@@ -39,7 +39,7 @@
  */
 
 /**
- * $Id: Suite.java,v 1.1 2004-04-10 18:04:56 shahid.shah Exp $
+ * $Id: Suite.java,v 1.2 2004-04-10 20:53:13 shahid.shah Exp $
  */
 
 package com.netspective.chronix.set;
@@ -63,6 +63,7 @@ public class Suite
         suite.addTest(new TestSuite(com.netspective.chronix.set.IteratorTest.class));
         suite.addTest(new TestSuite(com.netspective.chronix.set.DateRangesSetTest.class));
         suite.addTest(new TestSuite(com.netspective.chronix.set.MinuteRangesSetTest.class));
+        suite.addTest(new TestSuite(com.netspective.chronix.set.DaysOfWeekSetTest.class));
         return suite;
     }
 }

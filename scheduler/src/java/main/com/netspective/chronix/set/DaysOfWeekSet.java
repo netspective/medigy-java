@@ -39,7 +39,7 @@
  */
 
 /**
- * $Id: DaysOfWeekSet.java,v 1.2 2004-04-10 20:08:55 shahid.shah Exp $
+ * $Id: DaysOfWeekSet.java,v 1.3 2004-04-10 20:53:13 shahid.shah Exp $
  */
 
 package com.netspective.chronix.set;
@@ -47,22 +47,20 @@ package com.netspective.chronix.set;
 import java.util.Calendar;
 import java.util.StringTokenizer;
 
-/**
- * Type-safe wrapper to manage a set of days in a month (actual day numbers). The values that this set manages is the
- * same type as used by Calendar.get(Calendar.DAY_OF_WEEK).
- */
 public class DaysOfWeekSet
 {
     public class DayOfWeek
     {
         private int dayOfWeek;
         private boolean applicable;
+        private boolean applicableInAllWeeksOfMonth;
         private boolean[] applicableInWeeksOfMonth = new boolean[10]; // we'll never need more than this
 
         public DayOfWeek(int dayOfWeek, boolean applicable)
         {
             setDayOfWeek(dayOfWeek);
             this.applicable = applicable;
+            this.applicableInAllWeeksOfMonth = true;
             for(int i = 0; i < this.applicableInWeeksOfMonth.length; i++)
                 this.applicableInWeeksOfMonth[i] = true;
         }
@@ -70,13 +68,13 @@ public class DaysOfWeekSet
         public DayOfWeek(int dayOfWeek, boolean applicable, boolean[] applicableInWeeksOfMonth)
         {
             this(dayOfWeek, applicable);
+            this.applicableInAllWeeksOfMonth = false;
             this.applicableInWeeksOfMonth = applicableInWeeksOfMonth;
         }
 
         /**
-         * Initialize a day specification such as X or X:Y or X:Y;A-B where X is the day number that meets the range
-         * specified by Calendar.DAY_OF_WEEK and Y is a week of the month in which X should be applicable. Ranges of
-         * the week in the month (like A-B) may also be supplied.
+         * Initialize a day specification such as X or X:Y or X:Y;A;B where X is the day number that meets the range
+         * specified by Calendar.DAY_OF_WEEK and Y is a week of the month in which X should be applicable.
          * @param spec
          */
         public DayOfWeek(String spec)
@@ -90,28 +88,18 @@ public class DaysOfWeekSet
                 StringTokenizer itemTokenizer = new java.util.StringTokenizer(spec, ":");
                 setDayOfWeek(Integer.parseInt(itemTokenizer.nextToken()));
                 this.applicable = true;
+                this.applicableInAllWeeksOfMonth = false;
 
                 String applicableWeeksOfMonthText = itemTokenizer.nextToken();
-                StringTokenizer wkOfMonthTokenizer = new java.util.StringTokenizer(applicableWeeksOfMonthText, ",");
+                StringTokenizer wkOfMonthTokenizer = new java.util.StringTokenizer(applicableWeeksOfMonthText, ";");
                 while(wkOfMonthTokenizer.hasMoreTokens())
-                {
-                    String wkOfMonthItemText = wkOfMonthTokenizer.nextToken();
-                    if(wkOfMonthItemText.indexOf('-') > 0)
-                    {
-                        StringTokenizer rangeTokenizer = new java.util.StringTokenizer(wkOfMonthItemText, "-");
-                        int startWeekOfMonth = Integer.parseInt(rangeTokenizer.nextToken());
-                        int endWeekOfMonth = Integer.parseInt(rangeTokenizer.nextToken());
-                        for(int i = startWeekOfMonth; i <= endWeekOfMonth; i++)
-                            setApplicableInWeekOfMonth(i, true);
-                    }
-                    else
-                        setApplicableInWeekOfMonth(Integer.parseInt(wkOfMonthItemText), true);
-                }
+                    setApplicableInWeekOfMonth(Integer.parseInt(wkOfMonthTokenizer.nextToken()), true);
             }
             else
             {
                 setDayOfWeek(Integer.parseInt(spec));
                 this.applicable = true;
+                this.applicableInAllWeeksOfMonth = true;
                 for(int i = 0; i < this.applicableInWeeksOfMonth.length; i++)
                     this.applicableInWeeksOfMonth[i] = true;
             }
@@ -144,6 +132,11 @@ public class DaysOfWeekSet
             return applicableInWeeksOfMonth;
         }
 
+        public boolean isApplicableInAllWeeksOfMonth()
+        {
+            return applicableInAllWeeksOfMonth;
+        }
+
         public boolean isApplicableInWeekOfMonth(int weekOfMonth)
         {
             return applicable &&
@@ -157,6 +150,30 @@ public class DaysOfWeekSet
                 throw new RuntimeException("Invalid week of month: must be between 0.." + applicableInWeeksOfMonth.length);
 
             applicableInWeeksOfMonth[weekOfMonth] = value;
+        }
+
+        public String toString()
+        {
+            if(applicableInAllWeeksOfMonth)
+                return Integer.toString(dayOfWeek);
+            else
+            {
+                StringBuffer applWeeksInMonth = new StringBuffer();
+                for(int i = 0; i < this.applicableInWeeksOfMonth.length; i++)
+                {
+                    if(this.applicableInWeeksOfMonth[i])
+                    {
+                        if(applWeeksInMonth.length() > 0)
+                            applWeeksInMonth.append(";");
+                        applWeeksInMonth.append(i);
+                    }
+                }
+
+                if(applWeeksInMonth.length() > 0)
+                    return dayOfWeek + ":" + applWeeksInMonth;
+                else
+                    return Integer.toString(dayOfWeek);
+            }
         }
     }
 
@@ -240,6 +257,15 @@ public class DaysOfWeekSet
 
     public String toString()
     {
-        return daysOfWeekSet.toString();
+        StringBuffer sb = new StringBuffer();
+        for(int i = Calendar.SUNDAY; i <= Calendar.SATURDAY; i++)
+        {
+            if(daysOfWeekSet[i].isApplicable())
+            {
+                if(sb.length() > 0) sb.append(",");
+                sb.append(daysOfWeekSet[i]);
+            }
+        }
+        return sb.toString();
     }
 }
