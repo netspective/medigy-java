@@ -39,7 +39,7 @@
  */
 
 /**
- * $Id: MockScheduleElementProvider.java,v 1.1 2004-04-10 18:04:53 shahid.shah Exp $
+ * $Id: MockScheduleElementProvider.java,v 1.2 2004-04-10 18:37:04 shahid.shah Exp $
  */
 
 package com.netspective.chronix.schedule.mock;
@@ -60,8 +60,7 @@ import com.netspective.chronix.schedule.model.ScheduleParticipantTypes;
 import com.netspective.chronix.schedule.model.ScheduleParticipants;
 import com.netspective.chronix.schedule.model.ScheduleTemplateProvider;
 import com.netspective.chronix.schedule.model.ScheduleTemplates;
-import com.netspective.chronix.CalendarUtils;
-import com.netspective.chronix.set.IntSpan;
+import com.netspective.chronix.set.DaysOfWeekSet;
 
 public class MockScheduleElementProvider implements ScheduleEventProvider, ScheduleTemplateProvider, ScheduleParticipantProvider
 {
@@ -107,13 +106,13 @@ public class MockScheduleElementProvider implements ScheduleEventProvider, Sched
         // create a standard template that will work from 9 to 5 on weekdays with no other restrictions (normal workday)
         result.addTemplate(new DefaultScheduleTemplate(null, scheduleManager, participants, null, null, null, true,
                 beginDate, endDate, calendarUtils.createDate(beginDate, 9, 0), calendarUtils.createDate(beginDate, 16, 59, 59),
-                null, null, null, new IntSpan(Calendar.MONDAY + "-" + Calendar.FRIDAY)
+                null, null, null, new DaysOfWeekSet(Calendar.MONDAY + "-" + Calendar.FRIDAY)
         ));
 
         // create an unavailable template that will work from 12p to 1p on weekdays with no other restrictions (lunch)
         result.addTemplate(new DefaultScheduleTemplate(null, scheduleManager, participants, null, null, null, false,
                 beginDate, endDate, calendarUtils.createDate(beginDate, 12, 0), calendarUtils.createDate(beginDate, 12, 59, 59),
-                null, null, null, new IntSpan(Calendar.MONDAY + "-" + Calendar.FRIDAY)
+                null, null, null, new DaysOfWeekSet(Calendar.MONDAY + "-" + Calendar.FRIDAY)
         ));
 
         return result;

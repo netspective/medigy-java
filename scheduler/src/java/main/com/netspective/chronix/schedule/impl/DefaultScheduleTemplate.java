@@ -50,9 +50,11 @@ import com.netspective.chronix.schedule.model.ScheduleParticipantTypes;
 import com.netspective.chronix.schedule.model.ScheduleParticipants;
 import com.netspective.chronix.schedule.model.ScheduleTemplate;
 import com.netspective.chronix.schedule.model.ScheduleTemplateSlots;
-import com.netspective.chronix.CalendarUtils;
 import com.netspective.chronix.set.DateRangesSet;
-import com.netspective.chronix.set.IntSpan;
+import com.netspective.chronix.set.DaysOfMonthSet;
+import com.netspective.chronix.set.DaysOfWeekSet;
+import com.netspective.chronix.set.MonthsOfYearSet;
+import com.netspective.chronix.set.YearsSet;
 
 public class DefaultScheduleTemplate implements ScheduleTemplate
 {
@@ -64,7 +66,10 @@ public class DefaultScheduleTemplate implements ScheduleTemplate
     private Date startTime, endTime;
     private ScheduleParticipantTypes participantTypes;
     private ScheduleEventTypes eventTypes;
-    private IntSpan years, monthsOfTheYear, daysOfTheMonth, daysOfTheWeek;
+    private YearsSet years;
+    private MonthsOfYearSet monthsOfTheYear;
+    private DaysOfMonthSet daysOfTheMonth;
+    private DaysOfWeekSet daysOfTheWeek;
     private DateRangesSet applicableDateRangesSet;
     private int slotWidth;
 
@@ -77,7 +82,7 @@ public class DefaultScheduleTemplate implements ScheduleTemplate
                                    boolean available,
                                    Date effectiveBeginDate, Date effectiveEndDate,
                                    Date startTime, Date endTime,
-                                   IntSpan years, IntSpan monthsOfTheYear, IntSpan daysOfTheMonth, IntSpan daysOfTheWeek)
+                                   YearsSet years, MonthsOfYearSet monthsOfTheYear, DaysOfMonthSet daysOfTheMonth, DaysOfWeekSet daysOfTheWeek)
     {
         this.templateIdentifier = templateIdentifier == null ? new Integer(hashCode()) : templateIdentifier;
         this.scheduleManager = scheduleManager;
@@ -156,22 +161,22 @@ public class DefaultScheduleTemplate implements ScheduleTemplate
         return eventTypes;
     }
 
-    public IntSpan getYears()
+    public YearsSet getYears()
     {
         return years;
     }
 
-    public IntSpan getMonthsOfTheYear()
+    public MonthsOfYearSet getMonthsOfTheYear()
     {
         return monthsOfTheYear;
     }
 
-    public IntSpan getDaysOfTheMonth()
+    public DaysOfMonthSet getDaysOfTheMonth()
     {
         return daysOfTheMonth;
     }
 
-    public IntSpan getDaysOfTheWeek()
+    public DaysOfWeekSet getDaysOfTheWeek()
     {
         return daysOfTheWeek;
     }

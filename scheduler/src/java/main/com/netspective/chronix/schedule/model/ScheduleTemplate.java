@@ -39,14 +39,17 @@
  */
 
 /**
- * $Id: ScheduleTemplate.java,v 1.1 2004-04-10 18:04:50 shahid.shah Exp $
+ * $Id: ScheduleTemplate.java,v 1.2 2004-04-10 18:37:04 shahid.shah Exp $
  */
 
 package com.netspective.chronix.schedule.model;
 
 import java.util.Date;
 
-import com.netspective.chronix.set.IntSpan;
+import com.netspective.chronix.set.DaysOfMonthSet;
+import com.netspective.chronix.set.DaysOfWeekSet;
+import com.netspective.chronix.set.MonthsOfYearSet;
+import com.netspective.chronix.set.YearsSet;
 
 public interface ScheduleTemplate
 {
@@ -123,28 +126,28 @@ public interface ScheduleTemplate
      * @return A IntSpan integer set with the year numbers that this template is applicable. The year values corresponds
      *         to Calendar.set(Calendar.YEAR).
      */
-    public IntSpan getYears();
+    public YearsSet getYears();
 
     /**
      * Retrieve the months of the year that this template is applicable
      * @return A IntSpan integer set with the months of the year that this template is applicable. The first month
      *         begins with 0 and the month indexes correspond to Calendar.set(Calendar.MONTH).
      */
-    public IntSpan getMonthsOfTheYear();
+    public MonthsOfYearSet getMonthsOfTheYear();
 
     /**
      * Retrieve the days of the month that this template is applicable
      * @return A IntSpan integer set with the days of the month that this template is applicable. The first day
      *         begins with 1 and the day indexes correspond to Calendar.set(Calendar.DAY_OF_MONTH).
      */
-    public IntSpan getDaysOfTheMonth();
+    public DaysOfMonthSet getDaysOfTheMonth();
 
     /**
      * Retrieve the days of the week that this template is applicable
      * @return A IntSpan integer set with the day of week of the that this template is applicable. The first day
      *         begins with Calendar.MONDAY and the day indexes correspond to Calendar.set(Calendar.DAY_OF_WEEK).
      */
-    public IntSpan getDaysOfTheWeek();
+    public DaysOfWeekSet getDaysOfTheWeek();
 
     /**
      * Retrieve the slot width for parallel appointments

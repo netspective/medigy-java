@@ -39,7 +39,7 @@
  */
 
 /**
- * $Id: DateRangesSet.java,v 1.1 2004-04-10 18:04:51 shahid.shah Exp $
+ * $Id: DateRangesSet.java,v 1.2 2004-04-10 18:37:04 shahid.shah Exp $
  */
 
 package com.netspective.chronix.set;
@@ -50,7 +50,6 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 
-import com.netspective.chronix.CalendarUtils;
 import com.netspective.chronix.CalendarUtils;
 import com.netspective.chronix.set.IntSpan.ElementFormatter;
 import com.netspective.chronix.set.IntSpan.IntSpanIterator;
@@ -67,10 +66,10 @@ public class DateRangesSet
         this.calendarUtils = calendarUtils;
     }
 
-    public DateRangesSet(CalendarUtils calendarUtils, Date beginDate, Date endDate, IntSpan years, IntSpan monthsOfYear, IntSpan daysOfMonth, IntSpan daysOfWeek)
+    public DateRangesSet(CalendarUtils calendarUtils, Date beginDate, Date endDate, YearsSet years, MonthsOfYearSet monthsOfTheYear, DaysOfMonthSet daysOfTheMonth, DaysOfWeekSet daysOfTheWeek)
     {
         this(calendarUtils);
-        applyDateRange(beginDate, endDate, years, monthsOfYear, daysOfMonth, daysOfWeek);
+        applyDateRange(beginDate, endDate, years, monthsOfTheYear, daysOfTheMonth, daysOfTheWeek);
     }
 
     /**
@@ -78,17 +77,17 @@ public class DateRangesSet
      * the given begin and end date.
      * @param beginDate The date to start calculating from
      * @param endDate The date to end calculation at
-     * @param monthsOfYear A set of year members for which to calculate the date set (values must match input to Calendar.set(Calendar.YEAR)). May be NULL for all years.
-     * @param monthsOfYear A set of month numbers for which to calculate the date set (values must match input to Calendar.set(Calendar.MONTH)). May be NULL for all months.
-     * @param daysOfMonth A set of of day numbers for which to calculate the date set (values must match input to Calendar.set(Calendar.DAY_OF_MONTH)). May be NULL for all days of month.
-     * @param daysOfWeek A set of of days of the week to calculate the date set (values must match input to Calendar.set(Calendar.DAY_OF_WEEK)). May be NULL for all days of week.
+     * @param monthsOfTheYear A set of year members for which to calculate the date set (values must match input to Calendar.set(Calendar.YEAR)). May be NULL for all years.
+     * @param monthsOfTheYear A set of month numbers for which to calculate the date set (values must match input to Calendar.set(Calendar.MONTH)). May be NULL for all months.
+     * @param daysOfTheMonth A set of of day numbers for which to calculate the date set (values must match input to Calendar.set(Calendar.DAY_OF_MONTH)). May be NULL for all days of month.
+     * @param daysOfTheWeek A set of of days of the week to calculate the date set (values must match input to Calendar.set(Calendar.DAY_OF_WEEK)). May be NULL for all days of week.
      */
-    public void applyDateRange(Date beginDate, Date endDate, IntSpan years, IntSpan monthsOfYear, IntSpan daysOfMonth, IntSpan daysOfWeek)
+    public void applyDateRange(Date beginDate, Date endDate, YearsSet years, MonthsOfYearSet monthsOfTheYear, DaysOfMonthSet daysOfTheMonth, DaysOfWeekSet daysOfTheWeek)
     {
         Calendar calendar = calendarUtils.getCalendar();
 
         final int begin = calendarUtils.getJulianDay(beginDate), end = calendarUtils.getJulianDay(endDate);
-        final boolean haveYears = years != null, haveMonthsOfYear = monthsOfYear != null, haveDaysOfMonth = daysOfMonth != null, haveDaysOfWeek = daysOfWeek != null;
+        final boolean haveYears = years != null, haveMonthsOfYear = monthsOfTheYear != null, haveDaysOfMonth = daysOfTheMonth != null, haveDaysOfWeek = daysOfTheWeek != null;
 
         for (int julianDay = begin; julianDay <= end; julianDay++)
         {
@@ -96,9 +95,9 @@ public class DateRangesSet
             calendar.setTime(activeDate);
 
             if ((!haveYears || years.isMember(calendar.get(Calendar.YEAR))) &&
-                (!haveMonthsOfYear || monthsOfYear.isMember(calendar.get(Calendar.MONTH))) &&
-                (!haveDaysOfMonth || daysOfMonth.isMember(calendar.get(Calendar.DAY_OF_MONTH))) &&
-                (!haveDaysOfWeek || daysOfWeek.isMember(calendar.get(Calendar.DAY_OF_WEEK))))
+                (!haveMonthsOfYear || monthsOfTheYear.isMember(calendar.get(Calendar.MONTH))) &&
+                (!haveDaysOfMonth || daysOfTheMonth.isMember(calendar.get(Calendar.DAY_OF_MONTH))) &&
+                (!haveDaysOfWeek || daysOfTheWeek.isMember(calendar.get(Calendar.DAY_OF_WEEK))))
             {
                 add(julianDay);
             }

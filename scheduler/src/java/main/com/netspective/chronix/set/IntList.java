@@ -39,12 +39,12 @@
  */
 
 /**
- * $Id: IntList.java,v 1.1 2004-04-10 18:04:51 shahid.shah Exp $
+ * $Id: IntList.java,v 1.2 2004-04-10 18:37:04 shahid.shah Exp $
  */
 
 package com.netspective.chronix.set;
 
-public class IntList extends java.util.ArrayList implements Cloneable
+class IntList extends java.util.ArrayList implements Cloneable
 {
     void add(int n)
     {

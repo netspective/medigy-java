@@ -39,7 +39,7 @@
  */
 
 /**
- * $Id: IntSpan.java,v 1.1 2004-04-10 18:04:52 shahid.shah Exp $
+ * $Id: IntSpan.java,v 1.2 2004-04-10 18:37:04 shahid.shah Exp $
  */
 
 package com.netspective.chronix.set;
@@ -48,7 +48,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
 
-public class IntSpan implements Cloneable, Set
+class IntSpan implements Cloneable, Set
 {
     public static String emptyString = "-";
 

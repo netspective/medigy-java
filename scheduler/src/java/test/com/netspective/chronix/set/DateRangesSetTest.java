@@ -39,7 +39,7 @@
  */
 
 /**
- * $Id: DateRangesSetTest.java,v 1.1 2004-04-10 18:04:54 shahid.shah Exp $
+ * $Id: DateRangesSetTest.java,v 1.2 2004-04-10 18:37:04 shahid.shah Exp $
  */
 
 package com.netspective.chronix.set;
@@ -49,7 +49,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import com.netspective.chronix.CalendarUtils;
 import com.netspective.chronix.CalendarUtils;
 
 import junit.framework.TestCase;
@@ -80,7 +79,7 @@ public class DateRangesSetTest extends TestCase
         Date beginDate = createDate(0, 1, 2004);
         Date endDate = createDate(11, 31, 2004);
 
-        DateRangesSet dateSet = new DateRangesSet(calendarUtils, beginDate, endDate, null, new IntSpan("0-3"), null, null);
+        DateRangesSet dateSet = new DateRangesSet(calendarUtils, beginDate, endDate, null, new MonthsOfYearSet(Calendar.JANUARY + "-" + Calendar.APRIL), null, null);
         assertEquals("1/1/2004-4/30/2004", dateSet.toString(dateFormat, ", "));
     }
 
@@ -89,7 +88,7 @@ public class DateRangesSetTest extends TestCase
         Date beginDate = createDate(0, 1, 2004);
         Date endDate = createDate(11, 31, 2004);
 
-        DateRangesSet dateSet = new DateRangesSet(calendarUtils, beginDate, endDate, null, new IntSpan("0-3"), new IntSpan("1-5"), null);
+        DateRangesSet dateSet = new DateRangesSet(calendarUtils, beginDate, endDate, null, new MonthsOfYearSet(Calendar.JANUARY + "-" + Calendar.APRIL), new DaysOfMonthSet("1-5"), null);
         assertEquals("1/1/2004-1/5/2004, 2/1/2004-2/5/2004, 3/1/2004-3/5/2004, 4/1/2004-4/5/2004", dateSet.toString(dateFormat, ", "));
     }
 
@@ -98,7 +97,7 @@ public class DateRangesSetTest extends TestCase
         Date beginDate = createDate(0, 1, 2004);
         Date endDate = createDate(11, 31, 2004);
 
-        DateRangesSet dateSet = new DateRangesSet(calendarUtils, beginDate, endDate, null, new IntSpan("8-9"), null, new IntSpan(new int[] { Calendar.MONDAY }));
+        DateRangesSet dateSet = new DateRangesSet(calendarUtils, beginDate, endDate, null, new MonthsOfYearSet(Calendar.SEPTEMBER + "-" + Calendar.OCTOBER), null, new DaysOfWeekSet(new int[] { Calendar.MONDAY }));
         assertEquals("9/6/2004, 9/13/2004, 9/20/2004, 9/27/2004, 10/4/2004, 10/11/2004, 10/18/2004, 10/25/2004", dateSet.toString(dateFormat, ", "));
     }
 }
