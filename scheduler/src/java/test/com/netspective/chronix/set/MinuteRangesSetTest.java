@@ -39,7 +39,7 @@
  */
 
 /**
- * $Id: MinuteRangesSetTest.java,v 1.2 2004-04-14 20:44:11 shahid.shah Exp $
+ * $Id: MinuteRangesSetTest.java,v 1.3 2004-04-14 20:55:41 shahid.shah Exp $
  */
 
 package com.netspective.chronix.set;
@@ -56,16 +56,10 @@ public class MinuteRangesSetTest extends TestCase
     protected Calendar calendar = Calendar.getInstance();
     protected CalendarUtils calendarUtils = new CalendarUtils(calendar);
 
-    public Date createDate(int month, int day, int year, int hour, int minute)
-    {
-        calendar.set(year, month, day, hour, minute);
-        return calendar.getTime();
-    }
-
     public void testMinuteRangesSetSingleDay()
     {
-        Date beginDate = createDate(0, 1, 2004, 9, 30);
-        Date endDate = createDate(0, 1, 2004, 10, 00);
+        Date beginDate = calendarUtils.createDate(Calendar.JANUARY, 1, 2004, 9, 30);
+        Date endDate = calendarUtils.createDate(Calendar.JANUARY, 1, 2004, 10, 00);
 
         MinuteRangesSet minutesSet = new MinuteRangesSet(calendarUtils);
         minutesSet.applyDateRange(beginDate, endDate);
@@ -76,13 +70,14 @@ public class MinuteRangesSetTest extends TestCase
 
     public void testMinuteRangesSetMultiDay()
     {
-        Date beginDate = createDate(0, 1, 2004, 11, 00);
-        Date endDate = createDate(0, 3, 2004, 8, 30);
+        Date beginDate = calendarUtils.createDate(Calendar.JANUARY, 1, 2004, 11, 00);
 
         MinuteRangesSet minutesSet = new MinuteRangesSet(calendarUtils, beginDate, true);
-        minutesSet.applyDateRange(beginDate, endDate);
+        minutesSet.applyDateRange(beginDate, calendarUtils.createDate(Calendar.JANUARY, 3, 2004, 8, 30));
+        minutesSet.applyDateRange(calendarUtils.createDate(Calendar.JANUARY, 9, 2004, 8, 30), calendarUtils.createDate(Calendar.JANUARY, 9, 2004, 18, 30));
 
         assertTrue(minutesSet.isMultipleDays());
-        assertEquals("0d 11:00-2d 08:30", minutesSet.toString());
+        assertEquals(beginDate, minutesSet.getBaselineDate());
+        assertEquals("0d 11:00-2d 08:30, 8d 08:30-8d 18:30", minutesSet.toString());
     }
 }

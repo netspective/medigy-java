@@ -39,7 +39,7 @@
  */
 
 /**
- * $Id: ScheduleManagerTest.java,v 1.3 2004-04-14 20:44:11 shahid.shah Exp $
+ * $Id: ScheduleManagerTest.java,v 1.4 2004-04-14 20:55:41 shahid.shah Exp $
  */
 
 package com.netspective.chronix.schedule;
@@ -162,9 +162,15 @@ public class ScheduleManagerTest extends ScheduleTestCase
         assertEquals(15, mockSlot.getMinutesSet().size());
 
         ScheduleSlots.ResolvedSlotMinutes resolvedSlotMinutes = slots.getResolvedSlotMinutes();
-        System.out.println("  OPEN: [" + calendarUtils.formatDateOnly(resolvedSlotMinutes.getOpenMinutes().getBaselineDate()) + "] " +
-                                        resolvedSlotMinutes.getOpenMinutes());
-        System.out.println("CLOSED: [" + calendarUtils.formatDateOnly(resolvedSlotMinutes.getOpenMinutes().getBaselineDate()) + "] " +
-                                        resolvedSlotMinutes.getClosedMinutes());
+        MinuteRangesSet open = resolvedSlotMinutes.getOpenMinutes();
+        MinuteRangesSet closed = resolvedSlotMinutes.getClosedMinutes();
+
+        assertTrue(open.isMultipleDays());
+        assertEquals(resolvedSlotMinutes.getEarliestSlot().getBeginDate(), open.getBaselineDate());
+        assertEquals("0d 08:00-0d 16:59, 1d 08:00-1d 16:59", open.toString());
+
+        assertTrue(closed.isMultipleDays());
+        assertEquals(resolvedSlotMinutes.getEarliestSlot().getBeginDate(), closed.getBaselineDate());
+        assertEquals("0d 10:00-0d 10:14, 0d 12:00-0d 13:29, 0d 15:00-0d 15:14, 1d 10:00-1d 10:14, 1d 12:00-1d 13:29, 1d 15:00-1d 15:14", closed.toString());
     }
 }
