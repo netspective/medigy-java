@@ -39,7 +39,7 @@
  */
 
 /**
- * $Id: MockScheduleEvent.java,v 1.1 2004-04-10 18:04:53 shahid.shah Exp $
+ * $Id: MockScheduleEvent.java,v 1.2 2004-04-14 20:44:11 shahid.shah Exp $
  */
 
 package com.netspective.chronix.schedule.mock;
@@ -55,5 +55,10 @@ public class MockScheduleEvent extends AbstractScheduleSlot implements ScheduleE
     public MockScheduleEvent(ScheduleManager scheduleManager, Date beginDate, Date endDate)
     {
         super(scheduleManager, beginDate, endDate);
+    }
+
+    public boolean isOpenSlot()
+    {
+        return false; // an appointment is always "taken" so is never open
     }
 }

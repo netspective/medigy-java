@@ -39,7 +39,7 @@
  */
 
 /**
- * $Id: MockScheduleElementProvider.java,v 1.2 2004-04-10 18:37:04 shahid.shah Exp $
+ * $Id: MockScheduleElementProvider.java,v 1.3 2004-04-14 20:44:11 shahid.shah Exp $
  */
 
 package com.netspective.chronix.schedule.mock;
@@ -76,7 +76,7 @@ public class MockScheduleElementProvider implements ScheduleEventProvider, Sched
     public ScheduleEvents getScheduledEvents(ScheduleManager scheduleManager, Date beginDate, Date endDate)
     {
         CalendarUtils calendarUtils = scheduleManager.getCalendarUtils();
-        DefaultScheduleEvents result = new DefaultScheduleEvents();
+        DefaultScheduleEvents result = new DefaultScheduleEvents(scheduleManager);
 
         int beginDay = calendarUtils.getJulianDay(beginDate);
         int endDay = calendarUtils.getJulianDay(endDate);
@@ -101,18 +101,36 @@ public class MockScheduleElementProvider implements ScheduleEventProvider, Sched
     public ScheduleTemplates getScheduleTemplates(ScheduleManager scheduleManager, Date beginDate, Date endDate, ScheduleParticipants participants)
     {
         CalendarUtils calendarUtils = scheduleManager.getCalendarUtils();
-        DefaultScheduleTemplates result = new DefaultScheduleTemplates();
+        DefaultScheduleTemplates result = new DefaultScheduleTemplates(scheduleManager);
 
-        // create a standard template that will work from 9 to 5 on weekdays with no other restrictions (normal workday)
-        result.addTemplate(new DefaultScheduleTemplate(null, scheduleManager, participants, null, null, null, true,
-                beginDate, endDate, calendarUtils.createDate(beginDate, 9, 0), calendarUtils.createDate(beginDate, 16, 59, 59),
+        result.addTemplate(new DefaultScheduleTemplate(null, "Normal workday from 8 to 5 Monday through Friday",
+                scheduleManager, participants, null, null, null, true,
+                beginDate, endDate, calendarUtils.createDate(beginDate, 8, 0), calendarUtils.createDate(beginDate, 16, 59, 59),
                 null, null, null, new DaysOfWeekSet(Calendar.MONDAY + "-" + Calendar.FRIDAY)
         ));
 
-        // create an unavailable template that will work from 12p to 1p on weekdays with no other restrictions (lunch)
-        result.addTemplate(new DefaultScheduleTemplate(null, scheduleManager, participants, null, null, null, false,
-                beginDate, endDate, calendarUtils.createDate(beginDate, 12, 0), calendarUtils.createDate(beginDate, 12, 59, 59),
+        result.addTemplate(new DefaultScheduleTemplate(null, "Morning break from 10:00a to 10:15a Monday through Friday",
+                scheduleManager, participants, null, null, null, false,
+                beginDate, endDate, calendarUtils.createDate(beginDate, 10, 0), calendarUtils.createDate(beginDate, 10, 14, 59),
                 null, null, null, new DaysOfWeekSet(Calendar.MONDAY + "-" + Calendar.FRIDAY)
+        ));
+
+        result.addTemplate(new DefaultScheduleTemplate(null, "Lunch break from 12:00p to 1:30p Monday through Friday",
+                scheduleManager, participants, null, null, null, false,
+                beginDate, endDate, calendarUtils.createDate(beginDate, 12, 0), calendarUtils.createDate(beginDate, 13, 29, 59),
+                null, null, null, new DaysOfWeekSet(Calendar.MONDAY + "-" + Calendar.FRIDAY)
+        ));
+
+        result.addTemplate(new DefaultScheduleTemplate(null, "Afternoon break from 3:00p to 3:15p Monday through Friday",
+                scheduleManager, participants, null, null, null, false,
+                beginDate, endDate, calendarUtils.createDate(beginDate, 15, 0), calendarUtils.createDate(beginDate, 15, 14, 59),
+                null, null, null, new DaysOfWeekSet(Calendar.MONDAY + "-" + Calendar.FRIDAY)
+        ));
+
+        result.addTemplate(new DefaultScheduleTemplate(null, "Golf days off on first monday and third thursday of every month",
+                scheduleManager, participants, null, null, null, false,
+                beginDate, endDate, calendarUtils.createDate(beginDate, 0, 0), calendarUtils.createDate(beginDate, 23, 59, 59),
+                null, null, null, new DaysOfWeekSet(Calendar.MONDAY + ":1," + Calendar.THURSDAY + ":3")
         ));
 
         return result;

@@ -39,39 +39,111 @@
  */
 
 /**
- * $Id: DefaultScheduleTemplateSlot.java,v 1.2 2004-04-14 20:44:11 shahid.shah Exp $
+ * $Id: DefaultScheduleSlots.java,v 1.1 2004-04-14 20:44:11 shahid.shah Exp $
  */
 
 package com.netspective.chronix.schedule.impl;
 
-import java.util.Date;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import com.netspective.chronix.schedule.model.ScheduleManager;
-import com.netspective.chronix.schedule.model.ScheduleTemplate;
-import com.netspective.chronix.schedule.model.ScheduleTemplateSlot;
+import com.netspective.chronix.schedule.model.ScheduleSlot;
+import com.netspective.chronix.schedule.model.ScheduleSlots;
+import com.netspective.chronix.set.MinuteRangesSet;
 
-public class DefaultScheduleTemplateSlot extends AbstractScheduleSlot implements ScheduleTemplateSlot
+public class DefaultScheduleSlots implements ScheduleSlots
 {
-    private ScheduleTemplate scheduleTemplate;
+    private ScheduleManager scheduleManager;
+    private SortedSet sortedSlotsSet = new TreeSet();
+    private ScheduleSlot earliestSlot, latestSlot;
 
-    public DefaultScheduleTemplateSlot(ScheduleManager scheduleManager, ScheduleTemplate scheduleTemplate, Date beginDate, Date endDate)
+    public DefaultScheduleSlots(ScheduleManager scheduleManager)
     {
-        super(scheduleManager, beginDate, endDate);
-        this.scheduleTemplate = scheduleTemplate;
+        this.scheduleManager = scheduleManager;
     }
 
-    public ScheduleTemplate getScheduleTemplate()
+    public Collection getScheduleSlotsCollection()
     {
-        return scheduleTemplate;
+        return sortedSlotsSet;
     }
 
-    public boolean isOpenSlot()
+    public ScheduleSlot getEarliestSlot()
     {
-        return scheduleTemplate.isAvailable();
+        return (ScheduleSlot) sortedSlotsSet.first();
+    }
+
+    public ScheduleSlot getLatestSlot()
+    {
+        return (ScheduleSlot) sortedSlotsSet.last();
+    }
+
+    protected void addSlot(ScheduleSlot slot)
+    {
+        sortedSlotsSet.add(slot);
+    }
+
+    protected void addSlots(ScheduleSlots slots)
+    {
+        sortedSlotsSet.addAll(slots.getScheduleSlotsCollection());
+    }
+
+    public ScheduleSlot[] getScheduleSlots()
+    {
+        return (ScheduleSlot[]) sortedSlotsSet.toArray(new ScheduleSlot[sortedSlotsSet.size()]);
+    }
+
+    public String getFormattedList(String delim, String indent)
+    {
+        StringBuffer sb = new StringBuffer();
+
+        for(Iterator i = sortedSlotsSet.iterator(); i.hasNext(); )
+        {
+            ScheduleSlot slot = (ScheduleSlot) i.next();
+            if(sb.length() > 0) sb.append(delim);
+            sb.append(indent);
+            sb.append(slot);
+        }
+
+        return sb.toString();
     }
 
     public String toString()
     {
-        return super.toString() + ", templateId = " + scheduleTemplate.getTemplateIdentifier() + ", available = " + scheduleTemplate.isAvailable();
+        return getClass().getName() + " ("+ sortedSlotsSet.size() +")\n" + getFormattedList("\n", "  ");
+    }
+
+    public ResolvedSlotMinutes getResolvedSlotMinutes()
+    {
+        final ScheduleSlot earliestSlot = getEarliestSlot();
+        final MinuteRangesSet openMinutes = new MinuteRangesSet(scheduleManager.getCalendarUtils(), earliestSlot.getBeginDate(), true);
+        final MinuteRangesSet closedMinutes = new MinuteRangesSet(scheduleManager.getCalendarUtils(), earliestSlot.getBeginDate(), true);
+
+        for(Iterator i = sortedSlotsSet.iterator(); i.hasNext(); )
+        {
+            ScheduleSlot slot = (ScheduleSlot) i.next();
+            MinuteRangesSet set = slot.isOpenSlot() ? openMinutes : closedMinutes;
+            set.applyDateRange(slot.getBeginDate(), slot.getEndDate());
+        }
+
+        return new ResolvedSlotMinutes()
+        {
+            public MinuteRangesSet getClosedMinutes()
+            {
+                return closedMinutes;
+            }
+
+            public ScheduleSlot getEarliestSlot()
+            {
+                return earliestSlot;
+            }
+
+            public MinuteRangesSet getOpenMinutes()
+            {
+                return openMinutes;
+            }
+        };
     }
 }

@@ -39,7 +39,7 @@
  */
 
 /**
- * $Id: CalendarUtils.java,v 1.1 2004-04-10 18:04:47 shahid.shah Exp $
+ * $Id: CalendarUtils.java,v 1.2 2004-04-14 20:44:11 shahid.shah Exp $
  */
 
 package com.netspective.chronix;

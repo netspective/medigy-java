@@ -39,7 +39,7 @@
  */
 
 /**
- * $Id: MinuteRangesSetTest.java,v 1.1 2004-04-10 18:04:55 shahid.shah Exp $
+ * $Id: MinuteRangesSetTest.java,v 1.2 2004-04-14 20:44:11 shahid.shah Exp $
  */
 
 package com.netspective.chronix.set;
@@ -79,34 +79,10 @@ public class MinuteRangesSetTest extends TestCase
         Date beginDate = createDate(0, 1, 2004, 11, 00);
         Date endDate = createDate(0, 3, 2004, 8, 30);
 
-        MinuteRangesSet minutesSet = new MinuteRangesSet(calendarUtils);
+        MinuteRangesSet minutesSet = new MinuteRangesSet(calendarUtils, beginDate, true);
         minutesSet.applyDateRange(beginDate, endDate);
 
         assertTrue(minutesSet.isMultipleDays());
         assertEquals("0d 11:00-2d 08:30", minutesSet.toString());
-    }
-
-    public void testMinuteRangesSetSingleDayOffset()
-    {
-        Date beginDate = createDate(0, 1, 2004, 9, 30);
-        Date endDate = createDate(0, 1, 2004, 10, 00);
-
-        MinuteRangesSet minutesSet = new MinuteRangesSet(calendarUtils);
-        minutesSet.applyDateRange(beginDate, 3, endDate);
-
-        assertFalse(minutesSet.isMultipleDays());
-        assertEquals("3d 09:30-3d 10:00", minutesSet.toString());
-    }
-
-    public void testMinuteRangesSetMultiDayOffset()
-    {
-        Date beginDate = createDate(0, 1, 2004, 11, 00);
-        Date endDate = createDate(0, 3, 2004, 8, 30);
-
-        MinuteRangesSet minutesSet = new MinuteRangesSet(calendarUtils);
-        minutesSet.applyDateRange(beginDate, 12, endDate);
-
-        assertTrue(minutesSet.isMultipleDays());
-        assertEquals("12d 11:00-14d 08:30", minutesSet.toString());
     }
 }

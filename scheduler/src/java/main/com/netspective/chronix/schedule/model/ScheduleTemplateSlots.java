@@ -39,15 +39,12 @@
  */
 
 /**
- * $Id: ScheduleTemplateSlots.java,v 1.1 2004-04-10 18:04:51 shahid.shah Exp $
+ * $Id: ScheduleTemplateSlots.java,v 1.2 2004-04-14 20:44:11 shahid.shah Exp $
  */
 
 package com.netspective.chronix.schedule.model;
 
-import java.util.Collection;
-
 public interface ScheduleTemplateSlots extends ScheduleSlots
 {
-    public Collection getScheduleTemplateSlotsCollection();
     public ScheduleTemplateSlot[] getScheduleTemplateSlots();
 }

@@ -39,67 +39,32 @@
  */
 
 /**
- * $Id: DefaultScheduleEvents.java,v 1.1 2004-04-10 18:04:47 shahid.shah Exp $
+ * $Id: DefaultScheduleEvents.java,v 1.2 2004-04-14 20:44:11 shahid.shah Exp $
  */
 
 package com.netspective.chronix.schedule.impl;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
 import com.netspective.chronix.schedule.model.ScheduleEvent;
 import com.netspective.chronix.schedule.model.ScheduleEvents;
-import com.netspective.chronix.schedule.model.ScheduleSlot;
+import com.netspective.chronix.schedule.model.ScheduleManager;
 
-public class DefaultScheduleEvents implements ScheduleEvents
+public class DefaultScheduleEvents extends DefaultScheduleSlots implements ScheduleEvents
 {
-    private List eventsList = new ArrayList();
-
-    public DefaultScheduleEvents()
+    public DefaultScheduleEvents(ScheduleManager scheduleManager)
     {
-    }
-
-    protected DefaultScheduleEvents(List events)
-    {
-        this.eventsList = events;
-    }
-
-    protected List getEventsList()
-    {
-        return eventsList;
+        super(scheduleManager);
     }
 
     public void addEvent(ScheduleEvent event)
     {
-        eventsList.add(event);
+        addSlot(event);
     }
 
     public ScheduleEvent[] getScheduleEvents()
     {
-        return (ScheduleEvent[]) eventsList.toArray(new ScheduleEvent[eventsList.size()]);
-    }
-
-    public ScheduleSlot[] getScheduleSlots()
-    {
-        return getScheduleEvents();
-    }
-
-    public String getFormattedList(String eventDelim, String eventIndent)
-    {
-        StringBuffer sb = new StringBuffer();
-
-        for(int i = 0; i < eventsList.size(); i++)
-        {
-            if(i > 0) sb.append(eventDelim);
-            sb.append(eventIndent);
-            sb.append(eventsList.get(i).toString());
-        }
-
-        return sb.toString();
-    }
-
-    public String toString()
-    {
-        return getClass().getName() + " ("+ eventsList.size() +")\n" + getFormattedList("\n", "  ");
+        Collection scheduleSlotsCollection = getScheduleSlotsCollection();
+        return (ScheduleEvent[]) scheduleSlotsCollection.toArray(new ScheduleEvent[scheduleSlotsCollection.size()]);
     }
 }

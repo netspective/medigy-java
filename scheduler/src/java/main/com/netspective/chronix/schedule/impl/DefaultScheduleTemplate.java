@@ -59,6 +59,7 @@ import com.netspective.chronix.set.YearsSet;
 public class DefaultScheduleTemplate implements ScheduleTemplate
 {
     private Object templateIdentifier;
+    private String templateDescription;
     private ScheduleManager scheduleManager;
     private ScheduleParticipants templateOwners, templateParticipants;
     private boolean available;
@@ -73,8 +74,9 @@ public class DefaultScheduleTemplate implements ScheduleTemplate
     private DateRangesSet applicableDateRangesSet;
     private int slotWidth;
 
-    public DefaultScheduleTemplate(Object templateIdentifier, 
-                                   ScheduleManager scheduleManager, 
+    public DefaultScheduleTemplate(Object templateIdentifier,
+                                   String templateDescription,
+                                   ScheduleManager scheduleManager,
                                    ScheduleParticipants templateOwners,
                                    ScheduleParticipants templateParticipants,
                                    ScheduleParticipantTypes participantTypes,
@@ -85,6 +87,7 @@ public class DefaultScheduleTemplate implements ScheduleTemplate
                                    YearsSet years, MonthsOfYearSet monthsOfTheYear, DaysOfMonthSet daysOfTheMonth, DaysOfWeekSet daysOfTheWeek)
     {
         this.templateIdentifier = templateIdentifier == null ? new Integer(hashCode()) : templateIdentifier;
+        this.templateDescription = templateDescription;
         this.scheduleManager = scheduleManager;
         this.templateOwners = templateOwners;
         this.templateParticipants = templateParticipants;
@@ -109,6 +112,11 @@ public class DefaultScheduleTemplate implements ScheduleTemplate
     public Object getTemplateIdentifier()
     {
         return templateIdentifier;
+    }
+
+    public String getTemplateDescription()
+    {
+        return templateDescription;
     }
 
     public ScheduleManager getScheduleManager()
@@ -214,21 +222,21 @@ public class DefaultScheduleTemplate implements ScheduleTemplate
 
     public ScheduleTemplateSlots getScheduleTemplateSlots(Date beginDate, Date endDate)
     {
-        DefaultScheduleTemplateSlots result = new DefaultScheduleTemplateSlots();
-
         ScheduleManager mgr = getScheduleManager();
         CalendarUtils calendarUtils = mgr.getCalendarUtils();
         Calendar calendar = calendarUtils.getCalendar();
         DateRangesSet applicableDates = getApplicableDateRangesSet();
 
+        DefaultScheduleTemplateSlots result = new DefaultScheduleTemplateSlots(mgr);
+
         int beginDay = calendarUtils.getJulianDay(beginDate);
         int endDay = calendarUtils.getJulianDay(endDate);
 
         calendar.setTime(getStartTime());
-        int startHours = calendar.get(Calendar.HOUR_OF_DAY), startMinutes = calendar.get(Calendar.MINUTE);
+        int startHours = calendar.get(Calendar.HOUR_OF_DAY), startMinutes = calendar.get(Calendar.MINUTE), startSeconds = calendar.get(Calendar.SECOND);
 
         calendar.setTime(getEndTime());
-        int endHours = calendar.get(Calendar.HOUR_OF_DAY), endMinutes = calendar.get(Calendar.MINUTE);
+        int endHours = calendar.get(Calendar.HOUR_OF_DAY), endMinutes = calendar.get(Calendar.MINUTE), endSeconds = calendar.get(Calendar.SECOND);
 
         for(int day = beginDay; day <= endDay; day++)
         {
@@ -236,12 +244,12 @@ public class DefaultScheduleTemplate implements ScheduleTemplate
                 continue;
 
             // the starting date of the slot is the active date plus the starting time of the template
-            Date slotBeginDate = calendarUtils.getDateFromJulianDay(day, startHours, startMinutes, 0);
+            Date slotBeginDate = calendarUtils.getDateFromJulianDay(day, startHours, startMinutes, startSeconds);
 
             // the ending date of the slot is the same date as the slot begin date but the ending time of the template
-            Date slotEndDate = calendarUtils.createDate(slotBeginDate, endHours, endMinutes);
+            Date slotEndDate = calendarUtils.createDate(slotBeginDate, endHours, endMinutes, endSeconds);
 
-            result.addTemplateSlot(new DefaultScheduleTemplateSlot(mgr, this, slotBeginDate, slotEndDate));
+            result.addSlot(new DefaultScheduleTemplateSlot(mgr, this, slotBeginDate, slotEndDate));
         }
 
         return result;

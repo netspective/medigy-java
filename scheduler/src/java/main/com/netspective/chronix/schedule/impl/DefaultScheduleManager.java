@@ -39,7 +39,7 @@
  */
 
 /**
- * $Id: DefaultScheduleManager.java,v 1.1 2004-04-10 18:04:47 shahid.shah Exp $
+ * $Id: DefaultScheduleManager.java,v 1.2 2004-04-14 20:44:11 shahid.shah Exp $
  */
 
 package com.netspective.chronix.schedule.impl;
@@ -53,7 +53,6 @@ import com.netspective.chronix.schedule.model.ScheduleParticipantProvider;
 import com.netspective.chronix.schedule.model.ScheduleSearchParameters;
 import com.netspective.chronix.schedule.model.ScheduleSearchResults;
 import com.netspective.chronix.schedule.model.ScheduleTemplateProvider;
-import com.netspective.chronix.CalendarUtils;
 
 public class DefaultScheduleManager implements ScheduleManager
 {

@@ -39,7 +39,7 @@
  */
 
 /**
- * $Id: DefaultScheduleTemplates.java,v 1.1 2004-04-10 18:04:48 shahid.shah Exp $
+ * $Id: DefaultScheduleTemplates.java,v 1.2 2004-04-14 20:44:11 shahid.shah Exp $
  */
 
 package com.netspective.chronix.schedule.impl;
@@ -49,16 +49,19 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
+import com.netspective.chronix.schedule.model.ScheduleManager;
 import com.netspective.chronix.schedule.model.ScheduleTemplate;
 import com.netspective.chronix.schedule.model.ScheduleTemplateSlots;
 import com.netspective.chronix.schedule.model.ScheduleTemplates;
 
 public class DefaultScheduleTemplates implements ScheduleTemplates
 {
+    private ScheduleManager scheduleManager;
     private List templatesList = new ArrayList();
 
-    public DefaultScheduleTemplates()
+    public DefaultScheduleTemplates(ScheduleManager scheduleManager)
     {
+        this.scheduleManager = scheduleManager;
     }
 
     protected DefaultScheduleTemplates(List templates)
@@ -97,13 +100,13 @@ public class DefaultScheduleTemplates implements ScheduleTemplates
 
     public ScheduleTemplateSlots getScheduleTemplateSlots(Date beginDate, Date endDate)
     {
-        DefaultScheduleTemplateSlots result = new DefaultScheduleTemplateSlots();
+        DefaultScheduleTemplateSlots result = new DefaultScheduleTemplateSlots(scheduleManager);
 
         for(int i = 0; i < templatesList.size(); i++)
         {
             ScheduleTemplate template = (ScheduleTemplate) templatesList.get(i);
             ScheduleTemplateSlots slots = template.getScheduleTemplateSlots(beginDate, endDate);
-            result.addTemplateSlots(slots);
+            result.addSlots(slots);
         }
 
         return result;

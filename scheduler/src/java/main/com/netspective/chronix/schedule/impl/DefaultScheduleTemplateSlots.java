@@ -39,73 +39,27 @@
  */
 
 /**
- * $Id: DefaultScheduleTemplateSlots.java,v 1.1 2004-04-10 18:04:48 shahid.shah Exp $
+ * $Id: DefaultScheduleTemplateSlots.java,v 1.2 2004-04-14 20:44:11 shahid.shah Exp $
  */
 
 package com.netspective.chronix.schedule.impl;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
-import com.netspective.chronix.schedule.model.ScheduleSlot;
+import com.netspective.chronix.schedule.model.ScheduleManager;
 import com.netspective.chronix.schedule.model.ScheduleTemplateSlot;
 import com.netspective.chronix.schedule.model.ScheduleTemplateSlots;
 
-public class DefaultScheduleTemplateSlots implements ScheduleTemplateSlots
+public class DefaultScheduleTemplateSlots extends DefaultScheduleSlots implements ScheduleTemplateSlots
 {
-    private List templateSlotsList = new ArrayList();
-
-    public DefaultScheduleTemplateSlots()
+    public DefaultScheduleTemplateSlots(ScheduleManager scheduleManager)
     {
-    }
-
-    protected DefaultScheduleTemplateSlots(List templateSlotsList)
-    {
-        this.templateSlotsList = templateSlotsList;
-    }
-
-    public Collection getScheduleTemplateSlotsCollection()
-    {
-        return templateSlotsList;
-    }
-
-   public void addTemplateSlot(ScheduleTemplateSlot slot)
-    {
-        templateSlotsList.add(slot);
-    }
-
-    public void addTemplateSlots(ScheduleTemplateSlots slots)
-    {
-        templateSlotsList.addAll(slots.getScheduleTemplateSlotsCollection());
+        super(scheduleManager);
     }
 
     public ScheduleTemplateSlot[] getScheduleTemplateSlots()
     {
-        return (ScheduleTemplateSlot[]) templateSlotsList.toArray(new ScheduleSlot[templateSlotsList.size()]);
-    }
-
-    public ScheduleSlot[] getScheduleSlots()
-    {
-        return getScheduleTemplateSlots();
-    }
-
-    public String getFormattedList(String delim, String indent)
-    {
-        StringBuffer sb = new StringBuffer();
-
-        for(int i = 0; i < templateSlotsList.size(); i++)
-        {
-            if(i > 0) sb.append(delim);
-            sb.append(indent);
-            sb.append(templateSlotsList.get(i).toString());
-        }
-
-        return sb.toString();
-    }
-
-    public String toString()
-    {
-        return getClass().getName() + " ("+ templateSlotsList.size() +")\n" + getFormattedList("\n", "  ");
+        Collection scheduleSlotsCollection = getScheduleSlotsCollection();
+        return (ScheduleTemplateSlot[]) scheduleSlotsCollection.toArray(new ScheduleTemplateSlot[scheduleSlotsCollection.size()]);
     }
 }

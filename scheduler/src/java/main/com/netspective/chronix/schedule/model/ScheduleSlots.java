@@ -39,12 +39,40 @@
  */
 
 /**
- * $Id: ScheduleSlots.java,v 1.1 2004-04-10 18:04:50 shahid.shah Exp $
+ * $Id: ScheduleSlots.java,v 1.2 2004-04-14 20:44:11 shahid.shah Exp $
  */
 
 package com.netspective.chronix.schedule.model;
 
+import java.util.Collection;
+
+import com.netspective.chronix.set.MinuteRangesSet;
+
 public interface ScheduleSlots
 {
+    public Collection getScheduleSlotsCollection();
     public ScheduleSlot[] getScheduleSlots();
+
+    /**
+     * Resolve all of the schedule slots in this collection into a single group of open/closed minute ranges sets.
+     */
+    public ResolvedSlotMinutes getResolvedSlotMinutes();
+
+    public interface ResolvedSlotMinutes
+    {
+        /**
+         * Retrieve the baseline slot from which the open/closed minutes sets get their beginning days offset 
+         */
+        public ScheduleSlot getEarliestSlot();
+
+        /**
+         * Retrieve the minutes that are considered open or available for scheduling slots
+         */
+        public MinuteRangesSet getOpenMinutes();
+
+        /**
+         * Retrieve the minutes that are considered closed or unavailable
+         */
+        public MinuteRangesSet getClosedMinutes();
+    }
 }

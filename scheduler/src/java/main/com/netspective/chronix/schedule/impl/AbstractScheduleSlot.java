@@ -39,7 +39,7 @@
  */
 
 /**
- * $Id: AbstractScheduleSlot.java,v 1.1 2004-04-10 18:04:47 shahid.shah Exp $
+ * $Id: AbstractScheduleSlot.java,v 1.2 2004-04-14 20:44:11 shahid.shah Exp $
  */
 
 package com.netspective.chronix.schedule.impl;
@@ -49,10 +49,9 @@ import java.util.Date;
 import com.netspective.chronix.CalendarUtils;
 import com.netspective.chronix.schedule.model.ScheduleManager;
 import com.netspective.chronix.schedule.model.ScheduleSlot;
-import com.netspective.chronix.CalendarUtils;
 import com.netspective.chronix.set.MinuteRangesSet;
 
-public class AbstractScheduleSlot implements ScheduleSlot
+public abstract class AbstractScheduleSlot implements ScheduleSlot, Comparable
 {
     private ScheduleManager scheduleManager;
     private Object identifier = new Integer(hashCode());
@@ -75,6 +74,45 @@ public class AbstractScheduleSlot implements ScheduleSlot
         this.minutesSet = new MinuteRangesSet(calendarUtils);
         this.minutesSet.applyDateRange(beginDate, endDate);
     }
+
+    public int compareTo(Object o)
+    {
+        ScheduleSlot compareTo = (ScheduleSlot) o;
+
+        long myStartDay = this.getBeginJulianDay();
+        long myEndDay = this.getEndJulianDay();
+
+        long compareStartDay = compareTo.getBeginJulianDay();
+        long compareEndDay = compareTo.getEndJulianDay();
+
+        if(myStartDay < compareStartDay)
+            return -1;
+
+        if(myStartDay > compareStartDay)
+            return 1;
+
+        if(myEndDay < compareEndDay)
+            return -1;
+
+        if(myEndDay > compareEndDay)
+            return 1;
+
+        long myStartTime = this.getBeginDate().getTime();
+        long myEndTime = this.getEndDate().getTime();
+
+        long compareStartTime = compareTo.getBeginDate().getTime();
+        long compareEndTime = compareTo.getEndDate().getTime();
+
+        if(myStartTime < compareStartTime)
+            return -1;
+
+        if(myStartTime > compareStartTime)
+            return 1;
+
+        return 0;
+    }
+
+    public abstract boolean isOpenSlot();
 
     public Object getScheduleSlotIdentifier()
     {

@@ -39,7 +39,7 @@
  */
 
 /**
- * $Id: ScheduleTemplate.java,v 1.2 2004-04-10 18:37:04 shahid.shah Exp $
+ * $Id: ScheduleTemplate.java,v 1.3 2004-04-14 20:44:11 shahid.shah Exp $
  */
 
 package com.netspective.chronix.schedule.model;
@@ -58,6 +58,12 @@ public interface ScheduleTemplate
      * @return An object which uniquely identifies a specific template
      */
     public Object getTemplateIdentifier();
+
+    /**
+     * Retrieve the description (any comments) for this template instance
+     * @return A simple description of the template (for the user interface)
+     */
+    public String getTemplateDescription();
 
     /**
      * Retrieve the schedule manager that is managing this template

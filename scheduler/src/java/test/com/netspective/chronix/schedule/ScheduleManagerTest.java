@@ -39,7 +39,7 @@
  */
 
 /**
- * $Id: ScheduleManagerTest.java,v 1.2 2004-04-14 17:25:56 shahid.shah Exp $
+ * $Id: ScheduleManagerTest.java,v 1.3 2004-04-14 20:44:11 shahid.shah Exp $
  */
 
 package com.netspective.chronix.schedule;
@@ -51,6 +51,9 @@ import com.netspective.chronix.CalendarUtils;
 import com.netspective.chronix.schedule.mock.MockScheduleElementProvider;
 import com.netspective.chronix.schedule.model.ScheduleEvent;
 import com.netspective.chronix.schedule.model.ScheduleEvents;
+import com.netspective.chronix.schedule.model.ScheduleSlots;
+import com.netspective.chronix.schedule.model.ScheduleTemplate;
+import com.netspective.chronix.schedule.model.ScheduleTemplateSlot;
 import com.netspective.chronix.schedule.model.ScheduleTemplateSlots;
 import com.netspective.chronix.schedule.model.ScheduleTemplates;
 import com.netspective.chronix.set.MinuteRangesSet;
@@ -84,8 +87,7 @@ public class ScheduleManagerTest extends ScheduleTestCase
                 assertEquals(calendarUtils.createDate(julianDate, hm[2], hm[3]), mockEvent.getEndDate());
 
                 MinuteRangesSet minuteRangesSet = mockEvent.getMinutesSet();
-                assertEquals(0, minuteRangesSet.getBeginDateOffsetDays());
-                assertEquals(0, minuteRangesSet.getBeginDateOffsetMinutes());
+                assertFalse(minuteRangesSet.isMultipleDays());
                 assertTrue(minuteRangesSet.isMember(hm[0], hm[1]));
                 assertTrue(minuteRangesSet.isMember(hm[2], hm[3]));
             }
@@ -100,12 +102,69 @@ public class ScheduleManagerTest extends ScheduleTestCase
         Date effEndDate = calendarUtils.createDate(Calendar.DECEMBER, 31, 2004);
 
         ScheduleTemplates scheduleTemplates = getTemplateProvider().getScheduleTemplates(getScheduleManager(), effBeginDate, effEndDate, null);
-        System.out.println(scheduleTemplates);
+        ScheduleTemplate[] scheduleTemplatesList = scheduleTemplates.getScheduleTemplates();
+        assertEquals(5, scheduleTemplatesList.length);
 
         Date slotsBeginDate = calendarUtils.createDate(Calendar.JANUARY, 1, 2004);
         Date slotsEndDate = calendarUtils.createDate(Calendar.JANUARY, 3, 2004);
 
         ScheduleTemplateSlots slots = scheduleTemplates.getScheduleTemplateSlots(slotsBeginDate, slotsEndDate);
-        System.out.println(slots);
+
+        ScheduleTemplateSlot[] slotsList = slots.getScheduleTemplateSlots();
+        assertEquals(8, slotsList.length);
+
+        ScheduleTemplateSlot mockSlot = slotsList[0];
+        assertTrue(mockSlot.getScheduleTemplate().isAvailable());
+        assertEquals(calendarUtils.createDate(Calendar.JANUARY, 1, 2004,  8,  0,  0), mockSlot.getBeginDate());
+        assertEquals(calendarUtils.createDate(Calendar.JANUARY, 1, 2004, 16, 59, 59), mockSlot.getEndDate());
+        assertEquals(540, mockSlot.getMinutesSet().size());
+
+        mockSlot = slotsList[1];
+        assertFalse(mockSlot.getScheduleTemplate().isAvailable());
+        assertEquals(calendarUtils.createDate(Calendar.JANUARY, 1, 2004, 10,  0,  0), mockSlot.getBeginDate());
+        assertEquals(calendarUtils.createDate(Calendar.JANUARY, 1, 2004, 10, 14, 59), mockSlot.getEndDate());
+        assertEquals(15, mockSlot.getMinutesSet().size());
+
+        mockSlot = slotsList[2];
+        assertFalse(mockSlot.getScheduleTemplate().isAvailable());
+        assertEquals(calendarUtils.createDate(Calendar.JANUARY, 1, 2004, 12,  0,  0), mockSlot.getBeginDate());
+        assertEquals(calendarUtils.createDate(Calendar.JANUARY, 1, 2004, 13, 29, 59), mockSlot.getEndDate());
+        assertEquals(90, mockSlot.getMinutesSet().size());
+
+        mockSlot = slotsList[3];
+        assertFalse(mockSlot.getScheduleTemplate().isAvailable());
+        assertEquals(calendarUtils.createDate(Calendar.JANUARY, 1, 2004, 15,  0,  0), mockSlot.getBeginDate());
+        assertEquals(calendarUtils.createDate(Calendar.JANUARY, 1, 2004, 15, 14, 59), mockSlot.getEndDate());
+        assertEquals(15, mockSlot.getMinutesSet().size());
+
+        mockSlot = slotsList[4];
+        assertTrue(mockSlot.getScheduleTemplate().isAvailable());
+        assertEquals(calendarUtils.createDate(Calendar.JANUARY, 2, 2004,  8,  0,  0), mockSlot.getBeginDate());
+        assertEquals(calendarUtils.createDate(Calendar.JANUARY, 2, 2004, 16, 59, 59), mockSlot.getEndDate());
+        assertEquals(540, mockSlot.getMinutesSet().size());
+
+        mockSlot = slotsList[5];
+        assertFalse(mockSlot.getScheduleTemplate().isAvailable());
+        assertEquals(calendarUtils.createDate(Calendar.JANUARY, 2, 2004, 10,  0,  0), mockSlot.getBeginDate());
+        assertEquals(calendarUtils.createDate(Calendar.JANUARY, 2, 2004, 10, 14, 59), mockSlot.getEndDate());
+        assertEquals(15, mockSlot.getMinutesSet().size());
+
+        mockSlot = slotsList[6];
+        assertFalse(mockSlot.getScheduleTemplate().isAvailable());
+        assertEquals(calendarUtils.createDate(Calendar.JANUARY, 2, 2004, 12,  0,  0), mockSlot.getBeginDate());
+        assertEquals(calendarUtils.createDate(Calendar.JANUARY, 2, 2004, 13, 29, 59), mockSlot.getEndDate());
+        assertEquals(90, mockSlot.getMinutesSet().size());
+
+        mockSlot = slotsList[7];
+        assertFalse(mockSlot.getScheduleTemplate().isAvailable());
+        assertEquals(calendarUtils.createDate(Calendar.JANUARY, 2, 2004, 15,  0,  0), mockSlot.getBeginDate());
+        assertEquals(calendarUtils.createDate(Calendar.JANUARY, 2, 2004, 15, 14, 59), mockSlot.getEndDate());
+        assertEquals(15, mockSlot.getMinutesSet().size());
+
+        ScheduleSlots.ResolvedSlotMinutes resolvedSlotMinutes = slots.getResolvedSlotMinutes();
+        System.out.println("  OPEN: [" + calendarUtils.formatDateOnly(resolvedSlotMinutes.getOpenMinutes().getBaselineDate()) + "] " +
+                                        resolvedSlotMinutes.getOpenMinutes());
+        System.out.println("CLOSED: [" + calendarUtils.formatDateOnly(resolvedSlotMinutes.getOpenMinutes().getBaselineDate()) + "] " +
+                                        resolvedSlotMinutes.getClosedMinutes());
     }
 }

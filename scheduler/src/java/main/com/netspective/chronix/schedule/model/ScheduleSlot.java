@@ -39,7 +39,7 @@
  */
 
 /**
- * $Id: ScheduleSlot.java,v 1.1 2004-04-10 18:04:50 shahid.shah Exp $
+ * $Id: ScheduleSlot.java,v 1.2 2004-04-14 20:44:11 shahid.shah Exp $
  */
 
 package com.netspective.chronix.schedule.model;
@@ -54,6 +54,14 @@ public interface ScheduleSlot
     
     public Object getScheduleSlotIdentifier();
 
+    /**
+     * Ascertain whether the schedule slot is an open slot available for putting something in it or if it's a
+     * slot that already has something scheduled within it.
+     * @return True if the slot is a template slot and the template is a "positive" or available slot then, false if
+     *         the slot is an event or a negative (unavailable) template slot.
+     */
+    public boolean isOpenSlot();
+    
     public boolean isMultipleDays();
 
     public Date getDate();
