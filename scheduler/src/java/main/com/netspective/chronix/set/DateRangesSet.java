@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2000-2003 Netspective Communications LLC. All rights reserved.
+ * Copyright (c) 2000-2004 Netspective Communications LLC. All rights reserved.
  *
  * Netspective Communications LLC ("Netspective") permits redistribution, modification and use of this file in source
  * and binary form ("The Software") under the Netspective Source License ("NSL" or "The License"). The following
@@ -18,12 +18,7 @@
  *    ASCII text file unless otherwise agreed to, in writing, by Netspective.
  *
  * 4. The names "Netspective", "Axiom", "Commons", "Junxion", and "Sparx" are trademarks of Netspective and may not be
- *    used to endorse products derived from The Software without without written consent of Netspective. "Netspective",
- *    "Axiom", "Commons", "Junxion", and "Sparx" may not appear in the names of products derived from The Software
- *    without written consent of Netspective.
- *
- * 5. Please attribute functionality where possible. We suggest using the "powered by Netspective" button or creating
- *    a "powered by Netspective(tm)" link to http://www.netspective.com for each application using The Software.
+ *    used to endorse or appear in products derived from The Software without written consent of Netspective.
  *
  * THE SOFTWARE IS PROVIDED "AS IS" WITHOUT A WARRANTY OF ANY KIND. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND
  * WARRANTIES, INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT,
@@ -33,15 +28,8 @@
  * RESULT OF USING OR DISTRIBUTING THE SOFTWARE. IN NO EVENT WILL NETSPECTIVE OR ITS LICENSORS BE LIABLE FOR ANY LOST
  * REVENUE, PROFIT OR DATA, OR FOR DIRECT, INDIRECT, SPECIAL, CONSEQUENTIAL, INCIDENTAL OR PUNITIVE DAMAGES, HOWEVER
  * CAUSED AND REGARDLESS OF THE THEORY OF LIABILITY, ARISING OUT OF THE USE OF OR INABILITY TO USE THE SOFTWARE, EVEN
- * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
- *
- * @author Shahid N. Shah
+ * IF IT HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
-
-/**
- * $Id: DateRangesSet.java,v 1.3 2004-04-10 20:08:55 shahid.shah Exp $
- */
-
 package com.netspective.chronix.set;
 
 import java.text.DateFormat;
@@ -75,12 +63,13 @@ public class DateRangesSet
     /**
      * Calculate a set in which the months of the year, days of the month, and days of the week occur in between
      * the given begin and end date.
-     * @param beginDate The date to start calculating from
-     * @param endDate The date to end calculation at
+     *
+     * @param beginDate       The date to start calculating from
+     * @param endDate         The date to end calculation at
      * @param monthsOfTheYear A set of year members for which to calculate the date set (values must match input to Calendar.set(Calendar.YEAR)). May be NULL for all years.
      * @param monthsOfTheYear A set of month numbers for which to calculate the date set (values must match input to Calendar.set(Calendar.MONTH)). May be NULL for all months.
-     * @param daysOfTheMonth A set of of day numbers for which to calculate the date set (values must match input to Calendar.set(Calendar.DAY_OF_MONTH)). May be NULL for all days of month.
-     * @param daysOfTheWeek A set of of days of the week to calculate the date set (values must match input to Calendar.set(Calendar.DAY_OF_WEEK)). May be NULL for all days of week.
+     * @param daysOfTheMonth  A set of of day numbers for which to calculate the date set (values must match input to Calendar.set(Calendar.DAY_OF_MONTH)). May be NULL for all days of month.
+     * @param daysOfTheWeek   A set of of days of the week to calculate the date set (values must match input to Calendar.set(Calendar.DAY_OF_WEEK)). May be NULL for all days of week.
      */
     public void applyDateRange(Date beginDate, Date endDate, YearsSet years, MonthsOfYearSet monthsOfTheYear, DaysOfMonthSet daysOfTheMonth, DaysOfWeekSet daysOfTheWeek)
     {
@@ -95,9 +84,9 @@ public class DateRangesSet
             calendar.setTime(activeDate);
 
             if ((!haveYears || years.isMember(calendar.get(Calendar.YEAR))) &&
-                (!haveMonthsOfYear || monthsOfTheYear.isMember(calendar.get(Calendar.MONTH))) &&
-                (!haveDaysOfMonth || daysOfTheMonth.isMember(calendar.get(Calendar.DAY_OF_MONTH))) &&
-                (!haveDaysOfWeek || daysOfTheWeek.isMember(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.WEEK_OF_MONTH))))
+                    (!haveMonthsOfYear || monthsOfTheYear.isMember(calendar.get(Calendar.MONTH))) &&
+                    (!haveDaysOfMonth || daysOfTheMonth.isMember(calendar.get(Calendar.DAY_OF_MONTH))) &&
+                    (!haveDaysOfWeek || daysOfTheWeek.isMember(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.WEEK_OF_MONTH))))
             {
                 add(julianDay);
             }

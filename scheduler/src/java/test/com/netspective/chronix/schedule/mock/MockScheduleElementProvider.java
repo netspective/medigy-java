@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2000-2003 Netspective Communications LLC. All rights reserved.
+ * Copyright (c) 2000-2004 Netspective Communications LLC. All rights reserved.
  *
  * Netspective Communications LLC ("Netspective") permits redistribution, modification and use of this file in source
  * and binary form ("The Software") under the Netspective Source License ("NSL" or "The License"). The following
@@ -18,12 +18,7 @@
  *    ASCII text file unless otherwise agreed to, in writing, by Netspective.
  *
  * 4. The names "Netspective", "Axiom", "Commons", "Junxion", and "Sparx" are trademarks of Netspective and may not be
- *    used to endorse products derived from The Software without without written consent of Netspective. "Netspective",
- *    "Axiom", "Commons", "Junxion", and "Sparx" may not appear in the names of products derived from The Software
- *    without written consent of Netspective.
- *
- * 5. Please attribute functionality where possible. We suggest using the "powered by Netspective" button or creating
- *    a "powered by Netspective(tm)" link to http://www.netspective.com for each application using The Software.
+ *    used to endorse or appear in products derived from The Software without written consent of Netspective.
  *
  * THE SOFTWARE IS PROVIDED "AS IS" WITHOUT A WARRANTY OF ANY KIND. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND
  * WARRANTIES, INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT,
@@ -33,15 +28,8 @@
  * RESULT OF USING OR DISTRIBUTING THE SOFTWARE. IN NO EVENT WILL NETSPECTIVE OR ITS LICENSORS BE LIABLE FOR ANY LOST
  * REVENUE, PROFIT OR DATA, OR FOR DIRECT, INDIRECT, SPECIAL, CONSEQUENTIAL, INCIDENTAL OR PUNITIVE DAMAGES, HOWEVER
  * CAUSED AND REGARDLESS OF THE THEORY OF LIABILITY, ARISING OUT OF THE USE OF OR INABILITY TO USE THE SOFTWARE, EVEN
- * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
- *
- * @author Shahid N. Shah
+ * IF IT HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
-
-/**
- * $Id: MockScheduleElementProvider.java,v 1.3 2004-04-14 20:44:11 shahid.shah Exp $
- */
-
 package com.netspective.chronix.schedule.mock;
 
 import java.util.Calendar;
@@ -66,13 +54,13 @@ public class MockScheduleElementProvider implements ScheduleEventProvider, Sched
 {
     public static final int[][] MOCK_EVENT_HOURS = new int[][]
     {
-        {  9,  0,  9, 30 }, // 09:00 to 09:30 AM
-        { 10, 15, 11, 00 }, // 10:15 to 11:00 AM
-        { 13, 30, 14, 30 }, // 01:30 to 02:30 PM
-        { 14, 30, 14, 45 }, // 02:30 to 02:45 PM
-        { 15, 15, 16, 00 }  // 03:15 to 04:00 PM
+        {9, 0, 9, 30}, // 09:00 to 09:30 AM
+        {10, 15, 11, 00}, // 10:15 to 11:00 AM
+        {13, 30, 14, 30}, // 01:30 to 02:30 PM
+        {14, 30, 14, 45}, // 02:30 to 02:45 PM
+        {15, 15, 16, 00}  // 03:15 to 04:00 PM
     };
-    
+
     public ScheduleEvents getScheduledEvents(ScheduleManager scheduleManager, Date beginDate, Date endDate)
     {
         CalendarUtils calendarUtils = scheduleManager.getCalendarUtils();
@@ -81,17 +69,15 @@ public class MockScheduleElementProvider implements ScheduleEventProvider, Sched
         int beginDay = calendarUtils.getJulianDay(beginDate);
         int endDay = calendarUtils.getJulianDay(endDate);
 
-        for(int day = beginDay; day <= endDay; day++)
+        for (int day = beginDay; day <= endDay; day++)
         {
             Date julianDate = calendarUtils.getDateFromJulianDay(day);
 
-            for(int i = 0; i < MOCK_EVENT_HOURS.length; i++)
+            for (int i = 0; i < MOCK_EVENT_HOURS.length; i++)
             {
                 int[] hm = MOCK_EVENT_HOURS[i];
-                result.addEvent(
-                        new MockScheduleEvent(scheduleManager, calendarUtils.createDate(julianDate, hm[0], hm[1]),
-                                                               calendarUtils.createDate(julianDate, hm[2], hm[3]))
-                );
+                result.addEvent(new MockScheduleEvent(scheduleManager, calendarUtils.createDate(julianDate, hm[0], hm[1]),
+                        calendarUtils.createDate(julianDate, hm[2], hm[3])));
             }
         }
 
@@ -106,32 +92,27 @@ public class MockScheduleElementProvider implements ScheduleEventProvider, Sched
         result.addTemplate(new DefaultScheduleTemplate(null, "Normal workday from 8 to 5 Monday through Friday",
                 scheduleManager, participants, null, null, null, true,
                 beginDate, endDate, calendarUtils.createDate(beginDate, 8, 0), calendarUtils.createDate(beginDate, 16, 59, 59),
-                null, null, null, new DaysOfWeekSet(Calendar.MONDAY + "-" + Calendar.FRIDAY)
-        ));
+                null, null, null, new DaysOfWeekSet(Calendar.MONDAY + "-" + Calendar.FRIDAY)));
 
         result.addTemplate(new DefaultScheduleTemplate(null, "Morning break from 10:00a to 10:15a Monday through Friday",
                 scheduleManager, participants, null, null, null, false,
                 beginDate, endDate, calendarUtils.createDate(beginDate, 10, 0), calendarUtils.createDate(beginDate, 10, 14, 59),
-                null, null, null, new DaysOfWeekSet(Calendar.MONDAY + "-" + Calendar.FRIDAY)
-        ));
+                null, null, null, new DaysOfWeekSet(Calendar.MONDAY + "-" + Calendar.FRIDAY)));
 
         result.addTemplate(new DefaultScheduleTemplate(null, "Lunch break from 12:00p to 1:30p Monday through Friday",
                 scheduleManager, participants, null, null, null, false,
                 beginDate, endDate, calendarUtils.createDate(beginDate, 12, 0), calendarUtils.createDate(beginDate, 13, 29, 59),
-                null, null, null, new DaysOfWeekSet(Calendar.MONDAY + "-" + Calendar.FRIDAY)
-        ));
+                null, null, null, new DaysOfWeekSet(Calendar.MONDAY + "-" + Calendar.FRIDAY)));
 
         result.addTemplate(new DefaultScheduleTemplate(null, "Afternoon break from 3:00p to 3:15p Monday through Friday",
                 scheduleManager, participants, null, null, null, false,
                 beginDate, endDate, calendarUtils.createDate(beginDate, 15, 0), calendarUtils.createDate(beginDate, 15, 14, 59),
-                null, null, null, new DaysOfWeekSet(Calendar.MONDAY + "-" + Calendar.FRIDAY)
-        ));
+                null, null, null, new DaysOfWeekSet(Calendar.MONDAY + "-" + Calendar.FRIDAY)));
 
         result.addTemplate(new DefaultScheduleTemplate(null, "Golf days off on first monday and third thursday of every month",
                 scheduleManager, participants, null, null, null, false,
                 beginDate, endDate, calendarUtils.createDate(beginDate, 0, 0), calendarUtils.createDate(beginDate, 23, 59, 59),
-                null, null, null, new DaysOfWeekSet(Calendar.MONDAY + ":1," + Calendar.THURSDAY + ":3")
-        ));
+                null, null, null, new DaysOfWeekSet(Calendar.MONDAY + ":1," + Calendar.THURSDAY + ":3")));
 
         return result;
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2000-2003 Netspective Communications LLC. All rights reserved.
+ * Copyright (c) 2000-2004 Netspective Communications LLC. All rights reserved.
  *
  * Netspective Communications LLC ("Netspective") permits redistribution, modification and use of this file in source
  * and binary form ("The Software") under the Netspective Source License ("NSL" or "The License"). The following
@@ -18,12 +18,7 @@
  *    ASCII text file unless otherwise agreed to, in writing, by Netspective.
  *
  * 4. The names "Netspective", "Axiom", "Commons", "Junxion", and "Sparx" are trademarks of Netspective and may not be
- *    used to endorse products derived from The Software without without written consent of Netspective. "Netspective",
- *    "Axiom", "Commons", "Junxion", and "Sparx" may not appear in the names of products derived from The Software
- *    without written consent of Netspective.
- *
- * 5. Please attribute functionality where possible. We suggest using the "powered by Netspective" button or creating
- *    a "powered by Netspective(tm)" link to http://www.netspective.com for each application using The Software.
+ *    used to endorse or appear in products derived from The Software without written consent of Netspective.
  *
  * THE SOFTWARE IS PROVIDED "AS IS" WITHOUT A WARRANTY OF ANY KIND. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND
  * WARRANTIES, INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT,
@@ -33,15 +28,8 @@
  * RESULT OF USING OR DISTRIBUTING THE SOFTWARE. IN NO EVENT WILL NETSPECTIVE OR ITS LICENSORS BE LIABLE FOR ANY LOST
  * REVENUE, PROFIT OR DATA, OR FOR DIRECT, INDIRECT, SPECIAL, CONSEQUENTIAL, INCIDENTAL OR PUNITIVE DAMAGES, HOWEVER
  * CAUSED AND REGARDLESS OF THE THEORY OF LIABILITY, ARISING OUT OF THE USE OF OR INABILITY TO USE THE SOFTWARE, EVEN
- * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
- *
- * @author Shahid N. Shah
+ * IF IT HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
-
-/**
- * $Id: IntSpan.java,v 1.3 2004-04-10 20:08:55 shahid.shah Exp $
- */
-
 package com.netspective.chronix.set;
 
 import java.util.Collection;
@@ -151,7 +139,7 @@ class IntSpan implements Cloneable, Set
 
     public boolean addAll(Collection c)
     {
-        for(Iterator i = c.iterator(); i.hasNext(); )
+        for (Iterator i = c.iterator(); i.hasNext();)
             add(i.next());
 
         return true;
@@ -159,10 +147,10 @@ class IntSpan implements Cloneable, Set
 
     public boolean containsAll(Collection c)
     {
-        for(Iterator i = c.iterator(); i.hasNext(); )
+        for (Iterator i = c.iterator(); i.hasNext();)
         {
-            if(! contains(i.next()));
-                return false;
+            if (!contains(i.next())) ;
+            return false;
         }
 
         return true;
@@ -170,7 +158,7 @@ class IntSpan implements Cloneable, Set
 
     public boolean removeAll(Collection c)
     {
-        for(Iterator i = c.iterator(); i.hasNext(); )
+        for (Iterator i = c.iterator(); i.hasNext();)
             remove(i.next());
 
         return true;
@@ -180,14 +168,14 @@ class IntSpan implements Cloneable, Set
     {
         IntSpan removeElems = new IntSpan();
 
-        for(java.util.Iterator i = iterator(); i.hasNext(); )
+        for (java.util.Iterator i = iterator(); i.hasNext();)
         {
             Object o = i.next();
-            if(! c.contains(o));
-                removeElems.add(o);
+            if (!c.contains(o)) ;
+            removeElems.add(o);
         }
 
-        for(java.util.Iterator i = removeElems.first(); i.hasNext(); )
+        for (java.util.Iterator i = removeElems.first(); i.hasNext();)
             remove(i.next());
 
         return true;
@@ -303,7 +291,7 @@ class IntSpan implements Cloneable, Set
                 sb.append(Integer.toString(upper));
             else
                 sb.append(Integer.toString(lower + 1) + "-" +
-                          Integer.toString(upper));
+                        Integer.toString(upper));
 
             i += 2;
         }
@@ -322,6 +310,7 @@ class IntSpan implements Cloneable, Set
     public interface ElementFormatter
     {
         public String getFormattedElement(int element);
+
         public String getElementDelimiter();
     }
 
@@ -351,7 +340,7 @@ class IntSpan implements Cloneable, Set
                 sb.append(formatter.getFormattedElement(upper));
             else
                 sb.append(formatter.getFormattedElement(lower + 1) + "-" +
-                          formatter.getFormattedElement(upper));
+                        formatter.getFormattedElement(upper));
 
             i += 2;
         }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2000-2003 Netspective Communications LLC. All rights reserved.
+ * Copyright (c) 2000-2004 Netspective Communications LLC. All rights reserved.
  *
  * Netspective Communications LLC ("Netspective") permits redistribution, modification and use of this file in source
  * and binary form ("The Software") under the Netspective Source License ("NSL" or "The License"). The following
@@ -18,12 +18,7 @@
  *    ASCII text file unless otherwise agreed to, in writing, by Netspective.
  *
  * 4. The names "Netspective", "Axiom", "Commons", "Junxion", and "Sparx" are trademarks of Netspective and may not be
- *    used to endorse products derived from The Software without without written consent of Netspective. "Netspective",
- *    "Axiom", "Commons", "Junxion", and "Sparx" may not appear in the names of products derived from The Software
- *    without written consent of Netspective.
- *
- * 5. Please attribute functionality where possible. We suggest using the "powered by Netspective" button or creating
- *    a "powered by Netspective(tm)" link to http://www.netspective.com for each application using The Software.
+ *    used to endorse or appear in products derived from The Software without written consent of Netspective.
  *
  * THE SOFTWARE IS PROVIDED "AS IS" WITHOUT A WARRANTY OF ANY KIND. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND
  * WARRANTIES, INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT,
@@ -33,15 +28,8 @@
  * RESULT OF USING OR DISTRIBUTING THE SOFTWARE. IN NO EVENT WILL NETSPECTIVE OR ITS LICENSORS BE LIABLE FOR ANY LOST
  * REVENUE, PROFIT OR DATA, OR FOR DIRECT, INDIRECT, SPECIAL, CONSEQUENTIAL, INCIDENTAL OR PUNITIVE DAMAGES, HOWEVER
  * CAUSED AND REGARDLESS OF THE THEORY OF LIABILITY, ARISING OUT OF THE USE OF OR INABILITY TO USE THE SOFTWARE, EVEN
- * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
- *
- * @author Shahid N. Shah
+ * IF IT HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
-
-/**
- * $Id: DaysOfWeekSet.java,v 1.3 2004-04-10 20:53:13 shahid.shah Exp $
- */
-
 package com.netspective.chronix.set;
 
 import java.util.Calendar;
@@ -61,7 +49,7 @@ public class DaysOfWeekSet
             setDayOfWeek(dayOfWeek);
             this.applicable = applicable;
             this.applicableInAllWeeksOfMonth = true;
-            for(int i = 0; i < this.applicableInWeeksOfMonth.length; i++)
+            for (int i = 0; i < this.applicableInWeeksOfMonth.length; i++)
                 this.applicableInWeeksOfMonth[i] = true;
         }
 
@@ -75,14 +63,15 @@ public class DaysOfWeekSet
         /**
          * Initialize a day specification such as X or X:Y or X:Y;A;B where X is the day number that meets the range
          * specified by Calendar.DAY_OF_WEEK and Y is a week of the month in which X should be applicable.
+         *
          * @param spec
          */
         public DayOfWeek(String spec)
         {
-            if(spec.indexOf(':') > 0)
+            if (spec.indexOf(':') > 0)
             {
                 // since we have days of week specified, we're going to start with an empty list (all inapplicable)
-                for(int i = 0; i < this.applicableInWeeksOfMonth.length; i++)
+                for (int i = 0; i < this.applicableInWeeksOfMonth.length; i++)
                     this.applicableInWeeksOfMonth[i] = false;
 
                 StringTokenizer itemTokenizer = new java.util.StringTokenizer(spec, ":");
@@ -92,7 +81,7 @@ public class DaysOfWeekSet
 
                 String applicableWeeksOfMonthText = itemTokenizer.nextToken();
                 StringTokenizer wkOfMonthTokenizer = new java.util.StringTokenizer(applicableWeeksOfMonthText, ";");
-                while(wkOfMonthTokenizer.hasMoreTokens())
+                while (wkOfMonthTokenizer.hasMoreTokens())
                     setApplicableInWeekOfMonth(Integer.parseInt(wkOfMonthTokenizer.nextToken()), true);
             }
             else
@@ -100,7 +89,7 @@ public class DaysOfWeekSet
                 setDayOfWeek(Integer.parseInt(spec));
                 this.applicable = true;
                 this.applicableInAllWeeksOfMonth = true;
-                for(int i = 0; i < this.applicableInWeeksOfMonth.length; i++)
+                for (int i = 0; i < this.applicableInWeeksOfMonth.length; i++)
                     this.applicableInWeeksOfMonth[i] = true;
             }
         }
@@ -113,7 +102,7 @@ public class DaysOfWeekSet
         protected void setDayOfWeek(int dayOfWeek)
         {
             this.dayOfWeek = dayOfWeek;
-            if(this.dayOfWeek < Calendar.SUNDAY || this.dayOfWeek > Calendar.SATURDAY)
+            if (this.dayOfWeek < Calendar.SUNDAY || this.dayOfWeek > Calendar.SATURDAY)
                 throw new RuntimeException("Invalid day of the week: " + this.dayOfWeek);
         }
 
@@ -140,13 +129,13 @@ public class DaysOfWeekSet
         public boolean isApplicableInWeekOfMonth(int weekOfMonth)
         {
             return applicable &&
-                   (weekOfMonth >=0 && weekOfMonth < applicableInWeeksOfMonth.length) &&
-                   applicableInWeeksOfMonth[weekOfMonth];
+                    (weekOfMonth >= 0 && weekOfMonth < applicableInWeeksOfMonth.length) &&
+                    applicableInWeeksOfMonth[weekOfMonth];
         }
 
         public void setApplicableInWeekOfMonth(int weekOfMonth, boolean value)
         {
-            if (weekOfMonth <0 || weekOfMonth >= applicableInWeeksOfMonth.length)
+            if (weekOfMonth < 0 || weekOfMonth >= applicableInWeeksOfMonth.length)
                 throw new RuntimeException("Invalid week of month: must be between 0.." + applicableInWeeksOfMonth.length);
 
             applicableInWeeksOfMonth[weekOfMonth] = value;
@@ -154,22 +143,22 @@ public class DaysOfWeekSet
 
         public String toString()
         {
-            if(applicableInAllWeeksOfMonth)
+            if (applicableInAllWeeksOfMonth)
                 return Integer.toString(dayOfWeek);
             else
             {
                 StringBuffer applWeeksInMonth = new StringBuffer();
-                for(int i = 0; i < this.applicableInWeeksOfMonth.length; i++)
+                for (int i = 0; i < this.applicableInWeeksOfMonth.length; i++)
                 {
-                    if(this.applicableInWeeksOfMonth[i])
+                    if (this.applicableInWeeksOfMonth[i])
                     {
-                        if(applWeeksInMonth.length() > 0)
+                        if (applWeeksInMonth.length() > 0)
                             applWeeksInMonth.append(";");
                         applWeeksInMonth.append(i);
                     }
                 }
 
-                if(applWeeksInMonth.length() > 0)
+                if (applWeeksInMonth.length() > 0)
                     return dayOfWeek + ":" + applWeeksInMonth;
                 else
                     return Integer.toString(dayOfWeek);
@@ -181,7 +170,7 @@ public class DaysOfWeekSet
 
     public DaysOfWeekSet()
     {
-        for(int i = Calendar.SUNDAY; i <= Calendar.SATURDAY; i++)
+        for (int i = Calendar.SUNDAY; i <= Calendar.SATURDAY; i++)
         {
             DayOfWeek dow = new DayOfWeek(i, false);
             daysOfWeekSet[i] = dow;
@@ -191,10 +180,10 @@ public class DaysOfWeekSet
     public DaysOfWeekSet(int[] daysOfWeek)
     {
         this();
-        for(int i = 0; i < daysOfWeek.length; i++)
+        for (int i = 0; i < daysOfWeek.length; i++)
         {
             DayOfWeek dow = daysOfWeekSet[daysOfWeek[i]];
-            if(dow == null)
+            if (dow == null)
                 throw new RuntimeException("Invalid day of week: " + daysOfWeek[i]);
             dow.setApplicable(true);
         }
@@ -212,7 +201,7 @@ public class DaysOfWeekSet
         while (runListTokenizer.hasMoreTokens())
         {
             String itemText = runListTokenizer.nextToken();
-            if(itemText.indexOf('-') > 0)
+            if (itemText.indexOf('-') > 0)
             {
                 StringTokenizer itemTokenizer = new java.util.StringTokenizer(itemText, "-");
                 setRange(itemTokenizer.nextToken(), itemTokenizer.nextToken());
@@ -238,7 +227,7 @@ public class DaysOfWeekSet
         daysOfWeekSet[startDow.getDayOfWeek()] = startDow;
         daysOfWeekSet[endDow.getDayOfWeek()] = endDow;
 
-        for(int i = startDow.getDayOfWeek()+1; i < endDow.getDayOfWeek(); i++)
+        for (int i = startDow.getDayOfWeek() + 1; i < endDow.getDayOfWeek(); i++)
         {
             DayOfWeek dow = new DayOfWeek(i, true, startDow.getApplicableInWeeksOfMonth());
             daysOfWeekSet[dow.getDayOfWeek()] = dow;
@@ -258,11 +247,11 @@ public class DaysOfWeekSet
     public String toString()
     {
         StringBuffer sb = new StringBuffer();
-        for(int i = Calendar.SUNDAY; i <= Calendar.SATURDAY; i++)
+        for (int i = Calendar.SUNDAY; i <= Calendar.SATURDAY; i++)
         {
-            if(daysOfWeekSet[i].isApplicable())
+            if (daysOfWeekSet[i].isApplicable())
             {
-                if(sb.length() > 0) sb.append(",");
+                if (sb.length() > 0) sb.append(",");
                 sb.append(daysOfWeekSet[i]);
             }
         }
