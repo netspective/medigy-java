@@ -39,7 +39,7 @@
  */
 
 /**
- * $Id: DaysOfMonthSet.java,v 1.1 2004-04-10 18:37:04 shahid.shah Exp $
+ * $Id: DaysOfMonthSet.java,v 1.2 2004-04-10 20:08:55 shahid.shah Exp $
  */
 
 package com.netspective.chronix.set;
@@ -75,9 +75,9 @@ public class DaysOfMonthSet implements Set
         daysOfMonthSet = new IntSpan(elements);
     }
 
-    protected DaysOfMonthSet(IntSpan yearsSet)
+    protected DaysOfMonthSet(IntSpan daysOfMonthSet)
     {
-        this.daysOfMonthSet = yearsSet;
+        this.daysOfMonthSet = daysOfMonthSet;
     }
 
     public void add(int n)
@@ -110,9 +110,9 @@ public class DaysOfMonthSet implements Set
         return daysOfMonthSet.clone();
     }
 
-    public DaysOfMonthSet complement(IntSpan s)
+    public DaysOfMonthSet complement(DaysOfMonthSet s)
     {
-        return new DaysOfMonthSet(IntSpan.complement(s));
+        return new DaysOfMonthSet(IntSpan.complement(s.daysOfMonthSet));
     }
 
     public IntSpanIterator constructIterator(boolean empty, Integer start)

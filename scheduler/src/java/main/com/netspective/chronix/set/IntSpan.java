@@ -39,7 +39,7 @@
  */
 
 /**
- * $Id: IntSpan.java,v 1.2 2004-04-10 18:37:04 shahid.shah Exp $
+ * $Id: IntSpan.java,v 1.3 2004-04-10 20:08:55 shahid.shah Exp $
  */
 
 package com.netspective.chronix.set;
@@ -66,7 +66,7 @@ class IntSpan implements Cloneable, Set
     public IntSpan(String runList)
     {
         this();
-        runList = StripWhitespace(runList);
+        runList = stripWhitespace(runList);
 
         if (runList.equals("-"))
             return;  // empty set;
@@ -198,7 +198,7 @@ class IntSpan implements Cloneable, Set
         return first();
     }
 
-    private String StripWhitespace(String s)
+    protected static String stripWhitespace(String s)
     {
         StringBuffer sb = new StringBuffer();
         java.util.StringTokenizer st = new java.util.StringTokenizer(s);

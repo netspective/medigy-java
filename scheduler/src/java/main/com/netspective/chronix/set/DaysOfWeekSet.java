@@ -39,274 +39,207 @@
  */
 
 /**
- * $Id: DaysOfWeekSet.java,v 1.1 2004-04-10 18:37:04 shahid.shah Exp $
+ * $Id: DaysOfWeekSet.java,v 1.2 2004-04-10 20:08:55 shahid.shah Exp $
  */
 
 package com.netspective.chronix.set;
 
-import java.util.Collection;
-import java.util.Set;
-
-import com.netspective.chronix.set.IntSpan.ElementFormatter;
-import com.netspective.chronix.set.IntSpan.IntSpanIterator;
-import com.netspective.chronix.set.IntSpan.Mappable;
-import com.netspective.chronix.set.IntSpan.Testable;
+import java.util.Calendar;
+import java.util.StringTokenizer;
 
 /**
  * Type-safe wrapper to manage a set of days in a month (actual day numbers). The values that this set manages is the
  * same type as used by Calendar.get(Calendar.DAY_OF_WEEK).
  */
-public class DaysOfWeekSet implements Set
+public class DaysOfWeekSet
 {
-    private IntSpan daysOfWeekSet;
+    public class DayOfWeek
+    {
+        private int dayOfWeek;
+        private boolean applicable;
+        private boolean[] applicableInWeeksOfMonth = new boolean[10]; // we'll never need more than this
+
+        public DayOfWeek(int dayOfWeek, boolean applicable)
+        {
+            setDayOfWeek(dayOfWeek);
+            this.applicable = applicable;
+            for(int i = 0; i < this.applicableInWeeksOfMonth.length; i++)
+                this.applicableInWeeksOfMonth[i] = true;
+        }
+
+        public DayOfWeek(int dayOfWeek, boolean applicable, boolean[] applicableInWeeksOfMonth)
+        {
+            this(dayOfWeek, applicable);
+            this.applicableInWeeksOfMonth = applicableInWeeksOfMonth;
+        }
+
+        /**
+         * Initialize a day specification such as X or X:Y or X:Y;A-B where X is the day number that meets the range
+         * specified by Calendar.DAY_OF_WEEK and Y is a week of the month in which X should be applicable. Ranges of
+         * the week in the month (like A-B) may also be supplied.
+         * @param spec
+         */
+        public DayOfWeek(String spec)
+        {
+            if(spec.indexOf(':') > 0)
+            {
+                // since we have days of week specified, we're going to start with an empty list (all inapplicable)
+                for(int i = 0; i < this.applicableInWeeksOfMonth.length; i++)
+                    this.applicableInWeeksOfMonth[i] = false;
+
+                StringTokenizer itemTokenizer = new java.util.StringTokenizer(spec, ":");
+                setDayOfWeek(Integer.parseInt(itemTokenizer.nextToken()));
+                this.applicable = true;
+
+                String applicableWeeksOfMonthText = itemTokenizer.nextToken();
+                StringTokenizer wkOfMonthTokenizer = new java.util.StringTokenizer(applicableWeeksOfMonthText, ",");
+                while(wkOfMonthTokenizer.hasMoreTokens())
+                {
+                    String wkOfMonthItemText = wkOfMonthTokenizer.nextToken();
+                    if(wkOfMonthItemText.indexOf('-') > 0)
+                    {
+                        StringTokenizer rangeTokenizer = new java.util.StringTokenizer(wkOfMonthItemText, "-");
+                        int startWeekOfMonth = Integer.parseInt(rangeTokenizer.nextToken());
+                        int endWeekOfMonth = Integer.parseInt(rangeTokenizer.nextToken());
+                        for(int i = startWeekOfMonth; i <= endWeekOfMonth; i++)
+                            setApplicableInWeekOfMonth(i, true);
+                    }
+                    else
+                        setApplicableInWeekOfMonth(Integer.parseInt(wkOfMonthItemText), true);
+                }
+            }
+            else
+            {
+                setDayOfWeek(Integer.parseInt(spec));
+                this.applicable = true;
+                for(int i = 0; i < this.applicableInWeeksOfMonth.length; i++)
+                    this.applicableInWeeksOfMonth[i] = true;
+            }
+        }
+
+        public int getDayOfWeek()
+        {
+            return dayOfWeek;
+        }
+
+        protected void setDayOfWeek(int dayOfWeek)
+        {
+            this.dayOfWeek = dayOfWeek;
+            if(this.dayOfWeek < Calendar.SUNDAY || this.dayOfWeek > Calendar.SATURDAY)
+                throw new RuntimeException("Invalid day of the week: " + this.dayOfWeek);
+        }
+
+        public boolean isApplicable()
+        {
+            return applicable;
+        }
+
+        public void setApplicable(boolean applicable)
+        {
+            this.applicable = applicable;
+        }
+
+        public boolean[] getApplicableInWeeksOfMonth()
+        {
+            return applicableInWeeksOfMonth;
+        }
+
+        public boolean isApplicableInWeekOfMonth(int weekOfMonth)
+        {
+            return applicable &&
+                   (weekOfMonth >=0 && weekOfMonth < applicableInWeeksOfMonth.length) &&
+                   applicableInWeeksOfMonth[weekOfMonth];
+        }
+
+        public void setApplicableInWeekOfMonth(int weekOfMonth, boolean value)
+        {
+            if (weekOfMonth <0 || weekOfMonth >= applicableInWeeksOfMonth.length)
+                throw new RuntimeException("Invalid week of month: must be between 0.." + applicableInWeeksOfMonth.length);
+
+            applicableInWeeksOfMonth[weekOfMonth] = value;
+        }
+    }
+
+    private DayOfWeek[] daysOfWeekSet = new DayOfWeek[Calendar.SATURDAY + 1]; // array is 0-based but the 0'th element is not used since Calendar.SUNDAY == 1
 
     public DaysOfWeekSet()
     {
-        daysOfWeekSet = new IntSpan();
+        for(int i = Calendar.SUNDAY; i <= Calendar.SATURDAY; i++)
+        {
+            DayOfWeek dow = new DayOfWeek(i, false);
+            daysOfWeekSet[i] = dow;
+        }
+    }
+
+    public DaysOfWeekSet(int[] daysOfWeek)
+    {
+        this();
+        for(int i = 0; i < daysOfWeek.length; i++)
+        {
+            DayOfWeek dow = daysOfWeekSet[daysOfWeek[i]];
+            if(dow == null)
+                throw new RuntimeException("Invalid day of week: " + daysOfWeek[i]);
+            dow.setApplicable(true);
+        }
     }
 
     public DaysOfWeekSet(String runList)
     {
-        daysOfWeekSet = new IntSpan(runList);
+        this();
+        runList = IntSpan.stripWhitespace(runList);
+
+        if (runList.equals("-"))
+            return;  // empty set;
+
+        StringTokenizer runListTokenizer = new java.util.StringTokenizer(runList, ",");
+        while (runListTokenizer.hasMoreTokens())
+        {
+            String itemText = runListTokenizer.nextToken();
+            if(itemText.indexOf('-') > 0)
+            {
+                StringTokenizer itemTokenizer = new java.util.StringTokenizer(itemText, "-");
+                setRange(itemTokenizer.nextToken(), itemTokenizer.nextToken());
+            }
+            else
+            {
+                setSingle(itemText);
+            }
+        }
     }
 
-    public DaysOfWeekSet(int[] elements)
+    public void setSingle(String spec)
     {
-        daysOfWeekSet = new IntSpan(elements);
+        DayOfWeek dow = new DayOfWeek(spec);
+        daysOfWeekSet[dow.getDayOfWeek()] = dow;
     }
 
-    protected DaysOfWeekSet(IntSpan yearsSet)
+    public void setRange(String start, String end)
     {
-        this.daysOfWeekSet = yearsSet;
+        DayOfWeek startDow = new DayOfWeek(start);
+        DayOfWeek endDow = new DayOfWeek(end);
+
+        daysOfWeekSet[startDow.getDayOfWeek()] = startDow;
+        daysOfWeekSet[endDow.getDayOfWeek()] = endDow;
+
+        for(int i = startDow.getDayOfWeek()+1; i < endDow.getDayOfWeek(); i++)
+        {
+            DayOfWeek dow = new DayOfWeek(i, true, startDow.getApplicableInWeeksOfMonth());
+            daysOfWeekSet[dow.getDayOfWeek()] = dow;
+        }
     }
 
-    public void add(int n)
+    public boolean isMember(int calendarDayOfWeek)
     {
-        daysOfWeekSet.add(n);
+        return daysOfWeekSet[calendarDayOfWeek].isApplicable();
     }
 
-    public boolean add(Object o)
+    public boolean isMember(int calendarDayOfWeek, int calendarWeekInMonth)
     {
-        return daysOfWeekSet.add(o);
-    }
-
-    public boolean addAll(Collection c)
-    {
-        return daysOfWeekSet.addAll(c);
-    }
-
-    public void addClosed(int lower, int upper)
-    {
-        daysOfWeekSet.addClosed(lower, upper);
-    }
-
-    public void clear()
-    {
-        daysOfWeekSet.clear();
-    }
-
-    public Object clone()
-    {
-        return daysOfWeekSet.clone();
-    }
-
-    public DaysOfWeekSet complement(IntSpan s)
-    {
-        return new DaysOfWeekSet(IntSpan.complement(s));
-    }
-
-    public IntSpanIterator constructIterator(boolean empty, Integer start)
-    {
-        return daysOfWeekSet.constructIterator(empty, start);
-    }
-
-    public boolean contains(Object o)
-    {
-        return daysOfWeekSet.contains(o);
-    }
-
-    public boolean containsAll(Collection c)
-    {
-        return daysOfWeekSet.containsAll(c);
-    }
-
-    public DaysOfWeekSet diff(DaysOfWeekSet a, DaysOfWeekSet b)
-    {
-        return new DaysOfWeekSet(IntSpan.diff(a.daysOfWeekSet, b.daysOfWeekSet));
-    }
-
-    public boolean equal(DaysOfWeekSet a, DaysOfWeekSet b)
-    {
-        return IntSpan.equal(a.daysOfWeekSet, b.daysOfWeekSet);
-    }
-
-    public boolean equivalent(DaysOfWeekSet a, DaysOfWeekSet b)
-    {
-        return IntSpan.equivalent(a.daysOfWeekSet, b.daysOfWeekSet);
-    }
-
-    public IntSpanIterator first()
-    {
-        return daysOfWeekSet.first();
-    }
-
-    public int[] getElements()
-    {
-        return daysOfWeekSet.getElements();
-    }
-
-    public String getFormattedRunList(ElementFormatter formatter)
-    {
-        return daysOfWeekSet.getFormattedRunList(formatter);
-    }
-
-    public int getMax()
-    {
-        return daysOfWeekSet.getMax();
-    }
-
-    public Integer getMaxInteger()
-    {
-        return daysOfWeekSet.getMaxInteger();
-    }
-
-    public int getMin()
-    {
-        return daysOfWeekSet.getMin();
-    }
-
-    public Integer getMinInteger()
-    {
-        return daysOfWeekSet.getMinInteger();
-    }
-
-    public DaysOfWeekSet grep(Testable predicate)
-    {
-        return new DaysOfWeekSet(daysOfWeekSet.grep(predicate));
-    }
-
-    public DaysOfWeekSet intersect(DaysOfWeekSet a, DaysOfWeekSet b)
-    {
-        return new DaysOfWeekSet(IntSpan.intersect(a.daysOfWeekSet, b.daysOfWeekSet));
-    }
-
-    public boolean isEmpty()
-    {
-        return daysOfWeekSet.isEmpty();
-    }
-
-    public boolean isFinite()
-    {
-        return daysOfWeekSet.isFinite();
-    }
-
-    public boolean isInfinite()
-    {
-        return daysOfWeekSet.isInfinite();
-    }
-
-    public boolean isMember(int n)
-    {
-        return daysOfWeekSet.isMember(n);
-    }
-
-    public boolean isNegInfite()
-    {
-        return daysOfWeekSet.isNegInfite();
-    }
-
-    public boolean isPosInfite()
-    {
-        return daysOfWeekSet.isPosInfite();
-    }
-
-    public boolean isUniversal()
-    {
-        return daysOfWeekSet.isUniversal();
-    }
-
-    public java.util.Iterator iterator()
-    {
-        return daysOfWeekSet.iterator();
-    }
-
-    public IntSpanIterator last()
-    {
-        return daysOfWeekSet.last();
-    }
-
-    public DaysOfWeekSet map(Mappable trans)
-    {
-        return new DaysOfWeekSet(daysOfWeekSet.map(trans));
-    }
-
-    public void remove(int n)
-    {
-        daysOfWeekSet.remove(n);
-    }
-
-    public boolean remove(Object o)
-    {
-        return daysOfWeekSet.remove(o);
-    }
-
-    public boolean removeAll(Collection c)
-    {
-        return daysOfWeekSet.removeAll(c);
-    }
-
-    public boolean retainAll(Collection c)
-    {
-        return daysOfWeekSet.retainAll(c);
-    }
-
-    public String runList()
-    {
-        return daysOfWeekSet.runList();
-    }
-
-    public int size()
-    {
-        return daysOfWeekSet.size();
-    }
-
-    public IntSpanIterator start(int n)
-    {
-        return daysOfWeekSet.start(n);
-    }
-
-    public boolean subset(DaysOfWeekSet a, DaysOfWeekSet b)
-    {
-        return IntSpan.subset(a.daysOfWeekSet, b.daysOfWeekSet);
-    }
-
-    public boolean superset(DaysOfWeekSet a, DaysOfWeekSet b)
-    {
-        return IntSpan.superset(a.daysOfWeekSet, b.daysOfWeekSet);
-    }
-
-    public Object[] toArray()
-    {
-        return daysOfWeekSet.toArray();
-    }
-
-    public Object[] toArray(Object list[])
-    {
-        return daysOfWeekSet.toArray(list);
+        return daysOfWeekSet[calendarDayOfWeek].isApplicableInWeekOfMonth(calendarWeekInMonth);
     }
 
     public String toString()
     {
         return daysOfWeekSet.toString();
-    }
-
-    public DaysOfWeekSet union(DaysOfWeekSet a, DaysOfWeekSet b)
-    {
-        return new DaysOfWeekSet(IntSpan.union(a.daysOfWeekSet, b.daysOfWeekSet));
-    }
-
-    public DaysOfWeekSet xor(DaysOfWeekSet a, DaysOfWeekSet b)
-    {
-        return new DaysOfWeekSet(IntSpan.xor(a.daysOfWeekSet, b.daysOfWeekSet));
     }
 }

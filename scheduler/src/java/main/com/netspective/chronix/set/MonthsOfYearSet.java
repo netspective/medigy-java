@@ -39,7 +39,7 @@
  */
 
 /**
- * $Id: MonthsOfYearSet.java,v 1.1 2004-04-10 18:37:04 shahid.shah Exp $
+ * $Id: MonthsOfYearSet.java,v 1.2 2004-04-10 20:08:55 shahid.shah Exp $
  */
 
 package com.netspective.chronix.set;
@@ -75,9 +75,9 @@ public class MonthsOfYearSet implements Set
         monthsInYearSet = new IntSpan(elements);
     }
 
-    protected MonthsOfYearSet(IntSpan yearsSet)
+    protected MonthsOfYearSet(IntSpan monthsOfYearSet)
     {
-        this.monthsInYearSet = yearsSet;
+        this.monthsInYearSet = monthsOfYearSet;
     }
 
     public void add(int n)
@@ -110,9 +110,9 @@ public class MonthsOfYearSet implements Set
         return monthsInYearSet.clone();
     }
 
-    public MonthsOfYearSet complement(IntSpan s)
+    public MonthsOfYearSet complement(MonthsOfYearSet s)
     {
-        return new MonthsOfYearSet(IntSpan.complement(s));
+        return new MonthsOfYearSet(IntSpan.complement(s.monthsInYearSet));
     }
 
     public IntSpanIterator constructIterator(boolean empty, Integer start)

@@ -39,7 +39,7 @@
  */
 
 /**
- * $Id: DateRangesSet.java,v 1.2 2004-04-10 18:37:04 shahid.shah Exp $
+ * $Id: DateRangesSet.java,v 1.3 2004-04-10 20:08:55 shahid.shah Exp $
  */
 
 package com.netspective.chronix.set;
@@ -97,7 +97,7 @@ public class DateRangesSet
             if ((!haveYears || years.isMember(calendar.get(Calendar.YEAR))) &&
                 (!haveMonthsOfYear || monthsOfTheYear.isMember(calendar.get(Calendar.MONTH))) &&
                 (!haveDaysOfMonth || daysOfTheMonth.isMember(calendar.get(Calendar.DAY_OF_MONTH))) &&
-                (!haveDaysOfWeek || daysOfTheWeek.isMember(calendar.get(Calendar.DAY_OF_WEEK))))
+                (!haveDaysOfWeek || daysOfTheWeek.isMember(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.WEEK_OF_MONTH))))
             {
                 add(julianDay);
             }
