@@ -56,7 +56,7 @@ class IntList extends java.util.ArrayList implements Cloneable
 
     int getI(int i)
     {
-        if (i < 0)
+        if(i < 0)
             i += size();
 
         return ((Integer) get(i)).intValue();
@@ -77,7 +77,7 @@ class IntList extends java.util.ArrayList implements Cloneable
     void pop()
     {
         int i = size();
-        if (i > 0)
+        if(i > 0)
             remove(i - 1);
     }
 
@@ -85,7 +85,7 @@ class IntList extends java.util.ArrayList implements Cloneable
     {
         IntList clone = new IntList();
 
-        for (int i = 0; i < size(); i++)
+        for(int i = 0; i < size(); i++)
             clone.add(get(i));
 
         return clone;

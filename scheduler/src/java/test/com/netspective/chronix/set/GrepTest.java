@@ -127,19 +127,19 @@ public class GrepTest extends TestCase
 
     public void testGrep()
     {
-        for (int s = 0; s < sets.length; s++)
+        for(int s = 0; s < sets.length; s++)
         {
             IntSpan set = new IntSpan(sets[s]);
 
-            for (int p = 0; p < predicates.length; p++)
+            for(int p = 0; p < predicates.length; p++)
             {
                 IntSpan.Testable test = predicates[p];
                 IntSpan act = set.grep(test);
                 String st = expected[s][p];
                 IntSpan exp = st == null ? null : new IntSpan(st);
 
-                if (act == null ^ exp == null ||
-                        act != null && exp != null && !IntSpan.equal(act, exp))
+                if(act == null ^ exp == null ||
+                   act != null && exp != null && !IntSpan.equal(act, exp))
                 {
                     Object[] args = {test, set, act};
                     String problem = java.text.MessageFormat.format("grep {0} {1} -> {2}", args);

@@ -73,16 +73,16 @@ public abstract class AbstractScheduleSlot implements ScheduleSlot, Comparable
         long compareStartDay = compareTo.getBeginJulianDay();
         long compareEndDay = compareTo.getEndJulianDay();
 
-        if (myStartDay < compareStartDay)
+        if(myStartDay < compareStartDay)
             return -1;
 
-        if (myStartDay > compareStartDay)
+        if(myStartDay > compareStartDay)
             return 1;
 
-        if (myEndDay < compareEndDay)
+        if(myEndDay < compareEndDay)
             return -1;
 
-        if (myEndDay > compareEndDay)
+        if(myEndDay > compareEndDay)
             return 1;
 
         long myStartTime = this.getBeginDate().getTime();
@@ -91,10 +91,10 @@ public abstract class AbstractScheduleSlot implements ScheduleSlot, Comparable
         long compareStartTime = compareTo.getBeginDate().getTime();
         long compareEndTime = compareTo.getEndDate().getTime();
 
-        if (myStartTime < compareStartTime)
+        if(myStartTime < compareStartTime)
             return -1;
 
-        if (myStartTime > compareStartTime)
+        if(myStartTime > compareStartTime)
             return 1;
 
         return 0;

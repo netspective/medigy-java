@@ -104,9 +104,9 @@ public class RelationTest extends TestCase
 
     public void testRelation()
     {
-        for (int i = 0; i < sets.length; i++)
+        for(int i = 0; i < sets.length; i++)
         {
-            for (int j = 0; j < sets.length; j++)
+            for(int j = 0; j < sets.length; j++)
             {
                 IntSpan A = new IntSpan(sets[i]);
                 IntSpan B = new IntSpan(sets[j]);
@@ -126,7 +126,7 @@ public class RelationTest extends TestCase
 
     void relation(IntSpan A, IntSpan B, Operable op, int expected)
     {
-        if (op.relation(A, B) ^ expected == 1)
+        if(op.relation(A, B) ^ expected == 1)
         {
             Object[] args = {A, op, B};
             String problem = java.text.MessageFormat.format("{0} {1} {2}", args);

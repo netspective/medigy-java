@@ -153,19 +153,19 @@ public class MapTest extends TestCase
 
     public void testMap()
     {
-        for (int s = 0; s < sets.length; s++)
+        for(int s = 0; s < sets.length; s++)
         {
             IntSpan set = new IntSpan(sets[s]);
 
-            for (int m = 0; m < maps.length; m++)
+            for(int m = 0; m < maps.length; m++)
             {
                 IntSpan.Mappable map = maps[m];
                 IntSpan act = set.map(map);
                 String st = expected[s][m];
                 IntSpan exp = st == null ? null : new IntSpan(st);
 
-                if (act == null ^ exp == null ||
-                        act != null && exp != null && !IntSpan.equal(act, exp))
+                if(act == null ^ exp == null ||
+                   act != null && exp != null && !IntSpan.equal(act, exp))
                 {
                     Object[] args = {map, set, act};
                     String problem = java.text.MessageFormat.format("map {0} {1} -> {2}", args);

@@ -66,7 +66,7 @@ public class IteratorTest extends TestCase
 
     void create()
     {
-        for (int i = 0; i < sets.length; i++)
+        for(int i = 0; i < sets.length; i++)
         {
             IntSpan s = new IntSpan(sets[i]);
             create(s, new First(), first[i]);
@@ -82,16 +82,16 @@ public class IteratorTest extends TestCase
         try
         {
             IntSpan.IntSpanIterator actual = c.create(s);
-            if (!expected)
+            if(!expected)
                 failed = true;
         }
-        catch (java.util.NoSuchElementException e)
+        catch(java.util.NoSuchElementException e)
         {
-            if (expected)
+            if(expected)
                 failed = true;
         }
 
-        if (failed)
+        if(failed)
         {
             Object[] args = {s, c};
             String problem = java.text.MessageFormat.format("iterator {0} {1} -> failed", args);
@@ -147,19 +147,19 @@ public class IteratorTest extends TestCase
 
     void next()
     {
-        for (int i = 0; i < sets.length; i++)
+        for(int i = 0; i < sets.length; i++)
         {
             IntSpan s = new IntSpan(sets[i]);
-            if (s.isInfinite() || !first[i])
+            if(s.isInfinite() || !first[i])
                 continue;
 
             IntSpan.IntSpanIterator it = s.first();
             IntSpan s1 = new IntSpan();
 
-            while (it.hasNext())
+            while(it.hasNext())
                 s1.add(((Integer) it.next()).intValue());
 
-            if (!IntSpan.equal(s, s1))
+            if(!IntSpan.equal(s, s1))
             {
                 Object[] args = {s, s1};
                 String problem = java.text.MessageFormat.format("next {0} -> {1}", args);
@@ -178,10 +178,10 @@ public class IteratorTest extends TestCase
         IntSpan s1 = new IntSpan();
         IntSpan s100 = new IntSpan("0-99");
 
-        for (int i = 0; i < 100; i++)
+        for(int i = 0; i < 100; i++)
             s1.add(((Integer) it.next()).intValue());
 
-        if (!IntSpan.equal(s1, s100))
+        if(!IntSpan.equal(s1, s100))
         {
             Object[] args = {s1};
             String problem = java.text.MessageFormat.format("nextInf -> {0}", args);
@@ -193,19 +193,19 @@ public class IteratorTest extends TestCase
 
     void prev()
     {
-        for (int i = 0; i < sets.length; i++)
+        for(int i = 0; i < sets.length; i++)
         {
             IntSpan s = new IntSpan(sets[i]);
-            if (s.isInfinite() || !first[i])
+            if(s.isInfinite() || !first[i])
                 continue;
 
             IntSpan.IntSpanIterator it = s.last();
             IntSpan s1 = new IntSpan();
 
-            while (it.hasPrevious())
+            while(it.hasPrevious())
                 s1.add(((Integer) it.previous()).intValue());
 
-            if (!IntSpan.equal(s, s1))
+            if(!IntSpan.equal(s, s1))
             {
                 Object[] args = {s, s1};
                 String problem = java.text.MessageFormat.format("previous {0} -> {1}", args);
@@ -224,10 +224,10 @@ public class IteratorTest extends TestCase
         IntSpan s1 = new IntSpan();
         IntSpan s100 = new IntSpan("-99-0");
 
-        for (int i = 0; i < 100; i++)
+        for(int i = 0; i < 100; i++)
             s1.add(((Integer) it.previous()).intValue());
 
-        if (!IntSpan.equal(s1, s100))
+        if(!IntSpan.equal(s1, s100))
         {
             Object[] args = {s1};
             String problem = java.text.MessageFormat.format("prevInf -> {0}", args);
@@ -246,10 +246,10 @@ public class IteratorTest extends TestCase
         IntSpan.IntSpanIterator itPos = s.start(0);
         IntSpan s1Pos = new IntSpan();
 
-        while (itPos.hasNext())
+        while(itPos.hasNext())
             s1Pos.add(((Integer) itPos.next()).intValue());
 
-        if (!IntSpan.equal(sPos, s1Pos))
+        if(!IntSpan.equal(sPos, s1Pos))
         {
             Object[] args = {s, s1Pos};
             String problem = java.text.MessageFormat.format("start(0) pos {0} -> {1}", args);
@@ -261,10 +261,10 @@ public class IteratorTest extends TestCase
         IntSpan.IntSpanIterator itNeg = s.start(0);
         IntSpan s1Neg = new IntSpan();
 
-        while (itNeg.hasPrevious())
+        while(itNeg.hasPrevious())
             s1Neg.add(((Integer) itNeg.previous()).intValue());
 
-        if (!IntSpan.equal(sNeg, s1Neg))
+        if(!IntSpan.equal(sNeg, s1Neg))
         {
             Object[] args = {s, s1Neg};
             String problem = java.text.MessageFormat.format("start(0) neg {0} -> {1}", args);
@@ -290,11 +290,11 @@ public class IteratorTest extends TestCase
 
         IntSpan.IntSpanIterator it = s.first();
 
-        while (it.hasNext())
-            if ((((Integer) it.next()).intValue() & 1) == 1)
+        while(it.hasNext())
+            if((((Integer) it.next()).intValue() & 1) == 1)
                 it.remove();
 
-        if (!IntSpan.equal(s, sEven))
+        if(!IntSpan.equal(s, sEven))
         {
             Object[] args = {sAll, s};
             String problem = java.text.MessageFormat.format("remove {0} -> {1}", args);

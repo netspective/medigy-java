@@ -69,15 +69,15 @@ public class MockScheduleElementProvider implements ScheduleEventProvider, Sched
         int beginDay = calendarUtils.getJulianDay(beginDate);
         int endDay = calendarUtils.getJulianDay(endDate);
 
-        for (int day = beginDay; day <= endDay; day++)
+        for(int day = beginDay; day <= endDay; day++)
         {
             Date julianDate = calendarUtils.getDateFromJulianDay(day);
 
-            for (int i = 0; i < MOCK_EVENT_HOURS.length; i++)
+            for(int i = 0; i < MOCK_EVENT_HOURS.length; i++)
             {
                 int[] hm = MOCK_EVENT_HOURS[i];
                 result.addEvent(new MockScheduleEvent(scheduleManager, calendarUtils.createDate(julianDate, hm[0], hm[1]),
-                        calendarUtils.createDate(julianDate, hm[2], hm[3])));
+                                                      calendarUtils.createDate(julianDate, hm[2], hm[3])));
             }
         }
 
@@ -90,29 +90,29 @@ public class MockScheduleElementProvider implements ScheduleEventProvider, Sched
         DefaultScheduleTemplates result = new DefaultScheduleTemplates(scheduleManager);
 
         result.addTemplate(new DefaultScheduleTemplate(null, "Normal workday from 8 to 5 Monday through Friday",
-                scheduleManager, participants, null, null, null, true,
-                beginDate, endDate, calendarUtils.createDate(beginDate, 8, 0), calendarUtils.createDate(beginDate, 16, 59, 59),
-                null, null, null, new DaysOfWeekSet(Calendar.MONDAY + "-" + Calendar.FRIDAY)));
+                                                       scheduleManager, participants, null, null, null, true,
+                                                       beginDate, endDate, calendarUtils.createDate(beginDate, 8, 0), calendarUtils.createDate(beginDate, 16, 59, 59),
+                                                       null, null, null, new DaysOfWeekSet(Calendar.MONDAY + "-" + Calendar.FRIDAY)));
 
         result.addTemplate(new DefaultScheduleTemplate(null, "Morning break from 10:00a to 10:15a Monday through Friday",
-                scheduleManager, participants, null, null, null, false,
-                beginDate, endDate, calendarUtils.createDate(beginDate, 10, 0), calendarUtils.createDate(beginDate, 10, 14, 59),
-                null, null, null, new DaysOfWeekSet(Calendar.MONDAY + "-" + Calendar.FRIDAY)));
+                                                       scheduleManager, participants, null, null, null, false,
+                                                       beginDate, endDate, calendarUtils.createDate(beginDate, 10, 0), calendarUtils.createDate(beginDate, 10, 14, 59),
+                                                       null, null, null, new DaysOfWeekSet(Calendar.MONDAY + "-" + Calendar.FRIDAY)));
 
         result.addTemplate(new DefaultScheduleTemplate(null, "Lunch break from 12:00p to 1:30p Monday through Friday",
-                scheduleManager, participants, null, null, null, false,
-                beginDate, endDate, calendarUtils.createDate(beginDate, 12, 0), calendarUtils.createDate(beginDate, 13, 29, 59),
-                null, null, null, new DaysOfWeekSet(Calendar.MONDAY + "-" + Calendar.FRIDAY)));
+                                                       scheduleManager, participants, null, null, null, false,
+                                                       beginDate, endDate, calendarUtils.createDate(beginDate, 12, 0), calendarUtils.createDate(beginDate, 13, 29, 59),
+                                                       null, null, null, new DaysOfWeekSet(Calendar.MONDAY + "-" + Calendar.FRIDAY)));
 
         result.addTemplate(new DefaultScheduleTemplate(null, "Afternoon break from 3:00p to 3:15p Monday through Friday",
-                scheduleManager, participants, null, null, null, false,
-                beginDate, endDate, calendarUtils.createDate(beginDate, 15, 0), calendarUtils.createDate(beginDate, 15, 14, 59),
-                null, null, null, new DaysOfWeekSet(Calendar.MONDAY + "-" + Calendar.FRIDAY)));
+                                                       scheduleManager, participants, null, null, null, false,
+                                                       beginDate, endDate, calendarUtils.createDate(beginDate, 15, 0), calendarUtils.createDate(beginDate, 15, 14, 59),
+                                                       null, null, null, new DaysOfWeekSet(Calendar.MONDAY + "-" + Calendar.FRIDAY)));
 
         result.addTemplate(new DefaultScheduleTemplate(null, "Golf days off on first monday and third thursday of every month",
-                scheduleManager, participants, null, null, null, false,
-                beginDate, endDate, calendarUtils.createDate(beginDate, 0, 0), calendarUtils.createDate(beginDate, 23, 59, 59),
-                null, null, null, new DaysOfWeekSet(Calendar.MONDAY + ":1," + Calendar.THURSDAY + ":3")));
+                                                       scheduleManager, participants, null, null, null, false,
+                                                       beginDate, endDate, calendarUtils.createDate(beginDate, 0, 0), calendarUtils.createDate(beginDate, 23, 59, 59),
+                                                       null, null, null, new DaysOfWeekSet(Calendar.MONDAY + ":1," + Calendar.THURSDAY + ":3")));
 
         return result;
     }

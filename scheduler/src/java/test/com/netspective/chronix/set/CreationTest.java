@@ -73,7 +73,7 @@ public class CreationTest extends TestCase
     public void testCreation()
     {
 
-        for (int i = 0; i < tests.length; i++)
+        for(int i = 0; i < tests.length; i++)
         {
             Test t = tests[i];
 
@@ -81,20 +81,20 @@ public class CreationTest extends TestCase
             IntSpan set = new IntSpan(t.input);
             String actual = set.runList();
             String expected = t.runList;
-            if (!expected.equals(actual))
+            if(!expected.equals(actual))
                 report(expected, actual);
 
             IntSpan set1 = (IntSpan) (set.clone());
             actual = set1.runList();
-            if (!expected.equals(actual))
+            if(!expected.equals(actual))
                 report(expected, actual);
 
             int[] eActual = set.getElements();
             int[] eExpected = t.elements;
 
-            if (eActual == null ^ eExpected == null ||
-                    eActual != null && eExpected != null &&
-                    !java.util.Arrays.equals(eActual, eExpected))
+            if(eActual == null ^ eExpected == null ||
+               eActual != null && eExpected != null &&
+               !java.util.Arrays.equals(eActual, eExpected))
                 report(eExpected, eActual);
         }
 
@@ -123,10 +123,10 @@ public class CreationTest extends TestCase
 
     void dump(int[] a)
     {
-        if (a == null)
+        if(a == null)
             System.out.print("null");
         else
-            for (int i = 0; i < a.length; i++)
+            for(int i = 0; i < a.length; i++)
             {
                 System.out.print(a[i]);
                 System.out.print(" ");

@@ -61,11 +61,11 @@ public class ScheduleManagerTest extends ScheduleTestCase
         ScheduleEvent[] scheduleEventsList = scheduleEvents.getScheduleEvents();
         assertEquals(MockScheduleElementProvider.MOCK_EVENT_HOURS.length, scheduleEventsList.length);
 
-        for (int day = beginDay; day <= endDay; day++)
+        for(int day = beginDay; day <= endDay; day++)
         {
             Date julianDate = calendarUtils.getDateFromJulianDay(day);
 
-            for (int i = 0; i < MockScheduleElementProvider.MOCK_EVENT_HOURS.length; i++)
+            for(int i = 0; i < MockScheduleElementProvider.MOCK_EVENT_HOURS.length; i++)
             {
                 ScheduleEvent mockEvent = scheduleEventsList[i];
 

@@ -57,8 +57,6 @@ public interface ScheduleTemplate
 
     /**
      * Retrieve the schedule manager that is managing this template
-     *
-     * @return
      */
     public ScheduleManager getScheduleManager();
 
@@ -162,8 +160,6 @@ public interface ScheduleTemplate
 
     /**
      * Retrieve the slot width for parallel appointments
-     *
-     * @return
      */
     public int getSlotWidth();
 
@@ -171,9 +167,6 @@ public interface ScheduleTemplate
      * Retrieve all the template slots associated with this template. This method will start with the beginDate and
      * go through the endDate to find all applicable dates for which this template may be applicable and create an
      * appropriate set of schedule templates slots for the start/end times for the given date range.
-     *
-     * @param beginDate
-     * @param endDate
      *
      * @return A list of template slots calculated for the begin/end dates of this template
      */

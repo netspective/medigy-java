@@ -60,7 +60,7 @@ public class CardinalTest extends TestCase
     public void testCardinal()
     {
 
-        for (int i = 0; i < tests.length; i++)
+        for(int i = 0; i < tests.length; i++)
         {
             Test t = tests[i];
 
@@ -85,7 +85,7 @@ public class CardinalTest extends TestCase
 
     void metric(Test t, String name, int expected, int actual)
     {
-        if (expected != actual)
+        if(expected != actual)
         {
             Object[] args = {
                 t.runList, name, new Integer(expected),
@@ -100,9 +100,9 @@ public class CardinalTest extends TestCase
 
     void metric(Test t, String name, Integer expected, Integer actual)
     {
-        if (expected == null ^ actual == null ||
-                expected != null && actual != null &&
-                expected.intValue() != actual.intValue())
+        if(expected == null ^ actual == null ||
+           expected != null && actual != null &&
+           expected.intValue() != actual.intValue())
         {
             Object[] args = {t.runList, name, expected, actual};
             String format = "{0} {1}: {2} -> {3}";
@@ -114,7 +114,7 @@ public class CardinalTest extends TestCase
 
     void predicate(Test t, String name, boolean expected, boolean actual)
     {
-        if (expected ^ actual)
+        if(expected ^ actual)
         {
             Object[] args = {
                 t.runList, name, new Boolean(expected),

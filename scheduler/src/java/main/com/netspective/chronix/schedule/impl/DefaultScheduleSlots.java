@@ -87,10 +87,10 @@ public class DefaultScheduleSlots implements ScheduleSlots
     {
         StringBuffer sb = new StringBuffer();
 
-        for (Iterator i = sortedSlotsSet.iterator(); i.hasNext();)
+        for(Iterator i = sortedSlotsSet.iterator(); i.hasNext();)
         {
             ScheduleSlot slot = (ScheduleSlot) i.next();
-            if (sb.length() > 0) sb.append(delim);
+            if(sb.length() > 0) sb.append(delim);
             sb.append(indent);
             sb.append(slot);
         }
@@ -109,7 +109,7 @@ public class DefaultScheduleSlots implements ScheduleSlots
         final MinuteRangesSet openMinutes = new MinuteRangesSet(scheduleManager.getCalendarUtils(), earliestSlot.getBeginDate(), true);
         final MinuteRangesSet closedMinutes = new MinuteRangesSet(scheduleManager.getCalendarUtils(), earliestSlot.getBeginDate(), true);
 
-        for (Iterator i = sortedSlotsSet.iterator(); i.hasNext();)
+        for(Iterator i = sortedSlotsSet.iterator(); i.hasNext();)
         {
             ScheduleSlot slot = (ScheduleSlot) i.next();
             MinuteRangesSet set = slot.isOpenSlot() ? openMinutes : closedMinutes;

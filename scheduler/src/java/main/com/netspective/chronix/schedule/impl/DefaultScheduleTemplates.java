@@ -76,9 +76,9 @@ public class DefaultScheduleTemplates implements ScheduleTemplates
     {
         StringBuffer sb = new StringBuffer();
 
-        for (int i = 0; i < templatesList.size(); i++)
+        for(int i = 0; i < templatesList.size(); i++)
         {
-            if (i > 0) sb.append(eventDelim);
+            if(i > 0) sb.append(eventDelim);
             sb.append(eventIndent);
             sb.append(templatesList.get(i).toString());
         }
@@ -90,7 +90,7 @@ public class DefaultScheduleTemplates implements ScheduleTemplates
     {
         DefaultScheduleTemplateSlots result = new DefaultScheduleTemplateSlots(scheduleManager);
 
-        for (int i = 0; i < templatesList.size(); i++)
+        for(int i = 0; i < templatesList.size(); i++)
         {
             ScheduleTemplate template = (ScheduleTemplate) templatesList.get(i);
             ScheduleTemplateSlots slots = template.getScheduleTemplateSlots(beginDate, endDate);

@@ -106,10 +106,10 @@ public class MinuteRangesSet implements Set
         int endHours = calendar.get(Calendar.HOUR_OF_DAY);
         int endMinutes = calendar.get(Calendar.MINUTE);
 
-        if (!multipleDays)
+        if(!multipleDays)
         {
             minutesSet.addClosed((beginHours * MINUTES_PER_HOUR) + beginMinutes,
-                    (endHours * MINUTES_PER_HOUR) + endMinutes);
+                                 (endHours * MINUTES_PER_HOUR) + endMinutes);
         }
         else
         {
@@ -118,7 +118,7 @@ public class MinuteRangesSet implements Set
             int endDay = calendarUtils.getJulianDay(endDate) - baselineDay;
 
             minutesSet.addClosed((MINUTES_PER_DAY * beginDay) + (beginHours * MINUTES_PER_HOUR) + beginMinutes,
-                    (MINUTES_PER_DAY * endDay) + (endHours * MINUTES_PER_HOUR) + endMinutes);
+                                 (MINUTES_PER_DAY * endDay) + (endHours * MINUTES_PER_HOUR) + endMinutes);
         }
     }
 
@@ -324,7 +324,7 @@ public class MinuteRangesSet implements Set
 
     public String toString(String delim)
     {
-        if (isMultipleDays())
+        if(isMultipleDays())
             return minutesSet.getFormattedRunList(new MultiDayElementFormatter(delim));
         else
             return minutesSet.getFormattedRunList(new SingleDayElementFormatter(delim));
@@ -383,7 +383,8 @@ public class MinuteRangesSet implements Set
     private static final String formatDaysHoursMinutes(int days, int hours, int minutes)
     {
         return days + "d " + (hours < 10 ? "0" + hours : Integer.toString(hours)) + ":" + (minutes < 10
-                ? "0" + minutes : Integer.toString(minutes));
+                                                                                           ? "0" + minutes
+                                                                                           : Integer.toString(minutes));
     }
 
     private class SingleDayElementFormatter implements IntSpan.ElementFormatter
@@ -478,7 +479,7 @@ public class MinuteRangesSet implements Set
 
         public Date getDateForMinutes(int element)
         {
-            if (multipleDays)
+            if(multipleDays)
             {
                 int days = element / MINUTES_PER_DAY;
                 int hours = (element - (days * MINUTES_PER_DAY)) / MINUTES_PER_HOUR;

@@ -171,9 +171,9 @@ public class CalendarUtils
     public int getJulianDay(int month, int day, int year)
     {
         int jy = year;
-        if (year < 0) jy++;
+        if(year < 0) jy++;
         int jm = month;
-        if (month > 2)
+        if(month > 2)
             jm++;
         else
         {
@@ -181,12 +181,12 @@ public class CalendarUtils
             jm += 13;
         }
         int jul = (int) (Math.floor(365.25 * jy)
-                + Math.floor(30.6001 * jm) + day + 1720995.0);
+                         + Math.floor(30.6001 * jm) + day + 1720995.0);
 
         int IGREG = 15 + 31 * (10 + 12 * 1582);
         // Gregorian Calendar adopted Oct. 15, 1582
 
-        if (day + 31 * (month + 12 * year) >= IGREG)
+        if(day + 31 * (month + 12 * year) >= IGREG)
         // change over to Gregorian calendar
         {
             int ja = (int) (0.01 * jy);
@@ -205,26 +205,26 @@ public class CalendarUtils
         int year, month, day;
         int ja = julianDay;
 
-        if (julianDay >= JGREG)
+        if(julianDay >= JGREG)
         /* cross-over to Gregorian Calendar produces this
            correction
         */
         {
             int jalpha = (int) (((float) (julianDay - 1867216) - 0.25)
-                    / 36524.25);
+                                / 36524.25);
             ja += 1 + jalpha - (int) (0.25 * jalpha);
         }
         int jb = ja + 1524;
         int jc = (int) (6680.0 + ((float) (jb - 2439870) - 122.1)
-                / 365.25);
+                                 / 365.25);
         int jd = (int) (365 * jc + (0.25 * jc));
         int je = (int) ((jb - jd) / 30.6001);
         day = jb - jd - (int) (30.6001 * je);
         month = je - 1;
-        if (month > 12) month -= 12;
+        if(month > 12) month -= 12;
         year = jc - 4715;
-        if (month > 2) --year;
-        if (year <= 0) --year;
+        if(month > 2) --year;
+        if(year <= 0) --year;
 
         calendar.set(year, month - 1, day, hour, minute, second);
         return calendar.getTime();

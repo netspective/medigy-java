@@ -78,15 +78,15 @@ public class DateRangesSet
         final int begin = calendarUtils.getJulianDay(beginDate), end = calendarUtils.getJulianDay(endDate);
         final boolean haveYears = years != null, haveMonthsOfYear = monthsOfTheYear != null, haveDaysOfMonth = daysOfTheMonth != null, haveDaysOfWeek = daysOfTheWeek != null;
 
-        for (int julianDay = begin; julianDay <= end; julianDay++)
+        for(int julianDay = begin; julianDay <= end; julianDay++)
         {
             Date activeDate = calendarUtils.getDateFromJulianDay(julianDay);
             calendar.setTime(activeDate);
 
-            if ((!haveYears || years.isMember(calendar.get(Calendar.YEAR))) &&
-                    (!haveMonthsOfYear || monthsOfTheYear.isMember(calendar.get(Calendar.MONTH))) &&
-                    (!haveDaysOfMonth || daysOfTheMonth.isMember(calendar.get(Calendar.DAY_OF_MONTH))) &&
-                    (!haveDaysOfWeek || daysOfTheWeek.isMember(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.WEEK_OF_MONTH))))
+            if((!haveYears || years.isMember(calendar.get(Calendar.YEAR))) &&
+               (!haveMonthsOfYear || monthsOfTheYear.isMember(calendar.get(Calendar.MONTH))) &&
+               (!haveDaysOfMonth || daysOfTheMonth.isMember(calendar.get(Calendar.DAY_OF_MONTH))) &&
+               (!haveDaysOfWeek || daysOfTheWeek.isMember(calendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.WEEK_OF_MONTH))))
             {
                 add(julianDay);
             }

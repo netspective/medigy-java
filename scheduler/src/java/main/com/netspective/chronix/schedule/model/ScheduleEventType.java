@@ -43,8 +43,6 @@ public interface ScheduleEventType
 
     /**
      * Retrieve the schedule manager that is managing this template
-     *
-     * @return
      */
     public ScheduleManager getScheduleManager();
 
@@ -113,8 +111,6 @@ public interface ScheduleEventType
 
     /**
      * Retrieve the limit of number of events of this type for the day
-     *
-     * @return
      */
     public int getDayEventsLimit();
 

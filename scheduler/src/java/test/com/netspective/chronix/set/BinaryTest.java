@@ -65,7 +65,7 @@ public class BinaryTest extends TestCase
 
     public void testBinary()
     {
-        for (int i = 0; i < tests.length; i++)
+        for(int i = 0; i < tests.length; i++)
         {
             Test t = tests[i];
 
@@ -88,7 +88,7 @@ public class BinaryTest extends TestCase
         IntSpan B = new IntSpan(rlB);
         String actual = op.binary(A, B).runList();
 
-        if (!expected.trim().equals(actual))
+        if(!expected.trim().equals(actual))
         {
             Object[] args = {A, op, B, actual};
             String problem = java.text.MessageFormat.format("{0} {1} {2} -> {3}", args);

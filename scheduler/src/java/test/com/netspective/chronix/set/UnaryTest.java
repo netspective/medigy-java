@@ -54,7 +54,7 @@ public class UnaryTest extends TestCase
 
     public void testUnary()
     {
-        for (int i = 0; i < tests.length; i++)
+        for(int i = 0; i < tests.length; i++)
         {
             Test t = tests[i];
 
@@ -75,7 +75,7 @@ public class UnaryTest extends TestCase
         IntSpan set = new IntSpan(runList);
         String actual = IntSpan.complement(set).runList();
 
-        if (!expected.equals(actual))
+        if(!expected.equals(actual))
         {
             Object[] args = {expected, actual};
             String problem = java.text.MessageFormat.format("{0} -> {1}", args);

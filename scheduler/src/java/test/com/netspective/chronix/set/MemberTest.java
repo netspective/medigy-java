@@ -81,9 +81,9 @@ public class MemberTest extends TestCase
 
     public void testMember()
     {
-        for (int i = 0; i < sets.length; i++)
+        for(int i = 0; i < sets.length; i++)
         {
-            for (int j = 0; j < 7; j++)
+            for(int j = 0; j < 7; j++)
             {
                 int n = j + 1;
                 member(sets[i], n, isMember[i][j]);
@@ -102,7 +102,7 @@ public class MemberTest extends TestCase
     {
         IntSpan s = new IntSpan(runList);
 
-        if (s.isMember(n) ^ isMember == 1)
+        if(s.isMember(n) ^ isMember == 1)
         {
             Object[] args = {runList, new Integer(n)};
             String problem = java.text.MessageFormat.format("{1} element {0}", args);
@@ -118,7 +118,7 @@ public class MemberTest extends TestCase
         op.delta(s, n);
         String actual = s.runList();
 
-        if (!expected.trim().equals(actual))
+        if(!expected.trim().equals(actual))
         {
             Object[] args = {op, s, new Integer(n), actual};
             String problem = java.text.MessageFormat.format("{0} {1} {2} -> {3}", args);

@@ -96,9 +96,9 @@ public class DefaultScheduleTemplate implements ScheduleTemplate
         this.daysOfTheMonth = daysOfTheMonth;
         this.daysOfTheWeek = daysOfTheWeek;
         this.applicableDateRangesSet =
-                new DateRangesSet(scheduleManager.getCalendarUtils(),
-                        effectiveBeginDate, effectiveEndDate, years, monthsOfTheYear, daysOfTheMonth,
-                        daysOfTheWeek);
+        new DateRangesSet(scheduleManager.getCalendarUtils(),
+                          effectiveBeginDate, effectiveEndDate, years, monthsOfTheYear, daysOfTheMonth,
+                          daysOfTheWeek);
 
     }
 
@@ -231,9 +231,9 @@ public class DefaultScheduleTemplate implements ScheduleTemplate
         calendar.setTime(getEndTime());
         int endHours = calendar.get(Calendar.HOUR_OF_DAY), endMinutes = calendar.get(Calendar.MINUTE), endSeconds = calendar.get(Calendar.SECOND);
 
-        for (int day = beginDay; day <= endDay; day++)
+        for(int day = beginDay; day <= endDay; day++)
         {
-            if (!applicableDates.isMember(day))
+            if(!applicableDates.isMember(day))
                 continue;
 
             // the starting date of the slot is the active date plus the starting time of the template

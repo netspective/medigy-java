@@ -56,10 +56,10 @@ class IntSpan implements Cloneable, Set
         this();
         runList = stripWhitespace(runList);
 
-        if (runList.equals("-"))
+        if(runList.equals("-"))
             return;  // empty set;
 
-        if (runList.equals("(-)"))
+        if(runList.equals("(-)"))
         {
             negInf = true;
             posInf = true;
@@ -68,15 +68,15 @@ class IntSpan implements Cloneable, Set
 
         java.util.StringTokenizer st = new java.util.StringTokenizer(runList, ",");
 
-        while (st.hasMoreTokens())
+        while(st.hasMoreTokens())
         {
             String run = st.nextToken();
 
-            if (run.startsWith("(-"))
+            if(run.startsWith("(-"))
                 addOpenNeg(run);
-            else if (run.endsWith("-)"))
+            else if(run.endsWith("-)"))
                 addOpenPos(run);
-            else if (run.indexOf('-', 1) < 0)
+            else if(run.indexOf('-', 1) < 0)
                 addSingle(run);
             else
                 addDouble(run);
@@ -91,17 +91,17 @@ class IntSpan implements Cloneable, Set
         System.arraycopy(elements, 0, element, 0, elements.length);
         java.util.Arrays.sort(element);
 
-        for (int i = 0; i < element.length; i++)
+        for(int i = 0; i < element.length; i++)
         {
             int top = edges.size() - 1;
             int topEdge = 0;
-            if (top >= 0)
+            if(top >= 0)
                 topEdge = edges.getI(top);
 
-            if (top >= 0 && topEdge == element[i])
+            if(top >= 0 && topEdge == element[i])
                 continue;    // skip duplicates
 
-            if (top >= 0 && topEdge == element[i] - 1)
+            if(top >= 0 && topEdge == element[i] - 1)
             {
                 edges.set(top, element[i]);
             }
@@ -139,7 +139,7 @@ class IntSpan implements Cloneable, Set
 
     public boolean addAll(Collection c)
     {
-        for (Iterator i = c.iterator(); i.hasNext();)
+        for(Iterator i = c.iterator(); i.hasNext();)
             add(i.next());
 
         return true;
@@ -147,9 +147,9 @@ class IntSpan implements Cloneable, Set
 
     public boolean containsAll(Collection c)
     {
-        for (Iterator i = c.iterator(); i.hasNext();)
+        for(Iterator i = c.iterator(); i.hasNext();)
         {
-            if (!contains(i.next())) ;
+            if(!contains(i.next())) ;
             return false;
         }
 
@@ -158,7 +158,7 @@ class IntSpan implements Cloneable, Set
 
     public boolean removeAll(Collection c)
     {
-        for (Iterator i = c.iterator(); i.hasNext();)
+        for(Iterator i = c.iterator(); i.hasNext();)
             remove(i.next());
 
         return true;
@@ -168,14 +168,14 @@ class IntSpan implements Cloneable, Set
     {
         IntSpan removeElems = new IntSpan();
 
-        for (java.util.Iterator i = iterator(); i.hasNext();)
+        for(java.util.Iterator i = iterator(); i.hasNext();)
         {
             Object o = i.next();
-            if (!c.contains(o)) ;
+            if(!c.contains(o)) ;
             removeElems.add(o);
         }
 
-        for (java.util.Iterator i = removeElems.first(); i.hasNext();)
+        for(java.util.Iterator i = removeElems.first(); i.hasNext();)
             remove(i.next());
 
         return true;
@@ -191,7 +191,7 @@ class IntSpan implements Cloneable, Set
         StringBuffer sb = new StringBuffer();
         java.util.StringTokenizer st = new java.util.StringTokenizer(s);
 
-        while (st.hasMoreTokens())
+        while(st.hasMoreTokens())
             sb.append(st.nextToken());
 
         return sb.toString();
@@ -206,12 +206,12 @@ class IntSpan implements Cloneable, Set
     private void addOpenPos(String run)
     {
         int dash = run.lastIndexOf('-');
-        if (dash > -1)
+        if(dash > -1)
             run = run.substring(0, dash);
         int lower = Integer.parseInt(run);
 
         boolean lGap = edges.size() == 0 || lower - 1 - edges.getI(-1) > 0;
-        if (lGap)
+        if(lGap)
             edges.add(lower - 1);
         else
             edges.pop();
@@ -241,7 +241,7 @@ class IntSpan implements Cloneable, Set
     public void addClosed(int lower, int upper)
     {
         boolean lGap = edges.size() == 0 || lower - 1 - edges.getI(-1) > 0;
-        if (lGap)
+        if(lGap)
             edges.add(lower - 1);
         else
             edges.pop();
@@ -267,38 +267,38 @@ class IntSpan implements Cloneable, Set
 
     public String runList()
     {
-        if (isEmpty()) return emptyString;
-        if (isUniversal()) return "(-)";
+        if(isEmpty()) return emptyString;
+        if(isUniversal()) return "(-)";
 
         StringBuffer sb = new StringBuffer();
         int i = 0;
 
-        if (negInf)
+        if(negInf)
         {
             int upper = edges.getI(0);
             sb.append("(-" + Integer.toString(upper));
             i = 1;
         }
 
-        while (i < edges.size() - 1)
+        while(i < edges.size() - 1)
         {
-            if (i > 0) sb.append(",");
+            if(i > 0) sb.append(",");
 
             int lower = edges.getI(i);
             int upper = edges.getI(i + 1);
 
-            if (lower + 1 == upper)
+            if(lower + 1 == upper)
                 sb.append(Integer.toString(upper));
             else
                 sb.append(Integer.toString(lower + 1) + "-" +
-                        Integer.toString(upper));
+                          Integer.toString(upper));
 
             i += 2;
         }
 
-        if (posInf)
+        if(posInf)
         {
-            if (i > 0)
+            if(i > 0)
                 sb.append(",");
             int lower = edges.getI(i);
             sb.append(Integer.toString(lower + 1) + "-)");
@@ -316,38 +316,38 @@ class IntSpan implements Cloneable, Set
 
     public String getFormattedRunList(ElementFormatter formatter)
     {
-        if (isEmpty()) return emptyString;
-        if (isUniversal()) return "(-)";
+        if(isEmpty()) return emptyString;
+        if(isUniversal()) return "(-)";
 
         StringBuffer sb = new StringBuffer();
         int i = 0;
 
-        if (negInf)
+        if(negInf)
         {
             int upper = edges.getI(0);
             sb.append("(-" + formatter.getFormattedElement(upper));
             i = 1;
         }
 
-        while (i < edges.size() - 1)
+        while(i < edges.size() - 1)
         {
-            if (i > 0) sb.append(formatter.getElementDelimiter());
+            if(i > 0) sb.append(formatter.getElementDelimiter());
 
             int lower = edges.getI(i);
             int upper = edges.getI(i + 1);
 
-            if (lower + 1 == upper)
+            if(lower + 1 == upper)
                 sb.append(formatter.getFormattedElement(upper));
             else
                 sb.append(formatter.getFormattedElement(lower + 1) + "-" +
-                        formatter.getFormattedElement(upper));
+                          formatter.getFormattedElement(upper));
 
             i += 2;
         }
 
-        if (posInf)
+        if(posInf)
         {
-            if (i > 0)
+            if(i > 0)
                 sb.append(",");
             int lower = edges.getI(i);
             sb.append(formatter.getFormattedElement(lower + 1) + "-)");
@@ -358,18 +358,18 @@ class IntSpan implements Cloneable, Set
 
     public int[] getElements()
     {
-        if (negInf || posInf)
+        if(negInf || posInf)
             return null;
 
         int[] list = new int[size()];
         int l = 0;
 
-        for (int i = 0; i < edges.size(); i += 2)
+        for(int i = 0; i < edges.size(); i += 2)
         {
             int lower = edges.getI(i);
             int upper = edges.getI(i + 1);
 
-            for (int n = lower + 1; n <= upper; n++)
+            for(int n = lower + 1; n <= upper; n++)
                 list[l++] = n;
         }
 
@@ -383,17 +383,17 @@ class IntSpan implements Cloneable, Set
 
     public Object[] toArray(Object list[])
     {
-        if (negInf || posInf)
+        if(negInf || posInf)
             return null;
 
         int l = 0;
 
-        for (int i = 0; i < edges.size(); i += 2)
+        for(int i = 0; i < edges.size(); i += 2)
         {
             int lower = edges.getI(i);
             int upper = edges.getI(i + 1);
 
-            for (int n = lower + 1; n <= upper; n++)
+            for(int n = lower + 1; n <= upper; n++)
                 list[l++] = new Integer(n);
         }
 
@@ -408,11 +408,11 @@ class IntSpan implements Cloneable, Set
 
     public int size()
     {
-        if (negInf || posInf) return -1;
+        if(negInf || posInf) return -1;
 
         int cardinality = 0;
 
-        for (int i = 0; i < edges.size() - 1; i += 2)
+        for(int i = 0; i < edges.size() - 1; i += 2)
         {
             int lower = edges.getI(i);
             int upper = edges.getI(i + 1);
@@ -456,17 +456,17 @@ class IntSpan implements Cloneable, Set
     {
         boolean inSet = negInf;
 
-        for (int i = 0; i < edges.size(); i++)
+        for(int i = 0; i < edges.size(); i++)
         {
-            if (inSet)
+            if(inSet)
             {
-                if (n <= edges.getI(i))
+                if(n <= edges.getI(i))
                     return true;
                 inSet = false;
             }
             else
             {
-                if (n <= edges.getI(i))
+                if(n <= edges.getI(i))
                     return false;
                 inSet = true;
             }
@@ -480,38 +480,38 @@ class IntSpan implements Cloneable, Set
         boolean inSet = negInf;
 
         int i;
-        for (i = 0; i < edges.size(); i++)
+        for(i = 0; i < edges.size(); i++)
         {
-            if (inSet)
+            if(inSet)
             {
-                if (n <= edges.getI(i))
+                if(n <= edges.getI(i))
                     return;
                 inSet = false;
             }
             else
             {
-                if (n <= edges.getI(i))
+                if(n <= edges.getI(i))
                     break;
                 inSet = true;
             }
         }
 
-        if (inSet)
+        if(inSet)
             return;
 
         boolean lGap = i == 0 || n - 1 - edges.getI(i - 1) > 0;
         boolean rGap = i == edges.size() || edges.getI(i) - n > 0;
 
-        if (lGap && rGap)
+        if(lGap && rGap)
         {
             edges.add(i, n);
             edges.add(i, n - 1);
         }
-        else if (!lGap && rGap)
+        else if(!lGap && rGap)
         {
             edges.inc(i - 1);
         }
-        else if (lGap && !rGap)
+        else if(lGap && !rGap)
         {
             edges.dec(i);
         }
@@ -527,38 +527,38 @@ class IntSpan implements Cloneable, Set
         boolean inSet = negInf;
 
         int i;
-        for (i = 0; i < edges.size(); i++)
+        for(i = 0; i < edges.size(); i++)
         {
-            if (inSet)
+            if(inSet)
             {
-                if (n <= edges.getI(i))
+                if(n <= edges.getI(i))
                     break;
                 inSet = false;
             }
             else
             {
-                if (n <= edges.getI(i))
+                if(n <= edges.getI(i))
                     return;
                 inSet = true;
             }
         }
 
-        if (!inSet)
+        if(!inSet)
             return;
 
         boolean lGap = i == 0 || n - 1 - edges.getI(i - 1) > 0;
         boolean rGap = i == edges.size() || edges.getI(i) - n > 0;
 
-        if (lGap && rGap)
+        if(lGap && rGap)
         {
             edges.add(i, n);
             edges.add(i, n - 1);
         }
-        else if (!lGap && rGap)
+        else if(!lGap && rGap)
         {
             edges.inc(i - 1);
         }
-        else if (lGap && !rGap)
+        else if(lGap && !rGap)
         {
             edges.dec(i);
         }
@@ -598,14 +598,14 @@ class IntSpan implements Cloneable, Set
 
     public IntSpan grep(Testable predicate)
     {
-        if (isInfinite())
+        if(isInfinite())
             return null;
 
         IntSpan s = new IntSpan();
 
-        for (int i = 0; i < edges.size(); i += 2)
-            for (int n = edges.getI(i) + 1; n <= edges.getI(i + 1); n++)
-                if (predicate.test(n))
+        for(int i = 0; i < edges.size(); i += 2)
+            for(int n = edges.getI(i) + 1; n <= edges.getI(i + 1); n++)
+                if(predicate.test(n))
                     s.addClosed(n, n);
 
         return s;
@@ -618,18 +618,18 @@ class IntSpan implements Cloneable, Set
 
     public IntSpan map(Mappable trans)
     {
-        if (isInfinite())
+        if(isInfinite())
             return null;
 
         IntSpan s = new IntSpan();
 
-        for (int i = 0; i < edges.size(); i += 2)
+        for(int i = 0; i < edges.size(); i += 2)
         {
-            for (int n = edges.getI(i) + 1; n <= edges.getI(i + 1); n++)
+            for(int n = edges.getI(i) + 1; n <= edges.getI(i + 1); n++)
             {
                 int[] elements = trans.map(n);
 
-                for (int j = 0; j < elements.length; j++)
+                for(int j = 0; j < elements.length; j++)
                     s.add(elements[j]);
             }
         }
@@ -643,7 +643,7 @@ class IntSpan implements Cloneable, Set
 
     public IntSpanIterator first()
     {
-        if (negInf)
+        if(negInf)
             throw new java.util.NoSuchElementException("Set.IntSpan.first");
 
         return constructIterator(isEmpty(), getMinInteger());
@@ -651,7 +651,7 @@ class IntSpan implements Cloneable, Set
 
     public IntSpanIterator last()
     {
-        if (posInf)
+        if(posInf)
             throw new java.util.NoSuchElementException("Set.IntSpan.last");
 
         return constructIterator(isEmpty(), getMaxInteger());
@@ -659,7 +659,7 @@ class IntSpan implements Cloneable, Set
 
     public IntSpanIterator start(int n)
     {
-        if (!isMember(n))
+        if(!isMember(n))
             throw new java.util.NoSuchElementException("Set.IntSpan.start");
 
         return constructIterator(false, new Integer(n));
@@ -677,23 +677,23 @@ class IntSpan implements Cloneable, Set
         int iA = 0;
         int iB = 0;
 
-        while (iA < a.edges.size() && iB < b.edges.size())
+        while(iA < a.edges.size() && iB < b.edges.size())
         {
             int xA = a.edges.getI(iA);
             int xB = b.edges.getI(iB);
 
-            if (xA < xB)
+            if(xA < xB)
             {
                 iA++;
                 inA = !inA;
-                if (!inB)
+                if(!inB)
                     s.edges.add(xA);
             }
-            else if (xB < xA)
+            else if(xB < xA)
             {
                 iB++;
                 inB = !inB;
-                if (!inA)
+                if(!inA)
                     s.edges.add(xB);
             }
             else
@@ -702,17 +702,17 @@ class IntSpan implements Cloneable, Set
                 iB++;
                 inA = !inA;
                 inB = !inB;
-                if (inA == inB)
+                if(inA == inB)
                     s.edges.add(xA);
             }
         }
 
-        if (iA < a.edges.size() && !inB)
-            for (int i = iA; i < a.edges.size(); i++)
+        if(iA < a.edges.size() && !inB)
+            for(int i = iA; i < a.edges.size(); i++)
                 s.edges.add(a.edges.getI(i));
 
-        if (iB < b.edges.size() && !inA)
-            for (int i = iB; i < b.edges.size(); i++)
+        if(iB < b.edges.size() && !inA)
+            for(int i = iB; i < b.edges.size(); i++)
                 s.edges.add(b.edges.getI(i));
 
         s.posInf = a.posInf || b.posInf;
@@ -754,17 +754,17 @@ class IntSpan implements Cloneable, Set
         int iA = 0;
         int iB = 0;
 
-        while (iA < a.edges.size() && iB < b.edges.size())
+        while(iA < a.edges.size() && iB < b.edges.size())
         {
             int xA = a.edges.getI(iA);
             int xB = b.edges.getI(iB);
 
-            if (xA < xB)
+            if(xA < xB)
             {
                 iA++;
                 s.edges.add(xA);
             }
-            else if (xB < xA)
+            else if(xB < xA)
             {
                 iB++;
                 s.edges.add(xB);
@@ -776,12 +776,12 @@ class IntSpan implements Cloneable, Set
             }
         }
 
-        if (iA < a.edges.size())
-            for (int i = iA; i < a.edges.size(); i++)
+        if(iA < a.edges.size())
+            for(int i = iA; i < a.edges.size(); i++)
                 s.edges.add(a.edges.getI(i));
 
-        if (iB < b.edges.size())
-            for (int i = iB; i < b.edges.size(); i++)
+        if(iB < b.edges.size())
+            for(int i = iB; i < b.edges.size(); i++)
                 s.edges.add(b.edges.getI(i));
 
         s.posInf = a.posInf ^ b.posInf;
@@ -808,14 +808,14 @@ class IntSpan implements Cloneable, Set
 
     public static boolean equal(IntSpan a, IntSpan b)
     {
-        if (a.negInf ^ b.negInf) return false;
-        if (a.posInf ^ b.posInf) return false;
+        if(a.negInf ^ b.negInf) return false;
+        if(a.posInf ^ b.posInf) return false;
 
-        if (a.edges.size() != b.edges.size())
+        if(a.edges.size() != b.edges.size())
             return false;
 
-        for (int i = 0; i < a.edges.size(); i++)
-            if (a.edges.getI(i) != b.edges.getI(i))
+        for(int i = 0; i < a.edges.size(); i++)
+            if(a.edges.getI(i) != b.edges.getI(i))
                 return false;
 
         return true;
@@ -844,9 +844,9 @@ class IntSpan implements Cloneable, Set
 
             boolean inSet = negInf;
             int i;
-            for (i = 0; i < edges.size(); i++)
+            for(i = 0; i < edges.size(); i++)
             {
-                if (inSet && n <= edges.getI(i))
+                if(inSet && n <= edges.getI(i))
                     break;
                 inSet = !inSet;
             }
@@ -867,11 +867,11 @@ class IntSpan implements Cloneable, Set
 
         public Object next()
         {
-            if (!hasNext())
+            if(!hasNext())
                 throw new java.util.NoSuchElementException("Set.IntSpan.IteratorTest.next");
 
             int nEdges = edges.size();
-            if (iHi < nEdges && n <= edges.getI(iHi) || nEdges <= iHi)
+            if(iHi < nEdges && n <= edges.getI(iHi) || nEdges <= iHi)
             {
                 Integer i = new Integer(n);
                 nRemove = n;
@@ -889,11 +889,11 @@ class IntSpan implements Cloneable, Set
 
         public Object previous()
         {
-            if (!hasPrevious())
+            if(!hasPrevious())
                 throw new java.util.NoSuchElementException("Set.IntSpan.IteratorTest.previous");
 
             int nEdges = edges.size();
-            if (iLo < 0 || 0 <= iLo && iLo < nEdges && edges.getI(iLo) < n)
+            if(iLo < 0 || 0 <= iLo && iLo < nEdges && edges.getI(iLo) < n)
             {
                 Integer i = new Integer(n);
                 nRemove = n;

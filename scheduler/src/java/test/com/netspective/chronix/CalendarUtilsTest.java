@@ -51,7 +51,7 @@ public class CalendarUtilsTest extends ScheduleTestCase
 
         Random random = new Random();
 
-        for (int i = 0; i < 100; i++)
+        for(int i = 0; i < 100; i++)
         {
             int randomYear = 1975 + random.nextInt(100);
             int randomMonth = random.nextInt(12);        // month index starts from 0
