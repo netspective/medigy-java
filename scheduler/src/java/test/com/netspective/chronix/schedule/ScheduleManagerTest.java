@@ -39,53 +39,67 @@
  */
 
 /**
- * $Id: ScheduleManagerTest.java,v 1.1 2004-04-10 18:04:53 shahid.shah Exp $
+ * $Id: ScheduleManagerTest.java,v 1.2 2004-04-14 17:25:56 shahid.shah Exp $
  */
 
 package com.netspective.chronix.schedule;
 
-import java.util.Date;
 import java.util.Calendar;
+import java.util.Date;
 
+import com.netspective.chronix.CalendarUtils;
+import com.netspective.chronix.schedule.mock.MockScheduleElementProvider;
+import com.netspective.chronix.schedule.model.ScheduleEvent;
 import com.netspective.chronix.schedule.model.ScheduleEvents;
 import com.netspective.chronix.schedule.model.ScheduleTemplateSlots;
 import com.netspective.chronix.schedule.model.ScheduleTemplates;
+import com.netspective.chronix.set.MinuteRangesSet;
 
 public class ScheduleManagerTest extends ScheduleTestCase
 {
     public void testScheduleEvents()
     {
+        CalendarUtils calendarUtils = getCalendarUtils();
         Date beginDate = calendarUtils.createDate(Calendar.JANUARY, 1, 2004);
         Date endDate = calendarUtils.createDate(Calendar.JANUARY, 1, 2004);
 
         int beginDay = calendarUtils.getJulianDay(beginDate);
         int endDay = calendarUtils.getJulianDay(endDate);
 
-        ScheduleEvents scheduleEvents = eventProvider.getScheduledEvents(scheduleManager, beginDate, endDate);
-        System.out.println(scheduleEvents);
-/*
-        assertEquals()
+        ScheduleEvents scheduleEvents = getEventProvider().getScheduledEvents(getScheduleManager(), beginDate, endDate);
+        ScheduleEvent[] scheduleEventsList = scheduleEvents.getScheduleEvents();
+        assertEquals(MockScheduleElementProvider.MOCK_EVENT_HOURS.length, scheduleEventsList.length);
 
         for(int day = beginDay; day <= endDay; day++)
         {
-            // now try to reverse the procedure
-            Date julianDate = calendarUtils.getDateFromJulianDay(day, calendar);
+            Date julianDate = calendarUtils.getDateFromJulianDay(day);
 
-            for(int i = 0; i < MockScheduleEventProvider.MOCK_EVENT_HOURS.length; i++)
+            for(int i = 0; i < MockScheduleElementProvider.MOCK_EVENT_HOURS.length; i++)
             {
-                int[] hm = MOCK_EVENT_HOURS[i];
-                eventsList.add(createMockEvent(scheduleManager, julianDate,  hm[0],  hm[1],  hm[2], hm[3]));
+                ScheduleEvent mockEvent = scheduleEventsList[i];
+
+                int[] hm = MockScheduleElementProvider.MOCK_EVENT_HOURS[i];
+
+                assertEquals(calendarUtils.createDate(julianDate, hm[0], hm[1]), mockEvent.getBeginDate());
+                assertEquals(calendarUtils.createDate(julianDate, hm[2], hm[3]), mockEvent.getEndDate());
+
+                MinuteRangesSet minuteRangesSet = mockEvent.getMinutesSet();
+                assertEquals(0, minuteRangesSet.getBeginDateOffsetDays());
+                assertEquals(0, minuteRangesSet.getBeginDateOffsetMinutes());
+                assertTrue(minuteRangesSet.isMember(hm[0], hm[1]));
+                assertTrue(minuteRangesSet.isMember(hm[2], hm[3]));
             }
         }
-*/
     }
 
     public void testScheduleTemplateSlots()
     {
+        CalendarUtils calendarUtils = getCalendarUtils();
+
         Date effBeginDate = calendarUtils.createDate(Calendar.JANUARY, 1, 2004);
         Date effEndDate = calendarUtils.createDate(Calendar.DECEMBER, 31, 2004);
 
-        ScheduleTemplates scheduleTemplates = templateProvider.getScheduleTemplates(scheduleManager, effBeginDate, effEndDate, null);
+        ScheduleTemplates scheduleTemplates = getTemplateProvider().getScheduleTemplates(getScheduleManager(), effBeginDate, effEndDate, null);
         System.out.println(scheduleTemplates);
 
         Date slotsBeginDate = calendarUtils.createDate(Calendar.JANUARY, 1, 2004);

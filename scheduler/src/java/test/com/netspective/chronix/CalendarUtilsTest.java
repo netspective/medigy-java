@@ -39,7 +39,7 @@
  */
 
 /**
- * $Id: CalendarUtilsTest.java,v 1.1 2004-04-10 18:04:52 shahid.shah Exp $
+ * $Id: CalendarUtilsTest.java,v 1.2 2004-04-14 17:25:56 shahid.shah Exp $
  */
 
 package com.netspective.chronix;
@@ -58,6 +58,9 @@ public class CalendarUtilsTest extends ScheduleTestCase
      */
     public void testJulianRoutines()
     {
+        Calendar calendar = getCalendar();
+        CalendarUtils calendarUtils = getCalendarUtils();
+        
         Random random = new Random();
 
         for(int i = 0; i < 100; i++)

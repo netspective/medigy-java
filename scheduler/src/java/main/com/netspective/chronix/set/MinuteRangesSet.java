@@ -39,7 +39,7 @@
  */
 
 /**
- * $Id: MinuteRangesSet.java,v 1.1 2004-04-10 18:04:52 shahid.shah Exp $
+ * $Id: MinuteRangesSet.java,v 1.2 2004-04-14 17:25:56 shahid.shah Exp $
  */
 
 package com.netspective.chronix.set;
@@ -50,7 +50,6 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.Set;
 
-import com.netspective.chronix.CalendarUtils;
 import com.netspective.chronix.CalendarUtils;
 import com.netspective.chronix.set.IntSpan.ElementFormatter;
 import com.netspective.chronix.set.IntSpan.IntSpanIterator;
@@ -255,14 +254,29 @@ public class MinuteRangesSet implements Set
         return minutesSet.isUniversal();
     }
 
+    public boolean isMember(int hour, int minute)
+    {
+        return minutesSet.isMember((hour * MINUTES_PER_HOUR) + minute);
+    }
+
     public boolean isMember(int n)
     {
         return minutesSet.isMember(n);
     }
 
+    public void add(int hour, int minute)
+    {
+        minutesSet.add((hour * MINUTES_PER_HOUR) + minute);
+    }
+
     public void add(int n)
     {
         minutesSet.add(n);
+    }
+
+    public void remove(int hour, int minute)
+    {
+        minutesSet.remove((hour * MINUTES_PER_HOUR) + minute);
     }
 
     public void remove(int n)

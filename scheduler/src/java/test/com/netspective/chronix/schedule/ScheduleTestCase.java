@@ -39,32 +39,32 @@
  */
 
 /**
- * $Id: ScheduleTestCase.java,v 1.1 2004-04-10 18:04:53 shahid.shah Exp $
+ * $Id: ScheduleTestCase.java,v 1.2 2004-04-14 17:25:56 shahid.shah Exp $
  */
 
 package com.netspective.chronix.schedule;
 
 import java.util.Calendar;
 
+import com.netspective.chronix.CalendarUtils;
 import com.netspective.chronix.schedule.impl.DefaultScheduleManager;
 import com.netspective.chronix.schedule.mock.MockScheduleElementProvider;
 import com.netspective.chronix.schedule.model.ScheduleEventProvider;
 import com.netspective.chronix.schedule.model.ScheduleManager;
 import com.netspective.chronix.schedule.model.ScheduleParticipantProvider;
 import com.netspective.chronix.schedule.model.ScheduleTemplateProvider;
-import com.netspective.chronix.CalendarUtils;
 
 import junit.framework.TestCase;
 
 public class ScheduleTestCase extends TestCase
 {
-    protected Calendar calendar;
-    protected CalendarUtils calendarUtils;
-    protected MockScheduleElementProvider mockScheduleItemProvider;
-    protected ScheduleParticipantProvider participantProvider;
-    protected ScheduleEventProvider eventProvider;
-    protected ScheduleTemplateProvider templateProvider;
-    protected ScheduleManager scheduleManager;
+    private Calendar calendar;
+    private CalendarUtils calendarUtils;
+    private MockScheduleElementProvider mockScheduleItemProvider;
+    private ScheduleParticipantProvider participantProvider;
+    private ScheduleEventProvider eventProvider;
+    private ScheduleTemplateProvider templateProvider;
+    private ScheduleManager scheduleManager;
 
     protected void setUp() throws Exception
     {
@@ -77,5 +77,40 @@ public class ScheduleTestCase extends TestCase
         templateProvider = mockScheduleItemProvider;
 
         scheduleManager = new DefaultScheduleManager(calendarUtils, participantProvider, eventProvider, templateProvider);
+    }
+
+    protected Calendar getCalendar()
+    {
+        return calendar;
+    }
+
+    protected CalendarUtils getCalendarUtils()
+    {
+        return calendarUtils;
+    }
+
+    protected ScheduleEventProvider getEventProvider()
+    {
+        return eventProvider;
+    }
+
+    protected MockScheduleElementProvider getMockScheduleItemProvider()
+    {
+        return mockScheduleItemProvider;
+    }
+
+    protected ScheduleParticipantProvider getParticipantProvider()
+    {
+        return participantProvider;
+    }
+
+    protected ScheduleManager getScheduleManager()
+    {
+        return scheduleManager;
+    }
+
+    protected ScheduleTemplateProvider getTemplateProvider()
+    {
+        return templateProvider;
     }
 }
