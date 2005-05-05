@@ -15,6 +15,7 @@
     <orderEntry type="module" module-name="persistence" exported="" />
     <orderEntry type="library" name="Persistence Dependencies (Main)" level="project" />
     <orderEntry type="library" name="Persistence Dependencies (Test)" level="project" />
+    <orderEntry type="library" name="Common Dependencies (Test)" level="project" />
     <orderEntryProperties />
   </component>
 </module>

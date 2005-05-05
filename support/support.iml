@@ -8,8 +8,6 @@
     <content url="file://$MODULE_DIR$" />
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Persistence Dependencies (Main)" level="project" />
-    <orderEntry type="library" name="Persistence Dependencies (Test)" level="project" />
     <orderEntry type="module" module-name="persistence" />
     <orderEntryProperties />
   </component>
