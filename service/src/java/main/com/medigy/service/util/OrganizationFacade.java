@@ -1,8 +1,8 @@
 package com.medigy.service.util;
 
-import java.util.List;
+import com.medigy.persist.model.org.Organization;
 
-import com.medigy.model.org.Organization;
+import java.util.List;
 
 public interface OrganizationFacade
 {

@@ -38,13 +38,13 @@
  */
 package com.medigy.service.person;
 
-import com.medigy.dto.person.RegisteredProvider;
-import com.medigy.dto.person.RegisterHealthCareProviderParameters;
-import com.medigy.model.person.Person;
-import com.medigy.util.HibernateUtil;
+import com.medigy.persist.model.person.Person;
+import com.medigy.persist.reference.custom.person.PersonRoleType;
+import com.medigy.persist.util.HibernateUtil;
 import com.medigy.service.ServiceLocator;
+import com.medigy.service.dto.person.RegisterHealthCareProviderParameters;
+import com.medigy.service.dto.person.RegisteredProvider;
 import com.medigy.service.util.PersonFacade;
-import com.medigy.reference.custom.person.PersonRoleType;
 
 public class RegisterHealthCareProviderServiceImpl implements RegisterHealthCareProviderService
 {

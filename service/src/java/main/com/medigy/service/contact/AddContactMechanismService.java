@@ -38,12 +38,12 @@
  */
 package com.medigy.service.contact;
 
-import com.medigy.dto.party.AddPostalAddressParameters;
-import com.medigy.dto.party.AddEmailParameters;
-import com.medigy.dto.party.AddPhoneParameters;
-import com.medigy.dto.party.NewPostalAddress;
 import com.medigy.service.Service;
 import com.medigy.service.ServiceInvocationException;
+import com.medigy.service.dto.party.AddEmailParameters;
+import com.medigy.service.dto.party.AddPhoneParameters;
+import com.medigy.service.dto.party.AddPostalAddressParameters;
+import com.medigy.service.dto.party.NewPostalAddress;
 
 public interface AddContactMechanismService extends Service
 {

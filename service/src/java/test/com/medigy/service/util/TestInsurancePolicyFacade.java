@@ -38,12 +38,12 @@
  */
 package com.medigy.service.util;
 
-import com.medigy.model.TestCase;
-import com.medigy.model.person.Person;
-import com.medigy.model.insurance.InsurancePolicy;
-import com.medigy.model.org.Organization;
-import com.medigy.util.HibernateUtil;
-import com.medigy.reference.custom.insurance.InsurancePolicyType;
+import com.medigy.persist.model.insurance.InsurancePolicy;
+import com.medigy.persist.model.org.Organization;
+import com.medigy.persist.model.person.Person;
+import com.medigy.persist.reference.custom.insurance.InsurancePolicyType;
+import com.medigy.persist.util.HibernateUtil;
+import com.medigy.service.TestCase;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

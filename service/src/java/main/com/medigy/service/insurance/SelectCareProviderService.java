@@ -38,10 +38,10 @@
  */
 package com.medigy.service.insurance;
 
-import com.medigy.dto.insurance.CareProviderSelectionData;
-import com.medigy.dto.insurance.SelectCareProviderParameters;
+import com.medigy.persist.model.org.Organization;
 import com.medigy.service.Service;
-import com.medigy.model.org.Organization;
+import com.medigy.service.dto.insurance.CareProviderSelectionData;
+import com.medigy.service.dto.insurance.SelectCareProviderParameters;
 
 import java.util.List;
 

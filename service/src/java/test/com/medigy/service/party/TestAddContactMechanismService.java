@@ -38,19 +38,19 @@
  */
 package com.medigy.service.party;
 
-import com.medigy.dto.party.AddPostalAddressParameters;
-import com.medigy.dto.party.NewPostalAddress;
-import com.medigy.model.DbUnitTestCase;
-import com.medigy.model.party.Party;
-import com.medigy.model.party.PartyContactMechanism;
-import com.medigy.model.party.PartyContactMechanismPurpose;
-import com.medigy.model.party.PostalAddress;
-import com.medigy.model.person.Person;
-import com.medigy.reference.custom.party.ContactMechanismPurposeType;
-import com.medigy.reference.type.ContactMechanismType;
+import com.medigy.persist.model.party.Party;
+import com.medigy.persist.model.party.PartyContactMechanism;
+import com.medigy.persist.model.party.PartyContactMechanismPurpose;
+import com.medigy.persist.model.party.PostalAddress;
+import com.medigy.persist.model.person.Person;
+import com.medigy.persist.reference.custom.party.ContactMechanismPurposeType;
+import com.medigy.persist.reference.type.ContactMechanismType;
+import com.medigy.persist.util.HibernateUtil;
+import com.medigy.service.DbUnitTestCase;
 import com.medigy.service.ServiceLocator;
 import com.medigy.service.contact.AddContactMechanismService;
-import com.medigy.util.HibernateUtil;
+import com.medigy.service.dto.party.AddPostalAddressParameters;
+import com.medigy.service.dto.party.NewPostalAddress;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;

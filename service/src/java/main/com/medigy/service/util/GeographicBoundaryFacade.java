@@ -38,8 +38,8 @@
  */
 package com.medigy.service.util;
 
-import com.medigy.model.contact.GeographicBoundary;
-import com.medigy.reference.custom.GeographicBoundaryType;
+import com.medigy.persist.model.contact.GeographicBoundary;
+import com.medigy.persist.reference.custom.GeographicBoundaryType;
 
 import java.util.List;
 

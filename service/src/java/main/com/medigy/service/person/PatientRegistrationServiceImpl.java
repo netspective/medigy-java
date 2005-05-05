@@ -38,30 +38,29 @@
  */
 package com.medigy.service.person;
 
-import com.medigy.dto.party.AddPhoneParameters;
-import com.medigy.dto.party.AddPostalAddressParameters;
-import com.medigy.dto.person.RegisterPatientParameters;
-import com.medigy.dto.person.RegisteredPatient;
-import com.medigy.model.insurance.InsurancePolicy;
-import com.medigy.model.org.Organization;
-import com.medigy.model.party.PartyRole;
-import com.medigy.model.person.Person;
-import com.medigy.reference.custom.insurance.InsurancePolicyType;
-import com.medigy.reference.custom.party.ContactMechanismPurposeType;
-import com.medigy.reference.custom.party.OrganizationRoleType;
-import com.medigy.reference.custom.party.PartyRelationshipType;
-import com.medigy.reference.custom.person.PatientResponsiblePartyRoleType;
-import com.medigy.reference.custom.person.PersonRoleType;
-import com.medigy.reference.type.GenderType;
-import com.medigy.reference.type.MaritalStatusType;
+import com.medigy.persist.model.insurance.InsurancePolicy;
+import com.medigy.persist.model.org.Organization;
+import com.medigy.persist.model.party.PartyRole;
+import com.medigy.persist.model.person.Person;
+import com.medigy.persist.reference.custom.insurance.InsurancePolicyType;
+import com.medigy.persist.reference.custom.party.ContactMechanismPurposeType;
+import com.medigy.persist.reference.custom.party.OrganizationRoleType;
+import com.medigy.persist.reference.custom.party.PartyRelationshipType;
+import com.medigy.persist.reference.custom.person.PatientResponsiblePartyRoleType;
+import com.medigy.persist.reference.custom.person.PersonRoleType;
+import com.medigy.persist.reference.type.GenderType;
+import com.medigy.persist.reference.type.MaritalStatusType;
+import com.medigy.persist.util.HibernateUtil;
 import com.medigy.service.ServiceLocator;
 import com.medigy.service.common.ReferenceEntityLookupService;
 import com.medigy.service.common.UnknownReferenceTypeException;
 import com.medigy.service.contact.AddContactMechanismService;
+import com.medigy.service.dto.party.AddPhoneParameters;
+import com.medigy.service.dto.party.AddPostalAddressParameters;
+import com.medigy.service.dto.person.RegisterPatientParameters;
+import com.medigy.service.dto.person.RegisteredPatient;
 import com.medigy.service.util.PartyRelationshipFacade;
 import com.medigy.service.util.PersonFacade;
-import com.medigy.util.HibernateUtil;
-import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
@@ -344,7 +343,7 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
         }
         catch (Exception e)
         {
-            log.error(ExceptionUtils.getStackTrace(e));
+            log.error(e);
         }
         return null;
     }

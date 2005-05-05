@@ -39,8 +39,8 @@
 package com.medigy.service.person;
 
 import com.medigy.service.Service;
-import com.medigy.dto.person.RegisterHealthCareProviderParameters;
-import com.medigy.dto.person.RegisteredProvider;
+import com.medigy.service.dto.person.RegisterHealthCareProviderParameters;
+import com.medigy.service.dto.person.RegisteredProvider;
 
 public interface RegisterHealthCareProviderService extends Service
 {

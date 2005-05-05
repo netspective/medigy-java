@@ -38,10 +38,10 @@
  */
 package com.medigy.service.util;
 
-import com.medigy.model.party.PartyRole;
-import com.medigy.model.party.PostalAddress;
-import com.medigy.model.person.Person;
-import com.medigy.reference.custom.person.PersonRoleType;
+import com.medigy.persist.model.party.PartyRole;
+import com.medigy.persist.model.party.PostalAddress;
+import com.medigy.persist.model.person.Person;
+import com.medigy.persist.reference.custom.person.PersonRoleType;
 import com.medigy.service.Service;
 
 import java.io.Serializable;

@@ -43,23 +43,22 @@
  */
 package com.medigy.service;
 
-import com.medigy.persist.service.ServiceLocator;
-import com.medigy.persist.service.util.PersonFacade;
-import com.medigy.persist.service.common.ReferenceEntityLookupService;
-import com.medigy.persist.service.common.ReferenceEntityLookupServiceImpl;
-import com.medigy.persist.service.contact.AddContactMechanismService;
-import com.medigy.persist.service.contact.AddContactMechanismServiceImpl;
-import com.medigy.persist.service.util.PartyRelationshipFacade;
-import com.medigy.persist.service.util.PartyRelationshipFacadeImpl;
-import com.medigy.persist.service.person.PatientRegistrationService;
-import com.medigy.persist.service.person.PatientRegistrationServiceImpl;
-import com.medigy.persist.service.util.PersonFacadeImpl;
+import com.medigy.persist.model.session.ProcessSession;
+import com.medigy.persist.model.session.Session;
+import com.medigy.persist.model.session.SessionManager;
 import com.medigy.persist.util.HibernateConfiguration;
 import com.medigy.persist.util.HibernateUtil;
 import com.medigy.persist.util.ModelInitializer;
-import com.medigy.persist.model.session.Session;
-import com.medigy.persist.model.session.ProcessSession;
-import com.medigy.persist.model.session.SessionManager;
+import com.medigy.service.common.ReferenceEntityLookupService;
+import com.medigy.service.common.ReferenceEntityLookupServiceImpl;
+import com.medigy.service.contact.AddContactMechanismService;
+import com.medigy.service.contact.AddContactMechanismServiceImpl;
+import com.medigy.service.person.PatientRegistrationService;
+import com.medigy.service.person.PatientRegistrationServiceImpl;
+import com.medigy.service.util.PartyRelationshipFacade;
+import com.medigy.service.util.PartyRelationshipFacadeImpl;
+import com.medigy.service.util.PersonFacade;
+import com.medigy.service.util.PersonFacadeImpl;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.HibernateException;

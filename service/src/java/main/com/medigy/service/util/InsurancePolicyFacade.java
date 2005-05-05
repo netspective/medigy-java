@@ -38,8 +38,8 @@
  */
 package com.medigy.service.util;
 
-import com.medigy.model.insurance.InsurancePolicy;
-import com.medigy.model.org.Organization;
+import com.medigy.persist.model.insurance.InsurancePolicy;
+import com.medigy.persist.model.org.Organization;
 
 import java.io.Serializable;
 import java.util.List;

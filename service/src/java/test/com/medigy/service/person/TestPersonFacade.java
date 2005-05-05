@@ -38,10 +38,10 @@
  */
 package com.medigy.service.person;
 
-import com.medigy.model.DbUnitTestCase;
-import com.medigy.model.person.Person;
 import com.medigy.service.ServiceLocator;
+import com.medigy.service.DbUnitTestCase;
 import com.medigy.service.util.PersonFacade;
+import com.medigy.persist.model.person.Person;
 
 public class TestPersonFacade extends DbUnitTestCase
 {

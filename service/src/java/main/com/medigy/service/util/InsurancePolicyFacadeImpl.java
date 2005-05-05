@@ -38,10 +38,10 @@
  */
 package com.medigy.service.util;
 
-import com.medigy.model.insurance.InsurancePolicy;
-import com.medigy.model.org.Organization;
-import com.medigy.reference.custom.insurance.InsurancePolicyType;
-import com.medigy.util.HibernateUtil;
+import com.medigy.persist.model.insurance.InsurancePolicy;
+import com.medigy.persist.model.org.Organization;
+import com.medigy.persist.reference.custom.insurance.InsurancePolicyType;
+import com.medigy.persist.util.HibernateUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;

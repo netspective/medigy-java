@@ -4,8 +4,6 @@
 package com.medigy.service;
 
 import com.medigy.persist.util.HibernateUtil;
-import com.medigy.persist.model.*;
-
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.database.IDatabaseConnection;
 import org.dbunit.dataset.IDataSet;
@@ -16,7 +14,7 @@ import org.hibernate.cfg.Environment;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 
-public abstract class DbUnitTestCase extends com.medigy.persist.model.TestCase
+public abstract class DbUnitTestCase extends com.medigy.service.TestCase
 {
     protected void setUp() throws Exception
     {

@@ -38,9 +38,9 @@
  */
 package com.medigy.service.person;
 
-import com.medigy.dto.person.RegisterPatientParameters;
-import com.medigy.dto.person.RegisteredPatient;
 import com.medigy.service.Service;
+import com.medigy.service.dto.person.RegisterPatientParameters;
+import com.medigy.service.dto.person.RegisteredPatient;
 
 public interface PatientRegistrationService extends Service
 {

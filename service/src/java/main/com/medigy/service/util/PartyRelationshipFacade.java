@@ -38,10 +38,10 @@
  */
 package com.medigy.service.util;
 
-import com.medigy.model.party.PartyRelationship;
-import com.medigy.model.party.PartyRole;
-import com.medigy.model.party.Party;
-import com.medigy.reference.custom.party.PartyRelationshipType;
+import com.medigy.persist.model.party.Party;
+import com.medigy.persist.model.party.PartyRelationship;
+import com.medigy.persist.model.party.PartyRole;
+import com.medigy.persist.reference.custom.party.PartyRelationshipType;
 import com.medigy.service.Service;
 
 import java.util.List;

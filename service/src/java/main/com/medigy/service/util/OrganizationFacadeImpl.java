@@ -1,16 +1,15 @@
 package com.medigy.service.util;
 
-import java.util.List;
-
+import com.medigy.persist.model.org.Organization;
+import com.medigy.persist.model.party.PartyRelationship;
+import com.medigy.persist.model.party.PartyRole;
+import com.medigy.persist.reference.custom.party.OrganizationRoleType;
+import com.medigy.persist.reference.custom.party.PartyRelationshipType;
+import com.medigy.persist.util.HibernateUtil;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Expression;
 
-import com.medigy.model.org.Organization;
-import com.medigy.model.party.PartyRelationship;
-import com.medigy.model.party.PartyRole;
-import com.medigy.reference.custom.party.OrganizationRoleType;
-import com.medigy.reference.custom.party.PartyRelationshipType;
-import com.medigy.util.HibernateUtil;
+import java.util.List;
 
 public class OrganizationFacadeImpl implements OrganizationFacade
 {

@@ -38,9 +38,9 @@
  */
 package com.medigy.service.util;
 
-import com.medigy.model.contact.GeographicBoundary;
-import com.medigy.reference.custom.GeographicBoundaryType;
-import com.medigy.util.HibernateUtil;
+import com.medigy.persist.model.contact.GeographicBoundary;
+import com.medigy.persist.reference.custom.GeographicBoundaryType;
+import com.medigy.persist.util.HibernateUtil;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 

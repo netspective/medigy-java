@@ -38,12 +38,12 @@
  */
 package com.medigy.service.util;
 
-import com.medigy.model.party.Party;
-import com.medigy.model.party.PartyRelationship;
-import com.medigy.model.party.PartyRole;
-import com.medigy.model.party.ValidPartyRelationshipRole;
-import com.medigy.reference.custom.party.PartyRelationshipType;
-import com.medigy.util.HibernateUtil;
+import com.medigy.persist.model.party.Party;
+import com.medigy.persist.model.party.PartyRelationship;
+import com.medigy.persist.model.party.PartyRole;
+import com.medigy.persist.model.party.ValidPartyRelationshipRole;
+import com.medigy.persist.reference.custom.party.PartyRelationshipType;
+import com.medigy.persist.util.HibernateUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;

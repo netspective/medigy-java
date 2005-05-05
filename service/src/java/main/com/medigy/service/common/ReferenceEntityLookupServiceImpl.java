@@ -38,15 +38,15 @@
  */
 package com.medigy.service.common;
 
-import com.medigy.model.party.PartyRole;
-import com.medigy.reference.custom.party.ContactMechanismPurposeType;
-import com.medigy.reference.custom.person.EthnicityType;
-import com.medigy.reference.custom.person.PersonRoleType;
-import com.medigy.reference.custom.insurance.InsurancePolicyType;
-import com.medigy.reference.type.GenderType;
-import com.medigy.reference.type.LanguageType;
-import com.medigy.reference.type.MaritalStatusType;
-import com.medigy.util.HibernateUtil;
+import com.medigy.persist.model.party.PartyRole;
+import com.medigy.persist.reference.custom.insurance.InsurancePolicyType;
+import com.medigy.persist.reference.custom.party.ContactMechanismPurposeType;
+import com.medigy.persist.reference.custom.person.EthnicityType;
+import com.medigy.persist.reference.custom.person.PersonRoleType;
+import com.medigy.persist.reference.type.GenderType;
+import com.medigy.persist.reference.type.LanguageType;
+import com.medigy.persist.reference.type.MaritalStatusType;
+import com.medigy.persist.util.HibernateUtil;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.Restrictions;

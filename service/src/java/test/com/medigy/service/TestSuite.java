@@ -36,17 +36,11 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.model;
+package com.medigy.service;
 
-import com.medigy.model.contact.TestGeographicBoundary;
-import com.medigy.model.invoice.TestInvoice;
-import com.medigy.model.org.TestOrganization;
-import com.medigy.model.party.TestPartyRelationship;
-import com.medigy.model.person.TestPerson;
-import com.medigy.model.person.TestPersonRelationshipFacade;
 import com.medigy.service.party.TestAddContactMechanismService;
-import com.medigy.service.person.TestPatientRegistrationService;
 import com.medigy.service.person.TestPersonFacade;
+import com.medigy.service.person.TestPersonRelationshipFacade;
 import com.medigy.service.util.TestInsurancePolicyFacade;
 import junit.framework.Test;
 

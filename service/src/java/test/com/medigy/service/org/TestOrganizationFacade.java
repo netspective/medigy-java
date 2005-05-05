@@ -1,15 +1,14 @@
 package com.medigy.service.org;
 
-import java.util.List;
-
-import com.medigy.model.DbUnitTestCase;
-import com.medigy.model.TestCase;
-import com.medigy.model.org.Organization;
-import com.medigy.model.party.PartyRelationship;
-import com.medigy.reference.custom.party.PartyRelationshipType;
+import com.medigy.persist.model.org.Organization;
+import com.medigy.persist.model.party.PartyRelationship;
+import com.medigy.persist.reference.custom.party.PartyRelationshipType;
+import com.medigy.persist.util.HibernateUtil;
+import com.medigy.service.DbUnitTestCase;
 import com.medigy.service.util.OrganizationFacade;
 import com.medigy.service.util.OrganizationFacadeImpl;
-import com.medigy.util.HibernateUtil;
+
+import java.util.List;
 
 public class TestOrganizationFacade extends DbUnitTestCase
 {
@@ -20,7 +19,7 @@ public class TestOrganizationFacade extends DbUnitTestCase
         // SETUP
         Organization parentOrg = new Organization();
         parentOrg.setOrganizationName("Netspective");
-        HibernateUtil.getSession().save(parentOrg);        
+        HibernateUtil.getSession().save(parentOrg);
         // SETUP
         
         OrganizationFacade facade = new OrganizationFacadeImpl();
@@ -52,7 +51,6 @@ public class TestOrganizationFacade extends DbUnitTestCase
         
     }
 
-    @Override
     public String getDataSetFile()
     {
         return "/com/netspective/medigy/service/org/TestOrganizationFacade.xml";

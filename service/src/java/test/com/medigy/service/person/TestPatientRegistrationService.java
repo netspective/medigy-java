@@ -38,21 +38,19 @@
  */
 package com.medigy.service.person;
 
-import com.medigy.dto.person.RegisterPatientParameters;
-import com.medigy.dto.person.RegisteredPatient;
-import com.medigy.model.TestCase;
-import com.medigy.model.person.Person;
-import com.medigy.model.session.ProcessSession;
-import com.medigy.model.session.Session;
-import com.medigy.model.session.SessionManager;
-import com.medigy.reference.custom.party.PartyRelationshipType;
-import com.medigy.reference.custom.person.EthnicityType;
-import com.medigy.reference.custom.insurance.InsurancePolicyType;
-import com.medigy.reference.type.GenderType;
-import com.medigy.reference.type.LanguageType;
-import com.medigy.reference.type.MaritalStatusType;
+
+import com.medigy.persist.model.person.Person;
+import com.medigy.persist.reference.custom.insurance.InsurancePolicyType;
+import com.medigy.persist.reference.custom.party.PartyRelationshipType;
+import com.medigy.persist.reference.custom.person.EthnicityType;
+import com.medigy.persist.reference.type.GenderType;
+import com.medigy.persist.reference.type.LanguageType;
+import com.medigy.persist.reference.type.MaritalStatusType;
+import com.medigy.persist.util.HibernateUtil;
 import com.medigy.service.ServiceLocator;
-import com.medigy.util.HibernateUtil;
+import com.medigy.service.TestCase;
+import com.medigy.service.dto.person.RegisterPatientParameters;
+import com.medigy.service.dto.person.RegisteredPatient;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -64,11 +62,6 @@ public class TestPatientRegistrationService extends TestCase
 
     public void testPatientRegistration()
     {
-        Session session = new ProcessSession();
-        session.setProcessName(TestPatientRegistrationService.class.getName() + ".testPatientRegistration()");
-        SessionManager.getInstance().pushActiveSession(session);
-        HibernateUtil.getSession().save(session);
-
         RegisterPatientParameters patientParameters = null;
         try
         {

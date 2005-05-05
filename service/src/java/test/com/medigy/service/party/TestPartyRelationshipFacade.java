@@ -38,16 +38,16 @@
  */
 package com.medigy.service.party;
 
-import com.medigy.model.DbUnitTestCase;
-import com.medigy.model.party.PartyRole;
-import com.medigy.model.party.PartyRelationship;
-import com.medigy.model.person.Person;
-import com.medigy.util.HibernateUtil;
+import com.medigy.persist.model.party.PartyRelationship;
+import com.medigy.persist.model.party.PartyRole;
+import com.medigy.persist.model.person.Person;
+import com.medigy.persist.reference.custom.party.PartyRelationshipType;
+import com.medigy.persist.reference.custom.person.PatientResponsiblePartyRoleType;
+import com.medigy.persist.reference.custom.person.PersonRoleType;
+import com.medigy.persist.util.HibernateUtil;
+import com.medigy.service.DbUnitTestCase;
 import com.medigy.service.ServiceLocator;
 import com.medigy.service.util.PartyRelationshipFacade;
-import com.medigy.reference.custom.party.PartyRelationshipType;
-import com.medigy.reference.custom.person.PersonRoleType;
-import com.medigy.reference.custom.person.PatientResponsiblePartyRoleType;
 
 import java.util.List;
 
