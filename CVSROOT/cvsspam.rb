@@ -1053,7 +1053,7 @@ File.open("#{$logfile}.emailtmp", File::RDWR|File::CREAT|File::TRUNC) do |mail|
 end
 
 if $subjectPrefix == nil
-  $subjectPrefix = "[CVS #{Repository.array.join(',')}]"
+  $subjectPrefix = "[CVS Medigy/#{Repository.array.join(',')}]"
 end
 
 if $files_in_subject
