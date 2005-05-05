@@ -211,7 +211,46 @@
     <option name="remove" value="true" />
     <option name="replace" value="2" />
   </component>
-  <component name="libraryTable" />
+  <component name="libraryTable">
+    <library name="Persistence Dependencies (Main)">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/../../../persistence/depend/lib/main/asm-1.5.3.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../../../persistence/depend/lib/main/asm-attrs-1.5.3.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../../../persistence/depend/lib/main/bcel-5.1.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../../../persistence/depend/lib/main/cglib-2.1.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../../../persistence/depend/lib/main/commons-beanutils-1.7.0.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../../../persistence/depend/lib/main/commons-collections-2.1.1.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../../../persistence/depend/lib/main/commons-lang-2.0.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../../../persistence/depend/lib/main/commons-logging-1.0.4.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../../../persistence/depend/lib/main/dom4j-1.6.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../../../persistence/depend/lib/main/ehcache-1.1.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../../../persistence/depend/lib/main/ejb-3.0-edr2.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../../../persistence/depend/lib/main/hibernate-3.0.2.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../../../persistence/depend/lib/main/hibernate-annotations-3.0beta1.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../../../persistence/depend/lib/main/jdbc2_0-stdext.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../../../persistence/depend/lib/main/jta.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../../../persistence/depend/lib/main/log4j-1.2.9.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="Persistence Dependencies (Test)">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/../../../persistence/depend/lib/test/hsqldb-1.7.3.2.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../../../persistence/depend/lib/test/dbunit-2.1.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="Persistence Tools Dependencies (Main)">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/../../../persistence/support/tools/depend/sns-graphviz-1.0.0.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../../../persistence/support/tools/depend/sns-hibernate-1.0.0.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+  </component>
   <component name="uidesigner-configuration">
     <option name="INSTRUMENT_CLASSES" value="true" />
     <option name="COPY_FORMS_RUNTIME_TO_OUTPUT" value="true" />
