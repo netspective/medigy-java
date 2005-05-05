@@ -43,27 +43,17 @@
  */
 package com.medigy.persist.model.person;
 
-import java.io.Serializable;
-import java.util.Calendar;
-import java.util.Date;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import com.medigy.persist.TestCase;
-import com.medigy.persist.dto.party.AddPostalAddressParameters;
-import com.medigy.persist.model.party.PartyIdentifier;
-import com.medigy.persist.model.party.PostalAddress;
-import com.medigy.persist.model.session.ProcessSession;
-import com.medigy.persist.model.session.Session;
-import com.medigy.persist.model.session.SessionManager;
-import com.medigy.persist.reference.custom.party.ContactMechanismPurposeType;
 import com.medigy.persist.reference.custom.person.EthnicityType;
-import com.medigy.persist.reference.custom.person.PersonIdentifierType;
 import com.medigy.persist.reference.type.GenderType;
 import com.medigy.persist.reference.type.LanguageType;
 import com.medigy.persist.reference.type.MaritalStatusType;
 import com.medigy.persist.util.HibernateUtil;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import java.util.Calendar;
+import java.util.Date;
 
 public class TestPerson extends TestCase
 {
@@ -71,11 +61,6 @@ public class TestPerson extends TestCase
 
     public void testPerson()
     {
-        Session session = new ProcessSession();
-        session.setProcessName(TestPerson.class.getName() + ".testPerson()");
-        SessionManager.getInstance().pushActiveSession(session);
-        HibernateUtil.getSession().save(session);
-
         final Calendar calendar = Calendar.getInstance();
         HibernateUtil.beginTransaction();
 
@@ -114,85 +99,5 @@ public class TestPerson extends TestCase
         assertTrue(persistedPerson.hasEthnicity(EthnicityType.Cache.CAUCASIAN.getEntity()));
         assertTrue(persistedPerson.hasEthnicity(EthnicityType.Cache.NATIVE_AMERICAN.getEntity()));
 
-        HibernateUtil.beginTransaction();
-        final AddContactMechanismService addContactService = (AddContactMechanismService) ServiceLocator.getInstance().getService(AddContactMechanismService.class);
-        addContactService.addPostalAddress(new AddPostalAddressParameters() {
-            public Serializable getPartyId()
-            {
-                return persistedPerson.getPartyId();
-            }
-
-            public String getStreet1()
-            {
-                return "123 Acme Street";
-            }
-
-            public String getStreet2()
-            {
-                return null;
-            }
-
-            public String getCity()
-            {
-                return "Fairfax";
-            }
-
-            public String getState()
-            {
-                return "VA";
-            }
-
-            public String getProvince()
-            {
-                return null;
-            }
-
-            public String getPostalCode()
-            {
-                return "22033";
-            }
-
-            public String getCounty()
-            {
-                return "Fairfax County";
-            }
-
-            public String getCountry()
-            {
-                return "USA";
-            }
-
-            public String getPurpose()
-            {
-                return ContactMechanismPurposeType.Cache.HOME_ADDRESS.getEntity().getCode();
-            }
-        });
-
-        HibernateUtil.commitTransaction();
-        HibernateUtil.closeSession();
-
-        final Person updatedPerson = (Person) HibernateUtil.getSession().load(Person.class, persistedPerson.getPersonId());
-        assertNotNull(updatedPerson);
-        assertEquals(2, updatedPerson.getMaritalStatuses().size());
-        assertEquals(MaritalStatusType.Cache.MARRIED.getEntity(), updatedPerson.getCurrentMaritalStatus());
-        assertEquals(GenderType.Cache.MALE.getEntity(), updatedPerson.getCurrentGender());
-        assertEquals(calendar.getTime(), updatedPerson.getBirthDate());
-
-        // verify the Identifiers
-        assertEquals(updatedPerson.getPartyIdentifiers().size(), 1);
-        assertEquals(((PartyIdentifier) updatedPerson.getPartyIdentifiers().toArray()[0]).getType(),
-                PersonIdentifierType.Cache.SSN.getEntity());
-
-        // verify the contact mechanisms
-        assertEquals(updatedPerson.getPartyContactMechanisms().size(), 1);
-        final PersonFacade pFacade = (PersonFacade) ServiceLocator.getInstance().getService(PersonFacade.class);
-        final PostalAddress homeAddress = pFacade.getHomeAddress(updatedPerson);
-        assertEquals(homeAddress.getAddress1(), "123 Acme Street");
-        assertEquals(homeAddress.getCity().getName(), "Fairfax");
-        assertEquals(homeAddress.getState().getName(), "VA");
-
-
-        HibernateUtil.closeSession();
-        SessionManager.getInstance().popActiveSession();
     }
 }
