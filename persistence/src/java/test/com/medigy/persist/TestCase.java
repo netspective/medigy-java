@@ -43,14 +43,12 @@
  */
 package com.medigy.persist;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.Properties;
-import java.util.logging.LogManager;
-
+import com.medigy.persist.model.session.ProcessSession;
+import com.medigy.persist.model.session.Session;
+import com.medigy.persist.model.session.SessionManager;
+import com.medigy.persist.util.HibernateConfiguration;
+import com.medigy.persist.util.HibernateUtil;
+import com.medigy.persist.util.ModelInitializer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.HibernateException;
@@ -58,12 +56,13 @@ import org.hibernate.cfg.Environment;
 import org.hibernate.dialect.HSQLDialect;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
 
-import com.medigy.persist.model.session.ProcessSession;
-import com.medigy.persist.model.session.Session;
-import com.medigy.persist.model.session.SessionManager;
-import com.medigy.persist.util.HibernateConfiguration;
-import com.medigy.persist.util.HibernateUtil;
-import com.medigy.persist.util.ModelInitializer;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Properties;
+import java.util.logging.LogManager;
 
 public abstract class TestCase extends junit.framework.TestCase
 {
@@ -106,7 +105,7 @@ public abstract class TestCase extends junit.framework.TestCase
 
         try
         {
-            config.configure("com/netspective/medigy/hibernate.cfg.xml");
+            config.configure("com/medigy/persist/hibernate.cfg.xml");
         }
         catch (HibernateException e)
         {

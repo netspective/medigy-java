@@ -115,7 +115,7 @@ public abstract class TestCase extends junit.framework.TestCase
 
         try
         {
-            config.configure("com/netspective/medigy/hibernate.cfg.xml");
+            config.configure("com/medigy/persist/hibernate.cfg.xml");
         }
         catch (HibernateException e)
         {
