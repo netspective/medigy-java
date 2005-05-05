@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<project default="all">
+
+    <target name="init.prepare-repository-home" unless="repository.home" description="If repository.home property is not passed in, set the repository home path relative to the location of this build file.">
+        <path id="tmp.repository.home">
+            <pathelement location="${basedir}/../.."/>
+        </path>
+        <pathconvert targetos="unix" property="repository.home" refid="tmp.repository.home"/>
+    </target>
+
+    <target name="clean" depends="init.prepare-repository-home">
+        <delete dir="${repository.home}/support/build/ivy-cache"/>
+        <ant dir="${repository.home}/graphviz/support/build" target="clean" inheritall="false" inheritrefs="false" />
+        <ant dir="${repository.home}/hibernate/support/build" target="clean" inheritall="false" inheritrefs="false" />
+    </target>
+
+    <target name="all" depends="init.prepare-repository-home">
+        <ant dir="${repository.home}/graphviz/support/build" target="retrieve-all-dependencies" inheritall="false" inheritrefs="false" />
+        <ant dir="${repository.home}/graphviz/support/build" target="clean" inheritall="false" inheritrefs="false" />
+        <ant dir="${repository.home}/graphviz/support/build" target="jar" inheritall="false" inheritrefs="false" />
+
+        <ant dir="${repository.home}/hibernate/support/build" target="retrieve-all-dependencies" inheritall="false" inheritrefs="false" />
+        <ant dir="${repository.home}/hibernate/support/build" target="clean" inheritall="false" inheritrefs="false" />
+        <ant dir="${repository.home}/hibernate/support/build" target="jar" inheritall="false" inheritrefs="false" />
+    </target>
+
+</project>

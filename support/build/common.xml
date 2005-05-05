@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<project name="common" xmlns:ivy="antlib:fr.jayasoft.ivy.ant">
+
+    <target name="init.prepare-repository-home" unless="repository.home" description="If repository.home property is not passed in, set the repository home path relative to the location of this build file.">
+        <path id="tmp.repository.home">
+            <pathelement location="${basedir}/../../../"/>
+        </path>
+        <pathconvert targetos="unix" property="repository.home" refid="tmp.repository.home"/>
+    </target>
+
+    <target name="init.prepare-ivy-repository-lib-home" unless="ivy.repository.home" description="If ivy.repository.home property (where our generated JARs will go) is not passed in, set the repository libraries home path relative to the location of this build file.">
+        <property name="ivy.repository.home" value="${repository.home}/ivy-repository"/>
+    </target>
+
+    <target name="init.prepare-project-home" unless="project.home" description="If project.home property is not passed in, set the project home path relative to the location of this build file.">
+        <path id="tmp.project.home">
+            <pathelement location="${basedir}/../../"/>
+        </path>
+        <pathconvert targetos="unix" property="project.home" refid="tmp.project.home"/>
+    </target>
+
+    <target name="init.prepare-project-build-properties-file" unless="project.support.build.properties" description="If project.support.build.properties property is not passed in, set the project build properties relative to the location of this build file.">
+        <path id="tmp.project.support.build.properties">
+            <pathelement location="${basedir}/build.properties"/>
+        </path>
+        <pathconvert targetos="unix" property="project.support.build.properties" refid="tmp.project.support.build.properties"/>
+    </target>
+
+    <target name="init.prepare-project-name" unless="project.name" description="If project.name property is not passed in, set the project name to the name of the project's root directory.">
+        <basename property="tmp.project.name" file="${project.home}"/>
+        <property name="project.name" value="sns-${tmp.project.name}"/>
+    </target>
+
+    <target name="init.prepare-project.support.build.artifacts.home" unless="project.support.build.artifacts.home">
+        <property name="project.support.build.artifacts.home" value="${project.home}/support/build/artifacts"/>
+    </target>
+
+    <target name="init.prepare-project.support.build.artifacts.test.junit.home" unless="project.support.build.artifacts.test.junit.home">
+        <property name="project.support.build.artifacts.test.junit.home" value="${project.support.build.artifacts.home}/test/junit"/>
+    </target>
+
+    <target name="init.prepare-common-properties" depends="init.prepare-repository-home,init.prepare-ivy-repository-lib-home,init.prepare-project-home,init.prepare-project-name,init.prepare-project-build-properties-file,init.prepare-project.support.build.artifacts.home,init.prepare-project.support.build.artifacts.test.junit.home">
+        <property name="repository.support.home" value="${repository.home}/support"/>
+        <property name="repository.support.build.home" value="${repository.support.home}/build"/>
+
+        <property name="project.support.build" value="${basedir}"/>
+        <property name="project.support.build.artifacts.home" value="${artifactsDir}"/>
+        <property name="project.support.build.artifacts.test.home" value="${project.support.build.artifacts.home}/test"/>
+        <property name="project.support.build.artifacts.test.db.home" value="${project.support.build.artifacts.test.home}/db"/>
+        <property name="project.support.build.artifacts.test.coverage.home" value="${project.support.build.artifacts.test.home}/coverage"/>
+        <property name="project.support.build.artifacts.test.coverage.instr.home" value="${project.support.build.artifacts.test.coverage.home}/instr"/>
+        <!-- <property name="project.support.build.artifacts.test.coverage.enabled" value="true"/> -->
+
+        <property name="project.support.build.artifacts.classes.home" value="${project.support.build.artifacts.home}/classes"/>
+        <property name="project.support.build.artifacts.classes.main.home" value="${project.support.build.artifacts.classes.home}/main"/>
+        <property name="project.support.build.artifacts.classes.test.home" value="${project.support.build.artifacts.classes.home}/test"/>
+
+        <property name="project.lib.home" value="${ivy.repository.home}/lib"/>
+
+        <property name="project.src.home" value="${project.home}/src"/>
+        <property name="project.src.main.home" value="${project.src.home}/java/main"/>
+        <property name="project.src.test.home" value="${project.src.home}/java/test"/>
+
+        <property name="project.jar.name" value="${project.name}.jar"/>
+        <property name="project.support.build.artifacts.jar" value="${project.support.build.artifacts.home}/${project.jar.name}"/>
+
+        <!-- read properties that will provide project.test.TestSuite and override any properties we may have set above -->
+        <property file="${project.support.build.properties}"/>
+    </target>
+
+    <target name="init.prepare-build-classpath" depends="init.prepare-common-properties">
+        <path id="project.build.classpath">
+            <fileset dir="${project.lib.home}">
+                <include name="**/*.jar"/>
+            </fileset>
+        </path>
+    </target>
+
+    <target name="init.prepare-common" depends="init.prepare-build-classpath"/>
+
+    <target name="debug-common-properties" depends="init.prepare-common-properties">
+        <echo message="repository.home is ${repository.home}"/>
+        <echo message="project.name is ${project.name}"/>
+        <echo message="project.home is ${project.home}"/>
+        <echo message="repository.support.home is ${repository.support.home}"/>
+        <echo message="repository.support.build.home is ${repository.support.build.home}"/>
+        <echo message="project.support.build is ${project.support.build}"/>
+        <echo message="project.support.build.properties is ${project.support.build.properties}"/>
+        <echo message="project.support.build.artifacts.home is ${project.support.build.artifacts.home}"/>
+        <echo message="project.support.build.artifacts.classes.main.home is ${project.support.build.artifacts.classes.main.home}"/>
+        <echo message="project.support.build.artifacts.classes.test.home is ${project.support.build.artifacts.classes.test.home}"/>
+        <echo message="project.support.build.artifacts.test.home is ${project.support.build.artifacts.test.home}"/>
+        <echo message="project.support.build.artifacts.test.junit.home is ${project.support.build.artifacts.test.junit.home}"/>
+        <echo message="project.lib.jar is ${project.lib.jar}"/>
+        <echo message="project.lib.versioned-jar is ${project.lib.versioned-jar}"/>
+        <echo message="project.test.TestSuite is ${project.test.TestSuite}"/>
+    </target>
+
+    <!-- ==================== Compile targets  ======================= -->
+
+    <target name="compile-main" depends="init.prepare-common,create-artifact-directories">
+        <copy todir="${project.support.build.artifacts.classes.main.home}">
+            <fileset dir="${project.src.main.home}">
+                <include name="**/*.xml"/>
+                <include name="**/*.properties"/>
+            </fileset>
+        </copy>
+        <javac srcdir="${project.src.main.home}" destdir="${project.support.build.artifacts.classes.main.home}"
+            debug="on" optimize="true" deprecation="off" classpathref="project.build.classpath">
+            <!--<compilerarg value="-Xlint:unchecked"/>-->
+        </javac>
+    </target>
+
+    <target name="instrument-main" depends="compile-main" if="project.support.build.artifacts.test.coverage.enabled">
+        <emma>
+            <instr instrpath="${project.support.build.artifacts.classes.home}"
+                    destdir="${project.support.build.artifacts.test.coverage.instr.home}"
+                    metadatafile="${project.support.build.artifacts.test.coverage.home}/metadata.emma"
+                    merge="true">
+                <!--<filter excludes="*TestCase" />-->
+            </instr>
+        </emma>
+    </target>
+
+    <target name="compile-test" depends="compile-main">
+        <javac srcdir="${project.src.test.home}" destdir="${project.support.build.artifacts.classes.test.home}"
+            debug="on" optimize="true" deprecation="off" classpathref="project.build.classpath">
+            <classpath>
+                <pathelement location="${project.support.build.artifacts.classes.main.home}"/>
+            </classpath>
+            <!--<compilerarg value="-Xlint:unchecked"/>-->
+        </javac>
+    </target>
+
+    <target name="compile" depends="compile-main,instrument-main,compile-test"/>
+
+    <!-- ==================== Packaging targets  ======================= -->
+
+    <target name="jar" depends="compile-main">
+        <jar jarfile="${project.support.build.artifacts.jar}" basedir="${project.support.build.artifacts.classes.main.home}">
+            <include name="**/*"/>
+        </jar>
+        <ivy:configure file="${repository.support.build.home}/ivy.conf.xml"/>
+        <ivy:resolve/>
+		<ivy:publish artifactspattern="${project.support.build.artifacts.home}/[module].[ext]"
+			resolver="projects" status="release"/>
+    </target>
+
+    <!-- ==================== Test targets  ======================= -->
+
+    <target name="test-uninstrumented" depends="compile" unless="project.support.build.artifacts.test.coverage.enabled">
+        <junit filtertrace="yes" fork="true" maxmemory="256m" >
+            <classpath>
+                <path refid="project.test.class.path"/>
+                <pathelement location="${project.support.build.artifacts.classes.main.home}"/>
+                <pathelement location="${project.support.build.artifacts.classes.test.home}"/>
+            </classpath>
+
+            <formatter type="xml" usefile="true"/>
+            <sysproperty key="project.support.build.artifacts.test.db.home" value="${project.support.build.artifacts.test.db.home}"/>
+            <test name="${project.test.TestSuite}" todir="${project.support.build.artifacts.test.junit.home}"/>
+        </junit>
+
+        <junitreport todir="${project.support.build.artifacts.test.junit.home}">
+            <fileset dir="${project.support.build.artifacts.test.junit.home}">
+                <include name="TEST-*.xml"/>
+            </fileset>
+            <report format="noframes" todir="${project.support.build.artifacts.test.junit.home}"/>
+        </junitreport>
+    </target>
+
+    <target name="test-instrumented" depends="compile" if="project.support.build.artifacts.test.coverage.enabled">
+        <junit filtertrace="yes" fork="true" maxmemory="256m" >
+            <classpath>
+                <pathelement location="${project.support.build.artifacts.test.coverage.instr.home}" />
+                <path refid="project.test.class.path"/>
+                <pathelement location="${project.support.build.artifacts.classes.main.home}"/>
+                <pathelement location="${project.support.build.artifacts.classes.test.home}"/>
+            </classpath>
+
+            <jvmarg value="-Demma.coverage.out.file=${project.support.build.artifacts.test.coverage.home}/coverage.emma" />
+            <jvmarg value="-Demma.coverage.out.merge=false" />
+
+            <formatter type="xml" usefile="true"/>
+            <sysproperty key="project.support.build.artifacts.test.db.home" value="${project.support.build.artifacts.test.db.home}"/>
+            <test name="${project.test.TestSuite}" todir="${project.support.build.artifacts.test.junit.home}"/>
+        </junit>
+
+        <junitreport todir="${project.support.build.artifacts.test.junit.home}">
+            <fileset dir="${project.support.build.artifacts.test.junit.home}">
+                <include name="TEST-*.xml"/>
+            </fileset>
+            <report format="noframes" todir="${project.support.build.artifacts.test.junit.home}"/>
+        </junitreport>
+
+        <emma>
+            <report sourcepath="${project.src.main.home}" sort="+block,+name,+method,+class"
+                metrics="method:70,block:80,line:80,class:100">
+                <fileset dir="${project.support.build.artifacts.test.coverage.home}" includes="*.emma" />
+                <txt outfile="${project.support.build.artifacts.test.coverage.home}/coverage.txt" depth="package"
+                    columns="class,method,block,line,name"/>
+                <html outfile="${project.support.build.artifacts.test.coverage.home}/coverage.html" depth="method"
+                    columns="name,class,method,block,line"/>
+            </report>
+        </emma>
+    </target>
+
+    <target name="test.verify-project.test.TestSuite" unless="project.test.TestSuite">
+        <fail message="The property project.test.TestSuite was not set"/>
+    </target>
+
+    <target name="test" depends="test.verify-project.test.TestSuite,test-uninstrumented,test-instrumented"/>
+
+    <target name="create-artifact-directories" depends="init.prepare-common-properties">
+        <mkdir dir="${project.lib.home}"/>
+
+        <mkdir dir="${project.support.build.artifacts.home}"/>
+        <mkdir dir="${project.support.build.artifacts.classes.home}"/>
+        <mkdir dir="${project.support.build.artifacts.classes.main.home}"/>
+        <mkdir dir="${project.support.build.artifacts.classes.test.home}"/>
+        <mkdir dir="${project.support.build.artifacts.test.junit.home}"/>
+        <mkdir dir="${project.support.build.artifacts.test.coverage.instr.home}"/>
+        <mkdir dir="${project.support.build.artifacts.test.db.home}"/>
+    </target>
+
+    <target name="clean" depends="init.prepare-common-properties">
+        <delete dir="${project.support.build.artifacts.home}"/>
+    </target>
+
+    <target name="retrieve-all-dependencies" depends="init.prepare-common-properties">
+        <property name="ivy.lib.dir" value="${project.lib.home}"/>
+        <ivy:configure file="${repository.support.build.home}/ivy.conf.xml"/>
+        <ivy:retrieve/>
+        <ivy:report todir="${project.support.build.artifacts.home}/ivy" />
+    </target>
+
+    <target name="all" depends="clean,jar"/>
+
+</project>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ivyconf>
+    <conf defaultResolver="ibiblio" defaultCache="${ivy.conf.dir}/ivy-cache"/>
+    <resolvers>
+        <filesystem name="projects">
+            <artifact pattern="${ivy.repository.home}/[module]-[revision].[ext]" />
+            <ivy pattern="${ivy.repository.home}/[module]-[revision].xml"/>
+        </filesystem>
+        <ivyrep name="libraries" />
+        <ibiblio name="ibiblio" />
+    </resolvers>
+    <modules>
+        <module organisation="org.sns" name=".*" resolver="projects" />
+    </modules>
+</ivyconf>

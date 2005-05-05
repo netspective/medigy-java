@@ -1,0 +1,190 @@
+<!DOCTYPE hibernate-configuration PUBLIC
+	"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+	<session-factory>
+        <mapping package="com.medigy.persist.reference.custom"/>
+		<mapping class="com.medigy.persist.reference.custom.GeographicBoundaryType"/>
+        <mapping package="com.medigy.persist.reference.custom.claim"/>
+        <mapping class="com.medigy.persist.reference.custom.claim.ClaimRoleType"/>
+        <mapping class="com.medigy.persist.reference.custom.claim.ClaimServiceCodeType"/>
+        <mapping class="com.medigy.persist.reference.custom.claim.ClaimStatusType"/>
+
+        <mapping package="com.medigy.persist.reference.custom.health"/>
+        <mapping class="com.medigy.persist.reference.custom.health.DiagnosisType"/>
+        <mapping class="com.medigy.persist.reference.custom.health.EpisodeType"/>
+        <mapping class="com.medigy.persist.reference.custom.health.HealthCareDeliveryRoleType"/>
+        <mapping class="com.medigy.persist.reference.custom.health.HealthCareOfferingType"/>
+        <mapping class="com.medigy.persist.reference.custom.health.HealthCareVisitRoleType"/>
+        <mapping class="com.medigy.persist.reference.custom.health.HealthCareVisitStatusType"/>
+        <mapping class="com.medigy.persist.reference.custom.health.OutcomeType"/>
+        <mapping class="com.medigy.persist.reference.custom.health.SymptomType"/>
+        <mapping class="com.medigy.persist.reference.custom.health.HealthCareLicenseType"/>
+
+        <mapping package="com.medigy.persist.reference.custom.insurance"/>
+        <mapping class="com.medigy.persist.reference.custom.insurance.CoverageType"/>
+        <mapping class="com.medigy.persist.reference.custom.insurance.InsurancePolicyRoleType"/>
+        <mapping class="com.medigy.persist.reference.custom.insurance.InsurancePolicyType"/>
+
+        <mapping package="com.medigy.persist.reference.custom.invoice"/>
+        <mapping class="com.medigy.persist.reference.custom.invoice.BillingAccountRoleType"/>
+        <mapping class="com.medigy.persist.reference.custom.invoice.InvoiceItemType"/>
+        <mapping class="com.medigy.persist.reference.custom.invoice.InvoiceRoleType"/>
+        <mapping class="com.medigy.persist.reference.custom.invoice.InvoiceStatusType"/>
+        <mapping class="com.medigy.persist.reference.custom.invoice.InvoiceTermType"/>
+        <mapping class="com.medigy.persist.reference.custom.invoice.PaymentMethodType"/>
+        <mapping class="com.medigy.persist.reference.custom.invoice.PaymentType"/>
+
+        <mapping package="com.medigy.persist.reference.custom.party"/>
+        <mapping class="com.medigy.persist.reference.custom.party.PartyRoleType"/>
+        <mapping class="com.medigy.persist.reference.custom.party.AgreementType"/>
+        <mapping class="com.medigy.persist.reference.custom.party.CaseRoleType"/>
+        <mapping class="com.medigy.persist.reference.custom.party.CommunicationEventPurposeType"/>
+        <mapping class="com.medigy.persist.reference.custom.party.CommunicationEventRoleType"/>
+        <mapping class="com.medigy.persist.reference.custom.party.ContactMechanismPurposeType"/>
+        <mapping class="com.medigy.persist.reference.custom.party.EmploymentAgreementRoleType"/>
+        <mapping class="com.medigy.persist.reference.custom.party.FacilityType"/>
+        <mapping class="com.medigy.persist.reference.custom.party.OrganizationRoleType"/>
+        <mapping class="com.medigy.persist.reference.custom.party.PartyIdentifierType"/>
+        <mapping class="com.medigy.persist.reference.custom.party.PartyQualificationType"/>
+        <mapping class="com.medigy.persist.reference.custom.party.PartyRelationshipType"/>
+        <mapping class="com.medigy.persist.reference.custom.party.PartyClassificationType"/>
+
+        <mapping package="com.medigy.persist.reference.custom.person"/>
+        <mapping class="com.medigy.persist.reference.custom.person.EthnicityType"/>
+        <mapping class="com.medigy.persist.reference.custom.person.IncidentType"/>
+        <mapping class="com.medigy.persist.reference.custom.person.MedicalConditionType"/>
+        <mapping class="com.medigy.persist.reference.custom.person.PersonIdentifierType"/>
+        <mapping class="com.medigy.persist.reference.custom.person.PersonRoleType"/>
+        <mapping class="com.medigy.persist.reference.custom.person.PhysicalCharacteristicType"/>
+        <mapping class="com.medigy.persist.reference.custom.person.PatientResponsiblePartyRoleType"/>
+        <mapping class="com.medigy.persist.reference.custom.person.PersonClassificationType"/>
+
+        <mapping package="com.medigy.persist.reference.custom.org"/>
+        <mapping class="com.medigy.persist.reference.custom.org.OrganizationClassificationType"/>
+        
+        <mapping package="com.medigy.persist.model.party"/>
+        <!--mapping class="com.medigy.persist.model.party.Case"/-->
+        <!--mapping class="com.medigy.persist.model.party.CaseRole"/-->
+        <mapping class="com.medigy.persist.model.party.CommunicationEvent"/>
+        <mapping class="com.medigy.persist.model.party.CommunicationEventPurpose"/>
+        <mapping class="com.medigy.persist.model.party.CommunicationEventRole"/>
+        <mapping class="com.medigy.persist.model.party.CommunicationEventWork"/>
+        <mapping class="com.medigy.persist.model.party.ContactMechanism"/>
+        <mapping class="com.medigy.persist.model.party.ElectronicAddress"/>
+        <mapping class="com.medigy.persist.model.party.EmploymentAgreement"/>
+        <mapping class="com.medigy.persist.model.party.EmploymentAgreementItem"/>
+        <mapping class="com.medigy.persist.model.party.EmploymentAgreementRole"/>
+        <mapping class="com.medigy.persist.model.party.Facility"/>
+        <mapping class="com.medigy.persist.model.party.Party"/>
+        <mapping class="com.medigy.persist.model.party.PartyClassification"/>
+        <mapping class="com.medigy.persist.model.party.PartyContactMechanism"/>
+        <mapping class="com.medigy.persist.model.party.PartyContactMechanismPurpose"/>
+        <mapping class="com.medigy.persist.model.party.PartyFacilityRole"/>
+        <mapping class="com.medigy.persist.model.party.PartyIdentifier"/>
+        <mapping class="com.medigy.persist.model.party.PartyQualification"/>
+        <mapping class="com.medigy.persist.model.party.PartyRelationship"/>
+        <!--mapping class="com.medigy.persist.model.party.PartyRelationshipStatus"/-->
+        <mapping class="com.medigy.persist.model.party.PartyRole"/>
+        <mapping class="com.medigy.persist.model.party.PhoneNumber"/>
+        <mapping class="com.medigy.persist.model.party.PostalAddress"/>
+        <mapping class="com.medigy.persist.model.party.PostalAddressBoundary"/>
+        <mapping class="com.medigy.persist.model.party.ValidContactMechanismRole"/>
+        <mapping class="com.medigy.persist.model.party.ValidPartyRelationshipRole"/>
+
+        <mapping package="com.medigy.persist.model.claim"/>
+        <mapping class="com.medigy.persist.model.claim.Claim"/>
+        <mapping class="com.medigy.persist.model.claim.ClaimItem"/>
+        <mapping class="com.medigy.persist.model.claim.ClaimItemDiagnosisCode"/>
+        <mapping class="com.medigy.persist.model.claim.ClaimResubmission"/>
+        <mapping class="com.medigy.persist.model.claim.ClaimRole"/>
+        <mapping class="com.medigy.persist.model.claim.ClaimServiceCode"/>
+        <mapping class="com.medigy.persist.model.claim.ClaimSettlement"/>
+        <mapping class="com.medigy.persist.model.claim.ClaimSettlementAmount"/>
+        <mapping class="com.medigy.persist.model.claim.ClaimStatus"/>
+
+        <mapping package="com.medigy.persist.model.common"/>
+        <mapping class="com.medigy.persist.model.contact.GeographicBoundary"/>
+        <mapping class="com.medigy.persist.model.contact.City"/>
+        <mapping class="com.medigy.persist.model.contact.County"/>
+        <mapping class="com.medigy.persist.model.contact.State"/>
+        <mapping class="com.medigy.persist.model.contact.Province"/>
+        <mapping class="com.medigy.persist.model.contact.PostalCode"/>
+        <mapping class="com.medigy.persist.model.contact.Country"/>
+        <!--mapping class="com.medigy.persist.model.contact.GeographicBoundaryAssociation"/-->
+
+        <mapping package="com.medigy.persist.model.health"/>
+        <mapping class="com.medigy.persist.model.health.DeliveryOutcome"/>
+        <mapping class="com.medigy.persist.model.health.Diagnosis"/>
+        <mapping class="com.medigy.persist.model.health.DiagnosisRelatedGroup"/>
+        <mapping class="com.medigy.persist.model.health.DiagnosisRelatedGroupClassification"/>
+        <mapping class="com.medigy.persist.model.health.DiagnosisTreatment"/>
+        <mapping class="com.medigy.persist.model.health.EpisodeOutcome"/>
+        <mapping class="com.medigy.persist.model.health.HealthCareDelivery"/>
+        <mapping class="com.medigy.persist.model.health.HealthCareDeliveryAssociation"/>
+        <mapping class="com.medigy.persist.model.health.HealthCareDeliveryBilling"/>
+        <mapping class="com.medigy.persist.model.health.HealthCareDeliveryClaimSubmission"/>
+        <mapping class="com.medigy.persist.model.health.HealthCareDeliveryRole"/>
+        <mapping class="com.medigy.persist.model.health.HealthCareEpisode"/>
+        <mapping class="com.medigy.persist.model.health.HealthCareOffering"/>
+        <mapping class="com.medigy.persist.model.health.HealthCareVisit"/>
+        <mapping class="com.medigy.persist.model.health.HealthCareVisitRole"/>
+        <mapping class="com.medigy.persist.model.health.HealthCareVisitStatus"/>
+        <mapping class="com.medigy.persist.model.health.PractitionerDiagnosis"/>
+        <mapping class="com.medigy.persist.model.health.ProviderOffering"/>
+        <mapping class="com.medigy.persist.model.health.Symptom"/>
+        <mapping class="com.medigy.persist.model.health.VisitReason"/>
+        <mapping class="com.medigy.persist.model.health.HealthCareLicense"/>
+
+        <mapping package="com.medigy.persist.model.product"/>
+        <mapping class="com.medigy.persist.model.product.Product"/>
+        <mapping class="com.medigy.persist.model.product.ProductCategory"/>
+        <mapping class="com.medigy.persist.model.product.ProductFeature"/>
+
+        <mapping package="com.medigy.persist.model.insurance"/>
+        <mapping class="com.medigy.persist.model.insurance.CareProviderSelection"/>
+        <mapping class="com.medigy.persist.model.insurance.CoverageLevel"/>
+        <mapping class="com.medigy.persist.model.insurance.Enrollment"/>
+        <mapping class="com.medigy.persist.model.insurance.EnrollmentElection"/>
+        <mapping class="com.medigy.persist.model.insurance.Group"/>
+        <mapping class="com.medigy.persist.model.insurance.InsurancePolicy"/>
+        <mapping class="com.medigy.persist.model.insurance.InsurancePolicyItem"/>
+        <mapping class="com.medigy.persist.model.insurance.InsurancePolicyRole"/>
+        <mapping class="com.medigy.persist.model.insurance.InsuranceProduct"/>
+
+
+        <mapping package="com.medigy.persist.model.invoice"/>
+        <mapping class="com.medigy.persist.model.invoice.BillingAccount"/>
+        <mapping class="com.medigy.persist.model.invoice.BillingAccountRole"/>
+        <mapping class="com.medigy.persist.model.invoice.Invoice"/>
+        <mapping class="com.medigy.persist.model.invoice.InvoiceItem"/>
+        <mapping class="com.medigy.persist.model.invoice.InvoiceRole"/>
+        <mapping class="com.medigy.persist.model.invoice.InvoiceStatus"/>
+        <mapping class="com.medigy.persist.model.invoice.InvoiceTerm"/>
+        <mapping class="com.medigy.persist.model.invoice.Payment"/>
+        <mapping class="com.medigy.persist.model.invoice.PaymentApplication"/>
+
+        <mapping package="com.medigy.persist.model.org"/>
+        <mapping class="com.medigy.persist.model.org.Organization"/>
+
+        <mapping package="com.medigy.persist.model.person"/>
+        <mapping class="com.medigy.persist.model.person.Person"/>
+        <mapping class="com.medigy.persist.model.person.Ethnicity"/>
+        <mapping class="com.medigy.persist.model.person.Gender"/>
+        <mapping class="com.medigy.persist.model.person.Incident"/>
+        <mapping class="com.medigy.persist.model.person.Language"/>
+        <mapping class="com.medigy.persist.model.person.MaritalStatus"/>
+        <mapping class="com.medigy.persist.model.person.PatientMedicalCondition"/>
+        <mapping class="com.medigy.persist.model.person.PhysicalCharacteristic"/>
+
+        <mapping package="com.medigy.persist.model.session"/>
+        <mapping class="com.medigy.persist.model.session.Session"/>
+        <mapping class="com.medigy.persist.model.session.EndUserSession"/>
+        <mapping class="com.medigy.persist.model.session.ProcessSession"/>
+
+        <mapping package="com.medigy.persist.model.work"/>
+        <mapping class="com.medigy.persist.model.work.WorkEffort"/>
+
+	</session-factory>
+</hibernate-configuration>
