@@ -266,8 +266,8 @@
     </library>
     <library name="Persistence Tools Dependencies (Main)">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/../../../persistence/support/tools/depend/sns-graphviz-1.0.0.jar!/" />
-        <root url="jar://$PROJECT_DIR$/../../../persistence/support/tools/depend/sns-hibernate-1.0.0.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../../../persistence-tools/depend/lib/main/sns-hibernate-1.0.0.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../../../persistence-tools/depend/lib/main/sns-graphviz-1.0.0.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
