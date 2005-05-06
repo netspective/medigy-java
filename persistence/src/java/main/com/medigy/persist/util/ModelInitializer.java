@@ -77,21 +77,21 @@
  */
 package com.medigy.persist.util;
 
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.hibernate.Criteria;
-import org.hibernate.Session;
-import org.hibernate.criterion.Expression;
-
 import com.medigy.persist.model.data.EntitySeedDataPopulator;
 import com.medigy.persist.model.party.Party;
 import com.medigy.persist.reference.CachedReferenceEntity;
 import com.medigy.persist.reference.ReferenceEntity;
 import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
 import com.medigy.persist.reference.custom.CustomReferenceEntity;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.criterion.Expression;
+import org.hibernate.criterion.Restrictions;
+
+import java.util.List;
+import java.util.Map;
 
 public class ModelInitializer
 {
@@ -141,7 +141,7 @@ public class ModelInitializer
     {
 
         final Criteria criteria = session.createCriteria(Party.class);
-        criteria.add(Expression.eq("partyName", Party.SYS_GLOBAL_PARTY_NAME));
+        criteria.add(Restrictions.eq("partyName", Party.SYS_GLOBAL_PARTY_NAME));
         return (Party) criteria.uniqueResult();
     }
 
