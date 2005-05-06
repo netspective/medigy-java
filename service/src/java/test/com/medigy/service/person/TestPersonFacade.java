@@ -40,8 +40,8 @@ package com.medigy.service.person;
 
 import com.medigy.persist.DbUnitTestCase;
 import com.medigy.persist.model.person.Person;
-import com.medigy.service.ServiceLocator;
 import com.medigy.service.util.PersonFacade;
+import com.medigy.service.util.PersonFacadeImpl;
 
 public class TestPersonFacade extends DbUnitTestCase
 {
@@ -50,8 +50,7 @@ public class TestPersonFacade extends DbUnitTestCase
     protected void setUp() throws Exception
     {
         super.setUp();
-
-        personFacade =  (PersonFacade) ServiceLocator.getInstance().getService(PersonFacade.class);
+        personFacade =  new PersonFacadeImpl();
     }
 
     public String getDataSetFile()
