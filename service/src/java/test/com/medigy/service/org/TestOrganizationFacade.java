@@ -1,10 +1,10 @@
 package com.medigy.service.org;
 
+import com.medigy.persist.DbUnitTestCase;
 import com.medigy.persist.model.org.Organization;
 import com.medigy.persist.model.party.PartyRelationship;
 import com.medigy.persist.reference.custom.party.PartyRelationshipType;
 import com.medigy.persist.util.HibernateUtil;
-import com.medigy.service.DbUnitTestCase;
 import com.medigy.service.util.OrganizationFacade;
 import com.medigy.service.util.OrganizationFacadeImpl;
 
@@ -53,7 +53,7 @@ public class TestOrganizationFacade extends DbUnitTestCase
 
     public String getDataSetFile()
     {
-        return "/com/netspective/medigy/service/org/TestOrganizationFacade.xml";
+        return "/com/medigy/service/org/TestOrganizationFacade.xml";
     }
 
 }

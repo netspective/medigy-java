@@ -38,6 +38,7 @@
  */
 package com.medigy.service.party;
 
+import com.medigy.persist.DbUnitTestCase;
 import com.medigy.persist.model.party.Party;
 import com.medigy.persist.model.party.PartyContactMechanism;
 import com.medigy.persist.model.party.PartyContactMechanismPurpose;
@@ -46,7 +47,6 @@ import com.medigy.persist.model.person.Person;
 import com.medigy.persist.reference.custom.party.ContactMechanismPurposeType;
 import com.medigy.persist.reference.type.ContactMechanismType;
 import com.medigy.persist.util.HibernateUtil;
-import com.medigy.service.DbUnitTestCase;
 import com.medigy.service.ServiceLocator;
 import com.medigy.service.contact.AddContactMechanismService;
 import com.medigy.service.dto.party.AddPostalAddressParameters;
@@ -73,7 +73,7 @@ public class TestAddContactMechanismService extends DbUnitTestCase
 
     public String getDataSetFile()
     {
-        return "/com/netspective/medigy/service/party/TestAddContactMechanismService.xml";
+        return "/com/medigy/service/party/TestAddContactMechanismService.xml";
     }
 
     public void testAddPostalAddress() throws Exception

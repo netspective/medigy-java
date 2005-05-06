@@ -38,10 +38,10 @@
  */
 package com.medigy.service.person;
 
-import com.medigy.service.ServiceLocator;
-import com.medigy.service.DbUnitTestCase;
-import com.medigy.service.util.PersonFacade;
+import com.medigy.persist.DbUnitTestCase;
 import com.medigy.persist.model.person.Person;
+import com.medigy.service.ServiceLocator;
+import com.medigy.service.util.PersonFacade;
 
 public class TestPersonFacade extends DbUnitTestCase
 {
@@ -56,7 +56,7 @@ public class TestPersonFacade extends DbUnitTestCase
 
     public String getDataSetFile()
     {
-        return "/com/netspective/medigy/service/person/TestPersonFacade.xml";
+        return "/com/medigy/service/person/TestPersonFacade.xml";
     }
 
     public void testListPersonByLastName() throws Exception
