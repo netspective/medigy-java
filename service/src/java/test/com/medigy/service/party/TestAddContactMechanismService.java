@@ -47,10 +47,19 @@ import com.medigy.persist.model.person.Person;
 import com.medigy.persist.reference.custom.party.ContactMechanismPurposeType;
 import com.medigy.persist.reference.type.ContactMechanismType;
 import com.medigy.persist.util.HibernateUtil;
-import com.medigy.service.ServiceLocator;
 import com.medigy.service.contact.AddContactMechanismService;
+import com.medigy.service.contact.AddContactMechanismServiceImpl;
 import com.medigy.service.dto.party.AddPostalAddressParameters;
 import com.medigy.service.dto.party.NewPostalAddress;
+import com.medigy.service.ServiceLocator;
+import com.medigy.service.common.ReferenceEntityLookupServiceImpl;
+import com.medigy.service.common.ReferenceEntityLookupService;
+import com.medigy.service.util.PartyRelationshipFacadeImpl;
+import com.medigy.service.util.PartyRelationshipFacade;
+import com.medigy.service.util.PersonFacadeImpl;
+import com.medigy.service.util.PersonFacade;
+import com.medigy.service.person.PatientRegistrationServiceImpl;
+import com.medigy.service.person.PatientRegistrationService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
@@ -68,7 +77,17 @@ public class TestAddContactMechanismService extends DbUnitTestCase
     protected void setUp() throws Exception
     {
         super.setUp();
-        service = (AddContactMechanismService) ServiceLocator.getInstance().getService(AddContactMechanismService.class);
+        loadServiceLocator();
+        service = new AddContactMechanismServiceImpl();
+    }
+
+    protected void loadServiceLocator()
+    {
+        ServiceLocator.getInstance().loadService(PersonFacade.class, new PersonFacadeImpl());
+        ServiceLocator.getInstance().loadService(ReferenceEntityLookupService.class, new ReferenceEntityLookupServiceImpl());
+        ServiceLocator.getInstance().loadService(PartyRelationshipFacade.class, new PartyRelationshipFacadeImpl());
+        ServiceLocator.getInstance().loadService(PatientRegistrationService.class, new PatientRegistrationServiceImpl());
+        ServiceLocator.getInstance().loadService(AddContactMechanismService.class, new AddContactMechanismServiceImpl());
     }
 
     public String getDataSetFile()
