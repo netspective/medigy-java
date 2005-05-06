@@ -10,12 +10,8 @@
             <fileset dir="${repository.home}/common/depend/lib/main" includes="*.jar"/>
             <fileset dir="${repository.home}/persistence/depend/lib/build" includes="*.jar"/>
             <fileset dir="${repository.home}/persistence/depend/lib/main" includes="*.jar"/>
-            <path location="${repository.home}/persistence/support/build/artifacts/classes/main"/>
 
-<!--        WE DON'T HAVE ANY OF OUR OWN LIBS YET
-            <fileset dir="${module.dependencies.lib.home}/build" includes="*.jar"/>
-            <fileset dir="${module.dependencies.lib.home}/main" includes="*.jar"/>
--->
+            <path location="${repository.home}/persistence/support/build/artifacts/classes/main"/>
         </path>
     </target>
 
@@ -27,14 +23,9 @@
             <fileset dir="${repository.home}/persistence/depend/lib/build" includes="*.jar"/>
             <fileset dir="${repository.home}/persistence/depend/lib/main" includes="*.jar"/>
             <fileset dir="${repository.home}/persistence/depend/lib/test" includes="*.jar"/>
+
             <path location="${repository.home}/persistence/support/build/artifacts/classes/main"/>
             <path location="${repository.home}/persistence/support/build/artifacts/classes/test"/>
-
-<!--        WE DON'T HAVE ANY OF OUR OWN LIBS YET
-            <fileset dir="${module.dependencies.lib.home}/build" includes="*.jar"/>
-            <fileset dir="${module.dependencies.lib.home}/main" includes="*.jar"/>
-            <fileset dir="${module.dependencies.lib.home}/test" includes="*.jar"/>
--->
         </path>
     </target>
 
