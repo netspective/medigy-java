@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<project name="module" xmlns:ivy="antlib:fr.jayasoft.ivy.ant">
+
+    <target name="init.define-properties">
+
+    <!-- *********************************************************************************************************
+         ** Remember, Ant properties are immutable once assigned. This means that any property assignments here **
+         ** may be overridden by the command line or items in the build.properties file                         **
+         ********************************************************************************************************* -->
+
+        <!-- Locate the build properties file. -->
+        <path id="tmp.module.build.properties">
+            <pathelement location="${basedir}/build.properties"/>
+        </path>
+        <pathconvert targetos="unix" property="module.build.properties" refid="tmp.module.build.properties"/>
+
+        <!-- Read the properties from the file provided (if any). All properties in the file will override the following properties. -->
+        <property file="${module.build.properties}"/>
+
+        <!-- Locate the repository home in case it wasn't provided. -->
+        <path id="tmp.repository.home">
+            <pathelement location="${basedir}/../../../"/>
+        </path>
+        <pathconvert targetos="unix" property="repository.home" refid="tmp.repository.home"/>
+
+        <!-- Locate the module home in case it wasn't provided. -->
+        <path id="tmp.module.home">
+            <pathelement location="${basedir}/../../"/>
+        </path>
+        <pathconvert targetos="unix" property="module.home" refid="tmp.module.home"/>
+
+        <!-- Figure out a default the module name in case it hasn't been assigned. -->
+        <basename property="tmp.module.name" file="${module.home}"/>
+        <property name="module.name" value="medigy-${tmp.module.name}"/>
+
+        <property name="repository.support.home" value="${repository.home}/support"/>
+        <property name="repository.support.build.home" value="${repository.support.home}/build"/>
+
+        <property name="module.build.home" value="${basedir}"/>
+        <property name="module.artifacts.home" value="${module.build.home}/artifacts"/>
+        <property name="module.artifacts.test.home" value="${module.artifacts.home}/test"/>
+        <property name="module.artifacts.test.junit.home" value="${module.artifacts.home}/test/junit"/>
+        <property name="module.artifacts.test.db.home" value="${module.artifacts.test.home}/db"/>
+        <property name="module.artifacts.test.coverage.home" value="${module.artifacts.test.home}/coverage"/>
+        <property name="module.artifacts.test.coverage.instr.home" value="${module.artifacts.test.coverage.home}/instr"/>
+
+        <property name="module.artifacts.classes.home" value="${module.artifacts.home}/classes"/>
+        <property name="module.artifacts.classes.main.home" value="${module.artifacts.classes.home}/main"/>
+        <property name="module.artifacts.classes.test.home" value="${module.artifacts.classes.home}/test"/>
+
+        <property name="module.dependencies.home" value="${module.home}/depend"/>
+        <property name="module.dependencies.lib.home" value="${module.dependencies.home}/lib"/>
+
+        <property name="module.src.home" value="${module.home}/src"/>
+        <property name="module.src.main.home" value="${module.src.home}/java/main"/>
+        <property name="module.src.test.home" value="${module.src.home}/java/test"/>
+
+        <property name="module.jar.name" value="${module.name}.jar"/>
+        <property name="module.artifacts.jar" value="${module.artifacts.home}/${module.jar.name}"/>
+
+        <echo message="repository.home is ${repository.home}"/>
+        <echo message="module.home is ${module.home}"/>
+        <echo message="module.build.properties is ${module.build.properties}"/>
+    </target>
+
+    <!-- ==================== Sourcepaths  ======================= -->
+
+    <target name="init.define-main.srcpath" depends="init.define-properties">
+        <path id="module.main.srcpath" location="${module.src.main.home}" />
+    </target>
+
+    <target name="init.define-test.srcpath" depends="init.define-properties">
+        <path id="module.test.srcpath" location="${module.src.test.home}" />
+    </target>
+
+    <target name="init.define-main.resources" depends="init.define-properties">
+        <fileset id="module.resources.main" dir="${module.src.main.home}">
+            <include name="**/*.xml"/>
+            <include name="**/*.properties"/>
+        </fileset>
+    </target>
+
+    <target name="init.define-test.resources" depends="init.define-properties">
+        <fileset id="module.resources.test" dir="${module.src.test.home}">
+            <include name="**/*.xml"/>
+            <include name="**/*.properties"/>
+        </fileset>
+    </target>
+
+    <target name="init.define-srcpaths" depends="init.define-main.srcpath,init.define-test.srcpath,init.define-main.resources,init.define-test.resources"/>
+
+    <!-- ==================== Classpaths  ======================= -->
+
+    <target name="init.define-module.dependencies.main.classpath" depends="init.define-properties">
+        <path id="module.dependencies.main.classpath">
+            <fileset dir="${repository.home}/common/depend/lib/build" includes="*.jar"/>
+            <fileset dir="${repository.home}/common/depend/lib/main" includes="*.jar"/>
+            <fileset dir="${module.dependencies.lib.home}/build" includes="*.jar"/>
+            <fileset dir="${module.dependencies.lib.home}/main" includes="*.jar"/>
+        </path>
+    </target>
+
+    <target name="init.define-module.dependencies.test.classpath" depends="init.define-properties">
+        <path id="module.dependencies.test.classpath">
+            <fileset dir="${repository.home}/common/depend/lib/build" includes="*.jar"/>
+            <fileset dir="${repository.home}/common/depend/lib/main" includes="*.jar"/>
+            <fileset dir="${repository.home}/common/depend/lib/test" includes="*.jar"/>
+            <fileset dir="${module.dependencies.lib.home}/build" includes="*.jar"/>
+            <fileset dir="${module.dependencies.lib.home}/main" includes="*.jar"/>
+            <fileset dir="${module.dependencies.lib.home}/test" includes="*.jar"/>
+        </path>
+    </target>
+
+    <target name="init.define-module.dependencies.classpaths" depends="init.define-module.dependencies.main.classpath,init.define-module.dependencies.test.classpath"/>
+
+    <!-- ==================== Compile targets  ======================= -->
+
+    <target name="init.emma" depends="init.define-properties,init.define-module.dependencies.classpaths" if="module.test.coverage.enabled">
+        <taskdef resource="emma_ant.properties" classpathref="module.dependencies.test.classpath" />
+    </target>
+
+    <!-- ==================== Compile targets  ======================= -->
+
+    <target name="compile.main" depends="init.define-srcpaths,init.define-module.dependencies.classpaths">
+        <delete dir="${module.artifacts.classes.main.home}"/>
+        <mkdir dir="${module.artifacts.classes.main.home}"/>
+        <copy todir="${module.artifacts.classes.main.home}" >
+            <fileset refid="module.resources.main"/>
+        </copy>
+        <javac destdir="${module.artifacts.classes.main.home}"
+            debug="on" optimize="true" deprecation="off" classpathref="module.dependencies.main.classpath">
+            <src refid="module.main.srcpath"/>
+            <!--<compilerarg value="-Xlint:unchecked"/>-->
+        </javac>
+    </target>
+
+    <target name="compile.test" depends="compile.main">
+        <delete dir="${module.artifacts.classes.test.home}"/>
+        <mkdir dir="${module.artifacts.classes.test.home}"/>
+        <copy todir="${module.artifacts.classes.test.home}">
+            <fileset refid="module.resources.test"/>
+        </copy>
+        <javac destdir="${module.artifacts.classes.test.home}"
+            debug="on" optimize="true" deprecation="off">
+            <classpath>
+                <path refid="module.dependencies.test.classpath"/>
+                <pathelement location="${module.artifacts.classes.main.home}"/>
+            </classpath>
+            <src refid="module.test.srcpath"/>
+            <!--<compilerarg value="-Xlint:unchecked"/>-->
+        </javac>
+    </target>
+
+    <target name="instrument" depends="compile.main,init.emma" if="module.test.coverage.enabled">
+        <delete dir="${module.artifacts.test.coverage.instr.home}"/>
+        <mkdir dir="${module.artifacts.test.coverage.instr.home}"/>
+        <emma>
+            <instr instrpath="${module.artifacts.classes.main.home}"
+                   destdir="${module.artifacts.test.coverage.instr.home}"
+                   metadatafile="${module.artifacts.test.coverage.home}/metadata.emma"/>
+        </emma>
+    </target>
+
+    <!-- ==================== Packaging targets  ======================= -->
+
+    <target name="jar.no-ivy" depends="compile.main" unless="ivy.repository.home">
+        <jar jarfile="${module.artifacts.jar}" basedir="${module.artifacts.classes.main.home}">
+            <include name="**/*"/>
+        </jar>
+    </target>
+
+    <target name="jar.publish-ivy" depends="compile.main" if="ivy.repository.home">
+        <jar jarfile="${module.artifacts.jar}" basedir="${module.artifacts.classes.main.home}">
+            <include name="**/*"/>
+        </jar>
+        <ivy:configure file="${repository.support.build.home}/ivy.conf.xml"/>
+        <ivy:resolve/>
+		<ivy:publish artifactspattern="${module.artifacts.home}/[module].[ext]"
+			resolver="projects" status="release"/>
+    </target>
+
+    <target name="jar" depends="jar.no-ivy,jar.publish-ivy"/>
+
+    <!-- ==================== Test targets  ======================= -->
+
+    <target name="test.uninstrumented" depends="compile.main" unless="module.test.coverage.enabled">
+        <mkdir dir="${module.artifacts.test.junit.home}"/>
+        <junit filtertrace="yes" fork="true" maxmemory="256m" >
+            <classpath>
+                <pathelement location="${module.artifacts.classes.main.home}"/>
+                <pathelement location="${module.artifacts.classes.test.home}"/>
+                <path refid="module.dependencies.test.classpath"/>
+            </classpath>
+
+            <formatter type="xml" usefile="true"/>
+            <syspropertyset>
+                <propertyref prefix="module"/>
+                <mapper type="glob" from="module*" to="ant.build.module*"/>
+            </syspropertyset>
+            <test name="${module.test.TestSuite}" todir="${module.artifacts.test.junit.home}"/>
+        </junit>
+
+        <junitreport todir="${module.artifacts.test.junit.home}">
+            <fileset dir="${module.artifacts.test.junit.home}">
+                <include name="TEST-*.xml"/>
+            </fileset>
+            <report format="noframes" todir="${module.artifacts.test.junit.home}"/>
+        </junitreport>
+    </target>
+
+    <target name="test.instrumented" depends="compile.test,instrument" if="module.test.coverage.enabled">
+        <mkdir dir="${module.artifacts.test.junit.home}"/>
+        <junit filtertrace="yes" fork="true" maxmemory="256m">
+            <classpath>
+                <path refid="module.dependencies.test.classpath"/>
+                <pathelement location="${module.artifacts.test.coverage.instr.home}" />
+                <pathelement location="${module.artifacts.classes.test.home}"/>
+                <pathelement location="${module.artifacts.classes.main.home}"/>
+            </classpath>
+
+            <jvmarg value="-Demma.coverage.out.file=${module.artifacts.test.coverage.home}/coverage.emma" />
+            <jvmarg value="-Demma.coverage.out.merge=false" />
+
+            <formatter type="xml" usefile="true"/>
+            <syspropertyset>
+                <propertyref prefix="module"/>
+                <mapper type="glob" from="module*" to="ant.build.module*"/>
+            </syspropertyset>
+            <test name="${module.test.TestSuite}" todir="${module.artifacts.test.junit.home}"/>
+        </junit>
+
+        <junitreport todir="${module.artifacts.test.junit.home}">
+            <fileset dir="${module.artifacts.test.junit.home}">
+                <include name="TEST-*.xml"/>
+            </fileset>
+            <report format="noframes" todir="${module.artifacts.test.junit.home}"/>
+        </junitreport>
+
+        <emma>
+            <report sourcepath="${module.src.main.home}" sort="+block,+name,+method,+class"
+                metrics="method:70,block:80,line:80,class:100">
+                <fileset dir="${module.artifacts.test.coverage.home}" includes="*.emma" />
+                <txt outfile="${module.artifacts.test.coverage.home}/coverage.txt" depth="package"
+                    columns="class,method,block,line,name"/>
+                <html outfile="${module.artifacts.test.coverage.home}/coverage.html" depth="method"
+                    columns="name,class,method,block,line"/>
+            </report>
+        </emma>
+    </target>
+
+    <target name="test.verify-module.test.TestSuite" depends="init.define-properties" unless="module.test.TestSuite">
+        <fail message="The property module.test.TestSuite was not set"/>
+    </target>
+
+    <target name="test" depends="test.verify-module.test.TestSuite,compile.test,test.uninstrumented,test.instrumented"/>
+
+    <target name="clean" depends="init.define-properties">
+        <delete dir="${module.artifacts.home}"/>
+    </target>
+
+    <target name="retrieve-all-dependencies" depends="init.define-properties">
+        <property name="ivy.lib.dir" value="${module.lib.home}"/>
+        <ivy:configure file="${repository.support.build.home}/ivy.conf.xml"/>
+        <ivy:retrieve/>
+        <ivy:report todir="${module.artifacts.home}/ivy" />
+    </target>
+
+    <target name="all" depends="clean,jar"/>
+
+</project>

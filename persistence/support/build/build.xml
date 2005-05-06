@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<project name="sns-graphviz" default="all">
+<project name="medigy-persistence" default="all">
 
-    <import file="../../../support/build/common.xml"/>
+    <import file="../../../support/build/module.xml"/>
 
 </project>
