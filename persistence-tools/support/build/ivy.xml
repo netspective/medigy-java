@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ivy-module version="1.0">
+    <info organisation="com.medigy" module="medigy-persistence-tools" revision="1.0.0" status="release"/>
+    <dependencies>
+        <dependency name="medigy-persistence" rev="1.+"/>
+    </dependencies>
+</ivy-module>

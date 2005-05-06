@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<project name="medigy-persistence-tools" default="all">
+
+    <import file="../../../support/build/module.xml"/>
+
+    <target name="init.define-module.dependencies.main.classpath" depends="init.define-properties">
+        <path id="module.dependencies.main.classpath">
+            <fileset dir="${repository.home}/common/depend/lib/build" includes="*.jar"/>
+            <fileset dir="${repository.home}/common/depend/lib/main" includes="*.jar"/>
+            <fileset dir="${repository.home}/persistence/depend/lib/build" includes="*.jar"/>
+            <fileset dir="${repository.home}/persistence/depend/lib/main" includes="*.jar"/>
+            <path location="${repository.home}/persistence/support/build/artifacts/classes/main"/>
+
+            <fileset dir="${module.dependencies.lib.home}/main" includes="*.jar"/>
+        </path>
+    </target>
+
+    <target name="init.define-module.dependencies.test.classpath" depends="init.define-properties">
+        <path id="module.dependencies.test.classpath">
+            <fileset dir="${repository.home}/common/depend/lib/build" includes="*.jar"/>
+            <fileset dir="${repository.home}/common/depend/lib/main" includes="*.jar"/>
+            <fileset dir="${repository.home}/common/depend/lib/test" includes="*.jar"/>
+            <fileset dir="${repository.home}/persistence/depend/lib/build" includes="*.jar"/>
+            <fileset dir="${repository.home}/persistence/depend/lib/main" includes="*.jar"/>
+            <fileset dir="${repository.home}/persistence/depend/lib/test" includes="*.jar"/>
+            <path location="${repository.home}/persistence/support/build/artifacts/classes/main"/>
+            <path location="${repository.home}/persistence/support/build/artifacts/classes/test"/>
+
+            <fileset dir="${module.dependencies.lib.home}/main" includes="*.jar"/>
+        </path>
+    </target>
+
+</project>
