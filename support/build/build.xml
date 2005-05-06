@@ -13,6 +13,8 @@
         </path>
         <pathconvert targetos="unix" property="repository.home" refid="tmp.repository.home"/>
         <property name="consolidated.artifacts.home" value="${basedir}/artifacts"/>
+        <property name="consolidated.artifacts.test.junit.home" value="${consolidated.artifacts.home}/junit"/>
+        <property name="consolidated.artifacts.test.coverage.home" value="${consolidated.artifacts.home}/coverage"/>
     </target>
 
     <target name="clean" depends="init.define-properties">
@@ -48,8 +50,40 @@
             <property name="persistence.artifacts.home" value="${consolidated.artifacts.home}/persistence"/>
             <property name="module.artifacts.home" value="${consolidated.artifacts.home}/service"/>
         </ant>
+
+        <mkdir dir="${consolidated.artifacts.test.junit.home}"/>
+        <junitreport todir="${consolidated.artifacts.test.junit.home}">
+            <fileset dir="${consolidated.artifacts.home}">
+                <include name="**/test/junit/TEST-*.xml"/>
+            </fileset>
+            <report format="noframes" todir="${consolidated.artifacts.test.junit.home}"/>
+        </junitreport>
+
+        <taskdef resource="emma_ant.properties">
+            <classpath>
+                <fileset dir="${repository.home}/common/depend/lib/test" includes="*.jar"/>
+            </classpath>
+        </taskdef>
+
+        <emma>
+            <report sort="+block,+name,+method,+class"
+                metrics="method:70,block:80,line:80,class:100">
+                <fileset dir="${consolidated.artifacts.home}" includes="**/*.emma"/>
+
+                <sourcepath>
+                    <dirset dir="${repository.home}" >
+                        <include name="**/src/java/main" />
+                        <include name="**/src/java/test" />
+                    </dirset>
+                </sourcepath>
+
+                <txt outfile="${consolidated.artifacts.test.coverage.home}/coverage.txt" depth="package"
+                    columns="class,method,block,line,name"/>
+                <html outfile="${consolidated.artifacts.test.coverage.home}/index.html" depth="method"
+                    columns="name,class,method,block,line"/>
+            </report>
+        </emma>
     </target>
 
     <target name="all" depends="clean,jar"/>
-
 </project>
