@@ -1,28 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<project default="all">
+<project name="medigy-platform" default="all">
 
-    <target name="init.prepare-repository-home" unless="repository.home" description="If repository.home property is not passed in, set the repository home path relative to the location of this build file.">
+    <target name="init.define-properties">
+        <!-- *********************************************************************************************************
+             ** Remember, Ant properties are immutable once assigned. This means that any property assignments here **
+             ** may be overridden by the command line or items in the build.properties file                         **
+             ********************************************************************************************************* -->
+
         <path id="tmp.repository.home">
             <pathelement location="${basedir}/../.."/>
         </path>
         <pathconvert targetos="unix" property="repository.home" refid="tmp.repository.home"/>
+        <property name="consolidated.artifacts.home" value="${basedir}/artifacts"/>
     </target>
 
-    <target name="clean" depends="init.prepare-repository-home">
+    <target name="clean" depends="init.define-properties">
+        <delete dir="${consolidated.artifacts.home}"/>
         <delete dir="${repository.home}/support/build/ivy-cache"/>
-        <ant dir="${repository.home}/graphviz/support/build" target="clean" inheritall="false" inheritrefs="false" />
-        <ant dir="${repository.home}/hibernate/support/build" target="clean" inheritall="false" inheritrefs="false" />
+
+        <ant dir="${repository.home}/persistence/support/build" target="clean" inheritall="false" inheritrefs="false" />
+        <ant dir="${repository.home}/persistence-tools/support/build" target="clean" inheritall="false" inheritrefs="false" />
+        <ant dir="${repository.home}/service/support/build" target="clean" inheritall="false" inheritrefs="false" />
     </target>
 
-    <target name="all" depends="init.prepare-repository-home">
-        <ant dir="${repository.home}/graphviz/support/build" target="retrieve-all-dependencies" inheritall="false" inheritrefs="false" />
-        <ant dir="${repository.home}/graphviz/support/build" target="clean" inheritall="false" inheritrefs="false" />
-        <ant dir="${repository.home}/graphviz/support/build" target="jar" inheritall="false" inheritrefs="false" />
-
-        <ant dir="${repository.home}/hibernate/support/build" target="retrieve-all-dependencies" inheritall="false" inheritrefs="false" />
-        <ant dir="${repository.home}/hibernate/support/build" target="clean" inheritall="false" inheritrefs="false" />
-        <ant dir="${repository.home}/hibernate/support/build" target="jar" inheritall="false" inheritrefs="false" />
+    <target name="jar" depends="init.define-properties">
+        <ant dir="${repository.home}/persistence/support/build" target="jar" inheritall="false" inheritrefs="false">
+            <property name="common.artifacts.home" value="${consolidated.artifacts.home}/common"/>
+            <property name="module.artifacts.home" value="${consolidated.artifacts.home}/persistence"/>
+        </ant>
+        <ant dir="${repository.home}/persistence-tools/support/build" target="jar" inheritall="false" inheritrefs="false">
+            <property name="persistence.artifacts.home" value="${consolidated.artifacts.home}/persistence"/>
+            <property name="module.artifacts.home" value="${consolidated.artifacts.home}/persistence-tools"/>
+        </ant>
+        <ant dir="${repository.home}/service/support/build" target="jar" inheritall="false" inheritrefs="false">
+            <property name="persistence.artifacts.home" value="${consolidated.artifacts.home}/persistence"/>
+            <property name="module.artifacts.home" value="${consolidated.artifacts.home}/service"/>
+        </ant>
     </target>
+
+    <target name="test" depends="init.define-properties">
+        <ant dir="${repository.home}/persistence/support/build" target="test" inheritall="false" inheritrefs="false">
+            <property name="common.artifacts.home" value="${consolidated.artifacts.home}/common"/>
+            <property name="module.artifacts.home" value="${consolidated.artifacts.home}/persistence"/>
+        </ant>
+        <ant dir="${repository.home}/service/support/build" target="test" inheritall="false" inheritrefs="false">
+            <property name="persistence.artifacts.home" value="${consolidated.artifacts.home}/persistence"/>
+            <property name="module.artifacts.home" value="${consolidated.artifacts.home}/service"/>
+        </ant>
+    </target>
+
+    <target name="all" depends="clean,jar"/>
 
 </project>

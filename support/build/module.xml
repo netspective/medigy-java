@@ -64,6 +64,21 @@
         <echo message="module.build.properties is ${module.build.properties}"/>
     </target>
 
+    <target name="init.define-modules" depends="init.define-properties">
+        <property name="common.home" value="${repository.home}/common"/>
+        <property name="persistence.home" value="${repository.home}/persistence"/>
+        <property name="persistence-tools.home" value="${repository.home}/persistence-tools"/>
+        <property name="service.home" value="${repository.home}/service"/>
+        <property name="support.home" value="${repository.home}/support"/>
+    </target>
+
+    <target name="init.define-modules-artifacts-home" depends="init.define-modules">
+        <property name="common.artifacts.home" value="${common.home}/common/support/build/artifacts"/>
+        <property name="persistence.artifacts.home" value="${persistence.home}/support/build/artifacts"/>
+        <property name="persistence-tools.artifacts.home" value="${persistence-tools.home}/support/build/artifacts"/>
+        <property name="service.artifacts.home" value="${service.home}/support/build/artifacts"/>
+    </target>
+
     <!-- ==================== Sourcepaths  ======================= -->
 
     <target name="init.define-main.srcpath" depends="init.define-properties">
