@@ -38,16 +38,15 @@
  */
 package com.medigy.persist.model.invoice;
 
-import java.util.Date;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import com.medigy.persist.DbUnitTestCase;
 import com.medigy.persist.model.party.Party;
 import com.medigy.persist.reference.custom.invoice.InvoiceStatusType;
 import com.medigy.persist.reference.custom.invoice.InvoiceTermType;
 import com.medigy.persist.util.HibernateUtil;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import java.util.Date;
 
 public class TestInvoice  extends DbUnitTestCase
 {
@@ -109,9 +108,8 @@ public class TestInvoice  extends DbUnitTestCase
         HibernateUtil.closeSession();
     }
 
-    @Override
     public String getDataSetFile()
     {
-        return "/com/netspective/medigy/model/invoice/TestInvoice.xml";
+        return "/com/medigy/persist/model/invoice/TestInvoice.xml";
     }
 }

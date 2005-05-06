@@ -1,11 +1,11 @@
 package com.medigy.persist.model.party;
 
-import java.util.List;
-
 import com.medigy.persist.DbUnitTestCase;
 import com.medigy.persist.model.org.Organization;
 import com.medigy.persist.reference.custom.party.PartyRelationshipType;
 import com.medigy.persist.util.HibernateUtil;
+
+import java.util.List;
 
 public final class TestPartyRelationship extends DbUnitTestCase
 {
@@ -49,9 +49,8 @@ public final class TestPartyRelationship extends DbUnitTestCase
         assertEquals(groupRole.getPartyRoleId(), newRelation.getPartyTo().getPartyId());
     }
 
-    @Override
     public String getDataSetFile()
     {        
-        return "/com/netspective/medigy/model/party/TestPartyRelationship.xml";
+        return "/com/medigy/persist/model/party/TestPartyRelationship.xml";
     }
 }
