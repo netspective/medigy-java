@@ -118,32 +118,49 @@ public abstract class TestCase extends junit.framework.TestCase
 
     protected void setUp() throws Exception
     {
-        System.out.println("here in setup");
         super.setUp();
-
-        final String systemTempDir = System.getProperty("java.io.tmpdir");
-        final String systemFileSep = System.getProperty("file.separator");
-
-        final String testDbDir = System.getProperty("project.test.db.dir", systemTempDir);
-
-        databaseDirectory = new File(testDbDir + systemFileSep + getClassNameWithoutPackage());
-        System.out.println("Database directory: " + databaseDirectory.getAbsolutePath());
-
+        setupDatabaseDirectory();
         final HibernateConfiguration hibernateConfiguration = getHibernateConfiguration();
         HibernateUtil.setConfiguration(hibernateConfiguration);
+        setupModelInitializer(hibernateConfiguration);
+        generateSchemaDdl(hibernateConfiguration);
+        setupSession();
+    }
 
-        if (initializeModelData)
-            new ModelInitializer(HibernateUtil.getSession(),
-                             ModelInitializer.SeedDataPopulationType.AUTO,
-                             hibernateConfiguration).initialize();
+    protected void setupDatabaseDirectory()
+    {
+        final String systemTempDir = System.getProperty("java.io.tmpdir");
+        final String systemFileSep = System.getProperty("file.separator");
+        final String testDbDir = System.getProperty("project.test.db.dir", systemTempDir);
+        databaseDirectory = new File(testDbDir + systemFileSep + getClassNameWithoutPackage());
+        log.info("Database directory: " + databaseDirectory.getAbsolutePath());
+    }
 
+    protected void generateSchemaDdl(final HibernateConfiguration hibernateConfiguration)
+    {
+        final String systemFileSep = System.getProperty("file.separator");
         // Generate the DDL into a file so we can review it
         SchemaExport se = new SchemaExport(hibernateConfiguration);
         final String dialectName = hibernateConfiguration.getProperties().getProperty(Environment.DIALECT);
         final String dialectShortName = dialectName.substring(dialectName.lastIndexOf('.') + 1);
         se.setOutputFile(databaseDirectory.getAbsolutePath() + systemFileSep + "medigy-" + dialectShortName + ".ddl");
         se.create(false, false);
+    }
 
+    protected void setupModelInitializer(final HibernateConfiguration hibernateConfiguration) throws Exception
+    {
+        if (initializeModelData)
+            new ModelInitializer(HibernateUtil.getSession(),
+                             ModelInitializer.SeedDataPopulationType.AUTO,
+                             hibernateConfiguration).initialize();
+        else
+            new ModelInitializer(HibernateUtil.getSession(),
+                             ModelInitializer.SeedDataPopulationType.NO,
+                             hibernateConfiguration).initialize();
+    }
+
+    protected void setupSession() throws Exception
+    {
         // setup a person here so that we can add a contact information for him/her
         Session session = new ProcessSession();
         session.setProcessName(getClass().getName() + "." + getName());

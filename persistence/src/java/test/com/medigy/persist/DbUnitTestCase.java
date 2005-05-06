@@ -38,9 +38,8 @@
  */
 package com.medigy.persist;
 
-import java.io.FileOutputStream;
-import java.io.InputStream;
-
+import com.medigy.persist.util.HibernateConfiguration;
+import com.medigy.persist.util.HibernateUtil;
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.database.IDatabaseConnection;
 import org.dbunit.dataset.IDataSet;
@@ -48,22 +47,23 @@ import org.dbunit.dataset.xml.FlatXmlDataSet;
 import org.dbunit.operation.DatabaseOperation;
 import org.hibernate.cfg.Environment;
 
-import com.medigy.persist.util.HibernateUtil;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 
 public abstract class DbUnitTestCase extends TestCase
 {
-    protected void setUp() throws Exception
+    protected void setupModelInitializer(final HibernateConfiguration hibernateConfiguration) throws Exception
     {
-        // NOTE: This will disable the SYS GLOBAL party creation and creation of all the reference entities!!!
-        initializeModelData = false;
-        
-        super.setUp();
         IDatabaseConnection dbUnitConn = null;
         dbUnitConn = getDbUnitConnection();
         DatabaseOperation.REFRESH.execute(dbUnitConn, getDataSet());
         dbUnitConn.getConnection().commit();
         dbUnitConn.close();
         dbUnitConn.getConnection().close();
+
+        // NOTE: This will disable the SYS GLOBAL party creation and creation of all the reference entities!!!
+        initializeModelData = false;
+        super.setupModelInitializer(hibernateConfiguration);
     }
 
     protected IDataSet getDataSet() throws Exception

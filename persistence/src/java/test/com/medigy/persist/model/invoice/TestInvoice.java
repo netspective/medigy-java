@@ -46,7 +46,7 @@ import com.medigy.persist.util.HibernateUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import java.util.Date;
+import java.util.Calendar;
 
 public class TestInvoice  extends DbUnitTestCase
 {
@@ -54,6 +54,9 @@ public class TestInvoice  extends DbUnitTestCase
 
     public void testInvoice()
     {
+        Party sysglobal = (Party) HibernateUtil.getSession().load(Party.class, new Long(1));
+        assertNotNull(sysglobal);
+
         final Invoice invoice = new Invoice();
         invoice.setDescription("New invoice");
 
@@ -77,15 +80,18 @@ public class TestInvoice  extends DbUnitTestCase
         assertEquals(savedInvoiceTerm.getTermValue(), new Long(30));
         assertEquals(savedInvoiceTerm.getInvoice().getInvoiceId(), invoice.getInvoiceId());
 
+        Calendar cal = Calendar.getInstance();
+        cal.set(2005, 1, 10);
         final InvoiceStatus status = new InvoiceStatus();
         status.setType(InvoiceStatusType.Cache.SENT.getEntity());
-        status.setDate(new Date());
+        status.setDate(cal.getTime());
         status.setInvoice(newInvoice);
         newInvoice.getInvoiceStatuses().add(status);
 
+        cal.set(2005, 1, 11);
         final InvoiceStatus voidStatus = new InvoiceStatus();
         voidStatus.setType(InvoiceStatusType.Cache.VOID.getEntity());
-        voidStatus.setDate(new Date());
+        voidStatus.setDate(cal.getTime());
         voidStatus.setInvoice(newInvoice);
         newInvoice.getInvoiceStatuses().add(voidStatus);
  
@@ -98,7 +104,7 @@ public class TestInvoice  extends DbUnitTestCase
         log.info("VALID: Invoice");
         assertEquals(2, savedInvoice.getInvoiceStatuses().size());
         log.info("VALID: Invoice status count");
-        //assertEquals(voidStatus.getInvoiceStatusId(), savedInvoice.getCurrentInvoiceStatus().getInvoiceStatusId());
+        assertEquals(voidStatus.getInvoiceStatusId(), savedInvoice.getCurrentInvoiceStatus().getInvoiceStatusId());
         assertEquals(savedInvoice.getCurrentInvoiceStatus().getType(), InvoiceStatusType.Cache.VOID.getEntity());
         log.info("VALID: Current Invoice status type");
         assertEquals(1, savedInvoice.getInvoiceTerms().size());
