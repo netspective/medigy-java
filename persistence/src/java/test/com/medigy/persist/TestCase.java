@@ -131,9 +131,9 @@ public abstract class TestCase extends junit.framework.TestCase
     {
         final String systemTempDir = System.getProperty("java.io.tmpdir");
         final String systemFileSep = System.getProperty("file.separator");
-        final String testDbDir = System.getProperty("project.test.db.dir", systemTempDir);
+        final String testDbDir = System.getProperty("ant.build.module.artifacts.test.db.home", systemTempDir);
         databaseDirectory = new File(testDbDir + systemFileSep + getClassNameWithoutPackage());
-        log.info("Database directory: " + databaseDirectory.getAbsolutePath());
+        log.info("Test database directory: " + databaseDirectory.getAbsolutePath());
     }
 
     protected void generateSchemaDdl(final HibernateConfiguration hibernateConfiguration)
