@@ -17,7 +17,12 @@ public class OrganizationFacadeImpl implements OrganizationFacade
     {
         return PartyRelationshipType.Cache.ORGANIZATION_ROLLUP.getEntity();
     }
-    
+
+    /**
+     * Adds a logical insurance group under a Employer organization. This could just
+     * be a place holder for a group # for an employee's insurance policy.
+     * @param parentOrg   Employer organization
+     */
     public void addInsuranceGroup(final Organization parentOrg, final String groupName)
     {
         final Organization childOrg = new Organization();
@@ -26,18 +31,22 @@ public class OrganizationFacadeImpl implements OrganizationFacade
         final PartyRole childRole = new PartyRole();
         childRole.setType(OrganizationRoleType.Cache.GROUP.getEntity());
         childRole.setParty(childOrg);
-        
+        childOrg.addPartyRole(childRole);
+        HibernateUtil.getSession().save(childOrg);
+
         // the parent org might already have the parent role
         PartyRole parentRole = null;
-        if (!parentOrg.hasPartyRole(OrganizationRoleType.Cache.PARENT_ORG.getEntity()))
+        if (!parentOrg.hasPartyRole(OrganizationRoleType.Cache.EMPLOYER.getEntity()))
         {
             parentRole = new PartyRole();
-            parentRole.setType(OrganizationRoleType.Cache.PARENT_ORG.getEntity());
+            parentRole.setType(OrganizationRoleType.Cache.EMPLOYER.getEntity());
             parentRole.setParty(parentOrg);
+            parentOrg.addPartyRole(parentRole);
+            HibernateUtil.getSession().save(parentRole);
         }
         else
         {
-            parentRole = parentOrg.getPartyRole(OrganizationRoleType.Cache.PARENT_ORG.getEntity());
+            parentRole = parentOrg.getPartyRole(OrganizationRoleType.Cache.EMPLOYER.getEntity());
         }
         
         final PartyRelationship relationship = new PartyRelationship();
@@ -52,9 +61,9 @@ public class OrganizationFacadeImpl implements OrganizationFacade
 
     public List listInsuranceGroups(Organization parentOrg)
     {
-        Criteria criteria = HibernateUtil.getSession().createCriteria(Organization.class);        
-        final Criteria relationshipCriteria = criteria.createCriteria("partyRelationships");
-        relationshipCriteria.createCriteria("type").add(Expression.eq("systemId", getGroupToEmployerRelationshipType().getSystemId()));
+        Criteria criteria = HibernateUtil.getSession().createCriteria(Organization.class);
+        final Criteria relationshipCriteria = criteria.createCriteria("toPartyRelationships");
+        relationshipCriteria.createCriteria("type").add(Expression.eq("partyRelationshipTypeId", getGroupToEmployerRelationshipType().getSystemId()));
         relationshipCriteria.createCriteria("partyTo").add(Expression.eq("partyId", parentOrg.getPartyId()));
         return criteria.list();
     }
