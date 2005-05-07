@@ -282,6 +282,59 @@
 
     <target name="test" depends="test.verify-module.test.TestSuite,compile.test,test.uninstrumented,test.instrumented"/>
 
+    <!-- ==================== Documentation targets  ======================= -->
+
+    <target name="doc.javadoc.std" depends="init.define-main.srcpath,init.define-module.dependencies.build.classpath,init.define-module.dependencies.main.classpath,init.define-modules">
+        <property name="module.artifacts.javadoc.home" value="${module.artifacts.doc.home}/javadoc"/>
+        <delete dir="${module.artifacts.javadoc.home}"/>
+        <mkdir dir="${module.artifacts.javadoc.home}"/>
+        <javadoc packagenames="com.medigy.*"
+            sourcepathref="module.main.srcpath"
+            classpathref="module.dependencies.main.classpath"
+            destdir="${module.artifacts.javadoc.home}"
+            author="true"
+            version="true"
+            use="true"
+            windowtitle="Medigy Platform Documentation"
+            doctitle="Medigy Platform Documentation"
+            bottom="Copyright &#169; 2005 Netspective. All Rights Reserved.">
+        </javadoc>
+    </target>
+
+    <target name="doc.javadoc.ydoc" depends="init.define-main.srcpath,init.define-module.dependencies.build.classpath,init.define-module.dependencies.main.classpath,init.define-modules">
+        <property name="module.artifacts.javadoc.home" value="${module.artifacts.doc.home}/javadoc"/>
+        <delete dir="${module.artifacts.javadoc.home}"/>
+        <mkdir dir="${module.artifacts.javadoc.home}"/>
+        <javadoc packagenames="com.medigy.*"
+            sourcepathref="module.main.srcpath"
+            classpathref="module.dependencies.main.classpath"
+            destdir="${module.artifacts.javadoc.home}"
+            author="true"
+            version="true"
+            use="true"
+            windowtitle="Medigy Platform Documentation"
+            doctitle="Medigy Platform Documentation"
+            bottom="Copyright &#169; 2005 Netspective. All Rights Reserved."
+            docletpathref="module.dependencies.build.classpath">
+            <doclet
+                name="ydoc.doclets.YStandard"
+                path="${support.home}/build/ydoc-resources">
+                <param name="-author"/>
+                <param name="-generic"/>
+                <param name="-umlautogen"/>
+                <param name="-filterpath" value="${common.home}/depend/lib/build/ydoc.jar"/>
+                <param name="-filter"     value="ydoc.filters.ExcludeFilter"/>
+                <param name="-tag" value="y.precondition"/>
+                <param name="-tag" value="y.postcondition"/>
+                <param name="-tag" value="y.complexity"/>
+                <param name="-tag" value="param"/>
+                <param name="-tag" value="return"/>
+                <param name="-tag" value="see"/>
+                <param name="-tag" value="y.uml"/>
+            </doclet>
+        </javadoc>
+    </target>
+
     <target name="clean" depends="init.define-properties">
         <delete dir="${module.artifacts.home}"/>
     </target>

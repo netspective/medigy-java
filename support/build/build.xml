@@ -13,6 +13,7 @@
         </path>
         <pathconvert targetos="unix" property="repository.home" refid="tmp.repository.home"/>
         <property name="consolidated.artifacts.home" value="${basedir}/artifacts"/>
+        <property name="consolidated.artifacts.doc.home" value="{consolidated.artifacts.home}/consolidated/doc"/>
         <property name="consolidated.artifacts.test.junit.home" value="${consolidated.artifacts.home}/consolidated/reports/junit"/>
         <property name="consolidated.artifacts.test.coverage.home" value="${consolidated.artifacts.home}/consolidated/reports/coverage"/>
     </target>
@@ -96,7 +97,35 @@
         </emma>
     </target>
 
-    <target name="doc" depends="init.define-properties">
+    <target name="doc.javadoc.std" depends="init.define-properties">
+        <property name="artifacts.javadoc.home" value="${consolidated.artifacts.doc.home}/javadoc"/>
+        <delete dir="${artifacts.javadoc.home}"/>
+        <mkdir dir="${artifacts.javadoc.home}"/>
+        <javadoc packagenames="com.medigy.*"
+            destdir="${artifacts.javadoc.home}"
+            author="true"
+            version="true"
+            use="true"
+            windowtitle="Medigy Platform Documentation"
+            doctitle="Medigy Platform Documentation"
+            bottom="Copyright &#169; 2005 Netspective. All Rights Reserved.">
+
+            <sourcepath>
+                <dirset dir="${repository.home}" >
+                    <include name="**/src/java/main" />
+                </dirset>
+            </sourcepath>            
+
+            <classpath>
+                <fileset dir="${repository.home}" >
+                    <include name="**/depend/lib/build/*.jar" />
+                    <include name="**/depend/lib/main/*.jar" />
+                </fileset>
+            </classpath>
+        </javadoc>
+    </target>
+
+    <target name="doc" depends="init.define-properties,doc.javadoc.std">
         <ant dir="${repository.home}/persistence-tools/support/build" target="doc.generate-model-diagrams" inheritall="false" inheritrefs="false">
             <property name="graphviz.artifacts.home" value="${consolidated.artifacts.home}/graphviz"/>
             <property name="hibernate-doc.artifacts.home" value="${consolidated.artifacts.home}/hibernate-doc"/>
