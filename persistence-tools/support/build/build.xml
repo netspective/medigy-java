@@ -16,8 +16,6 @@
             <path location="${graphviz.artifacts.home}/classes/main"/>
             <path location="${hibernate-doc.artifacts.home}/classes/main"/>
             <path location="${persistence.artifacts.home}/classes/main"/>
-
-            <fileset dir="${module.dependencies.lib.home}/main" includes="*.jar"/>
         </path>
     </target>
 
@@ -35,8 +33,6 @@
             <path location="${hibernate-doc.artifacts.home}/classes/main"/>
             <path location="${persistence.artifacts.home}/classes/main"/>
             <path location="${persistence.artifacts.home}/classes/test"/>
-
-            <fileset dir="${module.dependencies.lib.home}/main" includes="*.jar"/>
         </path>
     </target>
 
