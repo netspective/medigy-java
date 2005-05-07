@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<project name="graphviz">
+
+    <macrodef name="graphviz.dot">
+       <attribute name="srcFile"/>
+       <attribute name="destFile"/>
+       <attribute name="format"/>
+       <sequential>
+           <exec executable="${graphviz.dot.exec.executable}">
+               <arg line="${graphviz.dot.exec.arg.cmd} -T@{format} -o@{destFile} @{srcFile}"/>
+           </exec>
+       </sequential>
+    </macrodef>
+
+    <target name="graphviz.init.assign-os">
+        <condition property="graphviz.os.windows">
+            <os family="windows"/>
+        </condition>
+        <condition property="graphviz.os.unix">
+            <os family="unix"/>
+        </condition>
+    </target>
+
+    <target name="graphviz.init.unix" if="graphviz.os.unix" depends="graphviz.init.assign-os">
+        <property name="graphviz.dot.exec.executable" value="/bin/sh"/>
+        <property name="graphviz.dot.exec.arg.cmd" value="/usr/bin/dot"/>
+    </target>
+    
+    <target name="graphviz.init.windows" if="graphviz.os.windows" depends="graphviz.init.assign-os">
+        <property name="graphviz.dot.exec.executable" value="cmd.exe"/>
+        <property name="graphviz.dot.exec.arg.cmd" value="/c C:\PROGRA~1\ATT\Graphviz\bin\dot.exe"/>
+    </target>
+
+    <target name="graphviz.init" depends="graphviz.init.unix,graphviz.init.windows" unless="graphviz.dot.exec.executable">
+        <fail message="GraphViz execution requires graphviz.dot.exec.executable and graphviz.dot.exec.arg.cmd to be specified"/>
+    </target>
+
+</project>

@@ -94,6 +94,8 @@ public class HibernateDiagramGenerator
                                      final HibernateDiagramGeneratorFilter schemaDiagramFilter) throws HibernateDiagramGeneratorException
     {
         this.configuration = configuration;
+        this.configuration.buildMappings();
+
         this.graphvizDiagramGenerator = graphvizDiagramGenerator;
         this.diagramFilter = schemaDiagramFilter;
 

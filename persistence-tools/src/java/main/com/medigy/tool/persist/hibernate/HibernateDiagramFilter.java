@@ -50,6 +50,8 @@ public class HibernateDiagramFilter implements HibernateDiagramGeneratorFilter
         commonColumns.add("record_status");
         commonColumns.add("create_session_id");
         commonColumns.add("update_session_id");
+        commonColumns.add("create_version_id");
+        commonColumns.add("update_version_id");
     }
 
     public Set getCommonColumns()
@@ -117,7 +119,7 @@ public class HibernateDiagramFilter implements HibernateDiagramGeneratorFilter
         return showClassStructure;
     }
 
-    public String getColumnDataType(HibernateDiagramGenerator generator, Column column, PrimaryKey partOfPrimaryKey, ForeignKey partOfForeignKey)
+    public String getColumnDataType(final HibernateDiagramGenerator generator, final Column column, final PrimaryKey partOfPrimaryKey, final ForeignKey partOfForeignKey)
     {
         if (showReferenceData && partOfForeignKey != null && (isReferenceRelationship(generator, partOfForeignKey) || isCustomReferenceRelationship(generator, partOfForeignKey)))
             return partOfForeignKey.getReferencedTable().getName();

@@ -21,17 +21,28 @@
         <delete dir="${consolidated.artifacts.home}"/>
         <delete dir="${repository.home}/support/build/ivy-cache"/>
 
+        <ant dir="${repository.home}/graphviz/support/build" target="clean" inheritall="false" inheritrefs="false" />
+        <ant dir="${repository.home}/hibernate-doc/support/build" target="clean" inheritall="false" inheritrefs="false" />
         <ant dir="${repository.home}/persistence/support/build" target="clean" inheritall="false" inheritrefs="false" />
         <ant dir="${repository.home}/persistence-tools/support/build" target="clean" inheritall="false" inheritrefs="false" />
         <ant dir="${repository.home}/service/support/build" target="clean" inheritall="false" inheritrefs="false" />
     </target>
 
     <target name="jar" depends="init.define-properties">
+        <ant dir="${repository.home}/graphviz/support/build" target="jar" inheritall="false" inheritrefs="false">
+            <property name="module.artifacts.home" value="${consolidated.artifacts.home}/graphviz"/>
+        </ant>
+        <ant dir="${repository.home}/hibernate-doc/support/build" target="jar" inheritall="false" inheritrefs="false">
+            <property name="graphviz.artifacts.home" value="${consolidated.artifacts.home}/graphviz"/>
+            <property name="module.artifacts.home" value="${consolidated.artifacts.home}/hibernate-doc"/>
+        </ant>
         <ant dir="${repository.home}/persistence/support/build" target="jar" inheritall="false" inheritrefs="false">
             <property name="common.artifacts.home" value="${consolidated.artifacts.home}/common"/>
             <property name="module.artifacts.home" value="${consolidated.artifacts.home}/persistence"/>
         </ant>
         <ant dir="${repository.home}/persistence-tools/support/build" target="jar" inheritall="false" inheritrefs="false">
+            <property name="graphviz.artifacts.home" value="${consolidated.artifacts.home}/graphviz"/>
+            <property name="hibernate-doc.artifacts.home" value="${consolidated.artifacts.home}/hibernate-doc"/>
             <property name="persistence.artifacts.home" value="${consolidated.artifacts.home}/persistence"/>
             <property name="module.artifacts.home" value="${consolidated.artifacts.home}/persistence-tools"/>
         </ant>
@@ -83,6 +94,15 @@
                     columns="name,class,method,block,line"/>
             </report>
         </emma>
+    </target>
+
+    <target name="doc" depends="init.define-properties">
+        <ant dir="${repository.home}/persistence-tools/support/build" target="doc.generate-model-diagrams" inheritall="false" inheritrefs="false">
+            <property name="graphviz.artifacts.home" value="${consolidated.artifacts.home}/graphviz"/>
+            <property name="hibernate-doc.artifacts.home" value="${consolidated.artifacts.home}/hibernate-doc"/>
+            <property name="persistence.artifacts.home" value="${consolidated.artifacts.home}/persistence"/>
+            <property name="module.artifacts.home" value="${consolidated.artifacts.home}/persistence-tools"/>
+        </ant>
     </target>
 
     <target name="all" depends="clean,jar"/>

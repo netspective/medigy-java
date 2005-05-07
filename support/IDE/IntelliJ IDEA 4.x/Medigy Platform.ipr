@@ -16,14 +16,14 @@
       <maximumHeapSize value="128" />
       <properties />
     </buildFile>
-    <buildFile url="file://$PROJECT_DIR$/../../../persistence-tools/support/build/build.xml">
+    <buildFile url="file://$PROJECT_DIR$/../../build/build.xml">
       <additionalClassPath />
       <antReference projectDefault="true" />
       <customJdkName value="" />
       <maximumHeapSize value="128" />
       <properties />
     </buildFile>
-    <buildFile url="file://$PROJECT_DIR$/../../build/build.xml">
+    <buildFile url="file://$PROJECT_DIR$/../../../persistence-tools/support/build/build.xml">
       <additionalClassPath />
       <antReference projectDefault="true" />
       <customJdkName value="" />
@@ -204,7 +204,9 @@
   </component>
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/../../../graphviz/support/GraphViz.iml" filepath="$PROJECT_DIR$/../../../graphviz/support/GraphViz.iml" />
       <module fileurl="file://$PROJECT_DIR$/../../../common/support/common.iml" filepath="$PROJECT_DIR$/../../../common/support/common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../../../hibernate-doc/support/hibernate-doc.iml" filepath="$PROJECT_DIR$/../../../hibernate-doc/support/hibernate-doc.iml" />
       <module fileurl="file://$PROJECT_DIR$/../../../persistence/support/persistence.iml" filepath="$PROJECT_DIR$/../../../persistence/support/persistence.iml" />
       <module fileurl="file://$PROJECT_DIR$/../../../persistence-tools/support/persistence-tools.iml" filepath="$PROJECT_DIR$/../../../persistence-tools/support/persistence-tools.iml" />
       <module fileurl="file://$PROJECT_DIR$/../../../service/support/service.iml" filepath="$PROJECT_DIR$/../../../service/support/service.iml" />
@@ -260,14 +262,6 @@
       <CLASSES>
         <root url="jar://$PROJECT_DIR$/../../../persistence/depend/lib/test/hsqldb-1.7.3.2.jar!/" />
         <root url="jar://$PROJECT_DIR$/../../../persistence/depend/lib/test/dbunit-2.1.jar!/" />
-      </CLASSES>
-      <JAVADOC />
-      <SOURCES />
-    </library>
-    <library name="Persistence Tools Dependencies (Main)">
-      <CLASSES>
-        <root url="jar://$PROJECT_DIR$/../../../persistence-tools/depend/lib/main/sns-hibernate-1.0.0.jar!/" />
-        <root url="jar://$PROJECT_DIR$/../../../persistence-tools/depend/lib/main/sns-graphviz-1.0.0.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />

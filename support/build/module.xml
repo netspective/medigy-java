@@ -39,6 +39,7 @@
 
         <property name="module.build.home" value="${basedir}"/>
         <property name="module.artifacts.home" value="${module.build.home}/artifacts"/>
+        <property name="module.artifacts.doc.home" value="${module.artifacts.home}/doc"/>
         <property name="module.artifacts.test.home" value="${module.artifacts.home}/test"/>
         <property name="module.artifacts.test.junit.home" value="${module.artifacts.home}/test/junit"/>
         <property name="module.artifacts.test.db.home" value="${module.artifacts.test.home}/db"/>
@@ -66,6 +67,8 @@
 
     <target name="init.define-modules" depends="init.define-properties">
         <property name="common.home" value="${repository.home}/common"/>
+        <property name="graphviz.home" value="${repository.home}/graphviz"/>
+        <property name="hibernate-doc.home" value="${repository.home}/hibernate-doc"/>
         <property name="persistence.home" value="${repository.home}/persistence"/>
         <property name="persistence-tools.home" value="${repository.home}/persistence-tools"/>
         <property name="service.home" value="${repository.home}/service"/>
@@ -73,7 +76,9 @@
     </target>
 
     <target name="init.define-modules-artifacts-home" depends="init.define-modules">
-        <property name="common.artifacts.home" value="${common.home}/common/support/build/artifacts"/>
+        <property name="common.artifacts.home" value="${common.home}/support/build/artifacts"/>
+        <property name="graphviz.artifacts.home" value="${graphviz.home}/support/build/artifacts"/>
+        <property name="hibernate-doc.artifacts.home" value="${hibernate-doc.home}/support/build/artifacts"/>
         <property name="persistence.artifacts.home" value="${persistence.home}/support/build/artifacts"/>
         <property name="persistence-tools.artifacts.home" value="${persistence-tools.home}/support/build/artifacts"/>
         <property name="service.artifacts.home" value="${service.home}/support/build/artifacts"/>
@@ -106,6 +111,13 @@
     <target name="init.define-srcpaths" depends="init.define-main.srcpath,init.define-test.srcpath,init.define-main.resources,init.define-test.resources"/>
 
     <!-- ==================== Classpaths  ======================= -->
+
+    <target name="init.define-module.dependencies.build.classpath" depends="init.define-properties">
+        <path id="module.dependencies.build.classpath">
+            <fileset dir="${repository.home}/common/depend/lib/build" includes="*.jar"/>
+            <fileset dir="${module.dependencies.lib.home}/build" includes="*.jar"/>
+        </path>
+    </target>
 
     <target name="init.define-module.dependencies.main.classpath" depends="init.define-properties">
         <path id="module.dependencies.main.classpath">
