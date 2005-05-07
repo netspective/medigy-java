@@ -23,8 +23,8 @@
     </target>
 
     <target name="graphviz.init.unix" if="graphviz.os.unix" depends="graphviz.init.assign-os">
-        <property name="graphviz.dot.exec.executable" value="/bin/sh"/>
-        <property name="graphviz.dot.exec.arg.cmd" value="/usr/bin/dot"/>
+        <property name="graphviz.dot.exec.executable" value="/usr/bin/dot"/>
+        <property name="graphviz.dot.exec.arg.cmd" value=""/> <!-- no cmd needed -->
     </target>
     
     <target name="graphviz.init.windows" if="graphviz.os.windows" depends="graphviz.init.assign-os">
