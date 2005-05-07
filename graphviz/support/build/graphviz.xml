@@ -8,7 +8,7 @@
        <attribute name="format"/>
        <sequential>
            <exec executable="${graphviz.dot.exec.executable}">
-               <arg line="${graphviz.dot.exec.arg.cmd} -T@{format} -o@{destFile} @{srcFile}"/>
+               <arg line="${graphviz.dot.exec.arg.cmd} -T@{format} -o&quot;@{destFile}&quot; &quot;@{srcFile}&quot;"/>
            </exec>
        </sequential>
     </macrodef>
