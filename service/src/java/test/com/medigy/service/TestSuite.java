@@ -38,10 +38,10 @@
  */
 package com.medigy.service;
 
+import com.medigy.service.insurance.TestInsurancePolicyFacade;
 import com.medigy.service.party.TestAddContactMechanismService;
 import com.medigy.service.person.TestPersonFacade;
 import com.medigy.service.person.TestPersonRelationshipFacade;
-import com.medigy.service.util.TestInsurancePolicyFacade;
 import junit.framework.Test;
 
 public class TestSuite extends junit.framework.TestSuite
