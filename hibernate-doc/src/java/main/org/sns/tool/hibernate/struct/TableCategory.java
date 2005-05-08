@@ -41,31 +41,9 @@
 /*
  * Copyright (c) 2005 Your Corporation. All Rights Reserved.
  */
-package com.medigy.persist.reference;
+package org.sns.tool.hibernate.struct;
 
-import com.medigy.persist.reference.type.ContactMechanismType;
-import com.medigy.persist.reference.type.DataEncryptionType;
-import com.medigy.persist.reference.type.GenderType;
-import com.medigy.persist.reference.type.LanguageType;
-import com.medigy.persist.reference.type.MaritalStatusType;
-import com.medigy.persist.reference.type.PriorityType;
-import com.medigy.persist.reference.type.UnitOfMeasureType;
-import com.medigy.persist.reference.type.party.PartyFacilityRoleType;
-import com.medigy.persist.reference.type.party.PartyType;
-
-public interface Catalog
+public interface TableCategory
 {
-    public Class[] ALL_REFERENCE_TYPES =
-    {
-        PartyType.class,
-        MaritalStatusType.class,
-        GenderType.class,
-        ContactMechanismType.class,
-        PartyFacilityRoleType.class,
-        PriorityType.class,
-        DataEncryptionType.class,
-        UnitOfMeasureType.class,
-        LanguageType.class,
-        ModelVersion.class,
-    };
+    public String getCategoryName();
 }

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<project name="graphviz">
+
+    <macrodef name="debug.path">
+       <attribute name="refid"/>
+       <sequential>
+           <pathconvert targetos="unix" property="tmp.@{refid}.CONVERTED" refid="module.dependencies.main.classpath"/>
+           <echo message="PATH '@{refid}' is: ${tmp.@{refid}.CONVERTED}" />
+       </sequential>
+    </macrodef>
+
+</project>

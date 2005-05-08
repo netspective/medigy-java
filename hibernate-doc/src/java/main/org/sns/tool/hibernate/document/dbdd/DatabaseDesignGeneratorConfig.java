@@ -41,27 +41,17 @@
 /*
  * Copyright (c) 2005 Your Corporation. All Rights Reserved.
  */
-package com.medigy.tool.persist.hibernate;
+package org.sns.tool.hibernate.document.dbdd;
 
-import org.hibernate.HibernateException;
+import java.io.File;
 
-import com.medigy.persist.util.HibernateConfiguration;
+import org.sns.tool.hibernate.struct.TableStructure;
+import org.hibernate.cfg.Configuration;
 
-public class HibernateDiagramConfiguration extends HibernateConfiguration
+public interface DatabaseDesignGeneratorConfig
 {
-    public HibernateDiagramConfiguration()
-    {
-        for (final Class c : com.medigy.persist.reference.Catalog.ALL_REFERENCE_TYPES)
-            addAnnotatedClass(c);
-
-        try
-        {
-            configure("/com/medigy/persist/hibernate.cfg.xml");
-        }
-        catch (HibernateException e)
-        {
-            throw new RuntimeException(e);
-        }
-        registerReferenceEntitiesAndCaches();
-    }
+    public Configuration getHibernateConfiguration();
+    public TableStructure getTableStructure();
+    public File getDestinationDirectory();
+    public File getIndexFile();
 }

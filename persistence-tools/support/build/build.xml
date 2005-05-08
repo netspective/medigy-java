@@ -49,7 +49,8 @@
 
         <mkdir dir="${persistence.artifacts.doc.db.struct.home}"/>
         <diagram dotFile="${persistence.artifacts.doc.diagram.dot.file}"
-                 hibernateConfigClass="com.medigy.tool.persist.hibernate.HibernateDiagramConfiguration"
+                 hibernateConfigClass="com.medigy.persist.util.HibernateConfiguration"
+                 hibernateConfigFile="/com/medigy/persist/hibernate.cfg.xml"
                  diagramFilterClass="com.medigy.tool.persist.hibernate.HibernateDiagramEngineerFilter"
             />
 
@@ -57,7 +58,25 @@
                       destFile="${persistence.artifacts.doc.diagram.dest.file-prefix}.svg" format="svg"/>
 
         <graphviz.dot srcFile="${persistence.artifacts.doc.diagram.dot.file}"
-                      destFile="${persistence.artifacts.doc.diagram.dest.file-prefix}.png" format="png"/>
+                      destFile="${persistence.artifacts.doc.diagram.dest.file-prefix}.gif" format="gif"/>
+    </target>
+
+    <target name="doc.generate-dbdd" depends="compile.main,init.define-modules,init.define-module.dependencies.main.classpath">
+        <taskdef name="dbdg" classname="org.sns.tool.hibernate.document.dbdd.DatabaseDesignGeneratorTask"
+                             classpathref="module.dependencies.main.classpath">
+            <classpath location="${module.artifacts.classes.main.home}"/>
+        </taskdef>
+
+        <property name="persistence.artifacts.doc.home" value="${persistence.artifacts.home}/doc"/>
+        <property name="persistence.artifacts.doc.db.dbdd.home" value="${persistence.artifacts.doc.home}/db/dbdd"/>
+
+        <mkdir dir="${persistence.artifacts.doc.db.dbdd.home}"/>
+        <dbdg indexFile="${persistence.artifacts.doc.db.dbdd.home}/index.txt"
+              hibernateConfigClass="com.medigy.persist.util.HibernateConfiguration"
+              hibernateConfigFile="/com/medigy/persist/hibernate.cfg.xml"
+              structureClass="org.sns.tool.hibernate.struct.DefaultTableStructure"
+              structureRulesClass="com.medigy.tool.persist.hibernate.HibernateStructureRules"
+            />
     </target>
 
 </project>
