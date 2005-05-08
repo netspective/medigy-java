@@ -38,9 +38,14 @@
  */
 package com.medigy.persist.model.insurance;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import com.medigy.persist.model.org.Organization;
+import com.medigy.persist.model.party.Agreement;
+import com.medigy.persist.model.party.AgreementItem;
+import com.medigy.persist.model.party.AgreementRole;
+import com.medigy.persist.model.party.Party;
+import com.medigy.persist.model.person.Person;
+import com.medigy.persist.reference.custom.insurance.InsurancePolicyRoleType;
+import com.medigy.persist.reference.custom.insurance.InsurancePolicyType;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -53,15 +58,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-
-import com.medigy.persist.model.org.Organization;
-import com.medigy.persist.model.party.Agreement;
-import com.medigy.persist.model.party.AgreementItem;
-import com.medigy.persist.model.party.AgreementRole;
-import com.medigy.persist.model.party.Party;
-import com.medigy.persist.model.person.Person;
-import com.medigy.persist.reference.custom.insurance.InsurancePolicyRoleType;
-import com.medigy.persist.reference.custom.insurance.InsurancePolicyType;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "Ins_Policy")
@@ -237,16 +236,17 @@ public class InsurancePolicy implements Agreement
     }
 
     @Transient
-    protected Set<Party> getPartiesByRole(final InsurancePolicyRoleType roleType)
+    public Set<Person> getInsuredDependents()
     {
-        final Set<Party> partyList = new HashSet<Party>();
+        final InsurancePolicyRoleType roleType = InsurancePolicyRoleType.Cache.INSURED_DEPENDENT.getEntity();
+        final Set<Person> partyList = new HashSet<Person>();
         final Object[] objects = (Object[]) getAgreementRoles().toArray();
         for (int i = 0; i < objects.length; i++)
         {
             AgreementRole role = (AgreementRole) objects[i];
-            if (role.getType().equals(roleType))
+            if (role.getType().equals(roleType) && role.getParty() instanceof Person)
             {
-                partyList.add(role.getParty());
+                partyList.add((Person) role.getParty());
             }
         }
         return partyList;
