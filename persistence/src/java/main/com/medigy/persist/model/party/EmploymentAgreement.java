@@ -38,9 +38,8 @@
  */
 package com.medigy.persist.model.party;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import com.medigy.persist.model.common.AbstractDateDurationEntity;
+import com.medigy.persist.reference.custom.party.EmploymentAgreementRoleType;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -51,15 +50,14 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-
-import com.medigy.persist.reference.custom.party.EmploymentAgreementRoleType;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity()
 @Table(name = "Emp_Agreement")
-public class EmploymentAgreement implements Agreement
+public class EmploymentAgreement extends AbstractDateDurationEntity implements Agreement
 {
     private Long agreementId;
-    private Date agreementDate;
     private String description;
 
     private Set<EmploymentAgreementRole> agreementRoles = new HashSet<EmploymentAgreementRole>();
@@ -95,17 +93,6 @@ public class EmploymentAgreement implements Agreement
                 this.agreementRoles.add((EmploymentAgreementRole) role);
             }
         }
-    }
-
-
-    public Date getAgreementDate()
-    {
-        return agreementDate;
-    }
-
-    public void setAgreementDate(Date agreementDate)
-    {
-        this.agreementDate = agreementDate;
     }
 
     public String getDescription()

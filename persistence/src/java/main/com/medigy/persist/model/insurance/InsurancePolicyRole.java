@@ -38,6 +38,13 @@
  */
 package com.medigy.persist.model.insurance;
 
+import com.medigy.persist.model.party.Agreement;
+import com.medigy.persist.model.party.AgreementRole;
+import com.medigy.persist.model.party.Party;
+import com.medigy.persist.reference.custom.insurance.InsurancePolicyRoleType;
+import com.medigy.persist.reference.custom.party.AgreementRoleType;
+import com.medigy.persist.reference.type.party.PartyType;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
@@ -46,13 +53,14 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.persistence.OneToMany;
+import java.util.Set;
+import java.util.HashSet;
 
-import com.medigy.persist.model.party.Agreement;
-import com.medigy.persist.model.party.AgreementRole;
-import com.medigy.persist.model.party.Party;
-import com.medigy.persist.reference.custom.insurance.InsurancePolicyRoleType;
-import com.medigy.persist.reference.custom.party.AgreementRoleType;
-
+/**
+ * Insurance policy role is used to logically define various policy related entities such an "insured individual",
+ * "insured organization", or "insurance provider".
+ */
 @Entity
 @Table(name = "Ins_Policy_Role")
 public class InsurancePolicyRole implements AgreementRole
@@ -61,6 +69,9 @@ public class InsurancePolicyRole implements AgreementRole
     private InsurancePolicy agreement;
     private Party party;
     protected InsurancePolicyRoleType type;
+
+    private Set<Enrollment> enrollments = new HashSet<Enrollment>();
+    private Set<CareProviderSelection> careProviderSelections = new HashSet<CareProviderSelection>();
 
     @Id(generate = GeneratorType.AUTO)
     @Column(name = "ins_policy_role_id")
@@ -92,7 +103,7 @@ public class InsurancePolicyRole implements AgreementRole
         return agreement;
     }
 
-    public void setAgreement(Agreement agreement)
+    public void setAgreement(final Agreement agreement)
     {
         this.agreement = ((InsurancePolicy) agreement);
     }
@@ -119,5 +130,78 @@ public class InsurancePolicyRole implements AgreementRole
     public void setType(final AgreementRoleType type)
     {
         this.type = (InsurancePolicyRoleType) type;
+    }
+
+    /**
+     * Checks to see if this role represents the insurance provider
+     * @return
+     */
+    @Transient
+    public boolean isInsuranceProvider()
+    {
+        return (getType().equals(InsurancePolicyRoleType.Cache.INSURANCE_PROVIDER.getEntity()) &&
+                getParty().getPartyType().equals(PartyType.Cache.ORGANIZATION.getEntity()));
+    }
+
+    /**
+     * Checks to see if this role represents either the contract holder or the dependent
+     * @return
+     */
+    @Transient
+    public boolean isInsuredIndividual()
+    {
+        return (getParty().getPartyType().equals(PartyType.Cache.PERSON.getEntity()) &&
+                (getType().equals(InsurancePolicyRoleType.Cache.INSURED_CONTRACT_HOLDER.getEntity()) || getType().equals(InsurancePolicyRoleType.Cache.INSURED_DEPENDENT.getEntity())));
+    }
+
+    /**
+     * Checks to see if this role represents an insured dependent
+     * @return
+     */
+    @Transient
+    public boolean isInsuredDependent()
+    {
+        return (getParty().getPartyType().equals(PartyType.Cache.PERSON.getEntity()) &&
+                getType().equals(InsurancePolicyRoleType.Cache.INSURED_DEPENDENT.getEntity()));
+    }
+
+    /**
+     * Checks to see if this role represents an insured contract holder
+     * @return
+     */
+    @Transient
+    public boolean isInsuredContractHolder()
+    {
+        return (getParty().getPartyType().equals(PartyType.Cache.PERSON.getEntity()) &&
+                getType().equals(InsurancePolicyRoleType.Cache.INSURED_CONTRACT_HOLDER.getEntity()));
+    }
+
+
+    @OneToMany(mappedBy = "insuredContractHolderRole")
+    public Set<Enrollment> getEnrollments()
+    {
+        return enrollments;
+    }
+
+    public void setEnrollments(Set<Enrollment> enrollments)
+    {
+        this.enrollments = enrollments;
+    }
+
+    @OneToMany(mappedBy = "insuredIndividualRole")
+    public Set<CareProviderSelection> getCareProviderSelections()
+    {
+        return careProviderSelections;
+    }
+
+    public void setCareProviderSelections(final Set<CareProviderSelection> careProviderSelections)
+    {
+        this.careProviderSelections = careProviderSelections;
+    }
+
+    @Transient
+    public void addCareProviderSelection(final CareProviderSelection selection)
+    {
+        getCareProviderSelections().add(selection);
     }
 }

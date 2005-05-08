@@ -38,6 +38,7 @@
  */
 package com.medigy.persist.model.insurance;
 
+import com.medigy.persist.model.common.AbstractDateDurationEntity;
 import com.medigy.persist.model.org.Organization;
 import com.medigy.persist.model.party.Agreement;
 import com.medigy.persist.model.party.AgreementItem;
@@ -58,18 +59,16 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "Ins_Policy")
-public class InsurancePolicy implements Agreement
+public class InsurancePolicy extends AbstractDateDurationEntity implements Agreement
 {
     private Long policyId;
     private String policyNumber;
     private String description;
-    private Date policyDate;
     private InsurancePolicyType type;
     private InsuranceProduct insuranceProduct;
 
@@ -86,17 +85,6 @@ public class InsurancePolicy implements Agreement
     public void setAgreementId(final Long id)
     {
         this.policyId = id;
-    }
-
-    @Column(name = "policy_effective_date")
-    public Date getAgreementDate()
-    {
-        return policyDate;
-    }
-
-    public void setAgreementDate(Date agreementDate)
-    {
-        this.policyDate = agreementDate;
     }
 
     @Transient

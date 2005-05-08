@@ -38,14 +38,14 @@
  */
 package com.medigy.persist.model.insurance;
 
+import com.medigy.persist.model.common.AbstractDateDurationEntity;
+import com.medigy.persist.model.person.Person;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-
-import com.medigy.persist.model.common.AbstractDateDurationEntity;
-import com.medigy.persist.model.person.Person;
 
 @Entity
 public class CareProviderSelection extends AbstractDateDurationEntity
@@ -54,7 +54,7 @@ public class CareProviderSelection extends AbstractDateDurationEntity
     private Person individualHealthCarePractitioner;
 
     private Enrollment enrollment;
-    private Person insuredIndividual;
+    private InsurancePolicyRole insuredIndividualRole;
 
     @Id(generate  = GeneratorType.AUTO)
     public Long getCareProviderSelectionId()
@@ -68,7 +68,7 @@ public class CareProviderSelection extends AbstractDateDurationEntity
     }
 
     @ManyToOne
-    @JoinColumn(name = "practitioner_party_id", referencedColumnName = "party_id")        
+    @JoinColumn(name = "practitioner_party_id", referencedColumnName = "party_id", nullable = false)        
     public Person getIndividualHealthCarePractitioner()
     {
         return individualHealthCarePractitioner;
@@ -91,15 +91,20 @@ public class CareProviderSelection extends AbstractDateDurationEntity
         this.enrollment = enrollment;
     }
 
+    /**
+     * Gets the insured individual logical entity which is actually the role
+     * @return
+     */
     @ManyToOne
-    @JoinColumn(name = "insured_party_id", referencedColumnName = "party_id")
-    public Person getInsuredIndividual()
+    @JoinColumn(name = "ins_policy_role_id", nullable = false)
+    public InsurancePolicyRole getInsuredIndividualRole()
     {
-        return insuredIndividual;
+        return insuredIndividualRole;
     }
 
-    public void setInsuredIndividual(final Person insuredIndividual)
+    public void setInsuredIndividualRole(final InsurancePolicyRole insuredIndividualRole)
     {
-        this.insuredIndividual = insuredIndividual;
+        this.insuredIndividualRole = insuredIndividualRole;
     }
+
 }

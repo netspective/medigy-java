@@ -96,7 +96,7 @@ public class Person extends Party
 
     private String firstNameSoundex;
     private String lastNameSoundex;
-
+    
     private Set<Ethnicity> ethnicities = new HashSet<Ethnicity>();
     private Set<Gender> genders = new HashSet<Gender>();
     private Set<MaritalStatus> maritalStatuses = new HashSet<MaritalStatus>();

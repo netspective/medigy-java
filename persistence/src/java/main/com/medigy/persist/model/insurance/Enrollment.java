@@ -38,9 +38,7 @@
  */
 package com.medigy.persist.model.insurance;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import com.medigy.persist.model.common.AbstractTopLevelEntity;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -49,9 +47,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-
-import com.medigy.persist.model.common.AbstractTopLevelEntity;
-import com.medigy.persist.model.person.Person;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Enrollment extends AbstractTopLevelEntity
@@ -59,10 +57,11 @@ public class Enrollment extends AbstractTopLevelEntity
     private Long enrollmentId;
     private Date enrolledDate;
     private Group group;
-    private Person insuredContractHolder;
-    
+    private InsurancePolicyRole insuredContractHolderRole;
+
     private Set<CareProviderSelection> careProviderSelections = new HashSet<CareProviderSelection>();
     private Set<EnrollmentElection> elections = new HashSet<EnrollmentElection>();
+
 
     @Id(generate = GeneratorType.AUTO)
     public Long getEnrollmentId()
@@ -122,14 +121,14 @@ public class Enrollment extends AbstractTopLevelEntity
     }
 
     @ManyToOne
-    @JoinColumn(name = "ins_contract_holder_id", referencedColumnName = "party_id", nullable = false)
-    public Person getInsuredContractHolder()
+    @JoinColumn(name = "ins_policy_role_id")
+    public InsurancePolicyRole getInsuredContractHolderRole()
     {
-        return insuredContractHolder;
+        return insuredContractHolderRole;
     }
 
-    public void setInsuredContractHolder(final Person insuredContractHolder)
+    public void setInsuredContractHolderRole(final InsurancePolicyRole insuredContractHolderRole)
     {
-        this.insuredContractHolder = insuredContractHolder;
+        this.insuredContractHolderRole = insuredContractHolderRole;
     }
 }

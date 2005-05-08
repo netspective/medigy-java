@@ -38,6 +38,10 @@
  */
 package com.medigy.persist.model.insurance;
 
+import com.medigy.persist.model.party.Agreement;
+import com.medigy.persist.model.party.AgreementItem;
+import com.medigy.persist.reference.custom.insurance.CoverageType;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
@@ -45,9 +49,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-
-import com.medigy.persist.model.party.Agreement;
-import com.medigy.persist.model.party.AgreementItem;
 
 @Entity
 @Table(name = "Ins_Policy_Item")
@@ -59,6 +60,9 @@ public class InsurancePolicyItem implements AgreementItem
     private String text;
     private byte[] image;
     private InsurancePolicyItem parentPolicyItem;
+
+    private CoverageLevel coverageLevel;
+    private CoverageType coverageType;
 
     @Id(generate = GeneratorType.AUTO)
     @Column(name = "ins_policy_item_id")
@@ -125,5 +129,29 @@ public class InsurancePolicyItem implements AgreementItem
     public void setParentAgreementItem(AgreementItem parentAgreementItem)
     {
         this.parentPolicyItem = (InsurancePolicyItem) parentAgreementItem;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "coverage_level_id")
+    public CoverageLevel getCoverageLevel()
+    {
+        return coverageLevel;
+    }
+
+    public void setCoverageLevel(final CoverageLevel coverageLevel)
+    {
+        this.coverageLevel = coverageLevel;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "coverage_type_id")        
+    public CoverageType getCoverageType()
+    {
+        return coverageType;
+    }
+
+    public void setCoverageType(final CoverageType coverageType)
+    {
+        this.coverageType = coverageType;
     }
 }

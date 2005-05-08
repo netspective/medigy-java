@@ -56,8 +56,10 @@ public interface Agreement
 
     public Long getAgreementId();
     public void setAgreementId(final Long id);
-    public Date getAgreementDate();
-    public void setAgreementDate(final Date agreementDate);
+    public Date getFromDate();
+    public void setFromDate(final Date agreementDate);
+    public Date getThroughDate();
+    public void setThroughDate(final Date throughDate);
 
     public String getDescription();
     public void setDescription(final String description);
