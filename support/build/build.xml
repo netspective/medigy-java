@@ -13,7 +13,7 @@
         </path>
         <pathconvert targetos="unix" property="repository.home" refid="tmp.repository.home"/>
         <property name="consolidated.artifacts.home" value="${basedir}/artifacts"/>
-        <property name="consolidated.artifacts.doc.home" value="{consolidated.artifacts.home}/consolidated/doc"/>
+        <property name="consolidated.artifacts.doc.home" value="${consolidated.artifacts.home}/consolidated/doc"/>
         <property name="consolidated.artifacts.test.junit.home" value="${consolidated.artifacts.home}/consolidated/reports/junit"/>
         <property name="consolidated.artifacts.test.coverage.home" value="${consolidated.artifacts.home}/consolidated/reports/coverage"/>
     </target>
