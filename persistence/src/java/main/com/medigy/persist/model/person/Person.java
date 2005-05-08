@@ -43,26 +43,6 @@
  */
 package com.medigy.persist.model.person;
 
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.TreeSet;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
-import javax.persistence.LobType;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-import javax.persistence.UniqueConstraint;
-
 import com.medigy.persist.model.health.HealthCareEpisode;
 import com.medigy.persist.model.health.HealthCareLicense;
 import com.medigy.persist.model.health.HealthCareVisit;
@@ -80,6 +60,26 @@ import com.medigy.persist.reference.type.GenderType;
 import com.medigy.persist.reference.type.LanguageType;
 import com.medigy.persist.reference.type.MaritalStatusType;
 import com.medigy.persist.reference.type.party.PartyType;
+import org.apache.commons.codec.language.Soundex;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
+import javax.persistence.LobType;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+import javax.persistence.UniqueConstraint;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.TreeSet;
 
 @Entity
 @Inheritance(strategy=InheritanceType.JOINED)
@@ -94,6 +94,9 @@ public class Person extends Party
     private Date deathDate;
     private byte[] photo;
 
+    private String firstNameSoundex;
+    private String lastNameSoundex;
+
     private Set<Ethnicity> ethnicities = new HashSet<Ethnicity>();
     private Set<Gender> genders = new HashSet<Gender>();
     private Set<MaritalStatus> maritalStatuses = new HashSet<MaritalStatus>();
@@ -105,7 +108,8 @@ public class Person extends Party
 
     public Person()
     {
-        setPartyType(PartyType.Cache.PERSON.getEntity());
+        super();
+        this.partyType = PartyType.Cache.PERSON.getEntity();
     }
 
     @Transient
@@ -129,6 +133,15 @@ public class Person extends Party
     {
         this.firstName = firstName;
         setPartyName(getFullName());
+        setFirstNameSoundex(createSoundexName(firstName));
+    }
+
+    @Transient
+    public String createSoundexName(final String name)
+    {
+        // using default US_ENGLISH_MAPPING for now
+        Soundex soundex = new Soundex();
+        return soundex.encode(name);
     }
 
     @Column(length = 128, nullable = false)
@@ -141,6 +154,7 @@ public class Person extends Party
     {
         this.lastName = lastName;
         setPartyName(getFullName());
+        setLastNameSoundex(createSoundexName(lastName));
     }
 
     @Column(length = 96)
@@ -574,6 +588,26 @@ public class Person extends Party
             }
         }
         return null;
+    }
+
+    public String getFirstNameSoundex()
+    {
+        return firstNameSoundex;
+    }
+
+    public void setFirstNameSoundex(final String firstNameSoundex)
+    {
+        this.firstNameSoundex = firstNameSoundex;
+    }
+
+    public String getLastNameSoundex()
+    {
+        return lastNameSoundex;
+    }
+
+    public void setLastNameSoundex(final String lastNameSoundex)
+    {
+        this.lastNameSoundex = lastNameSoundex;
     }
 
     public String toString()

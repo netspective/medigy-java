@@ -138,7 +138,7 @@ public class ModelInitializer
     }
 
     public Party readSystemGlobalPropertyEntity()
-    {
+    {                                    
 
         final Criteria criteria = session.createCriteria(Party.class);
         criteria.add(Restrictions.eq("partyName", Party.SYS_GLOBAL_PARTY_NAME));

@@ -43,28 +43,28 @@
  */
 package com.medigy.persist.util;
 
+import com.medigy.persist.reference.CachedReferenceEntity;
+import com.medigy.persist.reference.ReferenceEntity;
+import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
+import com.medigy.persist.reference.custom.CustomReferenceEntity;
+import org.hibernate.HibernateException;
+import org.hibernate.cfg.AnnotationConfiguration;
+import org.hibernate.dialect.Dialect;
+import org.hibernate.dialect.HSQLDialect;
+import org.hibernate.mapping.PersistentClass;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.persistence.Table;
-
-import org.hibernate.HibernateException;
-import org.hibernate.MappingException;
-import org.hibernate.cfg.AnnotationConfiguration;
-import org.hibernate.dialect.Dialect;
-import org.hibernate.dialect.HSQLDialect;
-import org.hibernate.mapping.PersistentClass;
-
-import com.medigy.persist.reference.CachedReferenceEntity;
-import com.medigy.persist.reference.ReferenceEntity;
-import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
-import com.medigy.persist.reference.custom.CustomReferenceEntity;
-
 public class HibernateConfiguration extends AnnotationConfiguration
 {
+    private static final Log log = LogFactory.getLog(HibernateConfiguration.class);
     private final Map<Class, Class> referenceEntitiesAndCachesMap = new HashMap<Class, Class>();
     private final Map<Class, Class> customReferenceEntitiesAndCachesMap = new HashMap<Class, Class>();
 
@@ -81,6 +81,15 @@ public class HibernateConfiguration extends AnnotationConfiguration
     public Map<Class, Class> getCustomReferenceEntitiesAndCachesMap()
     {
         return customReferenceEntitiesAndCachesMap;
+    }
+
+    @Override
+    public void buildMappings()
+    {
+        super.buildMappings();
+        registerReferenceEntitiesAndCaches();
+        if (log.isInfoEnabled())
+            log.info("Registered reference entities and caches.");
     }
 
     public void registerReferenceEntitiesAndCaches()
@@ -135,58 +144,6 @@ public class HibernateConfiguration extends AnnotationConfiguration
                 // if no cache is found, its ok since these are custom
             }
         }
-    }
-
-    public AnnotationConfiguration addAnnotatedClass(final Class aClass) throws MappingException
-    {
-        /*
-        if (ReferenceEntity.class.isAssignableFrom(aClass))
-        {
-            boolean foundCache = false;
-            for (final Class ic : aClass.getClasses())
-            {
-                if (CachedReferenceEntity.class.isAssignableFrom(ic))
-                {
-                    if (ic.isEnum())
-                    {
-                        referenceEntitiesAndCachesMap.put(aClass, ic);
-                        foundCache = true;
-                    }
-                    else
-                        throw new HibernateException(ic + " must be an enum since " + aClass + " is a " + ReferenceEntity.class.getName());
-
-                    break;
-                }
-
-            }
-
-            if (!foundCache)
-                throw new HibernateException(aClass + " is marked as a ReferenceEntity but does not contain a ReferenceEntityCache enum.");
-
-            // TODO: find out how to ensure the new mapping for reference type is immutable and read only
-            // final PersistentClass pClass = getClassMapping(aClass.getLabel());
-        }
-        else if (CustomReferenceEntity.class.isAssignableFrom(aClass))
-        {
-            for (final Class ic : aClass.getClasses())
-            {
-                if (CachedCustomReferenceEntity.class.isAssignableFrom(ic))
-                {
-                    if (ic.isEnum())
-                    {
-                        customReferenceEntitiesAndCachesMap.put(aClass, ic);
-                    }
-                    else
-                        throw new HibernateException(ic + " must be an enum since " + aClass + " is a " +
-                                CachedCustomReferenceEntity.class.getName());
-
-                    break;
-                }
-            }
-            // if no cache is found, its ok since these are custom
-        }
-        */
-        return super.addAnnotatedClass(aClass);
     }
 
     public String[] generateSchemaCreationScript(final Dialect dialect) throws HibernateException

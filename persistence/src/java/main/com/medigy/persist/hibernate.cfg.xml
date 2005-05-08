@@ -4,6 +4,34 @@
 
 <hibernate-configuration>
 	<session-factory>
+        <!--
+        PartyType.class,
+        MaritalStatusType.class,
+        GenderType.class,
+        ContactMechanismType.class,
+        PartyFacilityRoleType.class,
+        PriorityType.class,
+        DataEncryptionType.class,
+        UnitOfMeasureType.class,
+        LanguageType.class,
+        ModelVersion.class,
+        -->
+        <mapping package="com.medigy.persist.reference"/>
+        <mapping class="com.medigy.persist.reference.ModelVersion"/>
+        
+        <mapping package="com.medigy.persist.reference.type"/>
+        <mapping class="com.medigy.persist.reference.type.ContactMechanismType"/>
+        <mapping class="com.medigy.persist.reference.type.DataEncryptionType"/>
+        <mapping class="com.medigy.persist.reference.type.GenderType"/>
+        <mapping class="com.medigy.persist.reference.type.LanguageType"/>
+        <mapping class="com.medigy.persist.reference.type.MaritalStatusType"/>
+        <mapping class="com.medigy.persist.reference.type.PriorityType"/>
+        <mapping class="com.medigy.persist.reference.type.UnitOfMeasureType"/>
+
+        <mapping package="com.medigy.persist.reference.type.party"/>
+        <mapping class="com.medigy.persist.reference.type.party.PartyFacilityRoleType"/>
+        <mapping class="com.medigy.persist.reference.type.party.PartyType"/>
+
         <mapping package="com.medigy.persist.reference.custom"/>
 		<mapping class="com.medigy.persist.reference.custom.GeographicBoundaryType"/>
         <mapping package="com.medigy.persist.reference.custom.claim"/>
@@ -65,7 +93,8 @@
         <mapping class="com.medigy.persist.reference.custom.org.OrganizationClassificationType"/>
         
         <mapping package="com.medigy.persist.model.party"/>
-        <!--mapping class="com.medigy.persist.model.party.Case"/-->
+        <!--mapping class="com.medigy.persist.model.party.Case"/
+ -->
         <!--mapping class="com.medigy.persist.model.party.CaseRole"/-->
         <mapping class="com.medigy.persist.model.party.CommunicationEvent"/>
         <mapping class="com.medigy.persist.model.party.CommunicationEventPurpose"/>

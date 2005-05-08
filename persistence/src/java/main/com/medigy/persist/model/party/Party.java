@@ -40,8 +40,18 @@
 
 package com.medigy.persist.model.party;
 
-import java.util.HashSet;
-import java.util.Set;
+import com.medigy.persist.model.common.AbstractTopLevelEntity;
+import com.medigy.persist.model.insurance.InsurancePolicyRole;
+import com.medigy.persist.model.invoice.BillingAccountRole;
+import com.medigy.persist.model.invoice.InvoiceRole;
+import com.medigy.persist.reference.custom.party.CommunicationEventPurposeType;
+import com.medigy.persist.reference.custom.party.CommunicationEventRoleType;
+import com.medigy.persist.reference.custom.party.FacilityType;
+import com.medigy.persist.reference.custom.party.PartyClassificationType;
+import com.medigy.persist.reference.custom.party.PartyIdentifierType;
+import com.medigy.persist.reference.custom.party.PartyRelationshipType;
+import com.medigy.persist.reference.custom.party.PartyRoleType;
+import com.medigy.persist.reference.type.party.PartyType;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -55,19 +65,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-
-import com.medigy.persist.model.common.AbstractTopLevelEntity;
-import com.medigy.persist.model.insurance.InsurancePolicyRole;
-import com.medigy.persist.model.invoice.BillingAccountRole;
-import com.medigy.persist.model.invoice.InvoiceRole;
-import com.medigy.persist.reference.custom.party.CommunicationEventPurposeType;
-import com.medigy.persist.reference.custom.party.CommunicationEventRoleType;
-import com.medigy.persist.reference.custom.party.FacilityType;
-import com.medigy.persist.reference.custom.party.PartyClassificationType;
-import com.medigy.persist.reference.custom.party.PartyIdentifierType;
-import com.medigy.persist.reference.custom.party.PartyRelationshipType;
-import com.medigy.persist.reference.custom.party.PartyRoleType;
-import com.medigy.persist.reference.type.party.PartyType;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity()
 @Inheritance(strategy=InheritanceType.JOINED)
@@ -97,8 +96,8 @@ public class Party extends AbstractTopLevelEntity
     }
 
     private Long partyId;
-    private String partyName;
-    private PartyType partyType;
+    protected String partyName;
+    protected PartyType partyType;
 
     private Set<PartyClassification> partyClassifications = new HashSet<PartyClassification>();
     private Set<PartyRole> partyRoles = new HashSet<PartyRole>();
@@ -155,7 +154,7 @@ public class Party extends AbstractTopLevelEntity
     }
 
     @ManyToOne
-    @JoinColumn(name = "party_type_id", nullable = true)
+    @JoinColumn(name = "party_type_id")
     public PartyType getPartyType()
     {
         return partyType;

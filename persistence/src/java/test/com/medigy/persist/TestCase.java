@@ -100,25 +100,24 @@ public abstract class TestCase extends junit.framework.TestCase
         hibProperties.setProperty(Environment.SHOW_SQL, "false");
         config.addProperties(hibProperties);
 
-        for (final Class c : com.medigy.persist.reference.Catalog.ALL_REFERENCE_TYPES)
-            config.addAnnotatedClass(c);
-
         try
         {
             config.configure("com/medigy/persist/hibernate.cfg.xml");
+            config.buildMappings();
         }
         catch (HibernateException e)
         {
             log.error(e);
             throw new RuntimeException(e);
         }
-        config.registerReferenceEntitiesAndCaches();
+
         return config;
     }
 
     protected void setUp() throws Exception
     {
         super.setUp();
+        initializeModelData = true;
         setupDatabaseDirectory();
         final HibernateConfiguration hibernateConfiguration = getHibernateConfiguration();
         HibernateUtil.setConfiguration(hibernateConfiguration);
