@@ -36,22 +36,44 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.service.util;
+package com.medigy.service.insurance;
 
-import com.medigy.persist.TestCase;
+import com.medigy.persist.DbUnitTestCase;
 import com.medigy.persist.model.insurance.InsurancePolicy;
 import com.medigy.persist.model.org.Organization;
 import com.medigy.persist.model.person.Person;
 import com.medigy.persist.reference.custom.insurance.InsurancePolicyType;
 import com.medigy.persist.util.HibernateUtil;
+import com.medigy.service.util.InsurancePolicyFacade;
+import com.medigy.service.util.InsurancePolicyFacadeImpl;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.criterion.Restrictions;
 
 import java.util.List;
 
-public class TestInsurancePolicyFacade extends TestCase
+public class TestInsurancePolicyFacade extends DbUnitTestCase
 {
     private static final Log log = LogFactory.getLog(TestInsurancePolicyFacade.class);
+
+    public void testCreateIndividualInsurancePolicy()
+    {
+        final Organization policyProvider = (Organization) HibernateUtil.getSession().load(Organization.class, new Long(2));
+        final Person policyHolder = (Person) HibernateUtil.getSession().load(Person.class, new Long(3));
+        final List insuredDependentList = HibernateUtil.getSession().createCriteria(Person.class).add(Restrictions.gt("partyId", new Long(3))).list();
+        final Person[] insuredDependents = (Person[]) insuredDependentList.toArray(new Person[0]);
+
+        final InsurancePolicyFacade facade = new InsurancePolicyFacadeImpl();
+        final InsurancePolicy policy = facade.createIndividualInsurancePolicy("12345", policyProvider, policyHolder,
+            insuredDependents);
+
+        final InsurancePolicy newPolicy = (InsurancePolicy) HibernateUtil.getSession().load(InsurancePolicy.class, policy.getPolicyId());
+
+        assertNotNull(newPolicy);
+        assertEquals(policyProvider.getOrgId(), newPolicy.getInsuranceProvider().getOrgId());
+        assertEquals(policyHolder.getPersonId(), newPolicy.getInsuredContractHolder().getPersonId());
+        assertEquals(insuredDependents.length, newPolicy.getInsuredDependents().size());
+    }
 
     public void testGetInsurancePolicy()
     {
@@ -111,5 +133,10 @@ public class TestInsurancePolicyFacade extends TestCase
         assertEquals(1, policyList.size());
         assertEquals("12345", ((InsurancePolicy) policyList.toArray()[0]).getPolicyNumber());
 
+    }
+
+    public String getDataSetFile()
+    {
+        return "/com/medigy/service/insurance/TestInsurancePolicyFacade.xml";
     }
 }
