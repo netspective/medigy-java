@@ -40,12 +40,18 @@ package com.medigy.service.util;
 
 import com.medigy.persist.model.insurance.InsurancePolicy;
 import com.medigy.persist.model.org.Organization;
+import com.medigy.persist.model.person.Person;
 
 import java.io.Serializable;
 import java.util.List;
 
 public interface InsurancePolicyFacade
 {
+    public InsurancePolicy createIndividualInsurancePolicy(final String policyNumber,                                      
+                                      final Organization policyProvider,
+                                      final Person policyHolder,
+                                      final Person[] insuredDependents);
+
     public InsurancePolicy getIndividualInsurancePolicy(final String policyNumber);
 
     public List listInsurancePoliciesByProvider(final Organization org);

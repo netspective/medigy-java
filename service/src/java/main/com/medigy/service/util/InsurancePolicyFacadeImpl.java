@@ -40,6 +40,7 @@ package com.medigy.service.util;
 
 import com.medigy.persist.model.insurance.InsurancePolicy;
 import com.medigy.persist.model.org.Organization;
+import com.medigy.persist.model.person.Person;
 import com.medigy.persist.reference.custom.insurance.InsurancePolicyType;
 import com.medigy.persist.util.HibernateUtil;
 import org.apache.commons.logging.Log;
@@ -54,6 +55,22 @@ import java.util.List;
 public class InsurancePolicyFacadeImpl implements InsurancePolicyFacade
 {
     private static Log log = LogFactory.getLog(InsurancePolicyFacadeImpl.class);
+
+    public InsurancePolicy createIndividualInsurancePolicy(final String policyNumber,
+                                      final Organization policyProvider,
+                                      final Person policyHolder,
+                                      final Person[] insuredDependents)
+    {
+        final InsurancePolicy policy = new InsurancePolicy();
+        policy.setType(InsurancePolicyType.Cache.INDIVIDUAL_INSURANCE_POLICY.getEntity());
+        policy.setPolicyNumber(policyNumber);
+        policy.setInsuranceProvider(policyProvider);
+        policy.setPolicyHolder(policyHolder);
+        for (Person dep : insuredDependents)
+            policy.addInsuredDependent(dep);
+        HibernateUtil.getSession().save(policy);
+        return policy;
+    }
 
     public InsurancePolicy getIndividualInsurancePolicy(final String policyNumber)
     {
