@@ -38,8 +38,6 @@
  */
 package com.medigy.persist.model.insurance;
 
-import java.util.Date;
-
 import com.medigy.persist.TestCase;
 import com.medigy.persist.model.org.Organization;
 import com.medigy.persist.model.party.Party;
@@ -48,6 +46,8 @@ import com.medigy.persist.reference.custom.insurance.CoverageType;
 import com.medigy.persist.reference.custom.insurance.InsurancePolicyType;
 import com.medigy.persist.reference.custom.org.OrganizationClassificationType;
 import com.medigy.persist.util.HibernateUtil;
+
+import java.util.Date;
 
 public class TestInsurance extends TestCase
 {
@@ -74,7 +74,7 @@ public class TestInsurance extends TestCase
         final InsurancePolicy individualPolicy = new InsurancePolicy();
         individualPolicy.setType(InsurancePolicyType.Cache.INDIVIDUAL_INSURANCE_POLICY.getEntity());
         individualPolicy.setInsuranceProvider(blueCross);
-        individualPolicy.setAgreementDate(new Date());
+        individualPolicy.setFromDate(new Date());
         individualPolicy.setPolicyHolder(johnDoe);
         individualPolicy.addInsuredDependent(patient);
         individualPolicy.setPolicyNumber("12345");
@@ -137,7 +137,7 @@ public class TestInsurance extends TestCase
         johnDoe.setLastName("Doe");
         johnDoe.setFirstName("John");
 
-        currentYearEnrollment.setInsuredContractHolder(johnDoe);
+        //currentYearEnrollment.setInsuredContractHolder(johnDoe);
 
 
 
