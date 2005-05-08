@@ -132,6 +132,11 @@
             <property name="persistence.artifacts.home" value="${consolidated.artifacts.home}/persistence"/>
             <property name="module.artifacts.home" value="${consolidated.artifacts.home}/persistence-tools"/>
         </ant>
+        <ant dir="${repository.home}/persistence-tools/support/build" target="doc.generate-dbdd" inheritall="false" inheritrefs="false">
+            <property name="hibernate-doc.artifacts.home" value="${consolidated.artifacts.home}/hibernate-doc"/>
+            <property name="persistence.artifacts.home" value="${consolidated.artifacts.home}/persistence"/>
+            <property name="module.artifacts.home" value="${consolidated.artifacts.home}/persistence-tools"/>
+        </ant>
     </target>
 
     <target name="all" depends="clean,jar"/>
