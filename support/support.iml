@@ -5,7 +5,9 @@
     <output url="file://$MODULE_DIR$/build/artifacts/classes/main" />
     <exclude-output />
     <exclude-exploded />
-    <content url="file://$MODULE_DIR$" />
+    <content url="file://$MODULE_DIR$">
+      <excludeFolder url="file://$MODULE_DIR$/build/artifacts" />
+    </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="persistence" />
