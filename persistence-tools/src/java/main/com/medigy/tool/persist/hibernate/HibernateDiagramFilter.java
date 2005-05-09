@@ -44,7 +44,7 @@ public class HibernateDiagramFilter implements HibernateDiagramGeneratorFilter
         this.showReferenceData = showReferenceData;
         this.showClassStructure = showClassStructure;
 
-        commonColumns.add("version");
+        commonColumns.add("lock_version");
         commonColumns.add("create_timestamp");
         commonColumns.add("update_timestamp");
         commonColumns.add("record_status");
