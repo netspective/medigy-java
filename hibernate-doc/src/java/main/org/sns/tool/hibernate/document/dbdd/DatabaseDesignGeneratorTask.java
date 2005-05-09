@@ -46,17 +46,13 @@ package org.sns.tool.hibernate.document.dbdd;
 import java.io.File;
 import java.lang.reflect.Constructor;
 
-import org.hibernate.cfg.Environment;
-import org.hibernate.cfg.Configuration;
-import org.apache.tools.ant.Task;
 import org.apache.tools.ant.BuildException;
-import org.sns.tool.graphviz.GraphvizDiagramGenerator;
-import org.sns.tool.graphviz.GraphvizLayoutType;
-import org.sns.tool.hibernate.document.diagram.HibernateDiagramGeneratorFilter;
-import org.sns.tool.hibernate.document.diagram.HibernateDiagramGenerator;
-import org.sns.tool.hibernate.struct.TableStructureRules;
-import org.sns.tool.hibernate.struct.TableStructure;
+import org.apache.tools.ant.Task;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.cfg.Environment;
 import org.sns.tool.hibernate.struct.DefaultTableStructure;
+import org.sns.tool.hibernate.struct.TableStructure;
+import org.sns.tool.hibernate.struct.TableStructureRules;
 
 public class DatabaseDesignGeneratorTask extends Task
 {
@@ -66,7 +62,8 @@ public class DatabaseDesignGeneratorTask extends Task
     private String hibernateConfigFile;
     private String dialectClass;
     private File destDir;
-    private File indexFile;
+    private File docBookFile;
+    private String documentTitle;
 
     public void execute() throws BuildException
     {
@@ -76,7 +73,7 @@ public class DatabaseDesignGeneratorTask extends Task
         if(structureRulesClass == null)
             throw new BuildException("structureRulesClass was not provided.");
 
-        if(indexFile == null)
+        if(docBookFile == null)
             throw new BuildException("indexFile was not provided.");
 
         try
@@ -108,9 +105,9 @@ public class DatabaseDesignGeneratorTask extends Task
 
             final DatabaseDesignGeneratorConfig ddgConfig = new DatabaseDesignGeneratorConfig()
             {
-                public File getDestinationDirectory()
+                public File getImagesDirectory()
                 {
-                    return destDir == null ? indexFile.getParentFile() : destDir;
+                    return destDir == null ? docBookFile.getParentFile() : destDir;
                 }
 
                 public Configuration getHibernateConfiguration()
@@ -118,9 +115,14 @@ public class DatabaseDesignGeneratorTask extends Task
                     return configuration;
                 }
 
-                public File getIndexFile()
+                public File getDocBookFile()
                 {
-                    return indexFile;
+                    return docBookFile;
+                }
+
+                public String getDocumentTitle()
+                {
+                    return documentTitle == null ? "No documentTitle attribute provided." : documentTitle;
                 }
 
                 public TableStructure getTableStructure()
@@ -159,9 +161,9 @@ public class DatabaseDesignGeneratorTask extends Task
         this.destDir = destDir;
     }
 
-    public void setIndexFile(File indexFile)
+    public void setDocBookFile(File docBookFile)
     {
-        this.indexFile = indexFile;
+        this.docBookFile = docBookFile;
     }
 
     public void setStructureClass(final String structureClass) throws ClassNotFoundException
@@ -172,5 +174,10 @@ public class DatabaseDesignGeneratorTask extends Task
     public void setStructureRulesClass(final String structureRulesClass) throws ClassNotFoundException
     {
         this.structureRulesClass = Class.forName(structureRulesClass);
+    }
+
+    public void setDocumentTitle(String documentTitle)
+    {
+        this.documentTitle = documentTitle;
     }
 }

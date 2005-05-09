@@ -43,25 +43,25 @@
  */
 package org.sns.tool.hibernate.struct;
 
-import java.util.List;
+import java.text.Collator;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.Iterator;
 
 import org.hibernate.mapping.ForeignKey;
-import org.hibernate.mapping.Table;
 import org.hibernate.mapping.PersistentClass;
-import org.sns.tool.hibernate.struct.DefaultTableStructure.TableTreeNodeComparator;
+import org.hibernate.mapping.Table;
 
-public class DefaultTableStructureNode implements TableStructureNode
+public class DefaultTableStructureNode implements TableStructureNode, Comparable
 {
     private final TableStructure owner;
     private final TableStructureNode parentNode;
     private final Table nodeForTable;
     private final PersistentClass mappedClass;
     private final int level;
-    private List childNodes = new ArrayList();
+    private Set childNodes = new TreeSet();
     private List ancestorNodes;
 
     public DefaultTableStructureNode(final PersistentClass mappedClass, final Table nodeForTable, final TableStructure owner, final TableStructureNode parent, final int level)
@@ -72,7 +72,6 @@ public class DefaultTableStructureNode implements TableStructureNode
         this.parentNode = parent;
         this.level = level;
 
-        final Set sortedChildren = new TreeSet(new TableTreeNodeComparator());
         for (final Iterator classes = owner.getConfiguration().getClassMappings(); classes.hasNext(); )
         {
             final PersistentClass pclass = (PersistentClass) classes.next();
@@ -84,12 +83,11 @@ public class DefaultTableStructureNode implements TableStructureNode
                 if(owner.getRules().isParentRelationship(owner, foreignKey, nodeForTable))
                 {
                     final DefaultTableStructureNode childNode = new DefaultTableStructureNode(pclass, table, owner, this, level + 1);
-                    sortedChildren.add(childNode);
+                    childNodes.add(childNode);
                     owner.categorize(childNode);
                 }
             }
         }
-        childNodes.addAll(sortedChildren);
 
         ancestorNodes = new ArrayList();
         TableStructureNode activeParentNode = parent;
@@ -102,6 +100,13 @@ public class DefaultTableStructureNode implements TableStructureNode
 
             activeParentNode = activeParentNode.getParentNode();
         }
+    }
+
+    public int compareTo(Object o)
+    {
+        final TableStructureNode other = (TableStructureNode) o;
+        return Collator.getInstance().compare(nodeForTable.getName().toUpperCase(), other.getTable().getName().toUpperCase());
+
     }
 
     public TableStructure getOwner()
@@ -129,7 +134,7 @@ public class DefaultTableStructureNode implements TableStructureNode
         return parentNode;
     }
 
-    public List getChildNodes()
+    public Set getChildNodes()
     {
         return childNodes;
     }

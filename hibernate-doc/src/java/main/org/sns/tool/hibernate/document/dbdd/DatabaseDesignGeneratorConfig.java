@@ -45,13 +45,14 @@ package org.sns.tool.hibernate.document.dbdd;
 
 import java.io.File;
 
-import org.sns.tool.hibernate.struct.TableStructure;
 import org.hibernate.cfg.Configuration;
+import org.sns.tool.hibernate.struct.TableStructure;
 
 public interface DatabaseDesignGeneratorConfig
 {
     public Configuration getHibernateConfiguration();
+    public String getDocumentTitle();
     public TableStructure getTableStructure();
-    public File getDestinationDirectory();
-    public File getIndexFile();
+    public File getImagesDirectory();
+    public File getDocBookFile();
 }

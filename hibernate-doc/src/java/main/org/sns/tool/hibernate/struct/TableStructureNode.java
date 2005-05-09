@@ -1,9 +1,10 @@
 package org.sns.tool.hibernate.struct;
 
 import java.util.List;
+import java.util.Set;
 
-import org.hibernate.mapping.Table;
 import org.hibernate.mapping.PersistentClass;
+import org.hibernate.mapping.Table;
 
 public interface TableStructureNode
 {
@@ -33,12 +34,12 @@ public interface TableStructureNode
     public TableStructureNode getParentNode();
 
     /**
-     * Get all the children for this node -- each item in the list is a TableTreeNode
+     * Get all the children for this node -- each item in the set is a TableStructureNode
      */
-    public List getChildNodes();
+    public Set getChildNodes();
 
     /**
-     * Get all the ancestors for this node -- each item in the list is a TableTreeNode
+     * Get all the ancestors for this node -- each item in the set is a TableStructureNode
      */
     public List getAncestorNodes();
 

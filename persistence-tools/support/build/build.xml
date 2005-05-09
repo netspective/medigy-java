@@ -61,7 +61,7 @@
                       destFile="${persistence.artifacts.doc.diagram.dest.file-prefix}.gif" format="gif"/>
     </target>
 
-    <target name="doc.generate-dbdd" depends="compile.main,init.define-modules,init.define-module.dependencies.main.classpath">
+    <target name="doc.generate-dbdd-source" depends="compile.main,init.define-modules,init.define-module.dependencies.main.classpath">
         <taskdef name="dbdg" classname="org.sns.tool.hibernate.document.dbdd.DatabaseDesignGeneratorTask"
                              classpathref="module.dependencies.main.classpath">
             <classpath location="${module.artifacts.classes.main.home}"/>
@@ -69,14 +69,27 @@
 
         <property name="persistence.artifacts.doc.home" value="${persistence.artifacts.home}/doc"/>
         <property name="persistence.artifacts.doc.db.dbdd.home" value="${persistence.artifacts.doc.home}/db/dbdd"/>
+        <property name="persistence.artifacts.doc.db.dbdd.src" value="${persistence.artifacts.doc.db.dbdd.home}/dbdd.xml"/>
 
         <mkdir dir="${persistence.artifacts.doc.db.dbdd.home}"/>
-        <dbdg indexFile="${persistence.artifacts.doc.db.dbdd.home}/index.txt"
+        <dbdg docBookFile="${persistence.artifacts.doc.db.dbdd.src}"
               hibernateConfigClass="com.medigy.persist.util.HibernateConfiguration"
               hibernateConfigFile="/com/medigy/persist/hibernate.cfg.xml"
               structureClass="org.sns.tool.hibernate.struct.DefaultTableStructure"
               structureRulesClass="com.medigy.tool.persist.hibernate.HibernateStructureRules"
             />
+    </target>
+
+    <target name="doc.generate-dbdd-html" depends="doc.generate-dbdd-source">
+        <fail message="To generate DocBook, you need DocBook XSL package from http://docbook.sourceforge.net/projects/xsl/ and then set the doc.docbook-xsl.home property." unless="doc.docbook-xsl.home"/>
+        <echo message="Creating chunked HTML output in ${persistence.artifacts.doc.db.dbdd.home}"/>
+        <xslt basedir="${persistence.artifacts.doc.db.dbdd.home}"
+            destdir="${persistence.artifacts.doc.db.dbdd.home}"
+            style="${doc.docbook-xsl.home}/html/docbook.xsl"
+            force="yes" processor="trax" classpathref="module.dependencies.main.classpath">
+            <include name="*.xml"/>
+            <classpath location="${module.artifacts.classes.main.home}"/>
+        </xslt>
     </target>
 
 </project>

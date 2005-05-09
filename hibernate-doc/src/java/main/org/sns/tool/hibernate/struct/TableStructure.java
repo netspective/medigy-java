@@ -43,8 +43,8 @@
  */
 package org.sns.tool.hibernate.struct;
 
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.hibernate.cfg.Configuration;
 
@@ -61,10 +61,10 @@ public interface TableStructure
     public TableStructureRules getRules();
 
     /**
-     * Get all the children for the tree -- each item in the list is a TableTreeNode that comprises the "main"
+     * Get all the children for the tree -- each item in the set is a TableStructureNode that comprises the "main"
      * tables (entry points) for the hierarchy.
      */
-    public List getTopLevelTableNodes();
+    public Set getTopLevelTableNodes();
 
     /**
      * Using the rules provided in TableStructureRules, categorize the tableNode to put it into its appropriate

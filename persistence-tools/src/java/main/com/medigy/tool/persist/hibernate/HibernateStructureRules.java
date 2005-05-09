@@ -45,22 +45,24 @@ package com.medigy.tool.persist.hibernate;
 
 import java.util.Iterator;
 
-import org.hibernate.mapping.ForeignKey;
 import org.hibernate.mapping.Collection;
+import org.hibernate.mapping.Column;
+import org.hibernate.mapping.ForeignKey;
+import org.hibernate.mapping.PrimaryKey;
 import org.hibernate.mapping.Table;
-import org.sns.tool.hibernate.struct.TableStructureRules;
+import org.sns.tool.hibernate.struct.TableCategory;
 import org.sns.tool.hibernate.struct.TableStructure;
 import org.sns.tool.hibernate.struct.TableStructureNode;
-import org.sns.tool.hibernate.struct.TableCategory;
+import org.sns.tool.hibernate.struct.TableStructureRules;
 
 import com.medigy.persist.reference.ReferenceEntity;
 import com.medigy.persist.reference.custom.CustomReferenceEntity;
 
 public class HibernateStructureRules implements TableStructureRules
 {
-    private TableCategory defaultTableCategory = new TableCategoryImpl("Application");
-    private TableCategory refTableCategory = new TableCategoryImpl("Reference");
-    private TableCategory customRefTableCategory = new TableCategoryImpl("Custom Reference");
+    private TableCategory defaultTableCategory = new TableCategoryImpl("Application Tables");
+    private TableCategory refTableCategory = new TableCategoryImpl("Reference Tables");
+    private TableCategory customRefTableCategory = new TableCategoryImpl("Custom Reference Tables");
 
     public HibernateStructureRules()
     {
@@ -94,6 +96,11 @@ public class HibernateStructureRules implements TableStructureRules
             return new TableCategory[] { customRefTableCategory };
         else
             return new TableCategory[] { defaultTableCategory };
+    }
+
+    public String getTranslatedDataType(String defaultDataType, TableStructureNode tableNode, Column column, PrimaryKey partOfPrimaryKey, ForeignKey partOfForeignKey)
+    {
+        return defaultDataType;
     }
 
     protected class TableCategoryImpl implements TableCategory, Comparable

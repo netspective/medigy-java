@@ -43,31 +43,21 @@
  */
 package org.sns.tool.hibernate.struct;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.Map;
-import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
-import java.text.Collator;
+import java.util.TreeSet;
 
 import org.hibernate.cfg.Configuration;
-import org.hibernate.mapping.Table;
-import org.hibernate.mapping.PersistentClass;
 import org.hibernate.mapping.ForeignKey;
+import org.hibernate.mapping.PersistentClass;
+import org.hibernate.mapping.Table;
 
 public class DefaultTableStructure implements TableStructure
 {
     /**
-     * Map of tables and the persistent classes they represent.
-     */
-    private final Map tableToClassMap = new HashMap();
-
-    /**
-     * List of categories -- key is a string, value is a list of TableStructureNode instances
+     * List of categories -- key is a string, value is a set of TableStructureNode instances
      */
     private final Map tableCategories = new TreeMap();
 
@@ -84,7 +74,7 @@ public class DefaultTableStructure implements TableStructure
     /**
      * The tables that have no parents (top level tables with level = 1).
      */
-    private final List topLevelTableNodes = new ArrayList();
+    private final Set topLevelTableNodes = new TreeSet();
 
     public DefaultTableStructure(final Configuration configuration, final TableStructureRules rules)
     {
@@ -92,13 +82,10 @@ public class DefaultTableStructure implements TableStructure
         this.configuration.buildMappings();
         this.rules = rules;
 
-        final Set sortedChildren = new TreeSet(new TableTreeNodeComparator());
         for (final Iterator classes = configuration.getClassMappings(); classes.hasNext();)
         {
             final PersistentClass pclass = (PersistentClass) classes.next();
             final Table table = (Table) pclass.getTable();
-
-            tableToClassMap.put(table, pclass);
 
             boolean isChildTable = false;
             for (final Iterator fKeys = table.getForeignKeyIterator(); fKeys.hasNext();)
@@ -114,19 +101,18 @@ public class DefaultTableStructure implements TableStructure
             if(! isChildTable)
             {
                 final TableStructureNode topLevelNode = new DefaultTableStructureNode(pclass, table, this, null, 0);
-                sortedChildren.add(topLevelNode);
+                topLevelTableNodes.add(topLevelNode);
                 categorize(topLevelNode);
             }
         }
-        topLevelTableNodes.addAll(sortedChildren);
     }
 
     protected void categorize(final TableStructureNode tableNode, final TableCategory category)
     {
-        List entries = (List) tableCategories.get(category);
+        Set entries = (Set) tableCategories.get(category);
         if(entries == null)
         {
-            entries = new ArrayList();
+            entries = new TreeSet();
             tableCategories.put(category, entries);
         }
 
@@ -153,46 +139,9 @@ public class DefaultTableStructure implements TableStructure
         return rules;
     }
 
-    public List getTopLevelTableNodes()
+    public Set getTopLevelTableNodes()
     {
         return topLevelTableNodes;
-    }
-
-    public Map getTableToClassMap()
-    {
-        return tableToClassMap;
-    }
-
-    public String toString()
-    {
-        StringBuffer sb = new StringBuffer();
-
-        for(int c = 0; c < topLevelTableNodes.size(); c++)
-            sb.append(topLevelTableNodes.get(c));
-
-        return sb.toString();
-    }
-
-    public static class TableComparator implements Comparator
-    {
-        public int compare(Object o1, Object o2)
-        {
-            Table t1 = (Table) o1;
-            Table t2 = (Table) o2;
-
-            return Collator.getInstance().compare(t1.getName().toUpperCase(), t2.getName().toUpperCase());
-        }
-    }
-
-    public static class TableTreeNodeComparator implements Comparator
-    {
-        public int compare(Object o1, Object o2)
-        {
-            TableStructureNode n1 = (TableStructureNode) o1;
-            TableStructureNode n2 = (TableStructureNode) o2;
-
-            return Collator.getInstance().compare(n1.getTable().getName().toUpperCase(), n2.getTable().getName().toUpperCase());
-        }
     }
 
     public Map getTableCategories()

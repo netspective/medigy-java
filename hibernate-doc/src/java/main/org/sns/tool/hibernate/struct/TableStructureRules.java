@@ -43,7 +43,9 @@
  */
 package org.sns.tool.hibernate.struct;
 
+import org.hibernate.mapping.Column;
 import org.hibernate.mapping.ForeignKey;
+import org.hibernate.mapping.PrimaryKey;
 import org.hibernate.mapping.Table;
 
 public interface TableStructureRules
@@ -68,4 +70,16 @@ public interface TableStructureRules
      * @return The categories to which the table belongs or NULL if the table shouldn't be treated special
      */
     public TableCategory[] getTableCategories(final TableStructureNode tableNode);
+
+    /**
+     * Given a column of a table, translate the data type if the default data type is not acceptable.
+     * @param defaultDataType The datatype that was figured out from the dialect
+     * @param tableNode The table the column belongs to
+     * @param column The actual column whose data type we're interested
+     * @param partOfPrimaryKey Non-null if part of a primary key, null otherwise
+     * @param partOfForeignKey Non-null if part of a foreign key, null otherwise
+     * @return
+     */
+    public String getTranslatedDataType(final String defaultDataType, final TableStructureNode tableNode, final Column column, final PrimaryKey partOfPrimaryKey, final ForeignKey partOfForeignKey);
+
 }
