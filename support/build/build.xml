@@ -143,7 +143,7 @@
             </fileset>
         </path>
 
-        <javadoc
+        <javadoc packagenames="com.medigy.*,org.sns.*"
             destdir="${artifacts.javadoc.home}"
             author="true"
             version="true"
@@ -155,7 +155,7 @@
 
             <sourcepath>
                 <dirset dir="${repository.home}" >
-                    <include name="**/src/java/main/**/*.java" />
+                    <include name="**/src/java/main" />
                 </dirset>
             </sourcepath>
 
@@ -193,7 +193,6 @@
             <property name="module.artifacts.home" value="${consolidated.artifacts.home}/persistence-tools"/>
         </ant>
         <ant dir="${repository.home}/persistence-tools/support/build" target="doc.generate-dbdd" inheritall="false" inheritrefs="false">
-            <property name="graphviz.artifacts.home" value="${consolidated.artifacts.home}/graphviz"/>
             <property name="hibernate-doc.artifacts.home" value="${consolidated.artifacts.home}/hibernate-doc"/>
             <property name="persistence.artifacts.home" value="${consolidated.artifacts.home}/persistence"/>
             <property name="module.artifacts.home" value="${consolidated.artifacts.home}/persistence-tools"/>
