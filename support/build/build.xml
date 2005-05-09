@@ -130,6 +130,7 @@
     </target>
 
     <target name="exec-xhost" depends="init.define-properties" if="os.unix">
+        <echo message="running xhost +"/>
         <exec executable="/usr/bin/X11/xhost">
             <arg line="+"/>
         </exec>
