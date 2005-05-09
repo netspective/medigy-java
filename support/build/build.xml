@@ -133,7 +133,7 @@
         <condition property="doc.javadoc.ydoc.xhost.required">
             <os family="unix"/>
         </condition>
-        <exec executable="xhost" if="doc.javadoc.ydoc.xhost.required">
+        <exec executable="/usr/bin/X11/xhost" if="doc.javadoc.ydoc.xhost.required">
             <arg line="+"/>
         </exec>
 
