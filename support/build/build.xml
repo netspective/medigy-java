@@ -130,6 +130,13 @@
         <delete dir="${artifacts.javadoc.home}"/>
         <mkdir dir="${artifacts.javadoc.home}"/>
 
+        <condition property="doc.javadoc.ydoc.xhost.required">
+            <os family="unix"/>
+        </condition>
+        <exec executable="xhost" if="doc.javadoc.ydoc.xhost.required">
+            <arg line="+"/>
+        </exec>
+
         <path id="doc.javadoc.ydoc.doclet.path">
             <dirset dir="${repository.home}" >
                 <include name="**/src/java/main" />
