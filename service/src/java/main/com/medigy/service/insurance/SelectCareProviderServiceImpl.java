@@ -38,37 +38,18 @@
  */
 package com.medigy.service.insurance;
 
-import com.medigy.persist.model.insurance.CareProviderSelection;
 import com.medigy.persist.model.org.Organization;
-import com.medigy.persist.util.HibernateUtil;
 import com.medigy.service.dto.insurance.CareProviderSelectionData;
 import com.medigy.service.dto.insurance.SelectCareProviderParameters;
 
-import java.io.Serializable;
 import java.util.List;
 
 public class SelectCareProviderServiceImpl implements SelectCareProviderService
 {
     public CareProviderSelectionData selectCareProvider(final SelectCareProviderParameters params)
     {
-        final CareProviderSelection cps = new CareProviderSelection();
-        cps.setInsuredIndividual(params.getInsuredIndividual());
-        cps.setIndividualHealthCarePractitioner(params.getCareProvider());
-        cps.setFromDate(params.getFromDate());
-        cps.setThroughDate(params.getThroughDate());
-
-        HibernateUtil.getSession().save(cps);
-        return new CareProviderSelectionData() {
-            public SelectCareProviderParameters getSelectCareProviderParameters()
-            {
-                return params;
-            }
-
-            public Serializable getCareProviderSelectionId()
-            {
-                return cps.getCareProviderSelectionId();
-            }
-        };
+        // TODO: Implement method with latest data model methods
+        return null;
     }
 
     public List listCareProviders(final Organization providerOrganization)
