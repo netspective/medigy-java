@@ -25,6 +25,7 @@
             destdir="${consolidated.artifacts.home}"
             style="xalan-environment-check.xsl"
             force="yes" processor="trax">
+            <factory name="org.apache.xalan.processor.TransformerFactoryImpl"/>
             <include name="xalan-environment-check.xsl"/>
         </xslt>
     </target>
