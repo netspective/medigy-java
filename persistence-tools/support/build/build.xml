@@ -89,6 +89,7 @@
             force="yes" processor="trax" classpathref="module.dependencies.main.classpath">
             <include name="*.xml"/>
             <classpath location="${module.artifacts.classes.main.home}"/>
+            <factory name="org.apache.xalan.processor.TransformerFactoryImpl"/> <!-- for some reason, built-in Xalan won't work so we use the latest and force JDK to use it --> 
         </xslt>
     </target>
 
