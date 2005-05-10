@@ -23,9 +23,9 @@
 
         <xslt basedir="${basedir}"
             destdir="${consolidated.artifacts.home}"
-            style="environment-check.xsl"
+            style="xalan-environment-check.xsl"
             force="yes" processor="trax">
-            <include name="environment-check.xsl"/>
+            <include name="xalan-environment-check.xsl"/>
         </xslt>
     </target>
 
