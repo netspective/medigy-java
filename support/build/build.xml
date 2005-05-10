@@ -21,7 +21,12 @@
             <os family="unix"/>
         </condition>
 
-        <java classname="org.apache.xalan.xslt.EnvironmentCheck"/>
+        <xslt basedir="${basedir}"
+            destdir="${consolidated.artifacts.home}"
+            style="environment-check.xsl"
+            force="yes" processor="trax">
+            <include name="environment-check.xsl"/>
+        </xslt>
     </target>
 
     <target name="clean" depends="init.define-properties">
