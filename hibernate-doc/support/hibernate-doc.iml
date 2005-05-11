@@ -12,11 +12,8 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Hibernate 3.0 Final" level="application" />
     <orderEntry type="module" module-name="GraphViz" />
     <orderEntry type="library" name="Ant 1.6.2" level="application" />
-    <orderEntry type="library" name="Log4J 1.2.9" level="application" />
-    <orderEntry type="library" name="Commons Logging 1.0.4" level="application" />
     <orderEntry type="library" name="Persistence Dependencies (Main)" level="project" />
     <orderEntry type="library" name="Common Dependencies (Test)" level="project" />
     <orderEntryProperties />

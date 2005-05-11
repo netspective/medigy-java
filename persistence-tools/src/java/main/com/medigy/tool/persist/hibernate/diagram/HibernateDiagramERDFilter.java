@@ -1,4 +1,4 @@
-package com.medigy.tool.persist.hibernate;
+package com.medigy.tool.persist.hibernate.diagram;
 
 /**
  * This filter is useful for generating DOT and GraphViz output when the intended
