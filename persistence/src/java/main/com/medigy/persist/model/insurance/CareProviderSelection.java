@@ -39,16 +39,15 @@
 package com.medigy.persist.model.insurance;
 
 import com.medigy.persist.model.party.PartyRelationship;
-import com.medigy.persist.model.party.PartyRole;
-import com.medigy.persist.model.person.Person;
-import com.medigy.persist.reference.custom.person.PersonRoleType;
+import com.medigy.persist.reference.custom.party.PartyRelationshipType;
 
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.Transient;
 
-//@Entity
-//@Inheritance(strategy = InheritanceType.JOINED)
+@Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 public class CareProviderSelection extends PartyRelationship
 {
     private Enrollment enrollment;
@@ -56,7 +55,7 @@ public class CareProviderSelection extends PartyRelationship
 
     public CareProviderSelection()
     {
-        
+        setType(PartyRelationshipType.Cache.CARE_PROVIDER_SELECTION.getEntity());   
     }
 
     @Transient
@@ -69,6 +68,7 @@ public class CareProviderSelection extends PartyRelationship
     {
        setPartyRelationshipId(careProviderSelectionId);
     }
+    /*
 
     @ManyToOne
     @JoinColumn(name = "ins_policy_id")
@@ -102,46 +102,7 @@ public class CareProviderSelection extends PartyRelationship
         final CareProviderSelection otherSelection = (CareProviderSelection) o;
         return getEffectiveDates().compareTo(otherSelection.getEffectiveDates());
     }
+    */
+    
 
-    @Transient
-    public void setHealthCarePractitioner(Person physician)
-    {
-        PartyRole role = physician.getPartyRoleByType(PersonRoleType.Cache.INDIVIDUAL_HEALTH_CARE_PRACTITIONER.getEntity());
-        if (role == null)
-        {
-            role = new PartyRole();
-            role.setType(PersonRoleType.Cache.INDIVIDUAL_HEALTH_CARE_PRACTITIONER.getEntity());
-            role.setParty(physician);
-            physician.addPartyRole(role);
-        }
-        setPartyTo(physician);
-        setPartyRoleTo(role);
-    }
-
-    @Transient
-    public void setInsuredPerson(Person person)
-    {
-        PartyRole role = person.getPartyRoleByType(PersonRoleType.Cache.PATIENT.getEntity());
-        if (role == null)
-        {
-            role = new PartyRole();
-            role.setType(PersonRoleType.Cache.PATIENT.getEntity());
-            role.setParty(person);
-            person.addPartyRole(role);
-        }
-        setPartyFrom(person);
-        setPartyRoleFrom(role);
-    }
-
-    @Transient
-    public Person getHealthCarePractitioner()
-    {
-        return (Person) getPartyTo();
-    }
-
-    @Transient
-    public Person getInsuredPerson()
-    {
-        return (Person) getPartyFrom();
-    }
 }

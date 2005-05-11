@@ -133,6 +133,7 @@ public class ModelInitializer
 
     public void populateSeedData()
     {
+        System.out.println("Populating seed data");
         EntitySeedDataPopulator populator = new EntitySeedDataPopulator(session, hibernateConfiguration);
         populator.populateSeedData();
     }

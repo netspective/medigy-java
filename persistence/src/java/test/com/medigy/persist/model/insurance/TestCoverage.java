@@ -44,13 +44,19 @@ import com.medigy.persist.reference.custom.insurance.CoverageType;
 import com.medigy.persist.reference.custom.insurance.CoverageLevelType;
 import com.medigy.persist.reference.custom.insurance.CoverageLevelBasisType;
 
+/**
+ * Test case for testing coverage related classes
+ *
+ * @see com.medigy.persist.model.insurance.Coverage
+ * @see com.medigy.persist.model.insurance.CoverageLevel
+ * @see com.medigy.persist.model.insurance.CoverageLevelBasis
+ */
 public class TestCoverage extends TestCase
 {
     public void testCoverage() throws Exception
     {
         final Coverage coverage = new Coverage();
         coverage.setType(CoverageType.Cache.MAJOR_MEDICAL.getEntity());
-
 
         CoverageLevel copay = new CoverageLevel();
         copay.setType(CoverageLevelType.Cache.COPAY.getEntity());

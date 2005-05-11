@@ -43,8 +43,11 @@ import com.medigy.persist.util.HibernateUtil;
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.database.IDatabaseConnection;
 import org.dbunit.dataset.IDataSet;
+import org.dbunit.dataset.ITable;
+import org.dbunit.dataset.CompositeTable;
 import org.dbunit.dataset.xml.FlatXmlDataSet;
 import org.dbunit.operation.DatabaseOperation;
+import org.dbunit.Assertion;
 import org.hibernate.cfg.Environment;
 
 import java.io.FileOutputStream;
@@ -56,7 +59,8 @@ public abstract class DbUnitTestCase extends TestCase
     {
         IDatabaseConnection dbUnitConn = null;
         dbUnitConn = getDbUnitConnection();
-        DatabaseOperation.REFRESH.execute(dbUnitConn, getDataSet());
+        //DatabaseOperation.REFRESH.execute(dbUnitConn, getDataSet());
+        DatabaseOperation.CLEAN_INSERT.execute(dbUnitConn, getDataSet());
         dbUnitConn.getConnection().commit();
         dbUnitConn.close();
         dbUnitConn.getConnection().close();
@@ -91,6 +95,37 @@ public abstract class DbUnitTestCase extends TestCase
     {
         IDatabaseConnection connection = new DatabaseConnection(HibernateUtil.getNewConnection());
         return connection;
+    }
+
+
+    protected void assertDBAsExpected(String[] tableNames)
+            throws Exception
+    {
+        // Fetch database data after executing your code
+        IDatabaseConnection dbUnitConn = null;
+        try
+        {
+            dbUnitConn = getDbUnitConnection();
+            IDataSet actualDataSet = dbUnitConn.createDataSet(tableNames);
+            // Load expected data from an XML dataset
+            IDataSet expectedDataSet = getDataSet();
+            for (int i = 0; i < tableNames.length; i++)
+            {
+                ITable expected = expectedDataSet.getTable(tableNames[i]);
+                ITable actual = actualDataSet.getTable(tableNames[i]);
+                // converts actual to use the same colums as expected
+                ITable trimmedActual = new CompositeTable(expected.getTableMetaData(),
+                        actual);
+                Assertion.assertEquals(expected, trimmedActual);
+            }
+        }
+        finally
+        {
+            if (null != dbUnitConn)
+            {
+                dbUnitConn.close();
+            }
+        }
     }
 
     protected void extractFullDataset(final String datasetFileName) throws Exception
