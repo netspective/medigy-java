@@ -62,6 +62,8 @@
 
         <!-- DDL is considered part of the persistence JAR process since the object model needs it -->
         <ant dir="${repository.home}/persistence-tools/support/build" target="db.generate-ddl" inheritall="false" inheritrefs="false">
+            <property name="graphviz.artifacts.home" value="${consolidated.artifacts.home}/graphviz"/>
+            <property name="hibernate-doc.artifacts.home" value="${consolidated.artifacts.home}/hibernate-doc"/>
             <property name="persistence.artifacts.ddl.home" value="${consolidated.artifacts.home}/ddl"/>
             <property name="module.artifacts.home" value="${consolidated.artifacts.home}/persistence-tools"/>
         </ant>
