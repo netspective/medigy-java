@@ -41,6 +41,7 @@
         <mapping package="com.medigy.persist.reference.custom.insurance"/>
         <mapping class="com.medigy.persist.reference.custom.insurance.CoverageType"/>
         <mapping class="com.medigy.persist.reference.custom.insurance.CoverageLevelType"/>
+        <mapping class="com.medigy.persist.reference.custom.insurance.CoverageLevelBasisType"/>
         <mapping class="com.medigy.persist.reference.custom.insurance.InsurancePolicyRoleType"/>
         <mapping class="com.medigy.persist.reference.custom.insurance.InsurancePolicyType"/>
 
@@ -186,7 +187,9 @@
 
         <mapping package="com.medigy.persist.model.insurance"/>
         <!--mapping class="com.medigy.persist.model.insurance.CareProviderSelection"/-->
+        <mapping class="com.medigy.persist.model.insurance.Coverage"/>
         <mapping class="com.medigy.persist.model.insurance.CoverageLevel"/>
+        <mapping class="com.medigy.persist.model.insurance.CoverageLevelBasis"/>
         <mapping class="com.medigy.persist.model.insurance.Enrollment"/>
         <mapping class="com.medigy.persist.model.insurance.EnrollmentElection"/>
         <mapping class="com.medigy.persist.model.insurance.Group"/>

@@ -13,7 +13,7 @@ import javax.persistence.GeneratorType;
 import javax.persistence.Column;
 
 @Entity
-public class CoverageLevelBasis extends AbstractCustomReferenceEntity
+public class CoverageLevelBasisType extends AbstractCustomReferenceEntity
 {
     public enum Cache implements CachedCustomReferenceEntity
     {
@@ -22,7 +22,7 @@ public class CoverageLevelBasis extends AbstractCustomReferenceEntity
         PER_PERSON("PER_PERSON");
 
         private final String code;
-        private CoverageLevelBasis entity;
+        private CoverageLevelBasisType entity;
 
         Cache(final String code)
         {
@@ -34,14 +34,14 @@ public class CoverageLevelBasis extends AbstractCustomReferenceEntity
             return code;
         }
 
-        public CoverageLevelBasis getEntity()
+        public CoverageLevelBasisType getEntity()
         {
             return entity;
         }
 
         public void setEntity(final CustomReferenceEntity entity)
         {
-            this.entity = (CoverageLevelBasis) entity;
+            this.entity = (CoverageLevelBasisType) entity;
         }
     }
 

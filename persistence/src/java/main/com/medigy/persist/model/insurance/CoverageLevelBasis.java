@@ -36,59 +36,56 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.persist.reference.custom.insurance;
+package com.medigy.persist.model.insurance;
 
-import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
-import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
-import com.medigy.persist.reference.custom.CustomReferenceEntity;
+import com.medigy.persist.model.common.AbstractEntity;
+import com.medigy.persist.reference.custom.insurance.CoverageLevelBasisType;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratorType;
 import javax.persistence.Id;
+import javax.persistence.GeneratorType;
+import javax.persistence.ManyToOne;
+import javax.persistence.JoinColumn;
 
 @Entity
-public class CoverageType extends AbstractCustomReferenceEntity
+public class CoverageLevelBasis extends AbstractEntity
 {
-    // TODO: These are only the major coverage types and each one can be further broken down. I'm not sure if this should be a top level entity.
-    public enum Cache implements CachedCustomReferenceEntity
+    private Long coverageLevelBasisId;
+    private CoverageLevelBasisType type;
+    private CoverageLevel coverageLevel;
+
+    @Id(generate = GeneratorType.AUTO)
+    public Long getCoverageLevelBasisId()
     {
-        MAJOR_MEDICAL("MEDICAL"),
-        HOSPITALIZATION("HOSPITAL"),
-        DENTAL("DENTAL"), /* Percent amount */
-        VISION("VISION");
-
-        private final String code;
-        private CoverageType entity;
-
-        Cache(final String code)
-        {
-            this.code = code;
-        }
-
-        public String getCode()
-        {
-            return code;
-        }
-
-        public CoverageType getEntity()
-        {
-            return entity;
-        }
-
-        public void setEntity(final CustomReferenceEntity entity)
-        {
-            this.entity = (CoverageType) entity;
-        }
+        return coverageLevelBasisId;
     }
 
-    @Id(generate = GeneratorType.AUTO)    
-    public Long getCoverageTypeId()
+    public void setCoverageLevelBasisId(final Long coverageLevelBasisId)
     {
-        return super.getSystemId();
+        this.coverageLevelBasisId = coverageLevelBasisId;
     }
 
-    public void setCoverageTypeId(final Long id)
+    @ManyToOne
+    @JoinColumn(name = "coverage_level_basis_type_id")
+    public CoverageLevelBasisType getType()
     {
-        super.setSystemId(id);
+        return type;
+    }
+
+    public void setType(final CoverageLevelBasisType type)
+    {
+        this.type = type;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "coverage_level_id", nullable = false)
+    public CoverageLevel getCoverageLevel()
+    {
+        return coverageLevel;
+    }
+
+    public void setCoverageLevel(final CoverageLevel coverageLevel)
+    {
+        this.coverageLevel = coverageLevel;
     }
 }

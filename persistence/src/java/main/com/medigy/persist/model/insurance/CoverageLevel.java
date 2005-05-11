@@ -40,6 +40,7 @@ package com.medigy.persist.model.insurance;
 
 import com.medigy.persist.model.common.AbstractTopLevelEntity;
 import com.medigy.persist.reference.custom.insurance.CoverageLevelType;
+import com.medigy.persist.reference.custom.insurance.CoverageLevelBasisType;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
@@ -47,6 +48,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Transient;
+import javax.persistence.CascadeType;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -56,6 +59,11 @@ public class CoverageLevel extends AbstractTopLevelEntity
     private Long coverageLevelId;
     private CoverageLevelType type;
     private Set<EnrollmentElection> enrollmentElections = new HashSet<EnrollmentElection>();
+    private Float value;
+    private Float minValue;
+    private Float maxValue;
+    private Set<CoverageLevelBasis> coverageLevelBasises = new HashSet<CoverageLevelBasis>();
+    private Coverage coverage;
 
     @Id(generate = GeneratorType.AUTO)
     public Long getCoverageLevelId()
@@ -80,7 +88,7 @@ public class CoverageLevel extends AbstractTopLevelEntity
         this.type = type;
     }
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "enrollment_election_id")
     public Set<EnrollmentElection> getEnrollmentElections()
     {
@@ -90,5 +98,93 @@ public class CoverageLevel extends AbstractTopLevelEntity
     public void setEnrollmentElections(final Set<EnrollmentElection> enrollmentElections)
     {
         this.enrollmentElections = enrollmentElections;
+    }
+
+    /**
+     * Gets the coverage level value. This could be the co-pay amount, the coinsurance percentage,
+     * deductible amount, etc.
+     * @return  coverage value
+     */
+    public Float getValue()
+    {
+        return value;
+    }
+
+    public void setValue(final Float value)
+    {
+        this.value = value;
+    }
+
+    /**
+     * Gets the minimum coverage value, This is for coverage level types that need to have a min and max value
+     * instead of one value.
+     * @return minimum coverage value
+     */
+    public Float getMinValue()
+    {
+        return minValue;
+    }
+
+    public void setMinValue(final Float minValue)
+    {
+        this.minValue = minValue;
+    }
+
+    /**
+     * Gets the maximum coverage value. This is for coverage level types that need to have a min and max value
+     * instead of one value.
+     * @return  maximum coverage value
+     */
+    public Float getMaxValue()
+    {
+        return maxValue;
+    }
+
+    public void setMaxValue(final Float maxValue)
+    {
+        this.maxValue = maxValue;
+    }
+
+    /**
+     * Gets the coevrage level basis. This is to indicate whether this coverage level value is for
+     * per incident, per year, or per person.
+     * @return
+     */
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "coverageLevel")    
+    public Set<CoverageLevelBasis> getCoverageLevelBasises()
+    {
+        return coverageLevelBasises;
+    }
+
+    public void setCoverageLevelBasises(final Set<CoverageLevelBasis> coverageLevelBasis)
+    {
+        this.coverageLevelBasises = coverageLevelBasis;
+    }
+
+    @Transient
+    public void addCoverageLevelBasis(final CoverageLevelBasis basis)
+    {
+        getCoverageLevelBasises().add(basis);
+    }
+
+    @Transient
+    public void addCoverageLevelBasis(final CoverageLevelBasisType type)
+    {
+        final CoverageLevelBasis basis = new CoverageLevelBasis();
+        basis.setType(type);
+        basis.setCoverageLevel(this);
+        getCoverageLevelBasises().add(basis);
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "coverage_id")
+    public Coverage getCoverage()
+    {
+        return coverage;
+    }
+
+    public void setCoverage(final Coverage coverage)
+    {
+        this.coverage = coverage;
     }
 }
