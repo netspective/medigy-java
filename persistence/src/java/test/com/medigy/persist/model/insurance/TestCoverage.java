@@ -38,76 +38,42 @@
  */
 package com.medigy.persist.model.insurance;
 
-import com.medigy.persist.model.common.AbstractTopLevelEntity;
+import com.medigy.persist.TestCase;
+import com.medigy.persist.util.HibernateUtil;
 import com.medigy.persist.reference.custom.insurance.CoverageType;
 import com.medigy.persist.reference.custom.insurance.CoverageLevelType;
+import com.medigy.persist.reference.custom.insurance.CoverageLevelBasisType;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.GeneratorType;
-import javax.persistence.ManyToOne;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.Transient;
-import javax.persistence.CascadeType;
-import java.util.Set;
-import java.util.HashSet;
-
-@Entity
-public class Coverage  extends AbstractTopLevelEntity
+public class TestCoverage extends TestCase
 {
-    private Long coverageId;
-    private CoverageType type;
-    private Set<CoverageLevel> coverageLevels = new HashSet<CoverageLevel>();
-
-    @Id(generate = GeneratorType.AUTO)
-    public Long getCoverageId()
+    public void testCoverage() throws Exception
     {
-        return coverageId;
-    }
+        final Coverage coverage = new Coverage();
+        coverage.setType(CoverageType.Cache.MAJOR_MEDICAL.getEntity());
 
-    protected void setCoverageId(final Long coverageId)
-    {
-        this.coverageId = coverageId;
-    }
 
-    @ManyToOne
-    @JoinColumn(name = "coverage_type_id")
-    public CoverageType getType()
-    {
-        return type;
-    }
+        CoverageLevel copay = new CoverageLevel();
+        copay.setType(CoverageLevelType.Cache.COPAY.getEntity());
+        copay.setValue(new Float(10));
+        copay.setCoverage(coverage);
+        copay.addCoverageLevelBasis(CoverageLevelBasisType.Cache.PER_INCIDENT.getEntity());
 
-    public void setType(final CoverageType type)
-    {
-        this.type = type;
-    }
+        CoverageLevel coins = new CoverageLevel();
+        coins.setType(CoverageLevelType.Cache.CONINSURANCE.getEntity());
+        coins.setValue(new Float(80));
+        coins.setCoverage(coverage);
+        coins.addCoverageLevelBasis(CoverageLevelBasisType.Cache.PER_INCIDENT.getEntity());
+        coins.addCoverageLevelBasis(CoverageLevelBasisType.Cache.PER_PERSON.getEntity());
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "coverage")
-    public Set<CoverageLevel> getCoverageLevels()
-    {
-        return coverageLevels;
-    }
+        coverage.addCoverageLevel(copay);
+        coverage.addCoverageLevel(coins);
 
-    public void setCoverageLevels(final Set<CoverageLevel> coverageLevels)
-    {
-        this.coverageLevels = coverageLevels;
-    }
+        HibernateUtil.getSession().save(coverage);
+        HibernateUtil.closeSession();
 
-    @Transient
-    public void addCoverageLevel(final CoverageLevel level)
-    {
-        getCoverageLevels().add(level);
-    }
-
-    @Transient
-    public CoverageLevel getCoverageLevel(final CoverageLevelType type)
-    {
-        for (CoverageLevel level : coverageLevels)
-        {
-            if (level.getType().equals(type))
-                return level;
-        }
-        return null;
+        final Coverage medicalCoverage = (Coverage) HibernateUtil.getSession().load(Coverage.class, coverage.getCoverageId());
+        assertEquals(2, medicalCoverage.getCoverageLevels().size());
+        assertEquals(new Float(10), medicalCoverage.getCoverageLevel(CoverageLevelType.Cache.COPAY.getEntity()).getValue());
+        assertEquals(new Float(80), medicalCoverage.getCoverageLevel(CoverageLevelType.Cache.CONINSURANCE.getEntity()).getValue());
     }
 }
