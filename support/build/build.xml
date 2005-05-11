@@ -17,10 +17,6 @@
         <property name="consolidated.artifacts.test.junit.home" value="${consolidated.artifacts.home}/consolidated/reports/junit"/>
         <property name="consolidated.artifacts.test.coverage.home" value="${consolidated.artifacts.home}/consolidated/reports/coverage"/>
 
-        <condition property="os.unix">
-            <os family="unix"/>
-        </condition>
-
         <xslt basedir="${basedir}"
             destdir="${consolidated.artifacts.home}"
             style="xalan-environment-check.xsl"
@@ -137,13 +133,6 @@
         </javadoc>
     </target>
 
-    <target name="exec-xhost" depends="init.define-properties" if="os.unix">
-        <echo message="running xhost +"/>
-        <exec executable="/usr/bin/X11/xhost">
-            <arg line="+"/>
-        </exec>
-    </target>
-
     <target name="doc.javadoc.ydoc" depends="jar"> <!-- ydoc needs compiled classes, too, so we jar first -->
         <property name="artifacts.javadoc.home" value="${consolidated.artifacts.doc.home}/javadoc"/>
         <delete dir="${artifacts.javadoc.home}"/>
@@ -170,7 +159,8 @@
             windowtitle="Medigy Platform Documentation"
             doctitle="Medigy Platform Documentation"
             bottom="Copyright &#169; 2005 Netspective. All Rights Reserved."
-            docletpathref="doc.javadoc.ydoc.doclet.path">
+            docletpathref="doc.javadoc.ydoc.doclet.path"
+            additionalparam="-J-Djava.awt.headless=true">
 
             <sourcepath>
                 <dirset dir="${repository.home}" >

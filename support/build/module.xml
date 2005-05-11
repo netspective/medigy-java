@@ -315,7 +315,8 @@
             windowtitle="Medigy Platform Documentation"
             doctitle="Medigy Platform Documentation"
             bottom="Copyright &#169; 2005 Netspective. All Rights Reserved."
-            docletpathref="module.dependencies.build.classpath">
+            docletpathref="module.dependencies.build.classpath"
+            additionalparam="-J-Djava.awt.headless=true">
             <doclet
                 name="ydoc.doclets.YStandard"
                 path="${support.home}/build/ydoc-resources">
