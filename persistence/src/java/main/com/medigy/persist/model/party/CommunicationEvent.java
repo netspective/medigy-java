@@ -39,8 +39,8 @@
  */
 package com.medigy.persist.model.party;
 
-import java.util.HashSet;
-import java.util.Set;
+import com.medigy.persist.model.common.AbstractDateDurationEntity;
+import com.medigy.persist.reference.type.ContactMechanismType;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -51,9 +51,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-
-import com.medigy.persist.model.common.AbstractDateDurationEntity;
-import com.medigy.persist.reference.type.ContactMechanismType;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "Comm_Event")
@@ -61,7 +60,6 @@ public class CommunicationEvent extends AbstractDateDurationEntity
 {
     private Long eventId;
     private String notes;
-    private PartyRelationship partyRelationship;
     private Set<CommunicationEventPurpose> eventPurposes = new HashSet<CommunicationEventPurpose>();
     private ContactMechanismType contactMechanismType;
     private Set<CommunicationEventRole> eventRoles = new HashSet<CommunicationEventRole>();
@@ -92,18 +90,6 @@ public class CommunicationEvent extends AbstractDateDurationEntity
     protected void setNotes(final String notes)
     {
         this.notes = notes;
-    }
-
-    @ManyToOne(cascade={CascadeType.ALL})
-    @JoinColumn(name = "party_rel_id", nullable = false)
-    public PartyRelationship getPartyRelationship()
-    {
-        return partyRelationship;
-    }
-
-    protected void setPartyRelationship(final PartyRelationship partyRelationship)
-    {
-        this.partyRelationship = partyRelationship;
     }
 
     @OneToMany(cascade = CascadeType.ALL)

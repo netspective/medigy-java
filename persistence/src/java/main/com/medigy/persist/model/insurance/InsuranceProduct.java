@@ -38,38 +38,37 @@
  */
 package com.medigy.persist.model.insurance;
 
-import java.util.HashSet;
-import java.util.Set;
+import com.medigy.persist.model.product.Product;
 
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
-
-import com.medigy.persist.model.product.Product;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Inheritance(discriminatorValue = "Insurance")        
 public class InsuranceProduct extends Product
 {
-    private Set<InsurancePolicy> insurancePolicies = new HashSet<InsurancePolicy>();
+    private Set<InsurancePlan> insurancePlans = new HashSet<InsurancePlan>();
 
     @OneToMany
-    @JoinColumn(name = "product_id")
-    public Set<InsurancePolicy> getInsurancePolicies()
+    @JoinColumn(name = "ins_plan_id")
+    public Set<InsurancePlan> getInsurancePlans()
     {
-        return insurancePolicies;
+        return insurancePlans;
     }
 
-    public void setInsurancePolicies(final Set<InsurancePolicy> insurancePolicies)
+    public void setInsurancePlans(final Set<InsurancePlan> insurancePlans)
     {
-        this.insurancePolicies = insurancePolicies;
+        this.insurancePlans = insurancePlans;
     }
 
     @Transient
-    public void addInsurancePolicy(final InsurancePolicy policy)
+    public void addInsurancePolicy(final InsurancePlan policy)
     {
-        getInsurancePolicies().add(policy);
+        getInsurancePlans().add(policy);
     }
 }

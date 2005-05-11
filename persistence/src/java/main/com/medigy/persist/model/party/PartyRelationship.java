@@ -35,29 +35,27 @@
  * CAUSED AND REGARDLESS OF THE THEORY OF LIABILITY, ARISING OUT OF THE USE OF OR INABILITY TO USE THE SOFTWARE, EVEN
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
- * @author Aye Thu
  */
 package com.medigy.persist.model.party;
 
-import java.util.HashSet;
-import java.util.Set;
+import com.medigy.persist.model.common.AbstractDateDurationEntity;
+import com.medigy.persist.reference.custom.party.PartyRelationshipType;
+import com.medigy.persist.reference.type.PriorityType;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
-
-import com.medigy.persist.model.common.AbstractDateDurationEntity;
-import com.medigy.persist.reference.custom.party.PartyRelationshipType;
-import com.medigy.persist.reference.type.PriorityType;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.CascadeType;
 
 @Entity
 @Table(name = "Party_Relationship")
+@Inheritance(strategy = InheritanceType.JOINED)
 public class PartyRelationship extends AbstractDateDurationEntity
 {
     public static final String PK_COLUMN_NAME = "party_rel_id";
@@ -73,7 +71,7 @@ public class PartyRelationship extends AbstractDateDurationEntity
     private PartyRelationshipType type;
     private PriorityType priorityType;
 
-    private Set<CommunicationEvent> communicationEvents = new HashSet<CommunicationEvent>();
+    //private Set<CommunicationEvent> communicationEvents = new HashSet<CommunicationEvent>();
     //private Set<Agreement> agreements = new HashSet<Agreement>();
 
     public PartyRelationship()
@@ -128,7 +126,7 @@ public class PartyRelationship extends AbstractDateDurationEntity
         this.partyTo = partyTo;
     }
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "party_role_id_from", referencedColumnName = "party_role_id", nullable = false)
     public PartyRole getPartyRoleFrom()
     {
@@ -140,7 +138,7 @@ public class PartyRelationship extends AbstractDateDurationEntity
         this.partyRoleFrom = partyRoleFrom;
     }
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "party_role_id_to", referencedColumnName = "party_role_id", nullable = false)
     public PartyRole getPartyRoleTo()
     {
@@ -176,29 +174,5 @@ public class PartyRelationship extends AbstractDateDurationEntity
         this.priorityType = priorityType;
     }
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "party_rel_id")
-    public Set<CommunicationEvent> getCommunicationEvents()
-    {
-        return communicationEvents;
-    }
 
-    public void setCommunicationEvents(final Set<CommunicationEvent> communicationEvents)
-    {
-        this.communicationEvents = communicationEvents;
-    }
-
-    /*
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "party_relationship_id")
-    public Set<Agreement> getAgreements()
-    {
-        return agreements;
-    }
-
-    public void setAgreements(final Set<Agreement> agreements)
-    {
-        this.agreements = agreements;
-    }
-    */
 }

@@ -37,71 +37,59 @@
  *
  */
 
-package com.medigy.persist.model.party;
+package com.medigy.persist.model.insurance;
 
-import com.medigy.persist.model.common.AbstractTopLevelEntity;
-import com.medigy.persist.reference.type.ContactMechanismType;
+import com.medigy.persist.model.common.AbstractDateDurationEntity;
+import com.medigy.persist.reference.custom.party.ContactMechanismPurposeType;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratorType;
-import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import java.util.HashSet;
-import java.util.Set;
+import javax.persistence.Id;
+import javax.persistence.GeneratorType;
+import javax.persistence.ManyToOne;
+import javax.persistence.JoinColumn;
+
 
 @Entity
-@Table(name = "Contact_Mech")
-@Inheritance(strategy=InheritanceType.JOINED)        
-public class ContactMechanism extends AbstractTopLevelEntity
+@Table(name = "Ins_Plan_Contact_Mech_Purpose")
+public class InsurancePlanContactMechanismPurpose  extends AbstractDateDurationEntity
 {
-    private Long contactMechanismId;
-    protected ContactMechanismType type;
-
-    private Set<PartyContactMechanism> partyContactMechanisms = new HashSet<PartyContactMechanism>();
-
-    public ContactMechanism()
-    {
-    }
+    private Long purposeId;
+    private InsurancePlanContactMechanism contactMechanism;
+    private ContactMechanismPurposeType type;
 
     @Id(generate = GeneratorType.AUTO)
-    @Column(name = "contact_mech_id")
-    public Long getContactMechanismId()
+    public Long getPurposeId()
     {
-        return contactMechanismId;
+        return purposeId;
     }
 
-    protected void setContactMechanismId(final Long contactMechanismId)
+    protected void setPurposeId(final Long purposeId)
     {
-        this.contactMechanismId = contactMechanismId;
+        this.purposeId = purposeId;
     }
 
     @ManyToOne
-    @JoinColumn(name = "contact_mech_type_id", nullable = false)
-    public ContactMechanismType getType()
+    @JoinColumn(name = "ins_plan_contact_mech_id")
+    public InsurancePlanContactMechanism getContactMechanism()
+    {
+        return contactMechanism;
+    }
+
+    public void setContactMechanism(final InsurancePlanContactMechanism contactMechanism)
+    {
+        this.contactMechanism = contactMechanism;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "contact_mech_purpose_type_id")
+    public ContactMechanismPurposeType getType()
     {
         return type;
     }
 
-    public void setType(final ContactMechanismType type)
+    public void setType(final ContactMechanismPurposeType type)
     {
         this.type = type;
-    }
-
-    @OneToMany
-    @JoinColumn(name = "contact_mech_id")
-    public Set<PartyContactMechanism> getPartyContactMechanisms()
-    {
-        return partyContactMechanisms;
-    }
-
-    public void setPartyContactMechanisms(final Set<PartyContactMechanism> partyContactMechanisms)
-    {
-        this.partyContactMechanisms = partyContactMechanisms;
     }
 }

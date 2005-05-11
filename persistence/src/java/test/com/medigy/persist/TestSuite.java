@@ -57,7 +57,7 @@ public class TestSuite extends junit.framework.TestSuite
         suite.addTest(new junit.framework.TestSuite(TestGeographicBoundary.class));
         suite.addTest(new junit.framework.TestSuite(TestOrganization.class));
         suite.addTest(new junit.framework.TestSuite(TestInvoice.class));
-        
+        //suite.addTest(new junit.framework.TestSuite(TestCareProviderSelection.class));
         return suite;
     }
 }

@@ -38,14 +38,17 @@
  */
 package com.medigy.service.dto.insurance;
 
+import com.medigy.service.dto.ServiceReturnValues;
+
 import java.io.Serializable;
 
 /**
  * Interface for representing the result of the Care provider selection service
  */
-public interface CareProviderSelectionData
+public interface CareProviderSelectionData extends ServiceReturnValues
 {
     public Serializable getCareProviderSelectionId();
 
     public SelectCareProviderParameters getSelectCareProviderParameters();
+
 }

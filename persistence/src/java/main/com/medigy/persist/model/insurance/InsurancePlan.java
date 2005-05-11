@@ -36,72 +36,95 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
+package com.medigy.persist.model.insurance;
 
-package com.medigy.persist.model.party;
-
-import com.medigy.persist.model.common.AbstractTopLevelEntity;
-import com.medigy.persist.reference.type.ContactMechanismType;
+import com.medigy.persist.model.common.AbstractDateDurationEntity;
+import com.medigy.persist.model.org.Organization;
+import com.medigy.persist.model.party.PartyRole;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "Contact_Mech")
-@Inheritance(strategy=InheritanceType.JOINED)        
-public class ContactMechanism extends AbstractTopLevelEntity
+@Table(name = "Ins_Plan")
+public class InsurancePlan extends AbstractDateDurationEntity
 {
-    private Long contactMechanismId;
-    protected ContactMechanismType type;
+    private Long insurancePlanId;
+    private InsuranceProduct insuranceProduct;
+    private PartyRole insuranceProviderRole;
+    private String name;
 
-    private Set<PartyContactMechanism> partyContactMechanisms = new HashSet<PartyContactMechanism>();
-
-    public ContactMechanism()
-    {
-    }
+    private Set<InsurancePlanContactMechanism> insurancePlanContactMechanisms = new HashSet<InsurancePlanContactMechanism>();
 
     @Id(generate = GeneratorType.AUTO)
-    @Column(name = "contact_mech_id")
-    public Long getContactMechanismId()
+    public Long getInsurancePlanId()
     {
-        return contactMechanismId;
+        return insurancePlanId;
     }
 
-    protected void setContactMechanismId(final Long contactMechanismId)
+    public void setInsurancePlanId(final Long insurancePlanId)
     {
-        this.contactMechanismId = contactMechanismId;
+        this.insurancePlanId = insurancePlanId;
+    }
+
+    @Column(length = 100)
+    public String getName()
+    {
+        return name;
+    }
+
+    public void setName(final String name)
+    {
+        this.name = name;
     }
 
     @ManyToOne
-    @JoinColumn(name = "contact_mech_type_id", nullable = false)
-    public ContactMechanismType getType()
+    @JoinColumn(name = "product_id")
+    public InsuranceProduct getInsuranceProduct()
     {
-        return type;
+        return insuranceProduct;
     }
 
-    public void setType(final ContactMechanismType type)
+    public void setInsuranceProduct(final InsuranceProduct insuranceProduct)
     {
-        this.type = type;
+        this.insuranceProduct = insuranceProduct;
     }
 
-    @OneToMany
-    @JoinColumn(name = "contact_mech_id")
-    public Set<PartyContactMechanism> getPartyContactMechanisms()
+    @ManyToOne
+    @JoinColumn(name = "party_id")
+    public PartyRole getInsuranceProviderRole()
     {
-        return partyContactMechanisms;
+        return insuranceProviderRole;
     }
 
-    public void setPartyContactMechanisms(final Set<PartyContactMechanism> partyContactMechanisms)
+    public void setInsuranceProviderRole(final PartyRole insuranceProviderRole)
     {
-        this.partyContactMechanisms = partyContactMechanisms;
+        this.insuranceProviderRole = insuranceProviderRole;
+    }
+
+    @Transient
+    public Organization getInsuranceProvider()
+    {
+        return (Organization) insuranceProviderRole.getParty();
+    }
+
+    @OneToMany(mappedBy = "insurancePlan")
+    public Set<InsurancePlanContactMechanism> getInsurancePlanContactMechanisms()
+    {
+        return insurancePlanContactMechanisms;
+    }
+
+    public void setInsurancePlanContactMechanisms(final Set<InsurancePlanContactMechanism> insurancePlanContactMechanisms)
+    {
+        this.insurancePlanContactMechanisms = insurancePlanContactMechanisms;
     }
 }

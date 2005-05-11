@@ -38,15 +38,15 @@
  */
 package com.medigy.persist.reference.custom.insurance;
 
+import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
+import com.medigy.persist.reference.custom.CustomReferenceEntity;
+import com.medigy.persist.reference.custom.party.AgreementRoleType;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-
-import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
-import com.medigy.persist.reference.custom.CustomReferenceEntity;
-import com.medigy.persist.reference.custom.party.AgreementRoleType;
 
 @Entity
 @Table(name = "Ins_Policy_Role_Type")
@@ -57,7 +57,8 @@ public class InsurancePolicyRoleType  extends AgreementRoleType
         INSURANCE_PROVIDER("INS_PROV"),
         INSURANCE_PROVIDER_AGENT("INS_PROV_AGENT"),
         INSURED_CONTRACT_HOLDER("INS_IND"),
-        INSURED_DEPENDENT("INS_DEP");
+        INSURED_DEPENDENT("INS_DEP"),
+        HEALTH_CARE_PRACTITIONER("HC");
 
         private final String code;
         private InsurancePolicyRoleType entity;

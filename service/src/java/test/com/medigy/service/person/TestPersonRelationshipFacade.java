@@ -50,12 +50,15 @@ import com.medigy.service.util.PartyRelationshipFacade;
 import com.medigy.service.util.PartyRelationshipFacadeImpl;
 import com.medigy.service.util.PersonFacade;
 import com.medigy.service.util.PersonFacadeImpl;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.util.List;
 
 
 public class TestPersonRelationshipFacade extends TestCase
 {
+    private static final Log log = LogFactory.getLog(TestPersonRelationshipFacade.class);
     /**
      * Validate the VALID_PARTY_RELATIONSHIP_ROLE table, Add two roles associated with one relationship and verify by
      *  reading it back out using the  PartyRelationshipFacade

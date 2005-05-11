@@ -55,6 +55,7 @@ public class TestSuite extends junit.framework.TestSuite
         suite.addTest(new junit.framework.TestSuite(TestPersonFacade.class));
         suite.addTest(new junit.framework.TestSuite(TestAddContactMechanismService.class));
         suite.addTest(new junit.framework.TestSuite(TestInsurancePolicyFacade.class));
+        //suite.addTest(new junit.framework.TestSuite(TestSelectCareProviderService.class));
         //suite.addTest(new junit.framework.TestSuite(TestPatientRegistrationService.class));
 
         return suite;

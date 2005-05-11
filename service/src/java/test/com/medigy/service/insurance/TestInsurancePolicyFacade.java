@@ -39,16 +39,13 @@
 package com.medigy.service.insurance;
 
 import com.medigy.persist.DbUnitTestCase;
-import com.medigy.persist.model.insurance.InsurancePolicy;
+import com.medigy.persist.model.insurance.InsuranceProduct;
 import com.medigy.persist.model.org.Organization;
-import com.medigy.persist.model.person.Person;
-import com.medigy.persist.reference.custom.insurance.InsurancePolicyType;
 import com.medigy.persist.util.HibernateUtil;
 import com.medigy.service.util.InsurancePolicyFacade;
 import com.medigy.service.util.InsurancePolicyFacadeImpl;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.hibernate.criterion.Restrictions;
 
 import java.util.List;
 
@@ -56,6 +53,25 @@ public class TestInsurancePolicyFacade extends DbUnitTestCase
 {
     private static final Log log = LogFactory.getLog(TestInsurancePolicyFacade.class);
 
+    public void testListInsuranceProducts()
+    {
+        final Organization policyProvider = (Organization) HibernateUtil.getSession().load(Organization.class, new Long(2));
+
+        final InsuranceProduct product = new InsuranceProduct();
+        product.setName("PPO Plan Deluxe");
+        product.setOrganization(policyProvider);
+        HibernateUtil.getSession().save(product);
+        HibernateUtil.closeSession();
+
+        final InsurancePolicyFacade facade = new InsurancePolicyFacadeImpl();
+        List productList = facade.listInsuranceProducts(policyProvider);
+        assertEquals(1, productList.size());
+        final InsuranceProduct newProduct = (InsuranceProduct) productList.toArray()[0];
+        assertEquals("PPO Plan Deluxe", newProduct.getName());
+
+    }
+
+    /*
     public void testCreateIndividualInsurancePolicy()
     {
         final Organization policyProvider = (Organization) HibernateUtil.getSession().load(Organization.class, new Long(2));
@@ -93,7 +109,7 @@ public class TestInsurancePolicyFacade extends DbUnitTestCase
         assertEquals("Anthem", org.getOrganizationName());
 
         //IndividualInsurancePolicy newPolicy = (IndividualInsurancePolicy) HibernateUtil.getSession().load(IndividualInsurancePolicy.class, policy.getPolicyId());
-        //assertEquals(newPolicy.getPolicyNumber(), "12345");
+        //assertEquals(newPolicy.getIdentificationNumber(), "12345");
 
         final InsurancePolicyFacade facade = new InsurancePolicyFacadeImpl();
         final InsurancePolicy newPolicy = facade.getIndividualInsurancePolicy("12345");
@@ -134,7 +150,7 @@ public class TestInsurancePolicyFacade extends DbUnitTestCase
         assertEquals("12345", ((InsurancePolicy) policyList.toArray()[0]).getPolicyNumber());
 
     }
-
+    */
     public String getDataSetFile()
     {
         return "/com/medigy/service/insurance/TestInsurancePolicyFacade.xml";

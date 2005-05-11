@@ -39,15 +39,15 @@
  */
 package com.medigy.persist.reference.custom.party;
 
+import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
+import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
+import com.medigy.persist.reference.custom.CustomReferenceEntity;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-
-import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
-import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
-import com.medigy.persist.reference.custom.CustomReferenceEntity;
 
 @Entity
 @Table(name = "Party_Rel_Type")
@@ -59,7 +59,8 @@ public class PartyRelationshipType extends AbstractCustomReferenceEntity
         ORGANIZATION_ROLLUP("ORG_ROLLUP"),
         PARTNERSHIP("PARTNER"),
         CUSTOMER_RELATIONSHIP("CUST_REL"),
-        SUPPLIER_RELATIONSHIP("SUPP_REL");
+        SUPPLIER_RELATIONSHIP("SUPP_REL"),
+        CARE_PROVIDER_SELECTION("CARE_PROVIDER");
 
         private final String code;
         private PartyRelationshipType entity;

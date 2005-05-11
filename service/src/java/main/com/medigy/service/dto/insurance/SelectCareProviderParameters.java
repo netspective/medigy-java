@@ -38,15 +38,16 @@
  */
 package com.medigy.service.dto.insurance;
 
-import com.medigy.persist.model.person.Person;
-
+import java.io.Serializable;
 import java.util.Date;
 
 public interface SelectCareProviderParameters
 {
-    public Person getInsuredIndividual();
+    public Serializable getPersonId();
 
-    public Person getCareProvider();
+    public String getInsurancePolicyNumber();
+
+    public Serializable getCareProviderId();
 
     public Date getFromDate();
 

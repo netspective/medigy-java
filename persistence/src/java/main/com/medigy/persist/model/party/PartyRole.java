@@ -39,9 +39,10 @@
  */
 package com.medigy.persist.model.party;
 
-import java.util.HashSet;
-import java.util.Set;
+import com.medigy.persist.model.common.AbstractDateDurationEntity;
+import com.medigy.persist.reference.custom.party.PartyRoleType;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
@@ -50,9 +51,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-
-import com.medigy.persist.model.common.AbstractDateDurationEntity;
-import com.medigy.persist.reference.custom.party.PartyRoleType;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "Party_Role")
@@ -93,7 +93,7 @@ public class PartyRole extends AbstractDateDurationEntity implements Comparable
     }
 
 
-    @OneToMany(mappedBy = "partyRoleFrom")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "partyRoleFrom")
     public Set<PartyRelationship> getFromPartyRelationships()
     {
         return fromPartyRelationships;
@@ -104,7 +104,7 @@ public class PartyRole extends AbstractDateDurationEntity implements Comparable
         this.fromPartyRelationships = fromPartyRelationships;
     }
 
-    @OneToMany(mappedBy = "partyRoleTo")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "partyRoleTo")
     public Set<PartyRelationship> getToPartyRelationships()
     {
         return toPartyRelationships;

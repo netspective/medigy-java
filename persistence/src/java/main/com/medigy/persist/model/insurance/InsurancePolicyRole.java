@@ -67,11 +67,13 @@ public class InsurancePolicyRole implements AgreementRole
 {
     private Long insurancePolicyRoleId;
     private InsurancePolicy agreement;
+    private String identificationNumber;    // not unique across same household
+    private String groupNumber;
     private Party party;
     protected InsurancePolicyRoleType type;
 
-    private Set<Enrollment> enrollments = new HashSet<Enrollment>();
-    private Set<CareProviderSelection> careProviderSelections = new HashSet<CareProviderSelection>();
+    private Set<EnrollmentElection> enrollmentElections = new HashSet<EnrollmentElection>();
+
 
     @Id(generate = GeneratorType.AUTO)
     @Column(name = "ins_policy_role_id")
@@ -83,6 +85,28 @@ public class InsurancePolicyRole implements AgreementRole
     public void setInsurancePolicyRoleId(final Long insurancePolicyRoleId)
     {
         this.insurancePolicyRoleId = insurancePolicyRoleId;
+    }
+
+    @Column(length = 15)
+    public String getIdentificationNumber()
+    {
+        return identificationNumber;
+    }
+
+    public void setIdentificationNumber(final String identificationNumber)
+    {
+        this.identificationNumber = identificationNumber;
+    }
+
+    @Column(length = 15)
+    public String getGroupNumber()
+    {
+        return groupNumber;
+    }
+
+    public void setGroupNumber(final String groupNumber)
+    {
+        this.groupNumber = groupNumber;
     }
 
     @Transient
@@ -176,32 +200,14 @@ public class InsurancePolicyRole implements AgreementRole
                 getType().equals(InsurancePolicyRoleType.Cache.INSURED_CONTRACT_HOLDER.getEntity()));
     }
 
-
-    @OneToMany(mappedBy = "insuredContractHolderRole")
-    public Set<Enrollment> getEnrollments()
+    @OneToMany(mappedBy = "insurancePolicyRole")
+    public Set<EnrollmentElection> getEnrollmentElections()
     {
-        return enrollments;
+        return enrollmentElections;
     }
 
-    public void setEnrollments(Set<Enrollment> enrollments)
+    public void setEnrollmentElections(Set<EnrollmentElection> enrollmentElections)
     {
-        this.enrollments = enrollments;
-    }
-
-    @OneToMany(mappedBy = "insuredIndividualRole")
-    public Set<CareProviderSelection> getCareProviderSelections()
-    {
-        return careProviderSelections;
-    }
-
-    public void setCareProviderSelections(final Set<CareProviderSelection> careProviderSelections)
-    {
-        this.careProviderSelections = careProviderSelections;
-    }
-
-    @Transient
-    public void addCareProviderSelection(final CareProviderSelection selection)
-    {
-        getCareProviderSelections().add(selection);
+        this.enrollmentElections = enrollmentElections;
     }
 }

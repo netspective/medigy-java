@@ -38,14 +38,14 @@
  */
 package com.medigy.persist.model.insurance;
 
+import com.medigy.persist.model.common.AbstractTopLevelEntity;
+import com.medigy.persist.reference.custom.insurance.CoverageType;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-
-import com.medigy.persist.model.common.AbstractTopLevelEntity;
-import com.medigy.persist.reference.custom.insurance.CoverageType;
 
 @Entity
 public class EnrollmentElection extends AbstractTopLevelEntity
@@ -53,6 +53,7 @@ public class EnrollmentElection extends AbstractTopLevelEntity
     private Long enrollmentElectionId;
     private Enrollment enrollment;
     private CoverageType coverageType;
+    private InsurancePolicyRole insurancePolicyRole;
 
     /**
      * Examples of enrollment elections are dental, medical, accident, and life policies
@@ -94,5 +95,17 @@ public class EnrollmentElection extends AbstractTopLevelEntity
     public void setCoverageType(final CoverageType coverageType)
     {
         this.coverageType = coverageType;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "ins_policy_role_id")
+    public InsurancePolicyRole getInsurancePolicyRole()
+    {
+        return insurancePolicyRole;
+    }
+
+    public void setInsurancePolicyRole(final InsurancePolicyRole insurancePolicyRole)
+    {
+        this.insurancePolicyRole = insurancePolicyRole;
     }
 }

@@ -39,6 +39,7 @@
 package com.medigy.service.insurance;
 
 import com.medigy.persist.model.org.Organization;
+import com.medigy.service.ServiceLocator;
 import com.medigy.service.dto.insurance.CareProviderSelectionData;
 import com.medigy.service.dto.insurance.SelectCareProviderParameters;
 
@@ -46,9 +47,118 @@ import java.util.List;
 
 public class SelectCareProviderServiceImpl implements SelectCareProviderService
 {
+   public void registerService()
+   {
+       ServiceLocator.getInstance().loadService(SelectCareProviderService.class,
+               new SelectCareProviderServiceImpl());
+   }
+        
     public CareProviderSelectionData selectCareProvider(final SelectCareProviderParameters params)
     {
-        // TODO: Implement method with latest data model methods
+        /*
+        // first check to see if this person already has a primary care provider for this insurance policy
+        InsurancePolicyFacade isManager = (InsurancePolicyFacade) FacadeManager.getInstance().get(InsurancePolicyFacade.class);
+        final InsurancePolicy policy = isManager.getIndividualInsurancePolicy(params.getInsurancePolicyNumber());
+        if (policy == null)
+        {
+            // no matching policy was found
+            return new CareProviderSelectionData() {
+                public Serializable getCareProviderSelectionId()
+                {
+                    return null;
+                }
+
+                public SelectCareProviderParameters getSelectCareProviderParameters()
+                {
+                    return null;
+                }
+
+                public String getErrorMessage()
+                {
+                    // TODO: This needs to be calculated based on Locale
+                    return "No insurance policy was found with the insurance policy number: " + params.getInsurancePolicyNumber();
+                }
+
+            };
+        }
+
+        InsurancePolicyRole insuredPersonRole = policy.getInsuredPersonRole(params.getPersonId());
+        if (insuredPersonRole == null)
+        {
+            return new CareProviderSelectionData() {
+                public Serializable getCareProviderSelectionId()
+                {
+                    return null;
+                }
+
+                public SelectCareProviderParameters getSelectCareProviderParameters()
+                {
+                    return null;
+                }
+
+                public String getErrorMessage()
+                {
+                    // TODO: This needs to be calculated based on Locale
+                    return "No insured person was found with the following ID: " + params.getPersonId();
+                }
+
+            };
+        }
+        //final CareProviderSelection currentCps = insuredPersonRole.getCurrentCareProviderSelection();
+        final CareProviderSelection currentCps = (CareProviderSelection) insuredPersonRole.getCareProviderSelections().toArray()[0];
+        if (currentCps != null)
+        {
+            currentCps.setThroughDate(new Date());
+        }
+
+        PersonFacade personFacade = (PersonFacade) FacadeManager.getInstance().get(PersonFacade.class);
+        Person careProvider = personFacade.getPersonById(params.getCareProviderId());
+        if (careProvider == null)
+        {
+            return new CareProviderSelectionData() {
+                public Serializable getCareProviderSelectionId()
+                {
+                    return null;
+                }
+
+                public SelectCareProviderParameters getSelectCareProviderParameters()
+                {
+                    return null;
+                }
+
+                public String getErrorMessage()
+                {
+                    // TODO: This needs to be calculated based on Locale
+                    return "Could not find Care Provider with ID: " + params.getCareProviderId();
+                }
+            };
+        }
+
+
+        final CareProviderSelection cps = new CareProviderSelection();
+        cps.setInsurancePolicyRole(insuredPersonRole);
+        cps.setHealthCarePractitioner(careProvider);
+        cps.setFromDate(params.getFromDate());
+
+        HibernateUtil.getSession().save(cps);
+        HibernateUtil.getSession().flush();
+        return new CareProviderSelectionData() {
+            public SelectCareProviderParameters getSelectCareProviderParameters()
+            {
+                return params;
+            }
+
+            public Serializable getCareProviderSelectionId()
+            {
+                return cps.getCareProviderSelectionId();
+            }
+
+            public String getErrorMessage()
+            {
+                return null;
+            }
+        };
+*/
         return null;
     }
 

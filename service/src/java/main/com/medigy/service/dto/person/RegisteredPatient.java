@@ -38,9 +38,11 @@
  */
 package com.medigy.service.dto.person;
 
+import com.medigy.service.dto.ServiceReturnValues;
+
 import java.io.Serializable;
 
-public interface RegisteredPatient
+public interface RegisteredPatient extends ServiceReturnValues
 {
     /**
      * Gets the Id of the newly registered patient
@@ -54,4 +56,5 @@ public interface RegisteredPatient
      * @return
      */
     public RegisterPatientParameters getRegisterPatientParameters();
+
 }

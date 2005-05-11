@@ -38,21 +38,23 @@
  */
 package com.medigy.persist.model.insurance;
 
-import java.util.HashSet;
-import java.util.Set;
+import com.medigy.persist.model.common.AbstractTopLevelEntity;
+import com.medigy.persist.reference.custom.insurance.CoverageLevelType;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-
-import com.medigy.persist.model.common.AbstractTopLevelEntity;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class CoverageLevel extends AbstractTopLevelEntity
 {
     private Long coverageLevelId;
+    private CoverageLevelType type;
     private Set<EnrollmentElection> enrollmentElections = new HashSet<EnrollmentElection>();
 
     @Id(generate = GeneratorType.AUTO)
@@ -64,6 +66,18 @@ public class CoverageLevel extends AbstractTopLevelEntity
     protected void setCoverageLevelId(final Long coverageLevelId)
     {
         this.coverageLevelId = coverageLevelId;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "coverage_level_type_id")
+    public CoverageLevelType getType()
+    {
+        return type;
+    }
+
+    public void setType(CoverageLevelType type)
+    {
+        this.type = type;
     }
 
     @OneToMany

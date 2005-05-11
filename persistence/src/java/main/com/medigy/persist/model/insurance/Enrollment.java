@@ -39,6 +39,7 @@
 package com.medigy.persist.model.insurance;
 
 import com.medigy.persist.model.common.AbstractTopLevelEntity;
+import com.medigy.persist.model.person.Person;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -57,9 +58,9 @@ public class Enrollment extends AbstractTopLevelEntity
     private Long enrollmentId;
     private Date enrolledDate;
     private Group group;
-    private InsurancePolicyRole insuredContractHolderRole;
+    private Person person;
 
-    private Set<CareProviderSelection> careProviderSelections = new HashSet<CareProviderSelection>();
+    //private Set<CareProviderSelection> careProviderSelections = new HashSet<CareProviderSelection>();
     private Set<EnrollmentElection> elections = new HashSet<EnrollmentElection>();
 
 
@@ -72,6 +73,18 @@ public class Enrollment extends AbstractTopLevelEntity
     protected void setEnrollmentId(final Long enrollmentId)
     {
         this.enrollmentId = enrollmentId;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "party_id")
+    public Person getPerson()
+    {
+        return person;
+    }
+
+    public void setPerson(final Person person)
+    {
+        this.person = person;
     }
 
     public Date getEnrolledDate()
@@ -108,6 +121,7 @@ public class Enrollment extends AbstractTopLevelEntity
         this.group = group;
     }
 
+    /*
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "enrollment_id")
     public Set<CareProviderSelection> getCareProviderSelections()
@@ -119,16 +133,5 @@ public class Enrollment extends AbstractTopLevelEntity
     {
         this.careProviderSelections = careProviderSelections;
     }
-
-    @ManyToOne
-    @JoinColumn(name = "ins_policy_role_id")
-    public InsurancePolicyRole getInsuredContractHolderRole()
-    {
-        return insuredContractHolderRole;
-    }
-
-    public void setInsuredContractHolderRole(final InsurancePolicyRole insuredContractHolderRole)
-    {
-        this.insuredContractHolderRole = insuredContractHolderRole;
-    }
+    */
 }

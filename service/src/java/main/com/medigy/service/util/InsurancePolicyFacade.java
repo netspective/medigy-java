@@ -45,9 +45,9 @@ import com.medigy.persist.model.person.Person;
 import java.io.Serializable;
 import java.util.List;
 
-public interface InsurancePolicyFacade
+public interface InsurancePolicyFacade extends Facade
 {
-    public InsurancePolicy createIndividualInsurancePolicy(final String policyNumber,                                      
+    public InsurancePolicy createIndividualInsurancePolicy(final String policyNumber,
                                       final Organization policyProvider,
                                       final Person policyHolder,
                                       final Person[] insuredDependents);
@@ -63,4 +63,11 @@ public interface InsurancePolicyFacade
      * @return
      */
     public List listInsurancePolicies(final Serializable personId);
+
+    /**
+     * Lists all insurance products advertised by the isurance provider organization
+     * @param org
+     * @return
+     */
+    public List listInsuranceProducts(final Organization org);
 }

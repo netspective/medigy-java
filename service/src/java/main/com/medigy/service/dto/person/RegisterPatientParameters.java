@@ -80,6 +80,7 @@ public interface RegisterPatientParameters
      * @return
      * @see com.medigy.persist.reference.type.GenderType#getTypeId()
      */
+    //@referenceType
     public String getGender();
 
     /**

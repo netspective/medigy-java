@@ -61,16 +61,22 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import java.util.HashSet;
 import java.util.Set;
+import java.io.Serializable;
 
+/**
+ * Class representing the agreement between the Insurance Carrier and the Insured Organization or Insured Policy Holder.
+ * Thus, the
+ */
 @Entity
 @Table(name = "Ins_Policy")
 public class InsurancePolicy extends AbstractDateDurationEntity implements Agreement
 {
     private Long policyId;
-    private String policyNumber;
+    private String policyNumber;    // not unique across same household
+
     private String description;
     private InsurancePolicyType type;
-    private InsuranceProduct insuranceProduct;
+    private InsurancePlan insurancePlan;
 
     private Set<InsurancePolicyRole> insurancePolicyRoles = new HashSet<InsurancePolicyRole>();
     private Set<InsurancePolicyItem> insurancePolicyItems = new HashSet<InsurancePolicyItem>();
@@ -241,14 +247,32 @@ public class InsurancePolicy extends AbstractDateDurationEntity implements Agree
     }
 
     @ManyToOne
-    @JoinColumn(name = "product_id")        
-    public InsuranceProduct getInsuranceProduct()
+    @JoinColumn(name = "ins_plan_id")
+    public InsurancePlan getInsurancePlan()
     {
-        return insuranceProduct;
+        return insurancePlan;
     }
 
-    public void setInsuranceProduct(final InsuranceProduct insuranceProduct)
+    public void setInsurancePlan(final InsurancePlan insurancePlan)
     {
-        this.insuranceProduct = insuranceProduct;
+        this.insurancePlan = insurancePlan;
+    }
+
+    /**
+     * Gets the insured person role related to this insurance policy
+     * @param personId  the insured person's ID
+     * @return the insured person
+     */
+    @Transient
+    public InsurancePolicyRole getInsuredPersonRole(Serializable personId)
+    {
+        for (InsurancePolicyRole role : getAgreementRoles())
+        {
+            //role.isInsuredIndividual() && 
+            if (role.getParty().getPartyId().equals(personId))
+                return role;
+        }
+
+        return null;
     }
 }

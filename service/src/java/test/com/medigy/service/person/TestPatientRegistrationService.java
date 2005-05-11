@@ -49,8 +49,16 @@ import com.medigy.persist.reference.type.LanguageType;
 import com.medigy.persist.reference.type.MaritalStatusType;
 import com.medigy.persist.util.HibernateUtil;
 import com.medigy.service.ServiceLocator;
+import com.medigy.service.common.ReferenceEntityLookupService;
+import com.medigy.service.common.ReferenceEntityLookupServiceImpl;
+import com.medigy.service.contact.AddContactMechanismService;
+import com.medigy.service.contact.AddContactMechanismServiceImpl;
 import com.medigy.service.dto.person.RegisterPatientParameters;
 import com.medigy.service.dto.person.RegisteredPatient;
+import com.medigy.service.util.FacadeManager;
+import com.medigy.service.util.PartyRelationshipFacade;
+import com.medigy.service.util.PartyRelationshipFacadeImpl;
+import com.medigy.service.util.PersonFacadeImpl;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -60,301 +68,318 @@ public class TestPatientRegistrationService extends TestCase
 {
     private static final Log log = LogFactory.getLog(TestPatientRegistrationService.class);
 
-    public void testPatientRegistration()
+    protected void loadServiceLocator()
+    {
+        FacadeManager.getInstance().add(new PersonFacadeImpl());
+        ServiceLocator.getInstance().loadService(ReferenceEntityLookupService.class, new ReferenceEntityLookupServiceImpl());
+        ServiceLocator.getInstance().loadService(PartyRelationshipFacade.class, new PartyRelationshipFacadeImpl());
+        ServiceLocator.getInstance().loadService(PatientRegistrationService.class, new PatientRegistrationServiceImpl());
+        ServiceLocator.getInstance().loadService(AddContactMechanismService.class, new AddContactMechanismServiceImpl());
+    }
+
+    protected void setUp() throws Exception
+    {
+        super.setUp();
+        loadServiceLocator();
+    }
+
+    public void testPatientRegistrationService()
     {
         RegisterPatientParameters patientParameters = null;
-        try
-        {
-            patientParameters = new RegisterPatientParameters() {
-
-                public String getFirstName()
+                try
                 {
-                    return "Ryan";
-                }
+                    patientParameters = new RegisterPatientParameters() {
 
-                public String getLastName()
-                {
-                    return "Hackett";
-                }
+                        public String getFirstName()
+                        {
+                            return "Ryan";
+                        }
 
-                public String getMiddleName()
-                {
-                    return "Bluegrass";
-                }
+                        public String getLastName()
+                        {
+                            return "Hackett";
+                        }
 
-                public String getSuffix()
-                {
-                    return null;
-                }
+                        public String getMiddleName()
+                        {
+                            return "Bluegrass";
+                        }
 
-                public Date getBirthDate()
-                {
-                    return new Date();
-                }
+                        public String getSuffix()
+                        {
+                            return null;
+                        }
 
-                public String getGender()
-                {
-                    return GenderType.Cache.MALE.getId();
-                }
+                        public Date getBirthDate()
+                        {
+                            return new Date();
+                        }
 
-                public String getMaritalStatus()
-                {
-                    return MaritalStatusType.Cache.SINGLE.getId();
-                }
+                        public String getGender()
+                        {
+                            return GenderType.Cache.MALE.getId();
+                        }
 
-                public String getEmployerName()
-                {
-                    return "Netspective";
-                }
+                        public String getMaritalStatus()
+                        {
+                            return MaritalStatusType.Cache.SINGLE.getId();
+                        }
 
-                public String getEmployerId()
-                {
-                    return "1";
-                }
+                        public String getEmployerName()
+                        {
+                            return "Netspective";
+                        }
 
-                public String getOccupation()
-                {
-                    return "Consultant";
-                }
+                        public String getEmployerId()
+                        {
+                            return "1";
+                        }
 
-                public String getSsn()
-                {
-                    return "111111111";
-                }
+                        public String getOccupation()
+                        {
+                            return "Consultant";
+                        }
 
-                public String[] getEthnicityCodes()
-                {
-                    return new String[] { EthnicityType.Cache.AFRICAN_AMERICAN.getCode(), EthnicityType.Cache.ASIAN_PACIFIC_ISLANDER.getCode() };
-                }
+                        public String getSsn()
+                        {
+                            return "111111111";
+                        }
 
-                public String[] getLanguageCodes()
-                {
-                    return new String[] { LanguageType.Cache.ENGLISH.getId(), LanguageType.Cache.SPANISH.getId() };
-                }
+                        public String[] getEthnicityCodes()
+                        {
+                            return new String[] { EthnicityType.Cache.AFRICAN_AMERICAN.getCode(), EthnicityType.Cache.ASIAN_PACIFIC_ISLANDER.getCode() };
+                        }
 
-                public String getDriversLicenseNumber()
-                {
-                    return "999999999";
-                }
+                        public String[] getLanguageCodes()
+                        {
+                            return new String[] { LanguageType.Cache.ENGLISH.getId(), LanguageType.Cache.SPANISH.getId() };
+                        }
 
-                public String getResponsiblePartyLastName()
-                {
-                    return "Hackett";
-                }
+                        public String getDriversLicenseNumber()
+                        {
+                            return "999999999";
+                        }
 
-                public String getResponsiblePartyFirstName()
-                {
-                    return "Bob";
-                }
+                        public String getResponsiblePartyLastName()
+                        {
+                            return "Hackett";
+                        }
 
-                public String getResponsiblePartyId()
-                {
-                    return null;
-                }
+                        public String getResponsiblePartyFirstName()
+                        {
+                            return "Bob";
+                        }
 
-                public String getResponsiblePartyRole()
-                {
-                    return PartyRelationshipType.Cache.PATIENT_RESPONSIBLE_PARTY.getCode();
-                }
+                        public String getResponsiblePartyId()
+                        {
+                            return null;
+                        }
 
-                public String getHomePhoneCountryCode()
-                {
-                    return "95";
-                }
+                        public String getResponsiblePartyRole()
+                        {
+                            return PartyRelationshipType.Cache.PATIENT_RESPONSIBLE_PARTY.getCode();
+                        }
 
-                public String getHomePhoneCityCode()
-                {
-                    return "1";
-                }
+                        public String getHomePhoneCountryCode()
+                        {
+                            return "95";
+                        }
 
-                public String getHomePhoneAreaCode()
-                {
-                    return "703";
-                }
+                        public String getHomePhoneCityCode()
+                        {
+                            return "1";
+                        }
 
-                public String getHomePhoneNumber()
-                {
-                    return "1234567";
-                }
+                        public String getHomePhoneAreaCode()
+                        {
+                            return "703";
+                        }
 
-                public String getWorkPhoneCountryCode()
-                {
-                    return null;
-                }
+                        public String getHomePhoneNumber()
+                        {
+                            return "1234567";
+                        }
 
-                public String getWorkPhoneCityCode()
-                {
-                    return null;
-                }
+                        public String getWorkPhoneCountryCode()
+                        {
+                            return null;
+                        }
 
-                public String getWorkPhoneAreaCode()
-                {
-                    return "703";
-                }
+                        public String getWorkPhoneCityCode()
+                        {
+                            return null;
+                        }
 
-                public String getWorkPhoneNumber()
-                {
-                    return "0000000";
-                }
+                        public String getWorkPhoneAreaCode()
+                        {
+                            return "703";
+                        }
 
-                public String getMobilePhoneCountryCode()
-                {
-                    return null;
-                }
+                        public String getWorkPhoneNumber()
+                        {
+                            return "0000000";
+                        }
 
-                public String getMobilePhoneCityCode()
-                {
-                    return null;
-                }
+                        public String getMobilePhoneCountryCode()
+                        {
+                            return null;
+                        }
 
-                public String getMobilePhoneAreaCode()
-                {
-                    return "703";
-                }
+                        public String getMobilePhoneCityCode()
+                        {
+                            return null;
+                        }
 
-                public String getMobilePhoneNumber()
-                {
-                    return "1111111";
-                }
+                        public String getMobilePhoneAreaCode()
+                        {
+                            return "703";
+                        }
 
-                public String getStreetAddress1()
-                {
-                    return "123 Penny Lane";
-                }
+                        public String getMobilePhoneNumber()
+                        {
+                            return "1111111";
+                        }
 
-                public String getStreetAddress2()
-                {
-                    return null;
-                }
+                        public String getStreetAddress1()
+                        {
+                            return "123 Penny Lane";
+                        }
 
-                public String getCity()
-                {
-                    return "Manchester";
-                }
+                        public String getStreetAddress2()
+                        {
+                            return null;
+                        }
 
-                public String getCounty()
-                {
-                    return null;
-                }
+                        public String getCity()
+                        {
+                            return "Manchester";
+                        }
 
-                public String getProvince()
-                {
-                    return null;
-                }
+                        public String getCounty()
+                        {
+                            return null;
+                        }
 
-                public String getState()
-                {
-                    return "KY";
-                }
+                        public String getProvince()
+                        {
+                            return null;
+                        }
 
-                public String getPostalCode()
-                {
-                    return "12345";
-                }
+                        public String getState()
+                        {
+                            return "KY";
+                        }
 
-                public String getCountry()
-                {
-                    return "USA";
-                }
+                        public String getPostalCode()
+                        {
+                            return "12345";
+                        }
 
-                public String getPrimaryCareProviderLastName()
-                {
-                    return null;
-                }
+                        public String getCountry()
+                        {
+                            return "USA";
+                        }
 
-                public String getPrimaryCareProviderId()
-                {
-                    return null;
-                }
+                        public String getPrimaryCareProviderLastName()
+                        {
+                            return null;
+                        }
 
-                /**
-                 * Gets the patient's primary care provider first name
-                 *
-                 * @return
-                 */
-                public String getPrimaryCareProviderFirstName()
-                {
-                    return null;
-                }
+                        public String getPrimaryCareProviderId()
+                        {
+                            return null;
+                        }
 
-                /**
-                 * Gets the list of insurance policy numbers. The first one is considered
-                 * the primary insurance policy.
-                 *
-                 * @return
-                 */
-                public String[] getInsurancePolicyNumbers()
-                {
-                    return new String[]  { "12345", "ABC-12345" } ;
-                }
+                        /**
+                         * Gets the patient's primary care provider first name
+                         *
+                         * @return
+                         */
+                        public String getPrimaryCareProviderFirstName()
+                        {
+                            return null;
+                        }
 
-                public String[] getInsurancePolicyProviders()
-                {
-                    return new String[]  { "Blue Cross Blue Shield", "Anthem" };
-                }
+                        /**
+                         * Gets the list of insurance policy numbers. The first one is considered
+                         * the primary insurance policy.
+                         *
+                         * @return
+                         */
+                        public String[] getInsurancePolicyNumbers()
+                        {
+                            return new String[]  { "12345", "ABC-12345" } ;
+                        }
 
-                public String[] getInsurancePolicyProviderIds()
-                {
-                    return new String[0];
-                }
+                        public String[] getInsurancePolicyProviders()
+                        {
+                            return new String[]  { "Blue Cross Blue Shield", "Anthem" };
+                        }
 
-                public String[] getInsurancePolicyTypes()
-                {
-                    return new String[] { InsurancePolicyType.Cache.GROUP_INSURANCE_POLICY.getCode(),
-                        InsurancePolicyType.Cache.INDIVIDUAL_INSURANCE_POLICY.getCode()};
-                }
+                        public String[] getInsurancePolicyProviderIds()
+                        {
+                            return new String[0];
+                        }
 
-                public String[] getInsurancePolicyHolderLastNames()
-                {
-                    return new String[] { "Hackett", "Hackett" };
-                }
+                        public String[] getInsurancePolicyTypes()
+                        {
+                            return new String[] { InsurancePolicyType.Cache.GROUP_INSURANCE_POLICY.getCode(),
+                                InsurancePolicyType.Cache.INDIVIDUAL_INSURANCE_POLICY.getCode()};
+                        }
 
-                public String[] getInsurancePolicyHolderFirstNames()
-                {
-                    return new String[] { "Bryan", "Bryan" };
-                }
+                        public String[] getInsurancePolicyHolderLastNames()
+                        {
+                            return new String[] { "Hackett", "Hackett" };
+                        }
 
-                public String getResponsiblePartySuffix()
-                {
-                    return null;
-                }
+                        public String[] getInsurancePolicyHolderFirstNames()
+                        {
+                            return new String[] { "Bryan", "Bryan" };
+                        }
 
-                public String[] getInsurancePolicyHolderSuffix()
-                {
-                    return new String[] { "Sr.", null };
-                }
+                        public String getResponsiblePartySuffix()
+                        {
+                            return null;
+                        }
 
-                /**
-                 * Gets the list of ID of the insurance policy holders
-                 *
-                 * @return
-                 */
-                public String[] getInsurancePolicyHolderId()
-                {
-                    return new String[] { };
-                }
+                        public String[] getInsurancePolicyHolderSuffix()
+                        {
+                            return new String[] { "Sr.", null };
+                        }
 
-                /**
-                 * Gets the list of roles (relationship to the patient) of the insurance policy
-                 * holder.
-                 *
-                 * @return
-                 */
-                public String[] getInsurancePolicyHolderRole()
-                {
-                    return new String[] { };
+                        /**
+                         * Gets the list of ID of the insurance policy holders
+                         *
+                         * @return
+                         */
+                        public String[] getInsurancePolicyHolderId()
+                        {
+                            return new String[] { };
+                        }
+
+                        /**
+                         * Gets the list of roles (relationship to the patient) of the insurance policy
+                         * holder.
+                         *
+                         * @return
+                         */
+                        public String[] getInsurancePolicyHolderRole()
+                        {
+                            return new String[] { };
+                        }
+                    };
                 }
-            };
-        }
-        catch (Exception e)
-        {
-            fail(e.getMessage());
-        }
+                catch (Exception e)
+                {
+                    fail(e.getMessage());
+                }
 
         PatientRegistrationService service = (PatientRegistrationService) ServiceLocator.getInstance().getService(PatientRegistrationService.class);
         final RegisteredPatient registeredPatient = service.registerPatient(patientParameters);
+        if (registeredPatient.getErrorMessage() != null)
+            fail(registeredPatient.getErrorMessage());
 
-        final Person persistedPerson = (Person) HibernateUtil.getSession().load(Person.class, registeredPatient.getPatientId());
+            final Person persistedPerson = (Person) HibernateUtil.getSession().load(Person.class, registeredPatient.getPatientId());
         assertEquals(persistedPerson.getFirstName(), "Ryan");
         assertEquals(persistedPerson.getMiddleName(), "Bluegrass");
         assertEquals(persistedPerson.getLastName(), "Hackett");
@@ -375,9 +400,6 @@ public class TestPatientRegistrationService extends TestCase
         assertEquals(persistedPerson.getDriversLicenseNumber(), "999999999");
 
         assertEquals(persistedPerson.getPartyContactMechanisms().size(), 2);
-
-
-
-
     }
+
 }

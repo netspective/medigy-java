@@ -38,15 +38,49 @@
  */
 package com.medigy.persist.reference.custom.insurance;
 
+import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
+import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
+import com.medigy.persist.reference.custom.CustomReferenceEntity;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
 
-import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
-
 @Entity
 public class CoverageType extends AbstractCustomReferenceEntity
 {
+    // TODO: These are only the major coverage types and each one can be further broken down. I'm not sure if this should be a top level entity.
+    public enum Cache implements CachedCustomReferenceEntity
+    {
+        MAJOR_MEDICAL("IND_DEDUCT"),
+        HOSPITALIZATION("FAMILY_DEDUCT"),
+        DENTAL("COINS"), /* Percent amount */
+        VISION("COPAY");
+
+        private final String code;
+        private CoverageType entity;
+
+        Cache(final String code)
+        {
+            this.code = code;
+        }
+
+        public String getCode()
+        {
+            return code;
+        }
+
+        public CoverageType getEntity()
+        {
+            return entity;
+        }
+
+        public void setEntity(final CustomReferenceEntity entity)
+        {
+            this.entity = (CoverageType) entity;
+        }
+    }
+
     @Id(generate = GeneratorType.AUTO)    
     public Long getCoverageTypeId()
     {

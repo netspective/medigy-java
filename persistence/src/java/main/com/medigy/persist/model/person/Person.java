@@ -96,7 +96,9 @@ public class Person extends Party
 
     private String firstNameSoundex;
     private String lastNameSoundex;
-    
+
+    //private Set<CareProviderSelection> careProviderSelections = new HashSet<CareProviderSelection>();
+
     private Set<Ethnicity> ethnicities = new HashSet<Ethnicity>();
     private Set<Gender> genders = new HashSet<Gender>();
     private Set<MaritalStatus> maritalStatuses = new HashSet<MaritalStatus>();
@@ -637,4 +639,18 @@ public class Person extends Party
         }
         return null;
     }
+
+    /*
+    @OneToMany
+    @JoinColumn(name = "party_id")        
+    public Set<CareProviderSelection> getCareProviderSelections()
+    {
+        return careProviderSelections;
+    }
+
+    public void setCareProviderSelections(final Set<CareProviderSelection> careProviderSelections)
+    {
+        this.careProviderSelections = careProviderSelections;
+    }
+*/
 }

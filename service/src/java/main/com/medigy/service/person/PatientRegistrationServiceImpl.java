@@ -59,12 +59,12 @@ import com.medigy.service.dto.party.AddPhoneParameters;
 import com.medigy.service.dto.party.AddPostalAddressParameters;
 import com.medigy.service.dto.person.RegisterPatientParameters;
 import com.medigy.service.dto.person.RegisteredPatient;
+import com.medigy.service.util.InsurancePolicyFacade;
+import com.medigy.service.util.InsurancePolicyFacadeImpl;
 import com.medigy.service.util.PartyRelationshipFacade;
 import com.medigy.service.util.PersonFacade;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.hibernate.Criteria;
-import org.hibernate.criterion.Restrictions;
 
 import java.io.Serializable;
 
@@ -74,16 +74,45 @@ import java.io.Serializable;
 public class PatientRegistrationServiceImpl implements PatientRegistrationService
 {
     private static final Log log = LogFactory.getLog(PatientRegistrationServiceImpl.class);
+    private boolean createEmployerIfUnknown = true;
+    private boolean createInsuranceProviderIfUnknown = true;
+
+    /**
+     * Check to see if Employer organization should be automatically created if it is not known (no ID).
+     * @return
+     */
+    public boolean isCreateEmployerIfUnknown()
+    {
+        return createEmployerIfUnknown;
+    }
+
+    public void setCreateEmployerIfUnknown(boolean createEmployerIfUnknown)
+    {
+        this.createEmployerIfUnknown = createEmployerIfUnknown;
+    }
+
+    /**
+     * Check to see if Insurance Provider organization should be automatically created if it is not known (no ID)
+     * @return
+     */
+    public boolean isCreateInsuranceProviderIfUnknown()
+    {
+        return createInsuranceProviderIfUnknown;
+    }
+
+    public void setCreateInsuranceProviderIfUnknown(boolean createInsuranceProviderIfUnknown)
+    {
+        this.createInsuranceProviderIfUnknown = createInsuranceProviderIfUnknown;
+    }
 
     private static Serializable getPrimaryKey(String keyString)
     {
         return Long.parseLong(keyString);
     }
 
-    protected void registerInsuranceInformation(final Person person, final RegisterPatientParameters params) throws UnknownReferenceTypeException
+    protected void registerInsuranceInformation(final Person person, final Person responsibleParty, final RegisterPatientParameters params) throws Exception
     {
-        final ReferenceEntityLookupService referenceEntityService = (ReferenceEntityLookupService) ServiceLocator.getInstance().getService(ReferenceEntityLookupService.class);
-
+        // usually there is one primary insurance and one possible secondary
         final String[] policyNumbers = params.getInsurancePolicyNumbers();
         final String[] policyTypes = params.getInsurancePolicyTypes();
         final String[] contractHolderIds = params.getInsurancePolicyHolderId();
@@ -95,7 +124,6 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
         for (int i=0; i < policyNumbers.length; i++)
         {
             final String policyType = params.getInsurancePolicyTypes()[i];
-            final InsurancePolicyType type = referenceEntityService.getInsurancePolicyType(policyType);
             final String contractHolderId = contractHolderIds[i];
             final String contractHolderFirstName = contractHolderFirstNames[i];
             final String contractHolderLastName = contractHolderLastNames[i];
@@ -103,27 +131,28 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
             final String policyProviderId = policyProviderIds[i];
 
             Person policyHolder = null;
-            if (contractHolderId == null && contractHolderLastName != null)
+            if (contractHolderId != null)
             {
-                // create a new contract holder but check if this is the same person as the responsible party
-                if (params.getResponsiblePartyLastName().equals(contractHolderLastName) &&
+                policyHolder = (Person) HibernateUtil.getSession().load(Person.class,
+                    getPrimaryKey(contractHolderId));
+            }
+            else if (contractHolderLastName.equals(person.getLastName()) && contractHolderFirstName.equals(person.getFirstName()))
+            {
+                // the policy holder is self
+                policyHolder = person;
+            }
+            else if (params.getResponsiblePartyLastName().equals(contractHolderLastName) &&
                     params.getResponsiblePartyFirstName().equals(contractHolderFirstName))
-                {
-                    // TODO:
-                }
-                else
-                {
-                    policyHolder = new Person();
-                    policyHolder.setLastName(contractHolderLastName);
-                    policyHolder.setFirstName(contractHolderFirstName);
-                    HibernateUtil.getSession().save(policyHolder);
-                }
+            {
+                // TODO: The responsible party and policy Holder's names are the same so they're essentially the same person
+                policyHolder = responsibleParty;
             }
             else
             {
-                // NOTE: this will throw HibernateException if the ID doesnt exist
-                policyHolder = (Person) HibernateUtil.getSession().load(Person.class,
-                        getPrimaryKey(contractHolderId));
+                policyHolder = new Person();
+                policyHolder.setLastName(contractHolderLastName);
+                policyHolder.setFirstName(contractHolderFirstName);
+                HibernateUtil.getSession().save(policyHolder);
             }
 
             Organization providerOrg = null;
@@ -134,35 +163,57 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
             }
             else
             {
-                providerOrg = new Organization();
-                providerOrg.setOrganizationName(policyProvider);
-                providerOrg.addPartyRole(OrganizationRoleType.Cache.INSURANCE_PROVIDER.getEntity());
-                HibernateUtil.getSession().save(providerOrg);
+                // TODO: Determine if provider look up should be done using the Name also instead of just the ID
+                if (isCreateInsuranceProviderIfUnknown())
+                {
+                    providerOrg = new Organization();
+                    providerOrg.setOrganizationName(policyProvider);
+                    providerOrg.addPartyRole(OrganizationRoleType.Cache.INSURANCE_PROVIDER.getEntity());
+                    HibernateUtil.getSession().save(providerOrg);
+                }
+                else
+                {
+                    throw new Exception("Unknown policy provider: " + policyProvider);
+                }
             }
-
-            boolean newPolicy = false;
-
-            Criteria criteria = HibernateUtil.getSession().createCriteria(InsurancePolicy.class);
-            criteria.add(Restrictions.eq("policyNumber", policyNumbers[i]));
-            Criteria providerCriteria = criteria.createCriteria("insuranceProvider");
-            providerCriteria.add(Restrictions.eq("partyId", providerOrg.getPartyId()));
-            Criteria policyHolderCriteria = criteria.createCriteria("pol");
-
-            InsurancePolicy policy = new InsurancePolicy();
-            policy.setType(type);
-            policy.setPolicyNumber(policyNumbers[i]);
-            policy.setInsuranceProvider(providerOrg);
-            policy.setPolicyHolder(policyHolder);
-            policy.addInsuredDependent(person);
-
-            if (newPolicy)
-                HibernateUtil.getSession().save(newPolicy);
-            else
-                HibernateUtil.getSession().flush();
+            processInsurancePolicy(policyNumbers[i], policyType, providerOrg, policyHolder, person);
         }
-
-
     }
+
+    /**
+     * Process the insurance policy. If the policy already exists, update the policy and if it doesn't create a new one.
+     * @param policyNumber
+     * @param providerOrg
+     * @param policyHolder
+     * @param insuredDependent
+     */
+    protected void processInsurancePolicy(final String policyNumber,
+                                          final String policyType,
+                                          final Organization providerOrg,
+                                          final Person policyHolder,
+                                          final Person insuredDependent) throws UnknownReferenceTypeException
+    {
+        final ReferenceEntityLookupService referenceEntityService = (ReferenceEntityLookupService) ServiceLocator.getInstance().getService(ReferenceEntityLookupService.class);
+        final InsurancePolicyType type = referenceEntityService.getInsurancePolicyType(policyType);
+         // look up the insurance policy (if policy holder person is new then should we even look up the policy since
+        // its probably new also)
+        final InsurancePolicyFacade insFacade = new InsurancePolicyFacadeImpl();
+        InsurancePolicy policy = insFacade.getIndividualInsurancePolicy(policyNumber);
+        boolean newPolicy = false;
+
+        if (policy == null)
+        {
+            newPolicy = true;
+            policy = insFacade.createIndividualInsurancePolicy(policyNumber, providerOrg, policyHolder, new Person[] {insuredDependent});
+        }
+        else
+        {
+            // update the policy with the new dependent
+            policy.addInsuredDependent(insuredDependent);
+            HibernateUtil.getSession().flush();
+        }
+    }
+
 
     /**
      * Registers a responsible party associated with a new patient. This is a sub-task belonging to the
@@ -171,7 +222,7 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
      * @param person
      * @param patientParameters
      */
-    protected void registerResponsibleParty(final Person person, final RegisterPatientParameters patientParameters)
+    protected Person registerResponsibleParty(final Person person, final RegisterPatientParameters patientParameters)
     {
         final ReferenceEntityLookupService referenceEntityService = (ReferenceEntityLookupService) ServiceLocator.getInstance().getService(ReferenceEntityLookupService.class);
         final PersonFacade personFacade = (PersonFacade) ServiceLocator.getInstance().getService(PersonFacade.class);
@@ -181,28 +232,26 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
         final PartyRole patientRole = personFacade.addPersonRole(person, PersonRoleType.Cache.PATIENT.getEntity());
 
         String respLastName = patientParameters.getResponsiblePartyLastName();
-        if (respLastName != null)
+        Person respParty = null;
+        // if the responsible party ID is available then the person already exists
+        if (patientParameters.getResponsiblePartyId() != null)
         {
-            Person respParty = null;
-            // if the responsible party ID is available then the person already exists
-            if (patientParameters.getResponsiblePartyId() != null)
-            {
-                respParty = personFacade.getPersonById(patientParameters.getResponsiblePartyId());
-            }
-            else
-            {
-                respParty = new Person();
-                respParty.setLastName(patientParameters.getResponsiblePartyLastName());
-                respParty.setFirstName(patientParameters.getResponsiblePartyFirstName());
-                personFacade.addPerson(respParty);
-            }
-            // responsible party processing
-            final PatientResponsiblePartyRoleType entity = PatientResponsiblePartyRoleType.Cache.getEntity(patientParameters.getResponsiblePartyRole());
-            final PartyRole respPartyRole = personFacade.addPersonRole(respParty, entity);
-
-            // create a relationship between the patient and this person through the roles
-            partyRelFacade.addPartyRelationship(PartyRelationshipType.Cache.PATIENT_RESPONSIBLE_PARTY.getEntity(), patientRole, respPartyRole);
+            respParty = personFacade.getPersonById(patientParameters.getResponsiblePartyId());
         }
+        else
+        {
+            respParty = new Person();
+            respParty.setLastName(patientParameters.getResponsiblePartyLastName());
+            respParty.setFirstName(patientParameters.getResponsiblePartyFirstName());
+            personFacade.addPerson(respParty);
+        }
+        // responsible party processing
+        final PatientResponsiblePartyRoleType entity = PatientResponsiblePartyRoleType.Cache.getEntity(patientParameters.getResponsiblePartyRole());
+        final PartyRole respPartyRole = personFacade.addPersonRole(respParty, entity);
+
+        // create a relationship between the patient and this person through the roles
+        partyRelFacade.addPartyRelationship(PartyRelationshipType.Cache.PATIENT_RESPONSIBLE_PARTY.getEntity(), patientRole, respPartyRole);
+        return respParty;
     }
 
     /**
@@ -320,8 +369,8 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
             // Finally add the person
             personFacade.addPerson(person);
             registerPostalAddress(person, patientParameters);
-            registerResponsibleParty(person, patientParameters);
-            registerInsuranceInformation(person, patientParameters);
+            Person responsibleParty = registerResponsibleParty(person, patientParameters);
+            registerInsuranceInformation(person, responsibleParty, patientParameters);
             registerHomePhone(person, patientParameters);
 
             final Long patientId = (Long) person.getPersonId();
@@ -336,16 +385,48 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
                 {
                     return patientParameters;
                 }
+
+                /**
+                 * Locale specific error message
+                 *
+                 * @return
+                 */
+                public String getErrorMessage()
+                {
+                    return null;
+                }
             };
             if (log.isInfoEnabled())
                 log.info("New PERSON created with id = " + patient.getPatientId());
            return patient;
         }
-        catch (Exception e)
+        catch (final Exception e)
         {
             log.error(e);
+            RegisteredPatient patient = new RegisteredPatient()
+            {
+                public Serializable getPatientId()
+                {
+                    return null;
+                }
+
+                public RegisterPatientParameters getRegisterPatientParameters()
+                {
+                    return patientParameters;
+                }
+
+                /**
+                 * Locale specific error message
+                 *
+                 * @return
+                 */
+                public String getErrorMessage()
+                {
+                    return e.getMessage();
+                }
+            };
+            return patient;
         }
-        return null;
     }
 
     private void registerHomePhone(final Person person, final RegisterPatientParameters params)

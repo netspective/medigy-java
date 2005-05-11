@@ -38,45 +38,48 @@
  */
 package com.medigy.persist.model.insurance;
 
-import com.medigy.persist.model.common.AbstractDateDurationEntity;
+import com.medigy.persist.model.party.PartyRelationship;
+import com.medigy.persist.model.party.PartyRole;
 import com.medigy.persist.model.person.Person;
+import com.medigy.persist.reference.custom.person.PersonRoleType;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratorType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
 
-@Entity
-public class CareProviderSelection extends AbstractDateDurationEntity
+//@Entity
+//@Inheritance(strategy = InheritanceType.JOINED)
+public class CareProviderSelection extends PartyRelationship
 {
-    private Long careProviderSelectionId;
-    private Person individualHealthCarePractitioner;
-
     private Enrollment enrollment;
-    private InsurancePolicyRole insuredIndividualRole;
+    private InsurancePolicy insurancePolicy;
 
-    @Id(generate  = GeneratorType.AUTO)
+    public CareProviderSelection()
+    {
+        
+    }
+
+    @Transient
     public Long getCareProviderSelectionId()
     {
-        return careProviderSelectionId;
+        return getPartyRelationshipId();
     }
 
     public void setCareProviderSelectionId(final Long careProviderSelectionId)
     {
-        this.careProviderSelectionId = careProviderSelectionId;
+       setPartyRelationshipId(careProviderSelectionId);
     }
 
     @ManyToOne
-    @JoinColumn(name = "practitioner_party_id", referencedColumnName = "party_id", nullable = false)        
-    public Person getIndividualHealthCarePractitioner()
+    @JoinColumn(name = "ins_policy_id")
+    public InsurancePolicy getInsurancePolicy()
     {
-        return individualHealthCarePractitioner;
+        return insurancePolicy;
     }
 
-    public void setIndividualHealthCarePractitioner(final Person individualHealthCarePractitioner)
+    public void setInsurancePolicy(InsurancePolicy insurancePolicy)
     {
-        this.individualHealthCarePractitioner = individualHealthCarePractitioner;
+        this.insurancePolicy = insurancePolicy;
     }
 
     @ManyToOne
@@ -91,20 +94,54 @@ public class CareProviderSelection extends AbstractDateDurationEntity
         this.enrollment = enrollment;
     }
 
-    /**
-     * Gets the insured individual logical entity which is actually the role
-     * @return
-     */
-    @ManyToOne
-    @JoinColumn(name = "ins_policy_role_id", nullable = false)
-    public InsurancePolicyRole getInsuredIndividualRole()
+    public int compareTo(Object o)
     {
-        return insuredIndividualRole;
+        if(o == this)
+            return 0;
+
+        final CareProviderSelection otherSelection = (CareProviderSelection) o;
+        return getEffectiveDates().compareTo(otherSelection.getEffectiveDates());
     }
 
-    public void setInsuredIndividualRole(final InsurancePolicyRole insuredIndividualRole)
+    @Transient
+    public void setHealthCarePractitioner(Person physician)
     {
-        this.insuredIndividualRole = insuredIndividualRole;
+        PartyRole role = physician.getPartyRoleByType(PersonRoleType.Cache.INDIVIDUAL_HEALTH_CARE_PRACTITIONER.getEntity());
+        if (role == null)
+        {
+            role = new PartyRole();
+            role.setType(PersonRoleType.Cache.INDIVIDUAL_HEALTH_CARE_PRACTITIONER.getEntity());
+            role.setParty(physician);
+            physician.addPartyRole(role);
+        }
+        setPartyTo(physician);
+        setPartyRoleTo(role);
     }
 
+    @Transient
+    public void setInsuredPerson(Person person)
+    {
+        PartyRole role = person.getPartyRoleByType(PersonRoleType.Cache.PATIENT.getEntity());
+        if (role == null)
+        {
+            role = new PartyRole();
+            role.setType(PersonRoleType.Cache.PATIENT.getEntity());
+            role.setParty(person);
+            person.addPartyRole(role);
+        }
+        setPartyFrom(person);
+        setPartyRoleFrom(role);
+    }
+
+    @Transient
+    public Person getHealthCarePractitioner()
+    {
+        return (Person) getPartyTo();
+    }
+
+    @Transient
+    public Person getInsuredPerson()
+    {
+        return (Person) getPartyFrom();
+    }
 }

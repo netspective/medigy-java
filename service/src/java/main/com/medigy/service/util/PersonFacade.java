@@ -42,7 +42,6 @@ import com.medigy.persist.model.party.PartyRole;
 import com.medigy.persist.model.party.PostalAddress;
 import com.medigy.persist.model.person.Person;
 import com.medigy.persist.reference.custom.person.PersonRoleType;
-import com.medigy.service.Service;
 
 import java.io.Serializable;
 
@@ -50,7 +49,7 @@ import java.io.Serializable;
  * Interface for Person related activities. Implementation classes will be used by the
  * service layer to perform more higher level functions.
  */
-public interface PersonFacade extends Service
+public interface PersonFacade extends Facade
 {
     public Person[] listPersonByLastName(final String lastName, boolean exactMatch);
 

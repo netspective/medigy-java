@@ -36,72 +36,8 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
+package com.medigy.service.util;
 
-package com.medigy.persist.model.party;
-
-import com.medigy.persist.model.common.AbstractTopLevelEntity;
-import com.medigy.persist.reference.type.ContactMechanismType;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratorType;
-import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import java.util.HashSet;
-import java.util.Set;
-
-@Entity
-@Table(name = "Contact_Mech")
-@Inheritance(strategy=InheritanceType.JOINED)        
-public class ContactMechanism extends AbstractTopLevelEntity
+public interface Facade
 {
-    private Long contactMechanismId;
-    protected ContactMechanismType type;
-
-    private Set<PartyContactMechanism> partyContactMechanisms = new HashSet<PartyContactMechanism>();
-
-    public ContactMechanism()
-    {
-    }
-
-    @Id(generate = GeneratorType.AUTO)
-    @Column(name = "contact_mech_id")
-    public Long getContactMechanismId()
-    {
-        return contactMechanismId;
-    }
-
-    protected void setContactMechanismId(final Long contactMechanismId)
-    {
-        this.contactMechanismId = contactMechanismId;
-    }
-
-    @ManyToOne
-    @JoinColumn(name = "contact_mech_type_id", nullable = false)
-    public ContactMechanismType getType()
-    {
-        return type;
-    }
-
-    public void setType(final ContactMechanismType type)
-    {
-        this.type = type;
-    }
-
-    @OneToMany
-    @JoinColumn(name = "contact_mech_id")
-    public Set<PartyContactMechanism> getPartyContactMechanisms()
-    {
-        return partyContactMechanisms;
-    }
-
-    public void setPartyContactMechanisms(final Set<PartyContactMechanism> partyContactMechanisms)
-    {
-        this.partyContactMechanisms = partyContactMechanisms;
-    }
 }

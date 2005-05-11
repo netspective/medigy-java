@@ -39,6 +39,7 @@
 package com.medigy.service.util;
 
 import com.medigy.persist.model.insurance.InsurancePolicy;
+import com.medigy.persist.model.insurance.InsuranceProduct;
 import com.medigy.persist.model.org.Organization;
 import com.medigy.persist.model.person.Person;
 import com.medigy.persist.reference.custom.insurance.InsurancePolicyType;
@@ -93,6 +94,13 @@ public class InsurancePolicyFacadeImpl implements InsurancePolicyFacade
         Criteria criteria = HibernateUtil.getSession().createCriteria(InsurancePolicy.class);
         criteria.createCriteria("agreementRoles").createCriteria("party").add(Expression.eq("partyId", personId));
 
+        return criteria.list();
+    }
+
+    public List listInsuranceProducts(final Organization org)
+    {
+        Criteria criteria = HibernateUtil.getSession().createCriteria(InsuranceProduct.class);
+        criteria.createCriteria("organization").add(Restrictions.eq("partyId", org.getPartyId()));
         return criteria.list();
     }
 
