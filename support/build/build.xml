@@ -20,7 +20,7 @@
         <xslt basedir="${basedir}"
             destdir="${consolidated.artifacts.home}"
             style="xalan-environment-check.xsl"
-            force="yes" processor="trax" extension="xml">
+            force="yes" processor="trax" extension=".xml">
             <factory name="org.apache.xalan.processor.TransformerFactoryImpl"/>
             <include name="build.xml"/>
         </xslt>
