@@ -43,93 +43,64 @@
  */
 package org.sns.tool.hibernate.struct;
 
-import java.text.Collator;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import org.hibernate.mapping.Column;
+import org.hibernate.mapping.ForeignKey;
 
-import org.hibernate.mapping.PersistentClass;
-import org.hibernate.mapping.Table;
-
-public class LinkToOtherTableStructureNode implements TableStructureNode, Comparable
+public interface ColumnDetail
 {
-    private final TableStructureNode parentNode;
-    private final TableStructureNode linkedNode;
-    private final int level;
-    private final List ancestorNodes = new ArrayList();
+    /**
+     * Obtain the instance of the table structure node that contains this column detail instance.
+     */
+    public TableStructureNode getTableStructureNode();
 
-    public LinkToOtherTableStructureNode(final TableStructureNode linkedNode, final TableStructureNode parentNode, final int level)
-    {
-        this.linkedNode = linkedNode;
-        this.parentNode = parentNode;
-        this.level = level;
+    /**
+     * Obtain the column that this detail instance is describing
+     */
+    public Column getColumn();
 
-        TableStructureNode activeParentNode = parentNode;
-        while(activeParentNode != null)
-        {
-            if(ancestorNodes.size() == 0)
-                ancestorNodes.add(activeParentNode);
-            else
-                ancestorNodes.add(0, activeParentNode);
+    /**
+     * Ascertain whether or not this column should be treated as a primary key.
+     * @return true if the column described in this detail instance is the only primary key or just part of one
+     */
+    public boolean isPrimaryKey();
 
-            activeParentNode = activeParentNode.getParentNode();
-        }
-    }
+    /**
+     * Ascertain whether or not this column should be treated as a primary key.
+     * @return true if the column described in this detail instance is only part of a primary key (composite pk) or false if there's only one column in the PK
+     */
+    public boolean isPartOfPrimaryKey();
 
-    public int compareTo(Object o)
-    {
-        final TableStructureNode other = (TableStructureNode) o;
-        return Collator.getInstance().compare(this.getTable().getName().toUpperCase(), other.getTable().getName().toUpperCase());
+    /**
+     * Ascertain whether or not the column described is part of a foriegn key or the only column in a foreign key.
+     * @return true if the column described in this detail instance is the only column in the foreign key or just part of one.
+     */
+    public boolean isForeignKey();
 
-    }
+    /**
+     * Ascertain whether or not the column described is part of a foriegn key (but not the only column in a foreign key).
+     * @return true if the column described in this detail instance is just part of a foreign key.
+     */
+    public boolean isPartOfForeignKey();
 
-    public TableStructure getOwner()
-    {
-        return linkedNode.getOwner();
-    }
+    /**
+     * Obtain the foreign key instance that this column detail reference is a part of
+     * @return
+     */
+    public ForeignKey getForeignKey();
 
-    public int getLevel()
-    {
-        return level;
-    }
+    /**
+     * Ascertain whether or not the column described is part of a foriegn key that points to its parent (from a collection point of view).
+     */
+    public boolean isChildKeyOfParent();
 
-    public Table getTable()
-    {
-        return linkedNode.getTable();
-    }
+    /**
+     * Ascertain whether or not the column is nullable (NOT NULL would mean required).
+     */
+    public boolean isRequired();
 
-    public PersistentClass getPersistentClass()
-    {
-        return linkedNode.getPersistentClass();
-    }
-
-    public TableStructureNode getParentNode()
-    {
-        return parentNode;
-    }
-
-    public Set getChildNodes()
-    {
-        return linkedNode.getChildNodes();
-    }
-
-    public List getAncestorNodes()
-    {
-        return ancestorNodes;
-    }
-
-    public boolean hasChildren()
-    {
-        return getChildNodes().size() > 0;
-    }
-
-    public boolean isLinkedNode()
-    {
-        return true;
-    }
-
-    public TableStructureNode getLinkedNode()
-    {
-        return linkedNode;
-    }
+    /**
+     * Ascertain the category of columns to which this column belongs.
+     * @return Always a non-null value indicating a column category.
+     */
+    public ColumnCategory getColumnCategory();
 }

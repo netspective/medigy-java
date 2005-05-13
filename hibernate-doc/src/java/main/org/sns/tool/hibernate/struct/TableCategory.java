@@ -45,5 +45,6 @@ package org.sns.tool.hibernate.struct;
 
 public interface TableCategory
 {
-    public String getCategoryName();
+    public String getTableCategoryId();
+    public String getTableCategoryLabel();
 }

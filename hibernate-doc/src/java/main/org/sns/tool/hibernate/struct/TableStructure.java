@@ -69,6 +69,11 @@ public interface TableStructure
     public Set getTopLevelTableNodes();
 
     /**
+     * Obtain the table structure node for a particular table.
+     */
+    public TableStructureNode getNodeForTable(final Table table);
+
+    /**
      * Using the rules provided in TableStructureRules, categorize the tableNode to put it into its appropriate
      * buckets.
      */
@@ -81,10 +86,10 @@ public interface TableStructure
     public Map getTableCategories();
 
     /**
-     * Retrieve the table category named name.
-     * @return Null if no table category named "name" exists, TableCategory instance otherwise
+     * Retrieve the table category with the given id.
+     * @return Null if no table category with id "id" exists, TableCategory instance otherwise
      */
-    public TableCategory getTableCategory(final String name);
+    public TableCategory getTableCategory(final String id);
 
     /**
      * Create a new node or link to an existing one.

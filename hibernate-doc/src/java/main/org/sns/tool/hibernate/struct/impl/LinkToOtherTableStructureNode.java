@@ -41,58 +41,35 @@
 /*
  * Copyright (c) 2005 Your Corporation. All Rights Reserved.
  */
-package org.sns.tool.hibernate.struct;
+package org.sns.tool.hibernate.struct.impl;
 
 import java.text.Collator;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.TreeSet;
 
-import org.hibernate.mapping.ForeignKey;
 import org.hibernate.mapping.PersistentClass;
 import org.hibernate.mapping.Table;
+import org.sns.tool.hibernate.struct.ColumnCategory;
+import org.sns.tool.hibernate.struct.ColumnDetail;
+import org.sns.tool.hibernate.struct.TableCategory;
+import org.sns.tool.hibernate.struct.TableStructure;
+import org.sns.tool.hibernate.struct.TableStructureNode;
 
-public class DefaultTableStructureNode implements TableStructureNode, Comparable
+public class LinkToOtherTableStructureNode implements TableStructureNode, Comparable
 {
-    private final TableStructure owner;
     private final TableStructureNode parentNode;
-    private final Table nodeForTable;
-    private final PersistentClass mappedClass;
+    private final TableStructureNode linkedNode;
     private final int level;
-    private final Set childNodes = new TreeSet();
-    private final List ancestorNodes = new ArrayList();
+    private final TableStructureNode[] ancestorNodes;
 
-    public DefaultTableStructureNode(final PersistentClass mappedClass, final Table nodeForTable, final TableStructure owner, final TableStructureNode parent, final int level)
+    public LinkToOtherTableStructureNode(final TableStructureNode linkedNode, final TableStructureNode parentNode, final int level)
     {
-        this.mappedClass = mappedClass;
-        this.nodeForTable = nodeForTable;
-        this.owner = owner;
-        this.parentNode = parent;
+        this.linkedNode = linkedNode;
+        this.parentNode = parentNode;
         this.level = level;
-    }
 
-    protected void resolveChildrenAndAncestors()
-    {
-        for (final Iterator classes = owner.getConfiguration().getClassMappings(); classes.hasNext(); )
-        {
-            final PersistentClass pclass = (PersistentClass) classes.next();
-            final Table table = (Table) pclass.getTable();
-
-            for (final Iterator fKeys = table.getForeignKeyIterator(); fKeys.hasNext();)
-            {
-                final ForeignKey foreignKey = (ForeignKey) fKeys.next();
-                if(owner.getRules().isParentRelationship(owner, foreignKey, nodeForTable))
-                {
-
-                    final TableStructureNode childNode = owner.createNode(pclass, table, this, level + 1);
-                    childNodes.add(childNode);
-                    owner.categorize(childNode);
-                }
-            }
-        }
-
+        final List ancestorNodes = new ArrayList();
         TableStructureNode activeParentNode = parentNode;
         while(activeParentNode != null)
         {
@@ -103,17 +80,20 @@ public class DefaultTableStructureNode implements TableStructureNode, Comparable
 
             activeParentNode = activeParentNode.getParentNode();
         }
+
+        this.ancestorNodes = (TableStructureNode[]) ancestorNodes.toArray(new TableStructureNode[ancestorNodes.size()]);
     }
 
     public int compareTo(Object o)
     {
         final TableStructureNode other = (TableStructureNode) o;
-        return Collator.getInstance().compare(nodeForTable.getName().toUpperCase(), other.getTable().getName().toUpperCase());
+        return Collator.getInstance().compare(this.getTable().getName().toUpperCase(), other.getTable().getName().toUpperCase());
+
     }
 
     public TableStructure getOwner()
     {
-        return owner;
+        return linkedNode.getOwner();
     }
 
     public int getLevel()
@@ -123,12 +103,12 @@ public class DefaultTableStructureNode implements TableStructureNode, Comparable
 
     public Table getTable()
     {
-        return nodeForTable;
+        return linkedNode.getTable();
     }
 
     public PersistentClass getPersistentClass()
     {
-        return mappedClass;
+        return linkedNode.getPersistentClass();
     }
 
     public TableStructureNode getParentNode()
@@ -138,26 +118,51 @@ public class DefaultTableStructureNode implements TableStructureNode, Comparable
 
     public Set getChildNodes()
     {
-        return childNodes;
+        return linkedNode.getChildNodes();
     }
 
-    public List getAncestorNodes()
+    public TableStructureNode[] getAncestorNodes()
     {
         return ancestorNodes;
     }
 
     public boolean hasChildren()
     {
-        return childNodes.size() > 0;
-    }
-
-    public TableStructureNode getLinkedNode()
-    {
-        return null;
+        return getChildNodes().size() > 0;
     }
 
     public boolean isLinkedNode()
     {
-        return false;
+        return true;
+    }
+
+    public TableStructureNode getLinkedNode()
+    {
+        return linkedNode;
+    }
+
+    public ColumnDetail[] getAllColumns()
+    {
+        return linkedNode.getAllColumns();
+    }
+
+    public ColumnDetail[] getColumnsInCategory(final ColumnCategory columnCategory)
+    {
+        return linkedNode.getColumnsInCategory(columnCategory);
+    }
+
+    public TableStructureNode[] getDependencies()
+    {
+        return linkedNode.getDependencies();
+    }
+
+    public ColumnCategory getColumnCategory(final String id)
+    {
+        return linkedNode.getColumnCategory(id);
+    }
+
+    public TableCategory[] getTableCategories()
+    {
+        return linkedNode.getTableCategories();
     }
 }

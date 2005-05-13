@@ -118,6 +118,12 @@ public class DefaultTableStructureNode implements TableStructureNode, Comparable
                 }
             }
         }
+
+        for(final Iterator i = childNodes.iterator(); i.hasNext(); )
+        {
+            final DefaultTableStructureNode childNode = (DefaultTableStructureNode) i.next();
+            childNode.createChildNodes();
+        }
     }
 
     protected void resolveDependencies()

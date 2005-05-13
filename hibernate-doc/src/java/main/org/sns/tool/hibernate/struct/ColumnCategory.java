@@ -43,51 +43,8 @@
  */
 package org.sns.tool.hibernate.struct;
 
-import org.hibernate.mapping.ForeignKey;
-import org.hibernate.mapping.Table;
-
-public interface TableStructureRules
+public interface ColumnCategory
 {
-    /**
-     * Return true if the referenced table in the foreign key is a "parent" of the referencee.
-     * @param foreignKey The hibernate foreign key mapping
-     * @return true if the provided fkey is a parent relationship, false otherwise
-     */
-    public boolean isParentRelationship(final TableStructure structure, final ForeignKey foreignKey);
-
-    /**
-     * Return true if the referenced table in the foreign key is a "parent" of the provided table.
-     * @param foreignKey The hibernate foreign key mapping
-     * @return true if the provided fkey has a parent relationship to given table, false otherwise
-     */
-    public boolean isParentRelationship(final TableStructure structure, final ForeignKey foreignKey, final Table table);
-
-    /**
-     * Ascertain whether the given table node belongs in a special category (like "reference" or "application").
-     * @param tableNode The table in question
-     * @return The categories to which the table belongs (NULLs are not allowed)
-     */
-    public TableCategory[] getTableCategories(final TableStructureNode tableNode);
-
-    /**
-     * Ascertain whether the given column node belongs in a special category (like "common" or "child-key").
-     * @param columnDetail The column in question
-     * @return The category to which the column belongs (NULLs are not allowed)
-     */
-    public ColumnCategory getColumnCategory(final ColumnDetail columnDetail);
-
-    /**
-     * Whenever the column categories will be used for grouping columns and the columns are used for presentation or
-     * other list, this will be the sort order used.
-     */
-    public ColumnCategory[] getColumnCategoriesSortOrder();
-
-    /**
-     * Given a column of a table, translate the data type if the default data type is not acceptable.
-     * @param defaultDataType The datatype that was figured out from the dialect
-     * @param columnDetail The table the column belongs to
-     * @return
-     */
-    public String getTranslatedDataType(final String defaultDataType, final ColumnDetail columnDetail);
-
+    public String getColumnCategoryId();
+    public String getColumnCategoryLabel();
 }

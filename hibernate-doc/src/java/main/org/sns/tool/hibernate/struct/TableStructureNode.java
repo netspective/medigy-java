@@ -1,6 +1,5 @@
 package org.sns.tool.hibernate.struct;
 
-import java.util.List;
 import java.util.Set;
 
 import org.hibernate.mapping.PersistentClass;
@@ -39,9 +38,25 @@ public interface TableStructureNode
     public Set getChildNodes();
 
     /**
+     * Get the list of all the columns in this table.
+     */
+    public ColumnDetail[] getAllColumns();
+
+    /**
+     * Get the list of only those columns that belong in a particular category.
+     */
+    public ColumnDetail[] getColumnsInCategory(final ColumnCategory columnCategory);
+
+    /**
+     * Retrieve the column category named id.
+     * @return Null if no table category named "id" exists, ColumnCategory instance otherwise.
+     */
+    public ColumnCategory getColumnCategory(final String id);
+
+    /**
      * Get all the ancestors for this node -- each item in the set is a TableStructureNode
      */
-    public List getAncestorNodes();
+    public TableStructureNode[] getAncestorNodes();
 
     /**
      * Returns true if this node has any children.
@@ -59,4 +74,16 @@ public interface TableStructureNode
      * @return null if this is not a link, TableStructureNode instance if it's a reference to another node
      */
     public TableStructureNode getLinkedNode();
+
+    /**
+     * Ascertain whether the given table node belongs in a special category (like "reference" or "application").
+     * @return Always a non-null and non-zero length array of categories to which the table belongs
+     */
+    public TableCategory[] getTableCategories();
+
+    /**
+     * Obtain the list of table nodes that reference this instance.
+     * @return The list of nodes that have foreign keys that refer to this table.
+     */
+    public TableStructureNode[] getDependencies();
 }
