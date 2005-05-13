@@ -1,0 +1,99 @@
+/* things look wierd w/o setting font to Times; we set the font size 
+   as well, this is what the new browsers will all imply */
+
+body, div, .navheader, .navfooter, td, th 
+{
+  font-family: Georgia, Verdana, Arial, Helvetica, sans-serif;
+  font-size: 14px;
+}
+
+/* evil to force size smaller but it does look better */
+.literal, .token, .database 
+{
+  font-family: "Lucida Console", "Courier", monospace; 
+}
+
+.guiicon, .guibutton, .guilabel, .interface 
+{
+  font-weight: bold;
+}
+
+.chapter h1 
+{ 
+  font-family: Trebuchet MS, Arial, Helvetica, sans-serif;
+  font-size: 34px;
+}
+
+/* we need the a specifier so this wins out over the chapter h1 */
+h1.section a 
+{ 
+  font-family: Trebuchet MS, Arial, Helvetica, sans-serif;
+  font-size: 24px;
+}
+
+.navheader td, .navfooter td 
+{
+  font-family: Trebuchet MS, Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+/* tweak tables */
+.calstable tr th 
+{
+  background-color: black;
+  color: white;
+}
+
+pre.programlisting 
+{ 
+    font-family: "Lucida Typewriter", "Lucida Console", "Courier", monospace; 
+    background: #F0F0F0; 
+    border: 1px solid gray; 
+    padding: 2px; 
+    font-size: 10pt;
+    white-space: pre;
+}
+
+div.section
+{
+    margin-left: 25px;
+}
+
+div.section h2, div.section h3, div.section h4, div.section h5, div.section h6, div.section h7
+{
+ 	margin-left: -25px;
+}
+
+/** Table Columns Documentation tables **/
+
+div.table_columns table
+{
+    border: 1px solid silver; 
+}
+
+div.table_columns tr.primary-key
+{
+    background-color: orange;
+}
+
+
+div.table_columns table th
+{
+    border: 0;
+    background-color: beige;
+    border-spacing: 0px;
+}
+
+div.table_columns table td
+{
+    border-top: 1px dotted silver; border-left: 0; border-right: 0; border-bottom: 0;
+    margin: 0; padding-left: 5px; padding-right: 5px;
+    border-spacing: 0px;
+}
+
+span.chapter a 
+{
+    font-size: 14pt; font-weight: bold;
+}
+

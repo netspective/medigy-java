@@ -60,6 +60,8 @@
         <property name="module.jar.name" value="${module.name}.jar"/>
         <property name="module.artifacts.jar" value="${module.artifacts.home}/${module.jar.name}"/>
 
+        <property name="module.support.home" value="${module.home}/support"/>
+
         <echo message="repository.home is ${repository.home}"/>
         <echo message="module.home is ${module.home}"/>
         <echo message="module.build.properties is ${module.build.properties}"/>

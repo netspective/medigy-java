@@ -94,19 +94,35 @@
               hibernateConfigFile="/com/medigy/persist/hibernate.cfg.xml"
               structureClass="org.sns.tool.hibernate.struct.DefaultTableStructure"
               structureRulesClass="com.medigy.tool.persist.hibernate.HibernateStructureRules"
+              documentTitle="Medigy Data Model"
             />
     </target>
 
     <target name="doc.generate-dbdd-html" depends="doc.generate-dbdd-source">
         <fail message="To generate DocBook, you need DocBook XSL package from http://docbook.sourceforge.net/projects/xsl/ and then set the doc.docbook-xsl.home property." unless="doc.docbook-xsl.home"/>
+        <property name="module.support.dbdd-docbook-xsl.home" value="${module.support.home}/dbdd-docbook-xsl"/>
         <echo message="Creating chunked HTML output in ${persistence.artifacts.doc.db.dbdd.home}"/>
+
+        <mkdir dir="${persistence.artifacts.doc.db.dbdd.home}/resources"/>
+        <copy todir="${persistence.artifacts.doc.db.dbdd.home}/resources">
+            <fileset dir="${module.support.dbdd-docbook-xsl.home}/resources"/>
+        </copy>
+        <copy todir="${persistence.artifacts.doc.db.dbdd.home}/resources">
+            <fileset dir="${doc.docbook-xsl.home}/images"/>
+        </copy>
+
         <xslt basedir="${persistence.artifacts.doc.db.dbdd.home}"
             destdir="${persistence.artifacts.doc.db.dbdd.home}"
-            style="${doc.docbook-xsl.home}/html/docbook.xsl"
+            style="${module.support.dbdd-docbook-xsl.home}/stylesheets/chunk.xsl"
             force="yes" processor="trax" classpathref="module.dependencies.main.classpath">
+            <param name="param.docbook.home" expression="${doc.docbook-xsl.home}"/>
             <include name="*.xml"/>
             <classpath location="${module.artifacts.classes.main.home}"/>
-            <factory name="org.apache.xalan.processor.TransformerFactoryImpl"/> <!-- for some reason, built-in Xalan won't work so we use the latest and force JDK to use it --> 
+            <factory name="org.apache.xalan.processor.TransformerFactoryImpl"/> <!-- for some reason, built-in Xalan won't work so we use the latest and force JDK to use it -->
+            <xmlcatalog>
+                <entity publicId="doc.docbook-xsl.home/html/docbook.xsl" location="${doc.docbook-xsl.home}/html/docbook.xsl"/>
+                <entity publicId="doc.docbook-xsl.home/html/chunk.xsl" location="${doc.docbook-xsl.home}/html/chunk.xsl"/>
+            </xmlcatalog>
         </xslt>
     </target>
 
