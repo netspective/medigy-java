@@ -177,7 +177,7 @@ public class DatabaseDesignGenerator
 
         final Element requiredElem = (Element) result.appendChild(doc.createElement("entry"));
         requiredElem.setAttribute("role", isRequired ? "column-not-nullable" : "column-nullable");
-        if (isPrimaryKey)
+        if (isRequired)
             requiredElem.appendChild(createImageElement(doc, "value-required.gif"));
 
         final Element formulaElem = (Element) result.appendChild(doc.createElement("entry"));
