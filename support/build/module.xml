@@ -61,6 +61,7 @@
         <property name="module.artifacts.jar" value="${module.artifacts.home}/${module.jar.name}"/>
 
         <property name="module.support.home" value="${module.home}/support"/>
+        <property name="module.javadoc.stylesheet.file" value="${repository.home}/support/build/javadoc-resources/stylesheet.css"/>
 
         <echo message="repository.home is ${repository.home}"/>
         <echo message="module.home is ${module.home}"/>
@@ -299,7 +300,8 @@
             use="true"
             windowtitle="Medigy Platform Documentation"
             doctitle="Medigy Platform Documentation"
-            bottom="Copyright &#169; 2005 Netspective. All Rights Reserved.">
+            bottom="Copyright &#169; 2005 Netspective. All Rights Reserved."
+            stylesheetfile="module.javadoc.stylesheet.file">
         </javadoc>
     </target>
 
@@ -318,6 +320,7 @@
             doctitle="Medigy Platform Documentation"
             bottom="Copyright &#169; 2005 Netspective. All Rights Reserved."
             docletpathref="module.dependencies.build.classpath"
+            stylesheetfile="module.javadoc.stylesheet.file"
             additionalparam="-J-Djava.awt.headless=true">
             <doclet
                 name="ydoc.doclets.YStandard"

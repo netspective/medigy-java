@@ -17,6 +17,8 @@
         <property name="consolidated.artifacts.test.junit.home" value="${consolidated.artifacts.home}/consolidated/reports/junit"/>
         <property name="consolidated.artifacts.test.coverage.home" value="${consolidated.artifacts.home}/consolidated/reports/coverage"/>
 
+        <property name="consolidated.javadoc.stylesheet.file" value="${repository.home}/support/build/javadoc-resources/stylesheet.css"/>
+
         <xslt basedir="${basedir}"
             destdir="${consolidated.artifacts.home}"
             style="xalan-environment-check.xsl"
@@ -118,14 +120,15 @@
         <property name="artifacts.javadoc.home" value="${consolidated.artifacts.doc.home}/javadoc"/>
         <delete dir="${artifacts.javadoc.home}"/>
         <mkdir dir="${artifacts.javadoc.home}"/>
-        <javadoc packagenames="com.medigy.*"
+        <javadoc packagenames="com.medigy.*,org.sns.*"
             destdir="${artifacts.javadoc.home}"
             author="true"
             version="true"
             use="true"
             windowtitle="Medigy Platform Documentation"
             doctitle="Medigy Platform Documentation"
-            bottom="Copyright &#169; 2005 Netspective. All Rights Reserved.">
+            bottom="Copyright &#169; 2005 Netspective. All Rights Reserved."
+            stylesheetfile="${consolidated.javadoc.stylesheet.file}">
 
             <sourcepath>
                 <dirset dir="${repository.home}" >
@@ -169,7 +172,8 @@
             doctitle="Medigy Platform Documentation"
             bottom="Copyright &#169; 2005 Netspective. All Rights Reserved."
             docletpathref="doc.javadoc.ydoc.doclet.path"
-            additionalparam="-J-Djava.awt.headless=true">
+            additionalparam="-J-Djava.awt.headless=true"
+            stylesheetfile="${consolidated.javadoc.stylesheet.file}" >
 
             <sourcepath>
                 <dirset dir="${repository.home}" >
