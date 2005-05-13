@@ -40,22 +40,30 @@ package com.medigy.persist.model.insurance;
 
 import com.medigy.persist.model.product.Product;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Insurance Products, which are a broad classification of insurance plans offered by an insurance organization.
+ */
 @Entity
-@Inheritance(discriminatorValue = "Insurance")        
+@Inheritance(discriminatorValue = "Insurance")
 public class InsuranceProduct extends Product
 {
     private Set<InsurancePlan> insurancePlans = new HashSet<InsurancePlan>();
 
-    @OneToMany
-    @JoinColumn(name = "ins_plan_id")
+    /**
+     * Gets all the insurance plans for this insurance product. The different Insurance Plans that are part of the same
+     * Insurance Product can have differing specifications but will all conform to the broad guidelines laid down by
+     * the Insurance Product.
+     * @return   a set of insurance plans
+     */
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "insuranceProduct")
     public Set<InsurancePlan> getInsurancePlans()
     {
         return insurancePlans;
@@ -67,7 +75,7 @@ public class InsuranceProduct extends Product
     }
 
     @Transient
-    public void addInsurancePolicy(final InsurancePlan policy)
+    public void addInsurancePlan(final InsurancePlan policy)
     {
         getInsurancePlans().add(policy);
     }

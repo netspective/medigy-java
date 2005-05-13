@@ -50,12 +50,14 @@ import com.medigy.persist.model.party.Party;
 import com.medigy.persist.model.party.PartyIdentifier;
 import com.medigy.persist.model.party.PartyRelationship;
 import com.medigy.persist.model.party.PartyRole;
+import com.medigy.persist.model.insurance.InsurancePolicyRole;
 import com.medigy.persist.reference.custom.party.PartyIdentifierType;
 import com.medigy.persist.reference.custom.party.PartyRelationshipType;
 import com.medigy.persist.reference.custom.person.EthnicityType;
 import com.medigy.persist.reference.custom.person.PersonIdentifierType;
 import com.medigy.persist.reference.custom.person.PersonRoleType;
 import com.medigy.persist.reference.custom.person.PhysicalCharacteristicType;
+import com.medigy.persist.reference.custom.insurance.InsurancePolicyRoleType;
 import com.medigy.persist.reference.type.GenderType;
 import com.medigy.persist.reference.type.LanguageType;
 import com.medigy.persist.reference.type.MaritalStatusType;
@@ -107,11 +109,19 @@ public class Person extends Party
     private Set<HealthCareEpisode> healthCareEpisodes = new HashSet<HealthCareEpisode>();
     private Set<Language> languages = new HashSet<Language>();
     private Set<HealthCareLicense> licenses = new HashSet<HealthCareLicense>();
+    private Set<InsurancePolicyRole> insurancePolicyRoles = new HashSet<InsurancePolicyRole>();
 
     public Person()
     {
         super();
         this.partyType = PartyType.Cache.PERSON.getEntity();
+    }
+
+    public Person(final String lastName, final String firstName)
+    {
+        this();
+        setLastName(lastName);
+        setFirstName(firstName);
     }
 
     @Transient
@@ -640,17 +650,35 @@ public class Person extends Party
         return null;
     }
 
-    /*
-    @OneToMany
-    @JoinColumn(name = "party_id")        
-    public Set<CareProviderSelection> getCareProviderSelections()
+    /**
+     * Gets all the insurance policy roles associated with this person
+     * @return a set of insurance policy roles
+     */
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "person")
+    public Set<InsurancePolicyRole> getInsurancePolicyRoles()
     {
-        return careProviderSelections;
+        return insurancePolicyRoles;
     }
 
-    public void setCareProviderSelections(final Set<CareProviderSelection> careProviderSelections)
+    public void setInsurancePolicyRoles(final Set<InsurancePolicyRole> insurancePolicyRoles)
     {
-        this.careProviderSelections = careProviderSelections;
+        this.insurancePolicyRoles = insurancePolicyRoles;
     }
-*/
+
+    @Transient
+    public void addInsurancePolicyRole(final InsurancePolicyRole role)
+    {
+        insurancePolicyRoles.add(role);
+    }
+
+    @Transient
+    public InsurancePolicyRole getInsurancePolicyRole(final InsurancePolicyRoleType type)
+    {
+        for (InsurancePolicyRole role : insurancePolicyRoles)
+        {
+            if (role.getType().equals(type))
+                return role;
+        }
+        return null;
+    }
 }

@@ -39,22 +39,25 @@
 package com.medigy.service.util;
 
 import com.medigy.persist.model.insurance.InsurancePolicy;
+import com.medigy.persist.model.insurance.InsurancePlan;
+import com.medigy.persist.model.insurance.InsuranceProduct;
 import com.medigy.persist.model.org.Organization;
 import com.medigy.persist.model.person.Person;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Date;
 
 public interface InsurancePolicyFacade extends Facade
 {
-    public InsurancePolicy createIndividualInsurancePolicy(final String policyNumber,
-                                      final Organization policyProvider,
-                                      final Person policyHolder,
-                                      final Person[] insuredDependents);
 
-    public InsurancePolicy getIndividualInsurancePolicy(final String policyNumber);
 
-    public List listInsurancePoliciesByProvider(final Organization org);
+    public InsurancePolicy createInsurancePolicy(final Person  insuredPerson, final InsurancePlan plan,
+                                                 final String policyNumber, final String groupNumber,
+                                                 final Date startDate,
+                                                 boolean isPolicyHolder);
+
+    public List listInsurancePlans(final InsuranceProduct product);
 
     /**
      * Lists all insurance policies associated with the person.This person can be

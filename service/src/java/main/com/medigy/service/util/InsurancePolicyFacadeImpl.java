@@ -38,11 +38,13 @@
  */
 package com.medigy.service.util;
 
+import com.medigy.persist.model.insurance.InsurancePlan;
 import com.medigy.persist.model.insurance.InsurancePolicy;
+import com.medigy.persist.model.insurance.InsurancePolicyRole;
 import com.medigy.persist.model.insurance.InsuranceProduct;
 import com.medigy.persist.model.org.Organization;
 import com.medigy.persist.model.person.Person;
-import com.medigy.persist.reference.custom.insurance.InsurancePolicyType;
+import com.medigy.persist.reference.custom.insurance.InsurancePolicyRoleType;
 import com.medigy.persist.util.HibernateUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -51,49 +53,59 @@ import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.Restrictions;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 public class InsurancePolicyFacadeImpl implements InsurancePolicyFacade
 {
     private static Log log = LogFactory.getLog(InsurancePolicyFacadeImpl.class);
 
-    public InsurancePolicy createIndividualInsurancePolicy(final String policyNumber,
-                                      final Organization policyProvider,
-                                      final Person policyHolder,
-                                      final Person[] insuredDependents)
+    public InsurancePolicy createInsurancePolicy(final Person insuredPerson, final InsurancePlan plan,
+                                                 final String policyNumber, final String groupNumber,
+                                                 final Date startDate, boolean isPolicyHolder)
     {
-        final InsurancePolicy policy = new InsurancePolicy();
-        policy.setType(InsurancePolicyType.Cache.INDIVIDUAL_INSURANCE_POLICY.getEntity());
+        InsurancePolicyRoleType roleType = null;
+        if (isPolicyHolder)
+            roleType = InsurancePolicyRoleType.Cache.INSURED_CONTRACT_HOLDER.getEntity();
+        else
+            roleType = InsurancePolicyRoleType.Cache.INSURED_DEPENDENT.getEntity();
+        // check to see if the person has that role already
+        boolean newRole = false;
+        InsurancePolicyRole role = insuredPerson.getInsurancePolicyRole(roleType);
+        if (role == null)
+        {
+            role = new InsurancePolicyRole();
+            role.setType(roleType);
+            role.setPerson(insuredPerson);
+            insuredPerson.addInsurancePolicyRole(role);
+            newRole = true;
+        }
+        // create the new policy
+        InsurancePolicy policy = new InsurancePolicy();
         policy.setPolicyNumber(policyNumber);
-        policy.setInsuranceProvider(policyProvider);
-        policy.setPolicyHolder(policyHolder);
-        for (Person dep : insuredDependents)
-            policy.addInsuredDependent(dep);
-        HibernateUtil.getSession().save(policy);
+        policy.setGroupNumber(groupNumber);
+        policy.setInsurancePolicyRole(role);
+        policy.setInsurancePlan(plan);
+        policy.setFromDate(startDate);
+        role.addInsurancePolicy(policy);
+
+        if (newRole)
+            HibernateUtil.getSession().save(role);
+        HibernateUtil.getSession().flush();
         return policy;
     }
 
-    public InsurancePolicy getIndividualInsurancePolicy(final String policyNumber)
+    public List listInsurancePlans(final InsuranceProduct product)
     {
-        Criteria criteria = HibernateUtil.getSession().createCriteria(InsurancePolicy.class);
-        criteria.add(Restrictions.eq("policyNumber", policyNumber));
-        criteria.createCriteria("type").add(Expression.eq("code", InsurancePolicyType.Cache.INDIVIDUAL_INSURANCE_POLICY.getCode()));
-
-        log.info(criteria.list().size());
-        return (InsurancePolicy) criteria.uniqueResult();
-    }
-
-    public List listInsurancePoliciesByProvider(final Organization org)
-    {
-        Criteria criteria = HibernateUtil.getSession().createCriteria(InsurancePolicy.class);
-        return null;
+        Criteria criteria = HibernateUtil.getSession().createCriteria(InsurancePlan.class);
+        criteria.createCriteria("insuranceProduct").add(Restrictions.eq("productId", product.getProductId()));
+        return criteria.list();
     }
 
     public List listInsurancePolicies(final Serializable personId)
     {
         Criteria criteria = HibernateUtil.getSession().createCriteria(InsurancePolicy.class);
-        criteria.createCriteria("agreementRoles").createCriteria("party").add(Expression.eq("partyId", personId));
-
+        criteria.createCriteria("insurancePolicyRole").createCriteria("person").add(Expression.eq("partyId", personId));
         return criteria.list();
     }
 

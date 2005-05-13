@@ -38,8 +38,8 @@
  */
 package com.medigy.persist.model.product;
 
-import java.util.HashSet;
-import java.util.Set;
+import com.medigy.persist.model.common.AbstractTopLevelEntity;
+import com.medigy.persist.model.org.Organization;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -49,8 +49,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-
-import com.medigy.persist.model.common.AbstractTopLevelEntity;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Categories are groupings of insurance products. For example,
@@ -65,6 +65,7 @@ public class ProductCategory extends AbstractTopLevelEntity
     private String description;
     private ProductCategory parentCategory;
     private Set<Product> products = new HashSet<Product>();
+    private Organization organization;
 
     @Id(generate = GeneratorType.AUTO)
     @Column(name = "product_category_id")
@@ -111,5 +112,17 @@ public class ProductCategory extends AbstractTopLevelEntity
     public void setProducts(final Set<Product> products)
     {
         this.products = products;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "party_id")
+    public Organization getOrganization()
+    {
+        return organization;
+    }
+
+    public void setOrganization(final Organization organization)
+    {
+        this.organization = organization;
     }
 }

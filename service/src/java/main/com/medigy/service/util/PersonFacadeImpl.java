@@ -50,6 +50,7 @@ import com.medigy.persist.util.HibernateUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
+import org.hibernate.HibernateException;
 import org.hibernate.criterion.Expression;
 
 import java.io.Serializable;
@@ -116,8 +117,7 @@ public class PersonFacadeImpl implements PersonFacade
     }
 
     /**
-     * Creates new person (party) role and adds it to the person. If the person record already exists then
-     * this will go ahead and create the role in the database.
+     * Creates new person (party) role and adds it to the person.
      *
      * @param person    already existing Person
      * @param type
@@ -125,17 +125,13 @@ public class PersonFacadeImpl implements PersonFacade
      */
     public PartyRole addPersonRole(final Person person, final PersonRoleType type)
     {
+        if (!HibernateUtil.getSession().contains(person))
+            throw new HibernateException("Party role cannot be added to a PERSON which is not in current session.");
         final PartyRole respPartyRole = new PartyRole();
         respPartyRole.setType(type);
         respPartyRole.setParty(person);
         person.addPartyRole(respPartyRole);
-
-        // if the person record already exists then go ahead and create the role in the database
-        // but if the person record doesn't exist yet, don't write to the database yet and
-        // let the cascade events of the person adding handle it
-        if (person.getPartyId() != null)
-            HibernateUtil.getSession().save(respPartyRole);
-
+        HibernateUtil.getSession().flush();
         return respPartyRole;
     }
 

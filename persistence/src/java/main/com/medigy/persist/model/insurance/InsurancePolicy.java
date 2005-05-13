@@ -40,68 +40,109 @@ package com.medigy.persist.model.insurance;
 
 import com.medigy.persist.model.common.AbstractDateDurationEntity;
 import com.medigy.persist.model.org.Organization;
-import com.medigy.persist.model.party.Agreement;
-import com.medigy.persist.model.party.AgreementItem;
-import com.medigy.persist.model.party.AgreementRole;
-import com.medigy.persist.model.party.Party;
-import com.medigy.persist.model.person.Person;
-import com.medigy.persist.reference.custom.insurance.InsurancePolicyRoleType;
 import com.medigy.persist.reference.custom.insurance.InsurancePolicyType;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import java.util.HashSet;
+import javax.persistence.OneToMany;
+import javax.persistence.CascadeType;
 import java.util.Set;
-import java.io.Serializable;
+import java.util.HashSet;
 
 /**
- * Class representing the agreement between the Insurance Carrier and the Insured Organization or Insured Policy Holder.
- * Thus, the
+ * Class representing the agreement between the Insurance Carrier and  Insured Policy Holder.
  */
 @Entity
 @Table(name = "Ins_Policy")
-public class InsurancePolicy extends AbstractDateDurationEntity implements Agreement
+public class InsurancePolicy extends AbstractDateDurationEntity
 {
     private Long policyId;
     private String policyNumber;    // not unique across same household
-
+    private String groupNumber;
     private String description;
-    private InsurancePolicyType type;
-    private InsurancePlan insurancePlan;
 
-    private Set<InsurancePolicyRole> insurancePolicyRoles = new HashSet<InsurancePolicyRole>();
-    private Set<InsurancePolicyItem> insurancePolicyItems = new HashSet<InsurancePolicyItem>();
+    private InsurancePolicyType type;               // individual or group
+    private InsurancePolicy parentPolicy;           // the policy holder's policy (null if self)
+    private InsurancePlan insurancePlan;            // the plan to which this policy belongs to
+    private InsurancePolicyRole insurancePolicyRole;// the relating role to the person
+    private Enrollment enrollment;                  // the enrollment to which this policy belongs to (optional)
+
+    private Set<CareProviderSelection> careProviderSelections = new HashSet<CareProviderSelection>();
+    private Set<InsurancePolicy> childPolicies = new HashSet<InsurancePolicy>();
+
+    @ManyToOne
+    @JoinColumn(name = "enrollment_id")
+    public Enrollment getEnrollment()
+    {
+        return enrollment;
+    }
+
+    public void setEnrollment(final Enrollment enrollment)
+    {
+        this.enrollment = enrollment;
+    }
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "insurancePolicy")
+    public Set<CareProviderSelection> getCareProviderSelections()
+    {
+        return careProviderSelections;
+    }
+
+    public void setCareProviderSelections(final Set<CareProviderSelection> careProviderSelections)
+    {
+        this.careProviderSelections = careProviderSelections;
+    }
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "parentPolicy")
+    public Set<InsurancePolicy> getChildPolicies()
+    {
+        return childPolicies;
+    }
+
+    public void setChildPolicies(final Set<InsurancePolicy> childPolicies)
+    {
+        this.childPolicies = childPolicies;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "parent_ins_policy_id", referencedColumnName = "ins_policy_id")
+    public InsurancePolicy getParentPolicy()
+    {
+        return parentPolicy;
+    }
+
+    public void setParentPolicy(final InsurancePolicy parentPolicy)
+    {
+        this.parentPolicy = parentPolicy;
+    }
 
     @Id(generate = GeneratorType.AUTO)
     @Column(name = "ins_policy_id")
-    public Long getAgreementId()
+    public Long getInsurancePolicyId()
     {
         return policyId;
     }
 
-    public void setAgreementId(final Long id)
+    protected void setInsurancePolicyId(final Long id)
     {
         this.policyId = id;
     }
 
-    @Transient
-    public Long getPolicyId()
+    @Column(length = 10)
+    public String getGroupNumber()
     {
-        return getAgreementId();
+        return groupNumber;
     }
 
-    protected void setPolicyId(final Long policyId)
+    public void setGroupNumber(final String groupNumber)
     {
-        setAgreementId(policyId);
+        this.groupNumber = groupNumber;
     }
 
     @Column(length = 15, nullable = false)
@@ -126,38 +167,16 @@ public class InsurancePolicy extends AbstractDateDurationEntity implements Agree
         this.description = description;
     }
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "ins_policy_id")
-    public Set<InsurancePolicyRole> getAgreementRoles()
+    @ManyToOne
+    @JoinColumn(name = "ins_policy_role_id")
+    public InsurancePolicyRole getInsurancePolicyRole()
     {
-        return insurancePolicyRoles;
+        return insurancePolicyRole;
     }
 
-    public void setAgreementRoles(final Set<? extends AgreementRole> agreementRoles)
+    public void setInsurancePolicyRole(final InsurancePolicyRole role)
     {
-        this.insurancePolicyRoles = new HashSet<InsurancePolicyRole>();
-        for (AgreementRole role : agreementRoles)
-        {
-            if (role instanceof InsurancePolicyRole)
-                this.insurancePolicyRoles.add((InsurancePolicyRole) role);
-        }
-    }
-
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "ins_policy_id")
-    public Set<InsurancePolicyItem> getAgreementItems()
-    {
-        return insurancePolicyItems;
-    }
-
-    public void setAgreementItems(final Set<? extends AgreementItem> agreementItems)
-    {
-        this.insurancePolicyItems = new HashSet<InsurancePolicyItem>();
-        for (AgreementItem item : agreementItems)
-        {
-            if (item instanceof InsurancePolicyItem)
-                this.insurancePolicyItems.add((InsurancePolicyItem) item);
-        }
+        this.insurancePolicyRole = role;
     }
 
     @ManyToOne
@@ -173,77 +192,9 @@ public class InsurancePolicy extends AbstractDateDurationEntity implements Agree
     }
 
     @Transient
-    public void setInsuranceProvider(final Organization providerParty)
-    {
-        addPartyByRole(providerParty, InsurancePolicyRoleType.Cache.INSURANCE_PROVIDER.getEntity());
-    }
-
-    @Transient
-    public void setPolicyHolder(final Person individualParty)
-    {
-        addPartyByRole(individualParty, InsurancePolicyRoleType.Cache.INSURED_CONTRACT_HOLDER.getEntity());
-    }
-
-    @Transient
-    public void addInsuredDependent(final Person dependent)
-    {
-        addPartyByRole(dependent, InsurancePolicyRoleType.Cache.INSURED_DEPENDENT.getEntity());
-    }
-
-    @Transient
-    protected void addPartyByRole(final Party party, final InsurancePolicyRoleType roleType)
-    {
-        InsurancePolicyRole role = new InsurancePolicyRole();
-        role.setAgreement(this);
-        role.setType(roleType);
-        role.setParty(party);
-        party.getInsurancePolicyRoles().add(role);
-
-        getAgreementRoles().add(role);
-    }
-
-    @Transient
     public Organization getInsuranceProvider()
     {
-        return (Organization) getPartyByRole(InsurancePolicyRoleType.Cache.INSURANCE_PROVIDER.getEntity());
-    }
-
-    @Transient
-    public Person getInsuredContractHolder()
-    {
-        return (Person) getPartyByRole(InsurancePolicyRoleType.Cache.INSURED_CONTRACT_HOLDER.getEntity());
-    }
-
-    @Transient
-    protected Party getPartyByRole(final InsurancePolicyRoleType roleType)
-    {
-        final Object[] objects = (Object[]) getAgreementRoles().toArray();
-        for (int i = 0; i < objects.length; i++)
-        {
-            AgreementRole role = (AgreementRole) objects[i];
-            if (role.getType().equals(roleType))
-            {
-                return role.getParty();
-            }
-        }
-        return null;
-    }
-
-    @Transient
-    public Set<Person> getInsuredDependents()
-    {
-        final InsurancePolicyRoleType roleType = InsurancePolicyRoleType.Cache.INSURED_DEPENDENT.getEntity();
-        final Set<Person> partyList = new HashSet<Person>();
-        final Object[] objects = (Object[]) getAgreementRoles().toArray();
-        for (int i = 0; i < objects.length; i++)
-        {
-            AgreementRole role = (AgreementRole) objects[i];
-            if (role.getType().equals(roleType) && role.getParty() instanceof Person)
-            {
-                partyList.add((Person) role.getParty());
-            }
-        }
-        return partyList;
+        return getInsurancePlan().getInsuranceProvider();
     }
 
     @ManyToOne
@@ -258,21 +209,4 @@ public class InsurancePolicy extends AbstractDateDurationEntity implements Agree
         this.insurancePlan = insurancePlan;
     }
 
-    /**
-     * Gets the insured person role related to this insurance policy
-     * @param personId  the insured person's ID
-     * @return the insured person
-     */
-    @Transient
-    public InsurancePolicyRole getInsuredPersonRole(Serializable personId)
-    {
-        for (InsurancePolicyRole role : getAgreementRoles())
-        {
-            //role.isInsuredIndividual() && 
-            if (role.getParty().getPartyId().equals(personId))
-                return role;
-        }
-
-        return null;
-    }
 }

@@ -3,9 +3,8 @@
  */
 package com.medigy.persist.model.product;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import com.medigy.persist.model.common.AbstractDateDurationEntity;
+import com.medigy.persist.model.org.Organization;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,27 +14,19 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-
-import com.medigy.persist.model.common.AbstractTopLevelEntity;
-import com.medigy.persist.model.invoice.InvoiceItem;
-import com.medigy.persist.model.org.Organization;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE, discriminatorValue = "General")
-public class Product extends AbstractTopLevelEntity
+public class Product extends AbstractDateDurationEntity
 {
     private Long productId;
     private String name;
-    private Date introductionDate;
-    private Date saleDiscontinuationDate;
-    private Date supportDiscontinuationDate;
     private String comment;
     private Organization organization;
 
     private ProductCategory productCategory;
-    private Set<InvoiceItem> invoiceItems = new HashSet<InvoiceItem>();
-    
+    //private Set<InvoiceItem> invoiceItems = new HashSet<InvoiceItem>();
+
     @Id(generate = GeneratorType.AUTO)
     public Long getProductId()
     {
@@ -56,36 +47,6 @@ public class Product extends AbstractTopLevelEntity
     public void setName(final String name)
     {
         this.name = name;
-    }
-
-    public Date getIntroductionDate()
-    {
-        return introductionDate;
-    }
-
-    public void setIntroductionDate(final Date introductionDate)
-    {
-        this.introductionDate = introductionDate;
-    }
-
-    public Date getSaleDiscontinuationDate()
-    {
-        return saleDiscontinuationDate;
-    }
-
-    public void setSaleDiscontinuationDate(final Date saleDiscontinuationDate)
-    {
-        this.saleDiscontinuationDate = saleDiscontinuationDate;
-    }
-
-    public Date getSupportDiscontinuationDate()
-    {
-        return supportDiscontinuationDate;
-    }
-
-    public void setSupportDiscontinuationDate(final Date supportDiscontinuationDate)
-    {
-        this.supportDiscontinuationDate = supportDiscontinuationDate;
     }
 
     @Column(length = 100)
@@ -112,7 +73,7 @@ public class Product extends AbstractTopLevelEntity
     }
 
     @ManyToOne
-    @JoinColumn(name = "product_category_id")        
+    @JoinColumn(name = "product_category_id")
     public ProductCategory getProductCategory()
     {
         return productCategory;
@@ -123,6 +84,7 @@ public class Product extends AbstractTopLevelEntity
         this.productCategory = productCategory;
     }
 
+    /*
     @OneToMany(mappedBy = "product")
     public Set<InvoiceItem> getInvoiceItems()
     {
@@ -133,6 +95,6 @@ public class Product extends AbstractTopLevelEntity
     {
         this.invoiceItems = invoiceItems;
     }
+    */
 
-    
 }

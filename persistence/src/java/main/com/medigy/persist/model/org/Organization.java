@@ -44,7 +44,10 @@
 package com.medigy.persist.model.org;
 
 import com.medigy.persist.model.insurance.Group;
+import com.medigy.persist.model.insurance.InsuranceProduct;
 import com.medigy.persist.model.party.Party;
+import com.medigy.persist.model.product.ProductCategory;
+import com.medigy.persist.model.product.Product;
 import com.medigy.persist.reference.custom.org.OrganizationClassificationType;
 import com.medigy.persist.reference.type.party.PartyType;
 
@@ -54,15 +57,22 @@ import javax.persistence.InheritanceType;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.persistence.CascadeType;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Specialized party for organizations.
+ */
 @Entity
 @Inheritance(strategy=InheritanceType.JOINED)
 @Table(name = "Org")
 public class Organization extends Party
 {
     private Set<Group> groups = new HashSet<Group>();
+    private Set<InsuranceProduct> insuranceProducts = new HashSet<InsuranceProduct>();
+    private Set<ProductCategory> productCategories = new HashSet<ProductCategory>();
+    private Set<Product> products = new HashSet<Product>();
 
     public Organization()
     {
@@ -70,6 +80,11 @@ public class Organization extends Party
         setPartyType(PartyType.Cache.ORGANIZATION.getEntity());
     }
 
+    /**
+     * Gets the organization name. Same as {@link #getPartyName()}
+     *
+     * @return org name
+     */
     @Transient
     public String getOrganizationName()
     {
@@ -81,6 +96,10 @@ public class Organization extends Party
         super.setPartyName(organizationName);
     }
 
+    /**
+     * Gets the organizaton unique ID. Same as  {@link #getPartyId()}.
+     * @return  org ID
+     */
     @Transient
     public Long getOrgId()
     {
@@ -111,12 +130,62 @@ public class Organization extends Party
 
     /**
      * Checks to see if this organization is classified as an Insurance company
-     * @return
+     * @return  True if this organization is classified as an insurance carrier
      */
     @Transient
-    public boolean isInsuranceProvider()
+    public boolean isInsuranceCarrier()
     {
         return getPartyClassification(OrganizationClassificationType.Cache.INSURANCE.getEntity()) != null ? true : false;
+    }
+
+    /**
+     * Gets all the insurance products advertised by this organization. This will only return non-empty values when
+     * the organization is classified as an insurance carrier.
+     *
+     * @return a set of insurance products
+     * @see #isInsuranceCarrier()
+     */
+    @Transient
+    public Set<InsuranceProduct> getInsuranceProducts()
+    {
+        for (Product product : products)
+        {
+            //if (product.get)
+        }
+        return null;
+    }
+
+    public void setInsuranceProducts(final Set<InsuranceProduct> insuranceProducts)
+    {
+        this.insuranceProducts = insuranceProducts;
+    }
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "organization")
+    public Set<Product> getProducts()
+    {
+        return products;
+    }
+
+    public void setProducts(final Set<Product> products)
+    {
+        this.products = products;
+    }
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "organization")
+    public Set<ProductCategory> getProductCategories()
+    {
+        return productCategories;
+    }
+
+    public void setProductCategories(final Set<ProductCategory> productCategories)
+    {
+        this.productCategories = productCategories;
+    }
+
+    @Transient
+    public void addProductCategory(final ProductCategory category)
+    {
+        this.productCategories.add(category);
     }
 
     @Override

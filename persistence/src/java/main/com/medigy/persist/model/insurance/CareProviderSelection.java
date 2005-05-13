@@ -45,12 +45,13 @@ import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.Transient;
+import javax.persistence.ManyToOne;
+import javax.persistence.JoinColumn;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 public class CareProviderSelection extends PartyRelationship
 {
-    private Enrollment enrollment;
     private InsurancePolicy insurancePolicy;
 
     public CareProviderSelection()
@@ -68,7 +69,6 @@ public class CareProviderSelection extends PartyRelationship
     {
        setPartyRelationshipId(careProviderSelectionId);
     }
-    /*
 
     @ManyToOne
     @JoinColumn(name = "ins_policy_id")
@@ -77,32 +77,8 @@ public class CareProviderSelection extends PartyRelationship
         return insurancePolicy;
     }
 
-    public void setInsurancePolicy(InsurancePolicy insurancePolicy)
+    public void setInsurancePolicy(final InsurancePolicy insurancePolicy)
     {
         this.insurancePolicy = insurancePolicy;
     }
-
-    @ManyToOne
-    @JoinColumn(name = "enrollment_id")
-    public Enrollment getEnrollment()
-    {
-        return enrollment;
-    }
-
-    public void setEnrollment(final Enrollment enrollment)
-    {
-        this.enrollment = enrollment;
-    }
-
-    public int compareTo(Object o)
-    {
-        if(o == this)
-            return 0;
-
-        final CareProviderSelection otherSelection = (CareProviderSelection) o;
-        return getEffectiveDates().compareTo(otherSelection.getEffectiveDates());
-    }
-    */
-    
-
 }

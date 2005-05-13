@@ -38,16 +38,34 @@
  */
 package com.medigy.persist.model.contact;
 
-import java.util.List;
-
 import com.medigy.persist.TestCase;
 import com.medigy.persist.model.party.PostalAddress;
 import com.medigy.persist.model.party.PostalAddressBoundary;
 import com.medigy.persist.reference.custom.GeographicBoundaryType;
 import com.medigy.persist.util.HibernateUtil;
 
+import java.util.List;
+
 public class TestGeographicBoundary extends TestCase
 {
+    public void testGeographicBoundaryType()
+    {
+        final List geoTypeList = HibernateUtil.getSession().createCriteria(GeographicBoundaryType.class).list();
+        assertEquals(8, GeographicBoundaryType.Cache.values().length);
+        assertEquals(GeographicBoundaryType.Cache.COUNTRY.getEntity(), (GeographicBoundaryType) geoTypeList.toArray()[0]);
+        assertEquals(GeographicBoundaryType.Cache.REGION.getEntity(), (GeographicBoundaryType) geoTypeList.toArray()[1]);
+        assertEquals(GeographicBoundaryType.Cache.TERRITORY.getEntity(), (GeographicBoundaryType) geoTypeList.toArray()[2]);
+        assertEquals(GeographicBoundaryType.Cache.PROVINCE.getEntity(), (GeographicBoundaryType) geoTypeList.toArray()[3]);
+        assertEquals(GeographicBoundaryType.Cache.STATE.getEntity(), (GeographicBoundaryType) geoTypeList.toArray()[4]);
+        assertEquals(GeographicBoundaryType.Cache.POSTAL_CODE.getEntity(), (GeographicBoundaryType) geoTypeList.toArray()[5]);
+        assertEquals(GeographicBoundaryType.Cache.COUNTY.getEntity(), (GeographicBoundaryType) geoTypeList.toArray()[6]);
+        assertEquals(GeographicBoundaryType.Cache.CITY.getEntity(), (GeographicBoundaryType) geoTypeList.toArray()[7]);
+
+        assertEquals(GeographicBoundaryType.Cache.CITY.getParentEntity(), (GeographicBoundaryType) geoTypeList.toArray()[4]);
+        assertEquals(GeographicBoundaryType.Cache.POSTAL_CODE.getParentEntity(), (GeographicBoundaryType) geoTypeList.toArray()[4]);
+        assertEquals(GeographicBoundaryType.Cache.STATE.getParentEntity(), (GeographicBoundaryType) geoTypeList.toArray()[0]);
+    }
+
     /**
      * Main purpose is to test the relationship between postal address and geo boundaries
      */

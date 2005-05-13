@@ -40,9 +40,8 @@ package com.medigy.persist.model.insurance;
 
 import com.medigy.persist.TestCase;
 import com.medigy.persist.model.org.Organization;
-import com.medigy.persist.model.party.Party;
 import com.medigy.persist.model.person.Person;
-import com.medigy.persist.reference.custom.insurance.CoverageType;
+import com.medigy.persist.reference.custom.insurance.InsurancePolicyRoleType;
 import com.medigy.persist.reference.custom.insurance.InsurancePolicyType;
 import com.medigy.persist.reference.custom.org.OrganizationClassificationType;
 import com.medigy.persist.util.HibernateUtil;
@@ -52,6 +51,7 @@ import java.util.Date;
 public class TestInsurance extends TestCase
 {
 
+
     public void testInsurance()
     {
         // create the insurance company
@@ -59,88 +59,72 @@ public class TestInsurance extends TestCase
         blueCross.setOrganizationName("Blue Cross Blue Shield");
         blueCross.addPartyClassification(OrganizationClassificationType.Cache.INSURANCE.getEntity());
 
+        final InsuranceProduct product = new InsuranceProduct();
+        product.setName("PPO Product");
+        product.setOrganization(blueCross);
+
+        final InsurancePlan plan =  new InsurancePlan();
+        plan.setInsuranceProduct(product);
+        plan.setName("Super Plan");
+        product.addInsurancePlan(plan);
+
+        blueCross.getProducts().add(product);
+        HibernateUtil.getSession().save(blueCross);
+
         final Person johnDoe = new Person();
         johnDoe.setFirstName("John");
         johnDoe.setLastName("Doe");
+        InsurancePolicyRole policyHolderRole = new InsurancePolicyRole();
+        policyHolderRole.setPerson(johnDoe);
+        policyHolderRole.setType(InsurancePolicyRoleType.Cache.INSURED_CONTRACT_HOLDER.getEntity());
+        johnDoe.addInsurancePolicyRole(policyHolderRole);
 
         final Person patient = new Person();
         patient.setLastName("Doe");
         patient.setFirstName("Jane");
+        InsurancePolicyRole dependentRole = new InsurancePolicyRole();
+        dependentRole.setPerson(johnDoe);
+        dependentRole.setType(InsurancePolicyRoleType.Cache.INSURED_DEPENDENT.getEntity());
+        patient.addInsurancePolicyRole(dependentRole);
 
-        HibernateUtil.getSession().save(blueCross);
+        HibernateUtil.getSession().save(patient);
         HibernateUtil.getSession().save(johnDoe);
-        HibernateUtil.commitTransaction();
+        HibernateUtil.getSession().flush();
 
-        final InsurancePolicy individualPolicy = new InsurancePolicy();
-        individualPolicy.setType(InsurancePolicyType.Cache.INDIVIDUAL_INSURANCE_POLICY.getEntity());
-        individualPolicy.setInsuranceProvider(blueCross);
-        individualPolicy.setFromDate(new Date());
-        individualPolicy.setPolicyHolder(johnDoe);
-        individualPolicy.addInsuredDependent(patient);
-        individualPolicy.setPolicyNumber("12345");
+        InsurancePolicy johnDoePolicy = new InsurancePolicy();
+        johnDoePolicy.setInsurancePlan(plan);
+        johnDoePolicy.setInsurancePolicyRole(policyHolderRole);
+        johnDoePolicy.setPolicyNumber("12345");
+        johnDoePolicy.setGroupNumber("XXX");
+        johnDoePolicy.setFromDate(new Date());
+        johnDoePolicy.setType(InsurancePolicyType.Cache.INDIVIDUAL_INSURANCE_POLICY.getEntity());
+        policyHolderRole.addInsurancePolicy(johnDoePolicy);
 
-        HibernateUtil.getSession().save(individualPolicy);
-        HibernateUtil.commitTransaction();
+        InsurancePolicy patientPolicy = new InsurancePolicy();
+        patientPolicy.setInsurancePlan(plan);
+        patientPolicy.setInsurancePolicyRole(policyHolderRole);
+        patientPolicy.setPolicyNumber("12345-1");
+        patientPolicy.setGroupNumber("XXX");
+        patientPolicy.setFromDate(new Date());
+        patientPolicy.setParentPolicy(johnDoePolicy);
+        patientPolicy.setType(InsurancePolicyType.Cache.INDIVIDUAL_INSURANCE_POLICY.getEntity());
+        dependentRole.addInsurancePolicy(patientPolicy);
+        johnDoePolicy.getChildPolicies().add(patientPolicy);
 
-        final InsurancePolicy newPolicy = (InsurancePolicy) HibernateUtil.getSession().load(InsurancePolicy.class, individualPolicy.getPolicyId());
-        assertEquals("12345", newPolicy.getPolicyNumber());
-        assertEquals(InsurancePolicyType.Cache.INDIVIDUAL_INSURANCE_POLICY.getEntity(),
-                newPolicy.getType());
-        assertEquals(blueCross, newPolicy.getInsuranceProvider());
-        assertEquals(johnDoe, newPolicy.getInsuredContractHolder());
+        HibernateUtil.getSession().save(johnDoePolicy);
+        HibernateUtil.getSession().save(patientPolicy);
         HibernateUtil.closeSession();
 
+        final Person mainPerson = (Person) HibernateUtil.getSession().load(Person.class, johnDoe.getPartyId());
+        assertEquals(johnDoe.getPartyId(), mainPerson.getPartyId());
+        assertEquals(1, johnDoe.getInsurancePolicyRoles().size());
+        final InsurancePolicyRole insurancePolicyRole = johnDoe.getInsurancePolicyRole(InsurancePolicyRoleType.Cache.INSURED_CONTRACT_HOLDER.getEntity());
+        assertEquals(policyHolderRole, insurancePolicyRole);
+        assertEquals(1, insurancePolicyRole.getInsurancePolicies().size());
+        final InsurancePolicy policy = (InsurancePolicy) insurancePolicyRole.getInsurancePolicies().toArray()[0];
+        assertEquals(johnDoePolicy, policy);
 
     }
 
-    public void testGroupInsurance()
-    {
-
-        final Organization acmeCompany = new Organization();
-        acmeCompany.setOrganizationName("ACME Company");
-
-        final Organization anthemInsurance = new Organization();
-        anthemInsurance.setOrganizationName("Anthem");
-
-        final InsurancePolicy groupPolicy = new InsurancePolicy();
-        groupPolicy.setType(InsurancePolicyType.Cache.GROUP_INSURANCE_POLICY.getEntity());
-        groupPolicy.setInsuranceProvider(anthemInsurance);
-        groupPolicy.setPolicyNumber("12345");
-
-        final Group acmeDevelopers = new Group();
-        acmeDevelopers.setInsuredOrganization(acmeCompany);
-        acmeDevelopers.setDescription("ACME Developer Group");
-        acmeDevelopers.getInsurancePolicies().add(groupPolicy);
-
-        final Enrollment currentYearEnrollment = new Enrollment();
-        currentYearEnrollment.setEnrolledDate(new Date());
-        currentYearEnrollment.setGroup(acmeDevelopers);
-
-        final CoverageType medicalCoverageType = new CoverageType();
-        medicalCoverageType.setCode("Med");
-        medicalCoverageType.setLabel("Medical");
-        medicalCoverageType.setParty(Party.Cache.SYS_GLOBAL_PARTY.getEntity());
-
-        final CoverageType dentalCoverageType = new CoverageType();
-        dentalCoverageType.setCode("Den");
-        dentalCoverageType.setLabel("Dental");
-        dentalCoverageType.setParty(Party.Cache.SYS_GLOBAL_PARTY.getEntity());
-
-
-        final EnrollmentElection dentalElection = new EnrollmentElection();
-        dentalElection.setCoverageType(dentalCoverageType);
-        dentalElection.setEnrollment(currentYearEnrollment);
-        currentYearEnrollment.getElections().add(dentalElection);
-
-
-        Person johnDoe = new Person();
-        johnDoe.setLastName("Doe");
-        johnDoe.setFirstName("John");
-
-        //currentYearEnrollment.setInsuredContractHolder(johnDoe);
-
-
-
-
-    }
+    
 }

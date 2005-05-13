@@ -53,7 +53,6 @@ public class EnrollmentElection extends AbstractTopLevelEntity
     private Long enrollmentElectionId;
     private Enrollment enrollment;
     private CoverageType coverageType;
-    private InsurancePolicyRole insurancePolicyRole;
 
     /**
      * Examples of enrollment elections are dental, medical, accident, and life policies
@@ -97,15 +96,5 @@ public class EnrollmentElection extends AbstractTopLevelEntity
         this.coverageType = coverageType;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "ins_policy_role_id")
-    public InsurancePolicyRole getInsurancePolicyRole()
-    {
-        return insurancePolicyRole;
-    }
-
-    public void setInsurancePolicyRole(final InsurancePolicyRole insurancePolicyRole)
-    {
-        this.insurancePolicyRole = insurancePolicyRole;
-    }
+    
 }

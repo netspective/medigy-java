@@ -38,14 +38,12 @@
  */
 package com.medigy.service.person;
 
-import com.medigy.persist.model.insurance.InsurancePolicy;
 import com.medigy.persist.model.org.Organization;
 import com.medigy.persist.model.party.PartyRole;
 import com.medigy.persist.model.person.Person;
 import com.medigy.persist.reference.custom.insurance.InsurancePolicyType;
 import com.medigy.persist.reference.custom.party.ContactMechanismPurposeType;
 import com.medigy.persist.reference.custom.party.OrganizationRoleType;
-import com.medigy.persist.reference.custom.party.PartyRelationshipType;
 import com.medigy.persist.reference.custom.person.PatientResponsiblePartyRoleType;
 import com.medigy.persist.reference.custom.person.PersonRoleType;
 import com.medigy.persist.reference.type.GenderType;
@@ -59,8 +57,6 @@ import com.medigy.service.dto.party.AddPhoneParameters;
 import com.medigy.service.dto.party.AddPostalAddressParameters;
 import com.medigy.service.dto.person.RegisterPatientParameters;
 import com.medigy.service.dto.person.RegisteredPatient;
-import com.medigy.service.util.InsurancePolicyFacade;
-import com.medigy.service.util.InsurancePolicyFacadeImpl;
 import com.medigy.service.util.PartyRelationshipFacade;
 import com.medigy.service.util.PersonFacade;
 import org.apache.commons.logging.Log;
@@ -195,23 +191,8 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
     {
         final ReferenceEntityLookupService referenceEntityService = (ReferenceEntityLookupService) ServiceLocator.getInstance().getService(ReferenceEntityLookupService.class);
         final InsurancePolicyType type = referenceEntityService.getInsurancePolicyType(policyType);
-         // look up the insurance policy (if policy holder person is new then should we even look up the policy since
-        // its probably new also)
-        final InsurancePolicyFacade insFacade = new InsurancePolicyFacadeImpl();
-        InsurancePolicy policy = insFacade.getIndividualInsurancePolicy(policyNumber);
-        boolean newPolicy = false;
 
-        if (policy == null)
-        {
-            newPolicy = true;
-            policy = insFacade.createIndividualInsurancePolicy(policyNumber, providerOrg, policyHolder, new Person[] {insuredDependent});
-        }
-        else
-        {
-            // update the policy with the new dependent
-            policy.addInsuredDependent(insuredDependent);
-            HibernateUtil.getSession().flush();
-        }
+        // TODO: Need to figure how what's going to be available during registration for INSURANCE (e.g. Product, Plan, etc)
     }
 
 
@@ -224,6 +205,8 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
      */
     protected Person registerResponsibleParty(final Person person, final RegisterPatientParameters patientParameters)
     {
+        // TODO: FINANCIAL responsible party can be an organization and it can be changed per visit too. Need table to relate to PARTY_RELATIONSHIP.
+
         final ReferenceEntityLookupService referenceEntityService = (ReferenceEntityLookupService) ServiceLocator.getInstance().getService(ReferenceEntityLookupService.class);
         final PersonFacade personFacade = (PersonFacade) ServiceLocator.getInstance().getService(PersonFacade.class);
         final PartyRelationshipFacade partyRelFacade = (PartyRelationshipFacade) ServiceLocator.getInstance().getService(PartyRelationshipFacade.class);
@@ -249,8 +232,7 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
         final PatientResponsiblePartyRoleType entity = PatientResponsiblePartyRoleType.Cache.getEntity(patientParameters.getResponsiblePartyRole());
         final PartyRole respPartyRole = personFacade.addPersonRole(respParty, entity);
 
-        // create a relationship between the patient and this person through the roles
-        partyRelFacade.addPartyRelationship(PartyRelationshipType.Cache.PATIENT_RESPONSIBLE_PARTY.getEntity(), patientRole, respPartyRole);
+        //partyRelFacade.addPartyRelationship(PartyRelationshipType.Cache.PATIENT_RESPONSIBLE_PARTY.getEntity(), patientRole, respPartyRole);
         return respParty;
     }
 

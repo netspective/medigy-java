@@ -40,7 +40,6 @@ package com.medigy.persist.model.insurance;
 
 import com.medigy.persist.model.common.AbstractDateDurationEntity;
 import com.medigy.persist.model.org.Organization;
-import com.medigy.persist.model.party.PartyRole;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -51,6 +50,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.persistence.CascadeType;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -60,12 +60,13 @@ public class InsurancePlan extends AbstractDateDurationEntity
 {
     private Long insurancePlanId;
     private InsuranceProduct insuranceProduct;
-    private PartyRole insuranceProviderRole;
     private String name;
 
+    private Set<InsurancePolicy> insurancePolicies = new HashSet<InsurancePolicy>();
     private Set<InsurancePlanContactMechanism> insurancePlanContactMechanisms = new HashSet<InsurancePlanContactMechanism>();
 
     @Id(generate = GeneratorType.AUTO)
+    @Column(name = "ins_plan_id")        
     public Long getInsurancePlanId()
     {
         return insurancePlanId;
@@ -99,22 +100,21 @@ public class InsurancePlan extends AbstractDateDurationEntity
         this.insuranceProduct = insuranceProduct;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "party_id")
-    public PartyRole getInsuranceProviderRole()
-    {
-        return insuranceProviderRole;
-    }
-
-    public void setInsuranceProviderRole(final PartyRole insuranceProviderRole)
-    {
-        this.insuranceProviderRole = insuranceProviderRole;
-    }
-
     @Transient
     public Organization getInsuranceProvider()
     {
-        return (Organization) insuranceProviderRole.getParty();
+        return (Organization) getInsuranceProduct().getOrganization();
+    }
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "insurancePlan")
+    public Set<InsurancePolicy> getInsurancePolicies()
+    {
+        return insurancePolicies;
+    }
+
+    public void setInsurancePolicies(final Set<InsurancePolicy> insurancePolicies)
+    {
+        this.insurancePolicies = insurancePolicies;
     }
 
     @OneToMany(mappedBy = "insurancePlan")

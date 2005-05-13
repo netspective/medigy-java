@@ -38,8 +38,8 @@
  */
 package com.medigy.persist.model.insurance;
 
-import java.util.HashSet;
-import java.util.Set;
+import com.medigy.persist.model.common.AbstractTopLevelEntity;
+import com.medigy.persist.model.org.Organization;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -49,9 +49,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-
-import com.medigy.persist.model.common.AbstractTopLevelEntity;
-import com.medigy.persist.model.org.Organization;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Group extends AbstractTopLevelEntity
@@ -61,7 +60,6 @@ public class Group extends AbstractTopLevelEntity
     private Organization insuredOrganization;
 
     private Set<Enrollment> enrollments = new HashSet<Enrollment>();
-    private Set<InsurancePolicy> insurancePolicies = new HashSet<InsurancePolicy>();
 
     /**
      * A group is a collection of people within an organization for whom insurance is issued.
@@ -116,15 +114,4 @@ public class Group extends AbstractTopLevelEntity
         this.insuredOrganization = insuredOrganization;
     }
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "group_id")
-    public Set<InsurancePolicy> getInsurancePolicies()
-    {
-        return insurancePolicies;
-    }
-
-    public void setInsurancePolicies(final Set<InsurancePolicy> insurancePolicies)
-    {
-        this.insurancePolicies = insurancePolicies;
-    }
 }

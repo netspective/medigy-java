@@ -39,7 +39,6 @@
 package com.medigy.persist.model.insurance;
 
 import com.medigy.persist.model.common.AbstractTopLevelEntity;
-import com.medigy.persist.model.person.Person;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -58,11 +57,20 @@ public class Enrollment extends AbstractTopLevelEntity
     private Long enrollmentId;
     private Date enrolledDate;
     private Group group;
-    private Person person;
 
-    //private Set<CareProviderSelection> careProviderSelections = new HashSet<CareProviderSelection>();
+    private Set<InsurancePolicy> insurancePolicies = new HashSet<InsurancePolicy>();
     private Set<EnrollmentElection> elections = new HashSet<EnrollmentElection>();
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "enrollment")
+    public Set<InsurancePolicy> getInsurancePolicies()
+    {
+        return insurancePolicies;
+    }
+
+    public void setInsurancePolicies(final Set<InsurancePolicy> insurancePolicies)
+    {
+        this.insurancePolicies = insurancePolicies;
+    }
 
     @Id(generate = GeneratorType.AUTO)
     public Long getEnrollmentId()
@@ -75,17 +83,6 @@ public class Enrollment extends AbstractTopLevelEntity
         this.enrollmentId = enrollmentId;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "party_id")
-    public Person getPerson()
-    {
-        return person;
-    }
-
-    public void setPerson(final Person person)
-    {
-        this.person = person;
-    }
 
     public Date getEnrolledDate()
     {

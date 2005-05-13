@@ -67,6 +67,6 @@ public interface Agreement
     public Set<? extends AgreementRole> getAgreementRoles();
     public void setAgreementRoles(Set<? extends AgreementRole> agreementRoles);
 
-    public Set<? extends AgreementItem> getAgreementItems();
-    public void setAgreementItems(final Set<? extends AgreementItem> agreementItems);
+    //public Set<? extends AgreementItem> getAgreementItems();
+    //public void setAgreementItems(final Set<? extends AgreementItem> agreementItems);
 }

@@ -194,7 +194,7 @@
         <mapping class="com.medigy.persist.model.insurance.EnrollmentElection"/>
         <mapping class="com.medigy.persist.model.insurance.Group"/>
         <mapping class="com.medigy.persist.model.insurance.InsurancePolicy"/>
-        <mapping class="com.medigy.persist.model.insurance.InsurancePolicyItem"/>
+        <!--mapping class="com.medigy.persist.model.insurance.InsurancePolicyItem"/-->
         <mapping class="com.medigy.persist.model.insurance.InsurancePolicyRole"/>
         <mapping class="com.medigy.persist.model.insurance.InsuranceProduct"/>
         <mapping class="com.medigy.persist.model.insurance.InsurancePlan"/>

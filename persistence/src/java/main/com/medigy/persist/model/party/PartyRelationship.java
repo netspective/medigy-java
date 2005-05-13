@@ -42,16 +42,16 @@ import com.medigy.persist.model.common.AbstractDateDurationEntity;
 import com.medigy.persist.reference.custom.party.PartyRelationshipType;
 import com.medigy.persist.reference.type.PriorityType;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.CascadeType;
 
 @Entity
 @Table(name = "Party_Relationship")
@@ -70,9 +70,6 @@ public class PartyRelationship extends AbstractDateDurationEntity
     private PartyRole partyRoleTo;
     private PartyRelationshipType type;
     private PriorityType priorityType;
-
-    //private Set<CommunicationEvent> communicationEvents = new HashSet<CommunicationEvent>();
-    //private Set<Agreement> agreements = new HashSet<Agreement>();
 
     public PartyRelationship()
     {

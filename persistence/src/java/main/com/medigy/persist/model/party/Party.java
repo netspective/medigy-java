@@ -41,7 +41,6 @@
 package com.medigy.persist.model.party;
 
 import com.medigy.persist.model.common.AbstractTopLevelEntity;
-import com.medigy.persist.model.insurance.InsurancePolicyRole;
 import com.medigy.persist.model.invoice.BillingAccountRole;
 import com.medigy.persist.model.invoice.InvoiceRole;
 import com.medigy.persist.reference.custom.party.CommunicationEventPurposeType;
@@ -112,7 +111,6 @@ public class Party extends AbstractTopLevelEntity
     private Set<BillingAccountRole> billingAccountRoles = new HashSet<BillingAccountRole>();
     private Set<InvoiceRole> invoiceRoles = new HashSet<InvoiceRole>();
 
-    private Set<InsurancePolicyRole> insurancePolicyRoles = new HashSet<InsurancePolicyRole>();
 
     // All the custom reference entity types
     private Set<PartyIdentifierType> partyIdentifierTypes = new HashSet<PartyIdentifierType>();
@@ -429,14 +427,5 @@ public class Party extends AbstractTopLevelEntity
         this.partyQualifications = partyQualifications;
     }
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "party")
-    public Set<InsurancePolicyRole> getInsurancePolicyRoles()
-    {
-        return insurancePolicyRoles;
-    }
-
-    public void setInsurancePolicyRoles(final Set<InsurancePolicyRole> insurancePolicyRoles)
-    {
-        this.insurancePolicyRoles = insurancePolicyRoles;
-    }
+   
 }

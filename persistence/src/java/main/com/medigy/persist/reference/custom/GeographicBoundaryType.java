@@ -43,28 +43,37 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.ManyToOne;
+import javax.persistence.JoinColumn;
 
 @Entity
 @Table(name = "Geo_Boundary_Type")
-public class GeographicBoundaryType extends AbstractCustomReferenceEntity
+public class GeographicBoundaryType extends AbstractCustomHierarchyReferenceEntity
 {
-    public enum Cache implements CachedCustomReferenceEntity
+    public enum Cache implements CachedCustomHierarchyReferenceEntity
     {
-        CITY("CITY"),
-        COUNTY("COUNTY"),
-        STATE("STATE"),
-        POSTAL_CODE("ZIP"),
-        PROVINCE("PROVINCE"),
-        TERRITORY("TERRITORY"),
+        COUNTRY("COUNTRY"),
         REGION("REGION"),
-        COUNTRY("COUNTRY");
+        TERRITORY("TERRITORY"),
+        PROVINCE("PROVINCE"),
+        STATE("STATE", COUNTRY),
+        POSTAL_CODE("ZIP", STATE),
+        COUNTY("COUNTY", STATE),
+        CITY("CITY", STATE) ;
 
         private final String code;
         private GeographicBoundaryType entity;
+        private Cache parent;
 
         Cache(final String code)
         {
             this.code = code;
+        }
+
+        Cache(final String code, final Cache parent)
+        {
+            this.code = code;
+            this.parent = parent;
         }
 
         public String getCode()
@@ -82,6 +91,16 @@ public class GeographicBoundaryType extends AbstractCustomReferenceEntity
             this.entity = (GeographicBoundaryType) entity;
         }
 
+        public CachedCustomHierarchyReferenceEntity getParent()
+        {
+            return parent;
+        }
+
+        public GeographicBoundaryType getParentEntity()
+        {
+            return parent.getEntity();
+        }
+
         public static GeographicBoundaryType getEntity(String code)
         {
             for (GeographicBoundaryType.Cache geo : GeographicBoundaryType.Cache.values())
@@ -92,6 +111,8 @@ public class GeographicBoundaryType extends AbstractCustomReferenceEntity
             return null;
         }
     }
+
+    private GeographicBoundaryType parentEntity;
 
     public GeographicBoundaryType()
     {
@@ -116,4 +137,17 @@ public class GeographicBoundaryType extends AbstractCustomReferenceEntity
         else
             return getGeoBoundaryTypeId().equals(((GeographicBoundaryType) obj).getGeoBoundaryTypeId());
     }
+
+    @ManyToOne(targetEntity = "com.medigy.persist.reference.custom.GeographicBoundaryType")
+    @JoinColumn(name = "parent_geo_boundary_type_id", referencedColumnName = "geo_boundary_type_id")
+    public CustomHierarchyReferenceEntity getParentEntity()
+    {
+        return parentEntity;
+    }
+
+    public void setParentEntity(final CustomHierarchyReferenceEntity entity)
+    {
+        this.parentEntity = (GeographicBoundaryType) entity;
+    }
+
 }
