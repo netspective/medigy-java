@@ -55,6 +55,11 @@ pre.programlisting
     white-space: pre;
 }
 
+span.chapter a
+{
+    font-size: 14pt; font-weight: bold;
+}
+
 div.section
 {
     margin-left: 25px;
@@ -69,14 +74,13 @@ div.section h2, div.section h3, div.section h4, div.section h5, div.section h6, 
 
 div.table_columns table
 {
-    border: 1px solid silver; 
+    border-left: 1px solid #CCCCCC; border-top: 1px solid #CCCCCC; border-right: 1px solid #999999; border-bottom: 1px solid #999999;
 }
 
-div.table_columns tr.primary-key
+div.table_columns tr.primary-key td.column-name
 {
-    background-color: orange;
+    font-weight: bold;
 }
-
 
 div.table_columns table th
 {
@@ -90,10 +94,5 @@ div.table_columns table td
     border-top: 1px dotted silver; border-left: 0; border-right: 0; border-bottom: 0;
     margin: 0; padding-left: 5px; padding-right: 5px;
     border-spacing: 0px;
-}
-
-span.chapter a 
-{
-    font-size: 14pt; font-weight: bold;
 }
 

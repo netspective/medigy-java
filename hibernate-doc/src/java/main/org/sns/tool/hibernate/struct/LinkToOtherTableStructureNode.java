@@ -43,52 +43,93 @@
  */
 package org.sns.tool.hibernate.struct;
 
-import java.util.Map;
+import java.text.Collator;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
-import org.hibernate.cfg.Configuration;
 import org.hibernate.mapping.PersistentClass;
 import org.hibernate.mapping.Table;
 
-public interface TableStructure
+public class LinkToOtherTableStructureNode implements TableStructureNode, Comparable
 {
-    /**
-     * Return the hibernate configuration for which structural information was gathered
-     */
-    public Configuration getConfiguration();
+    private final TableStructureNode parentNode;
+    private final TableStructureNode linkedNode;
+    private final int level;
+    private final List ancestorNodes = new ArrayList();
 
-    /**
-     * The rules used to govern the structure.
-     */
-    public TableStructureRules getRules();
+    public LinkToOtherTableStructureNode(final TableStructureNode linkedNode, final TableStructureNode parentNode, final int level)
+    {
+        this.linkedNode = linkedNode;
+        this.parentNode = parentNode;
+        this.level = level;
 
-    /**
-     * Get all the children for the tree -- each item in the set is a TableStructureNode that comprises the "main"
-     * tables (entry points) for the hierarchy.
-     */
-    public Set getTopLevelTableNodes();
+        TableStructureNode activeParentNode = parentNode;
+        while(activeParentNode != null)
+        {
+            if(ancestorNodes.size() == 0)
+                ancestorNodes.add(activeParentNode);
+            else
+                ancestorNodes.add(0, activeParentNode);
 
-    /**
-     * Using the rules provided in TableStructureRules, categorize the tableNode to put it into its appropriate
-     * buckets.
-     */
-    public void categorize(final TableStructureNode tableNode);
+            activeParentNode = activeParentNode.getParentNode();
+        }
+    }
 
-    /**
-     * Return the map of table categories whose key is the TableCategory instance and the values are sets of
-     * TableStructureNode instances that belong to those categories.
-     */
-    public Map getTableCategories();
+    public int compareTo(Object o)
+    {
+        final TableStructureNode other = (TableStructureNode) o;
+        return Collator.getInstance().compare(this.getTable().getName().toUpperCase(), other.getTable().getName().toUpperCase());
 
-    /**
-     * Retrieve the table category named name.
-     * @return Null if no table category named "name" exists, TableCategory instance otherwise
-     */
-    public TableCategory getTableCategory(final String name);
+    }
 
-    /**
-     * Create a new node or link to an existing one.
-     * @return The new node which might be a real structure node or a link to an existing one if it's a duplicate
-     */
-    public TableStructureNode createNode(final PersistentClass mappedClass, final Table nodeForTable, final TableStructureNode parent, final int level);    
+    public TableStructure getOwner()
+    {
+        return linkedNode.getOwner();
+    }
+
+    public int getLevel()
+    {
+        return level;
+    }
+
+    public Table getTable()
+    {
+        return linkedNode.getTable();
+    }
+
+    public PersistentClass getPersistentClass()
+    {
+        return linkedNode.getPersistentClass();
+    }
+
+    public TableStructureNode getParentNode()
+    {
+        return parentNode;
+    }
+
+    public Set getChildNodes()
+    {
+        return linkedNode.getChildNodes();
+    }
+
+    public List getAncestorNodes()
+    {
+        return ancestorNodes;
+    }
+
+    public boolean hasChildren()
+    {
+        return getChildNodes().size() > 0;
+    }
+
+    public boolean isLinkedNode()
+    {
+        return true;
+    }
+
+    public TableStructureNode getLinkedNode()
+    {
+        return linkedNode;
+    }
 }

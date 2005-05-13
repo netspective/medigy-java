@@ -43,6 +43,7 @@
  */
 package org.sns.tool.hibernate.struct;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -57,9 +58,14 @@ import org.hibernate.mapping.Table;
 public class DefaultTableStructure implements TableStructure
 {
     /**
-     * List of categories -- key is a TableCategory instance, value is a set of TableStructureNode instances
+     * Map of categories -- key is a TableCategory instance, value is a set of TableStructureNode instances
      */
     private final Map tableCategories = new TreeMap();
+
+    /**
+     * Map of node structures by table. Key is the table name, value is a TableStructureNode instance
+     */
+    private final Map tableNodes = new HashMap();
 
     /**
      * The database policy for which we're generating the schema generator; null to generate db-independent ERD
@@ -100,7 +106,7 @@ public class DefaultTableStructure implements TableStructure
 
             if(! isChildTable)
             {
-                final TableStructureNode topLevelNode = new DefaultTableStructureNode(pclass, table, this, null, 0);
+                final TableStructureNode topLevelNode = createNode(pclass, table, null, 0);
                 topLevelTableNodes.add(topLevelNode);
                 categorize(topLevelNode);
             }
@@ -159,6 +165,20 @@ public class DefaultTableStructure implements TableStructure
         }
 
         return null;
+    }
+
+    public TableStructureNode createNode(final PersistentClass mappedClass, final Table nodeForTable, final TableStructureNode parent, final int level)
+    {
+        final TableStructureNode existing = (TableStructureNode) tableNodes.get(nodeForTable.getName());
+        if(existing == null)
+        {
+            final DefaultTableStructureNode newNode = new DefaultTableStructureNode(mappedClass, nodeForTable, this, parent, level);
+            tableNodes.put(nodeForTable.getName(), newNode);
+            newNode.resolveChildrenAndAncestors();
+            return newNode;
+        }
+        else
+            return new LinkToOtherTableStructureNode(existing, parent, level);
     }
 }
 

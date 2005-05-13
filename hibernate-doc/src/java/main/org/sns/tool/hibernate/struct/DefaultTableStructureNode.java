@@ -61,8 +61,8 @@ public class DefaultTableStructureNode implements TableStructureNode, Comparable
     private final Table nodeForTable;
     private final PersistentClass mappedClass;
     private final int level;
-    private Set childNodes = new TreeSet();
-    private List ancestorNodes;
+    private final Set childNodes = new TreeSet();
+    private final List ancestorNodes = new ArrayList();
 
     public DefaultTableStructureNode(final PersistentClass mappedClass, final Table nodeForTable, final TableStructure owner, final TableStructureNode parent, final int level)
     {
@@ -71,7 +71,10 @@ public class DefaultTableStructureNode implements TableStructureNode, Comparable
         this.owner = owner;
         this.parentNode = parent;
         this.level = level;
+    }
 
+    protected void resolveChildrenAndAncestors()
+    {
         for (final Iterator classes = owner.getConfiguration().getClassMappings(); classes.hasNext(); )
         {
             final PersistentClass pclass = (PersistentClass) classes.next();
@@ -82,15 +85,15 @@ public class DefaultTableStructureNode implements TableStructureNode, Comparable
                 final ForeignKey foreignKey = (ForeignKey) fKeys.next();
                 if(owner.getRules().isParentRelationship(owner, foreignKey, nodeForTable))
                 {
-                    final DefaultTableStructureNode childNode = new DefaultTableStructureNode(pclass, table, owner, this, level + 1);
+
+                    final TableStructureNode childNode = owner.createNode(pclass, table, this, level + 1);
                     childNodes.add(childNode);
                     owner.categorize(childNode);
                 }
             }
         }
 
-        ancestorNodes = new ArrayList();
-        TableStructureNode activeParentNode = parent;
+        TableStructureNode activeParentNode = parentNode;
         while(activeParentNode != null)
         {
             if(ancestorNodes.size() == 0)
@@ -106,7 +109,6 @@ public class DefaultTableStructureNode implements TableStructureNode, Comparable
     {
         final TableStructureNode other = (TableStructureNode) o;
         return Collator.getInstance().compare(nodeForTable.getName().toUpperCase(), other.getTable().getName().toUpperCase());
-
     }
 
     public TableStructure getOwner()
@@ -147,5 +149,15 @@ public class DefaultTableStructureNode implements TableStructureNode, Comparable
     public boolean hasChildren()
     {
         return childNodes.size() > 0;
+    }
+
+    public TableStructureNode getLinkedNode()
+    {
+        return null;
+    }
+
+    public boolean isLinkedNode()
+    {
+        return false;
     }
 }

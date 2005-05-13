@@ -306,7 +306,15 @@ public class DatabaseDesignGenerator
 
         tableStructSectionElem.appendChild(createColumnDocumentationTable(doc, tableStructNode));
         for(Iterator t = tableStructNode.getChildNodes().iterator(); t.hasNext(); )
-            document(tableStructSectionElem, category, (TableStructureNode) t.next());
+        {
+            final TableStructureNode childNode = (TableStructureNode) t.next();
+            if(childNode.isLinkedNode())
+            {
+                // TODO: handle this properly
+            }
+            else
+                document(tableStructSectionElem, category, childNode);
+        }
     }
 
     public void generate() throws IOException, ParserConfigurationException, TransformerException

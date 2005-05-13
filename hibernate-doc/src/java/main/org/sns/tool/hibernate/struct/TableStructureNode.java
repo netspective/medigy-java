@@ -47,4 +47,16 @@ public interface TableStructureNode
      * Returns true if this node has any children.
      */
     public boolean hasChildren();
+
+    /**
+     * Ascertain whether or not this node is a link to another node or a physical one.
+     * @return True if this node is a reference to another node.
+     */
+    public boolean isLinkedNode();
+
+    /**
+     * If this node is not a physical node but a link to another node, then provide the link.
+     * @return null if this is not a link, TableStructureNode instance if it's a reference to another node
+     */
+    public TableStructureNode getLinkedNode();
 }
