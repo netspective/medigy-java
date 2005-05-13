@@ -77,10 +77,27 @@ div.table_columns table
     border-left: 1px solid #CCCCCC; border-top: 1px solid #CCCCCC; border-right: 1px solid #999999; border-bottom: 1px solid #999999;
 }
 
-div.table_columns tr.primary-key td.column-name
+div.table_columns tr.primary-key-column
 {
     font-weight: bold;
 }
+
+div.table_columns tr.housekeeping-column
+{
+    color: silver;
+}
+
+div.table_columns tr.housekeeping-column a
+{
+    color: silver;
+}
+
+div.table_columns tr.housekeeping-column a:hover
+{
+    color: white;
+    background-color: blue;
+}
+
 
 div.table_columns table th
 {

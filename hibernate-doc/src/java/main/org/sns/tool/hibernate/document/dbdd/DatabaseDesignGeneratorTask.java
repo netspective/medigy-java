@@ -50,9 +50,9 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.Environment;
-import org.sns.tool.hibernate.struct.DefaultTableStructure;
 import org.sns.tool.hibernate.struct.TableStructure;
 import org.sns.tool.hibernate.struct.TableStructureRules;
+import org.sns.tool.hibernate.struct.impl.DefaultTableStructure;
 
 public class DatabaseDesignGeneratorTask extends Task
 {

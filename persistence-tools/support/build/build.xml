@@ -92,7 +92,7 @@
         <dbdg docBookFile="${persistence.artifacts.doc.db.dbdd.src}"
               hibernateConfigClass="com.medigy.persist.util.HibernateConfiguration"
               hibernateConfigFile="/com/medigy/persist/hibernate.cfg.xml"
-              structureClass="org.sns.tool.hibernate.struct.DefaultTableStructure"
+              structureClass="org.sns.tool.hibernate.struct.impl.DefaultTableStructure"
               structureRulesClass="com.medigy.tool.persist.hibernate.HibernateStructureRules"
               documentTitle="Medigy Data Model"
             />

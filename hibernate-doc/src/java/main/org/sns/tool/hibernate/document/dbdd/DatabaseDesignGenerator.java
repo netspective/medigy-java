@@ -27,11 +27,12 @@ import org.hibernate.engine.Mapping;
 import org.hibernate.mapping.Column;
 import org.hibernate.mapping.ForeignKey;
 import org.hibernate.mapping.PersistentClass;
-import org.hibernate.mapping.PrimaryKey;
 import org.hibernate.mapping.Property;
 import org.hibernate.mapping.Table;
 import org.hibernate.type.Type;
 import org.sns.tool.hibernate.document.diagram.HibernateDiagramGeneratorException;
+import org.sns.tool.hibernate.struct.ColumnCategory;
+import org.sns.tool.hibernate.struct.ColumnDetail;
 import org.sns.tool.hibernate.struct.TableCategory;
 import org.sns.tool.hibernate.struct.TableStructure;
 import org.sns.tool.hibernate.struct.TableStructureNode;
@@ -119,11 +120,11 @@ public class DatabaseDesignGenerator
         return getUniqueTableId(tableStructNode.getTable());
     }
 
-    public String getColumnDataType(final TableStructureNode tableStructNode, final Column column, final PrimaryKey partOfPrimaryKey, final ForeignKey partOfForeignKey)
+    public String getColumnDataType(final ColumnDetail columnDetail)
     {
-        final TableStructure tableStruct = tableStructNode.getOwner();
+        final TableStructure tableStruct = columnDetail.getTableStructureNode().getOwner();
         final TableStructureRules rules = tableStruct.getRules();
-        return rules.getTranslatedDataType(column.getSqlType(dialect, mapping), tableStructNode, column, partOfPrimaryKey, partOfForeignKey);
+        return rules.getTranslatedDataType(columnDetail.getColumn().getSqlType(dialect, mapping), columnDetail);
     }
 
     public Element createImageElement(final Document doc, final String imageFileRef, final String format)
@@ -142,47 +143,27 @@ public class DatabaseDesignGenerator
     }
 
     public Element createColumnDocumentationRow(final Document doc,
-                                                final TableStructureNode tableStructNode,
-                                                final Column column,
-                                                final PrimaryKey partOfPrimaryKey,
-                                                final ForeignKey partOfForeignKey)
+                                                final ColumnDetail columnDetail)
     {
-        final TableStructure tableStruct = tableStructNode.getOwner();
+        final TableStructure tableStruct = columnDetail.getTableStructureNode().getOwner();
         final TableStructureRules rules = tableStruct.getRules();
 
-        final boolean isPrimaryKey = partOfPrimaryKey != null;
-        final boolean isForeignKey = partOfForeignKey != null;
-        final boolean isChildKeyOfParent = isForeignKey && rules.isParentRelationship(tableStruct, partOfForeignKey);
-        final boolean isRequired = !column.isNullable() && partOfPrimaryKey == null;
-
-        String className = null;
-        if(isPrimaryKey)
-            className = "primary-key";
-        if(isChildKeyOfParent)
-            className = "child-key";
-        else if(isForeignKey)
-            className = "foreign-key";
-
-        if(isRequired)
-            className += className == null ? "required" : ("-required");
-
         final Element result = doc.createElement("row");
-        if(className != null)
-            result.appendChild(createDocBookClassNamePI(doc, className));
+        result.appendChild(createDocBookClassNamePI(doc, columnDetail.getColumnCategory().getColumnCategoryId()));
 
         final Element pkElem = (Element) result.appendChild(doc.createElement("entry"));
-        pkElem.setAttribute("role", isPrimaryKey ? "column-pk" : "column-not-pk");
-        if (isPrimaryKey)
+        pkElem.setAttribute("role", columnDetail.isPrimaryKey() ? "column-pk" : "column-not-pk");
+        if (columnDetail.isPrimaryKey())
             pkElem.appendChild(createImageElement(doc, "primary-key.gif"));
 
         final Element requiredElem = (Element) result.appendChild(doc.createElement("entry"));
-        requiredElem.setAttribute("role", isRequired ? "column-not-nullable" : "column-nullable");
-        if (isRequired || isPrimaryKey)
+        requiredElem.setAttribute("role", columnDetail.isRequired() ? "column-not-nullable" : "column-nullable");
+        if (columnDetail.isRequired() || columnDetail.isPrimaryKey())
             requiredElem.appendChild(createImageElement(doc, "value-required.gif"));
 
         final Element formulaElem = (Element) result.appendChild(doc.createElement("entry"));
-        formulaElem.setAttribute("role", isRequired ? "column-not-formula" : "column-formula");
-        if (column.isFormula())
+        formulaElem.setAttribute("role", columnDetail.getColumn().isFormula() ? "column-formula" : "column-not-formula");
+        if (columnDetail.getColumn().isFormula())
             formulaElem.appendChild(createImageElement(doc, "calculated-value.gif"));
 
         final Element nameElem = (Element) result.appendChild(doc.createElement("entry"));
@@ -197,16 +178,17 @@ public class DatabaseDesignGenerator
         final Element remarksElem = (Element) result.appendChild(doc.createElement("entry"));
         remarksElem.setAttribute("role", "column-remarks");
 
-        nameElem.appendChild(doc.createTextNode(column.getName()));
-        dataTypeElem.appendChild(doc.createTextNode(getColumnDataType(tableStructNode, column, partOfPrimaryKey, partOfForeignKey)));
+        nameElem.appendChild(doc.createTextNode(columnDetail.getColumn().getName()));
+        dataTypeElem.appendChild(doc.createTextNode(getColumnDataType(columnDetail)));
 
-        if(isForeignKey)
+        if(columnDetail.isForeignKey())
         {
-            if(isChildKeyOfParent)
+            if(columnDetail.isChildKeyOfParent())
                 formulaElem.appendChild(createImageElement(doc, "parent-ref-key.gif"));
             else
                 formulaElem.appendChild(createImageElement(doc, "foreign-key.gif"));
 
+            final ForeignKey partOfForeignKey = columnDetail.getForeignKey();
             final StringBuffer colNames = new StringBuffer();
             final List columns = partOfForeignKey.getColumns();
             for(int i = 0; i < columns.size(); i++)
@@ -253,43 +235,33 @@ public class DatabaseDesignGenerator
 
         tableGroupElem.setAttribute("cols", Integer.toString(tableColumnsHeadRowElem.getChildNodes().getLength()));
 
-        final List primaryKeyRows = new ArrayList();
-        final List childKeyRows = new ArrayList();
-        final List columnRows = new ArrayList();
-
-        final Table table = tableStructNode.getTable();
-        final PrimaryKey primaryKeyColumns = table.getPrimaryKey();
-
-        for (final Iterator columns = table.getColumnIterator(); columns.hasNext();)
+        final List rowsByColumnCategory = new ArrayList();
+        final ColumnCategory[] sortedCategories = rules.getColumnCategoriesSortOrder();
+        for(int sc = 0; sc < sortedCategories.length; sc++)
         {
-            final Column column = (Column) columns.next();
+            final List rowsInCategory = new ArrayList();
+            final ColumnCategory category = sortedCategories[sc];
+            final ColumnDetail[] columnDetails = tableStructNode.getColumnsInCategory(category);
 
-            ForeignKey partOfForeignKey = null;
-            for (Iterator fkIterator = table.getForeignKeyIterator(); fkIterator.hasNext();)
+            if(columnDetails != null)
             {
-                final ForeignKey fKey = (ForeignKey) fkIterator.next();
-                if (fKey.containsColumn(column))
+                for(int cd = 0; cd < columnDetails.length; cd++)
                 {
-                    partOfForeignKey = fKey;
-                    break;
+                    final ColumnDetail columnDetail = columnDetails[cd];
+                    rowsInCategory.add(createColumnDocumentationRow(doc, columnDetail));
                 }
             }
 
-            if (primaryKeyColumns.containsColumn(column))
-                primaryKeyRows.add(createColumnDocumentationRow(doc, tableStructNode, column, primaryKeyColumns, partOfForeignKey));
-            else if(partOfForeignKey != null && rules.isParentRelationship(tableStruct, partOfForeignKey))
-                childKeyRows.add(createColumnDocumentationRow(doc, tableStructNode, column, null, partOfForeignKey));
-            else
-                columnRows.add(createColumnDocumentationRow(doc, tableStructNode, column, null, partOfForeignKey));
+            rowsByColumnCategory.add(rowsInCategory);
         }
 
         final Element tableColumnsBodyElem = (Element) tableGroupElem.appendChild(doc.createElement("tbody"));
-        for(final Iterator i = primaryKeyRows.iterator(); i.hasNext(); )
-            tableColumnsBodyElem.appendChild((Node) i.next());
-        for(final Iterator i = childKeyRows.iterator(); i.hasNext(); )
-            tableColumnsBodyElem.appendChild((Node) i.next());
-        for(final Iterator i = columnRows.iterator(); i.hasNext(); )
-            tableColumnsBodyElem.appendChild((Node) i.next());
+        for(final Iterator i = rowsByColumnCategory.iterator(); i.hasNext(); )
+        {
+            final List rowsInCategory = (List) i.next();
+            for(final Iterator j = rowsInCategory.iterator(); j.hasNext(); )
+                tableColumnsBodyElem.appendChild((Node) j.next());
+        }
 
         return tableColumnsTableElem;
     }
@@ -301,7 +273,7 @@ public class DatabaseDesignGenerator
         final String tableName = tableStructNode.getTable().getName();
         final Element tableStructSectionElem = (Element) parentElement.appendChild(doc.createElement("section"));
         tableStructSectionElem.setAttribute("id", getUniqueTableId(tableStructNode) + "_sect");
-        tableStructSectionElem.appendChild(createDocBookChunkFileNamePI(doc, category.getCategoryName() + " " + tableName));
+        tableStructSectionElem.appendChild(createDocBookChunkFileNamePI(doc, category.getTableCategoryId() + " " + tableName));
         tableStructSectionElem.appendChild(doc.createElement("title")).appendChild(doc.createTextNode(tableName));
 
         tableStructSectionElem.appendChild(createColumnDocumentationTable(doc, tableStructNode));
@@ -338,9 +310,9 @@ public class DatabaseDesignGenerator
 
             final Element categoryChapter = (Element) rootElem.appendChild(doc.createElement("chapter"));
             categoryChapter.setAttribute("name", "category_" + categoryNum);
-            categoryChapter.setAttribute("id", "category_" + category.getCategoryName());
-            categoryChapter.appendChild(createDocBookChunkFileNamePI(doc, category.getCategoryName()));
-            categoryChapter.appendChild(doc.createElement("title")).appendChild(doc.createTextNode(category.getCategoryName()));
+            categoryChapter.setAttribute("id", "category_" + category.getTableCategoryId());
+            categoryChapter.appendChild(createDocBookChunkFileNamePI(doc, category.getTableCategoryId()));
+            categoryChapter.appendChild(doc.createElement("title")).appendChild(doc.createTextNode(category.getTableCategoryLabel()));
 
             for(Iterator t = categoryNodes.iterator(); t.hasNext(); )
             {

@@ -43,13 +43,15 @@
  */
 package com.medigy.tool.persist.hibernate;
 
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 import org.hibernate.mapping.Collection;
-import org.hibernate.mapping.Column;
 import org.hibernate.mapping.ForeignKey;
-import org.hibernate.mapping.PrimaryKey;
 import org.hibernate.mapping.Table;
+import org.sns.tool.hibernate.struct.ColumnCategory;
+import org.sns.tool.hibernate.struct.ColumnDetail;
 import org.sns.tool.hibernate.struct.TableCategory;
 import org.sns.tool.hibernate.struct.TableStructure;
 import org.sns.tool.hibernate.struct.TableStructureNode;
@@ -60,12 +62,28 @@ import com.medigy.persist.reference.custom.CustomReferenceEntity;
 
 public class HibernateStructureRules implements TableStructureRules
 {
-    private TableCategory defaultTableCategory = new TableCategoryImpl("Application Tables");
-    private TableCategory refTableCategory = new TableCategoryImpl("Reference Tables");
-    private TableCategory customRefTableCategory = new TableCategoryImpl("Custom Reference Tables");
+    private final TableCategory defaultTableCategory = new TableCategoryImpl("app-table", "Application Tables");
+    private final TableCategory refTableCategory = new TableCategoryImpl("reference-table", "Reference Tables");
+    private final TableCategory customRefTableCategory = new TableCategoryImpl("custom-reference-table", "Custom Reference Tables");
+
+    private final ColumnCategory pkColumnsCategory = new ColumnCategoryImpl("primary-key-column", "Primary Key Columns");
+    private final ColumnCategory childKeyColumnsCategory = new ColumnCategoryImpl("child-key-column", "Child Key Columns");
+    private final ColumnCategory defaultColumnCategory = new ColumnCategoryImpl("application-column", "Application Columns");
+    private final ColumnCategory housekeepingColumnsCategory = new ColumnCategoryImpl("housekeeping-column", "Housekeeping Columns");
+    private final ColumnCategory[] columnCategoriesSortOrder = new ColumnCategory[] { pkColumnsCategory, childKeyColumnsCategory, defaultColumnCategory, housekeepingColumnsCategory };
+
+    private final Set housekeepingColumnNames = new HashSet();
 
     public HibernateStructureRules()
     {
+        housekeepingColumnNames.add("lock_version");
+        housekeepingColumnNames.add("create_timestamp");
+        housekeepingColumnNames.add("update_timestamp");
+        housekeepingColumnNames.add("record_status");
+        housekeepingColumnNames.add("create_session_id");
+        housekeepingColumnNames.add("update_session_id");
+        housekeepingColumnNames.add("create_version_id");
+        housekeepingColumnNames.add("update_version_id");
     }
 
     public boolean isParentRelationship(final TableStructure structure, final ForeignKey foreignKey)
@@ -98,40 +116,108 @@ public class HibernateStructureRules implements TableStructureRules
             return new TableCategory[] { defaultTableCategory };
     }
 
-    public String getTranslatedDataType(String defaultDataType, TableStructureNode tableNode, Column column, PrimaryKey partOfPrimaryKey, ForeignKey partOfForeignKey)
+    public ColumnCategory getColumnCategory(final ColumnDetail columnDetail)
+    {
+        if(columnDetail.isPrimaryKey())
+            return pkColumnsCategory;
+        else if(columnDetail.isChildKeyOfParent())
+            return childKeyColumnsCategory;
+        else if(housekeepingColumnNames.contains(columnDetail.getColumn().getName()))
+            return housekeepingColumnsCategory;
+        else
+            return defaultColumnCategory;
+    }
+
+    public ColumnCategory[] getColumnCategoriesSortOrder()
+    {
+        return columnCategoriesSortOrder;
+    }
+
+    public String getTranslatedDataType(String defaultDataType, ColumnDetail columnDetail)
     {
         return defaultDataType;
     }
 
     protected class TableCategoryImpl implements TableCategory, Comparable
     {
-        private String name;
+        private String id;
+        private String label;
 
-        public TableCategoryImpl(String name)
+        public TableCategoryImpl(final String id, final String label)
         {
-            this.name = name;
+            this.id = id;
+            this.label = label;
         }
 
-        public String getCategoryName()
+        public String getTableCategoryId()
         {
-            return name;
+            return id;
+        }
+
+        public String getTableCategoryLabel()
+        {
+            return label;
         }
 
         public int compareTo(Object o)
         {
             TableCategoryImpl other = (TableCategoryImpl) o;
-            return name.compareTo(other.getCategoryName());
+            return id.compareTo(other.getTableCategoryId());
         }
 
         public boolean equals(Object o)
         {
             TableCategoryImpl other = (TableCategoryImpl) o;
-            return name.equals(other.getCategoryName());
+            return id.equals(other.getTableCategoryId());
         }
 
         public String toString()
         {
-            return getCategoryName();
+            return getTableCategoryId();
+        }
+    }
+
+    protected class ColumnCategoryImpl implements ColumnCategory, Comparable
+    {
+        private String id;
+        private String label;
+
+        public ColumnCategoryImpl(final String id, final String label)
+        {
+            this.id = id;
+            this.label = label;
+        }
+
+        public ColumnCategoryImpl(String name)
+        {
+            this.id = name;
+        }
+
+        public String getColumnCategoryId()
+        {
+            return id;
+        }
+
+        public String getColumnCategoryLabel()
+        {
+            return label;
+        }
+
+        public int compareTo(Object o)
+        {
+            TableCategoryImpl other = (TableCategoryImpl) o;
+            return id.compareTo(other.getTableCategoryId());
+        }
+
+        public boolean equals(Object o)
+        {
+            TableCategoryImpl other = (TableCategoryImpl) o;
+            return id.equals(other.getTableCategoryId());
+        }
+
+        public String toString()
+        {
+            return getColumnCategoryId();
         }
     }
 }
