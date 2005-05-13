@@ -51,7 +51,7 @@ import org.hibernate.cfg.Configuration;
 public interface TableStructure
 {
     /**
-     * Return the schema for which structural information was gathered
+     * Return the hibernate configuration for which structural information was gathered
      */
     public Configuration getConfiguration();
 
@@ -73,8 +73,14 @@ public interface TableStructure
     public void categorize(final TableStructureNode tableNode);
 
     /**
-     * Return the map of table categories whose key is the category name and the values are lists of TableStructureNode
-     * instances that belong to those categories.
+     * Return the map of table categories whose key is the TableCategory instance and the values are sets of
+     * TableStructureNode instances that belong to those categories.
      */
     public Map getTableCategories();
+
+    /**
+     * Retrieve the table category named name.
+     * @return Null if no table category named "name" exists, TableCategory instance otherwise
+     */
+    public TableCategory getTableCategory(final String name);
 }

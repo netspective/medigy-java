@@ -209,6 +209,7 @@
       <module fileurl="file://$PROJECT_DIR$/../../../graphviz/support/GraphViz.iml" filepath="$PROJECT_DIR$/../../../graphviz/support/GraphViz.iml" />
       <module fileurl="file://$PROJECT_DIR$/../../../common/support/common.iml" filepath="$PROJECT_DIR$/../../../common/support/common.iml" />
       <module fileurl="file://$PROJECT_DIR$/../../../hibernate-doc/support/hibernate-doc.iml" filepath="$PROJECT_DIR$/../../../hibernate-doc/support/hibernate-doc.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../../../../Frameworks/webapps/nefs-sample-medigy/nefs-sample-medigy.iml" filepath="$PROJECT_DIR$/../../../../Frameworks/webapps/nefs-sample-medigy/nefs-sample-medigy.iml" />
       <module fileurl="file://$PROJECT_DIR$/../../../persistence/support/persistence.iml" filepath="$PROJECT_DIR$/../../../persistence/support/persistence.iml" />
       <module fileurl="file://$PROJECT_DIR$/../../../persistence-tools/support/persistence-tools.iml" filepath="$PROJECT_DIR$/../../../persistence-tools/support/persistence-tools.iml" />
       <module fileurl="file://$PROJECT_DIR$/../../../service/support/service.iml" filepath="$PROJECT_DIR$/../../../service/support/service.iml" />

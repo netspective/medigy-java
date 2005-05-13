@@ -39,6 +39,7 @@ import org.sns.tool.hibernate.struct.TableStructureRules;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.w3c.dom.ProcessingInstruction;
 
 public class DatabaseDesignGenerator
 {
@@ -108,11 +109,36 @@ public class DatabaseDesignGenerator
         }
     }
 
+    public String getUniqueTableId(final Table table)
+    {
+        return Integer.toHexString(table.hashCode());
+    }
+
+    public String getUniqueTableId(final TableStructureNode tableStructNode)
+    {
+        return getUniqueTableId(tableStructNode.getTable());
+    }
+
     public String getColumnDataType(final TableStructureNode tableStructNode, final Column column, final PrimaryKey partOfPrimaryKey, final ForeignKey partOfForeignKey)
     {
         final TableStructure tableStruct = tableStructNode.getOwner();
         final TableStructureRules rules = tableStruct.getRules();
         return rules.getTranslatedDataType(column.getSqlType(dialect, mapping), tableStructNode, column, partOfPrimaryKey, partOfForeignKey);
+    }
+
+    public Element createImageElement(final Document doc, final String imageFileRef, final String format)
+    {
+        final Element result = doc.createElement("mediaobject");
+        final Element imageObjectElem = (Element) result.appendChild(doc.createElement("imageobject"));
+        final Element imageDataElem = (Element) imageObjectElem.appendChild(doc.createElement("imagedata"));
+        imageDataElem.setAttribute("format", format);
+        imageDataElem.setAttribute("fileref", "resources/" + imageFileRef);
+        return result;
+    }
+
+    public Element createImageElement(final Document doc, final String imageFileRef)
+    {
+        return createImageElement(doc, imageFileRef, imageFileRef.substring(imageFileRef.lastIndexOf('.')+1).toLowerCase());
     }
 
     public Element createColumnDocumentationRow(final Document doc,
@@ -124,34 +150,63 @@ public class DatabaseDesignGenerator
         final TableStructure tableStruct = tableStructNode.getOwner();
         final TableStructureRules rules = tableStruct.getRules();
 
+        final boolean isPrimaryKey = partOfPrimaryKey != null;
+        final boolean isForeignKey = partOfForeignKey != null;
+        final boolean isChildKeyOfParent = isForeignKey && rules.isParentRelationship(tableStruct, partOfForeignKey);
+        final boolean isRequired = !column.isNullable() && partOfPrimaryKey == null;
+
+        String className = null;
+        if(isPrimaryKey)
+            className = "primary-key";
+        if(isChildKeyOfParent)
+            className = "child-key";
+        else if(isForeignKey)
+            className = "foreign-key";
+
+        if(isRequired)
+            className += className == null ? "required" : ("-required");
+
         final Element result = doc.createElement("row");
+        if(className != null)
+            result.appendChild(createDocBookClassNamePI(doc, className));
+
         final Element pkElem = (Element) result.appendChild(doc.createElement("entry"));
-        final Element notNullElem = (Element) result.appendChild(doc.createElement("entry"));
-        final Element nameElem = (Element) result.appendChild(doc.createElement("entry"));
-        final Element dataTypeElem = (Element) result.appendChild(doc.createElement("entry"));
-        final Element constraintsElem = (Element) result.appendChild(doc.createElement("entry"));
-        final Element referencesElem = (Element) result.appendChild(doc.createElement("entry"));
+        pkElem.setAttribute("role", isPrimaryKey ? "column-pk" : "column-not-pk");
+        if (isPrimaryKey)
+            pkElem.appendChild(createImageElement(doc, "primary-key.gif"));
 
-        List constraints = new ArrayList();
-        if (column.isUnique())
-            constraints.add("Unique");
+        final Element requiredElem = (Element) result.appendChild(doc.createElement("entry"));
+        requiredElem.setAttribute("role", isRequired ? "column-not-nullable" : "column-nullable");
+        if (isPrimaryKey)
+            requiredElem.appendChild(createImageElement(doc, "value-required.gif"));
+
+        final Element formulaElem = (Element) result.appendChild(doc.createElement("entry"));
+        formulaElem.setAttribute("role", isRequired ? "column-not-formula" : "column-formula");
         if (column.isFormula())
-            constraints.add("Formula");
+            formulaElem.appendChild(createImageElement(doc, "calculated-value.gif"));
 
-        if (partOfPrimaryKey != null)
-            pkElem.appendChild(doc.createTextNode("*"));
+        final Element nameElem = (Element) result.appendChild(doc.createElement("entry"));
+        nameElem.setAttribute("role", "column-name");
 
-        if (!column.isNullable() && partOfPrimaryKey == null)
-            notNullElem.appendChild(doc.createTextNode("*"));
+        final Element dataTypeElem = (Element) result.appendChild(doc.createElement("entry"));
+        dataTypeElem.setAttribute("role", "column-data-type");
+
+        final Element referencesElem = (Element) result.appendChild(doc.createElement("entry"));
+        referencesElem.setAttribute("role", "column-references");
+
+        final Element remarksElem = (Element) result.appendChild(doc.createElement("entry"));
+        remarksElem.setAttribute("role", "column-remarks");
 
         nameElem.appendChild(doc.createTextNode(column.getName()));
         dataTypeElem.appendChild(doc.createTextNode(getColumnDataType(tableStructNode, column, partOfPrimaryKey, partOfForeignKey)));
 
-        if(constraints.size() > 0)
-            constraintsElem.appendChild(doc.createTextNode(constraints.toString()));
-
-        if(partOfForeignKey != null)
+        if(isForeignKey)
         {
+            if(isChildKeyOfParent)
+                formulaElem.appendChild(createImageElement(doc, "parent-ref-key.gif"));
+            else
+                formulaElem.appendChild(createImageElement(doc, "foreign-key.gif"));
+
             final StringBuffer colNames = new StringBuffer();
             final List columns = partOfForeignKey.getColumns();
             for(int i = 0; i < columns.size(); i++)
@@ -164,9 +219,11 @@ public class DatabaseDesignGenerator
             sb.append(partOfForeignKey.getReferencedTable().getName());
             sb.append(".");
             sb.append(colNames);
-            if (rules.isParentRelationship(tableStruct, partOfForeignKey))
-                sb.append(" (parent table)");
-            referencesElem.appendChild(doc.createTextNode(sb.toString()));
+
+            final Element linkElem = doc.createElement("link");
+            linkElem.setAttribute("linkend", getUniqueTableId(partOfForeignKey.getReferencedTable()));
+            linkElem.appendChild(doc.createTextNode(sb.toString()));
+            referencesElem.appendChild(linkElem);
         }
 
         return result;
@@ -179,18 +236,20 @@ public class DatabaseDesignGenerator
         final TableStructureRules rules = tableStruct.getRules();
 
         final Element tableColumnsTableElem = doc.createElement("table");
+        tableColumnsTableElem.setAttribute("id", getUniqueTableId(tableStructNode));
         tableColumnsTableElem.setAttribute("tabstyle", "table_columns");
         tableColumnsTableElem.appendChild(doc.createElement("title")).appendChild(doc.createTextNode(tableStructNode.getTable().getName() + " Columns"));
         final Element tableGroupElem = (Element) tableColumnsTableElem.appendChild(doc.createElement("tgroup"));
 
         final Element tableColumnsHeadElem = (Element) tableGroupElem.appendChild(doc.createElement("thead"));
         final Element tableColumnsHeadRowElem = (Element) tableColumnsHeadElem.appendChild(doc.createElement("row"));
-        tableColumnsHeadRowElem.appendChild(doc.createElement("entry")).appendChild(doc.createTextNode("PK"));
-        tableColumnsHeadRowElem.appendChild(doc.createElement("entry")).appendChild(doc.createTextNode("NN"));
+        tableColumnsHeadRowElem.appendChild(doc.createElement("entry")).appendChild(doc.createTextNode(""));
+        tableColumnsHeadRowElem.appendChild(doc.createElement("entry")).appendChild(doc.createTextNode(""));
+        tableColumnsHeadRowElem.appendChild(doc.createElement("entry")).appendChild(doc.createTextNode(""));
         tableColumnsHeadRowElem.appendChild(doc.createElement("entry")).appendChild(doc.createTextNode("Column"));
         tableColumnsHeadRowElem.appendChild(doc.createElement("entry")).appendChild(doc.createTextNode("Data type"));
-        tableColumnsHeadRowElem.appendChild(doc.createElement("entry")).appendChild(doc.createTextNode("Constraints"));
         tableColumnsHeadRowElem.appendChild(doc.createElement("entry")).appendChild(doc.createTextNode("References"));
+        tableColumnsHeadRowElem.appendChild(doc.createElement("entry")).appendChild(doc.createTextNode("Description"));
 
         tableGroupElem.setAttribute("cols", Integer.toString(tableColumnsHeadRowElem.getChildNodes().getLength()));
 
@@ -235,16 +294,19 @@ public class DatabaseDesignGenerator
         return tableColumnsTableElem;
     }
 
-    protected void document(final Element parentElement, final TableStructureNode tableStructNode) throws IOException
+    protected void document(final Element parentElement, final TableCategory category,  final TableStructureNode tableStructNode) throws IOException
     {
         final Document doc = parentElement.getOwnerDocument();
-        parentElement.appendChild(createColumnDocumentationTable(doc, tableStructNode));
 
+        final String tableName = tableStructNode.getTable().getName();
         final Element tableStructSectionElem = (Element) parentElement.appendChild(doc.createElement("section"));
-        tableStructSectionElem.appendChild(doc.createElement("title")).appendChild(doc.createTextNode(tableStructNode.getTable().getName()));
+        tableStructSectionElem.setAttribute("id", getUniqueTableId(tableStructNode) + "_sect");
+        tableStructSectionElem.appendChild(createDocBookChunkFileNamePI(doc, category.getCategoryName() + " " + tableName));
+        tableStructSectionElem.appendChild(doc.createElement("title")).appendChild(doc.createTextNode(tableName));
 
+        tableStructSectionElem.appendChild(createColumnDocumentationTable(doc, tableStructNode));
         for(Iterator t = tableStructNode.getChildNodes().iterator(); t.hasNext(); )
-            document(tableStructSectionElem, (TableStructureNode) t.next());
+            document(tableStructSectionElem, category, (TableStructureNode) t.next());
     }
 
     public void generate() throws IOException, ParserConfigurationException, TransformerException
@@ -268,6 +330,8 @@ public class DatabaseDesignGenerator
 
             final Element categoryChapter = (Element) rootElem.appendChild(doc.createElement("chapter"));
             categoryChapter.setAttribute("name", "category_" + categoryNum);
+            categoryChapter.setAttribute("id", "category_" + category.getCategoryName());
+            categoryChapter.appendChild(createDocBookChunkFileNamePI(doc, category.getCategoryName()));
             categoryChapter.appendChild(doc.createElement("title")).appendChild(doc.createTextNode(category.getCategoryName()));
 
             for(Iterator t = categoryNodes.iterator(); t.hasNext(); )
@@ -278,7 +342,7 @@ public class DatabaseDesignGenerator
                 if(tableNode.getLevel() > 0)
                     continue;
 
-                document(categoryChapter, tableNode);
+                document(categoryChapter, category, tableNode);
             }
 
             categoryNum++;
@@ -288,6 +352,16 @@ public class DatabaseDesignGenerator
         final Transformer serializer = transformerFactory.newTransformer();
 
         serializer.transform(new DOMSource(doc), new StreamResult(new FileOutputStream(generatorConfig.getDocBookFile())));
+    }
+
+    protected ProcessingInstruction createDocBookClassNamePI(final Document doc, final String className)
+    {
+        return doc.createProcessingInstruction("dbhtml", "class=\""+ className + "\"");
+    }
+
+    protected ProcessingInstruction createDocBookChunkFileNamePI(final Document doc, final String baseName)
+    {
+        return doc.createProcessingInstruction("dbhtml", "filename=\""+ baseName.replaceAll("[^A-Za-z0-9]+", "_").toLowerCase() + ".html\"");
     }
 
     /*-- Accessors and Mutators for access to private fields --------------------------------------------------------*/

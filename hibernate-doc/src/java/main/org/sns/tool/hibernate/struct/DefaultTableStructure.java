@@ -57,7 +57,7 @@ import org.hibernate.mapping.Table;
 public class DefaultTableStructure implements TableStructure
 {
     /**
-     * List of categories -- key is a string, value is a set of TableStructureNode instances
+     * List of categories -- key is a TableCategory instance, value is a set of TableStructureNode instances
      */
     private final Map tableCategories = new TreeMap();
 
@@ -72,7 +72,7 @@ public class DefaultTableStructure implements TableStructure
     private final TableStructureRules rules;
 
     /**
-     * The tables that have no parents (top level tables with level = 1).
+     * The tables that have no parents (top level tables with level = 0).
      */
     private final Set topLevelTableNodes = new TreeSet();
 
@@ -149,5 +149,16 @@ public class DefaultTableStructure implements TableStructure
         return tableCategories;
     }
 
+    public TableCategory getTableCategory(final String name)
+    {
+        for(final Iterator i = tableCategories.keySet().iterator(); i.hasNext(); )
+        {
+            final TableCategory tableCategory = (TableCategory) i.next();
+            if(tableCategory.getCategoryName().equalsIgnoreCase(name))
+                return tableCategory;
+        }
+
+        return null;
+    }
 }
 
