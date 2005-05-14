@@ -1,8 +1,9 @@
 /*
  * Copyright (c) 2005 Your Corporation. All Rights Reserved.
  */
-package org.sns.tool.hibernate.document.dbdd;
+package org.sns.tool.hibernate.document;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -275,6 +276,23 @@ public class DatabaseDesignGenerator
         tableStructSectionElem.setAttribute("id", getUniqueTableId(tableStructNode) + "_sect");
         tableStructSectionElem.appendChild(createDocBookChunkFileNamePI(doc, category.getTableCategoryId() + " " + tableName));
         tableStructSectionElem.appendChild(doc.createElement("title")).appendChild(doc.createTextNode(tableName));
+
+        final Element overview = (Element) tableStructSectionElem.appendChild(doc.createElement("para"));
+        overview.appendChild(doc.createTextNode("The " + tableStructNode.getTable().getName() + " table is represented in the domain model by the class "));
+
+        final File associatedJavaDocHome = generatorConfig.getAssociatedJavaDocHome();
+        final Class mappedClass = tableStructNode.getPersistentClass().getMappedClass();
+        if(associatedJavaDocHome != null)
+        {
+            final Element linkElem = doc.createElement("ulink");
+            linkElem.setAttribute("role", "table-mapped-class-javadoc");
+            linkElem.setAttribute("url", associatedJavaDocHome + "/" + mappedClass.getName().replace('.', '/') + ".html");
+            linkElem.appendChild(doc.createTextNode(mappedClass.getName()));
+            overview.appendChild(linkElem);
+        }
+        else
+            overview.appendChild(doc.createTextNode(mappedClass.getName()));
+        overview.appendChild(doc.createTextNode("."));
 
         tableStructSectionElem.appendChild(createColumnDocumentationTable(doc, tableStructNode));
         for(Iterator t = tableStructNode.getChildNodes().iterator(); t.hasNext(); )

@@ -78,7 +78,7 @@
     </target>
 
     <target name="doc.generate-dbdd-source" depends="compile.main,init.define-modules,init.define-module.dependencies.main.classpath">
-        <taskdef name="dbdg" classname="org.sns.tool.hibernate.document.dbdd.DatabaseDesignGeneratorTask"
+        <taskdef name="dbdg" classname="org.sns.tool.hibernate.document.DatabaseDesignGeneratorTask"
                              classpathref="module.dependencies.main.classpath">
             <classpath location="${module.artifacts.classes.main.home}"/>
         </taskdef>
@@ -95,6 +95,7 @@
               structureClass="org.sns.tool.hibernate.struct.impl.DefaultTableStructure"
               structureRulesClass="com.medigy.tool.persist.hibernate.HibernateStructureRules"
               documentTitle="Medigy Data Model"
+              associatedJavaDocHome="../../javadoc"
             />
     </target>
 

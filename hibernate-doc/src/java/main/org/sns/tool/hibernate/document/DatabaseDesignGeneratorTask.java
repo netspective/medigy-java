@@ -41,7 +41,7 @@
 /*
  * Copyright (c) 2005 Your Corporation. All Rights Reserved.
  */
-package org.sns.tool.hibernate.document.dbdd;
+package org.sns.tool.hibernate.document;
 
 import java.io.File;
 import java.lang.reflect.Constructor;
@@ -63,6 +63,7 @@ public class DatabaseDesignGeneratorTask extends Task
     private String dialectClass;
     private File destDir;
     private File docBookFile;
+    private File associatedJavaDocHome;
     private String documentTitle;
 
     public void execute() throws BuildException
@@ -118,6 +119,11 @@ public class DatabaseDesignGeneratorTask extends Task
                 public File getDocBookFile()
                 {
                     return docBookFile;
+                }
+
+                public File getAssociatedJavaDocHome()
+                {
+                    return associatedJavaDocHome;
                 }
 
                 public String getDocumentTitle()
@@ -179,5 +185,10 @@ public class DatabaseDesignGeneratorTask extends Task
     public void setDocumentTitle(String documentTitle)
     {
         this.documentTitle = documentTitle;
+    }
+
+    public void setAssociatedJavaDocHome(File associatedJavaDocHome)
+    {
+        this.associatedJavaDocHome = associatedJavaDocHome;
     }
 }

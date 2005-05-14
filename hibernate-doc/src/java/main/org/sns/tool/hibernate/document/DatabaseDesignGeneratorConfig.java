@@ -41,7 +41,7 @@
 /*
  * Copyright (c) 2005 Your Corporation. All Rights Reserved.
  */
-package org.sns.tool.hibernate.document.dbdd;
+package org.sns.tool.hibernate.document;
 
 import java.io.File;
 
@@ -55,4 +55,5 @@ public interface DatabaseDesignGeneratorConfig
     public TableStructure getTableStructure();
     public File getImagesDirectory();
     public File getDocBookFile();
+    public File getAssociatedJavaDocHome();
 }
