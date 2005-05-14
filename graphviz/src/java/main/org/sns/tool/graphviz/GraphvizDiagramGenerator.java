@@ -272,14 +272,7 @@ public class GraphvizDiagramGenerator
             final File dest = new File(params.getDestDir(), params.getBaseFileName() + fileExtn);
 
             final String cmdLine =  params.getGraphVizDotCommandSpec() + " -T"+ imageType +" -o\""+ dest +"\" \""+ src +"\"";
-            final String[] commands = new String[] {
-                params.getGraphVizDotCommandSpec(),
-                "-T"+ imageType,
-                "-o"+ dest.getAbsolutePath(),
-                src.getAbsolutePath()
-            };
-
-            GraphvizDotExec.exec(commands, System.out, System.err);
+            GraphvizDotExec.exec(cmdLine, System.out, System.err);
             results.add(dest);
         }
 
