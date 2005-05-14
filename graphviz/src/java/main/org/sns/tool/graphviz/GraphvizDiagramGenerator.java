@@ -279,9 +279,10 @@ public class GraphvizDiagramGenerator
                 src.getAbsolutePath()
             };
 
+            System.out.println("Running " + cmdLine);
             final Process p = Runtime.getRuntime().exec(commands);
             final int exitCode = p.waitFor();
-            System.out.println("ExitCode " + exitCode + " for command " + cmdLine);
+            System.out.println("ExitCode " + exitCode + " for command '" + commands[0] + "'");
             results.add(dest);
         }
 
