@@ -50,10 +50,17 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import org.hibernate.MappingException;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.cfg.Environment;
+import org.hibernate.dialect.Dialect;
+import org.hibernate.engine.Mapping;
 import org.hibernate.mapping.ForeignKey;
 import org.hibernate.mapping.PersistentClass;
+import org.hibernate.mapping.Property;
 import org.hibernate.mapping.Table;
+import org.hibernate.type.Type;
+import org.sns.tool.hibernate.document.diagram.HibernateDiagramGeneratorException;
 import org.sns.tool.hibernate.struct.TableCategory;
 import org.sns.tool.hibernate.struct.TableStructure;
 import org.sns.tool.hibernate.struct.TableStructureNode;
@@ -74,6 +81,11 @@ public class DefaultTableStructure implements TableStructure
     private final Map tableNodes = new HashMap();
 
     /**
+     * Map of Tables and their associated PersistentClass mapped classes.
+     */
+    private final Map tableToClassMap = new HashMap();
+
+    /**
      * The database policy for which we're generating the schema generator; null to generate db-independent ERD
      */
     private final Configuration configuration;
@@ -87,6 +99,16 @@ public class DefaultTableStructure implements TableStructure
      * The tables that have no parents (top level tables with level = 0).
      */
     private final Set topLevelTableNodes = new TreeSet();
+
+    /**
+     * The dialect we will use when obtaining the data types
+     */
+    private final Dialect dialect;
+
+    /**
+     * The mappings we're going to use for getting the data types and related information.
+     */
+    private final Mapping mapping;
 
     public DefaultTableStructure(final Configuration configuration, final TableStructureRules rules)
     {
@@ -116,6 +138,59 @@ public class DefaultTableStructure implements TableStructure
                 topLevelTableNodes.add(topLevelNode);
                 categorize(topLevelNode);
             }
+        }
+
+        for (final Iterator classes = configuration.getClassMappings(); classes.hasNext();)
+        {
+            final PersistentClass pclass = (PersistentClass) classes.next();
+            final Table table = (Table) pclass.getTable();
+
+            tableToClassMap.put(table, pclass);
+        }
+
+        // the following was copied from org.hibernate.cfg.Configuration.buildMapping() because buildMapping() was private
+        this.mapping = new Mapping()
+        {
+            /**
+             * Returns the identifier type of a mapped class
+             */
+            public Type getIdentifierType(String persistentClass) throws MappingException
+            {
+                final PersistentClass pc = configuration.getClassMapping(persistentClass);
+                if (pc == null) throw new MappingException("persistent class not known: " + persistentClass);
+                return pc.getIdentifier().getType();
+            }
+
+            public String getIdentifierPropertyName(String persistentClass) throws MappingException
+            {
+                final PersistentClass pc = configuration.getClassMapping(persistentClass);
+                if (pc == null) throw new MappingException("persistent class not known: " + persistentClass);
+                if (!pc.hasIdentifierProperty()) return null;
+                return pc.getIdentifierProperty().getName();
+            }
+
+            public Type getPropertyType(String persistentClass, String propertyName) throws MappingException
+            {
+                final PersistentClass pc = configuration.getClassMapping(persistentClass);
+                if (pc == null) throw new MappingException("persistent class not known: " + persistentClass);
+                Property prop = pc.getProperty(propertyName);
+                if (prop == null) throw new MappingException("property not known: " + persistentClass + '.' + propertyName);
+                return prop.getType();
+            }
+        };
+
+        String dialectName = configuration.getProperty(Environment.DIALECT);
+        if (dialectName == null)
+            dialectName = org.hibernate.dialect.GenericDialect.class.getName();
+
+        try
+        {
+            final Class cls = Class.forName(dialectName);
+            this.dialect = (Dialect) cls.newInstance();
+        }
+        catch (Exception e)
+        {
+            throw new HibernateDiagramGeneratorException(e);
         }
 
         resolveDependencies();
@@ -207,6 +282,26 @@ public class DefaultTableStructure implements TableStructure
         }
 
         return null;
+    }
+
+    public Map getTableToClassMap()
+    {
+        return tableToClassMap;
+    }
+
+    public PersistentClass getClassForTable(final Table table)
+    {
+        return (PersistentClass) tableToClassMap.get(table);
+    }
+
+    public Dialect getDialect()
+    {
+        return dialect;
+    }
+
+    public Mapping getMapping()
+    {
+        return mapping;
     }
 
     public TableStructureNode createNode(final PersistentClass mappedClass, final Table nodeForTable, final TableStructureNode parent, final int level)

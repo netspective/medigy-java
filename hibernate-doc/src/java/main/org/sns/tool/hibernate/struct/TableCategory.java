@@ -47,4 +47,5 @@ public interface TableCategory
 {
     public String getTableCategoryId();
     public String getTableCategoryLabel();
+    public boolean isGenerateDiagrams();
 }

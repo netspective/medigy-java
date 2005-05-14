@@ -77,7 +77,7 @@
                       destFile="${persistence.artifacts.doc.diagram.dest.file-prefix}.gif" format="gif"/>
     </target>
 
-    <target name="doc.generate-dbdd-source" depends="compile.main,init.define-modules,init.define-module.dependencies.main.classpath">
+    <target name="doc.generate-dbdd-source" depends="compile.main,init.define-modules,init.define-module.dependencies.main.classpath,graphviz.init">
         <taskdef name="dbdg" classname="org.sns.tool.hibernate.document.DatabaseDesignGeneratorTask"
                              classpathref="module.dependencies.main.classpath">
             <classpath location="${module.artifacts.classes.main.home}"/>
@@ -94,6 +94,8 @@
               hibernateConfigFile="/com/medigy/persist/hibernate.cfg.xml"
               structureClass="org.sns.tool.hibernate.struct.impl.DefaultTableStructure"
               structureRulesClass="com.medigy.tool.persist.hibernate.HibernateStructureRules"
+              databaseDiagramRendererClass="com.medigy.tool.persist.hibernate.HibernateDatabaseDiagramRenderer"
+              graphvizDotCmdSpec="${graphviz.dot.exec.executable} ${graphviz.dot.exec.arg.cmd}"
               documentTitle="Medigy Data Model"
               associatedJavaDocHome="../../javadoc"
             />

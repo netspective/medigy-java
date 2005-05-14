@@ -121,7 +121,14 @@ public class DefaultColumnDetail implements ColumnDetail
 
         return rules.getColumnCategory(this);
     }
-    
+
+    public String getDataType()
+    {
+        final TableStructure tableStruct = getTableStructureNode().getOwner();
+        final TableStructureRules rules = tableStruct.getRules();
+        return rules.getTranslatedDataType(getColumn().getSqlType(tableStruct.getDialect(), tableStruct.getMapping()), this);
+    }
+
     public ForeignKey getForeignKey()
     {
         return partOfForeignKey;

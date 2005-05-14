@@ -43,20 +43,34 @@
  */
 package org.sns.tool.hibernate.document;
 
-import java.io.File;
+import java.sql.SQLException;
 
-import org.hibernate.cfg.Configuration;
-import org.sns.tool.hibernate.struct.TableStructure;
+import javax.naming.NamingException;
 
-public interface DatabaseDesignGeneratorConfig
+import org.hibernate.mapping.ForeignKey;
+import org.hibernate.mapping.PersistentClass;
+import org.sns.tool.graphviz.GraphvizDiagramEdge;
+import org.sns.tool.graphviz.GraphvizDiagramNode;
+import org.sns.tool.hibernate.struct.ColumnDetail;
+
+public interface DatabaseDiagramRenderer
 {
-    public Configuration getHibernateConfiguration();
-    public String getDocumentTitle();
-    public TableStructure getTableStructure();
-    public File getImagesDirectory();
-    public File getDocBookFile();
-    public File getAssociatedJavaDocHome();
-    public DatabaseDiagramRenderer getDatabaseDiagramRenderer();
-    public String getGraphvizDiagramOutputType();
-    public String getGraphVizDotCommandSpec();
+    public static final String COLUMN_PORT_NAME_CONSTRAINT_SUFFIX = "_CONSTR";
+
+    public boolean includeForeignKeyEdgeInDiagram(DatabaseDesignGeneratorConfig generator, ForeignKey foreignKey);
+
+    public void formatTableNode(DatabaseDesignGeneratorConfig generator, PersistentClass pclass, GraphvizDiagramNode node);
+
+    public GraphvizDiagramEdge formatForeignKeyEdge(DatabaseDesignGeneratorConfig generator, ForeignKey foreignKey, GraphvizDiagramEdge edge);
+
+    public boolean isIncludeEdgePort(DatabaseDesignGeneratorConfig generator, ForeignKey foreignKey, boolean source);
+
+    public String getTableNameCellHtmlAttributes(DatabaseDesignGeneratorConfig generator, PersistentClass pclass);
+
+    public String getEntityTableHtmlAttributes(DatabaseDesignGeneratorConfig generator, PersistentClass pclass);
+
+    public String getColumnDefinitionHtml(DatabaseDesignGeneratorConfig generator,
+                                          ColumnDetail columnDetail,
+                                          boolean showDataTypes, boolean showConstraints,
+                                          String indent) throws SQLException, NamingException;
 }

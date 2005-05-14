@@ -133,7 +133,7 @@ public class GraphvizDiagramGenerator
     private List nodeList = new ArrayList();
     private List edgeList = new ArrayList();
 
-    public GraphvizDiagramGenerator(String graphId, boolean directed, String layout)
+    public GraphvizDiagramGenerator(final String graphId, final boolean directed, final String layout)
     {
         this.graphId = graphId;
         this.directed = directed;
@@ -144,25 +144,25 @@ public class GraphvizDiagramGenerator
             throw new RuntimeException("Invalid layout type '" + layout + "'.");
     }
 
-    public void addNode(GraphvizDiagramNode node)
+    public void addNode(final GraphvizDiagramNode node)
     {
         nodeList.add(node);
         nodes.put(node.getIdentifier(), node);
     }
 
-    public void addEdge(GraphvizDiagramEdge edge)
+    public void addEdge(final GraphvizDiagramEdge edge)
     {
         edgeList.add(edge);
     }
 
-    public String generateAttributes(Map attributes) throws IOException
+    public String generateAttributes(final Map attributes) throws IOException
     {
         if(attributes.size() == 0)
             return new String();
 
-        StringBuffer result = new StringBuffer("[");
+        final StringBuffer result = new StringBuffer("[");
         boolean first = true;
-        Set sortedAttrNames = new TreeSet(attributes.keySet());
+        final Set sortedAttrNames = new TreeSet(attributes.keySet());
         for(Iterator i = sortedAttrNames.iterator(); i.hasNext();)
         {
             String attrName = (String) i.next();
@@ -214,11 +214,70 @@ public class GraphvizDiagramGenerator
         writer.write("\n}");
     }
 
-    public void generateDOTSource(File dest) throws IOException
+    public void generateDOTSource(final File dest) throws IOException
     {
         FileWriter writer = new FileWriter(dest);
         generateDOTSource(writer);
         writer.close();
+    }
+
+    public interface ImageGenerationParams
+    {
+        /**
+         * Ascertain the directory in which the image generation will occur.
+         */
+        public File getDestDir();
+
+        /**
+         * Ascertain the base name of the files generated. The DOT source will be destDir/basename.dot. The images
+         * will be called destDir/basename[extn].
+         */
+        public String getBaseFileName();
+
+        /**
+         * Obtain the spec that will be used to run the graphViz dot command.
+         */
+        public String getGraphVizDotCommandSpec();
+
+        /**
+         * Provide the output types understood by graphviz dot command (gif, jpg, png, svg, etc).
+         */
+        public String[] getImageTypes();
+
+        /**
+         * Provide the extensions associated with the output image types provided by getImageTypes. If this is null,
+         * then getImagesTypes() will be used to provide the extensions.
+         */
+        public String[] getImageExtensions();
+    }
+
+    /**
+     * Generate images based on the input parameters.
+     * @param params The parameters.
+     * @return A list of files with the first item in the list as the DOT source file name and all others are the generated
+     * graphics files.
+     * @throws IOException
+     */
+    public File[] generateImages(final ImageGenerationParams params) throws IOException
+    {
+        final List results = new ArrayList();
+        final File src = new File(params.getDestDir(), params.getBaseFileName() + ".dot.txt");
+        generateDOTSource(src);
+        results.add(src);
+
+        for(int i = 0; i < params.getImageTypes().length; i++)
+        {
+            final String imageType = params.getImageTypes()[i];
+            final String fileExtn = params.getImageTypes() == null ? ("." + imageType) :params.getImageExtensions()[i];
+            final File dest = new File(params.getDestDir(), params.getBaseFileName() + fileExtn);
+            final String cmdLine =  params.getGraphVizDotCommandSpec() + " -T"+ imageType +" -o\""+ dest +"\" \""+ src +"\"";
+
+            System.out.println("Running " + cmdLine);
+            final Process p = Runtime.getRuntime().exec(cmdLine);
+            results.add(dest);
+        }
+
+        return (File[]) results.toArray(new File[results.size()]);
     }
 
     /*-- Accessors and Mutators for access to private fields --------------------------------------------------------*/

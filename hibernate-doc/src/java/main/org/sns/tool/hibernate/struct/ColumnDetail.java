@@ -103,4 +103,9 @@ public interface ColumnDetail
      * @return Always a non-null value indicating a column category.
      */
     public ColumnCategory getColumnCategory();
+
+    /**
+     * Obtain the data type associated with this column detail
+     */
+    public String getDataType();    
 }

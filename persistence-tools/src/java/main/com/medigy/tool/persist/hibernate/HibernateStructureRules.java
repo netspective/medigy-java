@@ -49,6 +49,7 @@ import java.util.Set;
 
 import org.hibernate.mapping.Collection;
 import org.hibernate.mapping.ForeignKey;
+import org.hibernate.mapping.PersistentClass;
 import org.hibernate.mapping.Table;
 import org.sns.tool.hibernate.struct.ColumnCategory;
 import org.sns.tool.hibernate.struct.ColumnDetail;
@@ -62,9 +63,10 @@ import com.medigy.persist.reference.custom.CustomReferenceEntity;
 
 public class HibernateStructureRules implements TableStructureRules
 {
-    private final TableCategory defaultTableCategory = new TableCategoryImpl("app-table", "Application Tables");
-    private final TableCategory refTableCategory = new TableCategoryImpl("reference-table", "Reference Tables");
-    private final TableCategory customRefTableCategory = new TableCategoryImpl("custom-reference-table", "Custom Reference Tables");
+    private final TableCategory defaultTableCategory = new TableCategoryImpl("app-table", "Application Tables", true);
+    private final TableCategory refTableCategory = new TableCategoryImpl("reference-table", "Reference Tables", false);
+    private final TableCategory customRefTableCategory = new TableCategoryImpl("custom-reference-table", "Custom Reference Tables", false);
+    private final TableCategory housekeepingTableCategory = new TableCategoryImpl("housekeeping-table", "Housekeeping Tables", false);
 
     private final ColumnCategory pkColumnsCategory = new ColumnCategoryImpl("primary-key-column", "Primary Key Columns");
     private final ColumnCategory childKeyColumnsCategory = new ColumnCategoryImpl("child-key-column", "Child Key Columns");
@@ -73,9 +75,12 @@ public class HibernateStructureRules implements TableStructureRules
     private final ColumnCategory[] columnCategoriesSortOrder = new ColumnCategory[] { pkColumnsCategory, childKeyColumnsCategory, defaultColumnCategory, housekeepingColumnsCategory };
 
     private final Set housekeepingColumnNames = new HashSet();
+    private final Set housekeepingTableNames = new HashSet();
 
     public HibernateStructureRules()
     {
+        housekeepingTableNames.add("Work_Session");
+
         housekeepingColumnNames.add("lock_version");
         housekeepingColumnNames.add("create_timestamp");
         housekeepingColumnNames.add("update_timestamp");
@@ -106,9 +111,18 @@ public class HibernateStructureRules implements TableStructureRules
         return foreignKey.getReferencedTable() == table && isParentRelationship(structure, foreignKey);
     }
 
+    public boolean isSubclassRelationship(final TableStructure structure, final ForeignKey foreignKey)
+    {
+        PersistentClass sourceClass = structure.getClassForTable(foreignKey.getTable());
+        PersistentClass refClass = structure.getClassForTable(foreignKey.getReferencedTable());
+        return refClass.getMappedClass().isAssignableFrom(sourceClass.getMappedClass());
+    }
+
     public TableCategory[] getTableCategories(final TableStructureNode tableNode)
     {
-        if(ReferenceEntity.class.isAssignableFrom(tableNode.getPersistentClass().getMappedClass()))
+        if(housekeepingTableNames.contains(tableNode.getTable().getName()))
+            return new TableCategory[] { housekeepingTableCategory };
+        else if(ReferenceEntity.class.isAssignableFrom(tableNode.getPersistentClass().getMappedClass()))
             return new TableCategory[] { refTableCategory };
         else if(CustomReferenceEntity.class.isAssignableFrom(tableNode.getPersistentClass().getMappedClass()))
             return new TableCategory[] { customRefTableCategory };
@@ -128,12 +142,12 @@ public class HibernateStructureRules implements TableStructureRules
             return defaultColumnCategory;
     }
 
-    public ColumnCategory[] getColumnCategoriesSortOrder()
+    public ColumnCategory[] getColumnCategoriesSortOrder(final TableStructure structure)
     {
         return columnCategoriesSortOrder;
     }
 
-    public String getTranslatedDataType(String defaultDataType, ColumnDetail columnDetail)
+    public String getTranslatedDataType(final String defaultDataType, final ColumnDetail columnDetail)
     {
         return defaultDataType;
     }
@@ -142,11 +156,13 @@ public class HibernateStructureRules implements TableStructureRules
     {
         private String id;
         private String label;
+        private boolean generateDiagrams;
 
-        public TableCategoryImpl(final String id, final String label)
+        public TableCategoryImpl(final String id, final String label, final boolean generateDiagrams)
         {
             this.id = id;
             this.label = label;
+            this.generateDiagrams = generateDiagrams;
         }
 
         public String getTableCategoryId()
@@ -157,6 +173,11 @@ public class HibernateStructureRules implements TableStructureRules
         public String getTableCategoryLabel()
         {
             return label;
+        }
+
+        public boolean isGenerateDiagrams()
+        {
+            return generateDiagrams;
         }
 
         public int compareTo(Object o)

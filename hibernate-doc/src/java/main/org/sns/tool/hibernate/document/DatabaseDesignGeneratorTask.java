@@ -59,7 +59,10 @@ public class DatabaseDesignGeneratorTask extends Task
     private Class structureClass;
     private Class hibernateConfigClass;
     private Class structureRulesClass;
+    private Class databaseDiagramRendererClass;
     private String hibernateConfigFile;
+    private String graphvizDotCmdSpec;
+    private String graphvizDotOutputType = "svg";
     private String dialectClass;
     private File destDir;
     private File docBookFile;
@@ -99,10 +102,13 @@ public class DatabaseDesignGeneratorTask extends Task
             if(dialectClass != null)
                 configuration.setProperty(Environment.DIALECT, dialectClass);
 
+            final DatabaseDiagramRenderer ddr = (DatabaseDiagramRenderer) databaseDiagramRendererClass.newInstance();
+
             log("Using Hibernate Configuration " + configuration.getClass());
             log("Using Structure " + structure.getClass());
             log("Using Structure Rules " + structure.getRules().getClass());
             log("Using Dialect " + configuration.getProperty(Environment.DIALECT));
+            log("Using Renderer " + ddr.getClass());
 
             final DatabaseDesignGeneratorConfig ddgConfig = new DatabaseDesignGeneratorConfig()
             {
@@ -135,10 +141,25 @@ public class DatabaseDesignGeneratorTask extends Task
                 {
                     return structure;
                 }
+
+                public DatabaseDiagramRenderer getDatabaseDiagramRenderer()
+                {
+                    return ddr;
+                }
+
+                public String getGraphvizDiagramOutputType()
+                {
+                    return graphvizDotOutputType;
+                }
+
+                public String getGraphVizDotCommandSpec()
+                {
+                    return graphvizDotCmdSpec;
+                }
             };
 
             final DatabaseDesignGenerator ddg = new DatabaseDesignGenerator(ddgConfig);
-            ddg.generate();
+            ddg.generateDatabaseDesign();
 
         }
         catch (Exception e)
@@ -182,6 +203,11 @@ public class DatabaseDesignGeneratorTask extends Task
         this.structureRulesClass = Class.forName(structureRulesClass);
     }
 
+    public void setDatabaseDiagramRendererClass(final String databaseDiagramRendererClass) throws ClassNotFoundException
+    {
+        this.databaseDiagramRendererClass = Class.forName(databaseDiagramRendererClass);
+    }
+
     public void setDocumentTitle(String documentTitle)
     {
         this.documentTitle = documentTitle;
@@ -190,5 +216,10 @@ public class DatabaseDesignGeneratorTask extends Task
     public void setAssociatedJavaDocHome(File associatedJavaDocHome)
     {
         this.associatedJavaDocHome = associatedJavaDocHome;
+    }
+
+    public void setGraphvizDotCmdSpec(String graphvizDotCmdSpec)
+    {
+        this.graphvizDotCmdSpec = graphvizDotCmdSpec;
     }
 }

@@ -42,6 +42,8 @@ public class GraphvizDiagramEdge
     private static final String ATTRNAME_ARROWSIZE = "arrowsize";
     private static final String ATTRNAME_STYLE = "style";
 
+    private GraphvizDiagramGenerator generator;
+
     /**
      * The node attributes
      */
@@ -59,6 +61,7 @@ public class GraphvizDiagramEdge
 
     public GraphvizDiagramEdge(GraphvizDiagramGenerator generator, String source, String destintation)
     {
+        this.generator = generator;
         this.attributes.putAll(generator.getDefaultEdgeAttributes());
         this.source = source;
         this.destintation = destintation;
@@ -68,6 +71,11 @@ public class GraphvizDiagramEdge
 
         if (this.destintation == null)
             throw new NullPointerException("Edge destintation may not be NULL.");
+    }
+
+    public GraphvizDiagramGenerator getGenerator()
+    {
+        return generator;
     }
 
     public Map getAttributes()

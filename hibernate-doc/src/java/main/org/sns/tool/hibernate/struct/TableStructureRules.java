@@ -63,6 +63,13 @@ public interface TableStructureRules
     public boolean isParentRelationship(final TableStructure structure, final ForeignKey foreignKey, final Table table);
 
     /**
+     * Ascertain whether the referenced class in the foreign key relationship is a superclass of the source class.
+     * @param foreignKey The foreign key relationship
+     * @return True if the source of the foreign key is a subclass of the referenced class
+     */
+    public boolean isSubclassRelationship(final TableStructure structure, final ForeignKey foreignKey);
+
+    /**
      * Ascertain whether the given table node belongs in a special category (like "reference" or "application").
      * @param tableNode The table in question
      * @return The categories to which the table belongs (NULLs are not allowed)
@@ -80,7 +87,7 @@ public interface TableStructureRules
      * Whenever the column categories will be used for grouping columns and the columns are used for presentation or
      * other list, this will be the sort order used.
      */
-    public ColumnCategory[] getColumnCategoriesSortOrder();
+    public ColumnCategory[] getColumnCategoriesSortOrder(final TableStructure structure);
 
     /**
      * Given a column of a table, translate the data type if the default data type is not acceptable.

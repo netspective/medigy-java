@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -20,17 +21,14 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.hibernate.MappingException;
-import org.hibernate.cfg.Configuration;
-import org.hibernate.cfg.Environment;
-import org.hibernate.dialect.Dialect;
-import org.hibernate.engine.Mapping;
 import org.hibernate.mapping.Column;
 import org.hibernate.mapping.ForeignKey;
-import org.hibernate.mapping.PersistentClass;
-import org.hibernate.mapping.Property;
 import org.hibernate.mapping.Table;
-import org.hibernate.type.Type;
+import org.sns.tool.graphviz.GraphvizDiagramEdge;
+import org.sns.tool.graphviz.GraphvizDiagramGenerator;
+import org.sns.tool.graphviz.GraphvizDiagramGenerator.ImageGenerationParams;
+import org.sns.tool.graphviz.GraphvizDiagramNode;
+import org.sns.tool.graphviz.GraphvizLayoutType;
 import org.sns.tool.hibernate.document.diagram.HibernateDiagramGeneratorException;
 import org.sns.tool.hibernate.struct.ColumnCategory;
 import org.sns.tool.hibernate.struct.ColumnDetail;
@@ -50,65 +48,9 @@ public class DatabaseDesignGenerator
      */
     private final DatabaseDesignGeneratorConfig generatorConfig;
 
-    /**
-     * The dialect we will use when showing the data types
-     */
-    private final Dialect dialect;
-
-    /**
-     * The mappings we're going to use for getting the data types and related information.
-     */
-    private final Mapping mapping;
-
     public DatabaseDesignGenerator(final DatabaseDesignGeneratorConfig config) throws HibernateDiagramGeneratorException
     {
         this.generatorConfig = config;
-
-        // the following was copied from org.hibernate.cfg.Configuration.buildMapping() because buildMapping() was private
-        final Configuration configuration = config.getHibernateConfiguration();
-        this.mapping = new Mapping()
-        {
-            /**
-             * Returns the identifier type of a mapped class
-             */
-            public Type getIdentifierType(String persistentClass) throws MappingException
-            {
-                final PersistentClass pc = configuration.getClassMapping(persistentClass);
-                if (pc == null) throw new MappingException("persistent class not known: " + persistentClass);
-                return pc.getIdentifier().getType();
-            }
-
-            public String getIdentifierPropertyName(String persistentClass) throws MappingException
-            {
-                final PersistentClass pc = configuration.getClassMapping(persistentClass);
-                if (pc == null) throw new MappingException("persistent class not known: " + persistentClass);
-                if (!pc.hasIdentifierProperty()) return null;
-                return pc.getIdentifierProperty().getName();
-            }
-
-            public Type getPropertyType(String persistentClass, String propertyName) throws MappingException
-            {
-                final PersistentClass pc = configuration.getClassMapping(persistentClass);
-                if (pc == null) throw new MappingException("persistent class not known: " + persistentClass);
-                Property prop = pc.getProperty(propertyName);
-                if (prop == null) throw new MappingException("property not known: " + persistentClass + '.' + propertyName);
-                return prop.getType();
-            }
-        };
-
-        String dialectName = configuration.getProperty(Environment.DIALECT);
-        if (dialectName == null)
-            dialectName = org.hibernate.dialect.GenericDialect.class.getName();
-
-        try
-        {
-            final Class cls = Class.forName(dialectName);
-            this.dialect = (Dialect) cls.newInstance();
-        }
-        catch (Exception e)
-        {
-            throw new HibernateDiagramGeneratorException(e);
-        }
     }
 
     public String getUniqueTableId(final Table table)
@@ -119,13 +61,6 @@ public class DatabaseDesignGenerator
     public String getUniqueTableId(final TableStructureNode tableStructNode)
     {
         return getUniqueTableId(tableStructNode.getTable());
-    }
-
-    public String getColumnDataType(final ColumnDetail columnDetail)
-    {
-        final TableStructure tableStruct = columnDetail.getTableStructureNode().getOwner();
-        final TableStructureRules rules = tableStruct.getRules();
-        return rules.getTranslatedDataType(columnDetail.getColumn().getSqlType(dialect, mapping), columnDetail);
     }
 
     public Element createImageElement(final Document doc, final String imageFileRef, final String format)
@@ -180,7 +115,7 @@ public class DatabaseDesignGenerator
         remarksElem.setAttribute("role", "column-remarks");
 
         nameElem.appendChild(doc.createTextNode(columnDetail.getColumn().getName()));
-        dataTypeElem.appendChild(doc.createTextNode(getColumnDataType(columnDetail)));
+        dataTypeElem.appendChild(doc.createTextNode(columnDetail.getDataType()));
 
         if(columnDetail.isForeignKey())
         {
@@ -237,7 +172,7 @@ public class DatabaseDesignGenerator
         tableGroupElem.setAttribute("cols", Integer.toString(tableColumnsHeadRowElem.getChildNodes().getLength()));
 
         final List rowsByColumnCategory = new ArrayList();
-        final ColumnCategory[] sortedCategories = rules.getColumnCategoriesSortOrder();
+        final ColumnCategory[] sortedCategories = rules.getColumnCategoriesSortOrder(tableStruct);
         for(int sc = 0; sc < sortedCategories.length; sc++)
         {
             final List rowsInCategory = new ArrayList();
@@ -307,7 +242,7 @@ public class DatabaseDesignGenerator
         }
     }
 
-    public void generate() throws IOException, ParserConfigurationException, TransformerException
+    public void generateDatabaseDesign() throws IOException, ParserConfigurationException, TransformerException
     {
         final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         final Document doc = factory.newDocumentBuilder().newDocument();
@@ -343,6 +278,9 @@ public class DatabaseDesignGenerator
                 document(categoryChapter, category, tableNode);
             }
 
+            if(category.isGenerateDiagrams())
+                generateDatabaseDiagrams((Set) tableStructure.getTableCategories().get(category), category.getTableCategoryId() + "-erd");
+
             categoryNum++;
         }
 
@@ -352,6 +290,75 @@ public class DatabaseDesignGenerator
         serializer.transform(new DOMSource(doc), new StreamResult(new FileOutputStream(generatorConfig.getDocBookFile())));
     }
 
+    public void generateDatabaseDiagrams(final Set tableStructNodes, final String baseName) throws IOException
+    {
+        final GraphvizDiagramGenerator gdg = new GraphvizDiagramGenerator("erd", true, GraphvizLayoutType.DOT);
+        final DatabaseDiagramRenderer ddr = generatorConfig.getDatabaseDiagramRenderer();
+
+        final Set tablesIncluded = new HashSet();
+        for(final Iterator i = tableStructNodes.iterator(); i.hasNext(); )
+        {
+            final TableStructureNode tableNode = (TableStructureNode) i.next();
+            tablesIncluded.add(tableNode.getTable());
+
+            StringBuffer tableNodeLabel = new StringBuffer("<<TABLE " + ddr.getEntityTableHtmlAttributes(generatorConfig, tableNode.getPersistentClass()) + ">\n");
+            tableNodeLabel.append("        <TR><TD " + ddr.getTableNameCellHtmlAttributes(generatorConfig, tableNode.getPersistentClass()) + ">" + tableNode.getTable().getName() + "</TD></TR>\n");
+            tableNodeLabel.append("    </TABLE>>");
+
+            final GraphvizDiagramNode gdn = new GraphvizDiagramNode(gdg, tableNode.getTable().getName());
+            gdn.setLabel(tableNodeLabel.toString());
+            gdn.setShape("plaintext");
+            gdn.setFontName("Helvetica");
+
+            gdg.addNode(gdn);
+        }
+
+
+        for(final Iterator i = tableStructNodes.iterator(); i.hasNext(); )
+        {
+            final TableStructureNode tableNode = (TableStructureNode) i.next();
+            for (final Iterator fKeys = tableNode.getTable().getForeignKeyIterator(); fKeys.hasNext();)
+            {
+                final ForeignKey foreignKey = (ForeignKey) fKeys.next();
+
+                if (tablesIncluded.contains(foreignKey.getReferencedTable()) && ddr.includeForeignKeyEdgeInDiagram(generatorConfig, foreignKey))
+                {
+                    final GraphvizDiagramEdge edge = new GraphvizDiagramEdge(gdg, foreignKey.getTable().getName(), foreignKey.getReferencedTable().getName());
+                    gdg.addEdge(ddr.formatForeignKeyEdge(generatorConfig, foreignKey, edge));
+                }
+            }
+        }
+
+        gdg.generateImages(new ImageGenerationParams()
+        {
+            public String getBaseFileName()
+            {
+                return baseName;
+            }
+
+            public File getDestDir()
+            {
+                return generatorConfig.getImagesDirectory();
+            }
+
+            public String getGraphVizDotCommandSpec()
+            {
+                return generatorConfig.getGraphVizDotCommandSpec();
+            }
+
+            public String[] getImageExtensions()
+            {
+                return new String[] { "." + generatorConfig.getGraphvizDiagramOutputType() };
+            }
+
+            public String[] getImageTypes()
+            {
+                return new String[] { generatorConfig.getGraphvizDiagramOutputType() };
+            }
+        });
+    }
+
+
     protected ProcessingInstruction createDocBookClassNamePI(final Document doc, final String className)
     {
         return doc.createProcessingInstruction("dbhtml", "class=\""+ className + "\"");
@@ -360,18 +367,6 @@ public class DatabaseDesignGenerator
     protected ProcessingInstruction createDocBookChunkFileNamePI(final Document doc, final String baseName)
     {
         return doc.createProcessingInstruction("dbhtml", "filename=\""+ baseName.replaceAll("[^A-Za-z0-9]+", "_").toLowerCase() + ".html\"");
-    }
-
-    /*-- Accessors and Mutators for access to private fields --------------------------------------------------------*/
-
-    public Dialect getDialect()
-    {
-        return dialect;
-    }
-
-    public Mapping getMapping()
-    {
-        return mapping;
     }
 
     public DatabaseDesignGeneratorConfig getGeneratorConfig()

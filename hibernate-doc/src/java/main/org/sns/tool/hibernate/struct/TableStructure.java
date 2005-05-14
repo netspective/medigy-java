@@ -47,6 +47,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.hibernate.cfg.Configuration;
+import org.hibernate.dialect.Dialect;
+import org.hibernate.engine.Mapping;
 import org.hibernate.mapping.PersistentClass;
 import org.hibernate.mapping.Table;
 
@@ -95,5 +97,25 @@ public interface TableStructure
      * Create a new node or link to an existing one.
      * @return The new node which might be a real structure node or a link to an existing one if it's a duplicate
      */
-    public TableStructureNode createNode(final PersistentClass mappedClass, final Table nodeForTable, final TableStructureNode parent, final int level);    
+    public TableStructureNode createNode(final PersistentClass mappedClass, final Table nodeForTable, final TableStructureNode parent, final int level);
+
+    /**
+     * Get the map that provides a link from a Table to its PersistentClass instance.
+     */
+    public Map getTableToClassMap();
+
+    /**
+     * Given a table, get the class that it's mapped to
+     */
+    public PersistentClass getClassForTable(final Table table);
+
+    /**
+     * Obtain the dialect we'll be using to do data type mapping
+     */
+    public Dialect getDialect();
+
+    /**
+     * Obtain the mapping we'll be using to do data type mapping
+     */
+    public Mapping getMapping();
 }
