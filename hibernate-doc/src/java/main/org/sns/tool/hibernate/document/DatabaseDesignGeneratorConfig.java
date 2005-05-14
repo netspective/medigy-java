@@ -44,6 +44,7 @@
 package org.sns.tool.hibernate.document;
 
 import java.io.File;
+import java.io.PrintStream;
 
 import org.hibernate.cfg.Configuration;
 import org.sns.tool.hibernate.struct.TableStructure;
@@ -59,4 +60,5 @@ public interface DatabaseDesignGeneratorConfig
     public DatabaseDiagramRenderer getDatabaseDiagramRenderer();
     public String getGraphvizDiagramOutputType();
     public String getGraphVizDotCommandSpec();
+    public PrintStream getGraphVizDotLogOutputStream();
 }

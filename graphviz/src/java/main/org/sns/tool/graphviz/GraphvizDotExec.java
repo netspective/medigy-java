@@ -71,7 +71,6 @@ public class GraphvizDotExec
 
         while ((line = is.readLine()) != null)
             out.println(line);
-        out.println("Done running " + command);
         out.flush();
 
         try
@@ -83,7 +82,7 @@ public class GraphvizDotExec
             err.println(e);  // "Can'tHappen"
             return;
         }
-        err.println("Process done, exit status was " + p.exitValue());
+        out.println("Process done, exit status was " + p.exitValue());
         return;
     }
 }

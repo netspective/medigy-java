@@ -35,6 +35,7 @@ package org.sns.tool.graphviz;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -249,6 +250,11 @@ public class GraphvizDiagramGenerator
          * then getImagesTypes() will be used to provide the extensions.
          */
         public String[] getImageExtensions();
+
+        /**
+         * Ascertain where the log output should be going
+         */
+        public PrintStream getLogOutputStream();
     }
 
     /**

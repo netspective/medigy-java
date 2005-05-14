@@ -43,7 +43,9 @@
  */
 package org.sns.tool.hibernate.document;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.PrintStream;
 import java.lang.reflect.Constructor;
 
 import org.apache.tools.ant.BuildException;
@@ -110,6 +112,9 @@ public class DatabaseDesignGeneratorTask extends Task
             log("Using Dialect " + configuration.getProperty(Environment.DIALECT));
             log("Using Renderer " + ddr.getClass());
 
+            final ByteArrayOutputStream graphvizCmdOutputStreamBuffer = new ByteArrayOutputStream();
+            final PrintStream graphvizCmdOutputStream = new PrintStream(graphvizCmdOutputStreamBuffer);
+
             final DatabaseDesignGeneratorConfig ddgConfig = new DatabaseDesignGeneratorConfig()
             {
                 public File getImagesDirectory()
@@ -156,11 +161,17 @@ public class DatabaseDesignGeneratorTask extends Task
                 {
                     return graphvizDotCmdSpec;
                 }
+
+                public PrintStream getGraphVizDotLogOutputStream()
+                {
+                    return graphvizCmdOutputStream;
+                }
             };
 
             final DatabaseDesignGenerator ddg = new DatabaseDesignGenerator(ddgConfig);
             ddg.generateDatabaseDesign();
 
+            log(graphvizCmdOutputStreamBuffer.toString());
         }
         catch (Exception e)
         {
