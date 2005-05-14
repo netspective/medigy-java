@@ -52,6 +52,13 @@ public class GraphvizDotExec
 {
     public static void exec(final String argv[], final PrintStream out, final PrintStream err) throws IOException
     {
+        out.print("Preparing to run:");
+        for(int i = 0; i < argv.length; i++)
+        {
+            out.print(" ");
+            out.print(argv[i]);
+        }
+        out.println("\n");
 
         // A Runtime object has methods for dealing with the OS
         final Runtime r = Runtime.getRuntime();
@@ -62,14 +69,6 @@ public class GraphvizDotExec
         // of argv contain args for the target program. This is just
         // what is needed for the String[] form of exec.
         p = r.exec(argv);
-
-        out.print("Running:");
-        for(int i = 0; i < argv.length; i++)
-        {
-            out.print(" ");
-            out.print(argv[i]);
-        }
-        out.println("\n");
 
         // getInputStream gives an Input stream connected to
         // the process p's standard output. Just use it to make
