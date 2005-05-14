@@ -50,15 +50,9 @@ import java.io.PrintStream;
 
 public class GraphvizDotExec
 {
-    public static void exec(final String argv[], final PrintStream out, final PrintStream err) throws IOException
+    public static void exec(final String command, final PrintStream out, final PrintStream err) throws IOException
     {
-        out.print("Preparing to run:");
-        for(int i = 0; i < argv.length; i++)
-        {
-            out.print(" ");
-            out.print(argv[i]);
-        }
-        out.println("\n");
+        out.println("Preparing to run: " + command);
 
         // A Runtime object has methods for dealing with the OS
         final Runtime r = Runtime.getRuntime();
@@ -68,7 +62,7 @@ public class GraphvizDotExec
         // Our argv[0] contains the program to run; remaining elements
         // of argv contain args for the target program. This is just
         // what is needed for the String[] form of exec.
-        p = r.exec(argv);
+        p = r.exec(command);
 
         // getInputStream gives an Input stream connected to
         // the process p's standard output. Just use it to make
@@ -77,7 +71,7 @@ public class GraphvizDotExec
 
         while ((line = is.readLine()) != null)
             out.println(line);
-        out.println("Done running " + argv[0]);
+        out.println("Done running " + command);
         out.flush();
 
         try

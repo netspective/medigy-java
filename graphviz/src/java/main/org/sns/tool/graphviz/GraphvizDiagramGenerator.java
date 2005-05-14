@@ -271,7 +271,7 @@ public class GraphvizDiagramGenerator
             final String fileExtn = params.getImageTypes() == null ? ("." + imageType) :params.getImageExtensions()[i];
             final File dest = new File(params.getDestDir(), params.getBaseFileName() + fileExtn);
 
-            final String cmdLine =  params.getGraphVizDotCommandSpec() + " -T"+ imageType +" -o\""+ dest +"\" \""+ src +"\"";
+            final String cmdLine =  params.getGraphVizDotCommandSpec() + " -T"+ imageType +" -o"+ dest +" "+ src +"";
             GraphvizDotExec.exec(cmdLine, System.out, System.err);
             results.add(dest);
         }
