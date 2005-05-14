@@ -258,7 +258,7 @@ public class GraphvizDiagramGenerator
      * graphics files.
      * @throws IOException
      */
-    public File[] generateImages(final ImageGenerationParams params) throws IOException
+    public File[] generateImages(final ImageGenerationParams params) throws IOException, InterruptedException
     {
         final List results = new ArrayList();
         final File src = new File(params.getDestDir(), params.getBaseFileName() + ".dot.txt");
@@ -272,8 +272,9 @@ public class GraphvizDiagramGenerator
             final File dest = new File(params.getDestDir(), params.getBaseFileName() + fileExtn);
             final String cmdLine =  params.getGraphVizDotCommandSpec() + " -T"+ imageType +" -o\""+ dest +"\" \""+ src +"\"";
 
-            System.out.println("Running " + cmdLine);
             final Process p = Runtime.getRuntime().exec(cmdLine);
+            final int exitCode = p.waitFor();
+            System.out.println("ExitCode " + exitCode + " for command " + cmdLine);
             results.add(dest);
         }
 

@@ -329,33 +329,40 @@ public class DatabaseDesignGenerator
             }
         }
 
-        gdg.generateImages(new ImageGenerationParams()
+        try
         {
-            public String getBaseFileName()
+            gdg.generateImages(new ImageGenerationParams()
             {
-                return baseName;
-            }
+                public String getBaseFileName()
+                {
+                    return baseName;
+                }
 
-            public File getDestDir()
-            {
-                return generatorConfig.getImagesDirectory();
-            }
+                public File getDestDir()
+                {
+                    return generatorConfig.getImagesDirectory();
+                }
 
-            public String getGraphVizDotCommandSpec()
-            {
-                return generatorConfig.getGraphVizDotCommandSpec();
-            }
+                public String getGraphVizDotCommandSpec()
+                {
+                    return generatorConfig.getGraphVizDotCommandSpec();
+                }
 
-            public String[] getImageExtensions()
-            {
-                return new String[] { "." + generatorConfig.getGraphvizDiagramOutputType() };
-            }
+                public String[] getImageExtensions()
+                {
+                    return new String[] { "." + generatorConfig.getGraphvizDiagramOutputType() };
+                }
 
-            public String[] getImageTypes()
-            {
-                return new String[] { generatorConfig.getGraphvizDiagramOutputType() };
-            }
-        });
+                public String[] getImageTypes()
+                {
+                    return new String[] { generatorConfig.getGraphvizDiagramOutputType() };
+                }
+            });
+        }
+        catch (InterruptedException e)
+        {
+            throw new RuntimeException(e);
+        }
     }
 
 
