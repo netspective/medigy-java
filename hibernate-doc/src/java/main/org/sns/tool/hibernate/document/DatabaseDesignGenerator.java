@@ -230,10 +230,45 @@ public class DatabaseDesignGenerator
             overview.appendChild(doc.createTextNode(mappedClass.getName()));
         overview.appendChild(doc.createTextNode("."));
 
-        tableStructSectionElem.appendChild(createColumnDocumentationTable(doc, tableStructNode));
-        for(Iterator t = tableStructNode.getChildNodes().iterator(); t.hasNext(); )
+        if(category.isGenerateDiagrams())
         {
-            final TableStructureNode childNode = (TableStructureNode) t.next();
+            final Set diagramTables = new HashSet();
+            diagramTables.add(tableStructNode);
+
+            final TableStructureNode[] ancestorNodes = tableStructNode.getAncestorNodes();
+            if(ancestorNodes.length > 0)
+                diagramTables.add(ancestorNodes[ancestorNodes.length-1]);
+
+            final TableStructureNode[] descendents = tableStructNode.getDescendents();
+            for(int j = 0; j < descendents.length; j++)
+                diagramTables.add(descendents[j]);
+
+            final ColumnDetail[] columnDetails = tableStructNode.getAllColumns();
+            for(int c = 0; c < columnDetails.length; c++)
+            {
+                final ColumnDetail columnDetail = columnDetails[c];
+                if(columnDetail.isForeignKey() && ! columnDetail.isChildKeyOfParent())
+                {
+                    final Table referencedTable = columnDetail.getForeignKey().getReferencedTable();
+                    diagramTables.add(tableStructNode.getOwner().getNodeForTable(referencedTable));
+                }
+            }
+
+            final String erdBaseName = tableName.replaceAll("[^A-Za-z0-9]+", "_").toLowerCase() + "-erd";
+            generateDatabaseDiagrams(tableStructNode, diagramTables, erdBaseName);
+
+            final Element result = doc.createElement("mediaobject");
+            final Element imageObjectElem = (Element) result.appendChild(doc.createElement("imageobject"));
+            final Element imageDataElem = (Element) imageObjectElem.appendChild(doc.createElement("imagedata"));
+            imageDataElem.setAttribute("format", generatorConfig.getGraphvizDiagramOutputType());
+            imageDataElem.setAttribute("fileref", erdBaseName + "." + generatorConfig.getGraphvizDiagramOutputType());
+            tableStructSectionElem.appendChild(imageDataElem);
+        }
+
+        tableStructSectionElem.appendChild(createColumnDocumentationTable(doc, tableStructNode));
+        for(int i = 0; i < tableStructNode.getChildNodes().length; i++)
+        {
+            final TableStructureNode childNode = tableStructNode.getChildNodes()[i];
             if(childNode.isLinkedNode())
             {
                 // TODO: handle this properly
@@ -280,7 +315,7 @@ public class DatabaseDesignGenerator
             }
 
             if(category.isGenerateDiagrams())
-                generateDatabaseDiagrams((Set) tableStructure.getTableCategories().get(category), category.getTableCategoryId() + "-erd");
+                generateDatabaseDiagrams(null, (Set) tableStructure.getTableCategories().get(category), category.getTableCategoryId() + "-erd");
 
             categoryNum++;
         }
@@ -291,7 +326,7 @@ public class DatabaseDesignGenerator
         serializer.transform(new DOMSource(doc), new StreamResult(new FileOutputStream(generatorConfig.getDocBookFile())));
     }
 
-    public void generateDatabaseDiagrams(final Set tableStructNodes, final String baseName) throws IOException
+    public void generateDatabaseDiagrams(final TableStructureNode focusedNode, final Set tableStructNodes, final String baseName) throws IOException
     {
         final GraphvizDiagramGenerator gdg = new GraphvizDiagramGenerator("erd", true, GraphvizLayoutType.DOT);
         final DatabaseDiagramRenderer ddr = generatorConfig.getDatabaseDiagramRenderer();
@@ -300,21 +335,20 @@ public class DatabaseDesignGenerator
         for(final Iterator i = tableStructNodes.iterator(); i.hasNext(); )
         {
             final TableStructureNode tableNode = (TableStructureNode) i.next();
-            tablesIncluded.add(tableNode.getTable());
+            if(tablesIncluded.contains(tableNode.getTable()))
+                continue;
 
-            StringBuffer tableNodeLabel = new StringBuffer("<<TABLE " + ddr.getEntityTableHtmlAttributes(generatorConfig, tableNode.getPersistentClass()) + ">\n");
-            tableNodeLabel.append("        <TR><TD " + ddr.getTableNameCellHtmlAttributes(generatorConfig, tableNode.getPersistentClass()) + ">" + tableNode.getTable().getName() + "</TD></TR>\n");
-            tableNodeLabel.append("    </TABLE>>");
-
+            final boolean focused = focusedNode == tableNode;
             final GraphvizDiagramNode gdn = new GraphvizDiagramNode(gdg, tableNode.getTable().getName());
-            gdn.setLabel(tableNodeLabel.toString());
+            gdn.setLabel(ddr.getTableDefinitionHtml(generatorConfig, tableNode, focused));
             gdn.setShape("plaintext");
             gdn.setFontName("Helvetica");
 
-            gdg.addNode(gdn);
+            gdg.addNode(ddr.formatTableNode(generatorConfig, tableNode, gdn, focused));
+            tablesIncluded.add(tableNode.getTable());
         }
 
-
+        final Set existingEdges = new HashSet();
         for(final Iterator i = tableStructNodes.iterator(); i.hasNext(); )
         {
             final TableStructureNode tableNode = (TableStructureNode) i.next();
@@ -322,10 +356,19 @@ public class DatabaseDesignGenerator
             {
                 final ForeignKey foreignKey = (ForeignKey) fKeys.next();
 
-                if (tablesIncluded.contains(foreignKey.getReferencedTable()) && ddr.includeForeignKeyEdgeInDiagram(generatorConfig, foreignKey))
+                final GraphvizDiagramEdge edge = new GraphvizDiagramEdge(gdg, foreignKey.getTable().getName(), foreignKey.getReferencedTable().getName());
+                final GraphvizDiagramEdge formattedEdge = ddr.formatForeignKeyEdge(generatorConfig, tableNode, foreignKey, edge, focusedNode == tableNode);
+
+                // the formatted edge may be null indicating that the renderer doesn't want to keep the edge in the diagram
+                if(formattedEdge == null)
+                    continue;
+
+                // make sure we don't duplicate arrows from nodes to other nodes
+                final String edgeId = formattedEdge.getSource() + " -> " + formattedEdge.getDestintation();
+                if(! existingEdges.contains(edgeId))
                 {
-                    final GraphvizDiagramEdge edge = new GraphvizDiagramEdge(gdg, foreignKey.getTable().getName(), foreignKey.getReferencedTable().getName());
-                    gdg.addEdge(ddr.formatForeignKeyEdge(generatorConfig, foreignKey, edge));
+                    existingEdges.add(edgeId);
+                    gdg.addEdge(formattedEdge);
                 }
             }
         }

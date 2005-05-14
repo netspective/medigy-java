@@ -1,19 +1,20 @@
 package com.medigy.tool.persist.hibernate;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.naming.NamingException;
-
 import org.hibernate.mapping.ForeignKey;
-import org.hibernate.mapping.PersistentClass;
 import org.sns.tool.graphviz.GraphvizDiagramEdge;
 import org.sns.tool.graphviz.GraphvizDiagramNode;
 import org.sns.tool.hibernate.document.DatabaseDesignGeneratorConfig;
 import org.sns.tool.hibernate.document.DatabaseDiagramRenderer;
+import org.sns.tool.hibernate.struct.ColumnCategory;
 import org.sns.tool.hibernate.struct.ColumnDetail;
+import org.sns.tool.hibernate.struct.TableStructure;
+import org.sns.tool.hibernate.struct.TableStructureNode;
+import org.sns.tool.hibernate.struct.TableStructureRules;
 
+import com.medigy.persist.reference.ReferenceEntity;
 import com.medigy.persist.reference.custom.CustomReferenceEntity;
 
 public class HibernateDatabaseDiagramRenderer implements DatabaseDiagramRenderer
@@ -22,10 +23,11 @@ public class HibernateDatabaseDiagramRenderer implements DatabaseDiagramRenderer
     {
     }
 
-    public GraphvizDiagramEdge formatForeignKeyEdge(final DatabaseDesignGeneratorConfig generator, final ForeignKey foreignKey, final GraphvizDiagramEdge edge)
+    public GraphvizDiagramEdge formatForeignKeyEdge(final DatabaseDesignGeneratorConfig generator, final TableStructureNode node, final ForeignKey foreignKey, final GraphvizDiagramEdge edge, boolean focused)
     {
         // for parents, we put the crow arrow pointing to us (the source becomes the parent, not the child -- this way it will look like a tree)
-        if (generator.getTableStructure().getRules().isParentRelationship(generator.getTableStructure(), foreignKey))
+        final TableStructureRules rules = generator.getTableStructure().getRules();
+        if (rules.isParentRelationship(generator.getTableStructure(), foreignKey))
         {
             final String src = edge.getSource();
             final String dest = edge.getDestintation();
@@ -34,62 +36,55 @@ public class HibernateDatabaseDiagramRenderer implements DatabaseDiagramRenderer
             return newEdge;
         }
 
+        // if the fkey is not a parent/child relationship and the fkey is not part of the focused table then eliminate the edge
+        // to remove clutter
+        if(! focused)
+            return null;
+
         return edge;
     }
 
-    public boolean isIncludeEdgePort(final DatabaseDesignGeneratorConfig generator, final ForeignKey foreignKey, boolean source)
+    public String getTableNameCellHtmlAttributes(final DatabaseDesignGeneratorConfig generator, final TableStructureNode node, boolean isFocused)
     {
-        return true;
-    }
-
-    public String getTableNameCellHtmlAttributes(final DatabaseDesignGeneratorConfig generator, final PersistentClass pclass)
-    {
-        if (CustomReferenceEntity.class.isAssignableFrom(pclass.getMappedClass()))
+        if (isFocused)
+            return " BGCOLOR=\"beige\"";
+        else if (CustomReferenceEntity.class.isAssignableFrom(node.getPersistentClass().getMappedClass()) ||
+                 ReferenceEntity.class.isAssignableFrom(node.getPersistentClass().getMappedClass()))
             return " BGCOLOR=\"rosybrown\"";
         else
             return " BGCOLOR=\"lightsteelblue\"";
     }
 
-    public String getEntityTableHtmlAttributes(final DatabaseDesignGeneratorConfig generator, final PersistentClass pclass)
+    public String getEntityTableHtmlAttributes(final DatabaseDesignGeneratorConfig generator, final TableStructureNode node, boolean isFocused)
     {
         return "BORDER=\"1\" CELLSPACING=\"0\" CELLBORDER=\"0\"";
     }
 
-    public void formatTableNode(final DatabaseDesignGeneratorConfig generator, final PersistentClass pclass, final GraphvizDiagramNode node)
+    public GraphvizDiagramNode formatTableNode(final DatabaseDesignGeneratorConfig generator, final TableStructureNode tableStructNode, final GraphvizDiagramNode gdNode, boolean isFocused)
     {
-    }
-
-    public boolean includeForeignKeyEdgeInDiagram(final DatabaseDesignGeneratorConfig generator, final ForeignKey foreignKey)
-    {
-        return true;
+        if(isFocused)
+            gdNode.setFontSize("10");
+        return gdNode;
     }
 
     public String getColumnDefinitionHtml(final DatabaseDesignGeneratorConfig generator,
                                           final ColumnDetail columnDetail,
                                           final boolean showDataTypes,
                                           final boolean showConstraints,
-                                          final String indent) throws SQLException, NamingException
+                                          final String indent)
     {
         String extraAttrs = "";
         if(columnDetail.isPrimaryKey())
-        {
-            if(columnDetail.isForeignKey())
-                extraAttrs = " BGCOLOR=\"lightcyan\"";
-            else
-                extraAttrs = " BGCOLOR=\"gray90\"";
-        }
-        else if(columnDetail.isChildKeyOfParent())
-            extraAttrs = " BGCOLOR=\"beige\"";
+            extraAttrs = " BGCOLOR=\"yellow\"";
 
         final StringBuffer result = new StringBuffer(indent + "<TR>\n");
         result.append(indent + indent + "<TD ALIGN=\"LEFT\" PORT=\"" + columnDetail.getColumn().getName() + "\"" + extraAttrs + ">" + columnDetail.getColumn().getName() + "</TD>\n");
 
         if (showDataTypes)
-            result.append(indent + indent + "<TD ALIGN=\"LEFT\"" + extraAttrs + ">" + columnDetail.getColumn() + "</TD>\n");
+            result.append(indent + indent + "<TD ALIGN=\"LEFT\"" + extraAttrs + ">" + columnDetail.getDataType() + "</TD>\n");
 
         if (showConstraints)
         {
-
             List constraints = new ArrayList();
             if (columnDetail.isPrimaryKey())
                 constraints.add("PK");
@@ -115,6 +110,39 @@ public class HibernateDatabaseDiagramRenderer implements DatabaseDiagramRenderer
 
         result.append(indent + "</TR>\n");
         return result.toString();
+    }
+
+    public String getTableDefinitionHtml(DatabaseDesignGeneratorConfig generatorConfig, TableStructureNode tableNode, boolean focused)
+    {
+        StringBuffer html = new StringBuffer("<<TABLE " + getEntityTableHtmlAttributes(generatorConfig, tableNode, focused) + ">\n");
+        if(focused)
+        {
+            html.append("        <TR><TD COLSPAN=\"2\" " + getTableNameCellHtmlAttributes(generatorConfig, tableNode, focused) + ">" + tableNode.getTable().getName() + "</TD></TR>\n");
+            final TableStructure tableStruct = tableNode.getOwner();
+            final ColumnCategory[] sortedCategories = tableStruct.getRules().getColumnCategoriesSortOrder(tableStruct);
+            for(int sc = 0; sc < sortedCategories.length; sc++)
+            {
+                final ColumnCategory category = sortedCategories[sc];
+                if(! category.isIncludeInDiagrams())
+                    continue;
+
+                final ColumnDetail[] columnDetails = tableNode.getColumnsInCategory(category);
+                if(columnDetails != null)
+                {
+                    for(int cd = 0; cd < columnDetails.length; cd++)
+                    {
+                        final ColumnDetail columnDetail = columnDetails[cd];
+                        html.append(getColumnDefinitionHtml(generatorConfig, columnDetail, true, false, "    "));
+                    }
+                }
+            }
+
+        }
+        else
+            html.append("        <TR><TD " + getTableNameCellHtmlAttributes(generatorConfig, tableNode, focused) + ">" + tableNode.getTable().getName() + "</TD></TR>\n");
+        html.append("    </TABLE>>");
+
+        return html.toString();
     }
 
 }

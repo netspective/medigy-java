@@ -88,6 +88,26 @@ public class GraphvizDiagramNode
         attributes.put(GraphvizDiagramGenerator.ATTRNAME_FONTNAME, fontName);
     }
 
+    public String getFontSize()
+    {
+        return (String) attributes.get(GraphvizDiagramGenerator.ATTRNAME_FONTSIZE);
+    }
+
+    public void setFontSize(String fontName)
+    {
+        attributes.put(GraphvizDiagramGenerator.ATTRNAME_FONTSIZE, fontName);
+    }
+
+    public String getColor()
+    {
+        return (String) attributes.get(GraphvizDiagramGenerator.ATTRNAME_COLOR);
+    }
+
+    public void setColor(String fontName)
+    {
+        attributes.put(GraphvizDiagramGenerator.ATTRNAME_COLOR, fontName);
+    }
+
     public String getIdentifier()
     {
         return identifier;

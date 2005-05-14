@@ -54,6 +54,8 @@ public class GraphvizDiagramGenerator
 {
     public static final String ATTRNAME_LABEL = "label";
     public static final String ATTRNAME_FONTNAME = "fontname";
+    public static final String ATTRNAME_FONTSIZE = "fontsize";
+    public static final String ATTRNAME_COLOR = "color";
 
     /**
      * The graph identifier

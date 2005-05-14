@@ -47,4 +47,5 @@ public interface ColumnCategory
 {
     public String getColumnCategoryId();
     public String getColumnCategoryLabel();
+    public boolean isIncludeInDiagrams();
 }

@@ -46,6 +46,7 @@ package org.sns.tool.hibernate.struct.impl;
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -71,8 +72,8 @@ public class DefaultTableStructureNode implements TableStructureNode, Comparable
     private final Table nodeForTable;
     private final PersistentClass mappedClass;
     private final int level;
-    private final Set childNodes = new TreeSet();
     private final TableStructureNode[] ancestorNodes;
+    private TableStructureNode[] childNodes;
     private TableStructureNode[] dependencies;
     private ColumnDetail[] allColumns;
     private Map columnDetailsByCategory = new HashMap(); // key is a ColumnCategory instance, value is ColumnDetail[] array
@@ -102,6 +103,7 @@ public class DefaultTableStructureNode implements TableStructureNode, Comparable
 
     protected void createChildNodes()
     {
+        final Set childNodes = new TreeSet();
         for (final Iterator classes = owner.getConfiguration().getClassMappings(); classes.hasNext(); )
         {
             final PersistentClass pclass = (PersistentClass) classes.next();
@@ -118,6 +120,7 @@ public class DefaultTableStructureNode implements TableStructureNode, Comparable
                 }
             }
         }
+        this.childNodes = (TableStructureNode[]) childNodes.toArray(new TableStructureNode[childNodes.size()]);
 
         for(final Iterator i = childNodes.iterator(); i.hasNext(); )
         {
@@ -144,6 +147,8 @@ public class DefaultTableStructureNode implements TableStructureNode, Comparable
                     dependencies.add(owner.getNodeForTable(referencedTable));
             }
         }
+
+        this.dependencies = (TableStructureNode[]) dependencies.toArray(new TableStructureNode[dependencies.size()]);
     }
 
     protected void createColumnDetail()
@@ -233,7 +238,7 @@ public class DefaultTableStructureNode implements TableStructureNode, Comparable
         return parentNode;
     }
 
-    public Set getChildNodes()
+    public TableStructureNode[] getChildNodes()
     {
         return childNodes;
     }
@@ -265,9 +270,26 @@ public class DefaultTableStructureNode implements TableStructureNode, Comparable
         return ancestorNodes;
     }
 
+    public TableStructureNode[] getDescendents()
+    {
+        final Set descendents = new HashSet();
+        for(int i = 0; i < childNodes.length; i++)
+        {
+            final TableStructureNode childNode = childNodes[i];
+            final TableStructureNode[] childDescendents = childNode.getDescendents();
+
+            descendents.add(childNode);
+
+            for(int j = 0; j < childDescendents.length; j++)
+                descendents.add(childDescendents[j]);
+        }
+
+        return (TableStructureNode[]) descendents.toArray(new TableStructureNode[descendents.size()]);
+    }
+
     public boolean hasChildren()
     {
-        return childNodes.size() > 0;
+        return childNodes.length > 0;
     }
 
     public TableStructureNode getLinkedNode()
@@ -280,9 +302,35 @@ public class DefaultTableStructureNode implements TableStructureNode, Comparable
         return getOwner().getRules().getTableCategories(this);
     }
 
+    public boolean isInCategory(final TableCategory category)
+    {
+        final TableCategory[] tableCategories = getTableCategories();
+        for(int i = 0; i < tableCategories.length; i++)
+        {
+            final TableCategory tableCategory = tableCategories[i];
+            if(tableCategory == category)
+                return true;
+        }
+
+        return false;
+    }
+
+    public boolean isInCategory(final String categoryId)
+    {
+        final TableCategory[] tableCategories = getTableCategories();
+        for(int i = 0; i < tableCategories.length; i++)
+        {
+            final TableCategory tableCategory = tableCategories[i];
+            if(tableCategory.getTableCategoryId().equalsIgnoreCase(categoryId))
+                return true;
+        }
+
+        return false;
+    }
+
     public TableStructureNode[] getDependencies()
     {
-        return new TableStructureNode[0];  //To change body of implemented methods use File | Settings | File Templates.
+        return dependencies;
     }
 
     public boolean isLinkedNode()

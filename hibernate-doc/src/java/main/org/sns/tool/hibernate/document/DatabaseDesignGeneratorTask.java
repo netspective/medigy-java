@@ -64,12 +64,13 @@ public class DatabaseDesignGeneratorTask extends Task
     private Class databaseDiagramRendererClass;
     private String hibernateConfigFile;
     private String graphvizDotCmdSpec;
-    private String graphvizDotOutputType = "svg";
+    private String graphvizDotOutputType = "gif";
     private String dialectClass;
     private File destDir;
     private File docBookFile;
     private File associatedJavaDocHome;
     private String documentTitle;
+    private boolean logGraphvizOutput;
 
     public void execute() throws BuildException
     {
@@ -171,7 +172,8 @@ public class DatabaseDesignGeneratorTask extends Task
             final DatabaseDesignGenerator ddg = new DatabaseDesignGenerator(ddgConfig);
             ddg.generateDatabaseDesign();
 
-            log(graphvizCmdOutputStreamBuffer.toString());
+            if(logGraphvizOutput)
+                log(graphvizCmdOutputStreamBuffer.toString());
         }
         catch (Exception e)
         {
@@ -232,5 +234,15 @@ public class DatabaseDesignGeneratorTask extends Task
     public void setGraphvizDotCmdSpec(String graphvizDotCmdSpec)
     {
         this.graphvizDotCmdSpec = graphvizDotCmdSpec;
+    }
+
+    public void setGraphvizDotOutputType(String graphvizDotOutputType)
+    {
+        this.graphvizDotOutputType = graphvizDotOutputType;
+    }
+
+    public void setLogGraphvizOutput(boolean logGraphvizOutput)
+    {
+        this.logGraphvizOutput = logGraphvizOutput;
     }
 }

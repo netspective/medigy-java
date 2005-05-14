@@ -46,7 +46,6 @@ package org.sns.tool.hibernate.struct.impl;
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import org.hibernate.mapping.PersistentClass;
 import org.hibernate.mapping.Table;
@@ -116,9 +115,9 @@ public class LinkToOtherTableStructureNode implements TableStructureNode, Compar
         return parentNode;
     }
 
-    public Set getChildNodes()
+    public TableStructureNode[] getChildNodes()
     {
-        return linkedNode.getChildNodes();
+        return new TableStructureNode[0];
     }
 
     public TableStructureNode[] getAncestorNodes()
@@ -128,7 +127,7 @@ public class LinkToOtherTableStructureNode implements TableStructureNode, Compar
 
     public boolean hasChildren()
     {
-        return getChildNodes().size() > 0;
+        return getChildNodes().length > 0;
     }
 
     public boolean isLinkedNode()
@@ -164,5 +163,20 @@ public class LinkToOtherTableStructureNode implements TableStructureNode, Compar
     public TableCategory[] getTableCategories()
     {
         return linkedNode.getTableCategories();
+    }
+
+    public TableStructureNode[] getDescendents()
+    {
+        return new TableStructureNode[0];
+    }
+
+    public boolean isInCategory(final TableCategory category)
+    {
+        return linkedNode.isInCategory(category);
+    }
+
+    public boolean isInCategory(final String categoryId)
+    {
+        return linkedNode.isInCategory(categoryId);
     }
 }

@@ -68,10 +68,10 @@ public class HibernateStructureRules implements TableStructureRules
     private final TableCategory customRefTableCategory = new TableCategoryImpl("custom-reference-table", "Custom Reference Tables", false);
     private final TableCategory housekeepingTableCategory = new TableCategoryImpl("housekeeping-table", "Housekeeping Tables", false);
 
-    private final ColumnCategory pkColumnsCategory = new ColumnCategoryImpl("primary-key-column", "Primary Key Columns");
-    private final ColumnCategory childKeyColumnsCategory = new ColumnCategoryImpl("child-key-column", "Child Key Columns");
-    private final ColumnCategory defaultColumnCategory = new ColumnCategoryImpl("application-column", "Application Columns");
-    private final ColumnCategory housekeepingColumnsCategory = new ColumnCategoryImpl("housekeeping-column", "Housekeeping Columns");
+    private final ColumnCategory pkColumnsCategory = new ColumnCategoryImpl("primary-key-column", "Primary Key Columns", true);
+    private final ColumnCategory childKeyColumnsCategory = new ColumnCategoryImpl("child-key-column", "Child Key Columns", true);
+    private final ColumnCategory defaultColumnCategory = new ColumnCategoryImpl("application-column", "Application Columns", true);
+    private final ColumnCategory housekeepingColumnsCategory = new ColumnCategoryImpl("housekeeping-column", "Housekeeping Columns", false);
     private final ColumnCategory[] columnCategoriesSortOrder = new ColumnCategory[] { pkColumnsCategory, childKeyColumnsCategory, defaultColumnCategory, housekeepingColumnsCategory };
 
     private final Set housekeepingColumnNames = new HashSet();
@@ -202,11 +202,13 @@ public class HibernateStructureRules implements TableStructureRules
     {
         private String id;
         private String label;
+        private boolean includeInDiagrams;
 
-        public ColumnCategoryImpl(final String id, final String label)
+        public ColumnCategoryImpl(final String id, final String label, final boolean includeInDiagrams)
         {
             this.id = id;
             this.label = label;
+            this.includeInDiagrams = includeInDiagrams;
         }
 
         public ColumnCategoryImpl(String name)
@@ -222,6 +224,11 @@ public class HibernateStructureRules implements TableStructureRules
         public String getColumnCategoryLabel()
         {
             return label;
+        }
+
+        public boolean isIncludeInDiagrams()
+        {
+            return includeInDiagrams;
         }
 
         public int compareTo(Object o)

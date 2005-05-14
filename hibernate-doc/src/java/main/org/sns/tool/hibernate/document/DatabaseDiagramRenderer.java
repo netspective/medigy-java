@@ -43,34 +43,28 @@
  */
 package org.sns.tool.hibernate.document;
 
-import java.sql.SQLException;
-
-import javax.naming.NamingException;
-
 import org.hibernate.mapping.ForeignKey;
-import org.hibernate.mapping.PersistentClass;
 import org.sns.tool.graphviz.GraphvizDiagramEdge;
 import org.sns.tool.graphviz.GraphvizDiagramNode;
 import org.sns.tool.hibernate.struct.ColumnDetail;
+import org.sns.tool.hibernate.struct.TableStructureNode;
 
 public interface DatabaseDiagramRenderer
 {
     public static final String COLUMN_PORT_NAME_CONSTRAINT_SUFFIX = "_CONSTR";
 
-    public boolean includeForeignKeyEdgeInDiagram(DatabaseDesignGeneratorConfig generator, ForeignKey foreignKey);
+    public GraphvizDiagramNode formatTableNode(DatabaseDesignGeneratorConfig generator, TableStructureNode tableStructNode, GraphvizDiagramNode gdNode, boolean isFocused);
 
-    public void formatTableNode(DatabaseDesignGeneratorConfig generator, PersistentClass pclass, GraphvizDiagramNode node);
+    public GraphvizDiagramEdge formatForeignKeyEdge(DatabaseDesignGeneratorConfig generator, TableStructureNode node, ForeignKey foreignKey, GraphvizDiagramEdge edge, boolean focused);
 
-    public GraphvizDiagramEdge formatForeignKeyEdge(DatabaseDesignGeneratorConfig generator, ForeignKey foreignKey, GraphvizDiagramEdge edge);
+    public String getTableNameCellHtmlAttributes(DatabaseDesignGeneratorConfig generator, TableStructureNode node, boolean isFocused);
 
-    public boolean isIncludeEdgePort(DatabaseDesignGeneratorConfig generator, ForeignKey foreignKey, boolean source);
+    public String getEntityTableHtmlAttributes(DatabaseDesignGeneratorConfig generator, TableStructureNode node, boolean isFocused);
 
-    public String getTableNameCellHtmlAttributes(DatabaseDesignGeneratorConfig generator, PersistentClass pclass);
-
-    public String getEntityTableHtmlAttributes(DatabaseDesignGeneratorConfig generator, PersistentClass pclass);
+    public String getTableDefinitionHtml(DatabaseDesignGeneratorConfig generator, TableStructureNode node, boolean isFocused);
 
     public String getColumnDefinitionHtml(DatabaseDesignGeneratorConfig generator,
                                           ColumnDetail columnDetail,
                                           boolean showDataTypes, boolean showConstraints,
-                                          String indent) throws SQLException, NamingException;
+                                          String indent);
 }
