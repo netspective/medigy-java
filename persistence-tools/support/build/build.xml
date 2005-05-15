@@ -51,32 +51,6 @@
             />
     </target>
 
-    <target name="doc.generate-model-diagrams" depends="graphviz.init,compile.main,init.define-modules,init.define-module.dependencies.main.classpath">
-        <taskdef name="diagram" classname="org.sns.tool.hibernate.document.diagram.HibernateDiagramGeneratorTask"
-                                classpathref="module.dependencies.main.classpath">
-            <classpath location="${module.artifacts.classes.main.home}"/>
-        </taskdef>
-
-        <property name="persistence.artifacts.doc.home" value="${persistence.artifacts.home}/doc"/>
-        <property name="persistence.artifacts.doc.db.home" value="${persistence.artifacts.doc.home}/db"/>
-        <property name="persistence.artifacts.doc.db.struct.home" value="${persistence.artifacts.doc.db.home}/structure"/>
-        <property name="persistence.artifacts.doc.diagram.dest.file-prefix" value="${persistence.artifacts.doc.db.struct.home}/class-erd"/>
-        <property name="persistence.artifacts.doc.diagram.dot.file" value="${persistence.artifacts.doc.diagram.dest.file-prefix}.dot.txt"/>
-
-        <mkdir dir="${persistence.artifacts.doc.db.struct.home}"/>
-        <diagram dotFile="${persistence.artifacts.doc.diagram.dot.file}"
-                 hibernateConfigClass="com.medigy.persist.util.HibernateConfiguration"
-                 hibernateConfigFile="/com/medigy/persist/hibernate.cfg.xml"
-                 diagramFilterClass="com.medigy.tool.persist.hibernate.diagram.HibernateDiagramEngineerFilter"
-            />
-
-        <graphviz.dot srcFile="${persistence.artifacts.doc.diagram.dot.file}"
-                      destFile="${persistence.artifacts.doc.diagram.dest.file-prefix}.svg" format="svg"/>
-
-        <graphviz.dot srcFile="${persistence.artifacts.doc.diagram.dot.file}"
-                      destFile="${persistence.artifacts.doc.diagram.dest.file-prefix}.gif" format="gif"/>
-    </target>
-
     <target name="doc.generate-dbdd-source" depends="compile.main,init.define-modules,init.define-module.dependencies.main.classpath,graphviz.init">
         <taskdef name="dbdg" classname="org.sns.tool.hibernate.document.DatabaseDesignGeneratorTask"
                              classpathref="module.dependencies.main.classpath">
@@ -84,8 +58,7 @@
         </taskdef>
 
         <property name="persistence.artifacts.doc.home" value="${persistence.artifacts.home}/doc"/>
-        <property name="persistence.artifacts.doc.db.home" value="${persistence.artifacts.doc.home}/db"/>
-        <property name="persistence.artifacts.doc.db.dbdd.home" value="${persistence.artifacts.doc.db.home}/dbdd"/>
+        <property name="persistence.artifacts.doc.db.dbdd.home" value="${persistence.artifacts.doc.home}/dbdd"/>
         <property name="persistence.artifacts.doc.db.dbdd.src" value="${persistence.artifacts.doc.db.dbdd.home}/dbdd.xml"/>
 
         <mkdir dir="${persistence.artifacts.doc.db.dbdd.home}"/>
@@ -93,11 +66,12 @@
               hibernateConfigClass="com.medigy.persist.util.HibernateConfiguration"
               hibernateConfigFile="/com/medigy/persist/hibernate.cfg.xml"
               structureClass="org.sns.tool.hibernate.struct.impl.DefaultTableStructure"
-              structureRulesClass="com.medigy.tool.persist.hibernate.HibernateStructureRules"
-              databaseDiagramRendererClass="com.medigy.tool.persist.hibernate.HibernateDatabaseDiagramRenderer"
+              structureRulesClass="com.medigy.tool.persist.hibernate.doc.HibernateStructureRules"
+              databaseDiagramRendererClass="com.medigy.tool.persist.hibernate.doc.HibernateDatabaseDiagramRenderer"
               graphvizDotCmdSpec="${graphviz.dot.exec.executable} ${graphviz.dot.exec.arg.cmd}"
               documentTitle="Medigy Data Model"
               associatedJavaDocHome="../../javadoc"
+              graphvizDotOutputType="GIF"
             />
     </target>
 

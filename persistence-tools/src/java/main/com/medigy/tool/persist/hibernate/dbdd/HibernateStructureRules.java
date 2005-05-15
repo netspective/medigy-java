@@ -41,7 +41,7 @@
 /*
  * Copyright (c) 2005 Your Corporation. All Rights Reserved.
  */
-package com.medigy.tool.persist.hibernate;
+package com.medigy.tool.persist.hibernate.dbdd;
 
 import java.util.HashSet;
 import java.util.Iterator;

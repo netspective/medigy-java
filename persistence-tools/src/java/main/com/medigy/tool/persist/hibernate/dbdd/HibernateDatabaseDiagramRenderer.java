@@ -1,4 +1,4 @@
-package com.medigy.tool.persist.hibernate;
+package com.medigy.tool.persist.hibernate.dbdd;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,8 +6,8 @@ import java.util.List;
 import org.hibernate.mapping.ForeignKey;
 import org.sns.tool.graphviz.GraphvizDiagramEdge;
 import org.sns.tool.graphviz.GraphvizDiagramNode;
-import org.sns.tool.hibernate.document.DatabaseDesignGeneratorConfig;
-import org.sns.tool.hibernate.document.DatabaseDiagramRenderer;
+import org.sns.tool.hibernate.dbdd.DatabaseDesignGeneratorConfig;
+import org.sns.tool.hibernate.dbdd.DatabaseDiagramRenderer;
 import org.sns.tool.hibernate.struct.ColumnCategory;
 import org.sns.tool.hibernate.struct.ColumnDetail;
 import org.sns.tool.hibernate.struct.TableStructure;

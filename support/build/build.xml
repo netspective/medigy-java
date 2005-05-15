@@ -208,18 +208,11 @@
     </target>
 
     <target name="doc" depends="init.define-properties,doc.javadoc.ydoc">
-        <ant dir="${repository.home}/persistence-tools/support/build" target="doc.generate-model-diagrams" inheritall="false" inheritrefs="false">
-            <property name="graphviz.artifacts.home" value="${consolidated.artifacts.home}/graphviz"/>
-            <property name="hibernate-doc.artifacts.home" value="${consolidated.artifacts.home}/hibernate-doc"/>
-            <property name="persistence.artifacts.home" value="${consolidated.artifacts.home}/persistence"/>
-            <property name="persistence.artifacts.doc.db.home" value="${consolidated.artifacts.doc.home}/db"/>
-            <property name="module.artifacts.home" value="${consolidated.artifacts.home}/persistence-tools"/>
-        </ant>
         <ant dir="${repository.home}/persistence-tools/support/build" target="doc.generate-dbdd-html" inheritall="false" inheritrefs="false">
             <property name="graphviz.artifacts.home" value="${consolidated.artifacts.home}/graphviz"/>
             <property name="hibernate-doc.artifacts.home" value="${consolidated.artifacts.home}/hibernate-doc"/>
             <property name="persistence.artifacts.home" value="${consolidated.artifacts.home}/persistence"/>
-            <property name="persistence.artifacts.doc.db.home" value="${consolidated.artifacts.doc.home}/db"/>
+            <property name="persistence.artifacts.doc.dbdd.home" value="${consolidated.artifacts.doc.home}/dbdd"/>
             <property name="module.artifacts.home" value="${consolidated.artifacts.home}/persistence-tools"/>
         </ant>
     </target>
