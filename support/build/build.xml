@@ -212,7 +212,7 @@
             <property name="graphviz.artifacts.home" value="${consolidated.artifacts.home}/graphviz"/>
             <property name="hibernate-doc.artifacts.home" value="${consolidated.artifacts.home}/hibernate-doc"/>
             <property name="persistence.artifacts.home" value="${consolidated.artifacts.home}/persistence"/>
-            <property name="persistence.artifacts.doc.dbdd.home" value="${consolidated.artifacts.doc.home}/dbdd"/>
+            <property name="persistence.artifacts.doc.home" value="${consolidated.artifacts.home}/doc"/>
             <property name="module.artifacts.home" value="${consolidated.artifacts.home}/persistence-tools"/>
         </ant>
     </target>
