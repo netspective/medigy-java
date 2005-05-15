@@ -69,7 +69,6 @@ public class TestPerson extends TestCase
         newPerson.setMiddleName("Bluegrass");
         newPerson.setLastName("Hackett");
 
-
         calendar.set(1990, 6, 14);
         newPerson.addMaritalStatus(MaritalStatusType.Cache.SINGLE.getEntity(), calendar.getTime(), new Date());
         newPerson.addMaritalStatus(MaritalStatusType.Cache.MARRIED.getEntity(), new Date(), null);
@@ -89,15 +88,14 @@ public class TestPerson extends TestCase
         HibernateUtil.closeSession();
 
         final Person persistedPerson = (Person) HibernateUtil.getSession().load(Person.class, newPerson.getPersonId());
-        assertEquals(persistedPerson.getFirstName(), "Ryan");
-        assertEquals(persistedPerson.getMiddleName(), "Bluegrass");
-        assertEquals(persistedPerson.getLastName(), "Hackett");
-        assertEquals(persistedPerson.getPartyName(), "Ryan Bluegrass Hackett");
+        assertThat(persistedPerson.getFirstName(), eq("Ryan"));
+        assertThat(persistedPerson.getMiddleName(), eq("Bluegrass"));
+        assertThat(persistedPerson.getLastName(), eq("Hackett"));
+        assertThat(persistedPerson.getPartyName(), eq("Ryan Bluegrass Hackett"));
 
         // verify the ethnicites
-        assertEquals(persistedPerson.getEthnicities().size(), 2);
-        assertTrue(persistedPerson.hasEthnicity(EthnicityType.Cache.CAUCASIAN.getEntity()));
-        assertTrue(persistedPerson.hasEthnicity(EthnicityType.Cache.NATIVE_AMERICAN.getEntity()));
-
+        assertThat(persistedPerson.getEthnicities().size(), eq(2));
+        assertThat(persistedPerson.hasEthnicity(EthnicityType.Cache.CAUCASIAN.getEntity()), eq(true));
+        assertThat(persistedPerson.hasEthnicity(EthnicityType.Cache.NATIVE_AMERICAN.getEntity()), eq(true));
     }
 }

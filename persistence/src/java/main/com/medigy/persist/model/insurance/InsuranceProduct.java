@@ -79,4 +79,15 @@ public class InsuranceProduct extends Product
     {
         getInsurancePlans().add(policy);
     }
+
+    @Transient
+    public InsurancePlan getInsurancePlan(final String planName)
+    {
+        for (InsurancePlan plan: insurancePlans)
+        {
+            if (plan.getName().equals(planName))
+            return plan;
+        }
+        return null;
+    }
 }

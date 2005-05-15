@@ -36,54 +36,11 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.service.person;
 
-import com.medigy.persist.TestCase;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+package com.medigy.service;
 
-
-public class TestPersonRelationshipFacade extends TestCase
+public interface ComponentVersion
 {
-    private static final Log log = LogFactory.getLog(TestPersonRelationshipFacade.class);
-    /**
-     * Validate the VALID_PARTY_RELATIONSHIP_ROLE table, Add two roles associated with one relationship and verify by
-     *  reading it back out using the  PartyRelationshipFacade
-     */
-    /*
-    public void testPersonRelationshipFacade()
-    {
-        Session session = new ProcessSession();
-        session.setProcessName(TestPersonRelationshipFacade.class.getName() + ".testPersonRelationshipFacade()");
-        SessionManager.getInstance().pushActiveSession(session);
-        HibernateUtil.getSession().save(session);
+    public String getComponentVersion();
 
-        //
-        HibernateUtil.beginTransaction();
-        final ValidPartyRelationshipRole parentMapping = new ValidPartyRelationshipRole();
-        parentMapping.setPartyRelationshipType(PartyRelationshipType.Cache.PATIENT_RESPONSIBLE_PARTY.getEntity());
-        parentMapping.setPartyRoleType(PersonRoleType.Cache.PARENT.getEntity());
-        HibernateUtil.getSession().save(parentMapping);
-
-        final ValidPartyRelationshipRole childMapping = new ValidPartyRelationshipRole();
-        childMapping.setPartyRelationshipType(PartyRelationshipType.Cache.PATIENT_RESPONSIBLE_PARTY.getEntity());
-        childMapping.setPartyRoleType(PersonRoleType.Cache.CHILD.getEntity());
-        HibernateUtil.getSession().save(childMapping);
-        HibernateUtil.commitTransaction();
-
-        PartyRelationshipType relType = PartyRelationshipType.Cache.PATIENT_RESPONSIBLE_PARTY.getEntity();
-        PartyRelationshipFacade facade = new PartyRelationshipFacadeImpl();
-        List validList = facade.getValidPartyRolesByRelationshipType(relType);
-        assertEquals(validList.size(), 2);
-
-        ValidPartyRelationshipRole validRelRole = (ValidPartyRelationshipRole) validList.toArray()[0];
-        assertEquals(validRelRole.getPartyRoleType(), PersonRoleType.Cache.PARENT.getEntity());
-        validRelRole = (ValidPartyRelationshipRole) validList.toArray()[1];
-        assertEquals(validRelRole.getPartyRoleType(), PersonRoleType.Cache.CHILD.getEntity());
-
-
-    }
-    */
-
-    
 }

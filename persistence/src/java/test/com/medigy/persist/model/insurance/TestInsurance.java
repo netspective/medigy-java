@@ -40,18 +40,19 @@ package com.medigy.persist.model.insurance;
 
 import com.medigy.persist.TestCase;
 import com.medigy.persist.model.org.Organization;
+import com.medigy.persist.model.party.PartyRelationship;
+import com.medigy.persist.model.party.PartyRole;
 import com.medigy.persist.model.person.Person;
-import com.medigy.persist.reference.custom.insurance.InsurancePolicyRoleType;
 import com.medigy.persist.reference.custom.insurance.InsurancePolicyType;
 import com.medigy.persist.reference.custom.org.OrganizationClassificationType;
+import com.medigy.persist.reference.custom.party.PartyRelationshipType;
+import com.medigy.persist.reference.custom.person.PersonRoleType;
 import com.medigy.persist.util.HibernateUtil;
 
 import java.util.Date;
 
 public class TestInsurance extends TestCase
 {
-
-
     public void testInsurance()
     {
         // create the insurance company
@@ -59,72 +60,114 @@ public class TestInsurance extends TestCase
         blueCross.setOrganizationName("Blue Cross Blue Shield");
         blueCross.addPartyClassification(OrganizationClassificationType.Cache.INSURANCE.getEntity());
 
-        final InsuranceProduct product = new InsuranceProduct();
-        product.setName("PPO Product");
-        product.setOrganization(blueCross);
+        final InsuranceProduct ppoProduct = new InsuranceProduct();
+        ppoProduct.setName("PPO Product");
+        ppoProduct.setOrganization(blueCross);
 
-        final InsurancePlan plan =  new InsurancePlan();
-        plan.setInsuranceProduct(product);
-        plan.setName("Super Plan");
-        product.addInsurancePlan(plan);
+        final InsurancePlan plan1 =  new InsurancePlan();
+        plan1.setInsuranceProduct(ppoProduct);
+        plan1.setName("Super Plan 1");
+        ppoProduct.addInsurancePlan(plan1);
 
-        blueCross.getProducts().add(product);
+        final InsurancePlan plan2 =  new InsurancePlan();
+        plan2.setInsuranceProduct(ppoProduct);
+        plan2.setName("Super Plan 2");
+        ppoProduct.addInsurancePlan(plan2);
+
+        blueCross.getProducts().add(ppoProduct);
         HibernateUtil.getSession().save(blueCross);
+        HibernateUtil.closeSession();
+
+        final Organization carrier = (Organization) HibernateUtil.getSession().load(Organization.class, blueCross.getOrgId());
+        assertThat(carrier.getInsuranceProducts().size(), eq(1));
+        final InsuranceProduct product = (InsuranceProduct) carrier.getInsuranceProducts().toArray()[0];
+        assertThat(product.getInsurancePlans().size(), eq(2));
+        assertThat(product.getInsurancePlan("Super Plan 1").getName(), eq("Super Plan 1"));
+        assertThat(product.getInsurancePlan("Super Plan 2").getName(), eq("Super Plan 2"));
 
         final Person johnDoe = new Person();
         johnDoe.setFirstName("John");
         johnDoe.setLastName("Doe");
-        InsurancePolicyRole policyHolderRole = new InsurancePolicyRole();
-        policyHolderRole.setPerson(johnDoe);
-        policyHolderRole.setType(InsurancePolicyRoleType.Cache.INSURED_CONTRACT_HOLDER.getEntity());
-        johnDoe.addInsurancePolicyRole(policyHolderRole);
+
+        final PartyRole parentRole = new PartyRole();
+        parentRole.setType(PersonRoleType.Cache.PARENT.getEntity());
+        parentRole.setParty(johnDoe);
+        johnDoe.addPartyRole(parentRole);
 
         final Person patient = new Person();
         patient.setLastName("Doe");
         patient.setFirstName("Jane");
-        InsurancePolicyRole dependentRole = new InsurancePolicyRole();
-        dependentRole.setPerson(johnDoe);
-        dependentRole.setType(InsurancePolicyRoleType.Cache.INSURED_DEPENDENT.getEntity());
-        patient.addInsurancePolicyRole(dependentRole);
+
+        final PartyRole childRole = new PartyRole();
+        childRole.setType(PersonRoleType.Cache.PARENT.getEntity());
+        childRole.setParty(patient);
+        patient.addPartyRole(childRole);
 
         HibernateUtil.getSession().save(patient);
         HibernateUtil.getSession().save(johnDoe);
         HibernateUtil.getSession().flush();
 
+        final PartyRelationship relationship = new PartyRelationship();
+        relationship.setPartyRoleFrom(childRole);
+        relationship.setPartyRoleTo(parentRole);
+        relationship.setFromDate(new Date());
+        relationship.setType(PartyRelationshipType.Cache.FAMILY.getEntity());
+        HibernateUtil.getSession().save(relationship);
+
         InsurancePolicy johnDoePolicy = new InsurancePolicy();
-        johnDoePolicy.setInsurancePlan(plan);
-        johnDoePolicy.setInsurancePolicyRole(policyHolderRole);
+        johnDoePolicy.setInsurancePlan(plan1);
+        johnDoePolicy.setInsuredPerson(johnDoe);
+        johnDoePolicy.setContractHolderPerson(johnDoe);
         johnDoePolicy.setPolicyNumber("12345");
         johnDoePolicy.setGroupNumber("XXX");
         johnDoePolicy.setFromDate(new Date());
         johnDoePolicy.setType(InsurancePolicyType.Cache.INDIVIDUAL_INSURANCE_POLICY.getEntity());
-        policyHolderRole.addInsurancePolicy(johnDoePolicy);
+        johnDoe.addInsurancePolicy(johnDoePolicy);
 
         InsurancePolicy patientPolicy = new InsurancePolicy();
-        patientPolicy.setInsurancePlan(plan);
-        patientPolicy.setInsurancePolicyRole(policyHolderRole);
+        patientPolicy.setInsurancePlan(plan1);
+        patientPolicy.setInsuredPerson(patient);
+        patientPolicy.setContractHolderPerson(johnDoe);
         patientPolicy.setPolicyNumber("12345-1");
         patientPolicy.setGroupNumber("XXX");
         patientPolicy.setFromDate(new Date());
-        patientPolicy.setParentPolicy(johnDoePolicy);
         patientPolicy.setType(InsurancePolicyType.Cache.INDIVIDUAL_INSURANCE_POLICY.getEntity());
-        dependentRole.addInsurancePolicy(patientPolicy);
-        johnDoePolicy.getChildPolicies().add(patientPolicy);
+        patient.addInsurancePolicy(patientPolicy);
 
         HibernateUtil.getSession().save(johnDoePolicy);
         HibernateUtil.getSession().save(patientPolicy);
         HibernateUtil.closeSession();
 
         final Person mainPerson = (Person) HibernateUtil.getSession().load(Person.class, johnDoe.getPartyId());
-        assertEquals(johnDoe.getPartyId(), mainPerson.getPartyId());
-        assertEquals(1, johnDoe.getInsurancePolicyRoles().size());
-        final InsurancePolicyRole insurancePolicyRole = johnDoe.getInsurancePolicyRole(InsurancePolicyRoleType.Cache.INSURED_CONTRACT_HOLDER.getEntity());
-        assertEquals(policyHolderRole, insurancePolicyRole);
-        assertEquals(1, insurancePolicyRole.getInsurancePolicies().size());
-        final InsurancePolicy policy = (InsurancePolicy) insurancePolicyRole.getInsurancePolicies().toArray()[0];
-        assertEquals(johnDoePolicy, policy);
+        assertThat(mainPerson.getInsurancePolicies().size(), eq(1));
+        assertThat(mainPerson.getResponsibleInsurancePolicies().size(), eq(2));
+
+        final InsurancePolicy jdPolicy = (InsurancePolicy) mainPerson.getInsurancePolicies().toArray()[0];
+        assertThat(jdPolicy.getInsuredPerson().getPersonId(), eq(johnDoe.getPersonId()));
+        assertThat(jdPolicy.getContractHolderPerson().getPersonId(), eq(johnDoe.getPersonId()));
+        assertThat(jdPolicy.getPolicyNumber(), eq("12345"));
+        assertThat(jdPolicy.getGroupNumber(), eq("XXX"));
+        assertThat(jdPolicy.getType(), eq(InsurancePolicyType.Cache.INDIVIDUAL_INSURANCE_POLICY.getEntity()));
+        assertThat(jdPolicy.getInsurancePlan().getInsurancePlanId(), eq(plan1.getInsurancePlanId()));
+        assertThat(jdPolicy.getInsurancePlan().getName(), eq("Super Plan 1"));
+        assertThat(jdPolicy.getInsurancePlan().getInsuranceProduct().getProductId(), eq(product.getProductId()));
+        assertThat(jdPolicy.getInsurancePlan().getInsuranceProduct().getName(), eq("PPO Product"));
+
+        final Person secondPerson = (Person) HibernateUtil.getSession().load(Person.class, patient.getPartyId());
+        assertThat(secondPerson.getInsurancePolicies().size(), eq(1));
+        assertThat(secondPerson.getResponsibleInsurancePolicies().size(), eq(0));
+
+        final InsurancePolicy secondPolicy = (InsurancePolicy) secondPerson.getInsurancePolicies().toArray()[0];
+        assertThat(secondPolicy.getInsuredPerson().getPersonId(), eq(patient.getPersonId()));
+        assertThat(secondPolicy.getContractHolderPerson().getPersonId(), eq(johnDoe.getPersonId()));
+        assertThat(secondPolicy.getPolicyNumber(), eq("12345-1"));
+        assertThat(secondPolicy.getGroupNumber(), eq("XXX"));
+        assertThat(secondPolicy.getType(), eq(InsurancePolicyType.Cache.INDIVIDUAL_INSURANCE_POLICY.getEntity()));
+        assertThat(secondPolicy.getInsurancePlan().getInsurancePlanId(), eq(plan1.getInsurancePlanId()));
+        assertThat(secondPolicy.getInsurancePlan().getName(), eq("Super Plan 1"));
+        assertThat(secondPolicy.getInsurancePlan().getInsuranceProduct().getProductId(), eq(product.getProductId()));
+        assertThat(secondPolicy.getInsurancePlan().getInsuranceProduct().getName(), eq("PPO Product"));
+
 
     }
-
-    
 }

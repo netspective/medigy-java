@@ -53,8 +53,9 @@ import com.medigy.persist.model.party.PostalAddress;
 import com.medigy.persist.reference.custom.party.ContactMechanismPurposeType;
 import com.medigy.persist.util.HibernateUtil;
 import com.medigy.service.ServiceInvocationException;
-import com.medigy.service.ServiceLocator;
+import com.medigy.service.ServiceVersion;
 import com.medigy.service.common.ReferenceEntityLookupService;
+import com.medigy.service.common.ReferenceEntityLookupServiceImpl;
 import com.medigy.service.common.UnknownReferenceTypeException;
 import com.medigy.service.dto.party.AddEmailParameters;
 import com.medigy.service.dto.party.AddPhoneParameters;
@@ -69,6 +70,12 @@ import java.io.Serializable;
 public class AddContactMechanismServiceImpl implements AddContactMechanismService
 {
     private static final Log log = LogFactory.getLog(AddContactMechanismServiceImpl.class);
+
+
+    public ServiceVersion[] getSupportedServiceVersions()
+    {
+        return new ServiceVersion[0];
+    }
 
     public void validatePostalAddress(final AddPostalAddressParameters param)
     {
@@ -194,8 +201,7 @@ public class AddContactMechanismServiceImpl implements AddContactMechanismServic
     protected void addPartyContactMechanism(final ContactMechanism cm,
                                             final Party party, final String purposeType)
     {
-        final ReferenceEntityLookupService referenceEntityService =
-                (ReferenceEntityLookupService) ServiceLocator.getInstance().getService(ReferenceEntityLookupService.class);
+        final ReferenceEntityLookupService referenceEntityService = new ReferenceEntityLookupServiceImpl();                
         // now create the relationship entry between party and the postal address
         final PartyContactMechanism mech = new PartyContactMechanism();
         mech.setParty(party);

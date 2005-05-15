@@ -40,6 +40,7 @@ package com.medigy.service.insurance;
 
 import com.medigy.persist.model.org.Organization;
 import com.medigy.service.ServiceLocator;
+import com.medigy.service.ServiceVersion;
 import com.medigy.service.dto.insurance.CareProviderSelectionData;
 import com.medigy.service.dto.insurance.SelectCareProviderParameters;
 
@@ -47,7 +48,13 @@ import java.util.List;
 
 public class SelectCareProviderServiceImpl implements SelectCareProviderService
 {
-   public void registerService()
+
+    public ServiceVersion[] getSupportedServiceVersions()
+    {
+        return new ServiceVersion[0];
+    }
+
+    public void registerService()
    {
        ServiceLocator.getInstance().loadService(SelectCareProviderService.class,
                new SelectCareProviderServiceImpl());

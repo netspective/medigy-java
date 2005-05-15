@@ -40,13 +40,14 @@ package com.medigy.persist.model.insurance;
 
 import com.medigy.persist.model.common.AbstractTopLevelEntity;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.GeneratorType;
-import javax.persistence.Id;
+import javax.persistence.CascadeType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.GeneratorType;
+import javax.persistence.Column;
 import javax.persistence.OneToMany;
+import javax.persistence.Id;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -54,6 +55,8 @@ import java.util.Set;
 @Entity
 public class Enrollment extends AbstractTopLevelEntity
 {
+    public static final String PK_COLUMN_NAME = "enrollment_id";
+    
     private Long enrollmentId;
     private Date enrolledDate;
     private Group group;
@@ -61,6 +64,7 @@ public class Enrollment extends AbstractTopLevelEntity
     private Set<InsurancePolicy> insurancePolicies = new HashSet<InsurancePolicy>();
     private Set<EnrollmentElection> elections = new HashSet<EnrollmentElection>();
 
+    /*
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "enrollment")
     public Set<InsurancePolicy> getInsurancePolicies()
     {
@@ -71,8 +75,10 @@ public class Enrollment extends AbstractTopLevelEntity
     {
         this.insurancePolicies = insurancePolicies;
     }
+    */
 
     @Id(generate = GeneratorType.AUTO)
+    @Column(name = PK_COLUMN_NAME)
     public Long getEnrollmentId()
     {
         return enrollmentId;
@@ -94,8 +100,7 @@ public class Enrollment extends AbstractTopLevelEntity
         this.enrolledDate = enrolledDate;
     }
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "enrollment_id")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "enrollment")
     public Set<EnrollmentElection> getElections()
     {
         return elections;

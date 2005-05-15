@@ -39,15 +39,21 @@
 package com.medigy.service.insurance;
 
 import com.medigy.persist.DbUnitTestCase;
+import com.medigy.persist.reference.custom.insurance.InsurancePolicyType;
 import com.medigy.persist.model.insurance.InsuranceProduct;
+import com.medigy.persist.model.insurance.InsurancePolicy;
+import com.medigy.persist.model.insurance.InsurancePlan;
 import com.medigy.persist.model.org.Organization;
+import com.medigy.persist.model.person.Person;
 import com.medigy.persist.util.HibernateUtil;
 import com.medigy.service.util.InsurancePolicyFacade;
 import com.medigy.service.util.InsurancePolicyFacadeImpl;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.criterion.Restrictions;
 
 import java.util.List;
+import java.util.Date;
 
 public class TestInsurancePolicyFacade extends DbUnitTestCase
 {
@@ -57,100 +63,45 @@ public class TestInsurancePolicyFacade extends DbUnitTestCase
     {
         final Organization policyProvider = (Organization) HibernateUtil.getSession().load(Organization.class, new Long(2));
 
-        final InsuranceProduct product = new InsuranceProduct();
-        product.setName("PPO Plan Deluxe");
-        product.setOrganization(policyProvider);
-        HibernateUtil.getSession().save(product);
-        HibernateUtil.closeSession();
-
         final InsurancePolicyFacade facade = new InsurancePolicyFacadeImpl();
         List productList = facade.listInsuranceProducts(policyProvider);
         assertEquals(1, productList.size());
         final InsuranceProduct newProduct = (InsuranceProduct) productList.toArray()[0];
-        assertEquals("PPO Plan Deluxe", newProduct.getName());
+        assertEquals("PPO Deluxe", newProduct.getName());
 
     }
 
-    /*
+
     public void testCreateIndividualInsurancePolicy()
     {
         final Organization policyProvider = (Organization) HibernateUtil.getSession().load(Organization.class, new Long(2));
+        final InsuranceProduct product = policyProvider.getInsuranceProduct("PPO Deluxe");
+        final InsurancePlan plan = product.getInsurancePlan("Super Plan");
+
         final Person policyHolder = (Person) HibernateUtil.getSession().load(Person.class, new Long(3));
         final List insuredDependentList = HibernateUtil.getSession().createCriteria(Person.class).add(Restrictions.gt("partyId", new Long(3))).list();
         final Person[] insuredDependents = (Person[]) insuredDependentList.toArray(new Person[0]);
 
         final InsurancePolicyFacade facade = new InsurancePolicyFacadeImpl();
-        final InsurancePolicy policy = facade.createIndividualInsurancePolicy("12345", policyProvider, policyHolder,
-            insuredDependents);
+        for (Person depdendent : insuredDependents)
+        {
+            final InsurancePolicy policy = facade.createInsurancePolicy(depdendent, policyHolder, plan, "12345", "XXX",
+                InsurancePolicyType.Cache.INDIVIDUAL_INSURANCE_POLICY.getEntity(), new Date());
+            HibernateUtil.getSession().flush();
+        }
+        final List newPolicies =  HibernateUtil.getSession().createCriteria(InsurancePolicy.class).list();
+        assertThat(newPolicies.size(), eq(insuredDependents.length));
+        final InsurancePolicy[] policyList = (InsurancePolicy[]) newPolicies.toArray(new InsurancePolicy[0]);
+        for (InsurancePolicy newPolicy : policyList)
+        {
+            assertThat(newPolicy.getPolicyNumber(), eq("12345"));
+            assertThat(newPolicy.getGroupNumber(), eq("XXX"));
+            assertThat(newPolicy.getContractHolderPerson().getPartyId(), eq(policyHolder.getPartyId()));
+        }
 
-        final InsurancePolicy newPolicy = (InsurancePolicy) HibernateUtil.getSession().load(InsurancePolicy.class, policy.getPolicyId());
-
-        assertNotNull(newPolicy);
-        assertEquals(policyProvider.getOrgId(), newPolicy.getInsuranceProvider().getOrgId());
-        assertEquals(policyHolder.getPersonId(), newPolicy.getInsuredContractHolder().getPersonId());
-        assertEquals(insuredDependents.length, newPolicy.getInsuredDependents().size());
-    }
-
-    public void testGetInsurancePolicy()
-    {
-        Organization providerOrg = new Organization();
-        providerOrg.setOrganizationName("Anthem");
-        HibernateUtil.getSession().save(providerOrg);
-
-        final InsurancePolicy policy = new InsurancePolicy();
-        policy.setType(InsurancePolicyType.Cache.INDIVIDUAL_INSURANCE_POLICY.getEntity());
-        policy.setPolicyNumber("12345");
-        policy.setInsuranceProvider(providerOrg);
-
-        HibernateUtil.getSession().save(policy);
-        HibernateUtil.closeSession();
-
-        Organization org = (Organization) HibernateUtil.getSession().load(Organization.class, providerOrg.getPartyId());
-        assertEquals("Anthem", org.getOrganizationName());
-
-        //IndividualInsurancePolicy newPolicy = (IndividualInsurancePolicy) HibernateUtil.getSession().load(IndividualInsurancePolicy.class, policy.getPolicyId());
-        //assertEquals(newPolicy.getIdentificationNumber(), "12345");
-
-        final InsurancePolicyFacade facade = new InsurancePolicyFacadeImpl();
-        final InsurancePolicy newPolicy = facade.getIndividualInsurancePolicy("12345");
-        assertNotNull(newPolicy);
-        assertEquals(policy.getPolicyNumber(), newPolicy.getPolicyNumber());
-        assertEquals(org.getOrgId(), newPolicy.getInsuranceProvider().getOrgId());
-
-        log.info(newPolicy.getInsuranceProvider());
-    }
-
-    public void testListInsurancePolicy()
-    {
-        Person patient = new Person();
-        patient.setLastName("Hackett");
-        patient.setFirstName("Bob");
-
-        Organization providerOrg = new Organization();
-        providerOrg.setOrganizationName("Anthem");
-        HibernateUtil.getSession().save(providerOrg);
-        HibernateUtil.getSession().save(patient);
-
-        final InsurancePolicy policy = new InsurancePolicy();
-        policy.setType(InsurancePolicyType.Cache.INDIVIDUAL_INSURANCE_POLICY.getEntity());
-        policy.setPolicyNumber("12345");
-        policy.setInsuranceProvider(providerOrg);
-        policy.setPolicyHolder(patient);
-
-        HibernateUtil.getSession().save(policy);
-        HibernateUtil.closeSession();
-
-        Organization org = (Organization) HibernateUtil.getSession().load(Organization.class, providerOrg.getPartyId());
-        assertEquals("Anthem", org.getOrganizationName());
-
-        final InsurancePolicyFacade facade = new InsurancePolicyFacadeImpl();
-        final List policyList = facade.listInsurancePolicies(patient.getPartyId());
-        assertNotNull(policyList);
-        assertEquals(1, policyList.size());
-        assertEquals("12345", ((InsurancePolicy) policyList.toArray()[0]).getPolicyNumber());
 
     }
-    */
+
     public String getDataSetFile()
     {
         return "/com/medigy/service/insurance/TestInsurancePolicyFacade.xml";

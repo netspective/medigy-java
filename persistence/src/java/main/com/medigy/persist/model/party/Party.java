@@ -72,6 +72,7 @@ import java.util.Set;
 @Table(name = "Party")
 public class Party extends AbstractTopLevelEntity
 {
+    public static final String PK_COLUMN_NAME = "party_id";
     public static final String SYS_GLOBAL_PARTY_NAME = "SYS_GLOBAL_PARTY";
 
     public enum Cache
@@ -130,6 +131,7 @@ public class Party extends AbstractTopLevelEntity
     }
 
     @Id(generate=GeneratorType.AUTO)
+    @Column(name = PK_COLUMN_NAME)        
     public Long getPartyId()
     {
         return partyId;
@@ -163,8 +165,7 @@ public class Party extends AbstractTopLevelEntity
         this.partyType = partyType;
     }
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "party_id")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "party")
     public Set<PartyClassification> getPartyClassifications()
     {
         return partyClassifications;
@@ -195,8 +196,7 @@ public class Party extends AbstractTopLevelEntity
         return null;
     }
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "party_id")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "party")
     public Set<PartyRole> getPartyRoles()
     {
         return partyRoles;
@@ -262,8 +262,7 @@ public class Party extends AbstractTopLevelEntity
     }
 
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "party_id")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "party")
     public Set<PartyContactMechanism> getPartyContactMechanisms()
     {
         return partyContactMechanisms;
@@ -274,8 +273,7 @@ public class Party extends AbstractTopLevelEntity
         this.partyContactMechanisms = partyContactMechanisms;
     }
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "party_id")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "party")
     public Set<PartyFacilityRole> getPartyFacilityRoles()
     {
         return partyFacilityRoles;
@@ -286,8 +284,7 @@ public class Party extends AbstractTopLevelEntity
         this.partyFacilityRoles = partyFacilityRoles;
     }
 
-    @OneToMany(cascade =  CascadeType.ALL)
-    @JoinColumn(name = "party_id")
+    @OneToMany(cascade =  CascadeType.ALL, mappedBy = "party")
     public Set<PartyIdentifierType> getPartyIdentifierTypes()
     {
         return partyIdentifierTypes;
@@ -298,8 +295,7 @@ public class Party extends AbstractTopLevelEntity
         this.partyIdentifierTypes = partyIdentifierTypes;
     }
 
-    @OneToMany(cascade =  CascadeType.ALL)
-    @JoinColumn(name = "party_id")
+    @OneToMany(cascade =  CascadeType.ALL, mappedBy = "party")
     public Set<PartyRoleType> getPartyRoleTypes()
     {
         return partyRoleTypes;
@@ -310,8 +306,7 @@ public class Party extends AbstractTopLevelEntity
         this.partyRoleTypes = partyRoleTypes;
     }
 
-    @OneToMany(cascade =  CascadeType.ALL)
-    @JoinColumn(name = "party_id")
+    @OneToMany(cascade =  CascadeType.ALL, mappedBy = "party")
     public Set<FacilityType> getFacilityTypes()
     {
         return facilityTypes;
@@ -322,8 +317,7 @@ public class Party extends AbstractTopLevelEntity
         this.facilityTypes = facilityTypes;
     }
 
-    @OneToMany(cascade =  CascadeType.ALL)
-    @JoinColumn(name = "party_id")
+    @OneToMany(cascade =  CascadeType.ALL, mappedBy = "party")
     public Set<PartyRelationshipType> getPartyRelationshipTypes()
     {
         return partyRelationshipTypes;
@@ -334,8 +328,7 @@ public class Party extends AbstractTopLevelEntity
         this.partyRelationshipTypes = partyRelationshipTypes;
     }
 
-    @OneToMany(cascade =  CascadeType.ALL)
-    @JoinColumn(name = "party_id")
+    @OneToMany(cascade =  CascadeType.ALL, mappedBy = "party")
     public Set<CommunicationEventPurposeType> getCommunicationEventPurposeTypes()
     {
         return communicationEventPurposeTypes;
@@ -346,8 +339,7 @@ public class Party extends AbstractTopLevelEntity
         this.communicationEventPurposeTypes = communicationEventPurposeTypes;
     }
 
-    @OneToMany(cascade =  CascadeType.ALL)
-    @JoinColumn(name = "party_id")
+    @OneToMany(cascade =  CascadeType.ALL, mappedBy = "party")
     public Set<CommunicationEventRoleType> getCommunicationEventRoleTypes()
     {
         return communicationEventRoleTypes;
@@ -358,8 +350,7 @@ public class Party extends AbstractTopLevelEntity
         this.communicationEventRoleTypes = communicationEventRoleTypes;
     }
 
-    @OneToMany
-    @JoinColumn(name = "party_id")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "party")
     public Set<CommunicationEventRole> getCommunicationEventRoles()
     {
         return communicationEventRoles;
@@ -370,8 +361,7 @@ public class Party extends AbstractTopLevelEntity
         this.communicationEventRoles = communicationEventRoles;
     }
 
-    @OneToMany
-    @JoinColumn(name = "party_id")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "party")
     public Set<BillingAccountRole> getBillingAccountRoles()
     {
         return billingAccountRoles;
@@ -382,8 +372,7 @@ public class Party extends AbstractTopLevelEntity
         this.billingAccountRoles = billingAccountRoles;
     }
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "party_id")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "party")
     public Set<InvoiceRole> getInvoiceRoles()
     {
         return invoiceRoles;

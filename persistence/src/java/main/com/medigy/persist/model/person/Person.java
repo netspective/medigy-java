@@ -46,18 +46,13 @@ package com.medigy.persist.model.person;
 import com.medigy.persist.model.health.HealthCareEpisode;
 import com.medigy.persist.model.health.HealthCareLicense;
 import com.medigy.persist.model.health.HealthCareVisit;
+import com.medigy.persist.model.insurance.InsurancePolicy;
 import com.medigy.persist.model.party.Party;
 import com.medigy.persist.model.party.PartyIdentifier;
-import com.medigy.persist.model.party.PartyRelationship;
-import com.medigy.persist.model.party.PartyRole;
-import com.medigy.persist.model.insurance.InsurancePolicyRole;
 import com.medigy.persist.reference.custom.party.PartyIdentifierType;
-import com.medigy.persist.reference.custom.party.PartyRelationshipType;
 import com.medigy.persist.reference.custom.person.EthnicityType;
 import com.medigy.persist.reference.custom.person.PersonIdentifierType;
-import com.medigy.persist.reference.custom.person.PersonRoleType;
 import com.medigy.persist.reference.custom.person.PhysicalCharacteristicType;
-import com.medigy.persist.reference.custom.insurance.InsurancePolicyRoleType;
 import com.medigy.persist.reference.type.GenderType;
 import com.medigy.persist.reference.type.LanguageType;
 import com.medigy.persist.reference.type.MaritalStatusType;
@@ -70,7 +65,6 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.LobType;
 import javax.persistence.OneToMany;
@@ -88,6 +82,8 @@ import java.util.TreeSet;
 @Table(uniqueConstraints = {@UniqueConstraint(columnNames={"firstName", "lastName", "birthDate"})})
 public class Person extends Party
 {
+    public static final String PK_COLUMN_NAME = Party.PK_COLUMN_NAME;
+
     private String firstName;
     private String lastName;
     private String middleName;
@@ -109,7 +105,9 @@ public class Person extends Party
     private Set<HealthCareEpisode> healthCareEpisodes = new HashSet<HealthCareEpisode>();
     private Set<Language> languages = new HashSet<Language>();
     private Set<HealthCareLicense> licenses = new HashSet<HealthCareLicense>();
-    private Set<InsurancePolicyRole> insurancePolicyRoles = new HashSet<InsurancePolicyRole>();
+
+    private Set<InsurancePolicy> insurancePolicies = new HashSet<InsurancePolicy>();
+    private Set<InsurancePolicy> responsibleInsurancePolicies = new HashSet<InsurancePolicy>();
 
     public Person()
     {
@@ -239,8 +237,7 @@ public class Person extends Party
         this.birthDate = birthDate;
     }
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "party_id")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "person")
     public Set<Gender> getGenders()
     {
         return genders;
@@ -293,8 +290,7 @@ public class Person extends Party
         return inverseSorted.first().getType();
     }
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "partyId")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "person")
     public Set<MaritalStatus> getMaritalStatuses()
     {
         return maritalStatuses;
@@ -355,7 +351,7 @@ public class Person extends Party
         this.physicalCharacteristics.add(pc);
     }
 
-    @OneToMany(mappedBy = "patient")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "patient")
     public Set<HealthCareVisit> getHealthCareVisits()
     {
         return healthCareVisits;
@@ -366,8 +362,7 @@ public class Person extends Party
         this.healthCareVisits = healthCareVisits;
     }
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "party_id")        
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "person")
     public Set<HealthCareEpisode> getHealthCareEpisodes()
     {
         return healthCareEpisodes;
@@ -378,8 +373,7 @@ public class Person extends Party
         this.healthCareEpisodes = healthCareEpisodes;
     }
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "party_id")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "person")
     public Set<Ethnicity> getEthnicities()
     {
         return ethnicities;
@@ -417,8 +411,7 @@ public class Person extends Party
         return false;
     }
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "party_id")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "person")
     public Set<Language> getLanguages()
     {
         return languages;
@@ -573,35 +566,6 @@ public class Person extends Party
         this.photo = photo;
     }
 
-    @Transient
-    public Person getResponsibleParty()
-    {
-        for (PartyRole role : getPartyRoles())
-        {
-            if (role.getType().equals(PersonRoleType.Cache.PATIENT.getEntity()))
-            {
-                for (PartyRelationship relationship : role.getFromPartyRelationships())
-                {
-                    if (relationship.getType().equals(PartyRelationshipType.Cache.PATIENT_RESPONSIBLE_PARTY.getEntity()) &&
-                        relationship.getPartyTo() instanceof Person)
-                    {
-                        return (Person) relationship.getPartyTo();
-                    }
-                }
-                for (PartyRelationship relationship : role.getToPartyRelationships())
-                {
-                    if (relationship.getType().equals(PartyRelationshipType.Cache.PATIENT_RESPONSIBLE_PARTY.getEntity()) &&
-                        relationship.getPartyFrom() instanceof Person)
-                    {
-                        return (Person) relationship.getPartyFrom();
-                    }
-                }
-
-            }
-        }
-        return null;
-    }
-
     public String getFirstNameSoundex()
     {
         return firstNameSoundex;
@@ -638,47 +602,47 @@ public class Person extends Party
                 "}";
     }
 
+    /**
+     * Gets all the insurance policies of this person. This will include policies that have expired also.
+     *
+     * @return a set of insurance policies
+     */
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "insuredPerson")
+    public Set<InsurancePolicy> getInsurancePolicies()
+    {
+        return insurancePolicies;
+    }
+
+    public void setInsurancePolicies(final Set<InsurancePolicy> insurancePolicies)
+    {
+        this.insurancePolicies = insurancePolicies;
+    }
 
     @Transient
-    public PartyRole getPartyRoleByType(final PersonRoleType type)
+    public void addInsurancePolicy(final InsurancePolicy policy)
     {
-        for (PartyRole role : getPartyRoles())
-        {
-            if (role.getType().equals(type))
-                return role;
-        }
-        return null;
+        this.insurancePolicies.add(policy);
     }
 
     /**
-     * Gets all the insurance policy roles associated with this person
-     * @return a set of insurance policy roles
+     * Gets all the insurance policies to which this person is financially responsible for. This will also include
+     * his/her own policies which they are responsible for.
+     * @return a set of insurance policies
      */
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "person")
-    public Set<InsurancePolicyRole> getInsurancePolicyRoles()
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "contractHolderPerson")
+    public Set<InsurancePolicy> getResponsibleInsurancePolicies()
     {
-        return insurancePolicyRoles;
+        return responsibleInsurancePolicies;
     }
 
-    public void setInsurancePolicyRoles(final Set<InsurancePolicyRole> insurancePolicyRoles)
+    public void setResponsibleInsurancePolicies(final Set<InsurancePolicy> responsibleInsurancePolicies)
     {
-        this.insurancePolicyRoles = insurancePolicyRoles;
-    }
-
-    @Transient
-    public void addInsurancePolicyRole(final InsurancePolicyRole role)
-    {
-        insurancePolicyRoles.add(role);
+        this.responsibleInsurancePolicies = responsibleInsurancePolicies;
     }
 
     @Transient
-    public InsurancePolicyRole getInsurancePolicyRole(final InsurancePolicyRoleType type)
+    public void addResponsibleInsurancePolicy(final InsurancePolicy policy)
     {
-        for (InsurancePolicyRole role : insurancePolicyRoles)
-        {
-            if (role.getType().equals(type))
-                return role;
-        }
-        return null;
+        this.responsibleInsurancePolicies.add(policy);
     }
 }

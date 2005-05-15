@@ -71,6 +71,7 @@ public class PartyRelationship extends AbstractDateDurationEntity
     private PartyRelationshipType type;
     private PriorityType priorityType;
 
+
     public PartyRelationship()
     {
     }
@@ -100,7 +101,7 @@ public class PartyRelationship extends AbstractDateDurationEntity
     }
 
     @ManyToOne
-    @JoinColumn(name = "party_id_from", referencedColumnName = "party_id", nullable = false)
+    @JoinColumn(name = "party_id_from", referencedColumnName = Party.PK_COLUMN_NAME, nullable = false)
     public Party getPartyFrom()
     {
         return partyFrom;
@@ -112,7 +113,7 @@ public class PartyRelationship extends AbstractDateDurationEntity
     }
 
     @ManyToOne
-    @JoinColumn(name = "party_id_to", referencedColumnName = "party_id", nullable = false)
+    @JoinColumn(name = "party_id_to", referencedColumnName = Party.PK_COLUMN_NAME, nullable = false)
     public Party getPartyTo()
     {
         return partyTo;
@@ -133,6 +134,7 @@ public class PartyRelationship extends AbstractDateDurationEntity
     public void setPartyRoleFrom(final PartyRole partyRoleFrom)
     {
         this.partyRoleFrom = partyRoleFrom;
+        this.partyFrom = partyRoleFrom.getParty();
     }
 
     @ManyToOne(cascade = CascadeType.MERGE)
@@ -145,6 +147,7 @@ public class PartyRelationship extends AbstractDateDurationEntity
     public void setPartyRoleTo(final PartyRole partyRoleTo)
     {
         this.partyRoleTo = partyRoleTo;
+        this.partyTo = partyRoleTo.getParty();
     }
 
 
@@ -154,7 +157,7 @@ public class PartyRelationship extends AbstractDateDurationEntity
         return comment;
     }
 
-    protected void setComment(final String comment)
+    public void setComment(final String comment)
     {
         this.comment = comment;
     }
@@ -166,10 +169,10 @@ public class PartyRelationship extends AbstractDateDurationEntity
         return priorityType;
     }
 
-    protected void setPriority(final PriorityType priorityType)
+    public void setPriority(final PriorityType priorityType)
     {
         this.priorityType = priorityType;
     }
 
-
+    
 }

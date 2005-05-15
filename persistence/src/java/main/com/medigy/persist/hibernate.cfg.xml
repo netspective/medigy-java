@@ -187,6 +187,7 @@
 
         <mapping package="com.medigy.persist.model.insurance"/>
         <mapping class="com.medigy.persist.model.insurance.CareProviderSelection"/>
+        <mapping class="com.medigy.persist.model.insurance.FinancialResponsiblePartySelection"/>
         <mapping class="com.medigy.persist.model.insurance.Coverage"/>
         <mapping class="com.medigy.persist.model.insurance.CoverageLevel"/>
         <mapping class="com.medigy.persist.model.insurance.CoverageLevelBasis"/>
@@ -195,7 +196,7 @@
         <mapping class="com.medigy.persist.model.insurance.Group"/>
         <mapping class="com.medigy.persist.model.insurance.InsurancePolicy"/>
         <!--mapping class="com.medigy.persist.model.insurance.InsurancePolicyItem"/-->
-        <mapping class="com.medigy.persist.model.insurance.InsurancePolicyRole"/>
+        <!--mapping class="com.medigy.persist.model.insurance.InsurancePolicyRole"/-->
         <mapping class="com.medigy.persist.model.insurance.InsuranceProduct"/>
         <mapping class="com.medigy.persist.model.insurance.InsurancePlan"/>
         <mapping class="com.medigy.persist.model.insurance.InsurancePlanContactMechanism"/>

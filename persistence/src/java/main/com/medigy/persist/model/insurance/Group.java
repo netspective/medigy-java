@@ -90,8 +90,7 @@ public class Group extends AbstractTopLevelEntity
         this.description = description;
     }
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "group_id")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "group")
     public Set<Enrollment> getEnrollments()
     {
         return enrollments;

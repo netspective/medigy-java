@@ -139,25 +139,30 @@ public class Organization extends Party
     }
 
     /**
-     * Gets all the insurance products advertised by this organization. This will only return non-empty values when
-     * the organization is classified as an insurance carrier.
+     * Gets all the insurance products advertised by this organization. Th
      *
      * @return a set of insurance products
-     * @see #isInsuranceCarrier()
      */
-    @Transient
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "organization")
     public Set<InsuranceProduct> getInsuranceProducts()
     {
-        for (Product product : products)
-        {
-            //if (product.get)
-        }
-        return null;
+        return insuranceProducts;
     }
 
     public void setInsuranceProducts(final Set<InsuranceProduct> insuranceProducts)
     {
         this.insuranceProducts = insuranceProducts;
+    }
+
+    @Transient
+    public InsuranceProduct getInsuranceProduct(final String productName)
+    {
+        for (InsuranceProduct product : insuranceProducts)
+        {
+            if (product.getName().equalsIgnoreCase(productName))
+                return product;
+        }
+        return null;
     }
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "organization")

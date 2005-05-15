@@ -38,12 +38,14 @@
  */
 package com.medigy.service.dto.person;
 
+import com.medigy.service.ServiceVersion;
+
 import java.util.Date;
 
 /**
  * Interface for DTO containing data specific to the Add Patient service
  */
-public interface RegisterPatientParameters
+public interface RegisterPatientParameters extends ServiceVersion
 {
     /**
      * Gets the patient's first name. REQUIRED.

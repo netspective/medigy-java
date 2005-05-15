@@ -40,44 +40,94 @@ package com.medigy.persist.model.insurance;
 
 import com.medigy.persist.model.common.AbstractDateDurationEntity;
 import com.medigy.persist.model.org.Organization;
+import com.medigy.persist.model.person.Person;
 import com.medigy.persist.reference.custom.insurance.InsurancePolicyType;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import javax.persistence.OneToMany;
-import javax.persistence.CascadeType;
-import java.util.Set;
 import java.util.HashSet;
+import java.util.Set;
 
 /**
- * Class representing the agreement between the Insurance Carrier and  Insured Policy Holder.
+ * <p>
+ * Class representing an agreement between an Insurance Carrier and an Insured Person. The policy will
+ * have two insurance policy roles associated with it: one is the insured person role and one is the insurance contract
+ * holder person role. It is possible that these two roles are played by the same person.</p>
+ * <p>
+ * The policy will also have relationships to one or more Care Provider Selections. This is to indicate which physicians have
+ * been selected as the primary care provider for what period of time. There will also be relationships to
+ * one or more Financial Responsible Party Selections which indicate what person is financially responsible for the policy
+ * during what time.
+ * </p>
  */
 @Entity
 @Table(name = "Ins_Policy")
 public class InsurancePolicy extends AbstractDateDurationEntity
 {
+    public static final String PK_COLUMN_NAME = "ins_policy_id";
+
     private Long policyId;
     private String policyNumber;    // not unique across same household
     private String groupNumber;
     private String description;
 
     private InsurancePolicyType type;               // individual or group
-    private InsurancePolicy parentPolicy;           // the policy holder's policy (null if self)
     private InsurancePlan insurancePlan;            // the plan to which this policy belongs to
-    private InsurancePolicyRole insurancePolicyRole;// the relating role to the person
     private Enrollment enrollment;                  // the enrollment to which this policy belongs to (optional)
 
+    private Set<FinancialResponsiblePartySelection> responsiblePartySelection = new HashSet<FinancialResponsiblePartySelection>();
     private Set<CareProviderSelection> careProviderSelections = new HashSet<CareProviderSelection>();
-    private Set<InsurancePolicy> childPolicies = new HashSet<InsurancePolicy>();
+
+    private Person insuredPerson;
+    private Person contractHolderPerson;
 
     @ManyToOne
-    @JoinColumn(name = "enrollment_id")
+    @JoinColumn(name = "insured_person_id", referencedColumnName = Person.PK_COLUMN_NAME)
+    public Person getInsuredPerson()
+    {
+        return insuredPerson;
+    }
+
+    public void setInsuredPerson(final Person insuredPerson)
+    {
+        this.insuredPerson = insuredPerson;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "contract_holder_person_id", referencedColumnName = Person.PK_COLUMN_NAME)
+    public Person getContractHolderPerson()
+    {
+        return contractHolderPerson;
+    }
+
+    public void setContractHolderPerson(final Person contractHolderPerson)
+    {
+        this.contractHolderPerson = contractHolderPerson;
+    }
+
+    @Id(generate = GeneratorType.AUTO)
+    @Column(name = PK_COLUMN_NAME)
+    public Long getInsurancePolicyId()
+    {
+       return policyId;
+    }
+
+    protected void setInsurancePolicyId(final Long id)
+    {
+       this.policyId = id;
+    }
+
+    /*
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = Enrollment.PK_COLUMN_NAME)
     public Enrollment getEnrollment()
     {
         return enrollment;
@@ -87,7 +137,7 @@ public class InsurancePolicy extends AbstractDateDurationEntity
     {
         this.enrollment = enrollment;
     }
-
+    */
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "insurancePolicy")
     public Set<CareProviderSelection> getCareProviderSelections()
     {
@@ -97,41 +147,6 @@ public class InsurancePolicy extends AbstractDateDurationEntity
     public void setCareProviderSelections(final Set<CareProviderSelection> careProviderSelections)
     {
         this.careProviderSelections = careProviderSelections;
-    }
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "parentPolicy")
-    public Set<InsurancePolicy> getChildPolicies()
-    {
-        return childPolicies;
-    }
-
-    public void setChildPolicies(final Set<InsurancePolicy> childPolicies)
-    {
-        this.childPolicies = childPolicies;
-    }
-
-    @ManyToOne
-    @JoinColumn(name = "parent_ins_policy_id", referencedColumnName = "ins_policy_id")
-    public InsurancePolicy getParentPolicy()
-    {
-        return parentPolicy;
-    }
-
-    public void setParentPolicy(final InsurancePolicy parentPolicy)
-    {
-        this.parentPolicy = parentPolicy;
-    }
-
-    @Id(generate = GeneratorType.AUTO)
-    @Column(name = "ins_policy_id")
-    public Long getInsurancePolicyId()
-    {
-        return policyId;
-    }
-
-    protected void setInsurancePolicyId(final Long id)
-    {
-        this.policyId = id;
     }
 
     @Column(length = 10)
@@ -167,17 +182,6 @@ public class InsurancePolicy extends AbstractDateDurationEntity
         this.description = description;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "ins_policy_role_id")
-    public InsurancePolicyRole getInsurancePolicyRole()
-    {
-        return insurancePolicyRole;
-    }
-
-    public void setInsurancePolicyRole(final InsurancePolicyRole role)
-    {
-        this.insurancePolicyRole = role;
-    }
 
     @ManyToOne
     @JoinColumn(name = "ins_policy_type_id", nullable = false)
@@ -208,5 +212,18 @@ public class InsurancePolicy extends AbstractDateDurationEntity
     {
         this.insurancePlan = insurancePlan;
     }
+
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "insurancePolicy")
+    public Set<FinancialResponsiblePartySelection> getResponsiblePartySelection()
+    {
+        return responsiblePartySelection;
+    }
+
+    public void setResponsiblePartySelection(final Set<FinancialResponsiblePartySelection> responsiblePartySelection)
+    {
+        this.responsiblePartySelection = responsiblePartySelection;
+    }
+
 
 }

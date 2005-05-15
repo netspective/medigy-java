@@ -43,11 +43,10 @@ import com.medigy.persist.model.party.PartyRelationship;
 import com.medigy.persist.model.party.PartyRole;
 import com.medigy.persist.model.person.Person;
 import com.medigy.persist.reference.custom.party.PartyRelationshipType;
-import com.medigy.persist.reference.custom.person.PatientResponsiblePartyRoleType;
 import com.medigy.persist.reference.custom.person.PersonRoleType;
 import com.medigy.persist.util.HibernateUtil;
-import com.medigy.service.ServiceLocator;
 import com.medigy.service.util.PartyRelationshipFacade;
+import com.medigy.service.util.PartyRelationshipFacadeImpl;
 
 import java.util.List;
 
@@ -63,37 +62,31 @@ public class TestPartyRelationshipFacade extends DbUnitTestCase
         Person personA = (Person) HibernateUtil.getSession().load(Person.class, new Long(2));
         Person personB = (Person) HibernateUtil.getSession().load(Person.class, new Long(3));
 
-        personA.addPartyRole(PersonRoleType.Cache.PATIENT.getEntity());
-        personB.addPartyRole(PatientResponsiblePartyRoleType.Cache.PARENT.getEntity());
+        personA.addPartyRole(PersonRoleType.Cache.CHILD.getEntity());
+        personB.addPartyRole(PersonRoleType.Cache.PARENT.getEntity());
 
         HibernateUtil.getSession().flush();
-
+        HibernateUtil.closeSession();
         assertNotNull(personA.getPartyRoles());
         assertNotNull(personB.getPartyRoles());
         assertEquals(1, personA.getPartyRoles().size());
         assertEquals(1, personB.getPartyRoles().size());
 
-        PartyRole roleA = personA.getPartyRoleByType(PersonRoleType.Cache.PATIENT.getEntity());
-        assertEquals(PersonRoleType.Cache.PATIENT.getEntity(), roleA.getType());
+        PartyRole roleA = personA.getPartyRole(PersonRoleType.Cache.CHILD.getEntity());
+        assertEquals(PersonRoleType.Cache.CHILD.getEntity(), roleA.getType());
 
-        PartyRole roleB = personB.getPartyRoleByType(PatientResponsiblePartyRoleType.Cache.PARENT.getEntity());
-        assertEquals(PatientResponsiblePartyRoleType.Cache.PARENT.getEntity(), roleB.getType());
+        PartyRole roleB = personB.getPartyRole(PersonRoleType.Cache.PARENT.getEntity());
+        assertEquals(PersonRoleType.Cache.PARENT.getEntity(), roleB.getType());
 
-        PartyRelationshipFacade facade = (PartyRelationshipFacade) ServiceLocator.getInstance().getService(PartyRelationshipFacade.class);
-        facade.addPartyRelationship(PartyRelationshipType.Cache.PATIENT_RESPONSIBLE_PARTY.getEntity(),
-            roleA, roleB);
+        PartyRelationshipFacade facade = new PartyRelationshipFacadeImpl();
+        PartyRelationship rel = facade.addPartyRelationship(PartyRelationshipType.Cache.FAMILY.getEntity(), roleA, roleB);
         HibernateUtil.closeSession();
-
-        Person patient = (Person) HibernateUtil.getSession().load(Person.class, new Long(2));
-        Person respParty = patient.getResponsibleParty();
-        assertNotNull(respParty);
-        assertEquals(personB.getPersonId().longValue(), respParty.getPersonId().longValue());
 
         final List relationships = HibernateUtil.getSession().createCriteria(PartyRelationship.class).list();
         assertEquals(1, relationships.size());
         PartyRelationship partyRelationship = ((PartyRelationship) relationships.toArray()[0]);
         PartyRelationshipType type = partyRelationship.getType();
-        assertEquals(PartyRelationshipType.Cache.PATIENT_RESPONSIBLE_PARTY.getEntity(),
+        assertEquals(PartyRelationshipType.Cache.FAMILY.getEntity(),
                 type);
         assertEquals(personA.getPersonId(), partyRelationship.getPartyFrom().getPartyId());
         assertEquals(personB.getPersonId(), partyRelationship.getPartyTo().getPartyId());

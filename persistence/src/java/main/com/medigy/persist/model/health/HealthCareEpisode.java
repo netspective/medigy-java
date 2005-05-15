@@ -38,9 +38,10 @@
  */
 package com.medigy.persist.model.health;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import com.medigy.persist.model.common.AbstractTopLevelEntity;
+import com.medigy.persist.model.person.Incident;
+import com.medigy.persist.model.person.Person;
+import com.medigy.persist.reference.custom.health.EpisodeType;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -50,10 +51,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-
-import com.medigy.persist.model.common.AbstractTopLevelEntity;
-import com.medigy.persist.model.person.Incident;
-import com.medigy.persist.reference.custom.health.EpisodeType;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class HealthCareEpisode extends AbstractTopLevelEntity
@@ -63,6 +63,7 @@ public class HealthCareEpisode extends AbstractTopLevelEntity
     private String description;
     private Date date; // create date
     private EpisodeType type;
+    private Person person;
 
     private Set<HealthCareDelivery> healthCareDeliveries = new HashSet<HealthCareDelivery>();
     private Set<Diagnosis> diagnosises = new HashSet<Diagnosis>();
@@ -87,6 +88,18 @@ public class HealthCareEpisode extends AbstractTopLevelEntity
     protected void setHealthCareEpisodeId(final Long healthCareEpisodeId)
     {
         this.healthCareEpisodeId = healthCareEpisodeId;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "person_id", referencedColumnName = "party_id")        
+    public Person getPerson()
+    {
+        return person;
+    }
+
+    public void setPerson(final Person person)
+    {
+        this.person = person;
     }
 
     @ManyToOne

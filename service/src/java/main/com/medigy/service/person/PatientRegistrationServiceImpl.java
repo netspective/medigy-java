@@ -50,6 +50,7 @@ import com.medigy.persist.reference.type.GenderType;
 import com.medigy.persist.reference.type.MaritalStatusType;
 import com.medigy.persist.util.HibernateUtil;
 import com.medigy.service.ServiceLocator;
+import com.medigy.service.ServiceVersion;
 import com.medigy.service.common.ReferenceEntityLookupService;
 import com.medigy.service.common.UnknownReferenceTypeException;
 import com.medigy.service.contact.AddContactMechanismService;
@@ -72,6 +73,12 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
     private static final Log log = LogFactory.getLog(PatientRegistrationServiceImpl.class);
     private boolean createEmployerIfUnknown = true;
     private boolean createInsuranceProviderIfUnknown = true;
+
+
+    public ServiceVersion[] getSupportedServiceVersions()
+    {
+        return new ServiceVersion[0];
+    }
 
     /**
      * Check to see if Employer organization should be automatically created if it is not known (no ID).

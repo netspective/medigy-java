@@ -42,7 +42,10 @@ import com.medigy.persist.model.party.Party;
 import com.medigy.persist.model.party.PartyRelationship;
 import com.medigy.persist.model.party.PartyRole;
 import com.medigy.persist.model.party.ValidPartyRelationshipRole;
+import com.medigy.persist.model.person.Person;
+import com.medigy.persist.model.org.Organization;
 import com.medigy.persist.reference.custom.party.PartyRelationshipType;
+import com.medigy.persist.reference.custom.person.PersonRoleType;
 import com.medigy.persist.util.HibernateUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -103,5 +106,29 @@ public class PartyRelationshipFacadeImpl implements PartyRelationshipFacade
         partyRelTypeCriteria.add(Expression.eq("code", PartyRelationshipType.Cache.PATIENT_RESPONSIBLE_PARTY.getCode()));
         criteria.createCriteria("partyFrom").add(Expression.eq("partyId", patient.getPartyId()));
         return criteria.list();
+    }
+
+    /**
+     * Creates a new party relationship between the patient and the organization who will be
+     * financially responsible for the patient (or for a visit)
+     *
+     * @param patient                   patient person
+     * @param responsibleOrganization   financially responsible organization
+     */
+    public void addFinancialResposibleOrganization(Person patient, Organization responsibleOrganization)
+    {
+        PartyRole patientRole = patient.getPartyRole(PersonRoleType.Cache.PATIENT.getEntity());
+        if (patientRole == null)
+        {
+            patientRole = new PartyRole();
+            patientRole.setType(PersonRoleType.Cache.PATIENT.getEntity());
+            patientRole.setParty(patient);
+            patient.addPartyRole(patientRole);
+        }
+    }
+
+    public void addFinancialResposiblePerson(Person patient, Person responsiblePerson)
+    {
+
     }
 }

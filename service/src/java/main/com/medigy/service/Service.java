@@ -40,4 +40,6 @@ package com.medigy.service;
 
 public interface Service
 {
+    public ServiceVersion[] getSupportedServiceVersions();
+
 }

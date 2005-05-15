@@ -40,17 +40,20 @@ package com.medigy.service;
 
 import com.medigy.service.insurance.TestInsurancePolicyFacade;
 import com.medigy.service.party.TestAddContactMechanismService;
+import com.medigy.service.party.TestPartyRelationshipFacade;
 import com.medigy.service.person.TestPersonFacade;
 import junit.framework.Test;
 
 public class TestSuite extends junit.framework.TestSuite
 {
+
+
     public static Test suite()
     {
         TestSuite suite= new TestSuite();
 
         // test services and facades
-        //suite.addTest(new junit.framework.TestSuite(TestPersonRelationshipFacade.class));
+        suite.addTest(new junit.framework.TestSuite(TestPartyRelationshipFacade.class));
         suite.addTest(new junit.framework.TestSuite(TestPersonFacade.class));
         suite.addTest(new junit.framework.TestSuite(TestAddContactMechanismService.class));
         suite.addTest(new junit.framework.TestSuite(TestInsurancePolicyFacade.class));

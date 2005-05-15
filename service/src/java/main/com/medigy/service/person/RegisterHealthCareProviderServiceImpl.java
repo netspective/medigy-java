@@ -42,6 +42,7 @@ import com.medigy.persist.model.person.Person;
 import com.medigy.persist.reference.custom.person.PersonRoleType;
 import com.medigy.persist.util.HibernateUtil;
 import com.medigy.service.ServiceLocator;
+import com.medigy.service.ServiceVersion;
 import com.medigy.service.dto.person.RegisterHealthCareProviderParameters;
 import com.medigy.service.dto.person.RegisteredProvider;
 import com.medigy.service.util.PersonFacade;
@@ -63,5 +64,10 @@ public class RegisterHealthCareProviderServiceImpl implements RegisterHealthCare
 
 
         return null;
+    }
+
+    public ServiceVersion[] getSupportedServiceVersions()
+    {
+        return new ServiceVersion[0];
     }
 }

@@ -47,12 +47,17 @@ import com.medigy.persist.reference.type.GenderType;
 import com.medigy.persist.reference.type.LanguageType;
 import com.medigy.persist.reference.type.MaritalStatusType;
 import com.medigy.persist.util.HibernateUtil;
+import com.medigy.service.ServiceVersion;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.Restrictions;
 
 public class ReferenceEntityLookupServiceImpl implements ReferenceEntityLookupService
 {
+    public ServiceVersion[] getSupportedServiceVersions()
+    {
+        return new ServiceVersion[0];
+    }
 
     public InsurancePolicyType getInsurancePolicyType(final String code) throws UnknownReferenceTypeException
     {

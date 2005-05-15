@@ -40,12 +40,11 @@ package com.medigy.service.util;
 
 import com.medigy.persist.model.insurance.InsurancePlan;
 import com.medigy.persist.model.insurance.InsurancePolicy;
-import com.medigy.persist.model.insurance.InsurancePolicyRole;
 import com.medigy.persist.model.insurance.InsuranceProduct;
 import com.medigy.persist.model.org.Organization;
 import com.medigy.persist.model.person.Person;
-import com.medigy.persist.reference.custom.insurance.InsurancePolicyRoleType;
 import com.medigy.persist.util.HibernateUtil;
+import com.medigy.persist.reference.custom.insurance.InsurancePolicyType;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
@@ -60,38 +59,27 @@ public class InsurancePolicyFacadeImpl implements InsurancePolicyFacade
 {
     private static Log log = LogFactory.getLog(InsurancePolicyFacadeImpl.class);
 
-    public InsurancePolicy createInsurancePolicy(final Person insuredPerson, final InsurancePlan plan,
-                                                 final String policyNumber, final String groupNumber,
-                                                 final Date startDate, boolean isPolicyHolder)
+    public InsurancePolicy createInsurancePolicy(final Person insuredPerson,
+                                                 final Person contractHolder,
+                                                 final InsurancePlan plan,
+                                                 final String policyNumber,
+                                                 final String groupNumber,
+                                                 final InsurancePolicyType type,
+                                                 final Date startDate)
     {
-        InsurancePolicyRoleType roleType = null;
-        if (isPolicyHolder)
-            roleType = InsurancePolicyRoleType.Cache.INSURED_CONTRACT_HOLDER.getEntity();
-        else
-            roleType = InsurancePolicyRoleType.Cache.INSURED_DEPENDENT.getEntity();
-        // check to see if the person has that role already
-        boolean newRole = false;
-        InsurancePolicyRole role = insuredPerson.getInsurancePolicyRole(roleType);
-        if (role == null)
-        {
-            role = new InsurancePolicyRole();
-            role.setType(roleType);
-            role.setPerson(insuredPerson);
-            insuredPerson.addInsurancePolicyRole(role);
-            newRole = true;
-        }
         // create the new policy
         InsurancePolicy policy = new InsurancePolicy();
         policy.setPolicyNumber(policyNumber);
         policy.setGroupNumber(groupNumber);
-        policy.setInsurancePolicyRole(role);
+        policy.setInsuredPerson(insuredPerson);
+        policy.setContractHolderPerson(contractHolder);
         policy.setInsurancePlan(plan);
         policy.setFromDate(startDate);
-        role.addInsurancePolicy(policy);
+        policy.setType(type);
+        insuredPerson.addInsurancePolicy(policy);
+        contractHolder.addResponsibleInsurancePolicy(policy);
 
-        if (newRole)
-            HibernateUtil.getSession().save(role);
-        HibernateUtil.getSession().flush();
+        HibernateUtil.getSession().save(policy);
         return policy;
     }
 

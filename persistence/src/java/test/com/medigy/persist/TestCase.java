@@ -54,6 +54,8 @@ import org.apache.commons.logging.LogFactory;
 import org.hibernate.HibernateException;
 import org.hibernate.cfg.Environment;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
+import org.jmock.MockObjectTestCase;
+import org.jmock.core.Constraint;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -63,12 +65,23 @@ import java.io.IOException;
 import java.util.Properties;
 import java.util.logging.LogManager;
 
-public abstract class TestCase extends junit.framework.TestCase
+public abstract class TestCase extends MockObjectTestCase
 {
     private static final Log log = LogFactory.getLog(TestCase.class);
 
     protected File databaseDirectory;
     protected boolean initializeModelData = true;
+
+    protected void assertThat(Object something, Constraint matches)
+    {
+        if (!matches.eval(something))
+        {
+            StringBuffer message = new StringBuffer("\nExpected: ");
+            matches.describeTo(message);
+            message.append("\nbut got : ").append(something).append('\n');
+            fail(message.toString());
+        }
+    }
 
     protected String getClassNameWithoutPackage()
     {
@@ -112,6 +125,9 @@ public abstract class TestCase extends junit.framework.TestCase
 
         return config;
     }
+
+
+
 
     protected void setUp() throws Exception
     {

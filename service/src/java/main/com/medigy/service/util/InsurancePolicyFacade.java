@@ -43,6 +43,7 @@ import com.medigy.persist.model.insurance.InsurancePlan;
 import com.medigy.persist.model.insurance.InsuranceProduct;
 import com.medigy.persist.model.org.Organization;
 import com.medigy.persist.model.person.Person;
+import com.medigy.persist.reference.custom.insurance.InsurancePolicyType;
 
 import java.io.Serializable;
 import java.util.List;
@@ -52,10 +53,13 @@ public interface InsurancePolicyFacade extends Facade
 {
 
 
-    public InsurancePolicy createInsurancePolicy(final Person  insuredPerson, final InsurancePlan plan,
-                                                 final String policyNumber, final String groupNumber,
-                                                 final Date startDate,
-                                                 boolean isPolicyHolder);
+    public InsurancePolicy createInsurancePolicy(final Person  insuredPerson,
+                                                 final Person contractHolder,
+                                                 final InsurancePlan plan,
+                                                 final String policyNumber, 
+                                                 final String groupNumber,
+                                                 final InsurancePolicyType type,
+                                                 final Date startDate);
 
     public List listInsurancePlans(final InsuranceProduct product);
 

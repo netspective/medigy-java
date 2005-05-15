@@ -38,10 +38,12 @@
  */
 package com.medigy.service.dto.person;
 
+import com.medigy.service.ServiceVersion;
+
 import java.io.Serializable;
 import java.util.Date;
 
-public interface RegisterHealthCareProviderParameters
+public interface RegisterHealthCareProviderParameters  extends ServiceVersion
 {
     public String getLastName();
 

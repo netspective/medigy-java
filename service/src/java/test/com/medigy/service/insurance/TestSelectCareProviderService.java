@@ -3,13 +3,11 @@
  */
 package com.medigy.service.insurance;
 
-import com.medigy.persist.DbUnitTestCase;
 import com.medigy.persist.model.insurance.InsurancePolicy;
 import com.medigy.persist.util.HibernateUtil;
-import com.medigy.service.dto.insurance.SelectCareProviderParameters;
+import com.medigy.persist.DbUnitTestCase;
 import com.medigy.service.dto.insurance.CareProviderSelectionData;
-import com.medigy.service.util.FacadeManager;
-import com.medigy.service.util.InsurancePolicyFacadeImpl;
+import com.medigy.service.dto.insurance.SelectCareProviderParameters;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 
@@ -18,13 +16,6 @@ import java.util.Date;
 
 public class TestSelectCareProviderService extends DbUnitTestCase
 {
-
-    protected void setUp() throws Exception
-    {
-        super.setUp();
-        FacadeManager.getInstance().add(new InsurancePolicyFacadeImpl());
-    }
-
     public String getDataSetFile()
     {
         return "/com/medigy/service/insurance/TestSelectCareProviderService.xml";

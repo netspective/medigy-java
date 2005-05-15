@@ -39,8 +39,8 @@
  */
 package com.medigy.persist.model.party;
 
-import java.util.HashSet;
-import java.util.Set;
+import com.medigy.persist.model.common.AbstractTopLevelEntity;
+import com.medigy.persist.reference.custom.party.FacilityType;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -50,9 +50,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-
-import com.medigy.persist.model.common.AbstractTopLevelEntity;
-import com.medigy.persist.reference.custom.party.FacilityType;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Facility extends AbstractTopLevelEntity
@@ -60,11 +59,12 @@ public class Facility extends AbstractTopLevelEntity
     private Long facilityId;
     private String description;
     private Float squareFootage;
-
+    private Facility parentFacility;
     private FacilityType type;
     // children childFacilities (e.g Rooms on a Floor, offices in a building)
     private Set<Facility> childFacilities = new HashSet<Facility>();
     private Set<PartyFacilityRole> facilityRole = new HashSet<PartyFacilityRole>();
+    public static final String PK_COLUMN_NAME = "facility_id";
 
     /**
      * Facilities are not children of any table and they are related to Parties only through the
@@ -75,6 +75,7 @@ public class Facility extends AbstractTopLevelEntity
     }
 
     @Id(generate=GeneratorType.AUTO)
+    @Column(name = PK_COLUMN_NAME)
     public Long getFacilityId()
     {
         return facilityId;
@@ -119,7 +120,7 @@ public class Facility extends AbstractTopLevelEntity
     }
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "child_facility_id", referencedColumnName = "facility_id")
+    @JoinColumn(name = "child_facility_id", referencedColumnName = PK_COLUMN_NAME)
     public Set<Facility> getChildFacilities()
     {
         return childFacilities;
@@ -130,8 +131,7 @@ public class Facility extends AbstractTopLevelEntity
         this.childFacilities = childFacilities;
     }
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "facility_id")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "facility")
     public Set<PartyFacilityRole> getFacilityRole()
     {
         return facilityRole;
@@ -142,4 +142,15 @@ public class Facility extends AbstractTopLevelEntity
         this.facilityRole = facilityRole;
     }
 
+    @ManyToOne
+    @JoinColumn(name = "parent_facility_id", referencedColumnName = PK_COLUMN_NAME)
+    public Facility getParentFacility()
+    {
+        return parentFacility;
+    }
+
+    public void setParentFacility(final Facility parentFacility)
+    {
+        this.parentFacility = parentFacility;
+    }
 }

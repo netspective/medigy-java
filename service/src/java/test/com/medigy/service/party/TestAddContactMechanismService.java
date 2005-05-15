@@ -47,19 +47,10 @@ import com.medigy.persist.model.person.Person;
 import com.medigy.persist.reference.custom.party.ContactMechanismPurposeType;
 import com.medigy.persist.reference.type.ContactMechanismType;
 import com.medigy.persist.util.HibernateUtil;
-import com.medigy.service.ServiceLocator;
-import com.medigy.service.common.ReferenceEntityLookupService;
-import com.medigy.service.common.ReferenceEntityLookupServiceImpl;
 import com.medigy.service.contact.AddContactMechanismService;
 import com.medigy.service.contact.AddContactMechanismServiceImpl;
 import com.medigy.service.dto.party.AddPostalAddressParameters;
 import com.medigy.service.dto.party.NewPostalAddress;
-import com.medigy.service.person.PatientRegistrationService;
-import com.medigy.service.person.PatientRegistrationServiceImpl;
-import com.medigy.service.util.FacadeManager;
-import com.medigy.service.util.PartyRelationshipFacade;
-import com.medigy.service.util.PartyRelationshipFacadeImpl;
-import com.medigy.service.util.PersonFacadeImpl;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
@@ -72,24 +63,6 @@ public class TestAddContactMechanismService extends DbUnitTestCase
 {
     private static final Log log = LogFactory.getLog(TestAddContactMechanismService.class);
 
-    private AddContactMechanismService service;
-
-    protected void setUp() throws Exception
-    {
-        super.setUp();
-        loadServiceLocator();
-        service = new AddContactMechanismServiceImpl();
-    }
-
-    protected void loadServiceLocator()
-    {
-        FacadeManager.getInstance().add(new PersonFacadeImpl());
-        ServiceLocator.getInstance().loadService(ReferenceEntityLookupService.class, new ReferenceEntityLookupServiceImpl());
-        ServiceLocator.getInstance().loadService(PartyRelationshipFacade.class, new PartyRelationshipFacadeImpl());
-        ServiceLocator.getInstance().loadService(PatientRegistrationService.class, new PatientRegistrationServiceImpl());
-        ServiceLocator.getInstance().loadService(AddContactMechanismService.class, new AddContactMechanismServiceImpl());
-    }
-
     public String getDataSetFile()
     {
         return "/com/medigy/service/party/TestAddContactMechanismService.xml";
@@ -101,6 +74,7 @@ public class TestAddContactMechanismService extends DbUnitTestCase
         final Person p = (Person) HibernateUtil.getSession().load(Person.class, new Long(2));
         assertEquals(p.getPartyContactMechanisms().size(), 0);
 
+        AddContactMechanismService service =  new AddContactMechanismServiceImpl();
         final NewPostalAddress address = service.addPostalAddress(new AddPostalAddressParameters() {
                 public Serializable getPartyId()
                 {

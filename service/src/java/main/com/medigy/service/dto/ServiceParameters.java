@@ -36,64 +36,11 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.persist.model.insurance;
+package com.medigy.service.dto;
 
-import com.medigy.persist.model.common.AbstractTopLevelEntity;
+import com.medigy.service.ServiceVersion;
 
-/**
- * Relationship table between a party and related insurance policies. The party can have several insurance
- * policy roles: INSURED PERSON  and INSURED POLICY HOLDER.
- *
- */
-public abstract class InsurancePolicyRole extends AbstractTopLevelEntity
+public interface ServiceParameters
 {
-    /*
-    public static final String PK_COLUMN_NAME = "ins_policy_role_id";
-
-    private Long insurancePolicyRoleId;
-    private Person person;
-
-    private Set<InsurancePolicy> insurancePolicies = new HashSet<InsurancePolicy>();
-
-    @Id(generate = GeneratorType.AUTO)
-    @Column(name = PK_COLUMN_NAME)
-    public Long getInsurancePolicyRoleId()
-    {
-        return insurancePolicyRoleId;
-    }
-
-    public void setInsurancePolicyRoleId(final Long insurancePolicyRoleId)
-    {
-        this.insurancePolicyRoleId = insurancePolicyRoleId;
-    }
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "insurancePolicyRole")
-    public Set<InsurancePolicy> getInsurancePolicies()
-    {
-        return insurancePolicies;
-    }
-
-    public void setInsurancePolicies(Set<InsurancePolicy> policies)
-    {
-        this.insurancePolicies = policies;
-    }
-
-    @ManyToOne
-    @JoinColumn(name = "party_id")
-    public Person getPerson()
-    {
-        return person;
-    }
-
-    public void setPerson(final Person person)
-    {
-        this.person = person;
-    }
-
-    @Transient
-    public void addInsurancePolicy(final InsurancePolicy policy)
-    {
-        insurancePolicies.add(policy);
-    }
-*/ 
+    public ServiceVersion getServiceVersion();
 }

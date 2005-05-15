@@ -39,7 +39,6 @@
 package com.medigy.service.person;
 
 
-import com.medigy.persist.TestCase;
 import com.medigy.persist.model.person.Person;
 import com.medigy.persist.reference.custom.insurance.InsurancePolicyType;
 import com.medigy.persist.reference.custom.party.PartyRelationshipType;
@@ -49,16 +48,9 @@ import com.medigy.persist.reference.type.LanguageType;
 import com.medigy.persist.reference.type.MaritalStatusType;
 import com.medigy.persist.util.HibernateUtil;
 import com.medigy.service.ServiceLocator;
-import com.medigy.service.common.ReferenceEntityLookupService;
-import com.medigy.service.common.ReferenceEntityLookupServiceImpl;
-import com.medigy.service.contact.AddContactMechanismService;
-import com.medigy.service.contact.AddContactMechanismServiceImpl;
+import com.medigy.persist.TestCase;
 import com.medigy.service.dto.person.RegisterPatientParameters;
 import com.medigy.service.dto.person.RegisteredPatient;
-import com.medigy.service.util.FacadeManager;
-import com.medigy.service.util.PartyRelationshipFacade;
-import com.medigy.service.util.PartyRelationshipFacadeImpl;
-import com.medigy.service.util.PersonFacadeImpl;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -67,21 +59,6 @@ import java.util.Date;
 public class TestPatientRegistrationService extends TestCase
 {
     private static final Log log = LogFactory.getLog(TestPatientRegistrationService.class);
-
-    protected void loadServiceLocator()
-    {
-        FacadeManager.getInstance().add(new PersonFacadeImpl());
-        ServiceLocator.getInstance().loadService(ReferenceEntityLookupService.class, new ReferenceEntityLookupServiceImpl());
-        ServiceLocator.getInstance().loadService(PartyRelationshipFacade.class, new PartyRelationshipFacadeImpl());
-        ServiceLocator.getInstance().loadService(PatientRegistrationService.class, new PatientRegistrationServiceImpl());
-        ServiceLocator.getInstance().loadService(AddContactMechanismService.class, new AddContactMechanismServiceImpl());
-    }
-
-    protected void setUp() throws Exception
-    {
-        super.setUp();
-        loadServiceLocator();
-    }
 
     public void testPatientRegistrationService()
     {
@@ -366,6 +343,11 @@ public class TestPatientRegistrationService extends TestCase
                         public String[] getInsurancePolicyHolderRole()
                         {
                             return new String[] { };
+                        }
+
+                        public String getComponentVersion()
+                        {
+                            return null;
                         }
                     };
                 }

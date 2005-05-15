@@ -38,62 +38,62 @@
  */
 package com.medigy.persist.model.insurance;
 
-import com.medigy.persist.model.common.AbstractTopLevelEntity;
+import com.medigy.persist.model.common.AbstractDateDurationEntity;
+import com.medigy.persist.model.party.PartyRelationship;
+
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.GeneratorType;
+import javax.persistence.Column;
+import javax.persistence.ManyToOne;
+import javax.persistence.JoinColumn;
 
 /**
- * Relationship table between a party and related insurance policies. The party can have several insurance
- * policy roles: INSURED PERSON  and INSURED POLICY HOLDER.
- *
+ * Class for holding party relationships that have been used as the financial responsible party
+ * for an insurance policy. 
  */
-public abstract class InsurancePolicyRole extends AbstractTopLevelEntity
+@Entity
+public class FinancialResponsiblePartySelection extends AbstractDateDurationEntity
 {
-    /*
-    public static final String PK_COLUMN_NAME = "ins_policy_role_id";
+    public static final String PK_COLUMN_NAME = "selection_id";
 
-    private Long insurancePolicyRoleId;
-    private Person person;
-
-    private Set<InsurancePolicy> insurancePolicies = new HashSet<InsurancePolicy>();
+    public Long selectionId;
+    public InsurancePolicy insurancePolicy;
+    public PartyRelationship partyRelationship;
 
     @Id(generate = GeneratorType.AUTO)
     @Column(name = PK_COLUMN_NAME)
-    public Long getInsurancePolicyRoleId()
+    public Long getSelectionId()
     {
-        return insurancePolicyRoleId;
+        return selectionId;
     }
 
-    public void setInsurancePolicyRoleId(final Long insurancePolicyRoleId)
+    public void setSelectionId(final Long selectionId)
     {
-        this.insurancePolicyRoleId = insurancePolicyRoleId;
-    }
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "insurancePolicyRole")
-    public Set<InsurancePolicy> getInsurancePolicies()
-    {
-        return insurancePolicies;
-    }
-
-    public void setInsurancePolicies(Set<InsurancePolicy> policies)
-    {
-        this.insurancePolicies = policies;
+        this.selectionId = selectionId;
     }
 
     @ManyToOne
-    @JoinColumn(name = "party_id")
-    public Person getPerson()
+    @JoinColumn(name = InsurancePolicy.PK_COLUMN_NAME, nullable = false)
+    public InsurancePolicy getInsurancePolicy()
     {
-        return person;
+        return insurancePolicy;
     }
 
-    public void setPerson(final Person person)
+    public void setInsurancePolicy(final InsurancePolicy insurancePolicy)
     {
-        this.person = person;
+        this.insurancePolicy = insurancePolicy;
     }
 
-    @Transient
-    public void addInsurancePolicy(final InsurancePolicy policy)
+    @ManyToOne
+    @JoinColumn(name = PartyRelationship.PK_COLUMN_NAME, nullable = false)
+    public PartyRelationship getPartyRelationship()
     {
-        insurancePolicies.add(policy);
+        return partyRelationship;
     }
-*/ 
+
+    public void setPartyRelationship(final PartyRelationship partyRelationship)
+    {
+        this.partyRelationship = partyRelationship;
+    }
 }

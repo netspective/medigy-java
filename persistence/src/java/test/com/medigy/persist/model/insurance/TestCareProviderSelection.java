@@ -69,7 +69,7 @@ public final class TestCareProviderSelection  extends DbUnitTestCase
         final CareProviderSelection savedSelection = (CareProviderSelection) HibernateUtil.getSession().load(CareProviderSelection.class, selection.getCareProviderSelectionId());
         assertNotNull(savedSelection);
         //assertEquals(physician.getPartyId(), savedSelection.getHealthCarePractitioner().getPartyId());
-        //assertEquals(patientRole.getInsurancePolicyRoleId(), savedSelection.getInsurancePolicyRole().getInsurancePolicyRoleId());
+        //assertEquals(patientRole.getInsurancePolicyRoleId(), savedSelection.getInsuredPersonRole().getInsurancePolicyRoleId());
 
     }
 }
