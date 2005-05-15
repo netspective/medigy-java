@@ -260,7 +260,7 @@ public class DatabaseDesignGenerator
             final Element imageObjectElem = (Element) mediaObjectElem.appendChild(doc.createElement("imageobject"));
             final Element imageDataElem = (Element) imageObjectElem.appendChild(doc.createElement("imagedata"));
             imageDataElem.setAttribute("format", generatorConfig.getGraphvizDiagramOutputType());
-            imageDataElem.setAttribute("fileref", erdBaseName + "." + generatorConfig.getGraphvizDiagramOutputType());
+            imageDataElem.setAttribute("fileref", erdBaseName + "." + generatorConfig.getGraphvizDiagramOutputType().toLowerCase());
             tableStructSectionElem.appendChild(mediaObjectElem);
         }
 
