@@ -11,4 +11,6 @@
     <xsl:variable name="chunk.first.sections">1</xsl:variable>
     <xsl:variable name="chunk.fast">1</xsl:variable>
 
+    <xsl:variable name="generate.section.toc.level">1</xsl:variable>        
+
 </xsl:stylesheet>
