@@ -52,7 +52,7 @@
     </target>
 
     <target name="doc.generate-dbdd-source" depends="compile.main,init.define-modules,init.define-module.dependencies.main.classpath,graphviz.init">
-        <taskdef name="dbdg" classname="org.sns.tool.hibernate.document.DatabaseDesignGeneratorTask"
+        <taskdef name="dbdg" classname="org.sns.tool.hibernate.dbdd.DatabaseDesignGeneratorTask"
                              classpathref="module.dependencies.main.classpath">
             <classpath location="${module.artifacts.classes.main.home}"/>
         </taskdef>
@@ -66,8 +66,8 @@
               hibernateConfigClass="com.medigy.persist.util.HibernateConfiguration"
               hibernateConfigFile="/com/medigy/persist/hibernate.cfg.xml"
               structureClass="org.sns.tool.hibernate.struct.impl.DefaultTableStructure"
-              structureRulesClass="com.medigy.tool.persist.hibernate.doc.HibernateStructureRules"
-              databaseDiagramRendererClass="com.medigy.tool.persist.hibernate.doc.HibernateDatabaseDiagramRenderer"
+              structureRulesClass="com.medigy.tool.persist.hibernate.dbdd.MedigyDatabaseStructureRules"
+              databaseDiagramRendererClass="com.medigy.tool.persist.hibernate.dbdd.MedigyDatabaseDiagramRenderer"
               graphvizDotCmdSpec="${graphviz.dot.exec.executable} ${graphviz.dot.exec.arg.cmd}"
               documentTitle="Medigy Data Model"
               associatedJavaDocHome="../../javadoc"

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2005 Your Corporation. All Rights Reserved.
  */
-package org.sns.tool.hibernate.document;
+package org.sns.tool.hibernate.dbdd;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -30,7 +30,6 @@ import org.sns.tool.graphviz.GraphvizDiagramGenerator;
 import org.sns.tool.graphviz.GraphvizDiagramGenerator.ImageGenerationParams;
 import org.sns.tool.graphviz.GraphvizDiagramNode;
 import org.sns.tool.graphviz.GraphvizLayoutType;
-import org.sns.tool.hibernate.document.diagram.HibernateDiagramGeneratorException;
 import org.sns.tool.hibernate.struct.ColumnCategory;
 import org.sns.tool.hibernate.struct.ColumnDetail;
 import org.sns.tool.hibernate.struct.TableCategory;
@@ -49,7 +48,7 @@ public class DatabaseDesignGenerator
      */
     private final DatabaseDesignGeneratorConfig generatorConfig;
 
-    public DatabaseDesignGenerator(final DatabaseDesignGeneratorConfig config) throws HibernateDiagramGeneratorException
+    public DatabaseDesignGenerator(final DatabaseDesignGeneratorConfig config)
     {
         this.generatorConfig = config;
     }
@@ -257,12 +256,12 @@ public class DatabaseDesignGenerator
             final String erdBaseName = tableName.replaceAll("[^A-Za-z0-9]+", "_").toLowerCase() + "-erd";
             generateDatabaseDiagrams(tableStructNode, diagramTables, erdBaseName);
 
-            final Element result = doc.createElement("mediaobject");
-            final Element imageObjectElem = (Element) result.appendChild(doc.createElement("imageobject"));
+            final Element mediaObjectElem = doc.createElement("mediaobject");
+            final Element imageObjectElem = (Element) mediaObjectElem.appendChild(doc.createElement("imageobject"));
             final Element imageDataElem = (Element) imageObjectElem.appendChild(doc.createElement("imagedata"));
             imageDataElem.setAttribute("format", generatorConfig.getGraphvizDiagramOutputType());
             imageDataElem.setAttribute("fileref", erdBaseName + "." + generatorConfig.getGraphvizDiagramOutputType());
-            tableStructSectionElem.appendChild(imageDataElem);
+            tableStructSectionElem.appendChild(mediaObjectElem);
         }
 
         tableStructSectionElem.appendChild(createColumnDocumentationTable(doc, tableStructNode));
@@ -342,7 +341,6 @@ public class DatabaseDesignGenerator
             final GraphvizDiagramNode gdn = new GraphvizDiagramNode(gdg, tableNode.getTable().getName());
             gdn.setLabel(ddr.getTableDefinitionHtml(generatorConfig, tableNode, focused));
             gdn.setShape("plaintext");
-            gdn.setFontName("Helvetica");
 
             gdg.addNode(ddr.formatTableNode(generatorConfig, tableNode, gdn, focused));
             tablesIncluded.add(tableNode.getTable());
@@ -384,7 +382,7 @@ public class DatabaseDesignGenerator
 
                 public File getDestDir()
                 {
-                    return generatorConfig.getImagesDirectory();
+                    return generatorConfig.getDocBookFile().getParentFile();
                 }
 
                 public String getGraphVizDotCommandSpec()
@@ -394,7 +392,7 @@ public class DatabaseDesignGenerator
 
                 public String[] getImageExtensions()
                 {
-                    return new String[] { "." + generatorConfig.getGraphvizDiagramOutputType() };
+                    return new String[] { "." + generatorConfig.getGraphvizDiagramOutputType().toLowerCase() };
                 }
 
                 public String[] getImageTypes()

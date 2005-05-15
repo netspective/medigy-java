@@ -41,26 +41,23 @@
 /*
  * Copyright (c) 2005 Your Corporation. All Rights Reserved.
  */
-package org.sns.tool.hibernate.document.diagram;
+package org.sns.tool.hibernate.dbdd;
 
-public class HibernateDiagramGeneratorException extends RuntimeException
+import java.io.File;
+import java.io.PrintStream;
+
+import org.hibernate.cfg.Configuration;
+import org.sns.tool.hibernate.struct.TableStructure;
+
+public interface DatabaseDesignGeneratorConfig
 {
-    public HibernateDiagramGeneratorException()
-    {
-    }
-
-    public HibernateDiagramGeneratorException(Throwable cause)
-    {
-        super(cause);
-    }
-
-    public HibernateDiagramGeneratorException(String message)
-    {
-        super(message);
-    }
-
-    public HibernateDiagramGeneratorException(String message, Throwable cause)
-    {
-        super(message, cause);
-    }
+    public Configuration getHibernateConfiguration();
+    public String getDocumentTitle();
+    public TableStructure getTableStructure();
+    public File getDocBookFile();
+    public File getAssociatedJavaDocHome();
+    public DatabaseDiagramRenderer getDatabaseDiagramRenderer();
+    public String getGraphvizDiagramOutputType();
+    public String getGraphVizDotCommandSpec();
+    public PrintStream getGraphVizDotLogOutputStream();
 }

@@ -41,7 +41,7 @@
 /*
  * Copyright (c) 2005 Your Corporation. All Rights Reserved.
  */
-package org.sns.tool.hibernate.document;
+package org.sns.tool.hibernate.dbdd;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;

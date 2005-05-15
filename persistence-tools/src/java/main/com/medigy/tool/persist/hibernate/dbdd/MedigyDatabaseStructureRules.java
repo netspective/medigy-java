@@ -61,7 +61,7 @@ import org.sns.tool.hibernate.struct.TableStructureRules;
 import com.medigy.persist.reference.ReferenceEntity;
 import com.medigy.persist.reference.custom.CustomReferenceEntity;
 
-public class HibernateStructureRules implements TableStructureRules
+public class MedigyDatabaseStructureRules implements TableStructureRules
 {
     private final TableCategory defaultTableCategory = new TableCategoryImpl("app-table", "Application Tables", true);
     private final TableCategory refTableCategory = new TableCategoryImpl("reference-table", "Reference Tables", false);
@@ -77,7 +77,7 @@ public class HibernateStructureRules implements TableStructureRules
     private final Set housekeepingColumnNames = new HashSet();
     private final Set housekeepingTableNames = new HashSet();
 
-    public HibernateStructureRules()
+    public MedigyDatabaseStructureRules()
     {
         housekeepingTableNames.add("Work_Session");
 

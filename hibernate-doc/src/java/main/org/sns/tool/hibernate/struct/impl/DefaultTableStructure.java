@@ -60,7 +60,6 @@ import org.hibernate.mapping.PersistentClass;
 import org.hibernate.mapping.Property;
 import org.hibernate.mapping.Table;
 import org.hibernate.type.Type;
-import org.sns.tool.hibernate.document.diagram.HibernateDiagramGeneratorException;
 import org.sns.tool.hibernate.struct.TableCategory;
 import org.sns.tool.hibernate.struct.TableStructure;
 import org.sns.tool.hibernate.struct.TableStructureNode;
@@ -190,7 +189,7 @@ public class DefaultTableStructure implements TableStructure
         }
         catch (Exception e)
         {
-            throw new HibernateDiagramGeneratorException(e);
+            throw new RuntimeException(e);
         }
 
         resolveDependencies();

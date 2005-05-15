@@ -17,9 +17,9 @@ import org.sns.tool.hibernate.struct.TableStructureRules;
 import com.medigy.persist.reference.ReferenceEntity;
 import com.medigy.persist.reference.custom.CustomReferenceEntity;
 
-public class HibernateDatabaseDiagramRenderer implements DatabaseDiagramRenderer
+public class MedigyDatabaseDiagramRenderer implements DatabaseDiagramRenderer
 {
-    public HibernateDatabaseDiagramRenderer()
+    public MedigyDatabaseDiagramRenderer()
     {
     }
 
