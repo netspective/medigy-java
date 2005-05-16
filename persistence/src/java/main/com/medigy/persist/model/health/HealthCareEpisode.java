@@ -65,6 +65,7 @@ public class HealthCareEpisode extends AbstractTopLevelEntity
     private EpisodeType type;
     private Person person;
 
+    private Set<HealthCareReferral> healthCareReferrals = new HashSet<HealthCareReferral>();
     private Set<HealthCareDelivery> healthCareDeliveries = new HashSet<HealthCareDelivery>();
     private Set<Diagnosis> diagnosises = new HashSet<Diagnosis>();
     private Set<EpisodeOutcome> outcomes = new HashSet<EpisodeOutcome>();
@@ -191,5 +192,16 @@ public class HealthCareEpisode extends AbstractTopLevelEntity
     public void setType(final EpisodeType type)
     {
         this.type = type;
+    }
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "episode")
+    public Set<HealthCareReferral> getHealthCareReferrals()
+    {
+        return healthCareReferrals;
+    }
+
+    public void setHealthCareReferrals(final Set<HealthCareReferral> healthCareReferrals)
+    {
+        this.healthCareReferrals = healthCareReferrals;
     }
 }

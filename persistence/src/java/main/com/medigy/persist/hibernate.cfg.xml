@@ -37,6 +37,7 @@
         <mapping class="com.medigy.persist.reference.custom.health.OutcomeType"/>
         <mapping class="com.medigy.persist.reference.custom.health.SymptomType"/>
         <mapping class="com.medigy.persist.reference.custom.health.HealthCareLicenseType"/>
+        <mapping class="com.medigy.persist.reference.custom.health.HealthCareReferralType"/>
 
         <mapping package="com.medigy.persist.reference.custom.insurance"/>
         <mapping class="com.medigy.persist.reference.custom.insurance.CoverageType"/>
@@ -155,6 +156,7 @@
         <mapping class="com.medigy.persist.model.health.Symptom"/>
         <mapping class="com.medigy.persist.model.health.VisitReason"/>
         <mapping class="com.medigy.persist.model.health.HealthCareLicense"/>
+        <mapping class="com.medigy.persist.model.health.HealthCareReferral"/>
 
         <mapping package="com.medigy.persist.model.product"/>
         <mapping class="com.medigy.persist.model.product.Product"/>

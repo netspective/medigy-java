@@ -36,61 +36,68 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.persist.reference.custom.health;
+package com.medigy.persist.model.health;
 
-import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
-import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
-import com.medigy.persist.reference.custom.CustomReferenceEntity;
+import com.medigy.persist.TestCase;
+import com.medigy.persist.util.HibernateUtil;
+import com.medigy.persist.reference.custom.person.PersonRoleType;
+import com.medigy.persist.reference.custom.health.HealthCareReferralType;
+import com.medigy.persist.model.person.Person;
+import com.medigy.persist.model.party.PartyRole;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratorType;
-import javax.persistence.Id;
+import java.util.Calendar;
 
-@Entity
-public class HealthCareVisitStatusType  extends AbstractCustomReferenceEntity
+public class TestHealthCareReferral extends TestCase
 {
-    public static final String PK_COLUMN_NAME = "visit_status_type_id";
-    public enum Cache implements CachedCustomReferenceEntity
+    public void testHealthCareReferral()
     {
-        SCHEDULED("SCH"),
-        INPROGRESS("INPG"),
-        COMPLETE("COMP"),
-        DISCARD("DISCARD");
+        final Person patient = Person.createNewPatient();
+        patient.setLastName("Hackett");
+        patient.setFirstName("Ryan");
 
-        private final String code;
-        private HealthCareVisitStatusType entity;
+        final PartyRole patientRole = new PartyRole();
+        patientRole.setType(PersonRoleType.Cache.PATIENT.getEntity());
+        patientRole.setParty(patient);
+        patient.addPartyRole(patientRole);
 
-        Cache(final String code)
-        {
-            this.code = code;
-        }
+        final Person requestorDoctor = Person.createNewPhysician();
+        requestorDoctor.setLastName("Doctor");
+        requestorDoctor.setFirstName("Requestor");
 
-        public String getCode()
-        {
-            return code;
-        }
+        final PartyRole requestorRole = new PartyRole();
+        requestorRole.setType(PersonRoleType.Cache.INDIVIDUAL_HEALTH_CARE_PRACTITIONER.getEntity());
+        requestorRole.setParty(requestorDoctor);
+        requestorDoctor.addPartyRole(requestorRole);
 
-        public HealthCareVisitStatusType getEntity()
-        {
-            return entity;
-        }
+        final Person provider = Person.createNewPhysician();
+        provider.setLastName("Doctor");
+        provider.setFirstName("Provider");
 
-        public void setEntity(final CustomReferenceEntity entity)
-        {
-            this.entity = (HealthCareVisitStatusType) entity;
-        }
-    }
+        final PartyRole providerRole = new PartyRole();
+        providerRole.setType(PersonRoleType.Cache.INDIVIDUAL_HEALTH_CARE_PRACTITIONER.getEntity());
+        providerRole.setParty(provider);
+        provider.addPartyRole(providerRole);
 
-    @Id(generate = GeneratorType.AUTO)
-    @Column(name = PK_COLUMN_NAME)        
-    public Long getHealthCareVisitStatusTypeId()
-    {
-        return super.getSystemId();
-    }
+        HibernateUtil.getSession().save(patient);
+        HibernateUtil.getSession().save(requestorDoctor);
+        HibernateUtil.getSession().save(provider);
 
-    public void setHealthCareVisitStatusTypeId(final Long id)
-    {
-        super.setSystemId(id);
+        Calendar cal = Calendar.getInstance();
+        cal.set(2005, 5, 16);
+        final HealthCareReferral referral = new HealthCareReferral();
+        referral.setPatientRole(patientRole);
+        referral.setProviderRole(providerRole);
+        referral.setRequesterRole(requestorRole);
+        referral.setReferralDate(cal.getTime());
+        referral.setType(HealthCareReferralType.Cache.CONSULTATION.getEntity());
+        HibernateUtil.getSession().save(referral);
+        HibernateUtil.closeSession();
+
+        final HealthCareReferral newReferral = (HealthCareReferral) HibernateUtil.getSession().load(HealthCareReferral.class, referral.getHealthCareReferralId());
+        assertThat(newReferral.getReferralDate(), eq(cal.getTime()));
+        assertThat(newReferral.getPatientRole(), eq(patientRole));
+        assertThat(newReferral.getRequesterRole(), eq(requestorRole));
+        assertThat(newReferral.getProviderRole(), eq(providerRole));
+        
     }
 }

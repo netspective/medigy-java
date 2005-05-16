@@ -55,9 +55,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "Party_Role")
+@Table(name = PartyRole.TABLE_NAME)
 public class PartyRole extends AbstractDateDurationEntity implements Comparable
 {
+    public static final String TABLE_NAME = "Party_Role";
     public static final String PK_COLUMN_NAME = "party_role_id";
 
     private Long partyRoleId;

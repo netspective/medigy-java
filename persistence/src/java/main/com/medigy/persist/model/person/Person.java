@@ -49,10 +49,12 @@ import com.medigy.persist.model.health.HealthCareVisit;
 import com.medigy.persist.model.insurance.InsurancePolicy;
 import com.medigy.persist.model.party.Party;
 import com.medigy.persist.model.party.PartyIdentifier;
+import com.medigy.persist.model.party.PartyRole;
 import com.medigy.persist.reference.custom.party.PartyIdentifierType;
 import com.medigy.persist.reference.custom.person.EthnicityType;
 import com.medigy.persist.reference.custom.person.PersonIdentifierType;
 import com.medigy.persist.reference.custom.person.PhysicalCharacteristicType;
+import com.medigy.persist.reference.custom.person.PersonRoleType;
 import com.medigy.persist.reference.type.GenderType;
 import com.medigy.persist.reference.type.LanguageType;
 import com.medigy.persist.reference.type.MaritalStatusType;
@@ -644,5 +646,35 @@ public class Person extends Party
     public void addResponsibleInsurancePolicy(final InsurancePolicy policy)
     {
         this.responsibleInsurancePolicies.add(policy);
+    }
+
+    /**
+     * Helper method to create a shell person having a patient role
+     * @return the new person with a patient role attached
+     */
+    @Transient
+    public static Person createNewPatient()
+    {
+        final Person patient = new Person();
+        final PartyRole role = new PartyRole();
+        role.setType(PersonRoleType.Cache.PATIENT.getEntity());
+        role.setParty(patient);
+        patient.addPartyRole(role);
+        return patient;
+    }
+
+    /**
+     * Helper method to create a shell person having a physician role
+     * @return  the new person with a physician role attached
+     */
+    @Transient
+    public static Person createNewPhysician()
+    {
+        final Person doctor = new Person();
+        final PartyRole role = new PartyRole();
+        role.setType(PersonRoleType.Cache.INDIVIDUAL_HEALTH_CARE_PRACTITIONER.getEntity());
+        role.setParty(doctor);
+        doctor.addPartyRole(role);
+        return doctor;
     }
 }

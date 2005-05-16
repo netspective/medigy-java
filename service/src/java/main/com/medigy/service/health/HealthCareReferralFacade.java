@@ -36,61 +36,31 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.persist.reference.custom.health;
+package com.medigy.service.health;
 
-import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
-import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
-import com.medigy.persist.reference.custom.CustomReferenceEntity;
+import com.medigy.service.util.Facade;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratorType;
-import javax.persistence.Id;
+import java.io.Serializable;
+import java.util.List;
 
-@Entity
-public class HealthCareVisitStatusType  extends AbstractCustomReferenceEntity
+/**
+ * Service oriented class built upon the data model
+ */
+public interface HealthCareReferralFacade extends Facade
 {
-    public static final String PK_COLUMN_NAME = "visit_status_type_id";
-    public enum Cache implements CachedCustomReferenceEntity
-    {
-        SCHEDULED("SCH"),
-        INPROGRESS("INPG"),
-        COMPLETE("COMP"),
-        DISCARD("DISCARD");
+    /**
+     * Lists all referrals by the patient ID
+     * @param patientId
+     * @return
+     */
+    public  List listReferralsByPatient(final Serializable patientId);
 
-        private final String code;
-        private HealthCareVisitStatusType entity;
+    /**
+     * List all referrals by the requesting physician ID
+     *
+     * @param physicianId
+     * @return
+     */
+    public List listReferralsByRequestor(final Serializable physicianId);
 
-        Cache(final String code)
-        {
-            this.code = code;
-        }
-
-        public String getCode()
-        {
-            return code;
-        }
-
-        public HealthCareVisitStatusType getEntity()
-        {
-            return entity;
-        }
-
-        public void setEntity(final CustomReferenceEntity entity)
-        {
-            this.entity = (HealthCareVisitStatusType) entity;
-        }
-    }
-
-    @Id(generate = GeneratorType.AUTO)
-    @Column(name = PK_COLUMN_NAME)        
-    public Long getHealthCareVisitStatusTypeId()
-    {
-        return super.getSystemId();
-    }
-
-    public void setHealthCareVisitStatusTypeId(final Long id)
-    {
-        super.setSystemId(id);
-    }
 }

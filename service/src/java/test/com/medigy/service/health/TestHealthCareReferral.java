@@ -36,61 +36,47 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.persist.reference.custom.health;
+package com.medigy.service.health;
 
-import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
-import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
-import com.medigy.persist.reference.custom.CustomReferenceEntity;
+import com.medigy.persist.TestCase;
+import com.medigy.persist.reference.custom.health.HealthCareReferralType;
+import com.medigy.persist.model.person.Person;
+import com.medigy.persist.util.HibernateUtil;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratorType;
-import javax.persistence.Id;
+import java.util.List;
 
-@Entity
-public class HealthCareVisitStatusType  extends AbstractCustomReferenceEntity
+public class TestHealthCareReferral  extends TestCase
 {
-    public static final String PK_COLUMN_NAME = "visit_status_type_id";
-    public enum Cache implements CachedCustomReferenceEntity
+    public void testHealthCareReferral()
     {
-        SCHEDULED("SCH"),
-        INPROGRESS("INPG"),
-        COMPLETE("COMP"),
-        DISCARD("DISCARD");
+        final Person patient = Person.createNewPatient();
+        patient.setLastName("Hackett");
+        patient.setFirstName("Ryan");
 
-        private final String code;
-        private HealthCareVisitStatusType entity;
+        final Person requestorDoctor = Person.createNewPhysician();
+        requestorDoctor.setLastName("Doctor");
+        requestorDoctor.setFirstName("Requestor");
 
-        Cache(final String code)
-        {
-            this.code = code;
-        }
+        final Person provider = Person.createNewPhysician();
+        provider.setLastName("Doctor");
+        provider.setFirstName("Provider");
 
-        public String getCode()
-        {
-            return code;
-        }
+        HibernateUtil.getSession().save(patient);
+        HibernateUtil.getSession().save(requestorDoctor);
+        HibernateUtil.getSession().save(provider);
 
-        public HealthCareVisitStatusType getEntity()
-        {
-            return entity;
-        }
+        com.medigy.persist.model.health.HealthCareReferral referral = new com.medigy.persist.model.health.HealthCareReferral();
+        referral.setPatient(patient);
+        referral.setProvider(provider);
+        referral.setRequestor(requestorDoctor);
+        referral.setType(HealthCareReferralType.Cache.CONSULTATION.getEntity());
+        HibernateUtil.getSession().save(referral);
 
-        public void setEntity(final CustomReferenceEntity entity)
-        {
-            this.entity = (HealthCareVisitStatusType) entity;
-        }
-    }
+        final HealthCareReferralFacade facade = new HealthCareReferralFacadeImpl();
+        List list = facade.listReferralsByPatient(patient.getPartyId());
+        assertThat(list.size(), eq(1));
 
-    @Id(generate = GeneratorType.AUTO)
-    @Column(name = PK_COLUMN_NAME)        
-    public Long getHealthCareVisitStatusTypeId()
-    {
-        return super.getSystemId();
-    }
-
-    public void setHealthCareVisitStatusTypeId(final Long id)
-    {
-        super.setSystemId(id);
+        List requestorList = facade.listReferralsByRequestor(requestorDoctor.getPartyId());
+        assertThat(requestorList.size(), eq(1));
     }
 }

@@ -42,6 +42,7 @@ import com.medigy.service.insurance.TestInsurancePolicyFacade;
 import com.medigy.service.party.TestAddContactMechanismService;
 import com.medigy.service.party.TestPartyRelationshipFacade;
 import com.medigy.service.person.TestPersonFacade;
+import com.medigy.service.health.TestHealthCareReferral;
 import junit.framework.Test;
 
 public class TestSuite extends junit.framework.TestSuite
@@ -57,6 +58,7 @@ public class TestSuite extends junit.framework.TestSuite
         suite.addTest(new junit.framework.TestSuite(TestPersonFacade.class));
         suite.addTest(new junit.framework.TestSuite(TestAddContactMechanismService.class));
         suite.addTest(new junit.framework.TestSuite(TestInsurancePolicyFacade.class));
+        suite.addTest(new junit.framework.TestSuite(TestHealthCareReferral.class));
         //suite.addTest(new junit.framework.TestSuite(TestSelectCareProviderService.class));
         //suite.addTest(new junit.framework.TestSuite(TestPatientRegistrationService.class));
 

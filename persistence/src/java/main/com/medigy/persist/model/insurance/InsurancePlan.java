@@ -61,6 +61,8 @@ public class InsurancePlan extends AbstractDateDurationEntity
     private Long insurancePlanId;
     private InsuranceProduct insuranceProduct;
     private String name;
+    private String remitPayerId;
+    private String medigapId;
 
     private Set<InsurancePolicy> insurancePolicies = new HashSet<InsurancePolicy>();
     private Set<InsurancePlanContactMechanism> insurancePlanContactMechanisms = new HashSet<InsurancePlanContactMechanism>();
@@ -86,6 +88,27 @@ public class InsurancePlan extends AbstractDateDurationEntity
     public void setName(final String name)
     {
         this.name = name;
+    }
+
+    @Column(length = 64)
+    public String getMedigapId()
+    {
+        return medigapId;
+    }
+
+    public void setMedigapId(final String medigapId)
+    {
+        this.medigapId = medigapId;
+    }
+
+    public String getRemitPayerId()
+    {
+        return remitPayerId;
+    }
+
+    public void setRemitPayerId(final String remitPayerId)
+    {
+        this.remitPayerId = remitPayerId;
     }
 
     @ManyToOne

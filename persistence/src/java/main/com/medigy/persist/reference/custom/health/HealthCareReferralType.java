@@ -42,26 +42,29 @@ import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
 import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
 import com.medigy.persist.reference.custom.CustomReferenceEntity;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratorType;
 import javax.persistence.Id;
+import javax.persistence.GeneratorType;
+import javax.persistence.Column;
 
 @Entity
-public class HealthCareVisitStatusType  extends AbstractCustomReferenceEntity
+public class HealthCareReferralType extends AbstractCustomReferenceEntity
 {
-    public static final String PK_COLUMN_NAME = "visit_status_type_id";
+    public static final String  PK_COLUMN_NAME = "health_care_referral_type_id";
+
     public enum Cache implements CachedCustomReferenceEntity
     {
-        SCHEDULED("SCH"),
-        INPROGRESS("INPG"),
-        COMPLETE("COMP"),
-        DISCARD("DISCARD");
+        TEST("TEST"),
+        CONSULTATION("CONSULT"),
+        EVALUATION("EVAL"),
+        TREATMENT("TREATMENT"),
+        SURGERY("SURGERY"),
+        PROCEDURE("PROC");
 
         private final String code;
-        private HealthCareVisitStatusType entity;
+        private HealthCareReferralType entity;
 
-        Cache(final String code)
+        private Cache(final String code)
         {
             this.code = code;
         }
@@ -71,25 +74,26 @@ public class HealthCareVisitStatusType  extends AbstractCustomReferenceEntity
             return code;
         }
 
-        public HealthCareVisitStatusType getEntity()
+
+        public HealthCareReferralType getEntity()
         {
             return entity;
         }
 
         public void setEntity(final CustomReferenceEntity entity)
         {
-            this.entity = (HealthCareVisitStatusType) entity;
+            this.entity = (HealthCareReferralType) entity;
         }
     }
 
     @Id(generate = GeneratorType.AUTO)
     @Column(name = PK_COLUMN_NAME)        
-    public Long getHealthCareVisitStatusTypeId()
+    public Long getHealthCareReferralTypeId()
     {
         return super.getSystemId();
     }
 
-    public void setHealthCareVisitStatusTypeId(final Long id)
+    protected void setHealthCareReferralTypeId(final Long id)
     {
         super.setSystemId(id);
     }

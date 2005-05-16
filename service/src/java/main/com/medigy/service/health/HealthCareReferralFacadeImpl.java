@@ -36,61 +36,35 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.persist.reference.custom.health;
+package com.medigy.service.health;
 
-import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
-import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
-import com.medigy.persist.reference.custom.CustomReferenceEntity;
+import com.medigy.persist.util.HibernateUtil;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratorType;
-import javax.persistence.Id;
+import java.util.List;
+import java.io.Serializable;
 
-@Entity
-public class HealthCareVisitStatusType  extends AbstractCustomReferenceEntity
+public class HealthCareReferralFacadeImpl implements HealthCareReferralFacade
 {
-    public static final String PK_COLUMN_NAME = "visit_status_type_id";
-    public enum Cache implements CachedCustomReferenceEntity
+    /**
+     * Lists all referrals by the patient ID
+     * @param patientId
+     * @return
+     */
+    public List listReferralsByPatient(final Serializable patientId)
     {
-        SCHEDULED("SCH"),
-        INPROGRESS("INPG"),
-        COMPLETE("COMP"),
-        DISCARD("DISCARD");
-
-        private final String code;
-        private HealthCareVisitStatusType entity;
-
-        Cache(final String code)
-        {
-            this.code = code;
-        }
-
-        public String getCode()
-        {
-            return code;
-        }
-
-        public HealthCareVisitStatusType getEntity()
-        {
-            return entity;
-        }
-
-        public void setEntity(final CustomReferenceEntity entity)
-        {
-            this.entity = (HealthCareVisitStatusType) entity;
-        }
+        return HibernateUtil.getSession().createQuery("from HealthCareReferral  hcr " +
+                " where hcr.patientRole.party.partyId = "  + patientId).list();
     }
 
-    @Id(generate = GeneratorType.AUTO)
-    @Column(name = PK_COLUMN_NAME)        
-    public Long getHealthCareVisitStatusTypeId()
+    /**
+     * List all referrals by the requesting physician ID
+     *
+     * @param physicianId
+     * @return
+     */
+    public List listReferralsByRequestor(final Serializable physicianId)
     {
-        return super.getSystemId();
-    }
-
-    public void setHealthCareVisitStatusTypeId(final Long id)
-    {
-        super.setSystemId(id);
+        return HibernateUtil.getSession().createQuery("from HealthCareReferral  hcr " +
+                " where hcr.requesterRole.party.partyId = "  + physicianId).list();
     }
 }
