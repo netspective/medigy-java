@@ -63,7 +63,7 @@ public class MedigyDatabaseDiagramRenderer implements DatabaseDiagramRenderer
     public GraphvizDiagramNode formatTableNode(final DatabaseDesignGeneratorConfig generator, final TableStructureNode tableStructNode, final GraphvizDiagramNode gdNode, boolean isFocused)
     {
         if(isFocused)
-            gdNode.setFontSize("10");
+            gdNode.setFontSize("9");
         return gdNode;
     }
 

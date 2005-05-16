@@ -280,7 +280,7 @@ public class GraphvizDiagramGenerator
             final File dest = new File(params.getDestDir(), params.getBaseFileName() + fileExtn);
 
             final String cmdLine =  params.getGraphVizDotCommandSpec() + " -T"+ imageType +" -o"+ dest +" "+ src +"";
-            GraphvizDotExec.exec(cmdLine, System.out, System.err);
+            GraphvizDotExec.exec(cmdLine, params.getLogOutputStream(), params.getLogOutputStream());
             results.add(dest);
         }
 

@@ -341,6 +341,8 @@ public class DatabaseDesignGenerator
             final GraphvizDiagramNode gdn = new GraphvizDiagramNode(gdg, tableNode.getTable().getName());
             gdn.setLabel(ddr.getTableDefinitionHtml(generatorConfig, tableNode, focused));
             gdn.setShape("plaintext");
+            gdn.setFontName("courier");
+            gdn.setFontSize("9");
 
             gdg.addNode(ddr.formatTableNode(generatorConfig, tableNode, gdn, focused));
             tablesIncluded.add(tableNode.getTable());
@@ -402,7 +404,7 @@ public class DatabaseDesignGenerator
 
                 public PrintStream getLogOutputStream()
                 {
-                    return null;  //To change body of implemented methods use File | Settings | File Templates.
+                    return generatorConfig.getGraphVizDotLogOutputStream();
                 }
             });
         }
