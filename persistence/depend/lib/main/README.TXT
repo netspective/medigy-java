@@ -2,6 +2,7 @@ All files in the lib/runtime directory are required at runtime (production use a
 
 Library                             Required By
 ----------------------------------  ------------------------
+antlr-2.7.5H3.jar                   Hibernate
 asm-1.5.3.jar                       Hibernate
 asm-attrs-1.5.3.jar                 Hibernate
 bcel-5.1.jar                        DataTransferObject tool
