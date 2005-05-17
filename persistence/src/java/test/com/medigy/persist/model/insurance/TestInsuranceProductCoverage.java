@@ -52,8 +52,11 @@ public class TestInsuranceProductCoverage extends TestCase
         final InsuranceProductCoverage ipc = new InsuranceProductCoverage();
         ipc.setCoverage(coverage);
         ipc.setInsuranceProduct(ppoProduct);
+        ppoProduct.addCoverageRelationship(ipc);
+        coverage.addInsuranceProductRelationship(ipc);
 
         HibernateUtil.getSession().save(ipc);
+        HibernateUtil.getSession().flush();
         HibernateUtil.closeSession();
 
         final InsuranceProduct product = (InsuranceProduct) HibernateUtil.getSession().load(InsuranceProduct.class, ppoProduct.getProductId());

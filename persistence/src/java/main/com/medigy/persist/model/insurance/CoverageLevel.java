@@ -50,12 +50,15 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 public class CoverageLevel extends AbstractTopLevelEntity
 {
+    public static final String PK_COLUMN_NAME = "coverage_level_id";
+
     private Long coverageLevelId;
     private CoverageLevelType type;
     private Set<EnrollmentElection> enrollmentElections = new HashSet<EnrollmentElection>();
@@ -65,7 +68,12 @@ public class CoverageLevel extends AbstractTopLevelEntity
     private Set<CoverageLevelBasis> coverageLevelBasises = new HashSet<CoverageLevelBasis>();
     private Coverage coverage;
 
+    private Set<InsurancePlanCoverageLevel> insurancePlanRelationships = new HashSet<InsurancePlanCoverageLevel>();
+    private Set<InsurancePolicyCoverageLevel> insurancePolicyRelationships = new HashSet<InsurancePolicyCoverageLevel>();
+    private Set<InsuranceProductCoverageLevel> insuranceProductRelationships = new HashSet<InsuranceProductCoverageLevel>();
+
     @Id(generate = GeneratorType.AUTO)
+    @Column(name = PK_COLUMN_NAME)
     public Long getCoverageLevelId()
     {
         return coverageLevelId;
@@ -187,4 +195,56 @@ public class CoverageLevel extends AbstractTopLevelEntity
     {
         this.coverage = coverage;
     }
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "coverageLevel")
+    public Set<InsurancePlanCoverageLevel> getInsurancePlanRelationships()
+    {
+        return insurancePlanRelationships;
+    }
+
+    public void setInsurancePlanRelationships(final Set<InsurancePlanCoverageLevel> insurancePlanRelationships)
+    {
+        this.insurancePlanRelationships = insurancePlanRelationships;
+    }
+
+    @Transient
+    public void addInsurancePlanCoverageLevel(final InsurancePlanCoverageLevel insPlanCoverageLevel)
+    {
+        this.insurancePlanRelationships.add(insPlanCoverageLevel);
+    }
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "coverageLevel")
+    public Set<InsurancePolicyCoverageLevel> getInsurancePolicyRelationships()
+    {
+        return insurancePolicyRelationships;
+    }
+
+    public void setInsurancePolicyRelationships(final Set<InsurancePolicyCoverageLevel> insurancePolicyRelationships)
+    {
+        this.insurancePolicyRelationships = insurancePolicyRelationships;
+    }
+
+    @Transient
+    public void addInsurancePolicyCoverageLevel(final InsurancePolicyCoverageLevel insPolicyCoverageLevel)
+    {
+        this.insurancePolicyRelationships.add(insPolicyCoverageLevel);
+    }
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "coverageLevel")
+    public Set<InsuranceProductCoverageLevel> getInsuranceProductRelationships()
+    {
+        return insuranceProductRelationships;
+    }
+
+    public void setInsuranceProductRelationships(final Set<InsuranceProductCoverageLevel> insuranceProductRelationships)
+    {
+        this.insuranceProductRelationships = insuranceProductRelationships;
+    }
+
+    @Transient
+    public void addInsuranceProductRelationship(final InsuranceProductCoverageLevel rel)
+    {
+        this.insuranceProductRelationships.add(rel);
+    }
+
 }

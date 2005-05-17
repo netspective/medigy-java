@@ -60,6 +60,25 @@ public class InsuranceProduct extends Product
     private Set<InsuranceProductCoverage> insuranceProductCoverages = new HashSet<InsuranceProductCoverage>();
     private Set<InsurancePlan> insurancePlans = new HashSet<InsurancePlan>();
 
+    private Set<InsuranceProductCoverageLevel> coverageLevelRelationships = new HashSet<InsuranceProductCoverageLevel>();
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "insuranceProduct")
+    public Set<InsuranceProductCoverageLevel> getCoverageLevelRelationships()
+    {
+        return coverageLevelRelationships;
+    }
+
+    public void setCoverageLevelRelationships(final Set<InsuranceProductCoverageLevel> coverageLevelRelationships)
+    {
+        this.coverageLevelRelationships = coverageLevelRelationships;
+    }
+
+    @Transient
+    public void addCoverageLevelRelationships(final InsuranceProductCoverageLevel rel)
+    {
+        this.coverageLevelRelationships.add(rel);
+    }
+
     /**
      * Gets all the insurance plans for this insurance product. The different Insurance Plans that are part of the same
      * Insurance Product can have differing specifications but will all conform to the broad guidelines laid down by
@@ -103,5 +122,11 @@ public class InsuranceProduct extends Product
     public void setInsuranceProductCoverages(final Set<InsuranceProductCoverage> insuranceProductCoverages)
     {
         this.insuranceProductCoverages = insuranceProductCoverages;
+    }
+
+    @Transient
+    public void addCoverageRelationship(final InsuranceProductCoverage rel)
+    {
+        this.insuranceProductCoverages.add(rel);
     }
 }

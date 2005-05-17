@@ -55,7 +55,7 @@ import java.util.Set;
 import java.util.HashSet;
 
 @Entity
-public class Coverage  extends AbstractTopLevelEntity
+public class Coverage extends AbstractTopLevelEntity
 {
     public static final String PK_COLUMN_NAME = "coverage_id";
 
@@ -63,8 +63,12 @@ public class Coverage  extends AbstractTopLevelEntity
     private CoverageType type;
     private Set<CoverageLevel> coverageLevels = new HashSet<CoverageLevel>();
 
+    private Set<InsuranceProductCoverage> insuranceProductRelationships = new HashSet<InsuranceProductCoverage>();
+    private Set<InsurancePlanCoverage> insurancePlanRelationships = new HashSet<InsurancePlanCoverage>();
+    private Set<InsurancePolicyCoverage> insurancePolicyRelationships = new HashSet<InsurancePolicyCoverage>();
+
     @Id(generate = GeneratorType.AUTO)
-    @Column(name = PK_COLUMN_NAME)        
+    @Column(name = PK_COLUMN_NAME)
     public Long getCoverageId()
     {
         return coverageId;
@@ -113,5 +117,44 @@ public class Coverage  extends AbstractTopLevelEntity
                 return level;
         }
         return null;
+    }
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "coverage")
+    public Set<InsuranceProductCoverage> getInsuranceProductRelationships()
+    {
+        return insuranceProductRelationships;
+    }
+
+    public void setInsuranceProductRelationships(final Set<InsuranceProductCoverage> insuranceProductRelationships)
+    {
+        this.insuranceProductRelationships = insuranceProductRelationships;
+    }
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "coverage")
+    public Set<InsurancePlanCoverage> getInsurancePlanRelationships()
+    {
+        return insurancePlanRelationships;
+    }
+
+    public void setInsurancePlanRelationships(final Set<InsurancePlanCoverage> insurancePlanRelationships)
+    {
+        this.insurancePlanRelationships = insurancePlanRelationships;
+    }
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "coverage")
+    public Set<InsurancePolicyCoverage> getInsurancePolicyRelationships()
+    {
+        return insurancePolicyRelationships;
+    }
+
+    public void setInsurancePolicyRelationships(final Set<InsurancePolicyCoverage> insurancePolicyRelationships)
+    {
+        this.insurancePolicyRelationships = insurancePolicyRelationships;
+    }
+
+    @Transient
+    public void addInsuranceProductRelationship(final InsuranceProductCoverage rel)
+    {
+        this.insuranceProductRelationships.add(rel);
     }
 }

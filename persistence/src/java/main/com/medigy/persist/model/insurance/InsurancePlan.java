@@ -58,6 +58,8 @@ import java.util.Set;
 @Table(name = "Ins_Plan")
 public class InsurancePlan extends AbstractDateDurationEntity
 {
+    public static final String PK_COLUMN_NAME = "ins_plan_id";
+
     private Long insurancePlanId;
     private InsuranceProduct insuranceProduct;
     private String name;
@@ -66,9 +68,10 @@ public class InsurancePlan extends AbstractDateDurationEntity
 
     private Set<InsurancePolicy> insurancePolicies = new HashSet<InsurancePolicy>();
     private Set<InsurancePlanContactMechanism> insurancePlanContactMechanisms = new HashSet<InsurancePlanContactMechanism>();
+    private Set<InsurancePlanCoverageLevel> coverageLevelRelationships = new HashSet<InsurancePlanCoverageLevel>();
 
     @Id(generate = GeneratorType.AUTO)
-    @Column(name = "ins_plan_id")        
+    @Column(name = PK_COLUMN_NAME)
     public Long getInsurancePlanId()
     {
         return insurancePlanId;
@@ -79,7 +82,24 @@ public class InsurancePlan extends AbstractDateDurationEntity
         this.insurancePlanId = insurancePlanId;
     }
 
-    @Column(length = 100)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "insurancePlan")
+    public Set<InsurancePlanCoverageLevel> getCoverageLevelRelationships()
+    {
+        return coverageLevelRelationships;
+    }
+
+    public void setCoverageLevelRelationships(final Set<InsurancePlanCoverageLevel> coverageLevelRelationships)
+    {
+        this.coverageLevelRelationships = coverageLevelRelationships;
+    }
+
+    @Transient
+    public void addCoverageLevelRelationship(final InsurancePlanCoverageLevel rel)
+    {
+        this.coverageLevelRelationships.add(rel);
+    }
+
+    @Column(length = 100, nullable = false)
     public String getName()
     {
         return name;

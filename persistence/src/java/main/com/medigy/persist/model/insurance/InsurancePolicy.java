@@ -85,6 +85,7 @@ public class InsurancePolicy extends AbstractDateDurationEntity
 
     private Set<FinancialResponsiblePartySelection> responsiblePartySelection = new HashSet<FinancialResponsiblePartySelection>();
     private Set<CareProviderSelection> careProviderSelections = new HashSet<CareProviderSelection>();
+    private Set<InsurancePolicyCoverageLevel> coverageLevelRelationships = new HashSet<InsurancePolicyCoverageLevel>();
 
     private Person insuredPerson;
     private Person contractHolderPerson;
@@ -225,5 +226,20 @@ public class InsurancePolicy extends AbstractDateDurationEntity
         this.responsiblePartySelection = responsiblePartySelection;
     }
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "insurancePolicy")
+    public Set<InsurancePolicyCoverageLevel> getCoverageLevelRelationships()
+    {
+        return coverageLevelRelationships;
+    }
 
+    public void setCoverageLevelRelationships(final Set<InsurancePolicyCoverageLevel> coverageLevelRelationships)
+    {
+        this.coverageLevelRelationships = coverageLevelRelationships;
+    }
+
+    @Transient
+    public void addCoverageLevelRelationship(final InsurancePolicyCoverageLevel rel)
+    {
+        this.coverageLevelRelationships.add(rel);
+    }
 }

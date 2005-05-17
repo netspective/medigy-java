@@ -208,6 +208,11 @@
         <mapping class="com.medigy.persist.model.insurance.InsurancePlanContactMechanism"/>
         <mapping class="com.medigy.persist.model.insurance.InsurancePlanContactMechanismPurpose"/>
         <mapping class="com.medigy.persist.model.insurance.InsuranceProductCoverage"/>
+        <mapping class="com.medigy.persist.model.insurance.InsurancePlanCoverage"/>
+        <mapping class="com.medigy.persist.model.insurance.InsurancePolicyCoverage"/>
+        <mapping class="com.medigy.persist.model.insurance.InsuranceProductCoverageLevel"/>
+        <mapping class="com.medigy.persist.model.insurance.InsurancePlanCoverageLevel"/>
+        <mapping class="com.medigy.persist.model.insurance.InsurancePolicyCoverageLevel"/>
 
         <mapping package="com.medigy.persist.model.session"/>
         <mapping class="com.medigy.persist.model.session.Session"/>
