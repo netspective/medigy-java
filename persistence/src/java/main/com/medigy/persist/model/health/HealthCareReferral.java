@@ -62,8 +62,12 @@ public class HealthCareReferral extends AbstractEntity
     public static final String PK_COLUMN_NAME = "health_care_referral_id";
 
     public Long healthCareReferralId;
+    private String referralReason;
     private String comment;
+    private String authorizationNumber;
     private Date referralDate;
+    private Long allowedVisits;
+
     private PartyRole patientRole;
     private PartyRole requesterRole;
     private PartyRole providerRole;
@@ -81,6 +85,44 @@ public class HealthCareReferral extends AbstractEntity
     public void setHealthCareReferralId(final Long healthCareReferralId)
     {
         this.healthCareReferralId = healthCareReferralId;
+    }
+
+    /**
+     * Gets the referral authorization number
+     * @return
+     */
+    public String getAuthorizationNumber()
+    {
+        return authorizationNumber;
+    }
+
+    public void setAuthorizationNumber(final String authorizationNumber)
+    {
+        this.authorizationNumber = authorizationNumber;
+    }
+
+    /**
+     * Gets the number of allowed visits
+     * @return
+     */
+    public Long getAllowedVisits()
+    {
+        return allowedVisits;
+    }
+
+    public void setAllowedVisits(final Long allowedVisits)
+    {
+        this.allowedVisits = allowedVisits;
+    }
+
+    public String getReferralReason()
+    {
+        return referralReason;
+    }
+
+    public void setReferralReason(final String referralReason)
+    {
+        this.referralReason = referralReason;
     }
 
     public String getComment()

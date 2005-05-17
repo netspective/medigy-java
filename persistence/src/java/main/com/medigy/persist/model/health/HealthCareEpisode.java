@@ -170,8 +170,7 @@ public class HealthCareEpisode extends AbstractTopLevelEntity
         this.outcomes = outcomes;
     }
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "episode_id")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "healthCareEpisode")
     public Set<Symptom> getSymptoms()
     {
         return symptoms;

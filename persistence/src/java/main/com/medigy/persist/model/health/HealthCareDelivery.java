@@ -38,8 +38,7 @@
  */
 package com.medigy.persist.model.health;
 
-import java.util.HashSet;
-import java.util.Set;
+import com.medigy.persist.model.common.AbstractDateDurationEntity;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -48,9 +47,12 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import java.util.HashSet;
+import java.util.Set;
 
-import com.medigy.persist.model.common.AbstractDateDurationEntity;
-
+/**
+ * Class for representing the health care services that was performed during a visit  
+ */
 @Entity
 public class HealthCareDelivery extends AbstractDateDurationEntity
 {
@@ -58,6 +60,7 @@ public class HealthCareDelivery extends AbstractDateDurationEntity
     private String deliveryNotes;
     private HealthCareOffering healthCareOffering;
     private HealthCareEpisode healthCareEpisode;
+    private HealthCareVisit healthCareVisit;
 
     private Set<HealthCareDeliveryBilling> billings = new HashSet<HealthCareDeliveryBilling>();
     private Set<HealthCareDeliveryRole> healthCareDeliveryRoles = new HashSet<HealthCareDeliveryRole>();
@@ -127,8 +130,7 @@ public class HealthCareDelivery extends AbstractDateDurationEntity
         this.healthCareDeliveryRoles = healthCareDeliveryRoles;
     }
 
-    @OneToMany
-    @JoinColumn(name = "health_care_delivery_id")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "healthCareDelivery")
     public Set<DeliveryOutcome> getOutcomes()
     {
         return outcomes;
@@ -139,8 +141,7 @@ public class HealthCareDelivery extends AbstractDateDurationEntity
         this.outcomes = outcomes;
     }
 
-    @OneToMany
-    @JoinColumn(name = "health_care_delivery_id")        
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "healthCareDelivery")
     public Set<HealthCareDeliveryBilling> getBillings()
     {
         return billings;
@@ -149,5 +150,17 @@ public class HealthCareDelivery extends AbstractDateDurationEntity
     public void setBillings(final Set<HealthCareDeliveryBilling> billings)
     {
         this.billings = billings;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = HealthCareVisit.PK_COLUMN_NAME)
+    public HealthCareVisit getHealthCareVisit()
+    {
+        return healthCareVisit;
+    }
+
+    public void setHealthCareVisit(final HealthCareVisit healthCareVisit)
+    {
+        this.healthCareVisit = healthCareVisit;
     }
 }

@@ -55,6 +55,9 @@ import java.util.Set;
 @Inheritance(discriminatorValue = "Insurance")
 public class InsuranceProduct extends Product
 {
+    public static final String PK_COLUMN_NAME = Product.PK_COLUMN_NAME;
+
+    private Set<InsuranceProductCoverage> insuranceProductCoverages = new HashSet<InsuranceProductCoverage>();
     private Set<InsurancePlan> insurancePlans = new HashSet<InsurancePlan>();
 
     /**
@@ -89,5 +92,16 @@ public class InsuranceProduct extends Product
             return plan;
         }
         return null;
+    }
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "insuranceProduct")
+    public Set<InsuranceProductCoverage> getInsuranceProductCoverages()
+    {
+        return  insuranceProductCoverages;
+    }
+
+    public void setInsuranceProductCoverages(final Set<InsuranceProductCoverage> insuranceProductCoverages)
+    {
+        this.insuranceProductCoverages = insuranceProductCoverages;
     }
 }

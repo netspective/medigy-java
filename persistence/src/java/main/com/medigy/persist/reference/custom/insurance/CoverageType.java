@@ -49,13 +49,13 @@ import javax.persistence.Id;
 @Entity
 public class CoverageType extends AbstractCustomReferenceEntity
 {
-    // TODO: These are only the major coverage types and each one can be further broken down. I'm not sure if this should be a top level entity.
     public enum Cache implements CachedCustomReferenceEntity
     {
         MAJOR_MEDICAL("MEDICAL"),
         HOSPITALIZATION("HOSPITAL"),
         DENTAL("DENTAL"), /* Percent amount */
-        VISION("VISION");
+        VISION("VISION"),
+        OTHER("OTHER");
 
         private final String code;
         private CoverageType entity;

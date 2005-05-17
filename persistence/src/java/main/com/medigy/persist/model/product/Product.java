@@ -5,6 +5,7 @@ package com.medigy.persist.model.product;
 
 import com.medigy.persist.model.common.AbstractDateDurationEntity;
 import com.medigy.persist.model.org.Organization;
+import com.medigy.persist.reference.custom.product.ProductType;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -19,15 +20,19 @@ import javax.persistence.ManyToOne;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE, discriminatorValue = "General")
 public class Product extends AbstractDateDurationEntity
 {
+    public static final String PK_COLUMN_NAME = "product_id";
+
     private Long productId;
     private String name;
     private String comment;
     private Organization organization;
+    private ProductType type;
 
     private ProductCategory productCategory;
     //private Set<InvoiceItem> invoiceItems = new HashSet<InvoiceItem>();
 
     @Id(generate = GeneratorType.AUTO)
+    @Column(name = PK_COLUMN_NAME)        
     public Long getProductId()
     {
         return productId;
@@ -82,6 +87,18 @@ public class Product extends AbstractDateDurationEntity
     public void setProductCategory(ProductCategory productCategory)
     {
         this.productCategory = productCategory;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = ProductType.PK_COLUMN_NAME)
+    public ProductType getType()
+    {
+        return type;
+    }
+
+    public void setType(final ProductType type)
+    {
+        this.type = type;
     }
 
     /*

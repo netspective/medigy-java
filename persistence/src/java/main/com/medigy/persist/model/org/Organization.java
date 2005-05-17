@@ -202,4 +202,9 @@ public class Organization extends Party
                 "}";
     }
 
+    @Transient
+    public void addProduct(final Product product)
+    {
+        getProducts().add(product);
+    }
 }

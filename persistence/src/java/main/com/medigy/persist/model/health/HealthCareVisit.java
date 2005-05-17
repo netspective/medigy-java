@@ -38,8 +38,10 @@
  */
 package com.medigy.persist.model.health;
 
-import java.util.HashSet;
-import java.util.Set;
+import com.medigy.persist.model.common.AbstractDateDurationEntity;
+import com.medigy.persist.model.party.Facility;
+import com.medigy.persist.model.party.PostalAddress;
+import com.medigy.persist.model.person.Person;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -48,30 +50,41 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.CascadeType;
+import javax.persistence.Transient;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.Date;
 
-import com.medigy.persist.model.common.AbstractDateDurationEntity;
-import com.medigy.persist.model.party.Facility;
-import com.medigy.persist.model.party.PostalAddress;
-import com.medigy.persist.model.person.Person;
-
+/**
+ * A health care visit may have been scheduled for several visit reasons: because of a health care episode
+ * or because of various symptoms.
+ *
+ */
 @Entity
 public class HealthCareVisit  extends AbstractDateDurationEntity
 {
+    public static final String PK_COLUMN_NAME = "visit_id";
+
     private Long healthCareVisitId;
     private Facility facility;
     private Person patient;
     private PostalAddress patientAddress;
 
+    private Date scheduledTime;
+    private Date startTime;
+
     private Set<HealthCareVisitStatus> statuses = new HashSet<HealthCareVisitStatus>();
-    private Set<HealthCareVisitRole> roles = new HashSet<HealthCareVisitRole>();
+    private Set<HealthCareVisitRole> roles = new HashSet<HealthCareVisitRole>();    // scheduler, patient, doctor
     private Set<VisitReason> reasons = new HashSet<VisitReason>();
+    private Set<HealthCareDelivery> healthCareDeliveries = new HashSet<HealthCareDelivery>();
 
     public HealthCareVisit()
     {
     }
 
     @Id(generate = GeneratorType.AUTO)
-    @Column(name = "visit_id")
+    @Column(name = PK_COLUMN_NAME)
     public Long getHealthCareVisitId()
     {
         return healthCareVisitId;
@@ -80,6 +93,34 @@ public class HealthCareVisit  extends AbstractDateDurationEntity
     protected void setHealthCareVisitId(final Long healthCareVisitId)
     {
         this.healthCareVisitId = healthCareVisitId;
+    }
+
+    /**
+     * Gets the start time of the visit
+     * @return
+     */
+    public Date getStartTime()
+    {
+        return startTime;
+    }
+
+    public void setStartTime(final Date startTime)
+    {
+        this.startTime = startTime;
+    }
+
+    /**
+     * Gets the time the appointment was made
+     * @return
+     */
+    public Date getScheduledTime()
+    {
+        return scheduledTime;
+    }
+
+    public void setScheduledTime(final Date scheduledTime)
+    {
+        this.scheduledTime = scheduledTime;
     }
 
     /**
@@ -124,8 +165,7 @@ public class HealthCareVisit  extends AbstractDateDurationEntity
         this.patient = patient;
     }
 
-    @OneToMany
-    @JoinColumn(name = "visit_id")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "visit")
     public Set<HealthCareVisitStatus> getStatuses()
     {
         return statuses;
@@ -136,8 +176,13 @@ public class HealthCareVisit  extends AbstractDateDurationEntity
         this.statuses = statuses;
     }
 
-    @OneToMany
-    @JoinColumn(name = "visit_id")
+    @Transient
+    public void addStatus(final HealthCareVisitStatus status)
+    {
+        this.statuses.add(status);
+    }
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "visit")
     public Set<HealthCareVisitRole> getRoles()
     {
         return roles;
@@ -148,8 +193,7 @@ public class HealthCareVisit  extends AbstractDateDurationEntity
         this.roles = roles;
     }
 
-    @OneToMany
-    @JoinColumn(name = "visit_id")        
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "visit")
     public Set<VisitReason> getReasons()
     {
         return reasons;
@@ -158,5 +202,22 @@ public class HealthCareVisit  extends AbstractDateDurationEntity
     public void setReasons(final Set<VisitReason> reasons)
     {
         this.reasons = reasons;
+    }
+
+    @Transient
+    public void addReason(final VisitReason reason)
+    {
+        this.reasons.add(reason);
+    }
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "healthCareVisit")
+    public Set<HealthCareDelivery> getHealthCareDeliveries()
+    {
+        return healthCareDeliveries;
+    }
+
+    public void setHealthCareDeliveries(final Set<HealthCareDelivery> healthCareDeliveries)
+    {
+        this.healthCareDeliveries = healthCareDeliveries;
     }
 }

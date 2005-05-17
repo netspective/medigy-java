@@ -78,8 +78,8 @@ public class TestCoverage extends TestCase
         HibernateUtil.closeSession();
 
         final Coverage medicalCoverage = (Coverage) HibernateUtil.getSession().load(Coverage.class, coverage.getCoverageId());
-        assertEquals(2, medicalCoverage.getCoverageLevels().size());
-        assertEquals(new Float(10), medicalCoverage.getCoverageLevel(CoverageLevelType.Cache.COPAY.getEntity()).getValue());
-        assertEquals(new Float(80), medicalCoverage.getCoverageLevel(CoverageLevelType.Cache.CONINSURANCE.getEntity()).getValue());
+        assertThat(medicalCoverage.getCoverageLevels().size(), eq(2));
+        assertThat(medicalCoverage.getCoverageLevel(CoverageLevelType.Cache.COPAY.getEntity()).getValue(), eq(new Float(10)));
+        assertThat(medicalCoverage.getCoverageLevel(CoverageLevelType.Cache.CONINSURANCE.getEntity()).getValue(), eq(new Float(80)));
     }
 }

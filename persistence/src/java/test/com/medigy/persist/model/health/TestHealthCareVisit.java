@@ -36,82 +36,19 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.persist.model.insurance;
+package com.medigy.persist.model.health;
 
-import com.medigy.persist.model.common.AbstractTopLevelEntity;
-import com.medigy.persist.reference.custom.insurance.CoverageType;
-import com.medigy.persist.reference.custom.insurance.CoverageLevelType;
+import com.medigy.persist.TestCase;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.GeneratorType;
-import javax.persistence.ManyToOne;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.Transient;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import java.util.Set;
-import java.util.HashSet;
-
-@Entity
-public class Coverage  extends AbstractTopLevelEntity
+public class TestHealthCareVisit extends TestCase
 {
-    public static final String PK_COLUMN_NAME = "coverage_id";
-
-    private Long coverageId;
-    private CoverageType type;
-    private Set<CoverageLevel> coverageLevels = new HashSet<CoverageLevel>();
-
-    @Id(generate = GeneratorType.AUTO)
-    @Column(name = PK_COLUMN_NAME)        
-    public Long getCoverageId()
+    public void testHealthCareVisit()
     {
-        return coverageId;
-    }
+        final HealthCareVisit visit = new HealthCareVisit();
 
-    protected void setCoverageId(final Long coverageId)
-    {
-        this.coverageId = coverageId;
-    }
+        VisitReason reason = new VisitReason();
+        //reason.setDescription();
+        //visit.addReason();
 
-    @ManyToOne
-    @JoinColumn(name = "coverage_type_id")
-    public CoverageType getType()
-    {
-        return type;
-    }
-
-    public void setType(final CoverageType type)
-    {
-        this.type = type;
-    }
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "coverage")
-    public Set<CoverageLevel> getCoverageLevels()
-    {
-        return coverageLevels;
-    }
-
-    public void setCoverageLevels(final Set<CoverageLevel> coverageLevels)
-    {
-        this.coverageLevels = coverageLevels;
-    }
-
-    @Transient
-    public void addCoverageLevel(final CoverageLevel level)
-    {
-        getCoverageLevels().add(level);
-    }
-
-    @Transient
-    public CoverageLevel getCoverageLevel(final CoverageLevelType type)
-    {
-        for (CoverageLevel level : coverageLevels)
-        {
-            if (level.getType().equals(type))
-                return level;
-        }
-        return null;
     }
 }

@@ -41,6 +41,7 @@ package com.medigy.persist;
 import com.medigy.persist.model.contact.TestGeographicBoundary;
 import com.medigy.persist.model.insurance.TestCoverage;
 import com.medigy.persist.model.insurance.TestInsurance;
+import com.medigy.persist.model.insurance.TestInsuranceProductCoverage;
 import com.medigy.persist.model.invoice.TestInvoice;
 import com.medigy.persist.model.org.TestOrganization;
 import com.medigy.persist.model.person.TestPerson;
@@ -58,6 +59,7 @@ public class TestSuite extends junit.framework.TestSuite
         
         // test the model classes
         suite.addTest(new junit.framework.TestSuite(TestInsurance.class));
+        suite.addTest(new junit.framework.TestSuite(TestInsuranceProductCoverage.class));
         suite.addTest(new junit.framework.TestSuite(TestHealthCareReferral.class));
         //suite.addTest(new junit.framework.TestSuite(TestPartyRelationship.class));
         // TODO: There's a possible  dbunit dependency or PK generation problem with TestCareProviderSelection
