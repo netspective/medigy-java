@@ -43,22 +43,10 @@
  */
 package org.sns.tool.hibernate.dbdd;
 
-import java.io.File;
-import java.io.PrintStream;
+import org.sns.tool.hibernate.struct.TableStructureNode;
+import org.w3c.dom.Element;
 
-import org.hibernate.cfg.Configuration;
-import org.sns.tool.hibernate.struct.TableStructure;
-
-public interface DatabaseDesignGeneratorConfig
+public interface MappedClassDocumentationProvider
 {
-    public Configuration getHibernateConfiguration();
-    public String getDocumentTitle();
-    public TableStructure getTableStructure();
-    public File getDocBookFile();
-    public File getAssociatedJavaDocHome();
-    public DatabaseDiagramRenderer getDatabaseDiagramRenderer();
-    public MappedClassDocumentationProviders getMappedClassDocumentationProviders();
-    public String getGraphvizDiagramOutputType();
-    public String getGraphVizDotCommandSpec();
-    public PrintStream getGraphVizDotLogOutputStream();
+    public void provideDocumentationFragments(DatabaseDesignGeneratorConfig generator, TableStructureNode node, Element parentElement);
 }

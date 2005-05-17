@@ -62,6 +62,7 @@ public class DatabaseDesignGeneratorTask extends Task
     private Class hibernateConfigClass;
     private Class structureRulesClass;
     private Class databaseDiagramRendererClass;
+    private Class mappedClassDocumentationProvidersClass;
     private String hibernateConfigFile;
     private String graphvizDotCmdSpec;
     private String graphvizDotOutputType = "gif";
@@ -106,12 +107,14 @@ public class DatabaseDesignGeneratorTask extends Task
                 configuration.setProperty(Environment.DIALECT, dialectClass);
 
             final DatabaseDiagramRenderer ddr = (DatabaseDiagramRenderer) databaseDiagramRendererClass.newInstance();
+            final MappedClassDocumentationProviders mcdp = (MappedClassDocumentationProviders) mappedClassDocumentationProvidersClass.newInstance();
 
             log("Using Hibernate Configuration " + configuration.getClass());
             log("Using Structure " + structure.getClass());
             log("Using Structure Rules " + structure.getRules().getClass());
             log("Using Dialect " + configuration.getProperty(Environment.DIALECT));
             log("Using Renderer " + ddr.getClass());
+            log("Using Mapped Class Documentation Providers " + mcdp.getClass());
 
             final ByteArrayOutputStream graphvizCmdOutputStreamBuffer = new ByteArrayOutputStream();
             final PrintStream graphvizCmdOutputStream = new PrintStream(graphvizCmdOutputStreamBuffer);
@@ -151,6 +154,11 @@ public class DatabaseDesignGeneratorTask extends Task
                 public DatabaseDiagramRenderer getDatabaseDiagramRenderer()
                 {
                     return ddr;
+                }
+
+                public MappedClassDocumentationProviders getMappedClassDocumentationProviders()
+                {
+                    return mcdp;
                 }
 
                 public String getGraphvizDiagramOutputType()
@@ -219,6 +227,11 @@ public class DatabaseDesignGeneratorTask extends Task
     public void setDatabaseDiagramRendererClass(final String databaseDiagramRendererClass) throws ClassNotFoundException
     {
         this.databaseDiagramRendererClass = Class.forName(databaseDiagramRendererClass);
+    }
+
+    public void setMappedClassDocumentationProvidersClass(final String mappedClassDocumentationProvidersClass) throws ClassNotFoundException
+    {
+        this.mappedClassDocumentationProvidersClass = Class.forName(mappedClassDocumentationProvidersClass);
     }
 
     public void setDocumentTitle(String documentTitle)

@@ -229,6 +229,11 @@ public class DatabaseDesignGenerator
             overview.appendChild(doc.createTextNode(mappedClass.getName()));
         overview.appendChild(doc.createTextNode("."));
 
+        // allow tables to append custom documentation if required
+        final MappedClassDocumentationProvider mcdp = generatorConfig.getMappedClassDocumentationProviders().getMappedClassDocumentationProvider(generatorConfig, tableStructNode);
+        if(mcdp != null)
+            mcdp.provideDocumentationFragments(generatorConfig, tableStructNode, tableStructSectionElem);
+
         if(category.isGenerateDiagrams())
         {
             final Set diagramTables = new HashSet();
@@ -263,6 +268,8 @@ public class DatabaseDesignGenerator
             imageDataElem.setAttribute("fileref", erdBaseName + "." + generatorConfig.getGraphvizDiagramOutputType().toLowerCase());
             tableStructSectionElem.appendChild(mediaObjectElem);
         }
+
+
 
         tableStructSectionElem.appendChild(createColumnDocumentationTable(doc, tableStructNode));
         for(int i = 0; i < tableStructNode.getChildNodes().length; i++)

@@ -70,8 +70,9 @@
               databaseDiagramRendererClass="com.medigy.tool.persist.hibernate.dbdd.MedigyDatabaseDiagramRenderer"
               graphvizDotCmdSpec="${graphviz.dot.exec.executable} ${graphviz.dot.exec.arg.cmd}"
               documentTitle="Medigy Data Model"
-              associatedJavaDocHome="../../javadoc"
+              associatedJavaDocHome="../javadoc"
               graphvizDotOutputType="GIF"
+              mappedClassDocumentationProvidersClass="com.medigy.tool.persist.hibernate.dbdd.MedigyMappedClassDocumentationProviders"
             />
     </target>
 

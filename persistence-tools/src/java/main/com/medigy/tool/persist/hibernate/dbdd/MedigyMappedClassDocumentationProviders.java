@@ -41,24 +41,29 @@
 /*
  * Copyright (c) 2005 Your Corporation. All Rights Reserved.
  */
-package org.sns.tool.hibernate.dbdd;
+package com.medigy.tool.persist.hibernate.dbdd;
 
-import java.io.File;
-import java.io.PrintStream;
+import org.sns.tool.hibernate.dbdd.DatabaseDesignGeneratorConfig;
+import org.sns.tool.hibernate.dbdd.MappedClassDocumentationProvider;
+import org.sns.tool.hibernate.dbdd.MappedClassDocumentationProviders;
+import org.sns.tool.hibernate.struct.TableStructureNode;
 
-import org.hibernate.cfg.Configuration;
-import org.sns.tool.hibernate.struct.TableStructure;
+import com.medigy.persist.reference.ReferenceEntity;
+import com.medigy.persist.reference.custom.CustomReferenceEntity;
 
-public interface DatabaseDesignGeneratorConfig
+public class MedigyMappedClassDocumentationProviders implements MappedClassDocumentationProviders
 {
-    public Configuration getHibernateConfiguration();
-    public String getDocumentTitle();
-    public TableStructure getTableStructure();
-    public File getDocBookFile();
-    public File getAssociatedJavaDocHome();
-    public DatabaseDiagramRenderer getDatabaseDiagramRenderer();
-    public MappedClassDocumentationProviders getMappedClassDocumentationProviders();
-    public String getGraphvizDiagramOutputType();
-    public String getGraphVizDotCommandSpec();
-    public PrintStream getGraphVizDotLogOutputStream();
+    private MappedClassDocumentationProvider refDocProvider = new MedigyReferenceDocumentationProvider();
+    private MappedClassDocumentationProvider customRefDocProvider = new MedigyCustomReferenceDocumentationProvider();
+
+    public MappedClassDocumentationProvider getMappedClassDocumentationProvider(DatabaseDesignGeneratorConfig ddgc, TableStructureNode node)
+    {
+        if(ReferenceEntity.class.isAssignableFrom(node.getPersistentClass().getMappedClass()))
+            return refDocProvider;
+
+        if(CustomReferenceEntity.class.isAssignableFrom(node.getPersistentClass().getMappedClass()))
+            return customRefDocProvider;
+
+        return null;
+    }
 }
