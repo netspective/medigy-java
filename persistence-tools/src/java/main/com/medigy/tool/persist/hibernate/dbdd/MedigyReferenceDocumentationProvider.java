@@ -102,7 +102,7 @@ public class MedigyReferenceDocumentationProvider implements MappedClassDocument
 
                 final Element idElem = (Element) rowElem.appendChild(doc.createElement("entry"));
                 idElem.setAttribute("role", "domain-value-id");
-                idElem.appendChild(doc.createTextNode(row.getId()));
+                idElem.appendChild(doc.createTextNode(row.getCode()));
 
                 final Element labelElem = (Element) rowElem.appendChild(doc.createElement("entry"));
                 labelElem.setAttribute("role", "domain-value-label");

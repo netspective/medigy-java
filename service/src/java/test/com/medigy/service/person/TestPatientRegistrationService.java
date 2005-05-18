@@ -39,6 +39,12 @@
 package com.medigy.service.person;
 
 
+import java.util.Date;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import com.medigy.persist.TestCase;
 import com.medigy.persist.model.person.Person;
 import com.medigy.persist.reference.custom.insurance.InsurancePolicyType;
 import com.medigy.persist.reference.custom.party.PartyRelationshipType;
@@ -48,13 +54,8 @@ import com.medigy.persist.reference.type.LanguageType;
 import com.medigy.persist.reference.type.MaritalStatusType;
 import com.medigy.persist.util.HibernateUtil;
 import com.medigy.service.ServiceLocator;
-import com.medigy.persist.TestCase;
 import com.medigy.service.dto.person.RegisterPatientParameters;
 import com.medigy.service.dto.person.RegisteredPatient;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import java.util.Date;
 
 public class TestPatientRegistrationService extends TestCase
 {
@@ -94,12 +95,12 @@ public class TestPatientRegistrationService extends TestCase
 
                         public String getGender()
                         {
-                            return GenderType.Cache.MALE.getId();
+                            return GenderType.Cache.MALE.getCode();
                         }
 
                         public String getMaritalStatus()
                         {
-                            return MaritalStatusType.Cache.SINGLE.getId();
+                            return MaritalStatusType.Cache.SINGLE.getCode();
                         }
 
                         public String getEmployerName()
@@ -129,7 +130,7 @@ public class TestPatientRegistrationService extends TestCase
 
                         public String[] getLanguageCodes()
                         {
-                            return new String[] { LanguageType.Cache.ENGLISH.getId(), LanguageType.Cache.SPANISH.getId() };
+                            return new String[] { LanguageType.Cache.ENGLISH.getCode(), LanguageType.Cache.SPANISH.getCode() };
                         }
 
                         public String getDriversLicenseNumber()
