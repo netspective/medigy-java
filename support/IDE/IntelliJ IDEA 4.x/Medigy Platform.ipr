@@ -274,6 +274,7 @@
         <root url="jar://$PROJECT_DIR$/../../../common/depend/lib/test/junit-3.8.1.jar!/" />
         <root url="jar://$PROJECT_DIR$/../../../common/depend/lib/test/emma-2.0.4217.jar!/" />
         <root url="jar://$PROJECT_DIR$/../../../common/depend/lib/test/emma_ant-2.0.4217.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../../../common/depend/lib/test/jmock-1.0.1.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
