@@ -82,6 +82,7 @@ public class MedigyCustomReferenceDocumentationProvider implements MappedClassDo
         final Element tableColumnsHeadRowElem = (Element) tableColumnsHeadElem.appendChild(doc.createElement("row"));
         tableColumnsHeadRowElem.appendChild(doc.createElement("entry")).appendChild(doc.createTextNode("Java Constant"));
         tableColumnsHeadRowElem.appendChild(doc.createElement("entry")).appendChild(doc.createTextNode("Code"));
+        tableColumnsHeadRowElem.appendChild(doc.createElement("entry")).appendChild(doc.createTextNode("Label"));
         tableGroupElem.setAttribute("cols", Integer.toString(tableColumnsHeadRowElem.getChildNodes().getLength()));
 
         final Element tableColumnsBodyElem = (Element) tableGroupElem.appendChild(doc.createElement("tbody"));
@@ -102,6 +103,10 @@ public class MedigyCustomReferenceDocumentationProvider implements MappedClassDo
                 final Element codeElem = (Element) rowElem.appendChild(doc.createElement("entry"));
                 codeElem.setAttribute("role", "domain-value-code");
                 codeElem.appendChild(doc.createTextNode(row.getCode()));
+
+                final Element labelElem = (Element) rowElem.appendChild(doc.createElement("entry"));
+                labelElem.setAttribute("role", "domain-value-label");
+                labelElem.appendChild(doc.createTextNode(row.getLabel()));
             }
         }
     }
