@@ -38,15 +38,15 @@
  */
 package com.medigy.persist.reference.custom.insurance;
 
+import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
+import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
+import com.medigy.persist.reference.custom.CustomReferenceEntity;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-
-import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
-import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
-import com.medigy.persist.reference.custom.CustomReferenceEntity;
 
 @Entity
 @Table(name = "Ins_Policy_Type")
@@ -54,15 +54,17 @@ public class InsurancePolicyType extends AbstractCustomReferenceEntity
 {
     public enum Cache implements CachedCustomReferenceEntity
     {
-        INDIVIDUAL_INSURANCE_POLICY("IND"),
-        GROUP_INSURANCE_POLICY("GROUP");
+        INDIVIDUAL_INSURANCE_POLICY("IND", "Individual"),
+        GROUP_INSURANCE_POLICY("GROUP", "Group");
 
+        private final String label;
         private final String code;
         private InsurancePolicyType entity;
 
-        Cache(final String code)
+        Cache(final String code, final String label)
         {
             this.code = code;
+            this.label = label;
         }
 
         public String getCode()
@@ -78,6 +80,11 @@ public class InsurancePolicyType extends AbstractCustomReferenceEntity
         public void setEntity(final CustomReferenceEntity entity)
         {
             this.entity = (InsurancePolicyType) entity;
+        }
+
+        public String getLabel()
+        {
+            return label;
         }
 
         public static InsurancePolicyType getEntity(final String code)

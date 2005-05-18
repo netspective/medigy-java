@@ -41,8 +41,11 @@ package com.medigy.persist.model.data;
 import com.medigy.persist.model.party.Party;
 import com.medigy.persist.model.session.ProcessSession;
 import com.medigy.persist.model.session.SessionManager;
+import com.medigy.persist.reference.CachedReferenceEntity;
+import com.medigy.persist.reference.ReferenceEntity;
 import com.medigy.persist.reference.custom.CachedCustomHierarchyReferenceEntity;
 import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
+import com.medigy.persist.reference.custom.CustomReferenceEntity;
 import com.medigy.persist.util.HibernateConfiguration;
 import com.medigy.persist.util.HibernateUtil;
 import org.apache.commons.logging.Log;
@@ -54,9 +57,9 @@ import java.beans.BeanInfo;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
-import java.util.HashMap;
 
 public class EntitySeedDataPopulator
 {
@@ -86,6 +89,23 @@ public class EntitySeedDataPopulator
         globalParty = new Party(Party.SYS_GLOBAL_PARTY_NAME);
         HibernateUtil.getSession().save(globalParty);
 
+        for(final Map.Entry<Class, Class> entry : configuration.getReferenceEntitiesAndCachesMap().entrySet())
+        {
+            final Class aClass = entry.getKey();
+            CachedReferenceEntity[] cachedEntities = (CachedReferenceEntity[]) entry.getValue().getEnumConstants();
+            Object[][] data = new Object[cachedEntities.length][2];
+            int i=0;
+            for(final CachedReferenceEntity c : cachedEntities)
+            {
+                data[i][0] = c.getCode();
+                data[i][1] = c.getLabel(); // LABEL
+                i++;
+            }
+            if (log.isInfoEnabled())
+                log.info(aClass.getCanonicalName() + " cached enums addded.");
+            populateCachedReferenceEntities(HibernateUtil.getSession(), aClass, cachedEntities, new String[] {"code", "label"}, data);
+        }
+
         for(final Map.Entry<Class, Class> entry : configuration.getCustomReferenceEntitiesAndCachesMap().entrySet())
         {
             final Class aClass = entry.getKey();
@@ -95,7 +115,7 @@ public class EntitySeedDataPopulator
             for(final CachedCustomReferenceEntity c : cachedEntities)
             {
                 data[i][0] = c.getCode();
-                data[i][1] = c.getCode(); // LABEL
+                data[i][1] = c.getLabel(); // LABEL
                 data[i][2] = globalParty;
 
                 if (c instanceof CachedCustomHierarchyReferenceEntity)
@@ -105,14 +125,16 @@ public class EntitySeedDataPopulator
                 i++;
             }
             if (log.isInfoEnabled())
-                log.info(aClass.getCanonicalName() + " cached enums addded.");
-            populateEntity(HibernateUtil.getSession(), aClass, cachedEntities, new String[] {"code", "label", "party", "parentEntity"}, data);
+                log.info(aClass.getCanonicalName() + " cached custom enums addded.");
+            populateCachedCustomReferenceEntities(HibernateUtil.getSession(), aClass, cachedEntities, new String[] {"code", "label", "party", "parentEntity"}, data);
         }
+
+
         HibernateUtil.commitTransaction();
         SessionManager.getInstance().popActiveSession();
     }
 
-    protected void  populateEntity(final Session session,
+    protected void  populateCachedCustomReferenceEntities(final Session session,
                                    final Class entityClass,
                                    final CachedCustomReferenceEntity[] cachedEntities,
                                    final String[] propertyList,
@@ -149,6 +171,49 @@ public class EntitySeedDataPopulator
                 }
                 entityMapByCache.put(cachedEntities[i], entityObject);
                 session.save(entityObject);
+                cachedEntities[i].setEntity((CustomReferenceEntity) entityObject);
+            }
+        }
+        catch (Exception e)
+        {
+            log.error(e);
+            throw new HibernateException(e);
+        }
+    }
+
+    protected void  populateCachedReferenceEntities(final Session session,
+                                   final Class entityClass,
+                                   final CachedReferenceEntity[] cachedEntities,
+                                   final String[] propertyList,
+                                   final Object[][] data)  throws HibernateException
+    {
+        try
+        {
+            final Hashtable pdsByName = new Hashtable();
+            final BeanInfo beanInfo = Introspector.getBeanInfo(entityClass);
+            final PropertyDescriptor[] descriptors = beanInfo.getPropertyDescriptors();
+            for (int i = 0; i < descriptors.length; i++)
+            {
+                final PropertyDescriptor descriptor = descriptors[i];
+                if (descriptor.getWriteMethod() != null)
+                    pdsByName.put(descriptor.getName(), descriptor.getWriteMethod());
+            }
+
+            Map entityMapByCache = new HashMap<CachedReferenceEntity, Object>();
+            for (int i = 0; i < data.length; i++)
+            {
+                final Object entityObject = entityClass.newInstance();
+                for (int j = 0; j < propertyList.length; j++)
+                {
+                    final Method setter = (Method) pdsByName.get(propertyList[j]);
+                    if (setter != null && data[i][j] != null)
+                    {
+                        setter.invoke(entityObject, new Object[] {data[i][j]});
+                    }
+                }
+                entityMapByCache.put(cachedEntities[i], entityObject);
+                session.save(entityObject);
+                cachedEntities[i].setEntity((ReferenceEntity) entityObject);
             }
         }
         catch (Exception e)

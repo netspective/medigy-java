@@ -17,16 +17,18 @@ public class CoverageLevelBasisType extends AbstractCustomReferenceEntity
 {
     public enum Cache implements CachedCustomReferenceEntity
     {
-        PER_INCIDENT("PER_INC"),
-        PER_YEAR("PER_YR"),
-        PER_PERSON("PER_PERSON");
+        PER_INCIDENT("PER_INC", "Per Incident"),
+        PER_YEAR("PER_YR", "Per Year"),
+        PER_PERSON("PER_PERSON", "Per Person");
 
+        private final String label;
         private final String code;
         private CoverageLevelBasisType entity;
 
-        Cache(final String code)
+        Cache(final String code, final String label)
         {
             this.code = code;
+            this.label = label;
         }
 
         public String getCode()
@@ -42,6 +44,11 @@ public class CoverageLevelBasisType extends AbstractCustomReferenceEntity
         public void setEntity(final CustomReferenceEntity entity)
         {
             this.entity = (CoverageLevelBasisType) entity;
+        }
+
+        public String getLabel()
+        {
+            return label;
         }
     }
 

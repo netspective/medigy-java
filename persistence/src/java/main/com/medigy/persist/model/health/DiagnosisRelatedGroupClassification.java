@@ -38,6 +38,10 @@
  */
 package com.medigy.persist.model.health;
 
+import com.medigy.persist.model.claim.ClaimServiceCode;
+import com.medigy.persist.model.common.AbstractTopLevelEntity;
+import com.medigy.persist.reference.custom.health.DiagnosisType;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
@@ -46,21 +50,19 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.medigy.persist.model.claim.ClaimServiceCode;
-import com.medigy.persist.model.common.AbstractTopLevelEntity;
-import com.medigy.persist.reference.custom.health.DiagnosisType;
-
 @Entity
 @Table(name = "Diagnosis_Rel_Grp_Class")
 public class DiagnosisRelatedGroupClassification extends AbstractTopLevelEntity
 {
+    public static final String PK_COLUMN_NAME = "diagnosis_rel_grp_class_id";
+
     private Long id;
     private DiagnosisType diagnosisType;
     private DiagnosisRelatedGroup group;
     private ClaimServiceCode claimServiceCode;
 
     @Id(generate = GeneratorType.AUTO)
-    @Column(name = "diagnosis_rel_grp_class_id")
+    @Column(name = PK_COLUMN_NAME)
     public Long getId()
     {
         return id;
@@ -84,7 +86,7 @@ public class DiagnosisRelatedGroupClassification extends AbstractTopLevelEntity
     }
 
     @ManyToOne
-    @JoinColumn(name = "diagnosis_rel_grp_id")
+    @JoinColumn(name = DiagnosisRelatedGroup.PK_COLUMN_NAME)
     public DiagnosisRelatedGroup getGroup()
     {
         return group;
@@ -96,7 +98,7 @@ public class DiagnosisRelatedGroupClassification extends AbstractTopLevelEntity
     }
 
     @ManyToOne
-    @JoinColumn(name = "claim_service_code_id")
+    @JoinColumn(name = ClaimServiceCode.PK_COLUMN_NAME)
     public ClaimServiceCode getClaimServiceCode()
     {
         return claimServiceCode;

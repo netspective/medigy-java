@@ -31,6 +31,12 @@ public class TestInsuranceProductCoverage extends TestCase
         final Coverage coverage = new Coverage();
         coverage.setType(CoverageType.Cache.MAJOR_MEDICAL.getEntity());
 
+        final InsuranceProductCoverage ipc = new InsuranceProductCoverage();
+        ipc.setCoverage(coverage);
+        ipc.setInsuranceProduct(ppoProduct);
+        ppoProduct.addCoverageRelationship(ipc);
+        coverage.addInsuranceProductRelationship(ipc);
+
         CoverageLevel copay = new CoverageLevel();
         copay.setType(CoverageLevelType.Cache.COPAY.getEntity());
         copay.setValue(new Float(10));
@@ -49,13 +55,6 @@ public class TestInsuranceProductCoverage extends TestCase
 
         HibernateUtil.getSession().save(coverage);
 
-        final InsuranceProductCoverage ipc = new InsuranceProductCoverage();
-        ipc.setCoverage(coverage);
-        ipc.setInsuranceProduct(ppoProduct);
-        ppoProduct.addCoverageRelationship(ipc);
-        coverage.addInsuranceProductRelationship(ipc);
-
-        HibernateUtil.getSession().save(ipc);
         HibernateUtil.getSession().flush();
         HibernateUtil.closeSession();
 

@@ -43,69 +43,68 @@
  */
 package com.medigy.persist.reference;
 
-import java.io.Serializable;
-
-import javax.persistence.Id;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import javax.persistence.Id;
+import java.io.Serializable;
 
 public abstract class AbstractReferenceEntity implements ReferenceEntity, Serializable, Comparable
 {
     private static final Log log = LogFactory.getLog(AbstractReferenceEntity.class);
 
-    private String typeId;
-    private String typeLabel;
-    private String typeDescription;
+    private String code;
+    private String label;
+    private String description;
 
     @Id
-    public String getTypeId()
+    public String getCode()
     {
-        return typeId;
+        return code;
     }
 
-    protected void setTypeId(final String typeId)
+    public void setCode(final String code)
     {
-        this.typeId = typeId;
+        this.code = code;
     }
 
-    public String getTypeLabel()
+    public String getLabel()
     {
-        return typeLabel;
+        return label;
     }
 
-    protected void setTypeLabel(final String typeLabel)
+    public void setLabel(final String label)
     {
-        this.typeLabel = typeLabel;
+        this.label = label;
     }
 
-    public String getTypeDescription()
+    public String getDescription()
     {
-        return typeDescription;
+        return description;
     }
 
-    protected void setTypeDescription(final String typeDescription)
+    public void setDescription(final String description)
     {
-        this.typeDescription = typeDescription;
+        this.description = description;
     }
 
     public int hashCode()
     {
-        return typeId != null ? typeId.hashCode() : super.hashCode();
+        return code != null ? code.hashCode() : super.hashCode();
     }
 
     public boolean equals(Object o)
     {
         if(o == this) return true;
         if(! (o instanceof ReferenceEntity)) return false;
-        return getTypeId().equals(((ReferenceEntity) o).getTypeId());
+        return getCode().equals(((ReferenceEntity) o).getCode());
     }
 
     public int compareTo(Object o)
     {
         if(o == this) return 0;
         if(! (o instanceof ReferenceEntity)) return -1;
-        return getTypeId().compareTo((String) ((ReferenceEntity) o).getTypeId());
+        return getCode().compareTo((String) ((ReferenceEntity) o).getCode());
     }
 }
 

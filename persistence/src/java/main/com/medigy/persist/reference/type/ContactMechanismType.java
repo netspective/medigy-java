@@ -43,12 +43,12 @@
  */
 package com.medigy.persist.reference.type;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-
 import com.medigy.persist.reference.AbstractReferenceEntity;
 import com.medigy.persist.reference.CachedReferenceEntity;
 import com.medigy.persist.reference.ReferenceEntity;
+
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "Contact_Mech_Type")
@@ -78,7 +78,7 @@ public class ContactMechanismType extends AbstractReferenceEntity
         }
 
 
-        public String getId()
+        public String getCode()
         {
             return code;
         }

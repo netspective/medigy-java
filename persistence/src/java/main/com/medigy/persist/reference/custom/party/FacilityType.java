@@ -39,36 +39,38 @@
  */
 package com.medigy.persist.reference.custom.party;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratorType;
-import javax.persistence.Id;
-
 import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
 import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
 import com.medigy.persist.reference.custom.CustomReferenceEntity;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratorType;
+import javax.persistence.Id;
 
 @Entity
 public class FacilityType extends AbstractCustomReferenceEntity
 {
     public enum Cache implements CachedCustomReferenceEntity
     {
-        WAREHOUSE("WARE"),
-        BUILDING("BLDG"),
-        PLANT("PLANT"),
-        FLOOR("FLOOR"),
-        ROOM("ROOM"),
-        OFFICE("OFFICE"),
+        WAREHOUSE("WARE", "Warehouse"),
+        BUILDING("BLDG", "Building"),
+        PLANT("PLANT", "Plant"),
+        FLOOR("FLOOR", "Floor"),
+        ROOM("ROOM", "Room"),
+        OFFICE("OFFICE", "Office"),
 
-        HOSPITAL("HOSPITAL"),
-        CLINIC("CLINIC"),
-        MEDICAL_BUILDING("MED_BLDG");
+        HOSPITAL("HOSPITAL", "Hospital"),
+        CLINIC("CLINIC", "Clinic"),
+        MEDICAL_BUILDING("MED_BLDG", "Medical Building");
 
+        private final String label;
         private final String code;
         private FacilityType entity;
 
-        Cache(final String code)
+        Cache(final String code, final String label)
         {
             this.code = code;
+            this.label = label;
         }
 
         public String getCode()
@@ -84,6 +86,11 @@ public class FacilityType extends AbstractCustomReferenceEntity
         public void setEntity(final CustomReferenceEntity entity)
         {
             this.entity = (FacilityType) entity;
+        }
+
+        public String getLabel()
+        {
+            return label;
         }
     }
 

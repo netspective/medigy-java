@@ -38,15 +38,15 @@
  */
 package com.medigy.persist.reference.custom.party;
 
+import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
+import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
+import com.medigy.persist.reference.custom.CustomReferenceEntity;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-
-import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
-import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
-import com.medigy.persist.reference.custom.CustomReferenceEntity;
 
 @Entity
 @Table(name = "Contact_Mech_Purpose_Type")
@@ -54,23 +54,25 @@ public class ContactMechanismPurposeType  extends AbstractCustomReferenceEntity
 {
     public enum Cache implements CachedCustomReferenceEntity
     {
-        HOME_PHONE("Home Phone"),
-        HOME_ADDRESS("Home Address"),
-        HOME_EMAIL("Home Email"),
-        WORK_PHONE("Work Phone"),
-        WORK_ADDRESS("Work Address"),
-        WORK_EMAIL("Work Email"),
-        PERSONAL_EMAIL("Personal Email"),
-        FAX_NUMBER("Fax Number"),
-        MAIN_OFFICE_NUMBER("Main office number"),
-        SECONDARY_OFFICE_NUMBER("Secondary office number");
+        HOME_PHONE("HOME_PH", "Home Phone"),
+        HOME_ADDRESS("HOME_ADDR", "Home Address"),
+        HOME_EMAIL("HOME_EMAIL", "Home Email"),
+        WORK_PHONE("WORK_PH", "Work Phone"),
+        WORK_ADDRESS("WORK_ADDR", "Work Address"),
+        WORK_EMAIL("WORK_EMAIL", "Work Email"),
+        PERSONAL_EMAIL("EMAIL", "Personal Email"),
+        FAX_NUMBER("FAX", "Fax Number"),
+        MAIN_OFFICE_NUMBER("MAIN_PH", "Main office number"),
+        SECONDARY_OFFICE_NUMBER("SEC_PH", "Secondary office number");
 
+        private final String label;
         private final String code;
         private ContactMechanismPurposeType entity;
 
-        Cache(final String code)
+        Cache(final String code, final String label)
         {
             this.code = code;
+            this.label = label;
         }
 
         public String getCode()
@@ -86,6 +88,11 @@ public class ContactMechanismPurposeType  extends AbstractCustomReferenceEntity
         public void setEntity(final CustomReferenceEntity entity)
         {
             this.entity = (ContactMechanismPurposeType) entity;
+        }
+
+        public String getLabel()
+        {
+            return label;
         }
 
         public static ContactMechanismPurposeType getEntity(String code)

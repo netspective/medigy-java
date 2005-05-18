@@ -45,7 +45,7 @@ package com.medigy.persist.reference;
 
 public interface ReferenceEntity
 {
-    public String getTypeId();
-    public String getTypeLabel();
-    public String getTypeDescription();
+    public String getCode();
+    public String getLabel();
+    public String getDescription();
 }

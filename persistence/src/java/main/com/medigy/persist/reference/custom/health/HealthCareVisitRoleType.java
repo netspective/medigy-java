@@ -38,18 +38,20 @@
  */
 package com.medigy.persist.reference.custom.health;
 
+import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
 
-import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
-
 @Entity
 public class HealthCareVisitRoleType extends AbstractCustomReferenceEntity
 {
+    public static final String PK_COLUMN_NAME = "visit_role_type_id";
+
     @Id(generate = GeneratorType.AUTO)
-    @Column(name = "visit_role_type_id")        
+    @Column(name = PK_COLUMN_NAME)        
     public Long getHealthCareVisitRoleTypeId()
     {
         return super.getSystemId();

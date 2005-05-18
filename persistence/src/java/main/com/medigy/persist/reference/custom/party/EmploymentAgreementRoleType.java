@@ -38,14 +38,14 @@
  */
 package com.medigy.persist.reference.custom.party;
 
+import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
+import com.medigy.persist.reference.custom.CustomReferenceEntity;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-
-import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
-import com.medigy.persist.reference.custom.CustomReferenceEntity;
 
 @Entity
 @Table(name = "Emp_Agree_Role_Type")
@@ -53,15 +53,17 @@ public class EmploymentAgreementRoleType  extends AgreementRoleType
 {
     public enum Cache implements CachedCustomReferenceEntity
     {
-        EMPLOYEE("EMPLOYEE"),
-        EMPLOYER("EMPLOYER");
+        EMPLOYEE("EMPLOYEE", "Employee"),
+        EMPLOYER("EMPLOYER", "Employer");
 
+        private final String label;
         private final String code;
         private EmploymentAgreementRoleType entity;
 
-        Cache(final String code)
+        Cache(final String code, final String label)
         {
             this.code = code;
+            this.label = label;
         }
 
         public String getCode()
@@ -77,6 +79,11 @@ public class EmploymentAgreementRoleType  extends AgreementRoleType
         public void setEntity(final CustomReferenceEntity entity)
         {
             this.entity = (EmploymentAgreementRoleType) entity;
+        }
+
+        public String getLabel()
+        {
+            return label;
         }
     }
 

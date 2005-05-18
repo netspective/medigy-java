@@ -54,18 +54,20 @@ public class InsurancePolicyRoleType  extends AgreementRoleType
 {
     public enum Cache implements CachedCustomReferenceEntity
     {
-        INSURANCE_PROVIDER("INS_PROV"),
-        INSURANCE_PROVIDER_AGENT("INS_PROV_AGENT"),
-        INSURED_CONTRACT_HOLDER("INS_IND"),
-        INSURED_DEPENDENT("INS_DEP"),
-        HEALTH_CARE_PRACTITIONER("HC");
+        INSURANCE_PROVIDER("INS_PROV", "Insurance Provider"),
+        INSURANCE_PROVIDER_AGENT("INS_PROV_AGENT", "Agent"),
+        INSURED_CONTRACT_HOLDER("INS_IND", "Contract Holder"),
+        INSURED_DEPENDENT("INS_DEP", "Dependent"),
+        HEALTH_CARE_PRACTITIONER("HC", "Practitioner");
 
+        private final String label;
         private final String code;
         private InsurancePolicyRoleType entity;
 
-        Cache(final String code)
+        Cache(final String code, final String label)
         {
             this.code = code;
+            this.label = label;
         }
 
         public String getCode()
@@ -81,6 +83,11 @@ public class InsurancePolicyRoleType  extends AgreementRoleType
         public void setEntity(final CustomReferenceEntity entity)
         {
             this.entity = (InsurancePolicyRoleType) entity;
+        }
+
+        public String getLabel()
+        {
+            return label;
         }
     }
 

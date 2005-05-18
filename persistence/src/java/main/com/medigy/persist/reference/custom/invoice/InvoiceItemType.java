@@ -38,15 +38,15 @@
  */
 package com.medigy.persist.reference.custom.invoice;
 
+import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
+import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
+import com.medigy.persist.reference.custom.CustomReferenceEntity;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-
-import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
-import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
-import com.medigy.persist.reference.custom.CustomReferenceEntity;
 
 @Entity
 @Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"code", "party_id"})})
@@ -54,16 +54,18 @@ public class InvoiceItemType extends AbstractCustomReferenceEntity
 {
     public enum Cache implements CachedCustomReferenceEntity
     {
-        SHIPPING("SHIP"),
-        SALES_TAX("TAX"),
-        FEE("FEE");
+        SHIPPING("SHIP", "Shipping"),
+        SALES_TAX("TAX", "Sales Tax"),
+        FEE("FEE", "Fee");
 
+        private final String label;
         private final String code;
         private InvoiceItemType entity;
 
-        Cache(final String code)
+        Cache(final String code, final String label)
         {
             this.code = code;
+            this.label = label;
         }
 
         public String getCode()
@@ -79,6 +81,11 @@ public class InvoiceItemType extends AbstractCustomReferenceEntity
         public void setEntity(final CustomReferenceEntity entity)
         {
             this.entity = (InvoiceItemType) entity;
+        }
+
+        public String getLabel()
+        {
+            return label;
         }
     }
 

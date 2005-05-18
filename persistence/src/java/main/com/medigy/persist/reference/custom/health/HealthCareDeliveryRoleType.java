@@ -38,14 +38,14 @@
  */
 package com.medigy.persist.reference.custom.health;
 
+import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
+import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
+import com.medigy.persist.reference.custom.CustomReferenceEntity;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-
-import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
-import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
-import com.medigy.persist.reference.custom.CustomReferenceEntity;
 
 @Entity
 @Table(name = "Health_Care_Del_Role_Type")        
@@ -53,17 +53,19 @@ public class HealthCareDeliveryRoleType extends AbstractCustomReferenceEntity
 {
     public enum Cache implements CachedCustomReferenceEntity
     {
-        TECHNICIAN("TECH"),
-        RADIOLOGIST("RAD"),
-        PHYSICIAN("PHY"),
-        INTERN("INTERN");
+        TECHNICIAN("TECH", "Technician"),
+        RADIOLOGIST("RAD", "Radiologist"),
+        PHYSICIAN("PHY", "Physician"),
+        INTERN("INTERN", "Intern");
 
+        private final String label;
         private final String code;
         private HealthCareDeliveryRoleType entity;
 
-        Cache(final String code)
+        Cache(final String code, final String label)
         {
             this.code = code;
+            this.label = label;
         }
 
         public String getCode()
@@ -79,6 +81,11 @@ public class HealthCareDeliveryRoleType extends AbstractCustomReferenceEntity
         public void setEntity(final CustomReferenceEntity entity)
         {
             this.entity = (HealthCareDeliveryRoleType) entity;
+        }
+
+        public String getLabel()
+        {
+            return label;
         }
     }
 

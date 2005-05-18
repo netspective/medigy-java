@@ -47,19 +47,14 @@ import com.medigy.persist.reference.CachedReferenceEntity;
 import com.medigy.persist.reference.ReferenceEntity;
 import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
 import com.medigy.persist.reference.custom.CustomReferenceEntity;
-import org.hibernate.HibernateException;
-import org.hibernate.cfg.AnnotationConfiguration;
-import org.hibernate.dialect.Dialect;
-import org.hibernate.dialect.HSQLDialect;
-import org.hibernate.mapping.PersistentClass;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.HibernateException;
+import org.hibernate.cfg.AnnotationConfiguration;
+import org.hibernate.mapping.PersistentClass;
 
-import javax.persistence.Table;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 public class HibernateConfiguration extends AnnotationConfiguration
@@ -146,38 +141,4 @@ public class HibernateConfiguration extends AnnotationConfiguration
         }
     }
 
-    public String[] generateSchemaCreationScript(final Dialect dialect) throws HibernateException
-    {
-        final String[] existingDDL = super.generateSchemaCreationScript(dialect);
-        if (dialect instanceof HSQLDialect)
-        {
-            for (int i = 0; i < existingDDL.length; i++)
-                existingDDL[i] = existingDDL[i].replaceFirst("create table ", "create cached table ");
-        }
-
-        if (referenceEntitiesAndCachesMap.size() == 0)
-            return existingDDL;
-
-        final List<String> newDDL = new ArrayList<String>();
-        for (String s : existingDDL)
-            newDDL.add(s);
-
-            for (final Map.Entry<Class, Class> entry : referenceEntitiesAndCachesMap.entrySet())
-            {
-                final Class refEntityClass = entry.getKey();
-                final Class refEntityCacheEnum = entry.getValue();
-
-                final String tableName = ((Table) refEntityClass.getAnnotation(Table.class)).name();
-
-                for (final Object x : refEntityCacheEnum.getEnumConstants())
-                {
-                    final CachedReferenceEntity cached = (CachedReferenceEntity) x;
-                    //TODO: this is kind of dumb right now, we need to do proper formatting of output, etc.
-                    newDDL.add("insert into " + tableName + " (type_id, type_label) values ('" + cached.getId() + "', '" + cached.getLabel() + "')");
-                }
-            }
-       
-
-        return newDDL.toArray(new String[newDDL.size()]);
-    }
 }

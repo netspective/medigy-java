@@ -38,8 +38,7 @@
  */
 package com.medigy.persist.model.health;
 
-import java.util.HashSet;
-import java.util.Set;
+import com.medigy.persist.model.common.AbstractTopLevelEntity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -47,13 +46,15 @@ import javax.persistence.GeneratorType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-
-import com.medigy.persist.model.common.AbstractTopLevelEntity;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "Diagnosis_Rel_Grp")
 public class DiagnosisRelatedGroup extends AbstractTopLevelEntity
 {
+    public static final String PK_COLUMN_NAME = "diagnosis_rel_grp_id";
+    
     private Long diagnosisRelatedGroupId;
     private String groupName;
     private Set<DiagnosisRelatedGroupClassification> groupClassification =
@@ -64,7 +65,7 @@ public class DiagnosisRelatedGroup extends AbstractTopLevelEntity
     }
 
     @Id(generate = GeneratorType.AUTO)
-    @Column(name = "diagnosis_rel_grp_id")        
+    @Column(name = PK_COLUMN_NAME)
     public Long getDiagnosisRelatedGroupId()
     {
         return diagnosisRelatedGroupId;

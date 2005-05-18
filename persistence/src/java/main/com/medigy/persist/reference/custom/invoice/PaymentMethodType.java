@@ -38,31 +38,33 @@
  */
 package com.medigy.persist.reference.custom.invoice;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratorType;
-import javax.persistence.Id;
-
 import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
 import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
 import com.medigy.persist.reference.custom.CustomReferenceEntity;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratorType;
+import javax.persistence.Id;
 
 @Entity
 public class PaymentMethodType  extends AbstractCustomReferenceEntity
 {
     public enum Cache implements CachedCustomReferenceEntity
     {
-        ELECTRONIC("ELECTRONIC"),
-        CASH("CASH"),
-        CERTIFIED_CHECK("CERT_CHECK"),
-        PERSONAL_CHECK("PER_CHECK"),
-        CREDIT_CARD("CREDIT");
+        ELECTRONIC("ELECTRONIC", "Electronic"),
+        CASH("CASH", "Cash"),
+        CERTIFIED_CHECK("CERT_CHECK", "Certified Check"),
+        PERSONAL_CHECK("PER_CHECK", "Personal Check"),
+        CREDIT_CARD("CREDIT", "Credit Card");
 
+        private final String label;
         private final String code;
         private PaymentMethodType entity;
 
-        Cache(final String code)
+        Cache(final String code, final String label)
         {
             this.code = code;
+            this.label = label;
         }
 
         public String getCode()
@@ -78,6 +80,11 @@ public class PaymentMethodType  extends AbstractCustomReferenceEntity
         public void setEntity(final CustomReferenceEntity entity)
         {
             this.entity = (PaymentMethodType) entity;
+        }
+
+        public String getLabel()
+        {
+            return label;
         }
     }
 

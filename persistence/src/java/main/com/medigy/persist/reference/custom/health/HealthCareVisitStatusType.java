@@ -53,17 +53,19 @@ public class HealthCareVisitStatusType  extends AbstractCustomReferenceEntity
     public static final String PK_COLUMN_NAME = "visit_status_type_id";
     public enum Cache implements CachedCustomReferenceEntity
     {
-        SCHEDULED("SCH"),
-        INPROGRESS("INPG"),
-        COMPLETE("COMP"),
-        DISCARD("DISCARD");
+        SCHEDULED("SCH", "Scheduled"),
+        INPROGRESS("INPG", "Inprogress"),
+        COMPLETE("COMP", "Complete"),
+        DISCARD("DISCARD", "Discard");
 
+        private final String label;
         private final String code;
         private HealthCareVisitStatusType entity;
 
-        Cache(final String code)
+        Cache(final String code, final String label)
         {
             this.code = code;
+            this.label = label;
         }
 
         public String getCode()
@@ -79,6 +81,11 @@ public class HealthCareVisitStatusType  extends AbstractCustomReferenceEntity
         public void setEntity(final CustomReferenceEntity entity)
         {
             this.entity = (HealthCareVisitStatusType) entity;
+        }
+
+        public String getLabel()
+        {
+            return label;
         }
     }
 

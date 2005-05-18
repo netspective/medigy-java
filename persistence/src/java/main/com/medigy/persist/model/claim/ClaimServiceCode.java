@@ -38,8 +38,9 @@
  */
 package com.medigy.persist.model.claim;
 
-import java.util.HashSet;
-import java.util.Set;
+import com.medigy.persist.model.common.AbstractTopLevelEntity;
+import com.medigy.persist.model.health.DiagnosisRelatedGroupClassification;
+import com.medigy.persist.reference.custom.claim.ClaimServiceCodeType;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -50,22 +51,26 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-
-import com.medigy.persist.model.common.AbstractTopLevelEntity;
-import com.medigy.persist.reference.custom.claim.ClaimServiceCodeType;
+import javax.persistence.CascadeType;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity()
 @Table(name = "Claim_Service_Code", uniqueConstraints = {@UniqueConstraint(columnNames = {"abbreviation", "claim_service_code_type_id"})})
 public class ClaimServiceCode extends AbstractTopLevelEntity
 {
+    public static final String PK_COLUMN_NAME = "claim_service_code_id";
+
     private Long claimServiceCodeId;
     private String abbreviation;
     private String description;
     private ClaimServiceCodeType type;
 
     private Set<ClaimItem> claimItems = new HashSet<ClaimItem>();
+    private Set<DiagnosisRelatedGroupClassification> drgClassifications = new HashSet<DiagnosisRelatedGroupClassification>();
 
     @Id(generate = GeneratorType.AUTO)
+    @Column(name = PK_COLUMN_NAME)        
     public Long getClaimServiceCodeId()
     {
         return claimServiceCodeId;
@@ -119,5 +124,16 @@ public class ClaimServiceCode extends AbstractTopLevelEntity
     public void setClaimItems(final Set<ClaimItem> claimItems)
     {
         this.claimItems = claimItems;
+    }
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "claimServiceCode")
+    public Set<DiagnosisRelatedGroupClassification> getDrgClassifications()
+    {
+        return drgClassifications;
+    }
+
+    public void setDrgClassifications(final Set<DiagnosisRelatedGroupClassification> drgClassifications)
+    {
+        this.drgClassifications = drgClassifications;
     }
 }

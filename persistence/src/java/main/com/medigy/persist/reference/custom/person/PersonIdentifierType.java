@@ -38,13 +38,13 @@
  */
 package com.medigy.persist.reference.custom.person;
 
-import javax.persistence.Entity;
-import javax.persistence.Inheritance;
-
 import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
 import com.medigy.persist.reference.custom.CustomReferenceEntity;
 import com.medigy.persist.reference.custom.party.PartyIdentifierType;
 import com.medigy.persist.reference.type.DataEncryptionType;
+
+import javax.persistence.Entity;
+import javax.persistence.Inheritance;
 
 @Entity
 @Inheritance(discriminatorValue="Person" )
@@ -52,15 +52,17 @@ public class PersonIdentifierType extends PartyIdentifierType
 {
     public enum Cache implements CachedCustomReferenceEntity
     {
-        DRIVERS_LICENSE("DVR_LIC"),
-        SSN("SSN") ;
+        DRIVERS_LICENSE("DVR_LIC", "Driver's License"),
+        SSN("SSN", "Social Security Number") ;
 
+        private final String label;
         private final String code;
         private PersonIdentifierType entity;
 
-        Cache(final String code)
+        Cache(final String code, final String label)
         {
             this.code = code;
+            this.label = label;
         }
 
         public String getCode()
@@ -76,6 +78,11 @@ public class PersonIdentifierType extends PartyIdentifierType
         public void setEntity(final CustomReferenceEntity entity)
         {
             this.entity = (PersonIdentifierType) entity;
+        }
+
+        public String getLabel()
+        {
+            return label;
         }
 
         public static PersonIdentifierType getEntity(String code)

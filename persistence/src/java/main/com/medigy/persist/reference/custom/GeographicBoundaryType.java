@@ -62,17 +62,20 @@ public class GeographicBoundaryType extends AbstractCustomHierarchyReferenceEnti
         CITY("CITY", STATE) ;
 
         private final String code;
+        private final String label;
         private GeographicBoundaryType entity;
         private Cache parent;
 
         Cache(final String code)
         {
             this.code = code;
+            this.label = code;
         }
 
         Cache(final String code, final Cache parent)
         {
             this.code = code;
+            this.label = code;
             this.parent = parent;
         }
 
@@ -89,6 +92,11 @@ public class GeographicBoundaryType extends AbstractCustomHierarchyReferenceEnti
         public void setEntity(final CustomReferenceEntity entity)
         {
             this.entity = (GeographicBoundaryType) entity;
+        }
+
+        public String getLabel()
+        {
+            return label;
         }
 
         public CachedCustomHierarchyReferenceEntity getParent()

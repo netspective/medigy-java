@@ -38,15 +38,15 @@
  */
 package com.medigy.persist.reference.custom.claim;
 
+import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
+import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
+import com.medigy.persist.reference.custom.CustomReferenceEntity;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-
-import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
-import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
-import com.medigy.persist.reference.custom.CustomReferenceEntity;
 
 @Entity
 @Table(name = "Claim_Service_Code_Type", uniqueConstraints = {@UniqueConstraint(columnNames = {"code", "party_id"})})
@@ -58,13 +58,14 @@ public class ClaimServiceCodeType extends AbstractCustomReferenceEntity
         HCPCS_CODE("HCPCS"),
         REV_CODE("REV");
 
-
+        private final String label;
         private final String code;
         private ClaimServiceCodeType entity;
 
         private Cache(final String code)
         {
             this.code = code;
+            this.label = code;
         }
 
         public String getCode()
@@ -81,6 +82,11 @@ public class ClaimServiceCodeType extends AbstractCustomReferenceEntity
         public void setEntity(final CustomReferenceEntity entity)
         {
             this.entity = (ClaimServiceCodeType) entity;
+        }
+
+        public String getLabel()
+        {
+            return label;
         }
     }
 

@@ -38,14 +38,14 @@
  */
 package com.medigy.persist.reference.custom.person;
 
+import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
+import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
+import com.medigy.persist.reference.custom.CustomReferenceEntity;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-
-import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
-import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
-import com.medigy.persist.reference.custom.CustomReferenceEntity;
 
 @Entity
 @Table(name = "Physical_Char_Type")        
@@ -53,17 +53,19 @@ public class PhysicalCharacteristicType extends AbstractCustomReferenceEntity
 {
     public enum Cache implements CachedCustomReferenceEntity
     {
-        HEIGHT("HEIGHT"),
-        WEIGHT("WEIGHT"),
-        BLOOD_PRESSURE("BLOOD_PR"),
-        CHOLESTROL_LEVEL("CHOLESTROL");
+        HEIGHT("HEIGHT", "Height"),
+        WEIGHT("WEIGHT", "Weight"),
+        BLOOD_PRESSURE("BLOOD_PR", "Blood Pressure"),
+        CHOLESTROL_LEVEL("CHOLESTROL", "Cholestrol");
 
+        private final String label;
         private final String code;
         private PhysicalCharacteristicType entity;
 
-        Cache(final String code)
+        Cache(final String code, final String label)
         {
             this.code = code;
+            this.label = label;
         }
 
         public String getCode()
@@ -79,6 +81,11 @@ public class PhysicalCharacteristicType extends AbstractCustomReferenceEntity
         public void setEntity(final CustomReferenceEntity entity)
         {
             this.entity = (PhysicalCharacteristicType) entity;
+        }
+
+        public String getLabel()
+        {
+            return label;
         }
     }
 

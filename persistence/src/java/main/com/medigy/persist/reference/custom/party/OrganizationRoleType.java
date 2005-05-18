@@ -38,11 +38,11 @@
  */
 package com.medigy.persist.reference.custom.party;
 
-import javax.persistence.Entity;
-import javax.persistence.Inheritance;
-
 import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
 import com.medigy.persist.reference.custom.CustomReferenceEntity;
+
+import javax.persistence.Entity;
+import javax.persistence.Inheritance;
 
 @Entity
 @Inheritance(discriminatorValue="Organization" )
@@ -50,29 +50,30 @@ public class OrganizationRoleType extends PartyRoleType
 {
     public enum Cache implements CachedCustomReferenceEntity
     {
-        INSURANCE_AGENCY("INS_AGENCY"),
-        INSURANCE_BROKER("INS_BROKER"),
+        INSURANCE_AGENCY("INS_AGENCY", "Insurance Agency"),
+        INSURANCE_BROKER("INS_BROKER", "Insurance Broker"),
 
-        GROUP("G"),
-        PROSPECT("P"),
-        DIVISION("DIV"),
-        OTHER_ORG_UNIT("OORG"),
-        DEPARTMENT("DEPT"),
-        SUBSIDIARY("SORG"),
-        PARENT_ORG("PORG"),
-        EMPLOYER("EMPLOYER"),
-        SUPPLIER("SUPPLIER"),
+        GROUP("G", "Group"),
+        DIVISION("DIV", "Divison"),
+        OTHER_ORG_UNIT("OORG", "Other"),
+        DEPARTMENT("DEPT", "Department"),
+        SUBSIDIARY("SORG", "Subsidiary"),
+        PARENT_ORG("PORG", "Parent Organization"),
+        EMPLOYER("EMPLOYER", "Employer"),
+        SUPPLIER("SUPPLIER", "Supplier"),
 
-        INSURANCE_PROVIDER("INS_PROV"),
-        HEALTH_CARE_ASSOCIATION("HL_ASSC"),
-        THIRD_PARTY_ADMINISTRATOR("THIRD_PARTY");
+        INSURANCE_PROVIDER("INS_PROV", "Insurance Provider"),
+        HEALTH_CARE_ASSOCIATION("HL_ASSC", "Health Care association"),
+        THIRD_PARTY_ADMINISTRATOR("THIRD_PARTY", "Third Party Adinistrator");
 
+        private final String label;
         private final String code;
         private OrganizationRoleType entity;
 
-        Cache(final String code)
+        Cache(final String code, final String label)
         {
             this.code = code;
+            this.label = label;
         }
 
         public String getCode()
@@ -88,6 +89,11 @@ public class OrganizationRoleType extends PartyRoleType
         public void setEntity(final CustomReferenceEntity entity)
         {
             this.entity = (OrganizationRoleType) entity;
+        }
+
+        public String getLabel()
+        {
+            return label;
         }
     }
 }

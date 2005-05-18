@@ -47,7 +47,7 @@ package com.medigy.persist.reference;
 
 public interface CachedReferenceEntity
 {
-    public String getId();
+    public String getCode();
     public String getLabel();
     public String getDescription();
     public ReferenceEntity getEntity();

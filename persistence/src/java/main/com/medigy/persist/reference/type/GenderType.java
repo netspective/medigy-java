@@ -43,12 +43,12 @@
  */
 package com.medigy.persist.reference.type;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-
 import com.medigy.persist.reference.AbstractReferenceEntity;
 import com.medigy.persist.reference.CachedReferenceEntity;
 import com.medigy.persist.reference.ReferenceEntity;
+
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "Gender_Type")
@@ -72,7 +72,7 @@ public class GenderType extends AbstractReferenceEntity
             this.description = description;
         }
 
-        public String getId()
+        public String getCode()
         {
             return code;
         }
@@ -101,7 +101,7 @@ public class GenderType extends AbstractReferenceEntity
         {
             for (GenderType.Cache gender : GenderType.Cache.values())
             {
-                if (gender.getId().equals(code))
+                if (gender.getCode().equals(code))
                     return gender.getEntity();
             }
             return null;

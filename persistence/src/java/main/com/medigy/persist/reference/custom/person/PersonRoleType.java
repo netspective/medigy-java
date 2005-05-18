@@ -38,12 +38,12 @@
  */
 package com.medigy.persist.reference.custom.person;
 
-import javax.persistence.Entity;
-import javax.persistence.Inheritance;
-
 import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
 import com.medigy.persist.reference.custom.CustomReferenceEntity;
 import com.medigy.persist.reference.custom.party.PartyRoleType;
+
+import javax.persistence.Entity;
+import javax.persistence.Inheritance;
 
 @Entity
 @Inheritance(discriminatorValue="Person" )
@@ -51,24 +51,26 @@ public class PersonRoleType extends PartyRoleType
 {
     public enum Cache implements CachedCustomReferenceEntity
     {
-        CHILD("CHILD"),
-        PARENT("PARENT"),
-        FAMILY_MEMBER("F"),
-        EMPLOYEE("E"),
-        DEPENDENT("DEP"),
+        CHILD("CHILD", "Child"),
+        PARENT("PARENT", "Parent"),
+        FAMILY_MEMBER("F", "Family Member"),
+        EMPLOYEE("E", "Employee"),
+        DEPENDENT("DEP", "Dependent"),
 
-        PATIENT("PATIENT"),
-        INSURED_DEPENDENT("INS_DEP"),
-        INSURED_CONTRACT_HOLDER("INS_PER"),
-        INSURED_ORG("INS_ORG"),
-        INDIVIDUAL_HEALTH_CARE_PRACTITIONER("IND_HCP");
+        PATIENT("PATIENT", "Patient"),
+        INSURED_DEPENDENT("INS_DEP", "Insured Dependent"),
+        INSURED_CONTRACT_HOLDER("INS_PER", "Insured Contract Holder"),
+        INSURED_ORG("INS_ORG", "Insured Organization"),
+        INDIVIDUAL_HEALTH_CARE_PRACTITIONER("IND_HCP", "Individual Health Care Practitioner");
 
-       private final String code;
-       private PersonRoleType entity;
+        private final String label;
+        private final String code;
+        private PersonRoleType entity;
 
-       Cache(final String code)
+       Cache(final String code, final String label)
        {
            this.code = code;
+           this.label = label;
        }
 
        public String getCode()
@@ -85,6 +87,11 @@ public class PersonRoleType extends PartyRoleType
        {
            this.entity = (PersonRoleType) entity;
        }
+
+        public String getLabel()
+        {
+            return label;
+        }
 
         public static PersonRoleType getEntity(String code)
         {

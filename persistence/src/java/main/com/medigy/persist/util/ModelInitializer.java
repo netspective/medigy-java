@@ -100,7 +100,7 @@ public class ModelInitializer
         AUTO, YES, NO
     }
 
-    private final Log log = LogFactory.getLog(EntitySeedDataPopulator.class);
+    private final Log log = LogFactory.getLog(ModelInitializer.class);
     private final SeedDataPopulationType seedDataPopulationType;
     private final Session session;
     private final HibernateConfiguration hibernateConfiguration;
@@ -114,26 +114,33 @@ public class ModelInitializer
 
     public void initialize()
     {
-        initReferenceEntityCaches();
-
+        boolean populate = false;
         switch(seedDataPopulationType)
         {
             case AUTO:
                 if(readSystemGlobalPropertyEntity() == null)
+                {
                     populateSeedData();
+                    populate = true;
+                }
                 break;
 
             case YES:
                 populateSeedData();
+                populate = true;
                 break;
         }
         initSystemGlobalPartyEntity();
-        initCustomReferenceEntityCaches();
+        if (!populate)
+        {
+            // the EntitySeedDataPopulator also registers the cache entities so no need to do this if it was called
+            initReferenceEntityCaches();
+            initCustomReferenceEntityCaches();
+        }
     }
 
     public void populateSeedData()
     {
-        System.out.println("Populating seed data");
         EntitySeedDataPopulator populator = new EntitySeedDataPopulator(session, hibernateConfiguration);
         populator.populateSeedData();
     }
@@ -175,7 +182,7 @@ public class ModelInitializer
         for(final Object i : list)
         {
             final ReferenceEntity entity = (ReferenceEntity) i;
-            final Object id = entity.getTypeId();
+            final Object id = entity.getCode();
             if(id == null)
             {
                 log.error(entity + " id is NULL: unable to map to one of " + cache);
@@ -184,7 +191,7 @@ public class ModelInitializer
 
             for(final CachedReferenceEntity c : cache)
             {
-                if(id.equals(c.getId()))
+                if(id.equals(c.getCode()))
                 {
                     final ReferenceEntity record = c.getEntity();
                     if(record != null)

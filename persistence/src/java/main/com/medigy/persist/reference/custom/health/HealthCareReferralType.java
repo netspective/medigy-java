@@ -54,26 +54,27 @@ public class HealthCareReferralType extends AbstractCustomReferenceEntity
 
     public enum Cache implements CachedCustomReferenceEntity
     {
-        TEST("TEST"),
-        CONSULTATION("CONSULT"),
-        EVALUATION("EVAL"),
-        TREATMENT("TREATMENT"),
-        SURGERY("SURGERY"),
-        PROCEDURE("PROC");
+        TEST("TEST", "Test"),
+        CONSULTATION("CONSULT", "Consultation"),
+        EVALUATION("EVAL", "Evaluation"),
+        TREATMENT("TREATMENT", "Treatment"),
+        SURGERY("SURGERY", "Surgery"),
+        PROCEDURE("PROC", "Procedure");
 
+        private final String label;
         private final String code;
         private HealthCareReferralType entity;
 
-        private Cache(final String code)
+        private Cache(final String code, final String label)
         {
             this.code = code;
+            this.label = label;
         }
 
         public String getCode()
         {
             return code;
         }
-
 
         public HealthCareReferralType getEntity()
         {
@@ -83,6 +84,11 @@ public class HealthCareReferralType extends AbstractCustomReferenceEntity
         public void setEntity(final CustomReferenceEntity entity)
         {
             this.entity = (HealthCareReferralType) entity;
+        }
+
+        public String getLabel()
+        {
+            return label;
         }
     }
 

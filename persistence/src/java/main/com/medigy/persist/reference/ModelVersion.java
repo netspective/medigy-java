@@ -60,7 +60,7 @@ public class ModelVersion extends AbstractReferenceEntity
             this.description = description;
         }
 
-        public String getId()
+        public String getCode()
         {
             return code;
         }

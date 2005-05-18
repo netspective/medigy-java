@@ -55,20 +55,22 @@ public class PartyRelationshipType extends AbstractCustomReferenceEntity
 {
     public enum Cache implements CachedCustomReferenceEntity
     {
-        FAMILY("FAMILY"),
-        PATIENT_RESPONSIBLE_PARTY("PRR"),        // describes relationship between the patient and the responsible party
-        ORGANIZATION_ROLLUP("ORG_ROLLUP"),
-        PARTNERSHIP("PARTNER"),
-        CUSTOMER_RELATIONSHIP("CUST_REL"),
-        SUPPLIER_RELATIONSHIP("SUPP_REL"),
-        CARE_PROVIDER_SELECTION("CARE_PROVIDER");
+        FAMILY("FAMILY", "Family"),
+        PATIENT_RESPONSIBLE_PARTY("PRR", "Patient Responsible Party"),        // describes relationship between the patient and the responsible party
+        ORGANIZATION_ROLLUP("ORG_ROLLUP", "Organization Rollup"),
+        PARTNERSHIP("PARTNER", "Partnership"),
+        CUSTOMER_RELATIONSHIP("CUST_REL", "Customer relationship"),
+        SUPPLIER_RELATIONSHIP("SUPP_REL", "Supplier Relationship"),
+        CARE_PROVIDER_SELECTION("CARE_PROVIDER", "Care Provider Relationship");
 
+        private final String label;
         private final String code;
         private PartyRelationshipType entity;
 
-        Cache(final String code)
+        Cache(final String code, final String label)
         {
             this.code = code;
+            this.label = label;
         }
 
         public String getCode()
@@ -84,6 +86,11 @@ public class PartyRelationshipType extends AbstractCustomReferenceEntity
         public void setEntity(final CustomReferenceEntity entity)
         {
             this.entity = (PartyRelationshipType) entity;
+        }
+
+        public String getLabel()
+        {
+            return label;
         }
     }
 

@@ -19,18 +19,20 @@ public class CoverageLevelType extends AbstractCustomReferenceEntity
 {
     public enum Cache implements CachedCustomReferenceEntity
     {
-        INDIVIDUAL_DEDUCTIBLE("IND_DEDUCT"),
-        FAMILY_DEDUCTIBLE("FAMILY_DEDUCT"),
-        CONINSURANCE("COINS"), /* Percent amount */
-        COPAY("COPAY"),
-        COVERAGE_RANGE("RANGE");
+        INDIVIDUAL_DEDUCTIBLE("IND_DEDUCT", "Individual Deductible"),
+        FAMILY_DEDUCTIBLE("FAMILY_DEDUCT", "Family Deductible"),
+        CONINSURANCE("COINS", "Coinsurance"), /* Percent amount */
+        COPAY("COPAY", "Copay"),
+        COVERAGE_RANGE("RANGE", "Coverage Range");
 
+        private final String label;
         private final String code;
         private CoverageLevelType entity;
 
-        Cache(final String code)
+        Cache(final String code, final String label)
         {
             this.code = code;
+            this.label = label;
         }
 
         public String getCode()
@@ -46,6 +48,11 @@ public class CoverageLevelType extends AbstractCustomReferenceEntity
         public void setEntity(final CustomReferenceEntity entity)
         {
             this.entity = (CoverageLevelType) entity;
+        }
+
+        public String getLabel()
+        {
+            return label;
         }
     }
 

@@ -51,18 +51,20 @@ public class CoverageType extends AbstractCustomReferenceEntity
 {
     public enum Cache implements CachedCustomReferenceEntity
     {
-        MAJOR_MEDICAL("MEDICAL"),
-        HOSPITALIZATION("HOSPITAL"),
-        DENTAL("DENTAL"), /* Percent amount */
-        VISION("VISION"),
-        OTHER("OTHER");
+        MAJOR_MEDICAL("MEDICAL", "Major Medical"),
+        HOSPITALIZATION("HOSPITAL", "Hospital"),
+        DENTAL("DENTAL", "Dental"),
+        VISION("VISION", "Vision"),
+        OTHER("OTHER", "Other");
 
+        private final String label;
         private final String code;
         private CoverageType entity;
 
-        Cache(final String code)
+        Cache(final String code, final String label)
         {
             this.code = code;
+            this.label = label;
         }
 
         public String getCode()
@@ -78,6 +80,11 @@ public class CoverageType extends AbstractCustomReferenceEntity
         public void setEntity(final CustomReferenceEntity entity)
         {
             this.entity = (CoverageType) entity;
+        }
+
+        public String getLabel()
+        {
+            return label;
         }
     }
 

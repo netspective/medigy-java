@@ -44,4 +44,5 @@ public interface CachedCustomReferenceEntity
     public String getCode();
     public CustomReferenceEntity getEntity();
     public void setEntity(final CustomReferenceEntity entity);
+    public String getLabel();
 }

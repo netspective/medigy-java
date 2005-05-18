@@ -38,34 +38,36 @@
  */
 package com.medigy.persist.reference.custom.party;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratorType;
-import javax.persistence.Id;
-
 import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
 import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
 import com.medigy.persist.reference.custom.CustomReferenceEntity;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratorType;
+import javax.persistence.Id;
 
 @Entity
 public class AgreementType extends AbstractCustomReferenceEntity
 {
     public enum Cache implements CachedCustomReferenceEntity
     {
-        PATIENT_PROVIDER_AGREEMENT("PPA"),
-        EMPLOYMENT_AGREEMENT("EA"),
-        PROVIDER_NETWORK_AGREEMENT("PNA"),
-        INSURANCE_POLICY("INS"),
-        PURCHASE_AGREEMENT("PA"),
-        SALES_AGREEMENT("SALES"),
-        PARTNERSHIP_AGREEMENT("PARTNER"),
-        OTHER("OTHER");
+        PATIENT_PROVIDER_AGREEMENT("PPA", "Patient Provider Agreement"),
+        EMPLOYMENT_AGREEMENT("EA", "Employment Agreement"),
+        PROVIDER_NETWORK_AGREEMENT("PNA", "Provider Network Agreement"),
+        INSURANCE_POLICY("INS", "Insurance Policy"),
+        PURCHASE_AGREEMENT("PA", "Purchase Agreement"),
+        SALES_AGREEMENT("SALES", "Sales Agreement"),
+        PARTNERSHIP_AGREEMENT("PARTNER", "Partner Agreement"),
+        OTHER("OTHER", "Other");
 
+        private final String label;
         private final String code;
         private AgreementType entity;
 
-        Cache(final String code)
+        Cache(final String code, final String label)
         {
             this.code = code;
+            this.label = label;
         }
 
         public String getCode()
@@ -81,6 +83,11 @@ public class AgreementType extends AbstractCustomReferenceEntity
         public void setEntity(final CustomReferenceEntity entity)
         {
             this.entity = (AgreementType) entity;
+        }
+
+        public String getLabel()
+        {
+            return label;
         }
     }
 

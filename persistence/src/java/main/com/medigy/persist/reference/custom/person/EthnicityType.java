@@ -38,31 +38,33 @@
  */
 package com.medigy.persist.reference.custom.person;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratorType;
-import javax.persistence.Id;
-
 import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
 import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
 import com.medigy.persist.reference.custom.CustomReferenceEntity;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratorType;
+import javax.persistence.Id;
 
 @Entity
 public class EthnicityType extends AbstractCustomReferenceEntity
 {
     public enum Cache implements CachedCustomReferenceEntity
     {
-        CAUCASIAN("C"),
-        HISPANIC("H"),
-        ASIAN_PACIFIC_ISLANDER("A"),
-        AFRICAN_AMERICAN("AF"),
-        NATIVE_AMERICAN("NA");
+        CAUCASIAN("C", "Caucasian"),
+        HISPANIC("H", "Hispanic"),
+        ASIAN_PACIFIC_ISLANDER("A", "Asian/Pacific Islander"),
+        AFRICAN_AMERICAN("AF", "African American"),
+        NATIVE_AMERICAN("NA", "Native American");
 
+        private final String label;
         private final String code;
         private EthnicityType entity;
 
-        Cache(final String code)
+        Cache(final String code, final String label)
         {
             this.code = code;
+            this.label = label;
         }
 
         public String getCode()
@@ -78,6 +80,11 @@ public class EthnicityType extends AbstractCustomReferenceEntity
         public void setEntity(final CustomReferenceEntity entity)
         {
             this.entity = (EthnicityType) entity;
+        }
+
+        public String getLabel()
+        {
+            return label;
         }
 
         public static EthnicityType getEntity(String code)

@@ -38,12 +38,14 @@
  */
 package com.medigy.persist.reference.custom.invoice;
 
+import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
+import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
+import com.medigy.persist.reference.custom.CustomReferenceEntity;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-
-import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
 
 @Entity
 @Table(name = "Bill_Acct_Role_Type")        
@@ -55,6 +57,53 @@ public class BillingAccountRoleType extends AbstractCustomReferenceEntity
      * MANAGER
      *
      */
+
+    public enum Cache implements CachedCustomReferenceEntity
+    {
+        PRIMARY_PAYER("PRIMARY_PAYER", "Primary Payer"),
+        SECONDARY_PAYER("Secondary Payer", "Secondary Payer");
+
+        private final String label;
+        private final String code;
+        private BillingAccountRoleType entity;
+
+        Cache(final String code, final String label)
+        {
+            this.code = code;
+            this.label = label;
+        }
+
+        public String getCode()
+        {
+            return code;
+        }
+
+        public BillingAccountRoleType getEntity()
+        {
+            return entity;
+        }
+
+        public void setEntity(final CustomReferenceEntity entity)
+        {
+            this.entity = (BillingAccountRoleType) entity;
+        }
+
+        public String getLabel()
+        {
+            return label;
+        }
+
+        public static BillingAccountRoleType getEntity(final String code)
+        {
+            for (BillingAccountRoleType.Cache role : BillingAccountRoleType.Cache.values())
+            {
+                if (role.getCode().equals(code))
+                    return role.getEntity();
+            }
+            return null;
+        }
+    }
+
     public BillingAccountRoleType()
     {
     }

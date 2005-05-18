@@ -38,12 +38,12 @@
  */
 package com.medigy.persist.reference.custom.org;
 
-import javax.persistence.Entity;
-import javax.persistence.Inheritance;
-
 import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
 import com.medigy.persist.reference.custom.CustomReferenceEntity;
 import com.medigy.persist.reference.custom.party.PartyClassificationType;
+
+import javax.persistence.Entity;
+import javax.persistence.Inheritance;
 
 /**
  * Classification type class for grouping organizations. For example,
@@ -55,16 +55,18 @@ public class OrganizationClassificationType extends PartyClassificationType
 {
     public enum Cache implements CachedCustomReferenceEntity
     {
-        INSURANCE("Insurance"),
-        EMPLOYER("Employer"),
-        FACILITY_SITE("Facility/Site");
+        INSURANCE("INS", "Insurance"),
+        EMPLOYER("EMP", "Employer"),
+        FACILITY_SITE("FAC", "Facility/Site");
 
+        private final String label;
         private final String code;
         private OrganizationClassificationType entity;
 
-        Cache(final String code)
+        Cache(final String code, final String label)
         {
             this.code = code;
+            this.label = label;
         }
 
         public String getCode()
@@ -80,6 +82,11 @@ public class OrganizationClassificationType extends PartyClassificationType
         public void setEntity(final CustomReferenceEntity entity)
         {
             this.entity = (OrganizationClassificationType) entity;
+        }
+
+        public String getLabel()
+        {
+            return label;
         }
 
         public static OrganizationClassificationType getEntity(String code)

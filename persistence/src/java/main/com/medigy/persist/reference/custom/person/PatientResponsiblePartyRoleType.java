@@ -38,11 +38,11 @@
  */
 package com.medigy.persist.reference.custom.person;
 
-import javax.persistence.Entity;
-import javax.persistence.Inheritance;
-
 import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
 import com.medigy.persist.reference.custom.CustomReferenceEntity;
+
+import javax.persistence.Entity;
+import javax.persistence.Inheritance;
 
 /**
  * When a patient is registered, a responsible party is recorded. This responsible party could be "self" or
@@ -55,17 +55,19 @@ public class PatientResponsiblePartyRoleType extends PersonRoleType
 {
     public enum Cache implements CachedCustomReferenceEntity
     {
-        PARENT("PARENT"),           // parent of the patient
-        LEGAL_GUARDIAN("GUARD"),    // legal guardian of the patient
-        SIBLING("SIB"),             // sibling of the patient
-        RELATIVE("REL");            // relative of the patient
+        PARENT("PARENT", "Parent"),           // parent of the patient
+        LEGAL_GUARDIAN("GUARD", "Guardian"),    // legal guardian of the patient
+        SIBLING("SIB", "Sibling"),             // sibling of the patient
+        RELATIVE("REL", "Relative");            // relative of the patient
 
+        private final String label;
         private final String code;
         private PatientResponsiblePartyRoleType entity;
 
-        Cache(final String code)
+        Cache(final String code, final String label)
         {
-           this.code = code;
+            this.code = code;
+            this.label = label;
         }
 
         public String getCode()
@@ -81,6 +83,11 @@ public class PatientResponsiblePartyRoleType extends PersonRoleType
         public void setEntity(final CustomReferenceEntity entity)
         {
            this.entity = (PatientResponsiblePartyRoleType) entity;
+        }
+
+        public String getLabel()
+        {
+            return label;
         }
 
         public static PatientResponsiblePartyRoleType getEntity(String code)

@@ -39,12 +39,12 @@
  */
 package com.medigy.persist.reference.type.party;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-
 import com.medigy.persist.reference.AbstractReferenceEntity;
 import com.medigy.persist.reference.CachedReferenceEntity;
 import com.medigy.persist.reference.ReferenceEntity;
+
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "Party_Rel_Stat_Type")
@@ -67,7 +67,7 @@ public class PartyRelationshipStatusType extends AbstractReferenceEntity
             this.description = description;
         }
 
-        public String getId()
+        public String getCode()
         {
             return code;
         }

@@ -38,13 +38,13 @@
  */
 package com.medigy.persist.reference.custom.health;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratorType;
-import javax.persistence.Id;
-
 import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
 import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
 import com.medigy.persist.reference.custom.CustomReferenceEntity;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratorType;
+import javax.persistence.Id;
 
 @Entity
 public class DiagnosisType extends AbstractCustomReferenceEntity
@@ -54,13 +54,14 @@ public class DiagnosisType extends AbstractCustomReferenceEntity
         ICD9_CODE("ICD9"),
         ICD10_CODE("ICD10");
 
-
+        private final String label;
         private final String code;
         private DiagnosisType entity;
 
         private Cache(final String code)
         {
             this.code = code;
+            this.label = code;
         }
 
         public String getCode()
@@ -77,6 +78,11 @@ public class DiagnosisType extends AbstractCustomReferenceEntity
         public void setEntity(final CustomReferenceEntity entity)
         {
             this.entity = (DiagnosisType) entity;
+        }
+
+        public String getLabel()
+        {
+            return label;
         }
     }
 
