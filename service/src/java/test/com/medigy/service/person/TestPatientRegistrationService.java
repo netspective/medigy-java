@@ -39,11 +39,6 @@
 package com.medigy.service.person;
 
 
-import java.util.Date;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import com.medigy.persist.TestCase;
 import com.medigy.persist.model.person.Person;
 import com.medigy.persist.reference.custom.insurance.InsurancePolicyType;
@@ -56,6 +51,10 @@ import com.medigy.persist.util.HibernateUtil;
 import com.medigy.service.ServiceLocator;
 import com.medigy.service.dto.person.RegisterPatientParameters;
 import com.medigy.service.dto.person.RegisteredPatient;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import java.util.Date;
 
 public class TestPatientRegistrationService extends TestCase
 {

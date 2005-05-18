@@ -80,7 +80,7 @@ public interface RegisterPatientParameters extends ServiceVersion
     /**
      * Gets the patients gender. REQUIRED.
      * @return
-     * @see com.medigy.persist.reference.type.GenderType#getTypeId()
+     * @see com.medigy.persist.reference.type.GenderType#getCode()
      */
     //@referenceType
     public String getGender();
@@ -88,7 +88,7 @@ public interface RegisterPatientParameters extends ServiceVersion
     /**
      * Gets the patient's marital status. REQUIRED.
      * @return
-     * @see com.medigy.persist.reference.type.MaritalStatusType#getTypeId()
+     * @see com.medigy.persist.reference.type.MaritalStatusType#getCode()
      */
     public String getMaritalStatus();
 
@@ -132,7 +132,7 @@ public interface RegisterPatientParameters extends ServiceVersion
     /**
      * Gets the patient's spoken languages. The first one is considered the primary language.
      * @return
-     * @see com.medigy.persist.reference.type.LanguageType#getTypeId()
+     * @see com.medigy.persist.reference.type.LanguageType#getCode()
      */
     public String[] getLanguageCodes();
 

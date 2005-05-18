@@ -38,16 +38,17 @@
  */
 package com.medigy.service.util;
 
-import com.medigy.persist.model.insurance.InsurancePolicy;
 import com.medigy.persist.model.insurance.InsurancePlan;
+import com.medigy.persist.model.insurance.InsurancePolicy;
 import com.medigy.persist.model.insurance.InsuranceProduct;
+import com.medigy.persist.model.insurance.CoverageLevel;
 import com.medigy.persist.model.org.Organization;
 import com.medigy.persist.model.person.Person;
 import com.medigy.persist.reference.custom.insurance.InsurancePolicyType;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.Date;
+import java.util.List;
 
 public interface InsurancePolicyFacade extends Facade
 {
@@ -61,6 +62,8 @@ public interface InsurancePolicyFacade extends Facade
                                                  final InsurancePolicyType type,
                                                  final Date startDate);
 
+    public List<CoverageLevel> listCoverageLevels(final InsuranceProduct product);
+
     public List listInsurancePlans(final InsuranceProduct product);
 
     /**
@@ -69,12 +72,12 @@ public interface InsurancePolicyFacade extends Facade
      * @param personId
      * @return
      */
-    public List listInsurancePolicies(final Serializable personId);
+    public List<InsurancePolicy> listInsurancePolicies(final Serializable personId);
 
     /**
      * Lists all insurance products advertised by the isurance provider organization
      * @param org
      * @return
      */
-    public List listInsuranceProducts(final Organization org);
+    public List<InsuranceProduct> listInsuranceProducts(final Organization org);
 }

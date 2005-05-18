@@ -38,24 +38,25 @@
  */
 package com.medigy.service.util;
 
+import com.medigy.persist.model.insurance.CoverageLevel;
 import com.medigy.persist.model.insurance.InsurancePlan;
 import com.medigy.persist.model.insurance.InsurancePolicy;
 import com.medigy.persist.model.insurance.InsuranceProduct;
 import com.medigy.persist.model.org.Organization;
 import com.medigy.persist.model.person.Person;
-import com.medigy.persist.util.HibernateUtil;
 import com.medigy.persist.reference.custom.insurance.InsurancePolicyType;
+import com.medigy.persist.util.HibernateUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
-import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.Restrictions;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class InsurancePolicyFacadeImpl implements InsurancePolicyFacade
+public class InsurancePolicyFacadeImpl extends AbstractFacade implements InsurancePolicyFacade
 {
     private static Log log = LogFactory.getLog(InsurancePolicyFacadeImpl.class);
 
@@ -83,6 +84,12 @@ public class InsurancePolicyFacadeImpl implements InsurancePolicyFacade
         return policy;
     }
 
+    public List<CoverageLevel> listCoverageLevels(final InsuranceProduct product)
+    {
+
+        return null;
+    }
+
     public List listInsurancePlans(final InsuranceProduct product)
     {
         Criteria criteria = HibernateUtil.getSession().createCriteria(InsurancePlan.class);
@@ -90,18 +97,22 @@ public class InsurancePolicyFacadeImpl implements InsurancePolicyFacade
         return criteria.list();
     }
 
-    public List listInsurancePolicies(final Serializable personId)
+    public List<InsurancePolicy> listInsurancePolicies(final Serializable personId)
     {
-        Criteria criteria = HibernateUtil.getSession().createCriteria(InsurancePolicy.class);
-        criteria.createCriteria("insurancePolicyRole").createCriteria("person").add(Expression.eq("partyId", personId));
-        return criteria.list();
+        List list = HibernateUtil.getSession().createQuery("from InsurancePolicy insPolicy where insPolicy.insuredPerson.partyId = " + personId).list();
+        List<InsurancePolicy> policies = new ArrayList<InsurancePolicy>(list.size());;
+        convert(InsurancePolicy.class, list, policies);
+        return policies;
     }
 
-    public List listInsuranceProducts(final Organization org)
+    public List<InsuranceProduct> listInsuranceProducts(final Organization org)
     {
         Criteria criteria = HibernateUtil.getSession().createCriteria(InsuranceProduct.class);
         criteria.createCriteria("organization").add(Restrictions.eq("partyId", org.getPartyId()));
-        return criteria.list();
+        List list = criteria.list();
+        List<InsuranceProduct> products = new ArrayList<InsuranceProduct>(list.size());
+        convert(InsuranceProduct.class, list, products);
+        return products;
     }
 
 

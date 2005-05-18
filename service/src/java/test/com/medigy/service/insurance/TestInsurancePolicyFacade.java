@@ -39,12 +39,12 @@
 package com.medigy.service.insurance;
 
 import com.medigy.persist.DbUnitTestCase;
-import com.medigy.persist.reference.custom.insurance.InsurancePolicyType;
-import com.medigy.persist.model.insurance.InsuranceProduct;
-import com.medigy.persist.model.insurance.InsurancePolicy;
 import com.medigy.persist.model.insurance.InsurancePlan;
+import com.medigy.persist.model.insurance.InsurancePolicy;
+import com.medigy.persist.model.insurance.InsuranceProduct;
 import com.medigy.persist.model.org.Organization;
 import com.medigy.persist.model.person.Person;
+import com.medigy.persist.reference.custom.insurance.InsurancePolicyType;
 import com.medigy.persist.util.HibernateUtil;
 import com.medigy.service.util.InsurancePolicyFacade;
 import com.medigy.service.util.InsurancePolicyFacadeImpl;
@@ -52,8 +52,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.criterion.Restrictions;
 
-import java.util.List;
 import java.util.Date;
+import java.util.List;
 
 public class TestInsurancePolicyFacade extends DbUnitTestCase
 {
@@ -64,13 +64,22 @@ public class TestInsurancePolicyFacade extends DbUnitTestCase
         final Organization policyProvider = (Organization) HibernateUtil.getSession().load(Organization.class, new Long(2));
 
         final InsurancePolicyFacade facade = new InsurancePolicyFacadeImpl();
-        List productList = facade.listInsuranceProducts(policyProvider);
+        List<InsuranceProduct> productList = facade.listInsuranceProducts(policyProvider);
         assertEquals(1, productList.size());
-        final InsuranceProduct newProduct = (InsuranceProduct) productList.toArray()[0];
+        final InsuranceProduct newProduct = productList.get(0);
         assertEquals("PPO Deluxe", newProduct.getName());
 
     }
 
+    /*
+    public void testListCoverageLevels()
+    {
+        final InsuranceProduct product = (InsuranceProduct) HibernateUtil.getSession().load(InsuranceProduct.class, new Long(1));
+        final InsurancePolicyFacade facade = new InsurancePolicyFacadeImpl();
+        List<CoverageLevel> levels = facade.listCoverageLevels(product);
+        
+    }
+   */
 
     public void testCreateIndividualInsurancePolicy()
     {
