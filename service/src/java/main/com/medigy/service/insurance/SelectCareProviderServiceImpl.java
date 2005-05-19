@@ -43,11 +43,16 @@ import com.medigy.service.ServiceLocator;
 import com.medigy.service.ServiceVersion;
 import com.medigy.service.dto.insurance.CareProviderSelectionData;
 import com.medigy.service.dto.insurance.SelectCareProviderParameters;
+import com.medigy.service.dto.ServiceParameters;
 
 import java.util.List;
 
 public class SelectCareProviderServiceImpl implements SelectCareProviderService
 {
+    public boolean isValid(ServiceParameters parameters)
+    {
+        return false;
+    }
 
     public ServiceVersion[] getSupportedServiceVersions()
     {

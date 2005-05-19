@@ -58,6 +58,7 @@ import com.medigy.service.dto.party.AddPostalAddressParameters;
 import com.medigy.service.dto.party.NewEmail;
 import com.medigy.service.dto.party.NewPhone;
 import com.medigy.service.dto.party.NewPostalAddress;
+import com.medigy.service.dto.ServiceParameters;
 import com.medigy.service.util.ContactMechanismFacade;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -86,6 +87,23 @@ public class AddContactMechanismServiceImpl implements AddContactMechanismServic
         return new ServiceVersion[0];
     }
 
+    public boolean isValid(ServiceParameters parameters)
+    {
+        if (parameters instanceof AddPostalAddressParameters)
+        {
+            validatePostalAddress((AddPostalAddressParameters) parameters);
+        }
+        else if (parameters instanceof AddEmailParameters)
+        {
+            validateEmail((AddEmailParameters) parameters);
+        }
+        else if (parameters instanceof AddPhoneParameters)
+        {
+            validatePhone((AddPhoneParameters) parameters);
+        }
+        return false;
+    }
+
     public void validatePostalAddress(final AddPostalAddressParameters param)
     {
         assert (param.getStreet1() != null && param.getStreet1().length() > 0) : "Street Address value cannot be empty.";
@@ -93,6 +111,16 @@ public class AddContactMechanismServiceImpl implements AddContactMechanismServic
         assert (param.getState() != null && param.getState().length() > 0) : "State value cannot be empty";
         assert (param.getPostalCode() != null && param.getPostalCode().length() > 0) : "Postal Code value cannot be empty";
         assert (param.getCountry() != null && param.getCountry().length() > 0) : "Country value cannot be empty";
+    }
+
+    public void validateEmail(final AddEmailParameters param)
+    {
+        // TODO: Add email validation rules
+    }
+
+    public void validatePhone(final AddPhoneParameters param)
+    {
+        // TODO: Add phone validation rules
     }
 
 

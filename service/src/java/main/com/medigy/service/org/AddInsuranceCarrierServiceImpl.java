@@ -43,6 +43,7 @@ import com.medigy.service.dto.org.NewOrganization;
 import com.medigy.service.dto.org.AddOrganization;
 import com.medigy.service.dto.party.NewPostalAddress;
 import com.medigy.service.dto.party.AddPostalAddressParameters;
+import com.medigy.service.dto.ServiceParameters;
 import com.medigy.service.ServiceVersion;
 import com.medigy.service.contact.AddContactMechanismService;
 import com.medigy.persist.model.org.Organization;
@@ -95,5 +96,15 @@ public class AddInsuranceCarrierServiceImpl implements AddInsuranceCarrierServic
     public ServiceVersion[] getSupportedServiceVersions()
     {
         return new ServiceVersion[0];
+    }
+
+    public boolean isValid(ServiceParameters parameters)
+    {
+        if (parameters instanceof AddInsuranceOrganization)
+        {
+            AddInsuranceOrganization orgParams = (AddInsuranceOrganization) parameters;
+            assert (orgParams.getName() != null && orgParams.getName().length() > 0) : "Organization name cannot be empty";
+        }
+        return true;
     }
 }

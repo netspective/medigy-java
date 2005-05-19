@@ -48,10 +48,27 @@ import com.medigy.service.dto.party.NewPhone;
 
 public interface AddContactMechanismService extends Service
 {
+    /**
+     * Creates a new postal address and associates it to the party
+     *
+     * @param param     the necessary parameters to create a new postal address and the party relationship
+     * @return          Id of the new postal address and other related information
+     */
     public NewPostalAddress addPostalAddress(AddPostalAddressParameters param);
 
+    /**
+     * Creates a new email and associates it to the party
+     *
+     * @param param
+     * @return
+     */
     public NewEmail addEmail(AddEmailParameters param);
 
+    /**
+     * Creates a new Phone number and associates it to the party
+     * @param param
+     * @return
+     */
     public NewPhone addPhone(AddPhoneParameters param);
 
 }

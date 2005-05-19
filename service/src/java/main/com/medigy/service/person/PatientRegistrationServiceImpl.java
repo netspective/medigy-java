@@ -58,6 +58,7 @@ import com.medigy.service.dto.party.AddPhoneParameters;
 import com.medigy.service.dto.party.AddPostalAddressParameters;
 import com.medigy.service.dto.person.RegisterPatientParameters;
 import com.medigy.service.dto.person.RegisteredPatient;
+import com.medigy.service.dto.ServiceParameters;
 import com.medigy.service.util.PartyRelationshipFacade;
 import com.medigy.service.util.PersonFacade;
 import org.apache.commons.logging.Log;
@@ -471,8 +472,9 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
     }
 
     // TODO: Put a validator and return a list of errors/warnings
-    public boolean isValid(RegisterPatientParameters patientParameters)
+    public boolean isValid(ServiceParameters params)
     {
+        RegisterPatientParameters patientParameters = (RegisterPatientParameters) params;
         assert  patientParameters.getGender() != null :
             "Gender cannot be empty.";
         final String[] languageCodes = patientParameters.getLanguageCodes();

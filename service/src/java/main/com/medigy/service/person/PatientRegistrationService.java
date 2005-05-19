@@ -46,6 +46,4 @@ public interface PatientRegistrationService extends Service
 {
     public RegisteredPatient registerPatient(RegisterPatientParameters person);
 
-    // TODO: Put a validator and return a list of errors/warnings
-    public boolean isValid(RegisterPatientParameters person);
 }

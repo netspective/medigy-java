@@ -36,44 +36,12 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.service.person;
+package com.medigy.service.contact;
 
-import com.medigy.persist.model.person.Person;
-import com.medigy.persist.reference.custom.person.PersonRoleType;
-import com.medigy.persist.util.HibernateUtil;
-import com.medigy.service.ServiceLocator;
-import com.medigy.service.ServiceVersion;
-import com.medigy.service.dto.person.RegisterHealthCareProviderParameters;
-import com.medigy.service.dto.person.RegisteredProvider;
-import com.medigy.service.dto.ServiceParameters;
-import com.medigy.service.util.PersonFacade;
+import com.medigy.service.Service;
+import com.medigy.service.dto.contact.EditPostalAddressParameters;
 
-public class RegisterHealthCareProviderServiceImpl implements RegisterHealthCareProviderService
+public interface EditContactMechanismService extends Service
 {
-    public RegisteredProvider register(final RegisterHealthCareProviderParameters params)
-    {
-        final Person person = new Person();
-        person.setLastName(params.getLastName());
-        person.setFirstName(params.getFirstName());
-        person.setMiddleName(params.getMiddleName());
-        person.setSuffix(params.getSuffix());
-
-        HibernateUtil.getSession().save(person);
-
-        final PersonFacade personFacade = (PersonFacade) ServiceLocator.getInstance().getService(PersonFacade.class);
-        personFacade.addPersonRole(person, PersonRoleType.Cache.INDIVIDUAL_HEALTH_CARE_PRACTITIONER.getEntity());
-
-
-        return null;
-    }
-
-    public ServiceVersion[] getSupportedServiceVersions()
-    {
-        return new ServiceVersion[0];
-    }
-
-    public boolean isValid(ServiceParameters parameters)
-    {
-        return false;
-    }
+    public void editPostalAddress(final EditPostalAddressParameters params);
 }

@@ -36,44 +36,46 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.service.person;
+package com.medigy.service.dto.contact;
 
-import com.medigy.persist.model.person.Person;
-import com.medigy.persist.reference.custom.person.PersonRoleType;
-import com.medigy.persist.util.HibernateUtil;
-import com.medigy.service.ServiceLocator;
-import com.medigy.service.ServiceVersion;
-import com.medigy.service.dto.person.RegisterHealthCareProviderParameters;
-import com.medigy.service.dto.person.RegisteredProvider;
 import com.medigy.service.dto.ServiceParameters;
-import com.medigy.service.util.PersonFacade;
 
-public class RegisterHealthCareProviderServiceImpl implements RegisterHealthCareProviderService
+import java.io.Serializable;
+
+/**
+ * Interface for input parameters to the edit postal address  service.
+ *
+ * @see com.medigy.service.contact.EditContactMechanismService
+ */
+public interface EditPostalAddressParameters extends ServiceParameters
 {
-    public RegisteredProvider register(final RegisterHealthCareProviderParameters params)
-    {
-        final Person person = new Person();
-        person.setLastName(params.getLastName());
-        person.setFirstName(params.getFirstName());
-        person.setMiddleName(params.getMiddleName());
-        person.setSuffix(params.getSuffix());
+    public Serializable getPostalAddressId();
 
-        HibernateUtil.getSession().save(person);
+    public Serializable getPartyId();
 
-        final PersonFacade personFacade = (PersonFacade) ServiceLocator.getInstance().getService(PersonFacade.class);
-        personFacade.addPersonRole(person, PersonRoleType.Cache.INDIVIDUAL_HEALTH_CARE_PRACTITIONER.getEntity());
+    public String getStreet1();
 
+    public String getStreet2();
 
-        return null;
-    }
+    public String getCity();
 
-    public ServiceVersion[] getSupportedServiceVersions()
-    {
-        return new ServiceVersion[0];
-    }
+    /**
+     * Gets the state. This should be an existing state name.
+     * @return
+     */
+    public String getState();
 
-    public boolean isValid(ServiceParameters parameters)
-    {
-        return false;
-    }
+    public String getProvince();
+
+    public String getPostalCode();
+
+    public String getCounty();
+
+    /**
+     * Gets the country name. This should be an existing country name and cannot be a new country that
+     * is not already created.
+     * @return
+     */
+    public String getCountry();
+
 }

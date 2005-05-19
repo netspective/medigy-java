@@ -42,10 +42,13 @@ import com.medigy.persist.model.party.ContactMechanism;
 import com.medigy.persist.model.party.Party;
 import com.medigy.persist.model.party.PartyContactMechanism;
 import com.medigy.persist.model.party.PartyContactMechanismPurpose;
+import com.medigy.persist.model.contact.Country;
+import com.medigy.persist.model.contact.State;
 import com.medigy.persist.reference.custom.party.ContactMechanismPurposeType;
 import com.medigy.persist.util.HibernateUtil;
 import com.medigy.service.common.ReferenceEntityFacade;
 import com.medigy.service.common.UnknownReferenceTypeException;
+import org.hibernate.criterion.Restrictions;
 
 public class ContactMechanismFacadeImpl implements ContactMechanismFacade
 {
@@ -94,5 +97,15 @@ public class ContactMechanismFacadeImpl implements ContactMechanismFacade
         mech.addPurpose(purpose);
         mech.setContactMechanism(cm);
         HibernateUtil.getSession().save(mech);
+    }
+
+    public Country getCountry(final String countryName)
+    {
+        return (Country) HibernateUtil.getSession().createCriteria(Country.class).add(Restrictions.eq("name", countryName)).uniqueResult();
+    }
+
+    public State getState(final String stateName)
+    {
+        return (State) HibernateUtil.getSession().createCriteria(State.class).add(Restrictions.eq("name", stateName)).uniqueResult();
     }
 }

@@ -40,10 +40,32 @@ package com.medigy.service.util;
 
 import com.medigy.persist.model.party.ContactMechanism;
 import com.medigy.persist.model.party.Party;
+import com.medigy.persist.model.contact.Country;
+import com.medigy.persist.model.contact.State;
 import com.medigy.service.common.UnknownReferenceTypeException;
 
 public interface ContactMechanismFacade extends Facade
 {
+    /**
+     * Creates a connection between a contact mechanism (email ,phone, etc) and a party and also
+     * assigns a "purpose" for the connection.
+     *
+     * @param cm                    the contact mechanism object
+     * @param party                 the party relating to the contact mechanism
+     * @param purposeType           the purpose type for the relationship
+     * @param purposeDescription    the description of the purpose if the type cannot be determined
+     * @throws UnknownReferenceTypeException
+     */
     public void addPartyContactMechanism(final ContactMechanism cm, final Party party, final String purposeType,
                                          final String purposeDescription)  throws UnknownReferenceTypeException;
+
+
+    /**
+     * Gets a country geographic boundary based on the name.
+     *
+     * @param countryName
+     * @return NULL if no match is found
+     */
+    public Country getCountry(final String countryName);
+    public State getState(final String stateName);
 }

@@ -38,8 +38,12 @@
  */
 package com.medigy.service;
 
+import com.medigy.service.dto.ServiceParameters;
+
 public interface Service
 {
     public ServiceVersion[] getSupportedServiceVersions();
+
+    public boolean isValid(ServiceParameters parameters);
 
 }
