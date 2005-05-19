@@ -17,6 +17,7 @@
     <orderEntry type="library" name="Persistence Dependencies (Main)" level="project" />
     <orderEntry type="library" name="Persistence Dependencies (Test)" level="project" />
     <orderEntry type="library" name="Common Dependencies (Test)" level="project" />
+    <orderEntry type="library" name="Service Dependencies (Main)" level="project" />
     <orderEntryProperties />
   </component>
 </module>

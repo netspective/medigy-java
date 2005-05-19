@@ -33,4 +33,18 @@
         </path>
     </target>
 
+    <target name="xmlbean.generate-from-xsd" depends="init.define-module.dependencies.classpaths">
+        <taskdef name="xmlbean" classname="org.apache.xmlbeans.impl.tool.XMLBean">
+            <classpath>
+                <path refid="module.dependencies.build.classpath"/>
+            </classpath>
+        </taskdef>
+        <xmlbean schema="${module.src.home}/xsd/AddPostalAddressParameters.xsd" destfile="AddPostalAddressParameters.jar"
+                 srconly="true" srcgendir="${module.src.generated.home}">
+            <classpath>
+                <path refid="module.dependencies.build.classpath"/>
+            </classpath>
+        </xmlbean>
+    </target>
+
 </project>
