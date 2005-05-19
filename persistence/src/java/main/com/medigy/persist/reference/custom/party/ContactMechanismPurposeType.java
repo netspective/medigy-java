@@ -54,6 +54,7 @@ public class ContactMechanismPurposeType  extends AbstractCustomReferenceEntity
 {
     public enum Cache implements CachedCustomReferenceEntity
     {
+        OTHER("OTHER", "Other"),
         HOME_PHONE("HOME_PH", "Home Phone"),
         HOME_ADDRESS("HOME_ADDR", "Home Address"),
         HOME_EMAIL("HOME_EMAIL", "Home Email"),

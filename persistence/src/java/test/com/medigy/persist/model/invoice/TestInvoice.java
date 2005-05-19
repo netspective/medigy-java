@@ -38,7 +38,7 @@
  */
 package com.medigy.persist.model.invoice;
 
-import com.medigy.persist.DbUnitTestCase;
+import com.medigy.persist.TestCase;
 import com.medigy.persist.model.party.Party;
 import com.medigy.persist.reference.custom.invoice.InvoiceStatusType;
 import com.medigy.persist.reference.custom.invoice.InvoiceTermType;
@@ -48,7 +48,7 @@ import org.apache.commons.logging.LogFactory;
 
 import java.util.Calendar;
 
-public class TestInvoice  extends DbUnitTestCase
+public class TestInvoice  extends TestCase
 {
     private static final Log log = LogFactory.getLog(TestInvoice.class);
 

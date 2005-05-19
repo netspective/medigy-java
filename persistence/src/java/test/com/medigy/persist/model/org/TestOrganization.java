@@ -40,13 +40,12 @@
 
 package com.medigy.persist.model.org;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import com.medigy.persist.TestCase;
 import com.medigy.persist.model.party.Party;
 import com.medigy.persist.reference.type.party.PartyType;
 import com.medigy.persist.util.HibernateUtil;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * Test class to test the Organization data model class. This should only test that the

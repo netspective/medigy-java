@@ -51,6 +51,14 @@ import com.medigy.persist.util.HibernateUtil;
 import com.medigy.persist.util.ModelInitializer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.dbunit.Assertion;
+import org.dbunit.database.DatabaseConnection;
+import org.dbunit.database.IDatabaseConnection;
+import org.dbunit.dataset.CompositeTable;
+import org.dbunit.dataset.IDataSet;
+import org.dbunit.dataset.ITable;
+import org.dbunit.dataset.xml.FlatXmlDataSet;
+import org.dbunit.operation.DatabaseOperation;
 import org.hibernate.HibernateException;
 import org.hibernate.cfg.Environment;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
@@ -61,7 +69,9 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 import java.util.logging.LogManager;
 
@@ -70,7 +80,7 @@ public abstract class TestCase extends MockObjectTestCase
     private static final Log log = LogFactory.getLog(TestCase.class);
 
     protected File databaseDirectory;
-    protected boolean initializeModelData = true;
+    protected boolean useExternalModelData = false;
 
     protected void assertThat(Object something, Constraint matches)
     {
@@ -126,13 +136,11 @@ public abstract class TestCase extends MockObjectTestCase
         return config;
     }
 
-
-
-
     protected void setUp() throws Exception
     {
         super.setUp();
-        initializeModelData = true;
+        if (getDataSetFile() != null)
+            useExternalModelData = true;
         setupDatabaseDirectory();
         final HibernateConfiguration hibernateConfiguration = getHibernateConfiguration();
         HibernateUtil.setConfiguration(hibernateConfiguration);
@@ -161,10 +169,40 @@ public abstract class TestCase extends MockObjectTestCase
         se.create(false, false);
     }
 
+     /**
+     * This method returns a DbUnit database connection
+     * based on the schema name
+     */
+    protected IDatabaseConnection getDbUnitConnection() throws Exception
+    {
+        IDatabaseConnection connection = new DatabaseConnection(HibernateUtil.getNewConnection());
+        return connection;
+    }
+
+    protected IDataSet getDataSet() throws Exception
+    {
+        InputStream stream = Environment.class.getResourceAsStream(getDataSetFile());
+		if (stream == null)
+            stream = Thread.currentThread().getContextClassLoader().getResourceAsStream( getDataSetFile() );
+		if (stream == null)
+			throw new RuntimeException(getDataSetFile() + " not found");
+
+        return new FlatXmlDataSet(stream);
+    }
+
     protected void setupModelInitializer(final HibernateConfiguration hibernateConfiguration) throws Exception
     {
-        System.out.println(initializeModelData);
-        if (initializeModelData)
+        if (useExternalModelData)
+        {
+            IDatabaseConnection dbUnitConn = null;
+            dbUnitConn = getDbUnitConnection();
+            //DatabaseOperation.REFRESH.execute(dbUnitConn, getDataSet());
+            DatabaseOperation.CLEAN_INSERT.execute(dbUnitConn, getDataSet());
+            dbUnitConn.getConnection().commit();
+            dbUnitConn.close();
+            dbUnitConn.getConnection().close();
+        }
+        if (!useExternalModelData)
             new ModelInitializer(HibernateUtil.getSession(),
                              ModelInitializer.SeedDataPopulationType.AUTO,
                              hibernateConfiguration).initialize();
@@ -185,10 +223,73 @@ public abstract class TestCase extends MockObjectTestCase
 
     protected void tearDown() throws Exception
     {
+        if (useExternalModelData)
+            DatabaseOperation.NONE.execute(getDbUnitConnection(), getDataSet());
         super.tearDown();
         SessionManager.getInstance().popActiveSession();
         HibernateUtil.closeSession();
     }
 
+    /**
+     * Overwrite this method if you want to use an outside dataset file instead of using the built-in reference
+     * entities
+     *
+     * @return
+     */
+    public String getDataSetFile()
+    {
+        return null;
+    }
 
+    /**
+     * Utility method to make sure that the XML data set file reflects whats currently in the database
+     *
+     * @param tableNames
+     * @throws Exception
+     */
+    protected void assertDBAsExpected(String[] tableNames)
+            throws Exception
+    {
+        // Fetch database data after executing your code
+        IDatabaseConnection dbUnitConn = null;
+        try
+        {
+            dbUnitConn = getDbUnitConnection();
+            IDataSet actualDataSet = dbUnitConn.createDataSet(tableNames);
+            // Load expected data from an XML dataset
+            IDataSet expectedDataSet = getDataSet();
+            for (int i = 0; i < tableNames.length; i++)
+            {
+                ITable expected = expectedDataSet.getTable(tableNames[i]);
+                ITable actual = actualDataSet.getTable(tableNames[i]);
+                // converts actual to use the same colums as expected
+                ITable trimmedActual = new CompositeTable(expected.getTableMetaData(),
+                        actual);
+                Assertion.assertEquals(expected, trimmedActual);
+            }
+        }
+        finally
+        {
+            if (null != dbUnitConn)
+            {
+                dbUnitConn.close();
+            }
+        }
+    }
+
+    /**
+     * Utility method for extracting an existing database as an XML file
+     *
+     * @param datasetFileName
+     * @throws Exception
+     */
+    protected void extractFullDataset(final String datasetFileName) throws Exception
+    {
+       // database connection
+        IDatabaseConnection connection = getDbUnitConnection();
+
+        // full database export
+        IDataSet fullDataSet = connection.createDataSet();
+        FlatXmlDataSet.write(fullDataSet, new FileOutputStream(datasetFileName));
+   }
 }

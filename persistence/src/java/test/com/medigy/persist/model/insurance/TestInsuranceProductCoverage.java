@@ -4,12 +4,12 @@
 package com.medigy.persist.model.insurance;
 
 import com.medigy.persist.TestCase;
-import com.medigy.persist.util.HibernateUtil;
-import com.medigy.persist.reference.custom.org.OrganizationClassificationType;
-import com.medigy.persist.reference.custom.insurance.CoverageType;
-import com.medigy.persist.reference.custom.insurance.CoverageLevelType;
-import com.medigy.persist.reference.custom.insurance.CoverageLevelBasisType;
 import com.medigy.persist.model.org.Organization;
+import com.medigy.persist.reference.custom.insurance.CoverageLevelBasisType;
+import com.medigy.persist.reference.custom.insurance.CoverageLevelType;
+import com.medigy.persist.reference.custom.insurance.CoverageType;
+import com.medigy.persist.reference.custom.org.OrganizationClassificationType;
+import com.medigy.persist.util.HibernateUtil;
 
 public class TestInsuranceProductCoverage extends TestCase
 {

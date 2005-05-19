@@ -39,13 +39,13 @@
 package com.medigy.persist;
 
 import com.medigy.persist.model.contact.TestGeographicBoundary;
+import com.medigy.persist.model.health.TestHealthCareReferral;
 import com.medigy.persist.model.insurance.TestCoverage;
 import com.medigy.persist.model.insurance.TestInsurance;
 import com.medigy.persist.model.insurance.TestInsuranceProductCoverage;
 import com.medigy.persist.model.invoice.TestInvoice;
 import com.medigy.persist.model.org.TestOrganization;
 import com.medigy.persist.model.person.TestPerson;
-import com.medigy.persist.model.health.TestHealthCareReferral;
 import junit.framework.Test;
 
 /**

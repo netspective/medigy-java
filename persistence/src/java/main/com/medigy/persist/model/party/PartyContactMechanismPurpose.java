@@ -38,14 +38,15 @@
  */
 package com.medigy.persist.model.party;
 
+import com.medigy.persist.model.common.AbstractDateDurationEntity;
+import com.medigy.persist.reference.custom.party.ContactMechanismPurposeType;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-
-import com.medigy.persist.model.common.AbstractDateDurationEntity;
-import com.medigy.persist.reference.custom.party.ContactMechanismPurposeType;
+import javax.persistence.Column;
 
 @Entity
 public class PartyContactMechanismPurpose extends AbstractDateDurationEntity
@@ -53,6 +54,7 @@ public class PartyContactMechanismPurpose extends AbstractDateDurationEntity
     private Long purposeId;
     private PartyContactMechanism partyContactMechanism;
     private ContactMechanismPurposeType type;
+    private String description;
 
     @Id(generate = GeneratorType.AUTO)
     public Long getPurposeId()
@@ -87,5 +89,21 @@ public class PartyContactMechanismPurpose extends AbstractDateDurationEntity
     public void setType(final ContactMechanismPurposeType type)
     {
         this.type = type;
+    }
+
+    /**
+     * Gets the description of the purpose. This column is used when the purpose type is OTHER.
+     * @return
+     * @see com.medigy.persist.reference.custom.party.ContactMechanismPurposeType.Cache.OTHER
+     */
+    @Column(length = 100)
+    public String getDescription()
+    {
+        return description;
+    }
+
+    public void setDescription(final String description)
+    {
+        this.description = description;
     }
 }

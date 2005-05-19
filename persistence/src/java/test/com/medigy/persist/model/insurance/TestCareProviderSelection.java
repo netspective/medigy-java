@@ -3,7 +3,7 @@
  */
 package com.medigy.persist.model.insurance;
 
-import com.medigy.persist.DbUnitTestCase;
+import com.medigy.persist.TestCase;
 import com.medigy.persist.model.party.PartyRole;
 import com.medigy.persist.model.person.Person;
 import com.medigy.persist.reference.custom.person.PersonRoleType;
@@ -17,7 +17,7 @@ import java.util.Date;
  *
  * @see com.medigy.persist.model.insurance.CareProviderSelection
  */
-public final class TestCareProviderSelection  extends DbUnitTestCase
+public final class TestCareProviderSelection  extends TestCase
 {
     public String getDataSetFile()
     {

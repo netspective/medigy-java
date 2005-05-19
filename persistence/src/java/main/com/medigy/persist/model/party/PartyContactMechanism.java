@@ -39,8 +39,8 @@
  */
 package com.medigy.persist.model.party;
 
-import java.util.HashSet;
-import java.util.Set;
+import com.medigy.persist.model.common.AbstractDateDurationEntity;
+import com.medigy.persist.reference.custom.party.ContactMechanismPurposeType;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -52,9 +52,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-
-import com.medigy.persist.model.common.AbstractDateDurationEntity;
-import com.medigy.persist.reference.custom.party.ContactMechanismPurposeType;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "Party_Contact_Mech")
@@ -149,6 +148,23 @@ public class PartyContactMechanism extends AbstractDateDurationEntity
         purpose.setType(type);
         purpose.setPartyContactMechanism(this);
         purposes.add(purpose);
+    }
+
+    @Transient
+    public void addPurpose(final PartyContactMechanismPurpose purpose)
+    {
+        purposes.add(purpose);
+    }
+
+    @Transient
+    public PartyContactMechanismPurpose getPurpose(final ContactMechanismPurposeType type)
+    {
+        for (PartyContactMechanismPurpose pcm : purposes)
+        {
+            if (pcm.getType().equals(type))
+                return pcm;
+        }
+        return null;
     }
 
     /**

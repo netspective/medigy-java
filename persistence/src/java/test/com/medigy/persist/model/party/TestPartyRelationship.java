@@ -1,16 +1,16 @@
 package com.medigy.persist.model.party;
 
-import com.medigy.persist.DbUnitTestCase;
+import com.medigy.persist.TestCase;
 import com.medigy.persist.model.org.Organization;
 import com.medigy.persist.model.person.Person;
 import com.medigy.persist.reference.custom.party.PartyRelationshipType;
-import com.medigy.persist.reference.custom.person.PersonRoleType;
 import com.medigy.persist.reference.custom.person.PatientResponsiblePartyRoleType;
+import com.medigy.persist.reference.custom.person.PersonRoleType;
 import com.medigy.persist.util.HibernateUtil;
 
 import java.util.List;
 
-public final class TestPartyRelationship extends DbUnitTestCase
+public final class TestPartyRelationship extends TestCase
 {
 
     public void testPersonRelationship()
