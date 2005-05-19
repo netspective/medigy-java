@@ -38,10 +38,10 @@
  */
 package com.medigy.service.health;
 
-import com.medigy.persist.TestCase;
-import com.medigy.persist.reference.custom.health.HealthCareReferralType;
 import com.medigy.persist.model.person.Person;
+import com.medigy.persist.reference.custom.health.HealthCareReferralType;
 import com.medigy.persist.util.HibernateUtil;
+import com.medigy.service.TestCase;
 
 import java.util.List;
 

@@ -1,17 +1,17 @@
 package com.medigy.service.org;
 
-import com.medigy.persist.DbUnitTestCase;
 import com.medigy.persist.model.org.Organization;
 import com.medigy.persist.model.party.PartyRelationship;
 import com.medigy.persist.reference.custom.party.OrganizationRoleType;
 import com.medigy.persist.reference.custom.party.PartyRelationshipType;
 import com.medigy.persist.util.HibernateUtil;
+import com.medigy.service.TestCase;
 import com.medigy.service.util.OrganizationFacade;
 import com.medigy.service.util.OrganizationFacadeImpl;
 
 import java.util.List;
 
-public class TestOrganizationFacade extends DbUnitTestCase
+public class TestOrganizationFacade extends TestCase
 {
     public void testAddInsuranceGroup()
     {

@@ -36,26 +36,30 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.service.dto.party;
+package com.medigy.service.common;
 
-import com.medigy.service.dto.ServiceReturnValues;
+import com.medigy.persist.model.party.PartyRole;
+import com.medigy.persist.reference.custom.insurance.InsurancePolicyType;
+import com.medigy.persist.reference.custom.party.ContactMechanismPurposeType;
+import com.medigy.persist.reference.custom.person.EthnicityType;
+import com.medigy.persist.reference.type.GenderType;
+import com.medigy.persist.reference.type.LanguageType;
+import com.medigy.persist.reference.type.MaritalStatusType;
+import com.medigy.service.util.Facade;
 
-import java.io.Serializable;
-
-/**
- * Interface for containing relevant data from outcome of adding a new postal address
- */
-public interface NewPostalAddress extends ServiceReturnValues
+public interface ReferenceEntityFacade extends Facade
 {
-    /**
-     * Gets the unique ID of the newly added postal address
-     * @return
-     */
-    public Serializable getPostalAddressId();
+    public InsurancePolicyType getInsurancePolicyType(final String code) throws UnknownReferenceTypeException;
 
-    /**
-     * Gets the input parameters passed to the service
-     * @return
-     */
-    public AddPostalAddressParameters getAddPostalAddressParameters();
+    public LanguageType getLanguageType(final String code) throws UnknownReferenceTypeException;
+
+    public GenderType getGenderType(final String genderCode) throws UnknownReferenceTypeException;
+
+    public EthnicityType getEthnicityType(final String ethnicityCode) throws UnknownReferenceTypeException;
+
+    public MaritalStatusType getMaritalStatusType(String statusCode) throws UnknownReferenceTypeException;
+
+    public PartyRole getPersonRole(String roleCode) throws UnknownReferenceTypeException;
+
+    public ContactMechanismPurposeType getContactMechanismPurposeType(String purposeCode)  throws UnknownReferenceTypeException;
 }

@@ -47,20 +47,18 @@ import com.medigy.persist.model.contact.State;
 import com.medigy.persist.model.party.ContactMechanism;
 import com.medigy.persist.model.party.ElectronicAddress;
 import com.medigy.persist.model.party.Party;
-import com.medigy.persist.model.party.PartyContactMechanism;
 import com.medigy.persist.model.party.PhoneNumber;
 import com.medigy.persist.model.party.PostalAddress;
-import com.medigy.persist.reference.custom.party.ContactMechanismPurposeType;
 import com.medigy.persist.util.HibernateUtil;
-import com.medigy.service.ServiceInvocationException;
 import com.medigy.service.ServiceVersion;
-import com.medigy.service.common.ReferenceEntityLookupService;
-import com.medigy.service.common.ReferenceEntityLookupServiceImpl;
 import com.medigy.service.common.UnknownReferenceTypeException;
 import com.medigy.service.dto.party.AddEmailParameters;
 import com.medigy.service.dto.party.AddPhoneParameters;
 import com.medigy.service.dto.party.AddPostalAddressParameters;
+import com.medigy.service.dto.party.NewEmail;
+import com.medigy.service.dto.party.NewPhone;
 import com.medigy.service.dto.party.NewPostalAddress;
+import com.medigy.service.util.ContactMechanismFacade;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.criterion.Restrictions;
@@ -71,6 +69,17 @@ public class AddContactMechanismServiceImpl implements AddContactMechanismServic
 {
     private static final Log log = LogFactory.getLog(AddContactMechanismServiceImpl.class);
 
+    private ContactMechanismFacade contactMechanismFacade;
+
+    public ContactMechanismFacade getContactMechanismFacade()
+    {
+        return contactMechanismFacade;
+    }
+
+    public void setContactMechanismFacade(final ContactMechanismFacade contactMechanismFacade)
+    {
+        this.contactMechanismFacade = contactMechanismFacade;
+    }
 
     public ServiceVersion[] getSupportedServiceVersions()
     {
@@ -87,7 +96,7 @@ public class AddContactMechanismServiceImpl implements AddContactMechanismServic
     }
 
 
-    public NewPostalAddress addPostalAddress(final AddPostalAddressParameters param)  throws ServiceInvocationException
+    public NewPostalAddress addPostalAddress(final AddPostalAddressParameters param)
     {
         final Party party = (Party) HibernateUtil.getSession().load(Party.class, param.getPartyId());
 
@@ -183,7 +192,41 @@ public class AddContactMechanismServiceImpl implements AddContactMechanismServic
         // PartyContactMechanisms so don't use the PostalAddress, instead use ContactMechanism
         ContactMechanism cm = (ContactMechanism) HibernateUtil.getSession().load(ContactMechanism.class, address.getContactMechanismId());
 
-        addPartyContactMechanism(cm, party, param.getPurpose());
+        try
+        {
+            contactMechanismFacade.addPartyContactMechanism(cm, party, param.getPurposeType(), param.getPurposeDescription());
+        }
+        catch (UnknownReferenceTypeException e)
+        {
+            final String error = e.getMessage();
+            return new NewPostalAddress() {
+                /**
+                 * Gets the unique ID of the newly added postal address
+                 *
+                 * @return
+                 */
+                public Serializable getPostalAddressId()
+                {
+                    return null;
+                }
+
+                /**
+                 * Gets the input parameters passed to the service
+                 *
+                 * @return
+                 */
+                public AddPostalAddressParameters getAddPostalAddressParameters()
+                {
+                    return null;
+                }
+
+                public String getErrorMessage()
+                {
+                    return error;
+                }
+            };
+        }
+
         return new NewPostalAddress()
         {
             public Serializable getPostalAddressId()
@@ -195,45 +238,57 @@ public class AddContactMechanismServiceImpl implements AddContactMechanismServic
             {
                 return param;
             }
+
+            public String getErrorMessage()
+            {
+                return null;
+            }
         };
     }
 
-    protected void addPartyContactMechanism(final ContactMechanism cm,
-                                            final Party party, final String purposeType)
-    {
-        final ReferenceEntityLookupService referenceEntityService = new ReferenceEntityLookupServiceImpl();                
-        // now create the relationship entry between party and the postal address
-        final PartyContactMechanism mech = new PartyContactMechanism();
-        mech.setParty(party);
-        final ContactMechanismPurposeType contactMechanismPurposeType;
-        try
-        {
-            contactMechanismPurposeType =
-                    referenceEntityService.getContactMechanismPurposeType(purposeType);
-            mech.addPurpose(contactMechanismPurposeType);
-            mech.setContactMechanism(cm);
-            HibernateUtil.getSession().save(mech);
-        }
-        catch (UnknownReferenceTypeException e)
-        {
-            log.error(e);
-            throw new ServiceInvocationException(e);
-        }
-    }
-
-    public void addEmail(AddEmailParameters param) throws ServiceInvocationException
+    public NewEmail addEmail(AddEmailParameters param)
     {
         final Party party = (Party) HibernateUtil.getSession().load(Party.class, param.getPartyId());
         final ElectronicAddress email = new ElectronicAddress();
         email.setElectronicAddress(param.getEmail());
         HibernateUtil.getSession().save(email);
 
-        ContactMechanism cm = (ContactMechanism) HibernateUtil.getSession().load(ContactMechanism.class,
+        final ContactMechanism cm = (ContactMechanism) HibernateUtil.getSession().load(ContactMechanism.class,
                 email.getContactMechanismId());
-        addPartyContactMechanism(cm, party, param.getPurpose());
+        try
+        {
+            contactMechanismFacade.addPartyContactMechanism(cm, party, param.getPurposeType(), param.getPurposeDescription());
+        }
+        catch (UnknownReferenceTypeException e)
+        {
+            final String error = e.getMessage();
+            return new NewEmail() {
+                public Serializable getEmailId()
+                {
+                    return null;
+                }
+
+                public String getErrorMessage()
+                {
+                    return error;
+                }
+            } ;
+        }
+
+        return new NewEmail() {
+            public Serializable getEmailId()
+            {
+                return cm.getContactMechanismId();
+            }
+
+            public String getErrorMessage()
+            {
+                return null;
+            }
+        } ;
     }
 
-    public void addPhone(AddPhoneParameters param) throws ServiceInvocationException
+    public NewPhone addPhone(AddPhoneParameters param)
     {
         final Party party = (Party) HibernateUtil.getSession().load(Party.class, param.getPartyId());
         final PhoneNumber phone = new PhoneNumber();
@@ -243,8 +298,37 @@ public class AddContactMechanismServiceImpl implements AddContactMechanismServic
         phone.setExtension(param.getExtension());
         HibernateUtil.getSession().save(phone);
 
-        ContactMechanism cm = (ContactMechanism) HibernateUtil.getSession().load(ContactMechanism.class,
+        final ContactMechanism cm = (ContactMechanism) HibernateUtil.getSession().load(ContactMechanism.class,
                 phone.getContactMechanismId());
-        addPartyContactMechanism(cm, party, param.getPurpose());
+        try
+        {
+            contactMechanismFacade.addPartyContactMechanism(cm, party, param.getPurposeType(), param.getPurposeDescription());
+        }
+        catch (UnknownReferenceTypeException e)
+        {
+            final String error = e.getMessage();
+            return new NewPhone() {
+                public Serializable getPhoneId()
+                {
+                    return null;
+                }
+
+                public String getErrorMessage()
+                {
+                    return error;
+                }
+            };
+        }
+        return new NewPhone() {
+            public Serializable getPhoneId()
+            {
+                return cm.getContactMechanismId();
+            }
+
+            public String getErrorMessage()
+            {
+                return null;
+            }
+        };
     }
 }

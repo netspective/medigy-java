@@ -39,7 +39,6 @@
 package com.medigy.service.person;
 
 
-import com.medigy.persist.TestCase;
 import com.medigy.persist.model.person.Person;
 import com.medigy.persist.reference.custom.insurance.InsurancePolicyType;
 import com.medigy.persist.reference.custom.party.PartyRelationshipType;
@@ -49,6 +48,7 @@ import com.medigy.persist.reference.type.LanguageType;
 import com.medigy.persist.reference.type.MaritalStatusType;
 import com.medigy.persist.util.HibernateUtil;
 import com.medigy.service.ServiceLocator;
+import com.medigy.service.TestCase;
 import com.medigy.service.dto.person.RegisterPatientParameters;
 import com.medigy.service.dto.person.RegisteredPatient;
 import org.apache.commons.logging.Log;

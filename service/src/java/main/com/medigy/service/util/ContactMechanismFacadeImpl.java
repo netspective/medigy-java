@@ -36,26 +36,63 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.service.dto.party;
+package com.medigy.service.util;
 
-import com.medigy.service.dto.ServiceReturnValues;
+import com.medigy.persist.model.party.ContactMechanism;
+import com.medigy.persist.model.party.Party;
+import com.medigy.persist.model.party.PartyContactMechanism;
+import com.medigy.persist.model.party.PartyContactMechanismPurpose;
+import com.medigy.persist.reference.custom.party.ContactMechanismPurposeType;
+import com.medigy.persist.util.HibernateUtil;
+import com.medigy.service.common.ReferenceEntityFacade;
+import com.medigy.service.common.UnknownReferenceTypeException;
 
-import java.io.Serializable;
-
-/**
- * Interface for containing relevant data from outcome of adding a new postal address
- */
-public interface NewPostalAddress extends ServiceReturnValues
+public class ContactMechanismFacadeImpl implements ContactMechanismFacade
 {
-    /**
-     * Gets the unique ID of the newly added postal address
-     * @return
-     */
-    public Serializable getPostalAddressId();
+    private ReferenceEntityFacade  referenceEntityService;
+
+    public ReferenceEntityFacade getReferenceEntityService()
+    {
+        return referenceEntityService;
+    }
+
+    public void setReferenceEntityService(final ReferenceEntityFacade referenceEntityService)
+    {
+        this.referenceEntityService = referenceEntityService;
+    }
 
     /**
-     * Gets the input parameters passed to the service
-     * @return
+     * Adds a contact mechanism for a party
+     *
+     * @param cm            the contact mechanism
+     * @param party         the party
+     * @param purposeType
+     * @param purposeDescription
      */
-    public AddPostalAddressParameters getAddPostalAddressParameters();
+    public void addPartyContactMechanism(final ContactMechanism cm, final Party party, final String purposeType, final String purposeDescription)
+    {
+        // now create the relationship entry between party and the postal address
+        final PartyContactMechanism mech = new PartyContactMechanism();
+        mech.setParty(party);
+
+        final PartyContactMechanismPurpose purpose = new PartyContactMechanismPurpose();
+        ContactMechanismPurposeType contactMechanismPurposeType = null;
+        try
+        {
+            contactMechanismPurposeType = referenceEntityService.getContactMechanismPurposeType(purposeType);
+        }
+        catch (UnknownReferenceTypeException e)
+        {
+            // unknown built-in purpose type
+            contactMechanismPurposeType = ContactMechanismPurposeType.Cache.OTHER.getEntity();
+        }
+        if (contactMechanismPurposeType.equals(ContactMechanismPurposeType.Cache.OTHER.getEntity()))
+            purpose.setDescription(purposeDescription);
+        purpose.setType(contactMechanismPurposeType);
+        purpose.setPartyContactMechanism(mech);
+
+        mech.addPurpose(purpose);
+        mech.setContactMechanism(cm);
+        HibernateUtil.getSession().save(mech);
+    }
 }

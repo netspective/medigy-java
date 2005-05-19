@@ -38,28 +38,10 @@
  */
 package com.medigy.service.dto.org;
 
-import java.io.Serializable;
-
-public interface AddEmployerOrganization
+public interface AddEmployerOrganization  extends AddOrganization
 {
-    public String getName();
-
-    public String getParentOrganizationName();
-    public Serializable getParentOrganizationId();
-
     public String getRepresentativeLastName();
     public String getRepresentativeFirstName();
     public String getRepresentativePhone();
 
-    public String getMailingAddressLine1();
-    public String getMailingAddressLine2();
-    public String getMailingAddressCity();
-    public String getMailingAddressState();
-    public String getMailingAddressPostalCode();
-    public String getMailingAddressCountry();
-
-    public String getEmail();
-    public String getPhone();
-    public String getFax();
-    public String getWebsiteUrl();
 }

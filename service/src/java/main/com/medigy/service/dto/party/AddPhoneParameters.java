@@ -48,5 +48,7 @@ public interface AddPhoneParameters
     public String getAreaCode();
     public String getNumber();
     public String getExtension();
-    public String getPurpose();
+    public String getPurposeType();
+
+    public String getPurposeDescription();
 }

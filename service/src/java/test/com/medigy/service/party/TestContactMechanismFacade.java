@@ -36,26 +36,50 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.service.dto.party;
+package com.medigy.service.party;
 
-import com.medigy.service.dto.ServiceReturnValues;
+import com.medigy.persist.model.party.PartyContactMechanism;
+import com.medigy.persist.model.party.PhoneNumber;
+import com.medigy.persist.model.person.Person;
+import com.medigy.persist.reference.custom.party.ContactMechanismPurposeType;
+import com.medigy.persist.util.HibernateUtil;
+import com.medigy.service.TestCase;
+import com.medigy.service.util.ContactMechanismFacade;
 
-import java.io.Serializable;
+import java.util.List;
 
-/**
- * Interface for containing relevant data from outcome of adding a new postal address
- */
-public interface NewPostalAddress extends ServiceReturnValues
+public class TestContactMechanismFacade extends TestCase
 {
-    /**
-     * Gets the unique ID of the newly added postal address
-     * @return
-     */
-    public Serializable getPostalAddressId();
+    public void testAddPartyContactMechanism() throws Exception
+    {
+        HibernateUtil.beginTransaction();
 
-    /**
-     * Gets the input parameters passed to the service
-     * @return
-     */
-    public AddPostalAddressParameters getAddPostalAddressParameters();
+        final Person person = new Person();
+        person.setLastName("Hackett");
+        person.setFirstName("Josh");
+        HibernateUtil.getSession().save(person);
+
+        final PhoneNumber phone = new PhoneNumber();
+        phone.setCountryCode("123");
+        phone.setNumber("1234567");
+        phone.setAreaCode("703");
+        phone.setExtension(null);
+        HibernateUtil.getSession().save(phone);
+
+        ContactMechanismFacade facade = (ContactMechanismFacade) getComponent(ContactMechanismFacade.class);
+        facade.addPartyContactMechanism(phone, person, ContactMechanismPurposeType.Cache.HOME_PHONE.getEntity().getCode(), null);
+        facade.addPartyContactMechanism(phone, person, ContactMechanismPurposeType.Cache.OTHER.getEntity().getCode(), "The Bat Phone");
+        HibernateUtil.commitTransaction();
+
+        List contactMechList = HibernateUtil.getSession().createCriteria(PartyContactMechanism.class).list();
+        assertThat(contactMechList.size(), eq(2));
+
+        PartyContactMechanism mech = (PartyContactMechanism) contactMechList.toArray()[0];
+        assertThat(mech.hasPurpose(ContactMechanismPurposeType.Cache.HOME_PHONE.getEntity()), eq(true));
+
+        mech =  (PartyContactMechanism) contactMechList.toArray()[1];
+        assertThat(mech.hasPurpose(ContactMechanismPurposeType.Cache.OTHER.getEntity()), eq(true));
+        assertThat(mech.getPurpose(ContactMechanismPurposeType.Cache.OTHER.getEntity()).getDescription(), eq("The Bat Phone"));
+
+    }
 }

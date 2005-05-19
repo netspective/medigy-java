@@ -36,30 +36,47 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.service.common;
+package com.medigy.service;
 
-import com.medigy.persist.model.party.PartyRole;
-import com.medigy.persist.reference.custom.insurance.InsurancePolicyType;
-import com.medigy.persist.reference.custom.party.ContactMechanismPurposeType;
-import com.medigy.persist.reference.custom.person.EthnicityType;
-import com.medigy.persist.reference.type.GenderType;
-import com.medigy.persist.reference.type.LanguageType;
-import com.medigy.persist.reference.type.MaritalStatusType;
-import com.medigy.service.Service;
+import com.medigy.service.common.ReferenceEntityFacadeImpl;
+import com.medigy.service.contact.AddContactMechanismServiceImpl;
+import com.medigy.service.util.ContactMechanismFacadeImpl;
+import com.medigy.service.util.GeographicBoundaryFacadeImpl;
+import com.medigy.service.util.InsurancePolicyFacadeImpl;
+import com.medigy.service.util.OrganizationFacadeImpl;
+import com.medigy.service.util.PartyRelationshipFacadeImpl;
+import com.medigy.service.util.PersonFacadeImpl;
+import org.picocontainer.MutablePicoContainer;
+import org.picocontainer.defaults.DefaultPicoContainer;
+import org.picocontainer.defaults.SetterInjectionComponentAdapterFactory;
 
-public interface ReferenceEntityLookupService extends Service
+public class TestCase extends com.medigy.persist.TestCase
 {
-    public InsurancePolicyType getInsurancePolicyType(final String code) throws UnknownReferenceTypeException;
+    private MutablePicoContainer pico;
 
-    public LanguageType getLanguageType(final String code) throws UnknownReferenceTypeException;
+    protected void setUpComponents()
+    {
+        pico = new DefaultPicoContainer(new SetterInjectionComponentAdapterFactory());
+        pico.registerComponentImplementation(ReferenceEntityFacadeImpl.class);
+        pico.registerComponentImplementation(ContactMechanismFacadeImpl.class);
+        pico.registerComponentImplementation(GeographicBoundaryFacadeImpl.class);
+        pico.registerComponentImplementation(InsurancePolicyFacadeImpl.class);
+        pico.registerComponentImplementation(OrganizationFacadeImpl.class);
+        pico.registerComponentImplementation(PartyRelationshipFacadeImpl.class);
+        pico.registerComponentImplementation(PersonFacadeImpl.class);
 
-    public GenderType getGenderType(final String genderCode) throws UnknownReferenceTypeException;
+        pico.registerComponentImplementation(AddContactMechanismServiceImpl.class);
+    }
 
-    public EthnicityType getEthnicityType(final String ethnicityCode) throws UnknownReferenceTypeException;
+    protected Object getComponent(final Class componentClass)
+    {
+        return pico.getComponentInstanceOfType(componentClass);
 
-    public MaritalStatusType getMaritalStatusType(String statusCode) throws UnknownReferenceTypeException;
+    }
 
-    public PartyRole getPersonRole(String roleCode) throws UnknownReferenceTypeException;
-
-    public ContactMechanismPurposeType getContactMechanismPurposeType(String purposeCode)  throws UnknownReferenceTypeException;
+    public TestCase()
+    {
+        super();
+        setUpComponents();
+    }
 }

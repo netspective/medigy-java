@@ -36,26 +36,13 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.service.dto.party;
+package com.medigy.service.org;
 
-import com.medigy.service.dto.ServiceReturnValues;
+import com.medigy.service.Service;
+import com.medigy.service.dto.org.AddInsuranceOrganization;
+import com.medigy.service.dto.org.NewOrganization;
 
-import java.io.Serializable;
-
-/**
- * Interface for containing relevant data from outcome of adding a new postal address
- */
-public interface NewPostalAddress extends ServiceReturnValues
+public interface AddInsuranceCarrierService extends Service
 {
-    /**
-     * Gets the unique ID of the newly added postal address
-     * @return
-     */
-    public Serializable getPostalAddressId();
-
-    /**
-     * Gets the input parameters passed to the service
-     * @return
-     */
-    public AddPostalAddressParameters getAddPostalAddressParameters();
+    public NewOrganization addInsuranceCarrier(final AddInsuranceOrganization org);
 }

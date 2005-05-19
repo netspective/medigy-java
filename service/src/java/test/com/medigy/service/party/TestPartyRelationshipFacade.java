@@ -38,19 +38,19 @@
  */
 package com.medigy.service.party;
 
-import com.medigy.persist.DbUnitTestCase;
 import com.medigy.persist.model.party.PartyRelationship;
 import com.medigy.persist.model.party.PartyRole;
 import com.medigy.persist.model.person.Person;
 import com.medigy.persist.reference.custom.party.PartyRelationshipType;
 import com.medigy.persist.reference.custom.person.PersonRoleType;
 import com.medigy.persist.util.HibernateUtil;
+import com.medigy.service.TestCase;
 import com.medigy.service.util.PartyRelationshipFacade;
 import com.medigy.service.util.PartyRelationshipFacadeImpl;
 
 import java.util.List;
 
-public class TestPartyRelationshipFacade extends DbUnitTestCase
+public class TestPartyRelationshipFacade extends TestCase
 {
     public String getDataSetFile()
     {

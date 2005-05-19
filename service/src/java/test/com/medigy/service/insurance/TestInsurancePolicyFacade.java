@@ -38,7 +38,6 @@
  */
 package com.medigy.service.insurance;
 
-import com.medigy.persist.DbUnitTestCase;
 import com.medigy.persist.model.insurance.InsurancePlan;
 import com.medigy.persist.model.insurance.InsurancePolicy;
 import com.medigy.persist.model.insurance.InsuranceProduct;
@@ -46,6 +45,7 @@ import com.medigy.persist.model.org.Organization;
 import com.medigy.persist.model.person.Person;
 import com.medigy.persist.reference.custom.insurance.InsurancePolicyType;
 import com.medigy.persist.util.HibernateUtil;
+import com.medigy.service.TestCase;
 import com.medigy.service.util.InsurancePolicyFacade;
 import com.medigy.service.util.InsurancePolicyFacadeImpl;
 import org.apache.commons.logging.Log;
@@ -55,9 +55,10 @@ import org.hibernate.criterion.Restrictions;
 import java.util.Date;
 import java.util.List;
 
-public class TestInsurancePolicyFacade extends DbUnitTestCase
+public class TestInsurancePolicyFacade extends TestCase
 {
     private static final Log log = LogFactory.getLog(TestInsurancePolicyFacade.class);
+
 
     public void testListInsuranceProducts()
     {
@@ -107,7 +108,6 @@ public class TestInsurancePolicyFacade extends DbUnitTestCase
             assertThat(newPolicy.getGroupNumber(), eq("XXX"));
             assertThat(newPolicy.getContractHolderPerson().getPartyId(), eq(policyHolder.getPartyId()));
         }
-
 
     }
 

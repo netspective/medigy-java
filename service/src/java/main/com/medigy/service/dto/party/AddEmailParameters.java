@@ -44,6 +44,16 @@ public interface AddEmailParameters
 {
     public Serializable getPartyId();
     public String getEmail();
-    public String getPurpose();
 
+    /**
+     * Gets the type of the purpose (if the purpose is one of the built-in types)
+     * @return
+     */
+    public String getPurposeType();
+
+    /**
+     * Gets the description of the purpose. This is used when the purpose doesn't match any of the types.
+     * @return
+     */
+    public String getPurposeDescription();
 }

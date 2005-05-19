@@ -38,12 +38,12 @@
  */
 package com.medigy.service.person;
 
-import com.medigy.persist.DbUnitTestCase;
 import com.medigy.persist.model.person.Person;
+import com.medigy.service.TestCase;
 import com.medigy.service.util.PersonFacade;
 import com.medigy.service.util.PersonFacadeImpl;
 
-public class TestPersonFacade extends DbUnitTestCase
+public class TestPersonFacade extends TestCase
 {
     private PersonFacade personFacade;
 

@@ -38,31 +38,13 @@
  */
 package com.medigy.service.dto.org;
 
-import java.io.Serializable;
-
 /**
  * Interface for value object needed to create a new insurance organization
  */
-public interface AddInsuranceOrganization
+public interface AddInsuranceOrganization  extends AddOrganization
 {
-    public String getName();
-
-    public String getParentOrganizationName();
-    public Serializable getParentOrganizationId();
-
     public String getRepresentativeLastName();
     public String getRepresentativeFirstName();
     public String getRepresentativePhone();
 
-    public String getMailingAddressLine1();
-    public String getMailingAddressLine2();
-    public String getMailingAddressCity();
-    public String getMailingAddressState();
-    public String getMailingAddressPostalCode();
-    public String getMailingAddressCountry();
-
-    public String getEmail();
-    public String getPhone();
-    public String getFax();
-    public String getWebsiteUrl();
 }

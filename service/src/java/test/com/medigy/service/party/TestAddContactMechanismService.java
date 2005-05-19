@@ -38,7 +38,6 @@
  */
 package com.medigy.service.party;
 
-import com.medigy.persist.DbUnitTestCase;
 import com.medigy.persist.model.party.Party;
 import com.medigy.persist.model.party.PartyContactMechanism;
 import com.medigy.persist.model.party.PartyContactMechanismPurpose;
@@ -47,8 +46,8 @@ import com.medigy.persist.model.person.Person;
 import com.medigy.persist.reference.custom.party.ContactMechanismPurposeType;
 import com.medigy.persist.reference.type.ContactMechanismType;
 import com.medigy.persist.util.HibernateUtil;
+import com.medigy.service.TestCase;
 import com.medigy.service.contact.AddContactMechanismService;
-import com.medigy.service.contact.AddContactMechanismServiceImpl;
 import com.medigy.service.dto.party.AddPostalAddressParameters;
 import com.medigy.service.dto.party.NewPostalAddress;
 import org.apache.commons.logging.Log;
@@ -59,7 +58,7 @@ import org.hibernate.criterion.Restrictions;
 import java.io.Serializable;
 import java.util.List;
 
-public class TestAddContactMechanismService extends DbUnitTestCase
+public class TestAddContactMechanismService extends TestCase
 {
     private static final Log log = LogFactory.getLog(TestAddContactMechanismService.class);
 
@@ -74,7 +73,7 @@ public class TestAddContactMechanismService extends DbUnitTestCase
         final Person p = (Person) HibernateUtil.getSession().load(Person.class, new Long(2));
         assertEquals(p.getPartyContactMechanisms().size(), 0);
 
-        AddContactMechanismService service =  new AddContactMechanismServiceImpl();
+        AddContactMechanismService service =  (AddContactMechanismService) getComponent(AddContactMechanismService.class);
         final NewPostalAddress address = service.addPostalAddress(new AddPostalAddressParameters() {
                 public Serializable getPartyId()
                 {
@@ -121,7 +120,12 @@ public class TestAddContactMechanismService extends DbUnitTestCase
                     return "USA";
                 }
 
-                public String getPurpose()
+                public String getPurposeDescription()
+                {
+                    return null;
+                }
+
+                public String getPurposeType()
                 {
                     return ContactMechanismPurposeType.Cache.HOME_ADDRESS.getCode();
                 }

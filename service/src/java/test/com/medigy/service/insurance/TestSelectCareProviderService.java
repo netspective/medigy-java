@@ -5,7 +5,7 @@ package com.medigy.service.insurance;
 
 import com.medigy.persist.model.insurance.InsurancePolicy;
 import com.medigy.persist.util.HibernateUtil;
-import com.medigy.persist.DbUnitTestCase;
+import com.medigy.service.TestCase;
 import com.medigy.service.dto.insurance.CareProviderSelectionData;
 import com.medigy.service.dto.insurance.SelectCareProviderParameters;
 import org.hibernate.Criteria;
@@ -14,7 +14,7 @@ import org.hibernate.criterion.Restrictions;
 import java.io.Serializable;
 import java.util.Date;
 
-public class TestSelectCareProviderService extends DbUnitTestCase
+public class TestSelectCareProviderService extends TestCase
 {
     public String getDataSetFile()
     {

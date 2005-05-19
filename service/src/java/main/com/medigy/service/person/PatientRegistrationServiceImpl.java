@@ -51,7 +51,7 @@ import com.medigy.persist.reference.type.MaritalStatusType;
 import com.medigy.persist.util.HibernateUtil;
 import com.medigy.service.ServiceLocator;
 import com.medigy.service.ServiceVersion;
-import com.medigy.service.common.ReferenceEntityLookupService;
+import com.medigy.service.common.ReferenceEntityFacade;
 import com.medigy.service.common.UnknownReferenceTypeException;
 import com.medigy.service.contact.AddContactMechanismService;
 import com.medigy.service.dto.party.AddPhoneParameters;
@@ -196,7 +196,7 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
                                           final Person policyHolder,
                                           final Person insuredDependent) throws UnknownReferenceTypeException
     {
-        final ReferenceEntityLookupService referenceEntityService = (ReferenceEntityLookupService) ServiceLocator.getInstance().getService(ReferenceEntityLookupService.class);
+        final ReferenceEntityFacade referenceEntityService = (ReferenceEntityFacade) ServiceLocator.getInstance().getService(ReferenceEntityFacade.class);
         final InsurancePolicyType type = referenceEntityService.getInsurancePolicyType(policyType);
 
         // TODO: Need to figure how what's going to be available during registration for INSURANCE (e.g. Product, Plan, etc)
@@ -214,7 +214,7 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
     {
         // TODO: FINANCIAL responsible party can be an organization and it can be changed per visit too. Need table to relate to PARTY_RELATIONSHIP.
 
-        final ReferenceEntityLookupService referenceEntityService = (ReferenceEntityLookupService) ServiceLocator.getInstance().getService(ReferenceEntityLookupService.class);
+        final ReferenceEntityFacade referenceEntityService = (ReferenceEntityFacade) ServiceLocator.getInstance().getService(ReferenceEntityFacade.class);
         final PersonFacade personFacade = (PersonFacade) ServiceLocator.getInstance().getService(PersonFacade.class);
         final PartyRelationshipFacade partyRelFacade = (PartyRelationshipFacade) ServiceLocator.getInstance().getService(PartyRelationshipFacade.class);
 
@@ -251,7 +251,7 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
      */
     protected void registerPrimaryCareProvider(final Person patient, final RegisterPatientParameters patientParameters)
     {
-        final ReferenceEntityLookupService referenceEntityService = (ReferenceEntityLookupService) ServiceLocator.getInstance().getService(ReferenceEntityLookupService.class);
+        final ReferenceEntityFacade referenceEntityService = (ReferenceEntityFacade) ServiceLocator.getInstance().getService(ReferenceEntityFacade.class);
         final PersonFacade personFacade = (PersonFacade) ServiceLocator.getInstance().getService(PersonFacade.class);
         final PartyRelationshipFacade partyRelFacade = (PartyRelationshipFacade) ServiceLocator.getInstance().getService(PartyRelationshipFacade.class);
 
@@ -312,10 +312,15 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
                     return patientParameters.getCountry();
                 }
 
-                public String getPurpose()
+                public String getPurposeType()
                 {
                     return null;
                     //return patientParameters.getAddressPurpose();
+                }
+
+                public String getPurposeDescription()
+                {
+                    return null;
                 }
             });
         }
@@ -327,7 +332,7 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
 
     public RegisteredPatient registerPatient(final RegisterPatientParameters patientParameters)
     {
-        final ReferenceEntityLookupService referenceEntityService = (ReferenceEntityLookupService) ServiceLocator.getInstance().getService(ReferenceEntityLookupService.class);
+        final ReferenceEntityFacade referenceEntityService = (ReferenceEntityFacade) ServiceLocator.getInstance().getService(ReferenceEntityFacade.class);
         final PersonFacade personFacade = (PersonFacade) ServiceLocator.getInstance().getService(PersonFacade.class);
 
         Person person = new Person();
@@ -453,7 +458,12 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
                 return null;
             }
 
-            public String getPurpose()
+            public String getPurposeDescription()
+            {
+                return null;
+            }
+
+            public String getPurposeType()
             {
                 return ContactMechanismPurposeType.Cache.HOME_PHONE.getCode();
             }

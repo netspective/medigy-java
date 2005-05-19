@@ -36,26 +36,64 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.service.dto.party;
+package com.medigy.service.org;
 
-import com.medigy.service.dto.ServiceReturnValues;
+import com.medigy.service.dto.org.AddInsuranceOrganization;
+import com.medigy.service.dto.org.NewOrganization;
+import com.medigy.service.dto.org.AddOrganization;
+import com.medigy.service.dto.party.NewPostalAddress;
+import com.medigy.service.dto.party.AddPostalAddressParameters;
+import com.medigy.service.ServiceVersion;
+import com.medigy.service.contact.AddContactMechanismService;
+import com.medigy.persist.model.org.Organization;
+import com.medigy.persist.util.HibernateUtil;
 
 import java.io.Serializable;
 
-/**
- * Interface for containing relevant data from outcome of adding a new postal address
- */
-public interface NewPostalAddress extends ServiceReturnValues
+public class AddInsuranceCarrierServiceImpl implements AddInsuranceCarrierService
 {
-    /**
-     * Gets the unique ID of the newly added postal address
-     * @return
-     */
-    public Serializable getPostalAddressId();
+    private AddContactMechanismService addContactMechanismService;
 
-    /**
-     * Gets the input parameters passed to the service
-     * @return
-     */
-    public AddPostalAddressParameters getAddPostalAddressParameters();
+    public AddContactMechanismService getAddContactMechanismService()
+    {
+        return addContactMechanismService;
+    }
+
+    public void setAddContactMechanismService(final AddContactMechanismService addContactMechanismService)
+    {
+        this.addContactMechanismService = addContactMechanismService;
+    }
+
+    public NewOrganization addInsuranceCarrier(final AddInsuranceOrganization orgParams)
+    {
+        final Organization newOrg = new Organization();
+        newOrg.setOrganizationName(orgParams.getName());
+        HibernateUtil.getSession().save(newOrg);
+
+        final AddPostalAddressParameters mailingAddress = orgParams.getMailingAddress();
+        // TODO: Need to somehow pass the party ID
+        final NewPostalAddress newPostalAddress = getAddContactMechanismService().addPostalAddress(mailingAddress);
+
+        return new NewOrganization() {
+            public Serializable getNewOrganizationId()
+            {
+                return newOrg.getOrgId();
+            }
+
+            public String getErrorMessage()
+            {
+                return null;
+            }
+
+            public AddOrganization getAddOrganizationParameters()
+            {
+                return orgParams;
+            }
+        };
+    }
+
+    public ServiceVersion[] getSupportedServiceVersions()
+    {
+        return new ServiceVersion[0];
+    }
 }

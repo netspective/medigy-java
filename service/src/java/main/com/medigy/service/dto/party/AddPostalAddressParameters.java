@@ -61,5 +61,7 @@ public interface AddPostalAddressParameters
     public String getCountry();
 
     // TODO: Make this into multiple purposes
-    public String getPurpose();
+    public String getPurposeType();
+
+    public String getPurposeDescription();
 }
