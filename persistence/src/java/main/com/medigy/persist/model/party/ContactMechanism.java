@@ -60,6 +60,8 @@ import java.util.Set;
 @Inheritance(strategy=InheritanceType.JOINED)        
 public class ContactMechanism extends AbstractTopLevelEntity
 {
+    public static final String PK_COLUMN_NAME = "contact_mech_id";
+
     private Long contactMechanismId;
     protected ContactMechanismType type;
 
@@ -70,7 +72,7 @@ public class ContactMechanism extends AbstractTopLevelEntity
     }
 
     @Id(generate = GeneratorType.AUTO)
-    @Column(name = "contact_mech_id")
+    @Column(name = PK_COLUMN_NAME)
     public Long getContactMechanismId()
     {
         return contactMechanismId;
