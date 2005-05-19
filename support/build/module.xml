@@ -54,6 +54,7 @@
         <property name="module.dependencies.lib.home" value="${module.dependencies.home}/lib"/>
 
         <property name="module.src.home" value="${module.home}/src"/>
+        <property name="module.src.generated.home" value="${module.src.home}/java/generated"/>
         <property name="module.src.main.home" value="${module.src.home}/java/main"/>
         <property name="module.src.test.home" value="${module.src.home}/java/test"/>
 
