@@ -36,7 +36,7 @@
         <ant dir="${repository.home}/hibernate-doc/support/build" target="clean" inheritall="false" inheritrefs="false" />
         <ant dir="${repository.home}/persistence/support/build" target="clean" inheritall="false" inheritrefs="false" />
         <ant dir="${repository.home}/persistence-tools/support/build" target="clean" inheritall="false" inheritrefs="false" />
-        <ant dir="${repository.home}/schedule/support/build" target="clean" inheritall="false" inheritrefs="false" />
+        <ant dir="${repository.home}/scheduler/support/build" target="clean" inheritall="false" inheritrefs="false" />
         <ant dir="${repository.home}/service/support/build" target="clean" inheritall="false" inheritrefs="false" />
     </target>
 

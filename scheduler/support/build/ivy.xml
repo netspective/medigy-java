@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ivy-module version="1.0">
+    <info organisation="org.sns" module="sns-graphviz" revision="1.0.0" status="release"/>
+</ivy-module>
