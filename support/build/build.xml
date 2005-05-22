@@ -36,6 +36,7 @@
         <ant dir="${repository.home}/hibernate-doc/support/build" target="clean" inheritall="false" inheritrefs="false" />
         <ant dir="${repository.home}/persistence/support/build" target="clean" inheritall="false" inheritrefs="false" />
         <ant dir="${repository.home}/persistence-tools/support/build" target="clean" inheritall="false" inheritrefs="false" />
+        <ant dir="${repository.home}/schedule/support/build" target="clean" inheritall="false" inheritrefs="false" />
         <ant dir="${repository.home}/service/support/build" target="clean" inheritall="false" inheritrefs="false" />
     </target>
 
@@ -57,6 +58,9 @@
             <property name="persistence.artifacts.home" value="${consolidated.artifacts.home}/persistence"/>
             <property name="module.artifacts.home" value="${consolidated.artifacts.home}/persistence-tools"/>
         </ant>
+        <ant dir="${repository.home}/scheduler/support/build" target="jar" inheritall="false" inheritrefs="false">
+            <property name="module.artifacts.home" value="${consolidated.artifacts.home}/scheduler"/>
+        </ant>
         <ant dir="${repository.home}/service/support/build" target="jar" inheritall="false" inheritrefs="false">
             <property name="persistence.artifacts.home" value="${consolidated.artifacts.home}/persistence"/>
             <property name="module.artifacts.home" value="${consolidated.artifacts.home}/service"/>
@@ -76,6 +80,9 @@
         <ant dir="${repository.home}/persistence/support/build" target="test" inheritall="false" inheritrefs="false">
             <property name="common.artifacts.home" value="${consolidated.artifacts.home}/common"/>
             <property name="module.artifacts.home" value="${consolidated.artifacts.home}/persistence"/>
+        </ant>
+        <ant dir="${repository.home}/scheduler/support/build" target="test" inheritall="false" inheritrefs="false">
+            <property name="module.artifacts.home" value="${consolidated.artifacts.home}/scheduler"/>
         </ant>
         <ant dir="${repository.home}/service/support/build" target="test" inheritall="false" inheritrefs="false">
             <property name="persistence.artifacts.home" value="${consolidated.artifacts.home}/persistence"/>
