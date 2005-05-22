@@ -6,8 +6,8 @@ import com.medigy.persist.reference.custom.party.OrganizationRoleType;
 import com.medigy.persist.reference.custom.party.PartyRelationshipType;
 import com.medigy.persist.util.HibernateUtil;
 import com.medigy.service.TestCase;
-import com.medigy.service.util.OrganizationFacade;
-import com.medigy.service.util.OrganizationFacadeImpl;
+import com.medigy.service.impl.org.OrganizationFacadeImpl;
+import com.medigy.service.org.OrganizationFacade;
 
 import java.util.List;
 

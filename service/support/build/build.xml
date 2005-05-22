@@ -26,6 +26,8 @@
             <fileset dir="${persistence.home}/depend/lib/main" includes="*.jar"/>
             <fileset dir="${persistence.home}/depend/lib/test" includes="*.jar"/>
 
+            <fileset dir="${service.home}/depend/lib/build" includes="*.jar"/>
+            <fileset dir="${service.home}/depend/lib/main" includes="*.jar"/>
             <fileset dir="${service.home}/depend/lib/test" includes="*.jar"/>
 
             <path location="${persistence.artifacts.home}/classes/main"/>
@@ -33,18 +35,8 @@
         </path>
     </target>
 
-    <target name="xmlbean.generate-from-xsd" depends="init.define-module.dependencies.classpaths">
-        <taskdef name="xmlbean" classname="org.apache.xmlbeans.impl.tool.XMLBean">
-            <classpath>
-                <path refid="module.dependencies.build.classpath"/>
-            </classpath>
-        </taskdef>
-        <xmlbean schema="${module.src.home}/xsd/AddPostalAddressParameters.xsd" destfile="AddPostalAddressParameters.jar"
-                 srconly="true" srcgendir="${module.src.generated.home}">
-            <classpath>
-                <path refid="module.dependencies.build.classpath"/>
-            </classpath>
-        </xmlbean>
+    <target name="generate.xmlbean-from-xsd" depends="init.define-module.dependencies.classpaths,init.generate-xmlbean">
+        <generate-xmlbean/>
     </target>
 
 </project>

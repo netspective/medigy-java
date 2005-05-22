@@ -36,51 +36,37 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.service.person;
+package com.medigy.service.contact;
 
-import com.medigy.persist.model.person.Person;
-import com.medigy.service.TestCase;
-import com.medigy.service.impl.person.PersonFacadeImpl;
-import com.medigy.service.person.PersonFacade;
+import com.medigy.persist.model.party.ContactMechanism;
+import com.medigy.persist.model.party.Party;
+import com.medigy.persist.model.contact.Country;
+import com.medigy.persist.model.contact.State;
+import com.medigy.service.util.Facade;
+import com.medigy.service.util.UnknownReferenceTypeException;
 
-public class TestPersonFacade extends TestCase
+public interface ContactMechanismFacade extends Facade
 {
-    private PersonFacade personFacade;
+    /**
+     * Creates a connection between a contact mechanism (email ,phone, etc) and a party and also
+     * assigns a "purpose" for the connection.
+     *
+     * @param cm                    the contact mechanism object
+     * @param party                 the party relating to the contact mechanism
+     * @param purposeType           the purpose type for the relationship
+     * @param purposeDescription    the description of the purpose if the type cannot be determined
+     * @throws com.medigy.service.util.UnknownReferenceTypeException
+     */
+    public void addPartyContactMechanism(final ContactMechanism cm, final Party party, final String purposeType,
+                                         final String purposeDescription)  throws UnknownReferenceTypeException;
 
-    protected void setUp() throws Exception
-    {
-        super.setUp();
-        personFacade =  new PersonFacadeImpl();
-    }
 
-    public String getDataSetFile()
-    {
-        return "/com/medigy/service/person/TestPersonFacade.xml";
-    }
-
-    public void testListPersonByLastName() throws Exception
-    {
-        Person[] personList = personFacade.listPersonByLastName("d%", false);
-        assertNotNull(personList);
-        assertEquals(personList.length, 1);
-        assertEquals(personList[0].getFirstName(), "John");
-        assertEquals(personList[0].getLastName(), "Doe");
-        assertEquals(personList[0].getMiddleName(), "D");
-
-        personList = personFacade.listPersonByLastName("Doe", true);
-        assertNotNull(personList);
-        assertEquals(personList.length, 1);
-        assertEquals(personList[0].getFirstName(), "John");
-        assertEquals(personList[0].getLastName(), "Doe");
-        assertEquals(personList[0].getMiddleName(), "D");
-
-        personList = personFacade.listPersonByLastName("%", false);
-        assertNotNull(personList);
-        assertEquals(personList.length, 2);
-        assertEquals(personList[0].getFirstName(), "John");
-        assertEquals(personList[0].getLastName(), "Doe");
-        assertEquals(personList[0].getMiddleName(), "D");
-        assertEquals(personList[1].getFirstName(), "Brian");
-        assertEquals(personList[1].getLastName(), "Hackett");
-    }
+    /**
+     * Gets a country geographic boundary based on the name.
+     *
+     * @param countryName
+     * @return NULL if no match is found
+     */
+    public Country getCountry(final String countryName);
+    public State getState(final String stateName);
 }

@@ -36,50 +36,77 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.service.party;
+package com.medigy.service.impl.contact;
 
+import com.medigy.persist.model.party.ContactMechanism;
+import com.medigy.persist.model.party.Party;
 import com.medigy.persist.model.party.PartyContactMechanism;
-import com.medigy.persist.model.party.PhoneNumber;
-import com.medigy.persist.model.person.Person;
+import com.medigy.persist.model.party.PartyContactMechanismPurpose;
+import com.medigy.persist.model.contact.Country;
+import com.medigy.persist.model.contact.State;
 import com.medigy.persist.reference.custom.party.ContactMechanismPurposeType;
 import com.medigy.persist.util.HibernateUtil;
-import com.medigy.service.TestCase;
+import com.medigy.service.util.ReferenceEntityFacade;
+import com.medigy.service.util.UnknownReferenceTypeException;
 import com.medigy.service.contact.ContactMechanismFacade;
+import org.hibernate.criterion.Restrictions;
 
-import java.util.List;
-
-public class TestContactMechanismFacade extends TestCase
+public class ContactMechanismFacadeImpl implements ContactMechanismFacade
 {
-    public void testAddPartyContactMechanism() throws Exception
+    private ReferenceEntityFacade  referenceEntityFacade;
+
+    public ReferenceEntityFacade getReferenceEntityFacade()
     {
-        HibernateUtil.beginTransaction();
+        return referenceEntityFacade;
+    }
 
-        final Person person = new Person();
-        person.setLastName("Hackett");
-        person.setFirstName("Josh");
-        HibernateUtil.getSession().save(person);
+    public void setReferenceEntityFacade(final ReferenceEntityFacade referenceEntityFacade)
+    {
+        this.referenceEntityFacade = referenceEntityFacade;
+    }
 
-        final PhoneNumber phone = new PhoneNumber();
-        phone.setCountryCode("123");
-        phone.setNumber("1234567");
-        phone.setAreaCode("703");
-        phone.setExtension(null);
-        HibernateUtil.getSession().save(phone);
+    /**
+     * Adds a contact mechanism for a party
+     *
+     * @param cm            the contact mechanism
+     * @param party         the party
+     * @param purposeType
+     * @param purposeDescription
+     */
+    public void addPartyContactMechanism(final ContactMechanism cm, final Party party, final String purposeType, final String purposeDescription)
+    {
+        // now create the relationship entry between party and the postal address
+        final PartyContactMechanism mech = new PartyContactMechanism();
+        mech.setParty(party);
 
-        ContactMechanismFacade facade = (ContactMechanismFacade) getRegistry().getService(ContactMechanismFacade.class);
-        facade.addPartyContactMechanism(phone, person, ContactMechanismPurposeType.Cache.HOME_PHONE.getEntity().getCode(), null);
-        facade.addPartyContactMechanism(phone, person, ContactMechanismPurposeType.Cache.OTHER.getEntity().getCode(), "The Bat Phone");
-        HibernateUtil.commitTransaction();
+        final PartyContactMechanismPurpose purpose = new PartyContactMechanismPurpose();
+        ContactMechanismPurposeType contactMechanismPurposeType = null;
+        try
+        {
+            contactMechanismPurposeType = referenceEntityFacade.getContactMechanismPurposeType(purposeType);
+        }
+        catch (UnknownReferenceTypeException e)
+        {
+            // unknown built-in purpose type
+            contactMechanismPurposeType = ContactMechanismPurposeType.Cache.OTHER.getEntity();
+        }
+        if (contactMechanismPurposeType.equals(ContactMechanismPurposeType.Cache.OTHER.getEntity()))
+            purpose.setDescription(purposeDescription);
+        purpose.setType(contactMechanismPurposeType);
+        purpose.setPartyContactMechanism(mech);
 
-        List contactMechList = HibernateUtil.getSession().createCriteria(PartyContactMechanism.class).list();
-        assertThat(contactMechList.size(), eq(2));
+        mech.addPurpose(purpose);
+        mech.setContactMechanism(cm);
+        HibernateUtil.getSession().save(mech);
+    }
 
-        PartyContactMechanism mech = (PartyContactMechanism) contactMechList.toArray()[0];
-        assertThat(mech.hasPurpose(ContactMechanismPurposeType.Cache.HOME_PHONE.getEntity()), eq(true));
+    public Country getCountry(final String countryName)
+    {
+        return (Country) HibernateUtil.getSession().createCriteria(Country.class).add(Restrictions.eq("name", countryName)).uniqueResult();
+    }
 
-        mech =  (PartyContactMechanism) contactMechList.toArray()[1];
-        assertThat(mech.hasPurpose(ContactMechanismPurposeType.Cache.OTHER.getEntity()), eq(true));
-        assertThat(mech.getPurpose(ContactMechanismPurposeType.Cache.OTHER.getEntity()).getDescription(), eq("The Bat Phone"));
-
+    public State getState(final String stateName)
+    {
+        return (State) HibernateUtil.getSession().createCriteria(State.class).add(Restrictions.eq("name", stateName)).uniqueResult();
     }
 }

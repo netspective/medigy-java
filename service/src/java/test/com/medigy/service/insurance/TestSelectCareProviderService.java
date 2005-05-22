@@ -6,6 +6,7 @@ package com.medigy.service.insurance;
 import com.medigy.persist.model.insurance.InsurancePolicy;
 import com.medigy.persist.util.HibernateUtil;
 import com.medigy.service.TestCase;
+import com.medigy.service.impl.insurance.SelectCareProviderServiceImpl;
 import com.medigy.service.dto.insurance.CareProviderSelectionData;
 import com.medigy.service.dto.insurance.SelectCareProviderParameters;
 import org.hibernate.Criteria;

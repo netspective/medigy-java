@@ -38,49 +38,31 @@
  */
 package com.medigy.service.person;
 
+import com.medigy.persist.model.party.PartyRole;
+import com.medigy.persist.model.party.PostalAddress;
 import com.medigy.persist.model.person.Person;
-import com.medigy.service.TestCase;
-import com.medigy.service.impl.person.PersonFacadeImpl;
-import com.medigy.service.person.PersonFacade;
+import com.medigy.persist.reference.custom.person.PersonRoleType;
+import com.medigy.service.util.Facade;
 
-public class TestPersonFacade extends TestCase
+import java.io.Serializable;
+
+/**
+ * Interface for Person related activities. Implementation classes will be used by the
+ * service layer to perform more higher level functions.
+ */
+public interface PersonFacade extends Facade
 {
-    private PersonFacade personFacade;
+    public Person[] listPersonByLastName(final String lastName, boolean exactMatch);
 
-    protected void setUp() throws Exception
-    {
-        super.setUp();
-        personFacade =  new PersonFacadeImpl();
-    }
+    // TODO: The primary keys are left as SERIALIZABLE for now
+    public Person getPersonById(final Serializable id);
 
-    public String getDataSetFile()
-    {
-        return "/com/medigy/service/person/TestPersonFacade.xml";
-    }
+    public void addPerson(Person person);
+    public Person addPerson(String lastName, String firstName);
 
-    public void testListPersonByLastName() throws Exception
-    {
-        Person[] personList = personFacade.listPersonByLastName("d%", false);
-        assertNotNull(personList);
-        assertEquals(personList.length, 1);
-        assertEquals(personList[0].getFirstName(), "John");
-        assertEquals(personList[0].getLastName(), "Doe");
-        assertEquals(personList[0].getMiddleName(), "D");
+    public PartyRole addPersonRole(Person person, PersonRoleType type);
 
-        personList = personFacade.listPersonByLastName("Doe", true);
-        assertNotNull(personList);
-        assertEquals(personList.length, 1);
-        assertEquals(personList[0].getFirstName(), "John");
-        assertEquals(personList[0].getLastName(), "Doe");
-        assertEquals(personList[0].getMiddleName(), "D");
+    public PostalAddress getHomeAddress(Person person);
 
-        personList = personFacade.listPersonByLastName("%", false);
-        assertNotNull(personList);
-        assertEquals(personList.length, 2);
-        assertEquals(personList[0].getFirstName(), "John");
-        assertEquals(personList[0].getLastName(), "Doe");
-        assertEquals(personList[0].getMiddleName(), "D");
-        assertEquals(personList[1].getFirstName(), "Brian");
-        assertEquals(personList[1].getLastName(), "Hackett");
-    }
+
 }

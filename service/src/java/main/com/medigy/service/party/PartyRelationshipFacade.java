@@ -36,51 +36,29 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.service.person;
+package com.medigy.service.party;
 
+import com.medigy.persist.model.org.Organization;
+import com.medigy.persist.model.party.Party;
+import com.medigy.persist.model.party.PartyRelationship;
+import com.medigy.persist.model.party.PartyRole;
 import com.medigy.persist.model.person.Person;
-import com.medigy.service.TestCase;
-import com.medigy.service.impl.person.PersonFacadeImpl;
-import com.medigy.service.person.PersonFacade;
+import com.medigy.persist.reference.custom.party.PartyRelationshipType;
+import com.medigy.service.util.Facade;
 
-public class TestPersonFacade extends TestCase
+import java.util.List;
+
+public interface PartyRelationshipFacade extends Facade
 {
-    private PersonFacade personFacade;
+    public List getValidPartyRolesByRelationshipType(final PartyRelationshipType type);
 
-    protected void setUp() throws Exception
-    {
-        super.setUp();
-        personFacade =  new PersonFacadeImpl();
-    }
+    public PartyRelationship addPartyRelationship(PartyRelationshipType type, PartyRole fromRole, PartyRole toRole);
 
-    public String getDataSetFile()
-    {
-        return "/com/medigy/service/person/TestPersonFacade.xml";
-    }
+    public List listPartyRelationshipsByTypeAndFromRole(PartyRelationshipType type, PartyRole fromRole);
 
-    public void testListPersonByLastName() throws Exception
-    {
-        Person[] personList = personFacade.listPersonByLastName("d%", false);
-        assertNotNull(personList);
-        assertEquals(personList.length, 1);
-        assertEquals(personList[0].getFirstName(), "John");
-        assertEquals(personList[0].getLastName(), "Doe");
-        assertEquals(personList[0].getMiddleName(), "D");
+    public List listPatientResponsiblePartyRelationship(Party patient);
 
-        personList = personFacade.listPersonByLastName("Doe", true);
-        assertNotNull(personList);
-        assertEquals(personList.length, 1);
-        assertEquals(personList[0].getFirstName(), "John");
-        assertEquals(personList[0].getLastName(), "Doe");
-        assertEquals(personList[0].getMiddleName(), "D");
+    public void addFinancialResposibleOrganization(Person patient, Organization responsibleOrganization);
 
-        personList = personFacade.listPersonByLastName("%", false);
-        assertNotNull(personList);
-        assertEquals(personList.length, 2);
-        assertEquals(personList[0].getFirstName(), "John");
-        assertEquals(personList[0].getLastName(), "Doe");
-        assertEquals(personList[0].getMiddleName(), "D");
-        assertEquals(personList[1].getFirstName(), "Brian");
-        assertEquals(personList[1].getLastName(), "Hackett");
-    }
+    public void addFinancialResposiblePerson(Person patient, Person responsiblePerson);
 }

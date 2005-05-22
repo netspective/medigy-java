@@ -73,7 +73,7 @@ public class TestAddContactMechanismService extends TestCase
         final Person p = (Person) HibernateUtil.getSession().load(Person.class, new Long(2));
         assertEquals(p.getPartyContactMechanisms().size(), 0);
 
-        AddContactMechanismService service =  (AddContactMechanismService) getComponent(AddContactMechanismService.class);
+        AddContactMechanismService service =  (AddContactMechanismService) getRegistry().getService(AddContactMechanismService.class);
         final NewPostalAddress address = service.addPostalAddress(new AddPostalAddressParameters() {
                 public Serializable getPartyId()
                 {

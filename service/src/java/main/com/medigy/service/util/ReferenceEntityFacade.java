@@ -36,51 +36,30 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.service.person;
+package com.medigy.service.util;
 
-import com.medigy.persist.model.person.Person;
-import com.medigy.service.TestCase;
-import com.medigy.service.impl.person.PersonFacadeImpl;
-import com.medigy.service.person.PersonFacade;
+import com.medigy.persist.model.party.PartyRole;
+import com.medigy.persist.reference.custom.insurance.InsurancePolicyType;
+import com.medigy.persist.reference.custom.party.ContactMechanismPurposeType;
+import com.medigy.persist.reference.custom.person.EthnicityType;
+import com.medigy.persist.reference.type.GenderType;
+import com.medigy.persist.reference.type.LanguageType;
+import com.medigy.persist.reference.type.MaritalStatusType;
+import com.medigy.service.util.Facade;
 
-public class TestPersonFacade extends TestCase
+public interface ReferenceEntityFacade extends Facade
 {
-    private PersonFacade personFacade;
+    public InsurancePolicyType getInsurancePolicyType(final String code) throws UnknownReferenceTypeException;
 
-    protected void setUp() throws Exception
-    {
-        super.setUp();
-        personFacade =  new PersonFacadeImpl();
-    }
+    public LanguageType getLanguageType(final String code) throws UnknownReferenceTypeException;
 
-    public String getDataSetFile()
-    {
-        return "/com/medigy/service/person/TestPersonFacade.xml";
-    }
+    public GenderType getGenderType(final String genderCode) throws UnknownReferenceTypeException;
 
-    public void testListPersonByLastName() throws Exception
-    {
-        Person[] personList = personFacade.listPersonByLastName("d%", false);
-        assertNotNull(personList);
-        assertEquals(personList.length, 1);
-        assertEquals(personList[0].getFirstName(), "John");
-        assertEquals(personList[0].getLastName(), "Doe");
-        assertEquals(personList[0].getMiddleName(), "D");
+    public EthnicityType getEthnicityType(final String ethnicityCode) throws UnknownReferenceTypeException;
 
-        personList = personFacade.listPersonByLastName("Doe", true);
-        assertNotNull(personList);
-        assertEquals(personList.length, 1);
-        assertEquals(personList[0].getFirstName(), "John");
-        assertEquals(personList[0].getLastName(), "Doe");
-        assertEquals(personList[0].getMiddleName(), "D");
+    public MaritalStatusType getMaritalStatusType(String statusCode) throws UnknownReferenceTypeException;
 
-        personList = personFacade.listPersonByLastName("%", false);
-        assertNotNull(personList);
-        assertEquals(personList.length, 2);
-        assertEquals(personList[0].getFirstName(), "John");
-        assertEquals(personList[0].getLastName(), "Doe");
-        assertEquals(personList[0].getMiddleName(), "D");
-        assertEquals(personList[1].getFirstName(), "Brian");
-        assertEquals(personList[1].getLastName(), "Hackett");
-    }
+    public PartyRole getPersonRole(String roleCode) throws UnknownReferenceTypeException;
+
+    public ContactMechanismPurposeType getContactMechanismPurposeType(String purposeCode)  throws UnknownReferenceTypeException;
 }

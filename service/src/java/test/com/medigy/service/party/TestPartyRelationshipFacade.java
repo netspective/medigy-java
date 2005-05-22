@@ -45,8 +45,8 @@ import com.medigy.persist.reference.custom.party.PartyRelationshipType;
 import com.medigy.persist.reference.custom.person.PersonRoleType;
 import com.medigy.persist.util.HibernateUtil;
 import com.medigy.service.TestCase;
-import com.medigy.service.util.PartyRelationshipFacade;
-import com.medigy.service.util.PartyRelationshipFacadeImpl;
+import com.medigy.service.party.PartyRelationshipFacade;
+import com.medigy.service.impl.party.PartyRelationshipFacadeImpl;
 
 import java.util.List;
 

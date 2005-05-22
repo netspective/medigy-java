@@ -36,51 +36,76 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.service.person;
+package com.medigy.service.impl.org;
 
-import com.medigy.persist.model.person.Person;
-import com.medigy.service.TestCase;
-import com.medigy.service.impl.person.PersonFacadeImpl;
-import com.medigy.service.person.PersonFacade;
+import com.medigy.service.dto.org.AddInsuranceOrganization;
+import com.medigy.service.dto.org.NewOrganization;
+import com.medigy.service.dto.org.AddOrganization;
+import com.medigy.service.dto.party.NewPostalAddress;
+import com.medigy.service.dto.party.AddPostalAddressParameters;
+import com.medigy.service.dto.ServiceParameters;
+import com.medigy.service.ServiceVersion;
+import com.medigy.service.org.AddInsuranceCarrierService;
+import com.medigy.service.contact.AddContactMechanismService;
+import com.medigy.persist.model.org.Organization;
+import com.medigy.persist.util.HibernateUtil;
 
-public class TestPersonFacade extends TestCase
+import java.io.Serializable;
+
+public class AddInsuranceCarrierServiceImpl implements AddInsuranceCarrierService
 {
-    private PersonFacade personFacade;
+    private AddContactMechanismService addContactMechanismService;
 
-    protected void setUp() throws Exception
+    public AddContactMechanismService getAddContactMechanismService()
     {
-        super.setUp();
-        personFacade =  new PersonFacadeImpl();
+        return addContactMechanismService;
     }
 
-    public String getDataSetFile()
+    public void setAddContactMechanismService(final AddContactMechanismService addContactMechanismService)
     {
-        return "/com/medigy/service/person/TestPersonFacade.xml";
+        this.addContactMechanismService = addContactMechanismService;
     }
 
-    public void testListPersonByLastName() throws Exception
+    public NewOrganization addInsuranceCarrier(final AddInsuranceOrganization orgParams)
     {
-        Person[] personList = personFacade.listPersonByLastName("d%", false);
-        assertNotNull(personList);
-        assertEquals(personList.length, 1);
-        assertEquals(personList[0].getFirstName(), "John");
-        assertEquals(personList[0].getLastName(), "Doe");
-        assertEquals(personList[0].getMiddleName(), "D");
+        final Organization newOrg = new Organization();
+        newOrg.setOrganizationName(orgParams.getName());
+        HibernateUtil.getSession().save(newOrg);
 
-        personList = personFacade.listPersonByLastName("Doe", true);
-        assertNotNull(personList);
-        assertEquals(personList.length, 1);
-        assertEquals(personList[0].getFirstName(), "John");
-        assertEquals(personList[0].getLastName(), "Doe");
-        assertEquals(personList[0].getMiddleName(), "D");
+        final AddPostalAddressParameters mailingAddress = orgParams.getMailingAddress();
+        // TODO: Need to somehow pass the party ID
+        final NewPostalAddress newPostalAddress = getAddContactMechanismService().addPostalAddress(mailingAddress);
 
-        personList = personFacade.listPersonByLastName("%", false);
-        assertNotNull(personList);
-        assertEquals(personList.length, 2);
-        assertEquals(personList[0].getFirstName(), "John");
-        assertEquals(personList[0].getLastName(), "Doe");
-        assertEquals(personList[0].getMiddleName(), "D");
-        assertEquals(personList[1].getFirstName(), "Brian");
-        assertEquals(personList[1].getLastName(), "Hackett");
+        return new NewOrganization() {
+            public Serializable getNewOrganizationId()
+            {
+                return newOrg.getOrgId();
+            }
+
+            public String getErrorMessage()
+            {
+                return null;
+            }
+
+            public AddOrganization getAddOrganizationParameters()
+            {
+                return orgParams;
+            }
+        };
+    }
+
+    public ServiceVersion[] getSupportedServiceVersions()
+    {
+        return new ServiceVersion[0];
+    }
+
+    public boolean isValid(ServiceParameters parameters)
+    {
+        if (parameters instanceof AddInsuranceOrganization)
+        {
+            AddInsuranceOrganization orgParams = (AddInsuranceOrganization) parameters;
+            assert (orgParams.getName() != null && orgParams.getName().length() > 0) : "Organization name cannot be empty";
+        }
+        return true;
     }
 }

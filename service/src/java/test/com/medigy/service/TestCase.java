@@ -38,45 +38,45 @@
  */
 package com.medigy.service;
 
-import com.medigy.service.common.ReferenceEntityFacadeImpl;
-import com.medigy.service.contact.AddContactMechanismServiceImpl;
-import com.medigy.service.util.ContactMechanismFacadeImpl;
-import com.medigy.service.util.GeographicBoundaryFacadeImpl;
-import com.medigy.service.util.InsurancePolicyFacadeImpl;
-import com.medigy.service.util.OrganizationFacadeImpl;
-import com.medigy.service.util.PartyRelationshipFacadeImpl;
-import com.medigy.service.util.PersonFacadeImpl;
-import org.picocontainer.MutablePicoContainer;
-import org.picocontainer.defaults.DefaultPicoContainer;
-import org.picocontainer.defaults.SetterInjectionComponentAdapterFactory;
+import org.apache.hivemind.Registry;
+import org.apache.hivemind.impl.RegistryBuilder;
 
 public class TestCase extends com.medigy.persist.TestCase
 {
-    private MutablePicoContainer pico;
+    private Registry hivemindRegistry;
 
-    protected void setUpComponents()
+
+    public void buildRegistry()
     {
-        pico = new DefaultPicoContainer(new SetterInjectionComponentAdapterFactory());
-        pico.registerComponentImplementation(ReferenceEntityFacadeImpl.class);
-        pico.registerComponentImplementation(ContactMechanismFacadeImpl.class);
-        pico.registerComponentImplementation(GeographicBoundaryFacadeImpl.class);
-        pico.registerComponentImplementation(InsurancePolicyFacadeImpl.class);
-        pico.registerComponentImplementation(OrganizationFacadeImpl.class);
-        pico.registerComponentImplementation(PartyRelationshipFacadeImpl.class);
-        pico.registerComponentImplementation(PersonFacadeImpl.class);
+        /*
+        //String projectRoot = System.getProperty("PROJECT_ROOT", ".");
+        String path = "e:\\netspective\\medigy\\service\\src\\descriptor\\META-INF\\hivemodule.xml";
 
-        pico.registerComponentImplementation(AddContactMechanismServiceImpl.class);
+        ClassResolver resolver = new DefaultClassResolver();
+        RegistryBuilder builder = new RegistryBuilder();
+
+
+
+        builder.addModuleDescriptorProvider(new XmlModuleDescriptorProvider(resolver));
+
+        // Register the examples.xml file, which (given its non-standard name)
+        // is not visible.
+        builder.addModuleDescriptorProvider(new XmlModuleDescriptorProvider(resolver,
+                new FileResource(path)));
+
+        hivemindRegistry = builder.constructRegistry(Locale.getDefault());
+        */
+        hivemindRegistry = RegistryBuilder.constructDefaultRegistry();
     }
 
-    protected Object getComponent(final Class componentClass)
+    protected Registry getRegistry()
     {
-        return pico.getComponentInstanceOfType(componentClass);
-
+        return hivemindRegistry;
     }
 
     public TestCase()
     {
         super();
-        setUpComponents();
+        buildRegistry();
     }
 }

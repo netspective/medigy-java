@@ -36,51 +36,55 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.service.person;
+package com.medigy.service.impl.person;
 
 import com.medigy.persist.model.person.Person;
-import com.medigy.service.TestCase;
-import com.medigy.service.impl.person.PersonFacadeImpl;
+import com.medigy.persist.reference.custom.person.PersonRoleType;
+import com.medigy.persist.util.HibernateUtil;
+import com.medigy.service.ServiceVersion;
+import com.medigy.service.person.RegisterHealthCareProviderService;
 import com.medigy.service.person.PersonFacade;
+import com.medigy.service.dto.person.RegisterHealthCareProviderParameters;
+import com.medigy.service.dto.person.RegisteredProvider;
+import com.medigy.service.dto.ServiceParameters;
 
-public class TestPersonFacade extends TestCase
+public class RegisterHealthCareProviderServiceImpl implements RegisterHealthCareProviderService
 {
     private PersonFacade personFacade;
 
-    protected void setUp() throws Exception
+    public PersonFacade getPersonFacade()
     {
-        super.setUp();
-        personFacade =  new PersonFacadeImpl();
+        return personFacade;
     }
 
-    public String getDataSetFile()
+    public void setPersonFacade(final PersonFacade personFacade)
     {
-        return "/com/medigy/service/person/TestPersonFacade.xml";
+        this.personFacade = personFacade;
     }
 
-    public void testListPersonByLastName() throws Exception
+    public RegisteredProvider register(final RegisterHealthCareProviderParameters params)
     {
-        Person[] personList = personFacade.listPersonByLastName("d%", false);
-        assertNotNull(personList);
-        assertEquals(personList.length, 1);
-        assertEquals(personList[0].getFirstName(), "John");
-        assertEquals(personList[0].getLastName(), "Doe");
-        assertEquals(personList[0].getMiddleName(), "D");
+        final Person person = new Person();
+        person.setLastName(params.getLastName());
+        person.setFirstName(params.getFirstName());
+        person.setMiddleName(params.getMiddleName());
+        person.setSuffix(params.getSuffix());
 
-        personList = personFacade.listPersonByLastName("Doe", true);
-        assertNotNull(personList);
-        assertEquals(personList.length, 1);
-        assertEquals(personList[0].getFirstName(), "John");
-        assertEquals(personList[0].getLastName(), "Doe");
-        assertEquals(personList[0].getMiddleName(), "D");
+        HibernateUtil.getSession().save(person);
 
-        personList = personFacade.listPersonByLastName("%", false);
-        assertNotNull(personList);
-        assertEquals(personList.length, 2);
-        assertEquals(personList[0].getFirstName(), "John");
-        assertEquals(personList[0].getLastName(), "Doe");
-        assertEquals(personList[0].getMiddleName(), "D");
-        assertEquals(personList[1].getFirstName(), "Brian");
-        assertEquals(personList[1].getLastName(), "Hackett");
+        personFacade.addPersonRole(person, PersonRoleType.Cache.INDIVIDUAL_HEALTH_CARE_PRACTITIONER.getEntity());
+
+
+        return null;
+    }
+
+    public ServiceVersion[] getSupportedServiceVersions()
+    {
+        return new ServiceVersion[0];
+    }
+
+    public boolean isValid(ServiceParameters parameters)
+    {
+        return false;
     }
 }

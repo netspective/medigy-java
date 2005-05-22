@@ -36,51 +36,85 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.service.person;
+package com.medigy.service.contact;
 
-import com.medigy.persist.model.person.Person;
-import com.medigy.service.TestCase;
-import com.medigy.service.impl.person.PersonFacadeImpl;
-import com.medigy.service.person.PersonFacade;
+import com.medigy.service.dto.contact.EditPostalAddressParameters;
+import com.medigy.service.ServiceVersion;
+import com.medigy.persist.util.HibernateUtil;
+import com.medigy.persist.model.party.PostalAddress;
 
-public class TestPersonFacade extends TestCase
+import java.io.Serializable;
+
+public class TestEditContactMechanismService extends com.medigy.service.TestCase
 {
-    private PersonFacade personFacade;
-
-    protected void setUp() throws Exception
-    {
-        super.setUp();
-        personFacade =  new PersonFacadeImpl();
-    }
-
     public String getDataSetFile()
     {
-        return "/com/medigy/service/person/TestPersonFacade.xml";
+        return "/com/medigy/service/contact/TestEditContactMechanismService.xml";
     }
 
-    public void testListPersonByLastName() throws Exception
+    public void testEditPostalAddress()
     {
-        Person[] personList = personFacade.listPersonByLastName("d%", false);
-        assertNotNull(personList);
-        assertEquals(personList.length, 1);
-        assertEquals(personList[0].getFirstName(), "John");
-        assertEquals(personList[0].getLastName(), "Doe");
-        assertEquals(personList[0].getMiddleName(), "D");
 
-        personList = personFacade.listPersonByLastName("Doe", true);
-        assertNotNull(personList);
-        assertEquals(personList.length, 1);
-        assertEquals(personList[0].getFirstName(), "John");
-        assertEquals(personList[0].getLastName(), "Doe");
-        assertEquals(personList[0].getMiddleName(), "D");
+        final EditContactMechanismService service = (EditContactMechanismService) getRegistry().getService(EditContactMechanismService.class);// getComponent(EditContactMechanismService.class);
 
-        personList = personFacade.listPersonByLastName("%", false);
-        assertNotNull(personList);
-        assertEquals(personList.length, 2);
-        assertEquals(personList[0].getFirstName(), "John");
-        assertEquals(personList[0].getLastName(), "Doe");
-        assertEquals(personList[0].getMiddleName(), "D");
-        assertEquals(personList[1].getFirstName(), "Brian");
-        assertEquals(personList[1].getLastName(), "Hackett");
+        service.editPostalAddress(new EditPostalAddressParameters() {
+            public Serializable getPostalAddressId()
+            {
+                return new Long(1);
+            }
+
+            public Serializable getPartyId()
+            {
+                return new Long(2);
+            }
+
+            public String getStreet1()
+            {
+                return "666 Damian Lane";
+            }
+
+            public String getStreet2()
+            {
+                return null;
+            }
+
+            public String getCity()
+            {
+                return "Arlington";
+            }
+
+            public String getState()
+            {
+                return "Virginia";
+            }
+
+            public String getProvince()
+            {
+                return null;
+            }
+
+            public String getPostalCode()
+            {
+                return "22000";
+            }
+
+            public String getCounty()
+            {
+                return null;
+            }
+
+            public String getCountry()
+            {
+                return "United States of America";
+            }
+
+            public ServiceVersion getServiceVersion()
+            {
+                return null;
+            }
+        });
+
+        final PostalAddress address = (PostalAddress) HibernateUtil.getSession().load(PostalAddress.class, new Long("1"));
+        assertNotNull(address);
     }
 }

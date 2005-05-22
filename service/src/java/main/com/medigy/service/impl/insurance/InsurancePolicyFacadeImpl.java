@@ -36,8 +36,9 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.service.insurance;
+package com.medigy.service.impl.insurance;
 
+import com.medigy.persist.model.insurance.CoverageLevel;
 import com.medigy.persist.model.insurance.InsurancePlan;
 import com.medigy.persist.model.insurance.InsurancePolicy;
 import com.medigy.persist.model.insurance.InsuranceProduct;
@@ -45,74 +46,76 @@ import com.medigy.persist.model.org.Organization;
 import com.medigy.persist.model.person.Person;
 import com.medigy.persist.reference.custom.insurance.InsurancePolicyType;
 import com.medigy.persist.util.HibernateUtil;
-import com.medigy.service.TestCase;
-import com.medigy.service.impl.insurance.InsurancePolicyFacadeImpl;
+import com.medigy.service.util.AbstractFacade;
 import com.medigy.service.insurance.InsurancePolicyFacade;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class TestInsurancePolicyFacade extends TestCase
+public class InsurancePolicyFacadeImpl extends AbstractFacade implements InsurancePolicyFacade
 {
-    private static final Log log = LogFactory.getLog(TestInsurancePolicyFacade.class);
+    private static Log log = LogFactory.getLog(InsurancePolicyFacadeImpl.class);
 
-
-    public void testListInsuranceProducts()
+    public InsurancePolicy createInsurancePolicy(final Person insuredPerson,
+                                                 final Person contractHolder,
+                                                 final InsurancePlan plan,
+                                                 final String policyNumber,
+                                                 final String groupNumber,
+                                                 final InsurancePolicyType type,
+                                                 final Date startDate)
     {
-        final Organization policyProvider = (Organization) HibernateUtil.getSession().load(Organization.class, new Long(2));
+        // create the new policy
+        InsurancePolicy policy = new InsurancePolicy();
+        policy.setPolicyNumber(policyNumber);
+        policy.setGroupNumber(groupNumber);
+        policy.setInsuredPerson(insuredPerson);
+        policy.setContractHolderPerson(contractHolder);
+        policy.setInsurancePlan(plan);
+        policy.setFromDate(startDate);
+        policy.setType(type);
+        insuredPerson.addInsurancePolicy(policy);
+        contractHolder.addResponsibleInsurancePolicy(policy);
 
-        final InsurancePolicyFacade facade = new InsurancePolicyFacadeImpl();
-        List<InsuranceProduct> productList = facade.listInsuranceProducts(policyProvider);
-        assertEquals(1, productList.size());
-        final InsuranceProduct newProduct = productList.get(0);
-        assertEquals("PPO Deluxe", newProduct.getName());
-
+        HibernateUtil.getSession().save(policy);
+        return policy;
     }
 
-    /*
-    public void testListCoverageLevels()
+    public List<CoverageLevel> listCoverageLevels(final InsuranceProduct product)
     {
-        final InsuranceProduct product = (InsuranceProduct) HibernateUtil.getSession().load(InsuranceProduct.class, new Long(1));
-        final InsurancePolicyFacade facade = new InsurancePolicyFacadeImpl();
-        List<CoverageLevel> levels = facade.listCoverageLevels(product);
-        
-    }
-   */
 
-    public void testCreateIndividualInsurancePolicy()
-    {
-        final Organization policyProvider = (Organization) HibernateUtil.getSession().load(Organization.class, new Long(2));
-        final InsuranceProduct product = policyProvider.getInsuranceProduct("PPO Deluxe");
-        final InsurancePlan plan = product.getInsurancePlan("Super Plan");
-
-        final Person policyHolder = (Person) HibernateUtil.getSession().load(Person.class, new Long(3));
-        final List insuredDependentList = HibernateUtil.getSession().createCriteria(Person.class).add(Restrictions.gt("partyId", new Long(3))).list();
-        final Person[] insuredDependents = (Person[]) insuredDependentList.toArray(new Person[0]);
-
-        final InsurancePolicyFacade facade = new InsurancePolicyFacadeImpl();
-        for (Person depdendent : insuredDependents)
-        {
-            final InsurancePolicy policy = facade.createInsurancePolicy(depdendent, policyHolder, plan, "12345", "XXX",
-                InsurancePolicyType.Cache.INDIVIDUAL_INSURANCE_POLICY.getEntity(), new Date());
-            HibernateUtil.getSession().flush();
-        }
-        final List newPolicies =  HibernateUtil.getSession().createCriteria(InsurancePolicy.class).list();
-        assertThat(newPolicies.size(), eq(insuredDependents.length));
-        final InsurancePolicy[] policyList = (InsurancePolicy[]) newPolicies.toArray(new InsurancePolicy[0]);
-        for (InsurancePolicy newPolicy : policyList)
-        {
-            assertThat(newPolicy.getPolicyNumber(), eq("12345"));
-            assertThat(newPolicy.getGroupNumber(), eq("XXX"));
-            assertThat(newPolicy.getContractHolderPerson().getPartyId(), eq(policyHolder.getPartyId()));
-        }
-
+        return null;
     }
 
-    public String getDataSetFile()
+    public List listInsurancePlans(final InsuranceProduct product)
     {
-        return "/com/medigy/service/insurance/TestInsurancePolicyFacade.xml";
+        Criteria criteria = HibernateUtil.getSession().createCriteria(InsurancePlan.class);
+        criteria.createCriteria("insuranceProduct").add(Restrictions.eq("productId", product.getProductId()));
+        return criteria.list();
     }
+
+    public List<InsurancePolicy> listInsurancePolicies(final Serializable personId)
+    {
+        List list = HibernateUtil.getSession().createQuery("from InsurancePolicy insPolicy where insPolicy.insuredPerson.partyId = " + personId).list();
+        List<InsurancePolicy> policies = new ArrayList<InsurancePolicy>(list.size());;
+        convert(InsurancePolicy.class, list, policies);
+        return policies;
+    }
+
+    public List<InsuranceProduct> listInsuranceProducts(final Organization org)
+    {
+        Criteria criteria = HibernateUtil.getSession().createCriteria(InsuranceProduct.class);
+        criteria.createCriteria("organization").add(Restrictions.eq("partyId", org.getPartyId()));
+        List list = criteria.list();
+        List<InsuranceProduct> products = new ArrayList<InsuranceProduct>(list.size());
+        convert(InsuranceProduct.class, list, products);
+        return products;
+    }
+
+
 }

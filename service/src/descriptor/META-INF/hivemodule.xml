@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<module id="medigy" version="1.0.0" package="com.medigy.service">
+
+    <service-point id="AddContactMechanismService" interface="com.medigy.service.contact.AddContactMechanismService">
+        <interceptor service-id="hivemind.LoggingInterceptor"/>
+        <invoke-factory>
+            <!-- Autowires service properties based on interface! -->
+            <construct class="impl.contact.AddContactMechanismServiceImpl"/>
+        </invoke-factory>
+    </service-point>
+
+    <service-point id="EditContactMechanismService" interface="com.medigy.service.contact.EditContactMechanismService">
+        <interceptor service-id="hivemind.LoggingInterceptor"/>
+        <invoke-factory>
+            <!-- Autowires service properties based on interface! -->
+            <construct class="impl.contact.EditContactMechanismServiceImpl"/>
+        </invoke-factory>
+    </service-point>
+
+    <service-point id="ContactMechanismFacade" interface="com.medigy.service.contact.ContactMechanismFacade">
+        <invoke-factory>
+            <!-- Autowires service properties based on interface! -->
+            <construct class="impl.contact.ContactMechanismFacadeImpl"/>
+        </invoke-factory>
+         <interceptor service-id="hivemind.LoggingInterceptor"/>
+    </service-point>
+
+    <service-point id="AddInsuranceCarrierService" interface="com.medigy.service.org.AddInsuranceCarrierService">
+        <interceptor service-id="hivemind.LoggingInterceptor"/>
+        <invoke-factory>
+            <!-- Autowires service properties based on interface! -->
+            <construct class="impl.org.AddInsuranceCarrierServiceImpl"/>
+        </invoke-factory>
+    </service-point>
+
+    <service-point id="PatientRegistrationService" interface="com.medigy.service.person.PatientRegistrationService">
+        <interceptor service-id="hivemind.LoggingInterceptor"/>
+        <invoke-factory>
+            <!-- Autowires service properties based on interface! -->
+            <construct class="impl.person.PatientRegistrationServiceImpl"/>
+        </invoke-factory>
+    </service-point>
+
+    <service-point id="RegisterHealthCareProviderService" interface="com.medigy.service.person.RegisterHealthCareProviderService">
+        <interceptor service-id="hivemind.LoggingInterceptor"/>
+        <invoke-factory>
+            <!-- Autowires service properties based on interface! -->
+            <construct class="impl.person.RegisterHealthCareProviderServiceImpl"/>
+        </invoke-factory>
+    </service-point>
+
+    <service-point id="ReferenceEntityFacade" interface="com.medigy.service.util.ReferenceEntityFacade">
+        <create-instance class="impl.util.ReferenceEntityFacadeImpl"/>
+         <interceptor service-id="hivemind.LoggingInterceptor"/>
+    </service-point>
+
+    <service-point id="HealthCareReferralFacade" interface="com.medigy.service.health.HealthCareReferralFacade">
+        <create-instance class="impl.health.HealthCareReferralFacadeImpl"/>
+         <interceptor service-id="hivemind.LoggingInterceptor"/>
+    </service-point>
+
+    <service-point id="GeographicBoundaryFacade" interface="com.medigy.service.contact.GeographicBoundaryFacade">
+        <create-instance class="impl.contact.GeographicBoundaryFacadeImpl"/>
+         <interceptor service-id="hivemind.LoggingInterceptor"/>
+    </service-point>
+</module>

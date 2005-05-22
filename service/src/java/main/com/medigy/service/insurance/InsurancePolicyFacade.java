@@ -36,51 +36,49 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.service.person;
+package com.medigy.service.insurance;
 
+import com.medigy.persist.model.insurance.InsurancePlan;
+import com.medigy.persist.model.insurance.InsurancePolicy;
+import com.medigy.persist.model.insurance.InsuranceProduct;
+import com.medigy.persist.model.insurance.CoverageLevel;
+import com.medigy.persist.model.org.Organization;
 import com.medigy.persist.model.person.Person;
-import com.medigy.service.TestCase;
-import com.medigy.service.impl.person.PersonFacadeImpl;
-import com.medigy.service.person.PersonFacade;
+import com.medigy.persist.reference.custom.insurance.InsurancePolicyType;
+import com.medigy.service.util.Facade;
 
-public class TestPersonFacade extends TestCase
+import java.io.Serializable;
+import java.util.Date;
+import java.util.List;
+
+public interface InsurancePolicyFacade extends Facade
 {
-    private PersonFacade personFacade;
 
-    protected void setUp() throws Exception
-    {
-        super.setUp();
-        personFacade =  new PersonFacadeImpl();
-    }
 
-    public String getDataSetFile()
-    {
-        return "/com/medigy/service/person/TestPersonFacade.xml";
-    }
+    public InsurancePolicy createInsurancePolicy(final Person  insuredPerson,
+                                                 final Person contractHolder,
+                                                 final InsurancePlan plan,
+                                                 final String policyNumber, 
+                                                 final String groupNumber,
+                                                 final InsurancePolicyType type,
+                                                 final Date startDate);
 
-    public void testListPersonByLastName() throws Exception
-    {
-        Person[] personList = personFacade.listPersonByLastName("d%", false);
-        assertNotNull(personList);
-        assertEquals(personList.length, 1);
-        assertEquals(personList[0].getFirstName(), "John");
-        assertEquals(personList[0].getLastName(), "Doe");
-        assertEquals(personList[0].getMiddleName(), "D");
+    public List<CoverageLevel> listCoverageLevels(final InsuranceProduct product);
 
-        personList = personFacade.listPersonByLastName("Doe", true);
-        assertNotNull(personList);
-        assertEquals(personList.length, 1);
-        assertEquals(personList[0].getFirstName(), "John");
-        assertEquals(personList[0].getLastName(), "Doe");
-        assertEquals(personList[0].getMiddleName(), "D");
+    public List listInsurancePlans(final InsuranceProduct product);
 
-        personList = personFacade.listPersonByLastName("%", false);
-        assertNotNull(personList);
-        assertEquals(personList.length, 2);
-        assertEquals(personList[0].getFirstName(), "John");
-        assertEquals(personList[0].getLastName(), "Doe");
-        assertEquals(personList[0].getMiddleName(), "D");
-        assertEquals(personList[1].getFirstName(), "Brian");
-        assertEquals(personList[1].getLastName(), "Hackett");
-    }
+    /**
+     * Lists all insurance policies associated with the person.This person can be
+     * either the policy holder or an insured dependent.
+     * @param personId
+     * @return
+     */
+    public List<InsurancePolicy> listInsurancePolicies(final Serializable personId);
+
+    /**
+     * Lists all insurance products advertised by the isurance provider organization
+     * @param org
+     * @return
+     */
+    public List<InsuranceProduct> listInsuranceProducts(final Organization org);
 }

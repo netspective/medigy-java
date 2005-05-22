@@ -36,51 +36,26 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.service.person;
+package com.medigy.service.util;
 
-import com.medigy.persist.model.person.Person;
-import com.medigy.service.TestCase;
-import com.medigy.service.impl.person.PersonFacadeImpl;
-import com.medigy.service.person.PersonFacade;
-
-public class TestPersonFacade extends TestCase
+public class UnknownReferenceTypeException extends Exception
 {
-    private PersonFacade personFacade;
-
-    protected void setUp() throws Exception
+    public UnknownReferenceTypeException()
     {
-        super.setUp();
-        personFacade =  new PersonFacadeImpl();
     }
 
-    public String getDataSetFile()
+    public UnknownReferenceTypeException(String message)
     {
-        return "/com/medigy/service/person/TestPersonFacade.xml";
+        super(message);
     }
 
-    public void testListPersonByLastName() throws Exception
+    public UnknownReferenceTypeException(String message, Throwable cause)
     {
-        Person[] personList = personFacade.listPersonByLastName("d%", false);
-        assertNotNull(personList);
-        assertEquals(personList.length, 1);
-        assertEquals(personList[0].getFirstName(), "John");
-        assertEquals(personList[0].getLastName(), "Doe");
-        assertEquals(personList[0].getMiddleName(), "D");
+        super(message, cause);
+    }
 
-        personList = personFacade.listPersonByLastName("Doe", true);
-        assertNotNull(personList);
-        assertEquals(personList.length, 1);
-        assertEquals(personList[0].getFirstName(), "John");
-        assertEquals(personList[0].getLastName(), "Doe");
-        assertEquals(personList[0].getMiddleName(), "D");
-
-        personList = personFacade.listPersonByLastName("%", false);
-        assertNotNull(personList);
-        assertEquals(personList.length, 2);
-        assertEquals(personList[0].getFirstName(), "John");
-        assertEquals(personList[0].getLastName(), "Doe");
-        assertEquals(personList[0].getMiddleName(), "D");
-        assertEquals(personList[1].getFirstName(), "Brian");
-        assertEquals(personList[1].getLastName(), "Hackett");
+    public UnknownReferenceTypeException(Throwable cause)
+    {
+        super(cause);
     }
 }

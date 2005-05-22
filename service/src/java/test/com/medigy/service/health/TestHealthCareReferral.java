@@ -42,6 +42,7 @@ import com.medigy.persist.model.person.Person;
 import com.medigy.persist.reference.custom.health.HealthCareReferralType;
 import com.medigy.persist.util.HibernateUtil;
 import com.medigy.service.TestCase;
+import com.medigy.service.impl.health.HealthCareReferralFacadeImpl;
 
 import java.util.List;
 

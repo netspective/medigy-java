@@ -47,7 +47,6 @@ import com.medigy.persist.reference.type.GenderType;
 import com.medigy.persist.reference.type.LanguageType;
 import com.medigy.persist.reference.type.MaritalStatusType;
 import com.medigy.persist.util.HibernateUtil;
-import com.medigy.service.ServiceLocator;
 import com.medigy.service.TestCase;
 import com.medigy.service.dto.person.RegisterPatientParameters;
 import com.medigy.service.dto.person.RegisteredPatient;
@@ -356,7 +355,7 @@ public class TestPatientRegistrationService extends TestCase
                     fail(e.getMessage());
                 }
 
-        PatientRegistrationService service = (PatientRegistrationService) ServiceLocator.getInstance().getService(PatientRegistrationService.class);
+        PatientRegistrationService service = (PatientRegistrationService)getRegistry().getService(PatientRegistrationService.class);
         final RegisteredPatient registeredPatient = service.registerPatient(patientParameters);
         if (registeredPatient.getErrorMessage() != null)
             fail(registeredPatient.getErrorMessage());

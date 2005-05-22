@@ -36,51 +36,36 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.service.person;
+package com.medigy.service.impl.health;
 
-import com.medigy.persist.model.person.Person;
-import com.medigy.service.TestCase;
-import com.medigy.service.impl.person.PersonFacadeImpl;
-import com.medigy.service.person.PersonFacade;
+import com.medigy.persist.util.HibernateUtil;
+import com.medigy.service.health.HealthCareReferralFacade;
 
-public class TestPersonFacade extends TestCase
+import java.util.List;
+import java.io.Serializable;
+
+public class HealthCareReferralFacadeImpl implements HealthCareReferralFacade
 {
-    private PersonFacade personFacade;
-
-    protected void setUp() throws Exception
+    /**
+     * Lists all referrals by the patient ID
+     * @param patientId
+     * @return
+     */
+    public List listReferralsByPatient(final Serializable patientId)
     {
-        super.setUp();
-        personFacade =  new PersonFacadeImpl();
+        return HibernateUtil.getSession().createQuery("from HealthCareReferral  hcr " +
+                " where hcr.patientRole.party.partyId = "  + patientId).list();
     }
 
-    public String getDataSetFile()
+    /**
+     * List all referrals by the requesting physician ID
+     *
+     * @param physicianId
+     * @return
+     */
+    public List listReferralsByRequestor(final Serializable physicianId)
     {
-        return "/com/medigy/service/person/TestPersonFacade.xml";
-    }
-
-    public void testListPersonByLastName() throws Exception
-    {
-        Person[] personList = personFacade.listPersonByLastName("d%", false);
-        assertNotNull(personList);
-        assertEquals(personList.length, 1);
-        assertEquals(personList[0].getFirstName(), "John");
-        assertEquals(personList[0].getLastName(), "Doe");
-        assertEquals(personList[0].getMiddleName(), "D");
-
-        personList = personFacade.listPersonByLastName("Doe", true);
-        assertNotNull(personList);
-        assertEquals(personList.length, 1);
-        assertEquals(personList[0].getFirstName(), "John");
-        assertEquals(personList[0].getLastName(), "Doe");
-        assertEquals(personList[0].getMiddleName(), "D");
-
-        personList = personFacade.listPersonByLastName("%", false);
-        assertNotNull(personList);
-        assertEquals(personList.length, 2);
-        assertEquals(personList[0].getFirstName(), "John");
-        assertEquals(personList[0].getLastName(), "Doe");
-        assertEquals(personList[0].getMiddleName(), "D");
-        assertEquals(personList[1].getFirstName(), "Brian");
-        assertEquals(personList[1].getLastName(), "Hackett");
+        return HibernateUtil.getSession().createQuery("from HealthCareReferral  hcr " +
+                " where hcr.requesterRole.party.partyId = "  + physicianId).list();
     }
 }

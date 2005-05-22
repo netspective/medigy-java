@@ -36,51 +36,62 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.service.person;
+package com.medigy.service.contact;
 
-import com.medigy.persist.model.person.Person;
-import com.medigy.service.TestCase;
-import com.medigy.service.impl.person.PersonFacadeImpl;
-import com.medigy.service.person.PersonFacade;
+import com.medigy.persist.model.contact.GeographicBoundary;
+import com.medigy.persist.reference.custom.GeographicBoundaryType;
 
-public class TestPersonFacade extends TestCase
+import java.util.List;
+
+/**
+ * Interface class for geographic boundary related activities. Implementing classes
+ * will be used by service layer classes to perform higher level functions.
+ */
+public interface GeographicBoundaryFacade
 {
-    private PersonFacade personFacade;
+    /**
+     * Adds a new geographic boundary who has no parents
+     * @param name
+     * @param type
+     * @return Unique ID for the new geographic boundary
+     */
+    public GeographicBoundary addGeographicBoundary(String name, GeographicBoundaryType type);
 
-    protected void setUp() throws Exception
-    {
-        super.setUp();
-        personFacade =  new PersonFacadeImpl();
-    }
+    /**
+     * Add a new geographic boundary
+     * @param name      Name of the geographic boundary
+     * @param type      The geo boundary type
+     * @param parents   The geo boundaries to which this new one belongs to
+     */
+    public GeographicBoundary addGeographicBoundary(String name, GeographicBoundaryType type, GeographicBoundary[] parents);
 
-    public String getDataSetFile()
-    {
-        return "/com/medigy/service/person/TestPersonFacade.xml";
-    }
+    /**
+     * List all geographic boundaries of the same type
+     * @param type
+     * @return
+     */
+    public List listGeographicBoundaries(GeographicBoundaryType type);
 
-    public void testListPersonByLastName() throws Exception
-    {
-        Person[] personList = personFacade.listPersonByLastName("d%", false);
-        assertNotNull(personList);
-        assertEquals(personList.length, 1);
-        assertEquals(personList[0].getFirstName(), "John");
-        assertEquals(personList[0].getLastName(), "Doe");
-        assertEquals(personList[0].getMiddleName(), "D");
+    /**
+     * Gets a geographic boundary by its name and type. The name will be a case insensitive
+     * exact match.
+     *
+     * @param name
+     * @param type
+     * @return      an existing geo boundary and Null if it doesn't exist
+     */
+    public GeographicBoundary getGeographicBoundary(String name, GeographicBoundaryType type);
 
-        personList = personFacade.listPersonByLastName("Doe", true);
-        assertNotNull(personList);
-        assertEquals(personList.length, 1);
-        assertEquals(personList[0].getFirstName(), "John");
-        assertEquals(personList[0].getLastName(), "Doe");
-        assertEquals(personList[0].getMiddleName(), "D");
+    /**
+     * Gets a geographic boundary by its name and type. The name will be a case insensitive
+     * exact match. Also if one doesn't exist, a new one will be created and returned.
+     * @param name
+     * @param type
+     * @param addIfNew
+     * @return
+     */
+    public GeographicBoundary getGeographicBoundary(String name, GeographicBoundaryType type,
+                                                    boolean addIfNew);
 
-        personList = personFacade.listPersonByLastName("%", false);
-        assertNotNull(personList);
-        assertEquals(personList.length, 2);
-        assertEquals(personList[0].getFirstName(), "John");
-        assertEquals(personList[0].getLastName(), "Doe");
-        assertEquals(personList[0].getMiddleName(), "D");
-        assertEquals(personList[1].getFirstName(), "Brian");
-        assertEquals(personList[1].getLastName(), "Hackett");
-    }
+    
 }
