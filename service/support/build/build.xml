@@ -35,6 +35,20 @@
         </path>
     </target>
 
+    <target name="compile.main" depends="init.define-srcpaths,init.define-module.dependencies.classpaths,init.generate-xmlbean">
+        <delete dir="${module.artifacts.classes.main.home}"/>
+        <mkdir dir="${module.artifacts.classes.main.home}"/>
+        <copy todir="${module.artifacts.classes.main.home}" >
+            <fileset refid="module.resources.main"/>
+        </copy>
+        <generate-xmlbean />
+        <javac destdir="${module.artifacts.classes.main.home}"
+            debug="on" optimize="true" deprecation="off" classpathref="module.dependencies.main.classpath">
+            <src refid="module.main.srcpath"/>
+            <!--<compilerarg value="-Xlint:unchecked"/>-->
+        </javac>
+    </target>
+
     <target name="generate.xmlbean-from-xsd" depends="init.define-module.dependencies.classpaths,init.generate-xmlbean">
         <generate-xmlbean/>
     </target>
