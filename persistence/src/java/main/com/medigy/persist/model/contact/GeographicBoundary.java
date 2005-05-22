@@ -38,8 +38,10 @@
  */
 package com.medigy.persist.model.contact;
 
-import java.util.HashSet;
-import java.util.Set;
+import com.medigy.persist.model.common.AbstractTopLevelEntity;
+import com.medigy.persist.model.health.HealthCareLicense;
+import com.medigy.persist.model.party.PostalAddressBoundary;
+import com.medigy.persist.reference.custom.GeographicBoundaryType;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -50,16 +52,15 @@ import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-
-import com.medigy.persist.model.common.AbstractTopLevelEntity;
-import com.medigy.persist.model.health.HealthCareLicense;
-import com.medigy.persist.model.party.PostalAddressBoundary;
-import com.medigy.persist.reference.custom.GeographicBoundaryType;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED )
-public abstract class GeographicBoundary extends AbstractTopLevelEntity
+public class GeographicBoundary extends AbstractTopLevelEntity
 {
+    public static final String PK_COLUMN_NAME = "geo_id";
+
     private Long geoId;
     private String name;
     private String abbreviation;
@@ -81,6 +82,7 @@ public abstract class GeographicBoundary extends AbstractTopLevelEntity
     }
 
     @Id(generate = GeneratorType.AUTO)
+    @Column(name = PK_COLUMN_NAME)
     public final Long getGeoId()
     {
         return geoId;

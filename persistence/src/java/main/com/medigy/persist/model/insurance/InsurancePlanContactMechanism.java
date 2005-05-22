@@ -103,7 +103,7 @@ public class InsurancePlanContactMechanism extends AbstractDateDurationEntity
     }
 
     @ManyToOne
-    @JoinColumn(name = "contact_mech_id")
+    @JoinColumn(name = ContactMechanism.PK_COLUMN_NAME)
     public ContactMechanism getContactMechanism()
     {
         return contactMechanism;

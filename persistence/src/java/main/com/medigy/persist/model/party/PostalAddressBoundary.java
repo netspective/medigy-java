@@ -38,14 +38,14 @@
  */
 package com.medigy.persist.model.party;
 
+import com.medigy.persist.model.common.AbstractTopLevelEntity;
+import com.medigy.persist.model.contact.GeographicBoundary;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-
-import com.medigy.persist.model.common.AbstractTopLevelEntity;
-import com.medigy.persist.model.contact.GeographicBoundary;
 
 /**
  * Relationship class for relating postal addresses with various geographic boundaries
@@ -70,7 +70,7 @@ public class PostalAddressBoundary extends AbstractTopLevelEntity
     }
 
     @ManyToOne
-    @JoinColumn(name = "contact_mech_id")
+    @JoinColumn(name = PostalAddress.PK_COLUMN_NAME)
     public PostalAddress getPostalAddress()
     {
         return postalAddress;
@@ -82,7 +82,7 @@ public class PostalAddressBoundary extends AbstractTopLevelEntity
     }
 
     @ManyToOne
-    @JoinColumn(name = "geo_id")
+    @JoinColumn(name = GeographicBoundary.PK_COLUMN_NAME)
     public GeographicBoundary getGeographicBoundary()
     {
         return geographicBoundary;

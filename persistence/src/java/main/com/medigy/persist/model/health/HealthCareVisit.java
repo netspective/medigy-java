@@ -40,9 +40,9 @@ package com.medigy.persist.model.health;
 
 import com.medigy.persist.model.common.AbstractDateDurationEntity;
 import com.medigy.persist.model.party.Facility;
-import com.medigy.persist.model.party.PostalAddress;
 import com.medigy.persist.model.person.Person;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
@@ -50,11 +50,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.CascadeType;
 import javax.persistence.Transient;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.Date;
 
 /**
  * A health care visit may have been scheduled for several visit reasons: because of a health care episode
@@ -69,7 +68,6 @@ public class HealthCareVisit  extends AbstractDateDurationEntity
     private Long healthCareVisitId;
     private Facility facility;
     private Person patient;
-    private PostalAddress patientAddress;
 
     private Date scheduledTime;
     private Date startTime;
@@ -123,20 +121,6 @@ public class HealthCareVisit  extends AbstractDateDurationEntity
         this.scheduledTime = scheduledTime;
     }
 
-    /**
-     * Gets the "home call" address
-     * @return
-     */
-    @JoinColumn(name = "contact_mech_id")
-    public PostalAddress getPatientAddress()
-    {
-        return patientAddress;
-    }
-
-    public void setPatientAddress(PostalAddress patientAddress)
-    {
-        this.patientAddress = patientAddress;
-    }
 
     /**
      * Gets the facility at which the visit occurred

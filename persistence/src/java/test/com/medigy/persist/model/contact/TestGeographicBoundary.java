@@ -69,7 +69,7 @@ public class TestGeographicBoundary extends TestCase
     /**
      * Main purpose is to test the relationship between postal address and geo boundaries
      */
-    public void testPostalAddress()
+    public void testPostalAddress() throws Exception
     {
         final PostalAddress address = new PostalAddress();
         address.setAddress1("123 Acme Street");
@@ -84,7 +84,7 @@ public class TestGeographicBoundary extends TestCase
         stateA.setStateAbbreviation("VA");
         stateA.setCountry(country);
         country.addState(stateA);
-
+        
         final PostalAddressBoundary countryRel  = new PostalAddressBoundary();
         countryRel.setGeographicBoundary(country);
         countryRel.setPostalAddress(address);
@@ -117,6 +117,8 @@ public class TestGeographicBoundary extends TestCase
 
         final List countrList = HibernateUtil.getSession().createCriteria(Country.class).list();
         assertEquals(1, countrList.size());
+
+        this.extractFullDataset("c:\\temp\\PostalAddressData.xml");
     }
 
     /**

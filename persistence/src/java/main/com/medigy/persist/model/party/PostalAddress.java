@@ -39,21 +39,6 @@
  */
 package com.medigy.persist.model.party;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.Transient;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import com.medigy.persist.model.contact.City;
 import com.medigy.persist.model.contact.Country;
 import com.medigy.persist.model.contact.County;
@@ -62,11 +47,25 @@ import com.medigy.persist.model.contact.PostalCode;
 import com.medigy.persist.model.contact.State;
 import com.medigy.persist.reference.custom.GeographicBoundaryType;
 import com.medigy.persist.reference.type.ContactMechanismType;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.OneToMany;
+import javax.persistence.Transient;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Inheritance(strategy=InheritanceType.JOINED)
 public class PostalAddress extends ContactMechanism
 {
+    public static final String PK_COLUMN_NAME = ContactMechanism.PK_COLUMN_NAME;
+
     private static final Log log = LogFactory.getLog(PostalAddress.class);
 
     private String address1;
@@ -126,8 +125,7 @@ public class PostalAddress extends ContactMechanism
         this.directions = directions;
     }
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "contact_mech_id")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "postalAddress")
     public Set<PostalAddressBoundary> getAddressBoundaries()
     {
         return addressBoundaries;
@@ -165,12 +163,25 @@ public class PostalAddress extends ContactMechanism
     @Transient
     public void setCity(City boundary)
     {
-        setBoundry(boundary);
+        if (boundary == null)
+        {
+            // the association to the city is being removed so just removed the relationship PostalAddressBoundary
+            // and leave the city entity itself
+            removePostalAddressBoundary(GeographicBoundaryType.Cache.CITY.getEntity());
+            return;
+        }
     }
 
     @Transient
     public void setCity(String cityName)
     {
+        if (cityName == null)
+        {
+            // the association to the city is being removed so just removed the relationship PostalAddressBoundary
+            // and leave the city entity itself
+            removePostalAddressBoundary(GeographicBoundaryType.Cache.CITY.getEntity());
+            return;
+        }
         setBoundry(new City(cityName));
     }
 
@@ -183,6 +194,13 @@ public class PostalAddress extends ContactMechanism
     @Transient
     public void setState(State boundary)
     {
+        if (boundary == null)
+        {
+            // the association to the state is being removed so just removed the relationship PostalAddressBoundary
+            // and leave the state entity itself
+            removePostalAddressBoundary(GeographicBoundaryType.Cache.STATE.getEntity());
+            return;
+        }
         setBoundry(boundary);
     }
 
@@ -195,6 +213,13 @@ public class PostalAddress extends ContactMechanism
     @Transient
     public void setPostalCode(PostalCode boundary)
     {
+        if (boundary == null)
+        {
+            // the association to the postal code is being removed so just removed the relationship PostalAddressBoundary
+            // and leave the postal code entity itself
+            removePostalAddressBoundary(GeographicBoundaryType.Cache.POSTAL_CODE.getEntity());
+            return;
+        }
         setBoundry(boundary);
     }
 
@@ -207,6 +232,13 @@ public class PostalAddress extends ContactMechanism
     @Transient
     public void setCounty(County boundary)
     {
+        if (boundary == null)
+        {
+            // the association to the county is being removed so just removed the relationship PostalAddressBoundary
+            // and leave the county entity itself
+            removePostalAddressBoundary(GeographicBoundaryType.Cache.COUNTY.getEntity());
+            return;
+        }
         setBoundry(boundary);
     }
 
@@ -219,7 +251,27 @@ public class PostalAddress extends ContactMechanism
     @Transient
     public void setCountry(Country boundary)
     {
+        if (boundary == null)
+        {
+            // the association to the country is being removed so just removed the relationship PostalAddressBoundary
+            // and leave the country entity itself
+            removePostalAddressBoundary(GeographicBoundaryType.Cache.COUNTRY.getEntity());
+            return;
+        }
         setBoundry(boundary);
+    }
+
+    @Transient
+    public void removePostalAddressBoundary(final GeographicBoundaryType type)
+    {
+        for (PostalAddressBoundary rel : addressBoundaries)
+        {
+            if (rel.getGeographicBoundary().getType().equals(type))
+            {
+                addressBoundaries.remove(rel);
+                return;
+            }
+        }
     }
 
     @Transient

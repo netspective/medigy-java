@@ -42,13 +42,11 @@ package com.medigy.persist.model.party;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
-import javax.persistence.InheritanceJoinColumn;
 import javax.persistence.InheritanceType;
 import javax.persistence.Transient;
 
 @Entity
 @Inheritance(strategy=InheritanceType.JOINED)
-@InheritanceJoinColumn(name="contact_mech_id")
 public class ElectronicAddress extends ContactMechanism
 {
     private String electronicAddress;

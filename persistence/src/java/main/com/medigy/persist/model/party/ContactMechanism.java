@@ -52,6 +52,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.CascadeType;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -95,8 +96,7 @@ public class ContactMechanism extends AbstractTopLevelEntity
         this.type = type;
     }
 
-    @OneToMany
-    @JoinColumn(name = "contact_mech_id")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "contactMechanism")
     public Set<PartyContactMechanism> getPartyContactMechanisms()
     {
         return partyContactMechanisms;

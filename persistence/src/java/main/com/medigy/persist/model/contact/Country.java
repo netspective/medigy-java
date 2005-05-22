@@ -38,23 +38,20 @@
  */
 package com.medigy.persist.model.contact;
 
-import java.util.HashSet;
-import java.util.Set;
+import com.medigy.persist.reference.custom.GeographicBoundaryType;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Inheritance;
-import javax.persistence.InheritanceJoinColumn;
 import javax.persistence.InheritanceType;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
-
-import com.medigy.persist.reference.custom.GeographicBoundaryType;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED )
-@InheritanceJoinColumn(name="country_id")
 public class Country extends GeographicBoundary
 {
     private Set<State> states = new HashSet<State>();
