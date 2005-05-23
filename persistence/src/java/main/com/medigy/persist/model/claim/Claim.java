@@ -38,23 +38,33 @@
  */
 package com.medigy.persist.model.claim;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import com.medigy.persist.model.common.AbstractTopLevelEntity;
+import com.medigy.persist.model.health.HealthCareDelivery;
+import com.medigy.persist.model.insurance.InsurancePolicy;
+import com.medigy.persist.reference.custom.claim.ClaimType;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-
-import com.medigy.persist.model.common.AbstractTopLevelEntity;
+import javax.persistence.Column;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Claim extends AbstractTopLevelEntity
 {
+    public static final String PK_COLUMN_NAME = "claim_id";
+
     private Long claimId;
+    private String claimBatchId;
     private Date claimSubmissionDate;
+    private ClaimType type;
+    private InsurancePolicy insurancePolicy;
 
     private Set<ClaimItem> claimItems = new HashSet<ClaimItem>();
     private Set<ClaimStatus> claimStatuses = new HashSet<ClaimStatus>();
@@ -62,8 +72,10 @@ public class Claim extends AbstractTopLevelEntity
     private Set<ClaimResubmission> resubmittedFor = new HashSet<ClaimResubmission>();
     private Set<ClaimResubmission> resubmittedWith = new HashSet<ClaimResubmission>();
     private Set<ClaimRole> claimRoles = new HashSet<ClaimRole>();
+    private Set<HealthCareDelivery> healthCareDeliveries = new HashSet<HealthCareDelivery>();
 
     @Id(generate = GeneratorType.AUTO)
+    @Column(name = PK_COLUMN_NAME)
     public Long getClaimId()
     {
         return claimId;
@@ -72,6 +84,55 @@ public class Claim extends AbstractTopLevelEntity
     protected void setClaimId(final Long claimId)
     {
         this.claimId = claimId;
+    }
+
+    /**
+     * Gets the batch the claim is associated with
+     * @return
+     */
+    public String getClaimBatchId()
+    {
+        return claimBatchId;
+    }
+
+    public void setClaimBatchId(final String claimBatchId)
+    {
+        this.claimBatchId = claimBatchId;
+    }
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "claim")
+    public Set<HealthCareDelivery> getHealthCareDeliveries()
+    {
+        return healthCareDeliveries;
+    }
+
+    public void setHealthCareDeliveries(final Set<HealthCareDelivery> healthCareDeliveries)
+    {
+        this.healthCareDeliveries = healthCareDeliveries;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = ClaimType.PK_COLUMN_NAME)
+    public ClaimType getType()
+    {
+        return type;
+    }
+
+    public void setType(final ClaimType type)
+    {
+        this.type = type;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = InsurancePolicy.PK_COLUMN_NAME)
+    public InsurancePolicy getInsurancePolicy()
+    {
+        return insurancePolicy;
+    }
+
+    public void setInsurancePolicy(final InsurancePolicy insurancePolicy)
+    {
+        this.insurancePolicy = insurancePolicy;
     }
 
     /**

@@ -36,101 +36,73 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.persist.model.person;
+package com.medigy.persist.reference.custom.invoice;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
+import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
+import com.medigy.persist.reference.custom.CustomReferenceEntity;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratorType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-
-import com.medigy.persist.model.common.AbstractTopLevelEntity;
-import com.medigy.persist.model.health.HealthCareEpisode;
-import com.medigy.persist.reference.custom.person.IncidentType;
+import javax.persistence.GeneratorType;
+import javax.persistence.Column;
 
 @Entity
-public class Incident extends AbstractTopLevelEntity
+public class BillSequenceType extends AbstractCustomReferenceEntity
 {
-    private Long incidentId;
-    private Date incidentDate;
-    private String description;
-    private Boolean employerRelatedInd;
-    private IncidentType type;
+    public static final String PK_COLUMN_NAME = "bill_sequence_type_id";
 
-    private Set<HealthCareEpisode> healthCareEpisodes = new HashSet<HealthCareEpisode>();
+    public enum Cache implements CachedCustomReferenceEntity
+    {
+        PRIMARY("PRIMARY", "Primary"),
+        SECONDARY("SECONDARY", "Secondary"),
+        TERTIARY("TERTIARY", "Tertiary"),
+        QUARTERNARY("HOME", "Home Care"),
+        WORKERS_COMPENSATION("WORK_COMP", "Workers Compensation"),
+        TERMINTAED("TERMINATED", "Terminated"),
+        INACTIVE("INACTIVE", "Inactive");
+
+        private final String label;
+        private final String code;
+        private BillSequenceType entity;
+
+        private Cache(final String code, final String label)
+        {
+            this.code = code;
+            this.label = label;
+        }
+
+        public String getCode()
+        {
+            return code;
+        }
+
+
+        public BillSequenceType getEntity()
+        {
+            return entity;
+        }
+
+        public void setEntity(final CustomReferenceEntity entity)
+        {
+            this.entity = (BillSequenceType) entity;
+        }
+
+        public String getLabel()
+        {
+            return label;
+        }
+    }
 
     @Id(generate = GeneratorType.AUTO)
-    public Long getIncidentId()
+    @Column(name = PK_COLUMN_NAME)
+    public Long getBillSequenceTypeId()
     {
-        return incidentId;
+        return super.getSystemId();
     }
 
-    protected void setIncidentId(final Long incidentId)
+    protected void setBillSequenceTypeId(final Long id)
     {
-        this.incidentId = incidentId;
-    }
-
-    @Column
-    public Date getIncidentDate()
-    {
-        return incidentDate;
-    }
-
-    public void setIncidentDate(final Date incidentDate)
-    {
-        this.incidentDate = incidentDate;
-    }
-
-    @Column(length = 1000)
-    public String getDescription()
-    {
-        return description;
-    }
-
-    public void setDescription(final String description)
-    {
-        this.description = description;
-    }
-
-    @Column(nullable = false)
-    public Boolean getEmployerRelatedInd()
-    {
-        return employerRelatedInd;
-    }
-
-    public void setEmployerRelatedInd(final Boolean employerRelatedInd)
-    {
-        this.employerRelatedInd = employerRelatedInd;
-    }
-
-    @ManyToOne
-    @JoinColumn(name = "incident_type_id")
-    public IncidentType getType()
-    {
-        return type;
-    }
-
-    public void setType(final IncidentType type)
-    {
-        this.type = type;
-    }
-
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "incident_id")
-    public Set<HealthCareEpisode> getHealthCareEpisodes()
-    {
-        return healthCareEpisodes;
-    }
-
-    public void setHealthCareEpisodes(final Set<HealthCareEpisode> healthCareEpisodes)
-    {
-        this.healthCareEpisodes = healthCareEpisodes;
+        super.setSystemId(id);
     }
 }

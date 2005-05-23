@@ -40,6 +40,7 @@ package com.medigy.persist.model.contact;
 
 import com.medigy.persist.model.common.AbstractTopLevelEntity;
 import com.medigy.persist.model.health.HealthCareLicense;
+import com.medigy.persist.model.health.IncidentGeographicBoundary;
 import com.medigy.persist.model.party.PostalAddressBoundary;
 import com.medigy.persist.reference.custom.GeographicBoundaryType;
 
@@ -66,6 +67,7 @@ public class GeographicBoundary extends AbstractTopLevelEntity
     private String abbreviation;
     private GeographicBoundaryType type;
 
+    private Set<IncidentGeographicBoundary> incidentGeographicBoundary = new HashSet<IncidentGeographicBoundary>();
     private Set<PostalAddressBoundary> postalAddressBoundary = new HashSet<PostalAddressBoundary>();
     //private Set<GeographicBoundaryAssociation> parentBoundaryAssociations = new HashSet<GeographicBoundaryAssociation>();
     //private Set<GeographicBoundaryAssociation> childBoundaryAssociations = new HashSet<GeographicBoundaryAssociation>();
@@ -118,7 +120,7 @@ public class GeographicBoundary extends AbstractTopLevelEntity
     }
 
     @ManyToOne
-    @JoinColumn(name = "geo_boundary_type_id", nullable = false)
+    @JoinColumn(name = GeographicBoundaryType.PK_COLUMN_NAME, nullable = false)
     public GeographicBoundaryType getType()
     {
         return type;
@@ -129,8 +131,7 @@ public class GeographicBoundary extends AbstractTopLevelEntity
         this.type = type;
     }
 
-    @OneToMany
-    @JoinColumn(name = "geo_id")
+    @OneToMany(mappedBy = "geographicBoundary")
     public Set<PostalAddressBoundary> getPostalAddressBoundary()
     {
         return postalAddressBoundary;
@@ -141,8 +142,7 @@ public class GeographicBoundary extends AbstractTopLevelEntity
         this.postalAddressBoundary = postalAddressBoundary;
     }
 
-    @OneToMany
-    @JoinColumn(name = "geo_id")        
+    @OneToMany(mappedBy = "geographicBoundary")
     public Set<HealthCareLicense> getLicenses()
     {
         return licenses;
@@ -151,6 +151,17 @@ public class GeographicBoundary extends AbstractTopLevelEntity
     public void setLicenses(Set<HealthCareLicense> licenses)
     {
         this.licenses = licenses;
+    }
+
+    @OneToMany(mappedBy = "geographicBoundary")
+    public Set<IncidentGeographicBoundary> getIncidentGeographicBoundary()
+    {
+        return incidentGeographicBoundary;
+    }
+
+    public void setIncidentGeographicBoundary(final Set<IncidentGeographicBoundary> incidentGeographicBoundary)
+    {
+        this.incidentGeographicBoundary = incidentGeographicBoundary;
     }
 
     public boolean equals(Object obj)

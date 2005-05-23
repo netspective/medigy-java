@@ -40,7 +40,9 @@ package com.medigy.persist.model.insurance;
 
 import com.medigy.persist.model.common.AbstractDateDurationEntity;
 import com.medigy.persist.model.org.Organization;
+import com.medigy.persist.reference.custom.invoice.BillRemittanceType;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
@@ -50,7 +52,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import javax.persistence.CascadeType;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -63,8 +64,10 @@ public class InsurancePlan extends AbstractDateDurationEntity
     private Long insurancePlanId;
     private InsuranceProduct insuranceProduct;
     private String name;
-    private String remitPayerId;
+    private String remittancePayerId;
+    private String remittancePayerName;
     private String medigapId;
+    private BillRemittanceType billRemittanceType;
 
     private Set<InsurancePolicy> insurancePolicies = new HashSet<InsurancePolicy>();
     private Set<InsurancePlanContactMechanism> insurancePlanContactMechanisms = new HashSet<InsurancePlanContactMechanism>();
@@ -99,6 +102,22 @@ public class InsurancePlan extends AbstractDateDurationEntity
         this.coverageLevelRelationships.add(rel);
     }
 
+    /**
+     * Gets the bill remittance type.  (NEFS-SAMPLE-MEDIGY)
+     * @return
+     */
+    @ManyToOne
+    @JoinColumn(name = BillRemittanceType.PK_COLUMN_NAME)
+    public BillRemittanceType getBillRemittanceType()
+    {
+        return billRemittanceType;
+    }
+
+    public void setBillRemittanceType(final BillRemittanceType billRemittanceType)
+    {
+        this.billRemittanceType = billRemittanceType;
+    }
+
     @Column(length = 100, nullable = false)
     public String getName()
     {
@@ -108,6 +127,21 @@ public class InsurancePlan extends AbstractDateDurationEntity
     public void setName(final String name)
     {
         this.name = name;
+    }
+
+    /**
+     * Gets the remittance payer name. The name given to the primary remittance id record (NEFS-SAMPLE-MEDIGY)
+     * @return
+     */
+    @Column(length = 256)
+    public String getRemittancePayerName()
+    {
+        return remittancePayerName;
+    }
+
+    public void setRemittancePayerName(final String remittancePayerName)
+    {
+        this.remittancePayerName = remittancePayerName;
     }
 
     @Column(length = 64)
@@ -121,14 +155,18 @@ public class InsurancePlan extends AbstractDateDurationEntity
         this.medigapId = medigapId;
     }
 
-    public String getRemitPayerId()
+    /**
+     * Gets the remittance payer name. The id (if required) for this insurance plan/group for electronic remittance (NEFS-SAMPLE-MEDIGY)
+     * @return
+     */
+    public String getRemittancePayerId()
     {
-        return remitPayerId;
+        return remittancePayerId;
     }
 
-    public void setRemitPayerId(final String remitPayerId)
+    public void setRemittancePayerId(final String remittancePayerId)
     {
-        this.remitPayerId = remitPayerId;
+        this.remittancePayerId = remittancePayerId;
     }
 
     @ManyToOne

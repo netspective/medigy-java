@@ -36,49 +36,36 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.persist.reference.custom;
+package com.medigy.persist.reference.custom.invoice;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratorType;
+import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
+import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
+import com.medigy.persist.reference.custom.CustomReferenceEntity;
+
 import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.ManyToOne;
-import javax.persistence.JoinColumn;
+import javax.persistence.GeneratorType;
+import javax.persistence.Entity;
+import javax.persistence.Column;
 
 @Entity
-@Table(name = "Geo_Boundary_Type")
-public class GeographicBoundaryType extends AbstractCustomHierarchyReferenceEntity
+public class BillRemittanceType extends AbstractCustomReferenceEntity
 {
-    public static final String PK_COLUMN_NAME = "geo_boundary_type_id";
-    
-    public enum Cache implements CachedCustomHierarchyReferenceEntity
+    public static final String PK_COLUMN_NAME = "bill_remittance_type_id";
+
+    public enum Cache implements CachedCustomReferenceEntity
     {
-        COUNTRY("COUNTRY"),
-        REGION("REGION"),
-        TERRITORY("TERRITORY"),
-        PROVINCE("PROVINCE"),
-        STATE("STATE", COUNTRY),
-        POSTAL_CODE("ZIP", STATE),
-        COUNTY("COUNTY", STATE),
-        CITY("CITY", STATE) ;
+        PAPER("PAPER", "Paper"),
+        ELECTRONIC("ELECTRONIC", "Electronic");
 
-        private final String code;
+
         private final String label;
-        private GeographicBoundaryType entity;
-        private Cache parent;
+        private final String code;
+        private BillRemittanceType entity;
 
-        Cache(final String code)
+        Cache(final String code, final String label)
         {
             this.code = code;
-            this.label = code;
-        }
-
-        Cache(final String code, final Cache parent)
-        {
-            this.code = code;
-            this.label = code;
-            this.parent = parent;
+            this.label = label;
         }
 
         public String getCode()
@@ -86,78 +73,36 @@ public class GeographicBoundaryType extends AbstractCustomHierarchyReferenceEnti
             return code;
         }
 
-        public GeographicBoundaryType getEntity()
+        public BillRemittanceType getEntity()
         {
             return entity;
         }
 
         public void setEntity(final CustomReferenceEntity entity)
         {
-            this.entity = (GeographicBoundaryType) entity;
+            this.entity = (BillRemittanceType) entity;
         }
 
         public String getLabel()
         {
             return label;
         }
-
-        public CachedCustomHierarchyReferenceEntity getParent()
-        {
-            return parent;
-        }
-
-        public GeographicBoundaryType getParentEntity()
-        {
-            return parent.getEntity();
-        }
-
-        public static GeographicBoundaryType getEntity(String code)
-        {
-            for (GeographicBoundaryType.Cache geo : GeographicBoundaryType.Cache.values())
-            {
-                if (geo.getCode().equals(code))
-                    return geo.getEntity();
-            }
-            return null;
-        }
     }
 
-    private GeographicBoundaryType parentEntity;
 
-    public GeographicBoundaryType()
+    public BillRemittanceType()
     {
     }
 
     @Id(generate = GeneratorType.AUTO)
-    @Column(name = PK_COLUMN_NAME)
-    public Long getGeoBoundaryTypeId()
+    @Column(name = PK_COLUMN_NAME)        
+    public Long getBillRemittanceTypeId()
     {
         return super.getSystemId();
     }
 
-    protected void setGeoBoundaryTypeId(final Long id)
+    protected void setBillRemittanceTypeId(final Long id)
     {
         super.setSystemId(id);
     }
-
-    public boolean equals(Object obj)
-    {
-        if (obj  == null || !(obj instanceof GeographicBoundaryType))
-            return false;
-        else
-            return getGeoBoundaryTypeId().equals(((GeographicBoundaryType) obj).getGeoBoundaryTypeId());
-    }
-
-    @ManyToOne(targetEntity = "com.medigy.persist.reference.custom.GeographicBoundaryType")
-    @JoinColumn(name = "parent_geo_boundary_type_id", referencedColumnName = "geo_boundary_type_id")
-    public CustomHierarchyReferenceEntity getParentEntity()
-    {
-        return parentEntity;
-    }
-
-    public void setParentEntity(final CustomHierarchyReferenceEntity entity)
-    {
-        this.parentEntity = (GeographicBoundaryType) entity;
-    }
-
 }

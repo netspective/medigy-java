@@ -36,128 +36,118 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.persist.reference.custom;
+package com.medigy.persist.model.health;
 
+import com.medigy.persist.model.common.AbstractTopLevelEntity;
+import com.medigy.persist.reference.custom.person.IncidentType;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.ManyToOne;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
-@Table(name = "Geo_Boundary_Type")
-public class GeographicBoundaryType extends AbstractCustomHierarchyReferenceEntity
+public class Incident extends AbstractTopLevelEntity
 {
-    public static final String PK_COLUMN_NAME = "geo_boundary_type_id";
-    
-    public enum Cache implements CachedCustomHierarchyReferenceEntity
-    {
-        COUNTRY("COUNTRY"),
-        REGION("REGION"),
-        TERRITORY("TERRITORY"),
-        PROVINCE("PROVINCE"),
-        STATE("STATE", COUNTRY),
-        POSTAL_CODE("ZIP", STATE),
-        COUNTY("COUNTY", STATE),
-        CITY("CITY", STATE) ;
+    public static final String PK_COLUMN_NAME = "incident_id";
 
-        private final String code;
-        private final String label;
-        private GeographicBoundaryType entity;
-        private Cache parent;
+    private Long incidentId;
+    private Date incidentDate;
+    private String description;
+    private Boolean employerRelatedInd;
+    private IncidentType type;
 
-        Cache(final String code)
-        {
-            this.code = code;
-            this.label = code;
-        }
-
-        Cache(final String code, final Cache parent)
-        {
-            this.code = code;
-            this.label = code;
-            this.parent = parent;
-        }
-
-        public String getCode()
-        {
-            return code;
-        }
-
-        public GeographicBoundaryType getEntity()
-        {
-            return entity;
-        }
-
-        public void setEntity(final CustomReferenceEntity entity)
-        {
-            this.entity = (GeographicBoundaryType) entity;
-        }
-
-        public String getLabel()
-        {
-            return label;
-        }
-
-        public CachedCustomHierarchyReferenceEntity getParent()
-        {
-            return parent;
-        }
-
-        public GeographicBoundaryType getParentEntity()
-        {
-            return parent.getEntity();
-        }
-
-        public static GeographicBoundaryType getEntity(String code)
-        {
-            for (GeographicBoundaryType.Cache geo : GeographicBoundaryType.Cache.values())
-            {
-                if (geo.getCode().equals(code))
-                    return geo.getEntity();
-            }
-            return null;
-        }
-    }
-
-    private GeographicBoundaryType parentEntity;
-
-    public GeographicBoundaryType()
-    {
-    }
+    private Set<HealthCareEpisode> healthCareEpisodes = new HashSet<HealthCareEpisode>();
+    private Set<IncidentGeographicBoundary> incidentGeographicBoundaries = new HashSet<IncidentGeographicBoundary>();
 
     @Id(generate = GeneratorType.AUTO)
     @Column(name = PK_COLUMN_NAME)
-    public Long getGeoBoundaryTypeId()
+    public Long getIncidentId()
     {
-        return super.getSystemId();
+        return incidentId;
     }
 
-    protected void setGeoBoundaryTypeId(final Long id)
+    protected void setIncidentId(final Long incidentId)
     {
-        super.setSystemId(id);
+        this.incidentId = incidentId;
     }
 
-    public boolean equals(Object obj)
+    @Column
+    public Date getIncidentDate()
     {
-        if (obj  == null || !(obj instanceof GeographicBoundaryType))
-            return false;
-        else
-            return getGeoBoundaryTypeId().equals(((GeographicBoundaryType) obj).getGeoBoundaryTypeId());
+        return incidentDate;
     }
 
-    @ManyToOne(targetEntity = "com.medigy.persist.reference.custom.GeographicBoundaryType")
-    @JoinColumn(name = "parent_geo_boundary_type_id", referencedColumnName = "geo_boundary_type_id")
-    public CustomHierarchyReferenceEntity getParentEntity()
+    public void setIncidentDate(final Date incidentDate)
     {
-        return parentEntity;
+        this.incidentDate = incidentDate;
     }
 
-    public void setParentEntity(final CustomHierarchyReferenceEntity entity)
+    /**
+     * Gets the description of the incident. This column should be used when the IncidentType
+     * is OTHER (meaing it is not one of the built-in types)
+     * @return
+     */
+    @Column(length = 1000)
+    public String getDescription()
     {
-        this.parentEntity = (GeographicBoundaryType) entity;
+        return description;
     }
 
+    public void setDescription(final String description)
+    {
+        this.description = description;
+    }
+
+    @Column(nullable = false)
+    public Boolean getEmployerRelatedInd()
+    {
+        return employerRelatedInd;
+    }
+
+    public void setEmployerRelatedInd(final Boolean employerRelatedInd)
+    {
+        this.employerRelatedInd = employerRelatedInd;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = IncidentType.PK_COLUMN_NAME)
+    public IncidentType getType()
+    {
+        return type;
+    }
+
+    public void setType(final IncidentType type)
+    {
+        this.type = type;
+    }
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "incident")
+    public Set<HealthCareEpisode> getHealthCareEpisodes()
+    {
+        return healthCareEpisodes;
+    }
+
+    public void setHealthCareEpisodes(final Set<HealthCareEpisode> healthCareEpisodes)
+    {
+        this.healthCareEpisodes = healthCareEpisodes;
+    }
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "incident")
+    public Set<IncidentGeographicBoundary> getIncidentGeographicBoundaries()
+    {
+        return incidentGeographicBoundaries;
+    }
+
+    public void setIncidentGeographicBoundaries(final Set<IncidentGeographicBoundary> incidentGeographicBoundaries)
+    {
+        this.incidentGeographicBoundaries = incidentGeographicBoundaries;
+    }
 }

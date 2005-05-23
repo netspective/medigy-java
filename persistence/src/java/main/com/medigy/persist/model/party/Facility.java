@@ -40,6 +40,7 @@
 package com.medigy.persist.model.party;
 
 import com.medigy.persist.model.common.AbstractTopLevelEntity;
+import com.medigy.persist.model.health.HealthCareVisit;
 import com.medigy.persist.reference.custom.party.FacilityType;
 
 import javax.persistence.CascadeType;
@@ -56,6 +57,8 @@ import java.util.Set;
 @Entity
 public class Facility extends AbstractTopLevelEntity
 {
+    public static final String PK_COLUMN_NAME = "facility_id";
+
     private Long facilityId;
     private String description;
     private Float squareFootage;
@@ -64,8 +67,8 @@ public class Facility extends AbstractTopLevelEntity
     // children childFacilities (e.g Rooms on a Floor, offices in a building)
     private Set<Facility> childFacilities = new HashSet<Facility>();
     private Set<PartyFacilityRole> facilityRole = new HashSet<PartyFacilityRole>();
-    public static final String PK_COLUMN_NAME = "facility_id";
 
+    private Set<HealthCareVisit> visits = new HashSet<HealthCareVisit>();
     /**
      * Facilities are not children of any table and they are related to Parties only through the
      * {@link PartyFacilityRole}. Parties can "own", "rent", or "lease" facilities.
@@ -152,5 +155,20 @@ public class Facility extends AbstractTopLevelEntity
     public void setParentFacility(final Facility parentFacility)
     {
         this.parentFacility = parentFacility;
+    }
+
+    /**
+     * Gets all the health care visits occurred at this facility
+     * @return
+     */
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "facility")
+    public Set<HealthCareVisit> getVisits()
+    {
+        return visits;
+    }
+
+    public void setVisits(final Set<HealthCareVisit> visits)
+    {
+        this.visits = visits;
     }
 }

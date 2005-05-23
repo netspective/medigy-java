@@ -41,7 +41,9 @@ package com.medigy.persist.model.insurance;
 import com.medigy.persist.model.common.AbstractDateDurationEntity;
 import com.medigy.persist.model.org.Organization;
 import com.medigy.persist.model.person.Person;
+import com.medigy.persist.model.claim.Claim;
 import com.medigy.persist.reference.custom.insurance.InsurancePolicyType;
+import com.medigy.persist.reference.custom.invoice.BillSequenceType;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -78,7 +80,9 @@ public class InsurancePolicy extends AbstractDateDurationEntity
     private String policyNumber;    // not unique across same household
     private String groupNumber;
     private String description;
+    private Long billSequenceId;
 
+    private BillSequenceType billSequenceType;
     private InsurancePolicyType type;               // individual or group
     private InsurancePlan insurancePlan;            // the plan to which this policy belongs to
     private Enrollment enrollment;                  // the enrollment to which this policy belongs to (optional)
@@ -86,6 +90,7 @@ public class InsurancePolicy extends AbstractDateDurationEntity
     private Set<FinancialResponsiblePartySelection> responsiblePartySelection = new HashSet<FinancialResponsiblePartySelection>();
     private Set<CareProviderSelection> careProviderSelections = new HashSet<CareProviderSelection>();
     private Set<InsurancePolicyCoverageLevel> coverageLevelRelationships = new HashSet<InsurancePolicyCoverageLevel>();
+    private Set<Claim> claims = new HashSet<Claim>();
 
     private Person insuredPerson;
     private Person contractHolderPerson;
@@ -124,6 +129,43 @@ public class InsurancePolicy extends AbstractDateDurationEntity
     protected void setInsurancePolicyId(final Long id)
     {
        this.policyId = id;
+    }
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "insurancePolicy")
+    public Set<Claim> getClaims()
+    {
+        return claims;
+    }
+
+    public void setClaims(final Set<Claim> claims)
+    {
+        this.claims = claims;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = BillSequenceType.PK_COLUMN_NAME)
+    public BillSequenceType getBillSequenceType()
+    {
+        return billSequenceType;
+    }
+
+    public void setBillSequenceType(final BillSequenceType billSequenceType)
+    {
+        this.billSequenceType = billSequenceType;
+    }
+
+    /**
+     * Gets the bill sequence.
+     * @return
+     */
+    public Long getBillSequenceId()
+    {
+        return billSequenceId;
+    }
+
+    public void setBillSequenceId(final Long billSequenceId)
+    {
+        this.billSequenceId = billSequenceId;
     }
 
     /*

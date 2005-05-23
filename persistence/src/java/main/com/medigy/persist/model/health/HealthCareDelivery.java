@@ -39,6 +39,8 @@
 package com.medigy.persist.model.health;
 
 import com.medigy.persist.model.common.AbstractDateDurationEntity;
+import com.medigy.persist.model.claim.Claim;
+import com.medigy.persist.reference.custom.health.HealthCareDeliveryType;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -61,6 +63,8 @@ public class HealthCareDelivery extends AbstractDateDurationEntity
     private HealthCareOffering healthCareOffering;
     private HealthCareEpisode healthCareEpisode;
     private HealthCareVisit healthCareVisit;
+    private Claim claim;
+    private HealthCareDeliveryType type;
 
     private Set<HealthCareDeliveryBilling> billings = new HashSet<HealthCareDeliveryBilling>();
     private Set<HealthCareDeliveryRole> healthCareDeliveryRoles = new HashSet<HealthCareDeliveryRole>();
@@ -92,7 +96,34 @@ public class HealthCareDelivery extends AbstractDateDurationEntity
     public void setDeliveryNotes(final String deliveryNotes)
     {
         this.deliveryNotes = deliveryNotes;
+    }
 
+    @ManyToOne
+    @JoinColumn(name = HealthCareDeliveryType.PK_COLUMN_NAME)
+    public HealthCareDeliveryType getType()
+    {
+        return type;
+    }
+
+    public void setType(final HealthCareDeliveryType type)
+    {
+        this.type = type;
+    }
+
+    /**
+     * Gets the claim this health care delivery is associated with
+     * @return
+     */
+    @ManyToOne
+    @JoinColumn(name = Claim.PK_COLUMN_NAME)
+    public Claim getClaim()
+    {
+        return claim;
+    }
+
+    public void setClaim(final Claim claim)
+    {
+        this.claim = claim;
     }
 
     @ManyToOne

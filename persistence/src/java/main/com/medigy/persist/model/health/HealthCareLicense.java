@@ -38,17 +38,17 @@
  */
 package com.medigy.persist.model.health;
 
+import com.medigy.persist.model.common.AbstractDateDurationEntity;
+import com.medigy.persist.model.contact.GeographicBoundary;
+import com.medigy.persist.model.person.Person;
+import com.medigy.persist.reference.custom.health.HealthCareLicenseType;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-
-import com.medigy.persist.model.common.AbstractDateDurationEntity;
-import com.medigy.persist.model.contact.GeographicBoundary;
-import com.medigy.persist.model.person.Person;
-import com.medigy.persist.reference.custom.health.HealthCareLicenseType;
 
 @Entity
 public class HealthCareLicense extends AbstractDateDurationEntity
@@ -94,7 +94,7 @@ public class HealthCareLicense extends AbstractDateDurationEntity
     }
 
     @ManyToOne
-    @JoinColumn(name = "party_id", nullable = false)
+    @JoinColumn(name = Person.PK_COLUMN_NAME, nullable = false)
     public Person getPerson()
     {
         return person;
@@ -110,7 +110,7 @@ public class HealthCareLicense extends AbstractDateDurationEntity
      * @return
      */
     @ManyToOne
-    @JoinColumn(name = "geo_id")
+    @JoinColumn(name = GeographicBoundary.PK_COLUMN_NAME)
     public GeographicBoundary getGeographicBoundary()
     {
         return geographicBoundary;

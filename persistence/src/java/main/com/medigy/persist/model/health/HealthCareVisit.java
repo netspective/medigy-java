@@ -121,12 +121,12 @@ public class HealthCareVisit  extends AbstractDateDurationEntity
         this.scheduledTime = scheduledTime;
     }
 
-
     /**
      * Gets the facility at which the visit occurred
      * @return
      */
-    @JoinColumn(name = "facility_id")
+    @ManyToOne
+    @JoinColumn(name = Facility.PK_COLUMN_NAME)
     public Facility getFacility()
     {
         return facility;
@@ -138,7 +138,7 @@ public class HealthCareVisit  extends AbstractDateDurationEntity
     }
 
     @ManyToOne
-    @JoinColumn(name = "party_id", nullable = false)
+    @JoinColumn(name = Person.PK_COLUMN_NAME, nullable = false)
     public Person getPatient()
     {
         return patient;
@@ -149,6 +149,10 @@ public class HealthCareVisit  extends AbstractDateDurationEntity
         this.patient = patient;
     }
 
+    /**
+     * Gets all the statuses associated with the visit
+     * @return
+     */
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "visit")
     public Set<HealthCareVisitStatus> getStatuses()
     {
@@ -177,6 +181,10 @@ public class HealthCareVisit  extends AbstractDateDurationEntity
         this.roles = roles;
     }
 
+    /**
+     * Gets all the reasons associated with the visit
+     * @return
+     */
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "visit")
     public Set<VisitReason> getReasons()
     {
@@ -194,6 +202,10 @@ public class HealthCareVisit  extends AbstractDateDurationEntity
         this.reasons.add(reason);
     }
 
+    /**
+     * Gets all the halth care deliveries (services) performed during the visit
+     * @return
+     */
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "healthCareVisit")
     public Set<HealthCareDelivery> getHealthCareDeliveries()
     {

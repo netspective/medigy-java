@@ -36,128 +36,64 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.persist.reference.custom;
+package com.medigy.persist.model.health;
+
+import com.medigy.persist.model.common.AbstractEntity;
+import com.medigy.persist.model.contact.GeographicBoundary;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.ManyToOne;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
+/**
+ * Class describing at what geographic boundaries the Incident occurred
+ */
 @Entity
-@Table(name = "Geo_Boundary_Type")
-public class GeographicBoundaryType extends AbstractCustomHierarchyReferenceEntity
+public class IncidentGeographicBoundary extends AbstractEntity
 {
-    public static final String PK_COLUMN_NAME = "geo_boundary_type_id";
-    
-    public enum Cache implements CachedCustomHierarchyReferenceEntity
-    {
-        COUNTRY("COUNTRY"),
-        REGION("REGION"),
-        TERRITORY("TERRITORY"),
-        PROVINCE("PROVINCE"),
-        STATE("STATE", COUNTRY),
-        POSTAL_CODE("ZIP", STATE),
-        COUNTY("COUNTY", STATE),
-        CITY("CITY", STATE) ;
+    private static final String PK_COLUMN_NAME = "incident_geo_boundary_id";
 
-        private final String code;
-        private final String label;
-        private GeographicBoundaryType entity;
-        private Cache parent;
-
-        Cache(final String code)
-        {
-            this.code = code;
-            this.label = code;
-        }
-
-        Cache(final String code, final Cache parent)
-        {
-            this.code = code;
-            this.label = code;
-            this.parent = parent;
-        }
-
-        public String getCode()
-        {
-            return code;
-        }
-
-        public GeographicBoundaryType getEntity()
-        {
-            return entity;
-        }
-
-        public void setEntity(final CustomReferenceEntity entity)
-        {
-            this.entity = (GeographicBoundaryType) entity;
-        }
-
-        public String getLabel()
-        {
-            return label;
-        }
-
-        public CachedCustomHierarchyReferenceEntity getParent()
-        {
-            return parent;
-        }
-
-        public GeographicBoundaryType getParentEntity()
-        {
-            return parent.getEntity();
-        }
-
-        public static GeographicBoundaryType getEntity(String code)
-        {
-            for (GeographicBoundaryType.Cache geo : GeographicBoundaryType.Cache.values())
-            {
-                if (geo.getCode().equals(code))
-                    return geo.getEntity();
-            }
-            return null;
-        }
-    }
-
-    private GeographicBoundaryType parentEntity;
-
-    public GeographicBoundaryType()
-    {
-    }
+    private Long incidentGeographicBoundaryId;
+    private Incident incident;
+    private GeographicBoundary geographicBoundary;
 
     @Id(generate = GeneratorType.AUTO)
     @Column(name = PK_COLUMN_NAME)
-    public Long getGeoBoundaryTypeId()
+    public Long getIncidentGeographicBoundaryId()
     {
-        return super.getSystemId();
+        return incidentGeographicBoundaryId;
     }
 
-    protected void setGeoBoundaryTypeId(final Long id)
+    public void setIncidentGeographicBoundaryId(final Long incidentGeographicBoundaryId)
     {
-        super.setSystemId(id);
+        this.incidentGeographicBoundaryId = incidentGeographicBoundaryId;
     }
 
-    public boolean equals(Object obj)
+    @ManyToOne
+    @JoinColumn(name = Incident.PK_COLUMN_NAME)
+    public Incident getIncident()
     {
-        if (obj  == null || !(obj instanceof GeographicBoundaryType))
-            return false;
-        else
-            return getGeoBoundaryTypeId().equals(((GeographicBoundaryType) obj).getGeoBoundaryTypeId());
+        return incident;
     }
 
-    @ManyToOne(targetEntity = "com.medigy.persist.reference.custom.GeographicBoundaryType")
-    @JoinColumn(name = "parent_geo_boundary_type_id", referencedColumnName = "geo_boundary_type_id")
-    public CustomHierarchyReferenceEntity getParentEntity()
+    public void setIncident(final Incident incident)
     {
-        return parentEntity;
+        this.incident = incident;
     }
 
-    public void setParentEntity(final CustomHierarchyReferenceEntity entity)
+    @ManyToOne
+    @JoinColumn(name = GeographicBoundary.PK_COLUMN_NAME)
+    public GeographicBoundary getGeographicBoundary()
     {
-        this.parentEntity = (GeographicBoundaryType) entity;
+        return geographicBoundary;
+    }
+
+    public void setGeographicBoundary(final GeographicBoundary geographicBoundary)
+    {
+        this.geographicBoundary = geographicBoundary;
     }
 
 }

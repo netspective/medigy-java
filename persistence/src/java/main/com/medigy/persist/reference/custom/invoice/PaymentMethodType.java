@@ -55,7 +55,8 @@ public class PaymentMethodType  extends AbstractCustomReferenceEntity
         CASH("CASH", "Cash"),
         CERTIFIED_CHECK("CERT_CHECK", "Certified Check"),
         PERSONAL_CHECK("PER_CHECK", "Personal Check"),
-        CREDIT_CARD("CREDIT", "Credit Card");
+        CREDIT_CARD("CREDIT", "Credit Card"),
+        OTHER("OTHER", "Other");
 
         private final String label;
         private final String code;

@@ -26,6 +26,7 @@
         <mapping class="com.medigy.persist.reference.custom.claim.ClaimRoleType"/>
         <mapping class="com.medigy.persist.reference.custom.claim.ClaimServiceCodeType"/>
         <mapping class="com.medigy.persist.reference.custom.claim.ClaimStatusType"/>
+        <mapping class="com.medigy.persist.reference.custom.claim.ClaimType"/>
 
         <mapping package="com.medigy.persist.reference.custom.health"/>
         <mapping class="com.medigy.persist.reference.custom.health.DiagnosisType"/>
@@ -38,6 +39,7 @@
         <mapping class="com.medigy.persist.reference.custom.health.SymptomType"/>
         <mapping class="com.medigy.persist.reference.custom.health.HealthCareLicenseType"/>
         <mapping class="com.medigy.persist.reference.custom.health.HealthCareReferralType"/>
+        <mapping class="com.medigy.persist.reference.custom.health.HealthCareDeliveryType"/>
 
         <mapping package="com.medigy.persist.reference.custom.product"/>
         <mapping class="com.medigy.persist.reference.custom.product.ProductType"/>
@@ -58,6 +60,8 @@
         <mapping class="com.medigy.persist.reference.custom.invoice.InvoiceTermType"/>
         <mapping class="com.medigy.persist.reference.custom.invoice.PaymentMethodType"/>
         <mapping class="com.medigy.persist.reference.custom.invoice.PaymentType"/>
+        <mapping class="com.medigy.persist.reference.custom.invoice.BillRemittanceType"/>
+        <mapping class="com.medigy.persist.reference.custom.invoice.BillSequenceType"/>
 
         <mapping package="com.medigy.persist.reference.custom.party"/>
         <mapping class="com.medigy.persist.reference.custom.party.PartyRoleType"/>
@@ -185,7 +189,8 @@
         <mapping class="com.medigy.persist.model.person.Person"/>
         <mapping class="com.medigy.persist.model.person.Ethnicity"/>
         <mapping class="com.medigy.persist.model.person.Gender"/>
-        <mapping class="com.medigy.persist.model.person.Incident"/>
+        <mapping class="com.medigy.persist.model.health.Incident"/>
+        <mapping class="com.medigy.persist.model.health.IncidentGeographicBoundary"/>
         <mapping class="com.medigy.persist.model.person.Language"/>
         <mapping class="com.medigy.persist.model.person.MaritalStatus"/>
         <mapping class="com.medigy.persist.model.person.PatientMedicalCondition"/>

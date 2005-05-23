@@ -38,16 +38,59 @@
  */
 package com.medigy.persist.reference.custom.person;
 
+import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
+import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
+import com.medigy.persist.reference.custom.CustomReferenceEntity;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
-
-import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
+import javax.persistence.Column;
 
 @Entity
 public class IncidentType extends AbstractCustomReferenceEntity
 {
+    public static final String PK_COLUMN_NAME = "incident_type_id";
+
+    public enum Cache implements CachedCustomReferenceEntity
+    {
+        AUTOMOBILE_ACCIDENT("AUTO", "Automobile Accident"),
+        OTHER("OTHER", "Other");
+
+        private final String label;
+        private final String code;
+        private IncidentType entity;
+
+        private Cache(final String code, final String label)
+        {
+            this.code = code;
+            this.label = label;
+        }
+
+        public String getCode()
+        {
+            return code;
+        }
+
+        public IncidentType getEntity()
+        {
+            return entity;
+        }
+
+        public void setEntity(final CustomReferenceEntity entity)
+        {
+            this.entity = (IncidentType) entity;
+        }
+
+        public String getLabel()
+        {
+            return label;
+        }
+    }
+
+
     @Id(generate = GeneratorType.AUTO)
+    @Column(name = PK_COLUMN_NAME)
     public Long getIncidentTypeId()
     {
         return super.getSystemId();
