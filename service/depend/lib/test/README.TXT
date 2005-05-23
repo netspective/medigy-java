@@ -2,4 +2,3 @@ All files in the lib/test directory are required ONLY for testing of the deploym
 
 Library                             Required By
 ----------------------------------  ------------------------
-pico-container-1.1.jar              Medigy service test cases
