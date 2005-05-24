@@ -39,7 +39,7 @@
 package com.medigy.persist.model.health;
 
 import com.medigy.persist.model.common.AbstractDateDurationEntity;
-import com.medigy.persist.model.contact.GeographicBoundary;
+import com.medigy.persist.model.contact.State;
 import com.medigy.persist.model.person.Person;
 import com.medigy.persist.reference.custom.health.HealthCareLicenseType;
 
@@ -49,6 +49,8 @@ import javax.persistence.GeneratorType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
+import java.util.Date;
 
 @Entity
 public class HealthCareLicense extends AbstractDateDurationEntity
@@ -57,7 +59,7 @@ public class HealthCareLicense extends AbstractDateDurationEntity
     private String licenseNumber;
     private String description;
     private Person person;
-    private GeographicBoundary geographicBoundary;
+    private State state;
     private HealthCareLicenseType type;
 
     @Id(generate = GeneratorType.AUTO)
@@ -109,20 +111,20 @@ public class HealthCareLicense extends AbstractDateDurationEntity
      * Gets the geographic boundary where this license is valid
      * @return
      */
-    @ManyToOne
-    @JoinColumn(name = GeographicBoundary.PK_COLUMN_NAME)
-    public GeographicBoundary getGeographicBoundary()
+    @ManyToOne()
+    @JoinColumn(name = State.PK_COLUMN_NAME)
+    public State getState()
     {
-        return geographicBoundary;
+        return state;
     }
 
-    public void setGeographicBoundary(final GeographicBoundary geographicBoundary)
+    public void setState(final State state)
     {
-        this.geographicBoundary = geographicBoundary;
+        this.state = state;
     }
 
     @ManyToOne
-    @JoinColumn(name = "license_type_id", nullable = false)
+    @JoinColumn(name = HealthCareLicenseType.PK_COLUMN_NAME, nullable = false)
     public HealthCareLicenseType getType()
     {
         return type;
@@ -131,5 +133,14 @@ public class HealthCareLicense extends AbstractDateDurationEntity
     public void setType(final HealthCareLicenseType type)
     {
         this.type = type;
+    }
+
+    @Transient
+    public boolean isExpired()
+    {
+        final Date expireDate = getThroughDate();
+        if (expireDate.before(new Date()))
+            return true;
+        return false;
     }
 }

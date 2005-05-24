@@ -40,6 +40,7 @@ package com.medigy.persist;
 
 import com.medigy.persist.model.contact.TestGeographicBoundary;
 import com.medigy.persist.model.health.TestHealthCareReferral;
+import com.medigy.persist.model.health.TestHealthCareLicense;
 import com.medigy.persist.model.insurance.TestCoverage;
 import com.medigy.persist.model.insurance.TestInsurance;
 import com.medigy.persist.model.insurance.TestInsuranceProductCoverage;
@@ -69,6 +70,7 @@ public class TestSuite extends junit.framework.TestSuite
         suite.addTest(new junit.framework.TestSuite(TestOrganization.class));
         suite.addTest(new junit.framework.TestSuite(TestInvoice.class));
         suite.addTest(new junit.framework.TestSuite(TestCoverage.class));
+        suite.addTest(new junit.framework.TestSuite(TestHealthCareLicense.class));
         return suite;
     }
 }

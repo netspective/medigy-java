@@ -55,6 +55,7 @@ import com.medigy.persist.reference.custom.person.EthnicityType;
 import com.medigy.persist.reference.custom.person.PersonIdentifierType;
 import com.medigy.persist.reference.custom.person.PhysicalCharacteristicType;
 import com.medigy.persist.reference.custom.person.PersonRoleType;
+import com.medigy.persist.reference.custom.health.HealthCareLicenseType;
 import com.medigy.persist.reference.type.GenderType;
 import com.medigy.persist.reference.type.LanguageType;
 import com.medigy.persist.reference.type.MaritalStatusType;
@@ -631,7 +632,7 @@ public class Person extends Party
      * his/her own policies which they are responsible for.
      * @return a set of insurance policies
      */
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "contractHolderPerson")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "contractHolderPerson", fetch = FetchType.LAZY)
     public Set<InsurancePolicy> getResponsibleInsurancePolicies()
     {
         return responsibleInsurancePolicies;
@@ -676,5 +677,16 @@ public class Person extends Party
         role.setParty(doctor);
         doctor.addPartyRole(role);
         return doctor;
+    }
+
+    @Transient
+    public HealthCareLicense getLicense(final HealthCareLicenseType type)
+    {
+        for (HealthCareLicense license : getLicenses())
+        {
+            if (license.getType().equals(type))
+                return license;
+        }
+        return null;
     }
 }

@@ -38,21 +38,88 @@
  */
 package com.medigy.persist.reference.custom.health;
 
+import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
+import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
+import com.medigy.persist.reference.custom.CustomReferenceEntity;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
-
-import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
+import javax.persistence.Column;
 
 @Entity
 public class HealthCareLicenseType extends AbstractCustomReferenceEntity
 {
+    public static final String PK_COLUMN_NAME = "license_type_id";
+
+    public enum Cache implements CachedCustomReferenceEntity
+    {
+        DEA("DEA", "Federal Drug Enforcement Administration"),
+        DPS("DPS", "State Narcotic License"),
+        IRS("IRS", "IRS"),
+        BOARD_CERTIFICATION("BOARD", "Board Certification"),
+        BCBS("BCBS", "BCBS"),
+        NURSING("NURSE", "Nursing License"),
+        MEMORIAL_SISTERS_CHARITY("MEMORIAL", "Memorial Sisters Charity"),
+        EPSDT("EPSDT", "EPSDT"),
+        MEDICARE("MEDICARE", "Medicare"),
+        MEDICAID("MEDICAID", "Medicaid"),
+        UPIN("UPIN", "UPIN"),
+        TAX_ID("TAX", "Tax ID"),
+        RAILROAD_MEDICARE("RAIL", "Railroad Medicare"),
+        CHAMPUS("CHAMPUS", "Champus"),
+        NATIONAL_PROVIDER("NATIONAL", "National Provider ID"),
+        OTHER("OTHER", "Other");
+
+
+        private final String label;
+        private final String code;
+        private HealthCareLicenseType entity;
+
+        Cache(final String code, final String label)
+        {
+            this.code = code;
+            this.label = label;
+        }
+
+        public String getCode()
+        {
+            return code;
+        }
+
+        public HealthCareLicenseType getEntity()
+        {
+            return entity;
+        }
+
+        public void setEntity(final CustomReferenceEntity entity)
+        {
+            this.entity = (HealthCareLicenseType) entity;
+        }
+
+        public String getLabel()
+        {
+            return label;
+        }
+
+        public static HealthCareLicenseType getEntity(String code)
+        {
+            for (HealthCareLicenseType.Cache type : HealthCareLicenseType.Cache.values())
+            {
+                if (type.getCode().equals(code))
+                    return type.getEntity();
+            }
+            return null;
+        }
+    }
+
     public HealthCareLicenseType()
     {
 
     }
 
     @Id(generate = GeneratorType.AUTO)
+    @Column(name = PK_COLUMN_NAME)
     public Long getLicenseTypeId()
     {
         return super.getSystemId();

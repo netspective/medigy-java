@@ -60,6 +60,7 @@ import org.dbunit.dataset.ITable;
 import org.dbunit.dataset.xml.FlatXmlDataSet;
 import org.dbunit.operation.DatabaseOperation;
 import org.hibernate.HibernateException;
+import org.hibernate.dialect.HSQLDialect;
 import org.hibernate.cfg.Environment;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
 import org.jmock.MockObjectTestCase;
@@ -113,7 +114,7 @@ public abstract class TestCase extends MockObjectTestCase
         final HibernateConfiguration config = new HibernateConfiguration();
 
         final Properties hibProperties = new Properties();
-        //hibProperties.setProperty(Environment.DIALECT, HSQLDialect.class.getName());
+        hibProperties.setProperty(Environment.DIALECT, HSQLDialect.class.getName());
         hibProperties.setProperty(Environment.CONNECTION_PREFIX + ".driver_class", "org.hsqldb.jdbcDriver");
         hibProperties.setProperty(Environment.CONNECTION_PREFIX + ".url", "jdbc:hsqldb:" + databaseDirectory + "/db");
         hibProperties.setProperty(Environment.CONNECTION_PREFIX + ".username", "sa");

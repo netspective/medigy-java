@@ -39,7 +39,6 @@
 package com.medigy.persist.model.contact;
 
 import com.medigy.persist.model.common.AbstractTopLevelEntity;
-import com.medigy.persist.model.health.HealthCareLicense;
 import com.medigy.persist.model.health.IncidentGeographicBoundary;
 import com.medigy.persist.model.party.PostalAddressBoundary;
 import com.medigy.persist.reference.custom.GeographicBoundaryType;
@@ -71,7 +70,6 @@ public class GeographicBoundary extends AbstractTopLevelEntity
     private Set<PostalAddressBoundary> postalAddressBoundary = new HashSet<PostalAddressBoundary>();
     //private Set<GeographicBoundaryAssociation> parentBoundaryAssociations = new HashSet<GeographicBoundaryAssociation>();
     //private Set<GeographicBoundaryAssociation> childBoundaryAssociations = new HashSet<GeographicBoundaryAssociation>();
-    private Set<HealthCareLicense> licenses = new HashSet<HealthCareLicense>();
 
     public GeographicBoundary()
     {
@@ -140,17 +138,6 @@ public class GeographicBoundary extends AbstractTopLevelEntity
     public void setPostalAddressBoundary(final Set<PostalAddressBoundary> postalAddressBoundary)
     {
         this.postalAddressBoundary = postalAddressBoundary;
-    }
-
-    @OneToMany(mappedBy = "geographicBoundary")
-    public Set<HealthCareLicense> getLicenses()
-    {
-        return licenses;
-    }
-
-    public void setLicenses(Set<HealthCareLicense> licenses)
-    {
-        this.licenses = licenses;
     }
 
     @OneToMany(mappedBy = "geographicBoundary")
