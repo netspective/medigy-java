@@ -39,13 +39,13 @@
 package com.medigy.service.util;
 
 import com.medigy.persist.model.party.PartyRole;
+import com.medigy.persist.reference.custom.health.HealthCareLicenseType;
 import com.medigy.persist.reference.custom.insurance.InsurancePolicyType;
 import com.medigy.persist.reference.custom.party.ContactMechanismPurposeType;
 import com.medigy.persist.reference.custom.person.EthnicityType;
 import com.medigy.persist.reference.type.GenderType;
 import com.medigy.persist.reference.type.LanguageType;
 import com.medigy.persist.reference.type.MaritalStatusType;
-import com.medigy.service.util.Facade;
 
 public interface ReferenceEntityFacade extends Facade
 {
@@ -62,4 +62,6 @@ public interface ReferenceEntityFacade extends Facade
     public PartyRole getPersonRole(String roleCode) throws UnknownReferenceTypeException;
 
     public ContactMechanismPurposeType getContactMechanismPurposeType(String purposeCode)  throws UnknownReferenceTypeException;
+
+    public HealthCareLicenseType getLicenseType(final String licenseType);
 }

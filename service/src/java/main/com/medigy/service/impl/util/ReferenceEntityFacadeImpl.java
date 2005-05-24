@@ -43,6 +43,7 @@ import com.medigy.persist.reference.custom.insurance.InsurancePolicyType;
 import com.medigy.persist.reference.custom.party.ContactMechanismPurposeType;
 import com.medigy.persist.reference.custom.person.EthnicityType;
 import com.medigy.persist.reference.custom.person.PersonRoleType;
+import com.medigy.persist.reference.custom.health.HealthCareLicenseType;
 import com.medigy.persist.reference.type.GenderType;
 import com.medigy.persist.reference.type.LanguageType;
 import com.medigy.persist.reference.type.MaritalStatusType;
@@ -160,6 +161,18 @@ public class ReferenceEntityFacadeImpl implements ReferenceEntityFacade
             type = (ContactMechanismPurposeType) criteria.uniqueResult();
             if (type == null)
                 throw new UnknownReferenceTypeException();
+        }
+        return type;
+    }
+
+    public HealthCareLicenseType getLicenseType(final String licenseType)
+    {
+        HealthCareLicenseType type = HealthCareLicenseType.Cache.getEntity(licenseType);
+        if (type == null)
+        {
+            final Criteria criteria = HibernateUtil.getSession().createCriteria(HealthCareLicenseType.class);
+            criteria.add(Expression.eq("code", licenseType));
+            type = (HealthCareLicenseType) criteria.uniqueResult();
         }
         return type;
     }

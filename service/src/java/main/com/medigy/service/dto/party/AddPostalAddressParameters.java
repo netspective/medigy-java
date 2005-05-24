@@ -38,9 +38,11 @@
  */
 package com.medigy.service.dto.party;
 
+import com.medigy.service.dto.ServiceParameters;
+
 import java.io.Serializable;
 
-public interface AddPostalAddressParameters
+public interface AddPostalAddressParameters extends ServiceParameters
 {
     public Serializable getPartyId();
 

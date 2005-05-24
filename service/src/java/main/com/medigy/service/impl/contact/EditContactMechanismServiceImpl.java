@@ -43,6 +43,7 @@ import com.medigy.service.contact.EditContactMechanismService;
 import com.medigy.service.contact.ContactMechanismFacade;
 import com.medigy.service.dto.contact.EditPostalAddressParameters;
 import com.medigy.service.dto.ServiceParameters;
+import com.medigy.service.dto.ServiceReturnValues;
 import com.medigy.persist.util.HibernateUtil;
 import com.medigy.persist.model.party.PostalAddress;
 import com.medigy.persist.model.contact.Country;
@@ -77,6 +78,11 @@ public class EditContactMechanismServiceImpl implements EditContactMechanismServ
             isPostalAdressParametersValid((EditPostalAddressParameters) parameters);
         }
         return true;
+    }
+
+    public ServiceReturnValues createErrorResponse(final ServiceParameters params, final String errorMessage)
+    {
+        return null;
     }
 
     protected void isPostalAdressParametersValid(final EditPostalAddressParameters params)

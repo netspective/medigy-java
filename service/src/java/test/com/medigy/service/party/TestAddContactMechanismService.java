@@ -47,6 +47,7 @@ import com.medigy.persist.reference.custom.party.ContactMechanismPurposeType;
 import com.medigy.persist.reference.type.ContactMechanismType;
 import com.medigy.persist.util.HibernateUtil;
 import com.medigy.service.TestCase;
+import com.medigy.service.ServiceVersion;
 import com.medigy.service.contact.AddContactMechanismService;
 import com.medigy.service.dto.party.AddPostalAddressParameters;
 import com.medigy.service.dto.party.NewPostalAddress;
@@ -121,6 +122,11 @@ public class TestAddContactMechanismService extends TestCase
                 }
 
                 public String getPurposeDescription()
+                {
+                    return null;
+                }
+
+                public ServiceVersion getServiceVersion()
                 {
                     return null;
                 }

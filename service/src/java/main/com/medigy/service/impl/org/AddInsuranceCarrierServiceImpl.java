@@ -38,17 +38,17 @@
  */
 package com.medigy.service.impl.org;
 
-import com.medigy.service.dto.org.AddInsuranceOrganization;
-import com.medigy.service.dto.org.NewOrganization;
-import com.medigy.service.dto.org.AddOrganization;
-import com.medigy.service.dto.party.NewPostalAddress;
-import com.medigy.service.dto.party.AddPostalAddressParameters;
-import com.medigy.service.dto.ServiceParameters;
-import com.medigy.service.ServiceVersion;
-import com.medigy.service.org.AddInsuranceCarrierService;
-import com.medigy.service.contact.AddContactMechanismService;
 import com.medigy.persist.model.org.Organization;
 import com.medigy.persist.util.HibernateUtil;
+import com.medigy.service.ServiceVersion;
+import com.medigy.service.contact.AddContactMechanismService;
+import com.medigy.service.dto.ServiceParameters;
+import com.medigy.service.dto.org.AddInsuranceOrganization;
+import com.medigy.service.dto.org.AddOrganization;
+import com.medigy.service.dto.org.NewOrganization;
+import com.medigy.service.dto.party.AddPostalAddressParameters;
+import com.medigy.service.dto.party.NewPostalAddress;
+import com.medigy.service.org.AddInsuranceCarrierService;
 
 import java.io.Serializable;
 
@@ -107,5 +107,25 @@ public class AddInsuranceCarrierServiceImpl implements AddInsuranceCarrierServic
             assert (orgParams.getName() != null && orgParams.getName().length() > 0) : "Organization name cannot be empty";
         }
         return true;
+    }
+
+    public NewOrganization createErrorResponse(final ServiceParameters params, final String errorMessage)
+    {
+        return new NewOrganization() {
+            public Serializable getNewOrganizationId()
+            {
+                return null;
+            }
+
+            public String getErrorMessage()
+            {
+                return errorMessage;
+            }
+
+            public AddOrganization getAddOrganizationParameters()
+            {
+                return (AddOrganization) params;
+            }
+        };
     }
 }

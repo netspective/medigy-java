@@ -50,16 +50,16 @@ import com.medigy.persist.reference.type.GenderType;
 import com.medigy.persist.reference.type.MaritalStatusType;
 import com.medigy.persist.util.HibernateUtil;
 import com.medigy.service.ServiceVersion;
-import com.medigy.service.person.PatientRegistrationService;
-import com.medigy.service.person.PersonFacade;
-import com.medigy.service.util.ReferenceEntityFacade;
-import com.medigy.service.util.UnknownReferenceTypeException;
 import com.medigy.service.contact.AddContactMechanismService;
 import com.medigy.service.dto.ServiceParameters;
 import com.medigy.service.dto.party.AddPhoneParameters;
 import com.medigy.service.dto.party.AddPostalAddressParameters;
 import com.medigy.service.dto.person.RegisterPatientParameters;
 import com.medigy.service.dto.person.RegisteredPatient;
+import com.medigy.service.person.PatientRegistrationService;
+import com.medigy.service.person.PersonFacade;
+import com.medigy.service.util.ReferenceEntityFacade;
+import com.medigy.service.util.UnknownReferenceTypeException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -347,6 +347,11 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
                 {
                     return null;
                 }
+
+                public ServiceVersion getServiceVersion()
+                {
+                    return null;
+                }
             });
         }
         catch (Exception e)
@@ -509,5 +514,31 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
         assert patientParameters.getResponsiblePartyLastName() != null :
             "Responsible party cannot be empty.";
         return false;
+    }
+
+    public RegisteredPatient createErrorResponse(final ServiceParameters params, final String errorMessage)
+    {
+        return new RegisteredPatient()
+            {
+                public Serializable getPatientId()
+                {
+                    return null;
+                }
+
+                public RegisterPatientParameters getRegisterPatientParameters()
+                {
+                    return (RegisterPatientParameters) params;
+                }
+
+                /**
+                 * Locale specific error message
+                 *
+                 * @return
+                 */
+                public String getErrorMessage()
+                {
+                    return errorMessage;
+                }
+            };
     }
 }

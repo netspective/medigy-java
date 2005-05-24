@@ -43,8 +43,11 @@ import com.medigy.persist.model.party.PartyContactMechanismPurpose;
 import com.medigy.persist.model.party.PartyRole;
 import com.medigy.persist.model.party.PostalAddress;
 import com.medigy.persist.model.person.Person;
+import com.medigy.persist.model.health.HealthCareLicense;
+import com.medigy.persist.model.contact.State;
 import com.medigy.persist.reference.custom.party.ContactMechanismPurposeType;
 import com.medigy.persist.reference.custom.person.PersonRoleType;
+import com.medigy.persist.reference.custom.health.HealthCareLicenseType;
 import com.medigy.persist.reference.type.ContactMechanismType;
 import com.medigy.persist.util.HibernateUtil;
 import com.medigy.service.person.PersonFacade;
@@ -57,6 +60,7 @@ import org.hibernate.criterion.Expression;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
+import java.util.Date;
 
 public class PersonFacadeImpl implements PersonFacade
 {
@@ -161,6 +165,22 @@ public class PersonFacadeImpl implements PersonFacade
             }
         }
         return null;
+    }
+
+    public HealthCareLicense addHealthCareLicense(final Person person, final String licenseNumber, final HealthCareLicenseType licenseType,
+                                                  final String description,
+                                                  final State state, final Date certificationDate, final Date expirationDate)
+    {
+        final HealthCareLicense license = new HealthCareLicense();
+        license.setType(licenseType);
+        license.setLicenseNumber(licenseNumber);
+        license.setFromDate(certificationDate);
+        license.setThroughDate(expirationDate);
+        license.setState(state);
+        license.setPerson(person);
+        person.addLicense(license);
+        HibernateUtil.getSession().save(license);
+        return license;
     }
 
 

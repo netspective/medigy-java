@@ -36,16 +36,24 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.service;
+package com.medigy.service.dto.person;
 
-import com.medigy.service.dto.ServiceParameters;
+import java.util.Date;
 
-public interface Service
+public interface HealthCareLicenseParameters
 {
-    public ServiceVersion[] getSupportedServiceVersions();
+    public String getLicenseNumber();
 
-    public boolean isValid(ServiceParameters parameters);
+    public String getLicenseType();
 
-    //public ServiceReturnValues createErrorResponse(final ServiceParameters params, final String errorMessage);
+    public String getState();
+
+    public String getCountry();
+
+    public String getDescription();
+
+    public Date getExpirationDate();
+
+    public Date getCertificationDate();
 
 }

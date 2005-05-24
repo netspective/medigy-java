@@ -39,10 +39,11 @@
 package com.medigy.service.dto.org;
 
 import com.medigy.service.dto.party.AddPostalAddressParameters;
+import com.medigy.service.dto.ServiceParameters;
 
 import java.io.Serializable;
 
-public interface AddOrganization
+public interface AddOrganization extends ServiceParameters
 {
     public String getName();
 

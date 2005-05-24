@@ -41,10 +41,14 @@ package com.medigy.service.person;
 import com.medigy.persist.model.party.PartyRole;
 import com.medigy.persist.model.party.PostalAddress;
 import com.medigy.persist.model.person.Person;
+import com.medigy.persist.model.health.HealthCareLicense;
+import com.medigy.persist.model.contact.State;
 import com.medigy.persist.reference.custom.person.PersonRoleType;
+import com.medigy.persist.reference.custom.health.HealthCareLicenseType;
 import com.medigy.service.util.Facade;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Interface for Person related activities. Implementation classes will be used by the
@@ -64,5 +68,11 @@ public interface PersonFacade extends Facade
 
     public PostalAddress getHomeAddress(Person person);
 
+    public HealthCareLicense addHealthCareLicense(Person person, String licenseNumber,
+                                                  HealthCareLicenseType licenseType,
+                                                  String description,
+                                                  State state,
+                                                  Date certificationDate,
+                                                  Date expirationDate);
 
 }

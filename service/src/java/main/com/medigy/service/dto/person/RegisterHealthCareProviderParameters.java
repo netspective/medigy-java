@@ -65,4 +65,6 @@ public interface RegisterHealthCareProviderParameters  extends ServiceVersion
 
     public Serializable getEmployerId();
 
+    public HealthCareLicenseParameters[] getLicenseParameters();
+
 }

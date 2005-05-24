@@ -38,7 +38,7 @@
  */
 package com.medigy.service.dto;
 
-public interface ServiceReturnValues
+public interface ServiceReturnValues 
 {
     public String getErrorMessage();
 }

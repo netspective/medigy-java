@@ -53,14 +53,14 @@ import com.medigy.persist.util.HibernateUtil;
 import com.medigy.service.ServiceVersion;
 import com.medigy.service.contact.AddContactMechanismService;
 import com.medigy.service.contact.ContactMechanismFacade;
-import com.medigy.service.util.UnknownReferenceTypeException;
+import com.medigy.service.dto.ServiceParameters;
 import com.medigy.service.dto.party.AddEmailParameters;
 import com.medigy.service.dto.party.AddPhoneParameters;
 import com.medigy.service.dto.party.AddPostalAddressParameters;
 import com.medigy.service.dto.party.NewEmail;
 import com.medigy.service.dto.party.NewPhone;
 import com.medigy.service.dto.party.NewPostalAddress;
-import com.medigy.service.dto.ServiceParameters;
+import com.medigy.service.util.UnknownReferenceTypeException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.criterion.Restrictions;
@@ -103,6 +103,36 @@ public class AddContactMechanismServiceImpl implements AddContactMechanismServic
             validatePhone((AddPhoneParameters) parameters);
         }
         return false;
+    }
+
+    public NewPostalAddress createErrorResponse(final ServiceParameters params, final String errorMessage)
+    {
+        return new NewPostalAddress() {
+                /**
+                 * Gets the unique ID of the newly added postal address
+                 *
+                 * @return
+                 */
+                public Serializable getPostalAddressId()
+                {
+                    return null;
+                }
+
+                /**
+                 * Gets the input parameters passed to the service
+                 *
+                 * @return
+                 */
+                public AddPostalAddressParameters getAddPostalAddressParameters()
+                {
+                    return (AddPostalAddressParameters) params;
+                }
+
+                public String getErrorMessage()
+                {
+                    return errorMessage;
+                }
+            };
     }
 
     public void validatePostalAddress(final AddPostalAddressParameters param)
@@ -228,32 +258,7 @@ public class AddContactMechanismServiceImpl implements AddContactMechanismServic
         catch (UnknownReferenceTypeException e)
         {
             final String error = e.getMessage();
-            return new NewPostalAddress() {
-                /**
-                 * Gets the unique ID of the newly added postal address
-                 *
-                 * @return
-                 */
-                public Serializable getPostalAddressId()
-                {
-                    return null;
-                }
-
-                /**
-                 * Gets the input parameters passed to the service
-                 *
-                 * @return
-                 */
-                public AddPostalAddressParameters getAddPostalAddressParameters()
-                {
-                    return null;
-                }
-
-                public String getErrorMessage()
-                {
-                    return error;
-                }
-            };
+            return createErrorResponse(param, error);
         }
 
         return new NewPostalAddress()

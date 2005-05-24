@@ -38,19 +38,38 @@
  */
 package com.medigy.service.impl.person;
 
+import com.medigy.persist.model.contact.Country;
+import com.medigy.persist.model.contact.State;
 import com.medigy.persist.model.person.Person;
+import com.medigy.persist.reference.custom.health.HealthCareLicenseType;
 import com.medigy.persist.reference.custom.person.PersonRoleType;
 import com.medigy.persist.util.HibernateUtil;
 import com.medigy.service.ServiceVersion;
-import com.medigy.service.person.RegisterHealthCareProviderService;
-import com.medigy.service.person.PersonFacade;
+import com.medigy.service.dto.ServiceParameters;
+import com.medigy.service.dto.person.HealthCareLicenseParameters;
 import com.medigy.service.dto.person.RegisterHealthCareProviderParameters;
 import com.medigy.service.dto.person.RegisteredProvider;
-import com.medigy.service.dto.ServiceParameters;
+import com.medigy.service.person.PersonFacade;
+import com.medigy.service.person.RegisterHealthCareProviderService;
+import com.medigy.service.util.ReferenceEntityFacade;
+import org.hibernate.criterion.Restrictions;
+
+import java.io.Serializable;
 
 public class RegisterHealthCareProviderServiceImpl implements RegisterHealthCareProviderService
 {
     private PersonFacade personFacade;
+    private ReferenceEntityFacade referenceEntityFacade;
+
+    public ReferenceEntityFacade getReferenceEntityFacade()
+    {
+        return referenceEntityFacade;
+    }
+
+    public void setReferenceEntityFacade(final ReferenceEntityFacade referenceEntityFacade)
+    {
+        this.referenceEntityFacade = referenceEntityFacade;
+    }
 
     public PersonFacade getPersonFacade()
     {
@@ -74,8 +93,64 @@ public class RegisterHealthCareProviderServiceImpl implements RegisterHealthCare
 
         personFacade.addPersonRole(person, PersonRoleType.Cache.INDIVIDUAL_HEALTH_CARE_PRACTITIONER.getEntity());
 
+        final HealthCareLicenseParameters[] licenseParams =  params.getLicenseParameters();
+        for (HealthCareLicenseParameters licenseParam : licenseParams)
+        {
+            final String stateString = licenseParam.getState();
+            final String countryString = licenseParam.getCountry();
 
-        return null;
+            Country country = (Country) HibernateUtil.getSession().createCriteria(Country.class).add(Restrictions.eq("name", countryString)).uniqueResult();
+            if (country == null)
+            {
+                // COUNTRY AND STATE MUST EXIST
+                return createErrorResponse(params, "Country is unknown");
+            }
+            final State state = country.getStateByName(stateString);
+            if (state == null)
+                return createErrorResponse(params, "State is unknown");
+
+            final HealthCareLicenseType type = referenceEntityFacade.getLicenseType(licenseParam.getLicenseType());
+            if (type == null)
+                return createErrorResponse(params, "License type is unknown");
+            personFacade.addHealthCareLicense(person, licenseParam.getLicenseNumber(), type, licenseParam.getDescription(), state,
+                    licenseParam.getCertificationDate(), licenseParam.getExpirationDate());
+        }
+        return new RegisteredProvider() {
+            public RegisterHealthCareProviderParameters getParameters()
+            {
+                return params;
+            }
+
+            public Serializable getRegisteredProviderId()
+            {
+                return person.getPartyId();
+            }
+
+            public String getErrorMessage()
+            {
+                return null;
+            }
+        };
+    }
+
+    public RegisteredProvider createErrorResponse(final RegisterHealthCareProviderParameters params, final String errorMessage)
+    {
+        return new RegisteredProvider() {
+            public RegisterHealthCareProviderParameters getParameters()
+            {
+                return (RegisterHealthCareProviderParameters) params;
+            }
+
+            public Serializable getRegisteredProviderId()
+            {
+                return null;
+            }
+
+            public String getErrorMessage()
+            {
+                return errorMessage;
+            }
+        };
     }
 
     public ServiceVersion[] getSupportedServiceVersions()

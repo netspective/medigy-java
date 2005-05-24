@@ -38,9 +38,11 @@
  */
 package com.medigy.service.dto.person;
 
+import com.medigy.service.dto.ServiceReturnValues;
+
 import java.io.Serializable;
 
-public interface RegisteredProvider
+public interface RegisteredProvider extends ServiceReturnValues
 {
     public RegisterHealthCareProviderParameters getParameters();
 
