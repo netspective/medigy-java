@@ -77,12 +77,9 @@ public class ReferenceEntityFacadeImpl implements ReferenceEntityFacade
      * @param code      Language code
      * @return
      */
-    public LanguageType getLanguageType(final String code) throws UnknownReferenceTypeException
+    public LanguageType getLanguageType(final String code)
     {
-        final LanguageType type = LanguageType.Cache.getEntity(code);
-        if (type == null)
-            throw new UnknownReferenceTypeException();
-        return type;
+        return LanguageType.Cache.getEntity(code);
     }
 
     /**
@@ -90,12 +87,9 @@ public class ReferenceEntityFacadeImpl implements ReferenceEntityFacade
      * @param genderCode
      * @return
      */
-    public GenderType getGenderType(final String genderCode) throws UnknownReferenceTypeException
+    public GenderType getGenderType(final String genderCode)
     {
-        final GenderType type = GenderType.Cache.getEntity(genderCode);
-        if (type == null)
-            throw new UnknownReferenceTypeException();
-        return type;
+        return GenderType.Cache.getEntity(genderCode);
     }
 
     /**
@@ -105,9 +99,8 @@ public class ReferenceEntityFacadeImpl implements ReferenceEntityFacade
      *
      * @param ethnicityCode
      * @return
-     * @throws UnknownReferenceTypeException
      */
-    public EthnicityType getEthnicityType(final String ethnicityCode) throws UnknownReferenceTypeException
+    public EthnicityType getEthnicityType(final String ethnicityCode)
     {
         EthnicityType type = EthnicityType.Cache.getEntity(ethnicityCode);
         if (type == null)
@@ -115,8 +108,6 @@ public class ReferenceEntityFacadeImpl implements ReferenceEntityFacade
             final Criteria criteria = HibernateUtil.getSession().createCriteria(EthnicityType.class);
             criteria.add(Expression.eq("code", ethnicityCode));
             type = (EthnicityType) criteria.uniqueResult();
-            if (type == null)
-                throw new UnknownReferenceTypeException();
         }
         return type;
     }

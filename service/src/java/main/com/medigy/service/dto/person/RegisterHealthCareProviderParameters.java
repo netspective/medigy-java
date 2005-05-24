@@ -57,11 +57,11 @@ public interface RegisterHealthCareProviderParameters  extends ServiceVersion
 
     public String getSsn();
 
-    public String getGender();
+    public String getGenderCode();
 
-    public String[] getEthnicities();
+    public String[] getEthnicityCodes();
 
-    public String[] getLanguages();
+    public String[] getLanguageCodes();
 
     public Serializable getEmployerId();
 

@@ -63,4 +63,9 @@
         <create-instance class="impl.contact.GeographicBoundaryFacadeImpl"/>
          <interceptor service-id="hivemind.LoggingInterceptor"/>
     </service-point>
+
+    <service-point id="PersonFacade" interface="com.medigy.service.person.PersonFacade">
+        <create-instance class="impl.person.PersonFacadeImpl"/>
+         <interceptor service-id="hivemind.LoggingInterceptor"/>
+    </service-point>
 </module>

@@ -51,11 +51,11 @@ public interface ReferenceEntityFacade extends Facade
 {
     public InsurancePolicyType getInsurancePolicyType(final String code) throws UnknownReferenceTypeException;
 
-    public LanguageType getLanguageType(final String code) throws UnknownReferenceTypeException;
+    public LanguageType getLanguageType(final String code);
 
-    public GenderType getGenderType(final String genderCode) throws UnknownReferenceTypeException;
+    public GenderType getGenderType(final String genderCode);
 
-    public EthnicityType getEthnicityType(final String ethnicityCode) throws UnknownReferenceTypeException;
+    public EthnicityType getEthnicityType(final String ethnicityCode);
 
     public MaritalStatusType getMaritalStatusType(String statusCode) throws UnknownReferenceTypeException;
 

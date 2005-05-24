@@ -43,6 +43,9 @@ import com.medigy.persist.model.contact.State;
 import com.medigy.persist.model.person.Person;
 import com.medigy.persist.reference.custom.health.HealthCareLicenseType;
 import com.medigy.persist.reference.custom.person.PersonRoleType;
+import com.medigy.persist.reference.custom.person.EthnicityType;
+import com.medigy.persist.reference.type.GenderType;
+import com.medigy.persist.reference.type.LanguageType;
 import com.medigy.persist.util.HibernateUtil;
 import com.medigy.service.ServiceVersion;
 import com.medigy.service.dto.ServiceParameters;
@@ -88,6 +91,27 @@ public class RegisterHealthCareProviderServiceImpl implements RegisterHealthCare
         person.setFirstName(params.getFirstName());
         person.setMiddleName(params.getMiddleName());
         person.setSuffix(params.getSuffix());
+
+        final GenderType genderType = referenceEntityFacade.getGenderType(params.getGenderCode());
+        if (genderType == null)
+            return createErrorResponse(params, "Unknown gender");
+        person.addGender(genderType);
+
+        for (String languageCode : params.getLanguageCodes())
+        {
+            final LanguageType langType = referenceEntityFacade.getLanguageType(languageCode);
+            if (langType == null)
+                return createErrorResponse(params, "Unknown language");
+            person.addLanguage(langType);
+        }
+
+        for (String ethnicityCode : params.getEthnicityCodes())
+        {
+            final EthnicityType ethType = referenceEntityFacade.getEthnicityType(ethnicityCode);
+            if (ethType == null)
+                return createErrorResponse(params, "Unknown ethnicity");
+            person.addEthnicity(ethType);
+        }
 
         HibernateUtil.getSession().save(person);
 
