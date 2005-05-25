@@ -38,11 +38,12 @@
  */
 package com.medigy.service.util;
 
-import com.medigy.persist.model.party.PartyRole;
 import com.medigy.persist.reference.custom.health.HealthCareLicenseType;
 import com.medigy.persist.reference.custom.insurance.InsurancePolicyType;
 import com.medigy.persist.reference.custom.party.ContactMechanismPurposeType;
+import com.medigy.persist.reference.custom.party.OrganizationRoleType;
 import com.medigy.persist.reference.custom.person.EthnicityType;
+import com.medigy.persist.reference.custom.person.PersonRoleType;
 import com.medigy.persist.reference.type.GenderType;
 import com.medigy.persist.reference.type.LanguageType;
 import com.medigy.persist.reference.type.MaritalStatusType;
@@ -59,7 +60,9 @@ public interface ReferenceEntityFacade extends Facade
 
     public MaritalStatusType getMaritalStatusType(String statusCode) throws UnknownReferenceTypeException;
 
-    public PartyRole getPersonRole(String roleCode) throws UnknownReferenceTypeException;
+    public PersonRoleType getPersonRoleType(String roleCode);
+
+    public OrganizationRoleType getOrganizationRoleType(String roleCode);
 
     public ContactMechanismPurposeType getContactMechanismPurposeType(String purposeCode)  throws UnknownReferenceTypeException;
 

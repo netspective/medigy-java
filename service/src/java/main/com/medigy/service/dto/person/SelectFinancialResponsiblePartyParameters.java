@@ -36,11 +36,41 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.service.dto;
+package com.medigy.service.dto.person;
 
 import com.medigy.service.ServiceVersion;
 
-public interface ServiceParameters 
+import java.io.Serializable;
+
+/**
+ * If the responsible party is a person, then the  getResponsiblePartyRoleCode() must be of PersonRoleType
+ * and if the party is an org, then the role must be of OrganiationRoleType.
+ */
+public interface SelectFinancialResponsiblePartyParameters extends ServiceVersion
 {
-    public ServiceVersion getServiceVersion();
+    public Serializable getPartyId();
+
+    /**
+     * Gets the responsible party ID. This means that the reponsible party already exists. A responsible party
+     * can be an org or a person.
+     * @return
+     */
+    public Serializable getResponsiblePartyId();
+
+    public String getResponsiblePartyName();
+
+    /**
+     * Gets the responsible party's role with respect to the relationship with the patient
+     * (e.g. Employer, Parent, Guardian).
+     * @return
+     */
+    public String getResponsiblePartyRoleCode();
+
+    /**
+     * Gets the relationship type of the responsible party with respect to the patient
+     * @return
+     */
+    public String getRelationshipTypeCode();
+
+
 }

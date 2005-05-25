@@ -36,11 +36,67 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.service.dto;
+package com.medigy.service.impl.party;
 
+import com.medigy.persist.model.party.Party;
+import com.medigy.persist.model.party.PartyRole;
+import com.medigy.persist.reference.custom.party.PartyRoleType;
+import com.medigy.persist.util.HibernateUtil;
 import com.medigy.service.ServiceVersion;
+import com.medigy.service.dto.ServiceParameters;
+import com.medigy.service.dto.person.SelectFinancialResponsiblePartyParameters;
+import com.medigy.service.party.SelectFinancialResponsiblePartyService;
+import com.medigy.service.util.ReferenceEntityFacade;
 
-public interface ServiceParameters 
+import java.io.Serializable;
+
+public class SelectFinancialResponsiblePartyServiceImpl implements SelectFinancialResponsiblePartyService
 {
-    public ServiceVersion getServiceVersion();
+    private ReferenceEntityFacade referenceEntityFacade;
+
+    public ReferenceEntityFacade getReferenceEntityFacade()
+    {
+        return referenceEntityFacade;
+    }
+
+    public void setReferenceEntityFacade(final ReferenceEntityFacade referenceEntityFacade)
+    {
+        this.referenceEntityFacade = referenceEntityFacade;
+    }
+
+    public void select(final SelectFinancialResponsiblePartyParameters params)
+    {
+        final Serializable partyId = params.getPartyId();
+        final Party party = (Party) HibernateUtil.getSession().load(Party.class, partyId);
+        final String roleCode = params.getResponsiblePartyRoleCode();
+
+        PartyRoleType roleType = null;
+        if (party.isPerson())
+            roleType = referenceEntityFacade.getPersonRoleType(roleCode);
+        else
+            roleType = referenceEntityFacade.getOrganizationRoleType(roleCode);
+        // check to see if the party alread has this role
+        if (!party.hasPartyRole(roleType))
+        {
+            // create the role
+            PartyRole partyRole = new PartyRole();
+            partyRole.setType(roleType);
+            partyRole.setParty(party);
+            party.addPartyRole(partyRole);
+            HibernateUtil.getSession().save(partyRole);
+        }
+
+        // TODO: now need to create/get the patient's role with respect to the relationship
+
+    }
+
+    public ServiceVersion[] getSupportedServiceVersions()
+    {
+        return new ServiceVersion[0];
+    }
+
+    public boolean isValid(ServiceParameters parameters)
+    {
+        return false;
+    }
 }

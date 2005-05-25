@@ -36,11 +36,12 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.service.dto;
+package com.medigy.service.party;
 
-import com.medigy.service.ServiceVersion;
+import com.medigy.service.Service;
+import com.medigy.service.dto.person.SelectFinancialResponsiblePartyParameters;
 
-public interface ServiceParameters 
+public interface SelectFinancialResponsiblePartyService extends Service
 {
-    public ServiceVersion getServiceVersion();
+    public void select(final SelectFinancialResponsiblePartyParameters params);
 }

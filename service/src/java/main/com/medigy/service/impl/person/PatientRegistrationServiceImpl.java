@@ -352,6 +352,11 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
                 {
                     return null;
                 }
+
+                public String getComponentVersion()
+                {
+                    return null;
+                }
             });
         }
         catch (Exception e)

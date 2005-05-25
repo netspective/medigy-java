@@ -38,12 +38,12 @@
  */
 package com.medigy.service.impl.util;
 
-import com.medigy.persist.model.party.PartyRole;
+import com.medigy.persist.reference.custom.health.HealthCareLicenseType;
 import com.medigy.persist.reference.custom.insurance.InsurancePolicyType;
 import com.medigy.persist.reference.custom.party.ContactMechanismPurposeType;
+import com.medigy.persist.reference.custom.party.OrganizationRoleType;
 import com.medigy.persist.reference.custom.person.EthnicityType;
 import com.medigy.persist.reference.custom.person.PersonRoleType;
-import com.medigy.persist.reference.custom.health.HealthCareLicenseType;
 import com.medigy.persist.reference.type.GenderType;
 import com.medigy.persist.reference.type.LanguageType;
 import com.medigy.persist.reference.type.MaritalStatusType;
@@ -126,7 +126,7 @@ public class ReferenceEntityFacadeImpl implements ReferenceEntityFacade
         return type;
     }
 
-    public PartyRole getPersonRole(String roleCode) throws UnknownReferenceTypeException
+    public PersonRoleType getPersonRoleType(String roleCode)
     {
         PersonRoleType  type = PersonRoleType.Cache.getEntity(roleCode);
         if (type == null)
@@ -134,12 +134,20 @@ public class ReferenceEntityFacadeImpl implements ReferenceEntityFacade
             final Criteria criteria = HibernateUtil.getSession().createCriteria(PersonRoleType.class);
             criteria.add(Expression.eq("code", roleCode));
             type = (PersonRoleType) criteria.uniqueResult();
-            if (type == null)
-                throw new UnknownReferenceTypeException();
         }
-        PartyRole role = new PartyRole();
-        role.setType(type);
-        return role;
+        return type;
+    }
+
+    public OrganizationRoleType getOrganizationRoleType(String roleCode)
+    {
+        OrganizationRoleType  type = OrganizationRoleType.Cache.getEntity(roleCode);
+        if (type == null)
+        {
+            final Criteria criteria = HibernateUtil.getSession().createCriteria(OrganizationRoleType.class);
+            criteria.add(Expression.eq("code", roleCode));
+            type = (OrganizationRoleType) criteria.uniqueResult();
+        }
+        return type;
     }
 
     public ContactMechanismPurposeType getContactMechanismPurposeType(String purposeCode) throws UnknownReferenceTypeException

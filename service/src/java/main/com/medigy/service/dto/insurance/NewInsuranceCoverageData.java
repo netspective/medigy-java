@@ -36,11 +36,16 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.service.dto;
+package com.medigy.service.dto.insurance;
 
-import com.medigy.service.ServiceVersion;
+import com.medigy.service.dto.ServiceReturnValues;
 
-public interface ServiceParameters 
+import java.io.Serializable;
+
+public interface NewInsuranceCoverageData extends ServiceReturnValues
 {
-    public ServiceVersion getServiceVersion();
+    public AddInsuranceCoverageParameters getAddInsuranceCoverageParameters();
+
+    public Serializable getInsurancePolicyId();
+        
 }

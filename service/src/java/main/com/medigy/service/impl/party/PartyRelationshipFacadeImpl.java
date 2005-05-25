@@ -44,6 +44,7 @@ import com.medigy.persist.model.party.PartyRole;
 import com.medigy.persist.model.party.ValidPartyRelationshipRole;
 import com.medigy.persist.model.person.Person;
 import com.medigy.persist.model.org.Organization;
+import com.medigy.persist.model.insurance.FinancialResponsiblePartySelection;
 import com.medigy.persist.reference.custom.party.PartyRelationshipType;
 import com.medigy.persist.reference.custom.person.PersonRoleType;
 import com.medigy.persist.util.HibernateUtil;
@@ -128,8 +129,16 @@ public class PartyRelationshipFacadeImpl implements PartyRelationshipFacade
         }
     }
 
-    public void addFinancialResposiblePerson(Person patient, Person responsiblePerson)
+    /**
+     * Creates a new FinancialResponsiblePartySelection entry
+     * @param relationship
+     * @return
+     */
+    public FinancialResponsiblePartySelection addFinancialResposiblePerson(final PartyRelationship relationship)
     {
-
+        final FinancialResponsiblePartySelection selection = new FinancialResponsiblePartySelection();
+        selection.setPartyRelationship(relationship);
+        HibernateUtil.getSession().save(relationship);
+        return selection;
     }
 }

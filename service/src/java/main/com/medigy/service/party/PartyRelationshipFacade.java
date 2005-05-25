@@ -43,6 +43,7 @@ import com.medigy.persist.model.party.Party;
 import com.medigy.persist.model.party.PartyRelationship;
 import com.medigy.persist.model.party.PartyRole;
 import com.medigy.persist.model.person.Person;
+import com.medigy.persist.model.insurance.FinancialResponsiblePartySelection;
 import com.medigy.persist.reference.custom.party.PartyRelationshipType;
 import com.medigy.service.util.Facade;
 
@@ -60,5 +61,5 @@ public interface PartyRelationshipFacade extends Facade
 
     public void addFinancialResposibleOrganization(Person patient, Organization responsibleOrganization);
 
-    public void addFinancialResposiblePerson(Person patient, Person responsiblePerson);
+    public FinancialResponsiblePartySelection addFinancialResposiblePerson(PartyRelationship relationship);
 }

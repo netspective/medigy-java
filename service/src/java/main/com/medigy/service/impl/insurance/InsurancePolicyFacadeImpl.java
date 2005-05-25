@@ -95,7 +95,7 @@ public class InsurancePolicyFacadeImpl extends AbstractFacade implements Insuran
     public List listInsurancePlans(final InsuranceProduct product)
     {
         Criteria criteria = HibernateUtil.getSession().createCriteria(InsurancePlan.class);
-        criteria.createCriteria("insuranceProduct").add(Restrictions.eq("productId", product.getProductId()));
+        criteria.createCriteria("insuranceProduct").add(Restrictions.eq("insuranceProductId", product.getInsuranceProductId()));
         return criteria.list();
     }
 

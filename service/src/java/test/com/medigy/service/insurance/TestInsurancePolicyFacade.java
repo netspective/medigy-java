@@ -44,10 +44,10 @@ import com.medigy.persist.model.insurance.InsuranceProduct;
 import com.medigy.persist.model.org.Organization;
 import com.medigy.persist.model.person.Person;
 import com.medigy.persist.reference.custom.insurance.InsurancePolicyType;
+import com.medigy.persist.reference.custom.insurance.InsuranceProductType;
 import com.medigy.persist.util.HibernateUtil;
 import com.medigy.service.TestCase;
 import com.medigy.service.impl.insurance.InsurancePolicyFacadeImpl;
-import com.medigy.service.insurance.InsurancePolicyFacade;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.criterion.Restrictions;
@@ -68,7 +68,7 @@ public class TestInsurancePolicyFacade extends TestCase
         List<InsuranceProduct> productList = facade.listInsuranceProducts(policyProvider);
         assertEquals(1, productList.size());
         final InsuranceProduct newProduct = productList.get(0);
-        assertEquals("PPO Deluxe", newProduct.getName());
+        assertThat(newProduct.getType(), eq(InsuranceProductType.Cache.PPO.getEntity()));
 
     }
 
@@ -85,7 +85,7 @@ public class TestInsurancePolicyFacade extends TestCase
     public void testCreateIndividualInsurancePolicy()
     {
         final Organization policyProvider = (Organization) HibernateUtil.getSession().load(Organization.class, new Long(2));
-        final InsuranceProduct product = policyProvider.getInsuranceProduct("PPO Deluxe");
+        final InsuranceProduct product = policyProvider.getInsuranceProduct(InsuranceProductType.Cache.PPO.getEntity());
         final InsurancePlan plan = product.getInsurancePlan("Super Plan");
 
         final Person policyHolder = (Person) HibernateUtil.getSession().load(Person.class, new Long(3));

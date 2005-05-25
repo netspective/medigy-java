@@ -36,11 +36,13 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.service.dto;
+package com.medigy.service.insurance;
 
-import com.medigy.service.ServiceVersion;
+import com.medigy.service.Service;
+import com.medigy.service.dto.insurance.AddInsuranceCoverageParameters;
+import com.medigy.service.dto.insurance.NewInsuranceCoverageData;
 
-public interface ServiceParameters 
+public interface AddInsuranceCoverageService extends Service
 {
-    public ServiceVersion getServiceVersion();
+    public NewInsuranceCoverageData add(AddInsuranceCoverageParameters params);
 }

@@ -36,11 +36,42 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.service.dto;
+package com.medigy.service.dto.insurance;
 
-import com.medigy.service.ServiceVersion;
+import com.medigy.service.dto.ServiceParameters;
 
-public interface ServiceParameters 
+import java.io.Serializable;
+import java.util.Date;
+
+public interface AddInsuranceCoverageParameters  extends ServiceParameters
 {
-    public ServiceVersion getServiceVersion();
+    public Serializable getPatientId();
+
+    public Serializable getInsuranceCarrierId();
+
+    public Serializable getInsuranceProductId();
+
+    public Serializable getInsurancePlanId();
+
+    public String getInsurancePolicyNumber();
+
+    public String getInsuranceGroupNumber();
+
+    public Serializable getInsuranceContractHolderId();
+
+    public String getInsuranceContractHolderRole();
+
+    public Date getCoverageStartDate();
+
+    public Date getCoverageEndDate();
+
+    public Float getIndividualDeductibleAmount();
+
+    public Float getFamilyDeductibleAmount();
+
+    public Float getOfficeVisitCoPay();
+
+    public Float getPercentagePay();
+
+    public Float getMaxThresholdAmount();
 }
