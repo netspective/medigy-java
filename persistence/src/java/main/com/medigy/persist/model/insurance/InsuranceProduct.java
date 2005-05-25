@@ -38,11 +38,17 @@
  */
 package com.medigy.persist.model.insurance;
 
-import com.medigy.persist.model.product.Product;
+import com.medigy.persist.model.common.AbstractTopLevelEntity;
+import com.medigy.persist.model.org.Organization;
+import com.medigy.persist.reference.custom.insurance.InsuranceProductType;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Inheritance;
+import javax.persistence.GeneratorType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 import java.util.HashSet;
@@ -52,15 +58,52 @@ import java.util.Set;
  * Insurance Products, which are a broad classification of insurance plans offered by an insurance organization.
  */
 @Entity
-@Inheritance(discriminatorValue = "Insurance")
-public class InsuranceProduct extends Product
+public class InsuranceProduct extends AbstractTopLevelEntity
 {
-    public static final String PK_COLUMN_NAME = Product.PK_COLUMN_NAME;
+    public static final String PK_COLUMN_NAME = "ins_product_id";
 
+    private Long insuranceProductId;
+    private InsuranceProductType type;
+    private Organization organization;
     private Set<InsuranceProductCoverage> insuranceProductCoverages = new HashSet<InsuranceProductCoverage>();
     private Set<InsurancePlan> insurancePlans = new HashSet<InsurancePlan>();
-
     private Set<InsuranceProductCoverageLevel> coverageLevelRelationships = new HashSet<InsuranceProductCoverageLevel>();
+
+    @Id(generate = GeneratorType.AUTO)
+    @Column(name = PK_COLUMN_NAME)
+    public Long getInsuranceProductId()
+    {
+        return insuranceProductId;
+    }
+
+    public void setInsuranceProductId(final Long insuranceProductId)
+    {
+        this.insuranceProductId = insuranceProductId;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = Organization.PK_COLUMN_NAME)
+    public Organization getOrganization()
+    {
+        return organization;
+    }
+
+    public void setOrganization(final Organization organization)
+    {
+        this.organization = organization;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = InsuranceProductType.PK_COLUMN_NAME)
+    public InsuranceProductType getType()
+    {
+        return type;
+    }
+
+    public void setType(final InsuranceProductType type)
+    {
+        this.type = type;
+    }
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "insuranceProduct")
     public Set<InsuranceProductCoverageLevel> getCoverageLevelRelationships()

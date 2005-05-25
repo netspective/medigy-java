@@ -43,21 +43,21 @@
  */
 package com.medigy.persist.model.org;
 
-import com.medigy.persist.model.insurance.Group;
+import com.medigy.persist.model.insurance.Enrollment;
+import com.medigy.persist.model.insurance.InsurancePlan;
 import com.medigy.persist.model.insurance.InsuranceProduct;
 import com.medigy.persist.model.party.Party;
-import com.medigy.persist.model.product.ProductCategory;
-import com.medigy.persist.model.product.Product;
+import com.medigy.persist.reference.custom.insurance.InsuranceProductType;
 import com.medigy.persist.reference.custom.org.OrganizationClassificationType;
 import com.medigy.persist.reference.type.party.PartyType;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import javax.persistence.CascadeType;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -69,10 +69,9 @@ import java.util.Set;
 @Table(name = "Org")
 public class Organization extends Party
 {
-    private Set<Group> groups = new HashSet<Group>();
     private Set<InsuranceProduct> insuranceProducts = new HashSet<InsuranceProduct>();
-    private Set<ProductCategory> productCategories = new HashSet<ProductCategory>();
-    private Set<Product> products = new HashSet<Product>();
+    private Set<InsurancePlan> insurancePlan = new HashSet<InsurancePlan>();
+    private Set<Enrollment> enrollments = new HashSet<Enrollment>();
 
     public Organization()
     {
@@ -111,23 +110,6 @@ public class Organization extends Party
         super.setPartyId(orgId);
     }
 
-    @OneToMany(mappedBy = "insuredOrganization")
-    public Set<Group> getGroups()
-    {
-        return groups;
-    }
-
-    public void setGroups(final Set<Group> groups)
-    {
-        this.groups = groups;
-    }
-
-    @Transient
-    public void addGroup(final Group group)
-    {
-        getGroups().add(group);
-    }
-
     /**
      * Checks to see if this organization is classified as an Insurance company
      * @return  True if this organization is classified as an insurance carrier
@@ -155,42 +137,14 @@ public class Organization extends Party
     }
 
     @Transient
-    public InsuranceProduct getInsuranceProduct(final String productName)
+    public InsuranceProduct getInsuranceProduct(final InsuranceProductType type)
     {
         for (InsuranceProduct product : insuranceProducts)
         {
-            if (product.getName().equalsIgnoreCase(productName))
+            if (product.getType().equals(type))
                 return product;
         }
         return null;
-    }
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "organization")
-    public Set<Product> getProducts()
-    {
-        return products;
-    }
-
-    public void setProducts(final Set<Product> products)
-    {
-        this.products = products;
-    }
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "organization")
-    public Set<ProductCategory> getProductCategories()
-    {
-        return productCategories;
-    }
-
-    public void setProductCategories(final Set<ProductCategory> productCategories)
-    {
-        this.productCategories = productCategories;
-    }
-
-    @Transient
-    public void addProductCategory(final ProductCategory category)
-    {
-        this.productCategories.add(category);
     }
 
     @Override
@@ -203,8 +157,37 @@ public class Organization extends Party
     }
 
     @Transient
-    public void addProduct(final Product product)
+    public void addInsuranceProduct(final InsuranceProduct product)
     {
-        getProducts().add(product);
+        getInsuranceProducts().add(product);
     }
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "organization")
+    public Set<InsurancePlan> getInsurancePlan()
+    {
+        return insurancePlan;
+    }
+
+    public void setInsurancePlan(final Set<InsurancePlan> insurancePlan)
+    {
+        this.insurancePlan = insurancePlan;
+    }
+
+    @Transient
+    public void addInsurancePlan(final InsurancePlan plan)
+    {
+        insurancePlan.add(plan);
+    }
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "organization")
+    public Set<Enrollment> getEnrollments()
+    {
+        return enrollments;
+    }
+
+    public void setEnrollments(final Set<Enrollment> enrollments)
+    {
+        this.enrollments = enrollments;
+    }
+
 }

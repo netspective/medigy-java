@@ -3,16 +3,16 @@
  */
 package com.medigy.persist.reference.custom;
 
-import com.medigy.persist.model.common.AbstractTopLevelEntity;
+import com.medigy.persist.model.common.AbstractEntity;
 import com.medigy.persist.model.party.Party;
 
-import javax.persistence.Transient;
-import javax.persistence.Column;
-import javax.persistence.ManyToOne;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
 
-public abstract class AbstractCustomHierarchyReferenceEntity extends AbstractTopLevelEntity implements CustomHierarchyReferenceEntity, Comparable
+public abstract class AbstractCustomHierarchyReferenceEntity extends AbstractEntity implements CustomHierarchyReferenceEntity, Comparable
 {
     private Long systemId;
     private String code;

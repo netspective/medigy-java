@@ -43,6 +43,7 @@ import com.medigy.persist.model.org.Organization;
 import com.medigy.persist.model.person.Person;
 import com.medigy.persist.model.claim.Claim;
 import com.medigy.persist.reference.custom.insurance.InsurancePolicyType;
+import com.medigy.persist.reference.custom.insurance.CoverageLevelType;
 import com.medigy.persist.reference.custom.invoice.BillSequenceType;
 
 import javax.persistence.CascadeType;
@@ -241,7 +242,7 @@ public class InsurancePolicy extends AbstractDateDurationEntity
     @Transient
     public Organization getInsuranceProvider()
     {
-        return getInsurancePlan().getInsuranceProvider();
+        return getInsurancePlan().getOrganization();
     }
 
     @ManyToOne
@@ -283,5 +284,21 @@ public class InsurancePolicy extends AbstractDateDurationEntity
     public void addCoverageLevelRelationship(final InsurancePolicyCoverageLevel rel)
     {
         this.coverageLevelRelationships.add(rel);
+    }
+
+    /**
+     * Gets the policy to coverage level relationship entity based on the type of the coverage level
+     * @param entity
+     * @return
+     */
+    @Transient
+    public InsurancePolicyCoverageLevel getCoverageLevelRelationship(final CoverageLevelType entity)
+    {
+        for (InsurancePolicyCoverageLevel rel : coverageLevelRelationships)
+        {
+            if (rel.getCoverageLevel().getType().equals(entity))
+                return rel;
+        }
+        return null;
     }
 }

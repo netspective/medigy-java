@@ -48,6 +48,8 @@ import javax.persistence.Inheritance;
 @Inheritance(discriminatorValue="Organization" )
 public class OrganizationRoleType extends PartyRoleType
 {
+    public static final String PK_COLUMN_NAME = PartyRoleType.PK_COLUMN_NAME;
+    
     public enum Cache implements CachedCustomReferenceEntity
     {
         INSURANCE_AGENCY("INS_AGENCY", "Insurance Agency"),
@@ -94,6 +96,16 @@ public class OrganizationRoleType extends PartyRoleType
         public String getLabel()
         {
             return label;
+        }
+
+        public static OrganizationRoleType getEntity(String code)
+        {
+            for (OrganizationRoleType.Cache role : OrganizationRoleType.Cache.values())
+            {
+                if (role.getCode().equals(code))
+                    return role.getEntity();
+            }
+            return null;
         }
     }
 }

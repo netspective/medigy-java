@@ -38,6 +38,9 @@
  */
 package com.medigy.persist.reference.custom.party;
 
+import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
+import com.medigy.persist.model.party.ValidFinancialResponsiblePartyRelationship;
+
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
 import javax.persistence.Entity;
@@ -46,8 +49,10 @@ import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.Table;
-
-import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
+import javax.persistence.Column;
+import javax.persistence.OneToMany;
+import java.util.Set;
+import java.util.HashSet;
 
 @Entity
 @Table(name = "Party_Role_Type")
@@ -58,12 +63,18 @@ import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
 )
 @DiscriminatorColumn(name="role_type")
 public class PartyRoleType extends AbstractCustomReferenceEntity
-{    
+{
+    public static final String PK_COLUMN_NAME = "party_role_type_id";
+
+    private Set<ValidFinancialResponsiblePartyRelationship> responsiblePartyRelationships = new HashSet<ValidFinancialResponsiblePartyRelationship>();
+    private Set<ValidFinancialResponsiblePartyRelationship> validPatientRelationships = new HashSet<ValidFinancialResponsiblePartyRelationship>();
+
     public PartyRoleType()
     {
     }
 
     @Id(generate = GeneratorType.AUTO)
+    @Column(name = PK_COLUMN_NAME)
     public Long getPartyRoleTypeId()
     {
         return super.getSystemId();
@@ -74,5 +85,25 @@ public class PartyRoleType extends AbstractCustomReferenceEntity
         super.setSystemId(id);
     }
 
+    @OneToMany(mappedBy = "responsiblePartyRoleType")
+    public Set<ValidFinancialResponsiblePartyRelationship> getResponsiblePartyRelationships()
+    {
+        return responsiblePartyRelationships;
+    }
 
+    public void setResponsiblePartyRelationships(final Set<ValidFinancialResponsiblePartyRelationship> responsiblePartyRelationships)
+    {
+        this.responsiblePartyRelationships = responsiblePartyRelationships;
+    }
+
+    @OneToMany(mappedBy = "patientRoleType")
+    public Set<ValidFinancialResponsiblePartyRelationship> getValidPatientRelationships()
+    {
+        return validPatientRelationships;
+    }
+
+    public void setValidPatientRelationships(final Set<ValidFinancialResponsiblePartyRelationship> validPatientRelationships)
+    {
+        this.validPatientRelationships = validPatientRelationships;
+    }
 }

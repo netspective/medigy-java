@@ -165,6 +165,12 @@ public class Party extends AbstractTopLevelEntity
         this.partyType = partyType;
     }
 
+    @Transient
+    public boolean isPerson()
+    {
+        return partyType.equals(PartyType.Cache.PERSON.getEntity());    
+    }
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "party")
     public Set<PartyClassification> getPartyClassifications()
     {

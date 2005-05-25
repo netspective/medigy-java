@@ -67,7 +67,7 @@ public class PhysicalCharacteristicType extends AbstractCustomReferenceEntity
             this.code = code;
             this.label = label;
         }
-
+     
         public String getCode()
         {
             return code;

@@ -8,6 +8,7 @@ import com.medigy.persist.model.org.Organization;
 import com.medigy.persist.reference.custom.insurance.CoverageLevelBasisType;
 import com.medigy.persist.reference.custom.insurance.CoverageLevelType;
 import com.medigy.persist.reference.custom.insurance.CoverageType;
+import com.medigy.persist.reference.custom.insurance.InsuranceProductType;
 import com.medigy.persist.reference.custom.org.OrganizationClassificationType;
 import com.medigy.persist.util.HibernateUtil;
 
@@ -22,9 +23,9 @@ public class TestInsuranceProductCoverage extends TestCase
 
         // create the product
         final InsuranceProduct ppoProduct = new InsuranceProduct();
-        ppoProduct.setName("PPO Product");
+        ppoProduct.setType(InsuranceProductType.Cache.PPO.getEntity());
         ppoProduct.setOrganization(blueCross);
-        blueCross.addProduct(ppoProduct);
+        blueCross.addInsuranceProduct(ppoProduct);
 
         HibernateUtil.getSession().save(blueCross);
 
@@ -58,7 +59,7 @@ public class TestInsuranceProductCoverage extends TestCase
         HibernateUtil.getSession().flush();
         HibernateUtil.closeSession();
 
-        final InsuranceProduct product = (InsuranceProduct) HibernateUtil.getSession().load(InsuranceProduct.class, ppoProduct.getProductId());
+        final InsuranceProduct product = (InsuranceProduct) HibernateUtil.getSession().load(InsuranceProduct.class, ppoProduct.getInsuranceProductId());
         assertThat(product.getInsuranceProductCoverages().size(), eq(1));
         final InsuranceProductCoverage productCoverage = (InsuranceProductCoverage) product.getInsuranceProductCoverages().toArray()[0];
         assertThat(productCoverage.getInsuranceProductCoverageId(), eq(ipc.getInsuranceProductCoverageId()));

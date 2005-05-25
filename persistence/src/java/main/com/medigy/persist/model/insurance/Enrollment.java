@@ -39,6 +39,7 @@
 package com.medigy.persist.model.insurance;
 
 import com.medigy.persist.model.common.AbstractTopLevelEntity;
+import com.medigy.persist.model.org.Organization;
 
 import javax.persistence.Entity;
 import javax.persistence.CascadeType;
@@ -59,7 +60,7 @@ public class Enrollment extends AbstractTopLevelEntity
     
     private Long enrollmentId;
     private Date enrolledDate;
-    private Group group;
+    private Organization organization;
 
     private Set<InsurancePolicy> insurancePolicies = new HashSet<InsurancePolicy>();
     private Set<EnrollmentElection> elections = new HashSet<EnrollmentElection>();
@@ -112,15 +113,15 @@ public class Enrollment extends AbstractTopLevelEntity
     }
 
     @ManyToOne
-    @JoinColumn(name = "group_id")
-    public Group getGroup()
+    @JoinColumn(name = Organization.PK_COLUMN_NAME)
+    public Organization getOrganization()
     {
-        return group;
+        return organization;
     }
 
-    public void setGroup(final Group group)
+    public void setOrganization(final Organization group)
     {
-        this.group = group;
+        this.organization = group;
     }
 
     /*

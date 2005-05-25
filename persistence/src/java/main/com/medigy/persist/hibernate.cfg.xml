@@ -4,10 +4,10 @@
 
 <hibernate-configuration>
 	<session-factory>
-        <mapping package="com.medigy.persist.reference"/>
+        <!--mapping package="com.medigy.persist.reference"/-->
         <mapping class="com.medigy.persist.reference.ModelVersion"/>
 
-        <mapping package="com.medigy.persist.reference.type"/>
+        <!--mapping package="com.medigy.persist.reference.type"/-->
         <mapping class="com.medigy.persist.reference.type.ContactMechanismType"/>
         <mapping class="com.medigy.persist.reference.type.DataEncryptionType"/>
         <mapping class="com.medigy.persist.reference.type.GenderType"/>
@@ -16,19 +16,19 @@
         <mapping class="com.medigy.persist.reference.type.PriorityType"/>
         <mapping class="com.medigy.persist.reference.type.UnitOfMeasureType"/>
 
-        <mapping package="com.medigy.persist.reference.type.party"/>
+        <!--mapping package="com.medigy.persist.reference.type.party"/-->
         <mapping class="com.medigy.persist.reference.type.party.PartyFacilityRoleType"/>
         <mapping class="com.medigy.persist.reference.type.party.PartyType"/>
 
-        <mapping package="com.medigy.persist.reference.custom"/>
+        <!--mapping package="com.medigy.persist.reference.custom"/-->
 		<mapping class="com.medigy.persist.reference.custom.GeographicBoundaryType"/>
-        <mapping package="com.medigy.persist.reference.custom.claim"/>
+        <!--mapping package="com.medigy.persist.reference.custom.claim"/-->
         <mapping class="com.medigy.persist.reference.custom.claim.ClaimRoleType"/>
         <mapping class="com.medigy.persist.reference.custom.claim.ClaimServiceCodeType"/>
         <mapping class="com.medigy.persist.reference.custom.claim.ClaimStatusType"/>
         <mapping class="com.medigy.persist.reference.custom.claim.ClaimType"/>
 
-        <mapping package="com.medigy.persist.reference.custom.health"/>
+        <!--mapping package="com.medigy.persist.reference.custom.health"/-->
         <mapping class="com.medigy.persist.reference.custom.health.DiagnosisType"/>
         <mapping class="com.medigy.persist.reference.custom.health.EpisodeType"/>
         <mapping class="com.medigy.persist.reference.custom.health.HealthCareDeliveryRoleType"/>
@@ -41,10 +41,10 @@
         <mapping class="com.medigy.persist.reference.custom.health.HealthCareReferralType"/>
         <mapping class="com.medigy.persist.reference.custom.health.HealthCareDeliveryType"/>
 
-        <mapping package="com.medigy.persist.reference.custom.product"/>
+        <!--mapping package="com.medigy.persist.reference.custom.product"/-->
         <mapping class="com.medigy.persist.reference.custom.product.ProductType"/>
 
-        <mapping package="com.medigy.persist.reference.custom.insurance"/>
+        <!--mapping package="com.medigy.persist.reference.custom.insurance"/-->
         <mapping class="com.medigy.persist.reference.custom.insurance.CoverageType"/>
         <mapping class="com.medigy.persist.reference.custom.insurance.CoverageLevelType"/>
         <mapping class="com.medigy.persist.reference.custom.insurance.CoverageLevelBasisType"/>
@@ -52,7 +52,7 @@
         <mapping class="com.medigy.persist.reference.custom.insurance.InsurancePolicyType"/>
         <mapping class="com.medigy.persist.reference.custom.insurance.InsuranceProductType"/>
 
-        <mapping package="com.medigy.persist.reference.custom.invoice"/>
+        <!--mapping package="com.medigy.persist.reference.custom.invoice"/-->
         <mapping class="com.medigy.persist.reference.custom.invoice.BillingAccountRoleType"/>
         <mapping class="com.medigy.persist.reference.custom.invoice.InvoiceItemType"/>
         <mapping class="com.medigy.persist.reference.custom.invoice.InvoiceRoleType"/>
@@ -63,7 +63,7 @@
         <mapping class="com.medigy.persist.reference.custom.invoice.BillRemittanceType"/>
         <mapping class="com.medigy.persist.reference.custom.invoice.BillSequenceType"/>
 
-        <mapping package="com.medigy.persist.reference.custom.party"/>
+        <!--mapping package="com.medigy.persist.reference.custom.party"/-->
         <mapping class="com.medigy.persist.reference.custom.party.PartyRoleType"/>
         <mapping class="com.medigy.persist.reference.custom.party.AgreementType"/>
         <mapping class="com.medigy.persist.reference.custom.party.CaseRoleType"/>
@@ -78,7 +78,7 @@
         <mapping class="com.medigy.persist.reference.custom.party.PartyRelationshipType"/>
         <mapping class="com.medigy.persist.reference.custom.party.PartyClassificationType"/>
 
-        <mapping package="com.medigy.persist.reference.custom.person"/>
+        <!--mapping package="com.medigy.persist.reference.custom.person"/-->
         <mapping class="com.medigy.persist.reference.custom.person.EthnicityType"/>
         <mapping class="com.medigy.persist.reference.custom.person.IncidentType"/>
         <mapping class="com.medigy.persist.reference.custom.person.MedicalConditionType"/>
@@ -88,10 +88,10 @@
         <mapping class="com.medigy.persist.reference.custom.person.PatientResponsiblePartyRoleType"/>
         <mapping class="com.medigy.persist.reference.custom.person.PersonClassificationType"/>
 
-        <mapping package="com.medigy.persist.reference.custom.org"/>
+        <!--mapping package="com.medigy.persist.reference.custom.org"/-->
         <mapping class="com.medigy.persist.reference.custom.org.OrganizationClassificationType"/>
         
-        <mapping package="com.medigy.persist.model.party"/>
+        <!--mapping package="com.medigy.persist.model.party"/-->
         <!--mapping class="com.medigy.persist.model.party.Case"/
  -->
         <!--mapping class="com.medigy.persist.model.party.CaseRole"/-->
@@ -120,8 +120,9 @@
         <mapping class="com.medigy.persist.model.party.PostalAddressBoundary"/>
         <mapping class="com.medigy.persist.model.party.ValidContactMechanismRole"/>
         <mapping class="com.medigy.persist.model.party.ValidPartyRelationshipRole"/>
+        <mapping class="com.medigy.persist.model.party.ValidFinancialResponsiblePartyRelationship"/>
 
-        <mapping package="com.medigy.persist.model.claim"/>
+        <!--mapping package="com.medigy.persist.model.claim"/-->
         <mapping class="com.medigy.persist.model.claim.Claim"/>
         <mapping class="com.medigy.persist.model.claim.ClaimItem"/>
         <mapping class="com.medigy.persist.model.claim.ClaimItemDiagnosisCode"/>
@@ -132,7 +133,7 @@
         <mapping class="com.medigy.persist.model.claim.ClaimSettlementAmount"/>
         <mapping class="com.medigy.persist.model.claim.ClaimStatus"/>
 
-        <mapping package="com.medigy.persist.model.common"/>
+        <!--mapping package="com.medigy.persist.model.common"/-->
         <mapping class="com.medigy.persist.model.contact.GeographicBoundary"/>
         <mapping class="com.medigy.persist.model.contact.City"/>
         <mapping class="com.medigy.persist.model.contact.County"/>
@@ -142,7 +143,7 @@
         <mapping class="com.medigy.persist.model.contact.Country"/>
         <!--mapping class="com.medigy.persist.model.contact.GeographicBoundaryAssociation"/-->
 
-        <mapping package="com.medigy.persist.model.health"/>
+        <!--mapping package="com.medigy.persist.model.health"/-->
         <mapping class="com.medigy.persist.model.health.DeliveryOutcome"/>
         <mapping class="com.medigy.persist.model.health.Diagnosis"/>
         <mapping class="com.medigy.persist.model.health.DiagnosisRelatedGroup"/>
@@ -166,12 +167,12 @@
         <mapping class="com.medigy.persist.model.health.HealthCareLicense"/>
         <mapping class="com.medigy.persist.model.health.HealthCareReferral"/>
 
-        <mapping package="com.medigy.persist.model.product"/>
-        <mapping class="com.medigy.persist.model.product.Product"/>
+        <!--mapping package="com.medigy.persist.model.product"/-->
+        <!--mapping class="com.medigy.persist.model.product.Product"/>
         <mapping class="com.medigy.persist.model.product.ProductCategory"/>
-        <mapping class="com.medigy.persist.model.product.ProductFeature"/>
+        <mapping class="com.medigy.persist.model.product.ProductFeature"/-->
 
-        <mapping package="com.medigy.persist.model.invoice"/>
+        <!--mapping package="com.medigy.persist.model.invoice"/-->
         <mapping class="com.medigy.persist.model.invoice.BillingAccount"/>
         <mapping class="com.medigy.persist.model.invoice.BillingAccountRole"/>
         <mapping class="com.medigy.persist.model.invoice.Invoice"/>
@@ -182,10 +183,10 @@
         <mapping class="com.medigy.persist.model.invoice.Payment"/>
         <mapping class="com.medigy.persist.model.invoice.PaymentApplication"/>
 
-        <mapping package="com.medigy.persist.model.org"/>
+        <!--mapping package="com.medigy.persist.model.org"/-->
         <mapping class="com.medigy.persist.model.org.Organization"/>
 
-        <mapping package="com.medigy.persist.model.person"/>
+        <!--mapping package="com.medigy.persist.model.person"/-->
         <mapping class="com.medigy.persist.model.person.Person"/>
         <mapping class="com.medigy.persist.model.person.Ethnicity"/>
         <mapping class="com.medigy.persist.model.person.Gender"/>
@@ -196,7 +197,7 @@
         <mapping class="com.medigy.persist.model.person.PatientMedicalCondition"/>
         <mapping class="com.medigy.persist.model.person.PhysicalCharacteristic"/>
 
-        <mapping package="com.medigy.persist.model.insurance"/>
+        <!--mapping package="com.medigy.persist.model.insurance"/-->
         <mapping class="com.medigy.persist.model.insurance.CareProviderSelection"/>
         <mapping class="com.medigy.persist.model.insurance.FinancialResponsiblePartySelection"/>
         <mapping class="com.medigy.persist.model.insurance.Coverage"/>
@@ -204,7 +205,6 @@
         <mapping class="com.medigy.persist.model.insurance.CoverageLevelBasis"/>
         <mapping class="com.medigy.persist.model.insurance.Enrollment"/>
         <mapping class="com.medigy.persist.model.insurance.EnrollmentElection"/>
-        <mapping class="com.medigy.persist.model.insurance.Group"/>
         <mapping class="com.medigy.persist.model.insurance.InsurancePolicy"/>
         <!--mapping class="com.medigy.persist.model.insurance.InsurancePolicyItem"/-->
         <!--mapping class="com.medigy.persist.model.insurance.InsurancePolicyRole"/-->
@@ -219,12 +219,12 @@
         <mapping class="com.medigy.persist.model.insurance.InsurancePlanCoverageLevel"/>
         <mapping class="com.medigy.persist.model.insurance.InsurancePolicyCoverageLevel"/>
 
-        <mapping package="com.medigy.persist.model.session"/>
+        <!--mapping package="com.medigy.persist.model.session"/-->
         <mapping class="com.medigy.persist.model.session.Session"/>
         <mapping class="com.medigy.persist.model.session.EndUserSession"/>
         <mapping class="com.medigy.persist.model.session.ProcessSession"/>
 
-        <mapping package="com.medigy.persist.model.work"/>
+        <!--mapping package="com.medigy.persist.model.work"/-->
         <mapping class="com.medigy.persist.model.work.WorkEffort"/>
 
 	</session-factory>

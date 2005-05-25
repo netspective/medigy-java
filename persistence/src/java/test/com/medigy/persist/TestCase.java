@@ -51,6 +51,7 @@ import com.medigy.persist.util.HibernateUtil;
 import com.medigy.persist.util.ModelInitializer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.dbunit.Assertion;
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.database.IDatabaseConnection;
@@ -144,7 +145,15 @@ public abstract class TestCase extends MockObjectTestCase
             useExternalModelData = true;
         setupDatabaseDirectory();
         final HibernateConfiguration hibernateConfiguration = getHibernateConfiguration();
-        HibernateUtil.setConfiguration(hibernateConfiguration);
+        try
+        {
+            HibernateUtil.setConfiguration(hibernateConfiguration);
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            log.error(ExceptionUtils.getStackTrace(e));
+        }
         setupModelInitializer(hibernateConfiguration);
         generateSchemaDdl(hibernateConfiguration);
         setupSession();

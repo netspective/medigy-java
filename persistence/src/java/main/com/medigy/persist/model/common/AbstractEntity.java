@@ -43,16 +43,15 @@
  */
 package com.medigy.persist.model.common;
 
-import java.io.Serializable;
-import java.util.Date;
+import com.medigy.persist.model.session.Session;
+import com.medigy.persist.model.session.SessionManager;
+import com.medigy.persist.reference.ModelVersion;
 
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Version;
-
-import com.medigy.persist.model.session.Session;
-import com.medigy.persist.model.session.SessionManager;
-import com.medigy.persist.reference.ModelVersion;
+import java.io.Serializable;
+import java.util.Date;
 
 public abstract class AbstractEntity implements Serializable
 {

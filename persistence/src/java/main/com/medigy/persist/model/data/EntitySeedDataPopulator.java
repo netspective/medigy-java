@@ -41,6 +41,7 @@ package com.medigy.persist.model.data;
 import com.medigy.persist.model.party.Party;
 import com.medigy.persist.model.session.ProcessSession;
 import com.medigy.persist.model.session.SessionManager;
+import com.medigy.persist.model.common.Entity;
 import com.medigy.persist.reference.CachedReferenceEntity;
 import com.medigy.persist.reference.ReferenceEntity;
 import com.medigy.persist.reference.custom.CachedCustomHierarchyReferenceEntity;
@@ -52,14 +53,18 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
+import org.hibernate.mapping.PersistentClass;
 
 import java.beans.BeanInfo;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
+import java.beans.IntrospectionException;
 import java.lang.reflect.Method;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
+import java.util.Iterator;
 
 public class EntitySeedDataPopulator
 {
@@ -73,6 +78,77 @@ public class EntitySeedDataPopulator
     {
         this.session = session;
         this.configuration = configuration;
+    }
+
+    public void populateEntityCacheData() throws HibernateException
+    {
+        final Iterator itr = configuration.getClassMappings();
+        while (itr.hasNext())
+        {
+            Class entityClass = ((PersistentClass) itr.next()).getMappedClass(); //(Class) classMappings.next();
+            log.warn(entityClass.getName());
+            if (!Entity.class.isAssignableFrom(entityClass))
+                continue;
+
+            Class[] innerClasses = entityClass.getDeclaredClasses();
+            for (Class innerClass : innerClasses)
+            {
+                // TODO: assume that this is the inner CACHE class !???!!! maybe make Cache extend an interface to indicate this??
+                if (innerClass.isEnum() && !entityClass.equals(Party.class))
+                {
+                    try
+                    {
+                        final BeanInfo beanInfo = Introspector.getBeanInfo(entityClass);
+                        final PropertyDescriptor[] descriptors = beanInfo.getPropertyDescriptors();
+                        final Hashtable pdsByName = new Hashtable();
+                        for (int i = 0; i < descriptors.length; i++)
+                        {
+                            final PropertyDescriptor descriptor = descriptors[i];
+                            if (descriptor.getWriteMethod() != null)
+                                pdsByName.put(descriptor.getReadMethod().getName(), descriptor.getWriteMethod());
+                        }
+
+                        Object[] enumObjects = innerClass.getEnumConstants();
+                        // now match the enum methods with the enclosing class' methods
+                        for (Object enumObj : enumObjects)
+                        {
+                            Object entityObj = entityClass.newInstance();
+                            final Method[] enumMethods = enumObj.getClass().getMethods();
+                            for (Method enumMethod : enumMethods)
+                            {
+                                final Method writeMethod = (Method) pdsByName.get(enumMethod.getName());
+                                if (writeMethod != null)
+                                {
+                                    writeMethod.invoke(entityObj, enumMethod.invoke(enumObj));
+                                }
+                            }
+                            HibernateUtil.getSession().save(entityObj);
+                            log.info("ENTITY CACHE: " + entityClass.getName() + " enum " + enumObj + " processed.");
+                        }
+                    }
+                    catch (IntrospectionException e)
+                    {
+                        log.error(e);
+                    }
+                    catch (IllegalAccessException e)
+                    {
+                        log.error(e);
+                    }
+                    catch (InstantiationException e)
+                    {
+                        log.error(e);
+                    }
+                    catch (InvocationTargetException e)
+                    {
+                        log.error(e);
+                    }
+                    catch (HibernateException e)
+                    {
+                        log.error(e);
+                    }
+                }
+            }
+        }
     }
 
     public void populateSeedData() throws HibernateException
@@ -129,7 +205,7 @@ public class EntitySeedDataPopulator
             populateCachedCustomReferenceEntities(HibernateUtil.getSession(), aClass, cachedEntities, new String[] {"code", "label", "party", "parentEntity"}, data);
         }
 
-
+        //populateEntityCacheData();
         HibernateUtil.commitTransaction();
         SessionManager.getInstance().popActiveSession();
     }

@@ -115,6 +115,7 @@ public class ModelInitializer
     public void initialize()
     {
         boolean populate = false;
+        log.info("Initialize model setting: " + seedDataPopulationType);
         switch(seedDataPopulationType)
         {
             case AUTO:

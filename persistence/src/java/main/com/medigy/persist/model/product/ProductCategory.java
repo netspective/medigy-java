@@ -41,14 +41,6 @@ package com.medigy.persist.model.product;
 import com.medigy.persist.model.common.AbstractTopLevelEntity;
 import com.medigy.persist.model.org.Organization;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratorType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -58,7 +50,6 @@ import java.util.Set;
  * "group health insurance" and "individual health insurance" and various insurance products
  * can exist for these.
  */
-@Entity
 public class ProductCategory extends AbstractTopLevelEntity
 {
     private Long insuranceProductCategoryId;
@@ -67,8 +58,6 @@ public class ProductCategory extends AbstractTopLevelEntity
     private Set<Product> products = new HashSet<Product>();
     private Organization organization;
 
-    @Id(generate = GeneratorType.AUTO)
-    @Column(name = "product_category_id")
     public Long getProductCategoryId()
     {
         return insuranceProductCategoryId;
@@ -79,7 +68,6 @@ public class ProductCategory extends AbstractTopLevelEntity
         this.insuranceProductCategoryId = insuranceProductCategoryId;
     }
 
-    @Column(length = 256, nullable = false)
     public String getDescription()
     {
         return description;
@@ -90,8 +78,6 @@ public class ProductCategory extends AbstractTopLevelEntity
         this.description = description;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "parent_product_category_id", referencedColumnName = "product_category_id")
     public ProductCategory getParentCategory()
     {
         return parentCategory;
@@ -102,8 +88,6 @@ public class ProductCategory extends AbstractTopLevelEntity
         this.parentCategory = (ProductCategory) parentCategory;
     }
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "product_category_id")
     public Set<Product> getProducts()
     {
         return products;
@@ -114,8 +98,6 @@ public class ProductCategory extends AbstractTopLevelEntity
         this.products = products;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "party_id")
     public Organization getOrganization()
     {
         return organization;

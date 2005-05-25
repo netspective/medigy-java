@@ -49,13 +49,17 @@ import javax.persistence.Inheritance;
 @Inheritance(discriminatorValue="Person" )
 public class PersonRoleType extends PartyRoleType
 {
+    public static final String PK_COLUMN_NAME = PartyRoleType.PK_COLUMN_NAME;
+
     public enum Cache implements CachedCustomReferenceEntity
     {
+        SELF("SELF", "Self"),
         CHILD("CHILD", "Child"),
         PARENT("PARENT", "Parent"),
         FAMILY_MEMBER("F", "Family Member"),
         EMPLOYEE("E", "Employee"),
         DEPENDENT("DEP", "Dependent"),
+        SPOUSE("SPOUSE", "Spouse"),
 
         PATIENT("PATIENT", "Patient"),
         INSURED_DEPENDENT("INS_DEP", "Insured Dependent"),
@@ -67,7 +71,7 @@ public class PersonRoleType extends PartyRoleType
         private final String code;
         private PersonRoleType entity;
 
-       Cache(final String code, final String label)
+        Cache(final String code, final String label)
        {
            this.code = code;
            this.label = label;

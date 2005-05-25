@@ -38,8 +38,8 @@
  */
 package com.medigy.persist.model.invoice;
 
-import java.util.HashSet;
-import java.util.Set;
+import com.medigy.persist.model.common.AbstractTopLevelEntity;
+import com.medigy.persist.reference.custom.invoice.InvoiceItemType;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -50,11 +50,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-
-import com.medigy.persist.model.common.AbstractTopLevelEntity;
-import com.medigy.persist.model.product.Product;
-import com.medigy.persist.model.product.ProductFeature;
-import com.medigy.persist.reference.custom.invoice.InvoiceItemType;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"invoice_id", "invoice_item_seq_id"})})
@@ -70,8 +67,6 @@ public class InvoiceItem extends AbstractTopLevelEntity
 
     private InvoiceItemType type;
     private Invoice invoice;
-    private Product product;
-    private ProductFeature productFeature;
     private Set<InvoiceTerm> invoiceTerms = new HashSet<InvoiceTerm>();
 
     private InvoiceItem parentInvoiceItem;
@@ -112,7 +107,7 @@ public class InvoiceItem extends AbstractTopLevelEntity
     }
 
     /**
-     * Because each invoice item may be for a product, product feature, work effort, or time entry or because it may be
+     * Because each invoice item may be for a insuranceProduct, insuranceProduct feature, work effort, or time entry or because it may be
      * described via an ITEM DESCRIPTION for non-standard items, the relationships to PRODUCT and PRODUCT FEATURE are
      * both optional.
      * @return
@@ -170,30 +165,6 @@ public class InvoiceItem extends AbstractTopLevelEntity
     public void setInvoice(final Invoice invoice)
     {
         this.invoice = invoice;
-    }
-
-    @ManyToOne
-    @JoinColumn(name = "product_id")
-    public Product getProduct()
-    {
-        return product;
-    }
-
-    public void setProduct(final Product product)
-    {
-        this.product = product;
-    }
-
-    @ManyToOne
-    @JoinColumn(name = "product_feat_id")
-    public ProductFeature getProductFeature()
-    {
-        return productFeature;
-    }
-
-    public void setProductFeature(final ProductFeature productFeature)
-    {
-        this.productFeature = productFeature;
     }
 
     @ManyToOne

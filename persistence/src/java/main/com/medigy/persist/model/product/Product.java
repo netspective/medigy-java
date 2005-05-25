@@ -7,17 +7,6 @@ import com.medigy.persist.model.common.AbstractDateDurationEntity;
 import com.medigy.persist.model.org.Organization;
 import com.medigy.persist.reference.custom.product.ProductType;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratorType;
-import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-
-@Entity
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE, discriminatorValue = "General")
 public class Product extends AbstractDateDurationEntity
 {
     public static final String PK_COLUMN_NAME = "product_id";
@@ -31,8 +20,6 @@ public class Product extends AbstractDateDurationEntity
     private ProductCategory productCategory;
     //private Set<InvoiceItem> invoiceItems = new HashSet<InvoiceItem>();
 
-    @Id(generate = GeneratorType.AUTO)
-    @Column(name = PK_COLUMN_NAME)        
     public Long getProductId()
     {
         return productId;
@@ -48,13 +35,11 @@ public class Product extends AbstractDateDurationEntity
         return name;
     }
 
-    @Column(length = 100)
     public void setName(final String name)
     {
         this.name = name;
     }
 
-    @Column(length = 100)
     public String getComment()
     {
         return comment;
@@ -65,8 +50,6 @@ public class Product extends AbstractDateDurationEntity
         this.comment = comment;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "party_id")
     public Organization getOrganization()
     {
         return organization;
@@ -77,8 +60,6 @@ public class Product extends AbstractDateDurationEntity
         this.organization = party;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "product_category_id")
     public ProductCategory getProductCategory()
     {
         return productCategory;
@@ -89,8 +70,6 @@ public class Product extends AbstractDateDurationEntity
         this.productCategory = productCategory;
     }
 
-    @ManyToOne
-    @JoinColumn(name = ProductType.PK_COLUMN_NAME)
     public ProductType getType()
     {
         return type;

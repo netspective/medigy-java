@@ -43,6 +43,6 @@
  */
 package com.medigy.persist.model.common;
 
-public abstract class AbstractTopLevelEntity extends AbstractEntity
+public abstract class AbstractTopLevelEntity extends AbstractEntity implements Entity
 {
 }

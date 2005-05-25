@@ -44,6 +44,7 @@ import com.medigy.persist.model.party.PartyRelationship;
 import com.medigy.persist.model.party.PartyRole;
 import com.medigy.persist.model.person.Person;
 import com.medigy.persist.reference.custom.insurance.InsurancePolicyType;
+import com.medigy.persist.reference.custom.insurance.InsuranceProductType;
 import com.medigy.persist.reference.custom.org.OrganizationClassificationType;
 import com.medigy.persist.reference.custom.party.PartyRelationshipType;
 import com.medigy.persist.reference.custom.person.PersonRoleType;
@@ -61,20 +62,24 @@ public class TestInsurance extends TestCase
         blueCross.addPartyClassification(OrganizationClassificationType.Cache.INSURANCE.getEntity());
 
         final InsuranceProduct ppoProduct = new InsuranceProduct();
-        ppoProduct.setName("PPO Product");
+        ppoProduct.setType(InsuranceProductType.Cache.MEDICAID.getEntity());
         ppoProduct.setOrganization(blueCross);
 
         final InsurancePlan plan1 =  new InsurancePlan();
         plan1.setInsuranceProduct(ppoProduct);
         plan1.setName("Super Plan 1");
+        plan1.setOrganization(blueCross);
         ppoProduct.addInsurancePlan(plan1);
+        blueCross.addInsurancePlan(plan1);
 
         final InsurancePlan plan2 =  new InsurancePlan();
         plan2.setInsuranceProduct(ppoProduct);
         plan2.setName("Super Plan 2");
+        plan2.setOrganization(blueCross);
         ppoProduct.addInsurancePlan(plan2);
+        blueCross.addInsurancePlan(plan2);
 
-        blueCross.getProducts().add(ppoProduct);
+        blueCross.getInsuranceProducts().add(ppoProduct);
         HibernateUtil.getSession().save(blueCross);
         HibernateUtil.closeSession();
 
@@ -150,8 +155,8 @@ public class TestInsurance extends TestCase
         assertThat(jdPolicy.getType(), eq(InsurancePolicyType.Cache.INDIVIDUAL_INSURANCE_POLICY.getEntity()));
         assertThat(jdPolicy.getInsurancePlan().getInsurancePlanId(), eq(plan1.getInsurancePlanId()));
         assertThat(jdPolicy.getInsurancePlan().getName(), eq("Super Plan 1"));
-        assertThat(jdPolicy.getInsurancePlan().getInsuranceProduct().getProductId(), eq(product.getProductId()));
-        assertThat(jdPolicy.getInsurancePlan().getInsuranceProduct().getName(), eq("PPO Product"));
+        assertThat(jdPolicy.getInsurancePlan().getInsuranceProduct().getInsuranceProductId(), eq(product.getInsuranceProductId()));
+        assertThat(jdPolicy.getInsurancePlan().getInsuranceProduct().getType(), eq(InsuranceProductType.Cache.MEDICAID.getEntity()));
 
         final Person secondPerson = (Person) HibernateUtil.getSession().load(Person.class, patient.getPartyId());
         assertThat(secondPerson.getInsurancePolicies().size(), eq(1));
@@ -165,8 +170,8 @@ public class TestInsurance extends TestCase
         assertThat(secondPolicy.getType(), eq(InsurancePolicyType.Cache.INDIVIDUAL_INSURANCE_POLICY.getEntity()));
         assertThat(secondPolicy.getInsurancePlan().getInsurancePlanId(), eq(plan1.getInsurancePlanId()));
         assertThat(secondPolicy.getInsurancePlan().getName(), eq("Super Plan 1"));
-        assertThat(secondPolicy.getInsurancePlan().getInsuranceProduct().getProductId(), eq(product.getProductId()));
-        assertThat(secondPolicy.getInsurancePlan().getInsuranceProduct().getName(), eq("PPO Product"));
+        assertThat(secondPolicy.getInsurancePlan().getInsuranceProduct().getInsuranceProductId(), eq(product.getInsuranceProductId()));
+        assertThat(secondPolicy.getInsurancePlan().getInsuranceProduct().getType(), eq(InsuranceProductType.Cache.MEDICAID.getEntity()));
 
 
     }

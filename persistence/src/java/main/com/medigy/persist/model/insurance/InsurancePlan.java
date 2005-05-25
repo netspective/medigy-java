@@ -41,6 +41,7 @@ package com.medigy.persist.model.insurance;
 import com.medigy.persist.model.common.AbstractDateDurationEntity;
 import com.medigy.persist.model.org.Organization;
 import com.medigy.persist.reference.custom.invoice.BillRemittanceType;
+import com.medigy.persist.reference.custom.insurance.CoverageLevelType;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -63,6 +64,7 @@ public class InsurancePlan extends AbstractDateDurationEntity
 
     private Long insurancePlanId;
     private InsuranceProduct insuranceProduct;
+    private Organization organization;
     private String name;
     private String remittancePayerId;
     private String remittancePayerName;
@@ -100,6 +102,29 @@ public class InsurancePlan extends AbstractDateDurationEntity
     public void addCoverageLevelRelationship(final InsurancePlanCoverageLevel rel)
     {
         this.coverageLevelRelationships.add(rel);
+    }
+
+    @Transient
+    public InsurancePlanCoverageLevel getCoverageLevelRelationship(final CoverageLevelType entity)
+    {
+        for (InsurancePlanCoverageLevel rel : coverageLevelRelationships)
+        {
+            if (rel.getCoverageLevel().getType().equals(entity))
+                return rel;
+        }
+        return null;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = InsuranceProduct.PK_COLUMN_NAME)
+    public InsuranceProduct getInsuranceProduct()
+    {
+        return insuranceProduct;
+    }
+
+    public void setInsuranceProduct(final InsuranceProduct insuranceProduct)
+    {
+        this.insuranceProduct = insuranceProduct;
     }
 
     /**
@@ -170,21 +195,15 @@ public class InsurancePlan extends AbstractDateDurationEntity
     }
 
     @ManyToOne
-    @JoinColumn(name = "product_id")
-    public InsuranceProduct getInsuranceProduct()
+    @JoinColumn(name = Organization.PK_COLUMN_NAME, nullable = false)
+    public Organization getOrganization()
     {
-        return insuranceProduct;
+        return organization;
     }
 
-    public void setInsuranceProduct(final InsuranceProduct insuranceProduct)
+    public void setOrganization(final Organization organization)
     {
-        this.insuranceProduct = insuranceProduct;
-    }
-
-    @Transient
-    public Organization getInsuranceProvider()
-    {
-        return (Organization) getInsuranceProduct().getOrganization();
+        this.organization = organization;
     }
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "insurancePlan")
@@ -207,5 +226,11 @@ public class InsurancePlan extends AbstractDateDurationEntity
     public void setInsurancePlanContactMechanisms(final Set<InsurancePlanContactMechanism> insurancePlanContactMechanisms)
     {
         this.insurancePlanContactMechanisms = insurancePlanContactMechanisms;
+    }
+
+    @Transient
+    public void addInsurancePolicy(final InsurancePolicy insPolicy)
+    {
+        insurancePolicies.add(insPolicy);
     }
 }

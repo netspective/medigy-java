@@ -61,7 +61,8 @@ public class PartyRelationshipType extends AbstractCustomReferenceEntity
         PARTNERSHIP("PARTNER", "Partnership"),
         CUSTOMER_RELATIONSHIP("CUST_REL", "Customer relationship"),
         SUPPLIER_RELATIONSHIP("SUPP_REL", "Supplier Relationship"),
-        CARE_PROVIDER_SELECTION("CARE_PROVIDER", "Care Provider Relationship");
+        CARE_PROVIDER_SELECTION("CARE_PROVIDER", "Care Provider Relationship"),
+        OTHER("OTHER", "Other");
 
         private final String label;
         private final String code;

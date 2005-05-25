@@ -36,81 +36,42 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.persist.model.insurance;
+package com.medigy.persist.model.party;
 
-import com.medigy.persist.model.common.AbstractTopLevelEntity;
-import com.medigy.persist.model.org.Organization;
+import com.medigy.persist.TestCase;
+import com.medigy.persist.reference.custom.person.PersonRoleType;
+import com.medigy.persist.reference.custom.party.OrganizationRoleType;
+import com.medigy.persist.util.HibernateUtil;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratorType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
-@Entity
-public class Group extends AbstractTopLevelEntity
+public class TestValidFinancialResponsiblePartyRelationship extends TestCase
 {
-    private Long groupId;
-    private String description;
-    private Organization insuredOrganization;
-
-    private Set<Enrollment> enrollments = new HashSet<Enrollment>();
-
-    /**
-     * A group is a collection of people within an organization for whom insurance is issued.
-     */
-    public Group()
+    public void testValidFinancialResponsiblePartyRelationship()
     {
-    }
+        ValidFinancialResponsiblePartyRelationship rel = new ValidFinancialResponsiblePartyRelationship();
+        rel.setPatientRoleType(PersonRoleType.Cache.CHILD.getEntity());
+        rel.setResponsiblePartyRoleType(PersonRoleType.Cache.PARENT.getEntity());
+        HibernateUtil.getSession().save(rel);
 
-    @Id(generate = GeneratorType.AUTO)
-    public Long getGroupId()
-    {
-        return groupId;
-    }
+        rel = new ValidFinancialResponsiblePartyRelationship();
+        rel.setPatientRoleType(PersonRoleType.Cache.SELF.getEntity());
+        rel.setResponsiblePartyRoleType(PersonRoleType.Cache.SELF.getEntity());
+        HibernateUtil.getSession().save(rel);
 
-    protected void setGroupId(final Long groupId)
-    {
-        this.groupId = groupId;
-    }
+        rel = new ValidFinancialResponsiblePartyRelationship();
+        rel.setPatientRoleType(PersonRoleType.Cache.SPOUSE.getEntity());
+        rel.setResponsiblePartyRoleType(PersonRoleType.Cache.SPOUSE.getEntity());
+        HibernateUtil.getSession().save(rel);
 
-    @Column(length = 100, nullable = false)
-    public String getDescription()
-    {
-        return description;
-    }
+        rel = new ValidFinancialResponsiblePartyRelationship();
+        rel.setPatientRoleType(PersonRoleType.Cache.EMPLOYEE.getEntity());
+        rel.setResponsiblePartyRoleType(OrganizationRoleType.Cache.EMPLOYER.getEntity());
+        HibernateUtil.getSession().save(rel);
 
-    public void setDescription(final String description)
-    {
-        this.description = description;
-    }
+        List list = HibernateUtil.getSession().createCriteria(ValidFinancialResponsiblePartyRelationship.class).list();
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "group")
-    public Set<Enrollment> getEnrollments()
-    {
-        return enrollments;
-    }
+        //assertThat(list.size(), eq(ValidFinancialResponsiblePartyRelationship.Cache.class.getEnumConstants().length));
 
-    public void setEnrollments(final Set<Enrollment> enrollments)
-    {
-        this.enrollments = enrollments;
     }
-
-    @ManyToOne
-    @JoinColumn(name = "party_id", nullable = false)
-    public Organization getInsuredOrganization()
-    {
-        return insuredOrganization;
-    }
-
-    public void setInsuredOrganization(final Organization insuredOrganization)
-    {
-        this.insuredOrganization = insuredOrganization;
-    }
-
 }
