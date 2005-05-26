@@ -145,18 +145,11 @@ public abstract class TestCase extends MockObjectTestCase
             useExternalModelData = true;
         setupDatabaseDirectory();
         final HibernateConfiguration hibernateConfiguration = getHibernateConfiguration();
-        try
-        {
-            HibernateUtil.setConfiguration(hibernateConfiguration);
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-            log.error(ExceptionUtils.getStackTrace(e));
-        }
+        HibernateUtil.setConfiguration(hibernateConfiguration);
         setupModelInitializer(hibernateConfiguration);
         generateSchemaDdl(hibernateConfiguration);
         setupSession();
+        HibernateUtil.enableStatistics();        
     }
 
     protected void setupDatabaseDirectory()
@@ -233,11 +226,23 @@ public abstract class TestCase extends MockObjectTestCase
 
     protected void tearDown() throws Exception
     {
+        HibernateUtil.logStatistics();
         if (useExternalModelData)
             DatabaseOperation.NONE.execute(getDbUnitConnection(), getDataSet());
         super.tearDown();
         SessionManager.getInstance().popActiveSession();
         HibernateUtil.closeSession();
+
+        try
+        {
+            final File[] dbFiles = databaseDirectory.listFiles();
+            for (File file : dbFiles)
+                file.delete();
+        }
+        catch (Exception e)
+        {
+            log.error(ExceptionUtils.getStackTrace(e));
+        }
     }
 
     /**
