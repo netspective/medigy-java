@@ -43,9 +43,6 @@
  */
 package com.medigy.persist.util;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.HibernateException;
@@ -57,6 +54,11 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.connection.ConnectionProvider;
 import org.hibernate.connection.ConnectionProviderFactory;
 import org.hibernate.exception.NestableRuntimeException;
+import org.hibernate.stat.EntityStatistics;
+import org.hibernate.stat.Statistics;
+
+import java.sql.Connection;
+import java.sql.SQLException;
 
 public class HibernateUtil
 {
@@ -70,6 +72,8 @@ public class HibernateUtil
     {
         try
         {
+            if (sessionFactory != null)
+                sessionFactory.close();    
             sessionFactory = cfg.buildSessionFactory();
             connectionProvider = ConnectionProviderFactory.newConnectionProvider(cfg.getProperties());
         }
@@ -185,5 +189,46 @@ public class HibernateUtil
             log.error(e);
             throw new NestableRuntimeException(e);
         }
+    }
+
+    public static void enableStatistics()
+    {
+        sessionFactory.getStatistics().setStatisticsEnabled(true);
+    }
+
+    public static void logStatistics()
+    {
+
+        Statistics stats = HibernateUtil.sessionFactory.getStatistics();
+        if (!stats.isStatisticsEnabled())
+        {
+            log.warn("Statistics are not enabled.");
+            return;
+        }
+        log.info("Connection count: " + stats.getConnectCount());
+        log.info("Session open count: " + stats.getSessionOpenCount());
+        log.info("Session close count: " + stats.getSessionCloseCount());
+
+        log.info("Entities insert count: " + stats.getEntityInsertCount());
+        log.info("Entities update count: " + stats.getEntityUpdateCount());
+        log.info("Entities fetch count: " + stats.getEntityFetchCount());
+
+        log.info("Collection fetch count: " + stats.getCollectionFetchCount());
+        log.info("Collection load count: " + stats.getCollectionLoadCount());
+        double queryCacheHitCount  = stats.getQueryCacheHitCount();
+        double queryCacheMissCount = stats.getQueryCacheMissCount();
+        double queryCacheHitRatio = queryCacheHitCount / (queryCacheHitCount + queryCacheMissCount);
+        log.info("Query Hit ratio:" + queryCacheHitRatio);
+    }
+
+    public static void logEntityStatistics(final Class entityClass)
+    {
+        Statistics stats = HibernateUtil.sessionFactory.getStatistics();
+        EntityStatistics entityStats = stats.getEntityStatistics( entityClass.getName() );
+        long changes =
+                entityStats.getInsertCount()
+                + entityStats.getUpdateCount()
+                + entityStats.getDeleteCount();
+        log.info(entityClass.getName() + " changed " + changes + "times"  );
     }
 }
