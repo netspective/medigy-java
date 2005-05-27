@@ -293,7 +293,7 @@ public class Person extends Party
         return inverseSorted.first().getType();
     }
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "person")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "person", fetch = FetchType.LAZY)
     public Set<MaritalStatus> getMaritalStatuses()
     {
         return maritalStatuses;
@@ -354,7 +354,7 @@ public class Person extends Party
         this.physicalCharacteristics.add(pc);
     }
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "patient")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "patient", fetch = FetchType.LAZY)
     public Set<HealthCareVisit> getHealthCareVisits()
     {
         return healthCareVisits;
@@ -376,7 +376,7 @@ public class Person extends Party
         this.healthCareEpisodes = healthCareEpisodes;
     }
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "person")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "person", fetch = FetchType.LAZY)
     public Set<Ethnicity> getEthnicities()
     {
         return ethnicities;
@@ -414,7 +414,7 @@ public class Person extends Party
         return false;
     }
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "person")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "person", fetch = FetchType.LAZY)
     public Set<Language> getLanguages()
     {
         return languages;
@@ -540,7 +540,7 @@ public class Person extends Party
         partyIdentifiers.add(identifier);
     }
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "person")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "person", fetch = FetchType.LAZY)
     public Set<HealthCareLicense> getLicenses()
     {
         return licenses;
@@ -610,7 +610,7 @@ public class Person extends Party
      *
      * @return a set of insurance policies
      */
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "insuredPerson")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "insuredPerson", fetch = FetchType.LAZY)
     public Set<InsurancePolicy> getInsurancePolicies()
     {
         return insurancePolicies;
@@ -657,10 +657,7 @@ public class Person extends Party
     public static Person createNewPatient()
     {
         final Person patient = new Person();
-        final PartyRole role = new PartyRole();
-        role.setType(PersonRoleType.Cache.PATIENT.getEntity());
-        role.setParty(patient);
-        patient.addPartyRole(role);
+        patient.addPartyRole(PersonRoleType.Cache.PATIENT.getEntity());
         return patient;
     }
 
@@ -672,10 +669,7 @@ public class Person extends Party
     public static Person createNewPhysician()
     {
         final Person doctor = new Person();
-        final PartyRole role = new PartyRole();
-        role.setType(PersonRoleType.Cache.INDIVIDUAL_HEALTH_CARE_PRACTITIONER.getEntity());
-        role.setParty(doctor);
-        doctor.addPartyRole(role);
+        doctor.addPartyRole(PersonRoleType.Cache.INDIVIDUAL_HEALTH_CARE_PRACTITIONER.getEntity());
         return doctor;
     }
 

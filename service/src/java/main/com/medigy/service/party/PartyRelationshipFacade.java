@@ -38,13 +38,12 @@
  */
 package com.medigy.service.party;
 
-import com.medigy.persist.model.org.Organization;
 import com.medigy.persist.model.party.Party;
 import com.medigy.persist.model.party.PartyRelationship;
 import com.medigy.persist.model.party.PartyRole;
 import com.medigy.persist.model.person.Person;
-import com.medigy.persist.model.insurance.FinancialResponsiblePartySelection;
 import com.medigy.persist.reference.custom.party.PartyRelationshipType;
+import com.medigy.persist.reference.custom.party.PartyRoleType;
 import com.medigy.service.util.Facade;
 
 import java.util.List;
@@ -59,7 +58,8 @@ public interface PartyRelationshipFacade extends Facade
 
     public List listPatientResponsiblePartyRelationship(Party patient);
 
-    public void addFinancialResposibleOrganization(Person patient, Organization responsibleOrganization);
+    public List<PartyRoleType> listValidResponsiblePartyRoleTypes();
 
-    public FinancialResponsiblePartySelection addFinancialResposiblePerson(PartyRelationship relationship);
+    public PartyRelationship addFinancialResposiblePartyRelationship(final Person patient, final Party responsibleParty,
+                                                                           final PartyRoleType responsiblePartyRoleType);
 }

@@ -51,6 +51,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -103,6 +104,12 @@ public class PartyRole extends AbstractDateDurationEntity implements Comparable
     public void setFromPartyRelationships(final Set<PartyRelationship> fromPartyRelationships)
     {
         this.fromPartyRelationships = fromPartyRelationships;
+    }
+
+    @Transient
+    public void addFromPartyRelationship(final PartyRelationship relationship)
+    {
+        this.fromPartyRelationships.add(relationship);
     }
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "partyRoleTo")
@@ -172,5 +179,11 @@ public class PartyRole extends AbstractDateDurationEntity implements Comparable
                 ", party_id=" + (party != null ? party.getPartyId() : null) +
                 ", type=" + type +
                 "}";
+    }
+
+    @Transient
+    public void addToPartyRelationship(final PartyRelationship relationship)
+    {
+        toPartyRelationships.add(relationship);
     }
 }

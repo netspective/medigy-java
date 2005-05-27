@@ -43,8 +43,8 @@ import com.medigy.persist.model.health.TestHealthCareLicense;
 import com.medigy.persist.model.health.TestHealthCareReferral;
 import com.medigy.persist.model.insurance.TestCoverage;
 import com.medigy.persist.model.insurance.TestInsurance;
-import com.medigy.persist.model.insurance.TestInsuranceProductCoverage;
 import com.medigy.persist.model.insurance.TestInsurancePlanCoverage;
+import com.medigy.persist.model.insurance.TestInsuranceProductCoverage;
 import com.medigy.persist.model.invoice.TestInvoice;
 import com.medigy.persist.model.org.TestOrganization;
 import com.medigy.persist.model.person.TestPerson;
@@ -60,8 +60,7 @@ public class TestSuite extends junit.framework.TestSuite
         TestSuite suite= new TestSuite();
         
         // test the model classes
-        //suite.addTest(new junit.framework.TestSuite(TestValidFinancialResponsiblePartyRelationship.class));
-
+        suite.addTest(new junit.framework.TestSuite(TestHealthCareLicense.class));
         suite.addTest(new junit.framework.TestSuite(TestInsurance.class));
         suite.addTest(new junit.framework.TestSuite(TestInsuranceProductCoverage.class));
         suite.addTest(new junit.framework.TestSuite(TestInsurancePlanCoverage.class));
@@ -74,7 +73,6 @@ public class TestSuite extends junit.framework.TestSuite
         suite.addTest(new junit.framework.TestSuite(TestOrganization.class));
         suite.addTest(new junit.framework.TestSuite(TestInvoice.class));
         suite.addTest(new junit.framework.TestSuite(TestCoverage.class));
-        suite.addTest(new junit.framework.TestSuite(TestHealthCareLicense.class));
         return suite;
     }
 }

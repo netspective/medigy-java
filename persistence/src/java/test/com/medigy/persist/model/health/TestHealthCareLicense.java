@@ -60,8 +60,8 @@ public class TestHealthCareLicense  extends TestCase
         final Country country = new Country();
         country.setName("USA");
         final State state = new State("Virginia", "VA");
-        state.setCountry(country);
         country.addState(state);
+
         HibernateUtil.getSession().save(country);
         HibernateUtil.getSession().save(doctor);
 
@@ -73,9 +73,7 @@ public class TestHealthCareLicense  extends TestCase
         calendar.set(3000, 5, 1);
         license.setThroughDate(calendar.getTime());
         license.setState(state);
-        license.setPerson(doctor);
         doctor.addLicense(license);
-        HibernateUtil.getSession().save(license);
 
         calendar.set(2000, 5, 1);
         final HealthCareLicense license2 = new HealthCareLicense();
@@ -83,29 +81,22 @@ public class TestHealthCareLicense  extends TestCase
         license2.setDescription("Voodoo License");
         license2.setLicenseNumber("XXX");
         license2.setThroughDate(calendar.getTime());
-        license2.setPerson(doctor);
         doctor.addLicense(license2);
-        HibernateUtil.getSession().save(license2);
+
         HibernateUtil.getSession().flush();
         HibernateUtil.closeSession();
         final Person savedDoctor = (Person) HibernateUtil.getSession().load(Person.class, doctor.getPartyId());
         assertThat(savedDoctor.getLicenses().size(), eq(2));
-        assertThat(savedDoctor.getLicense(HealthCareLicenseType.Cache.BOARD_CERTIFICATION.getEntity()).getLicenseId(),
-                eq(license.getLicenseId()));
-        assertThat(savedDoctor.getLicense(HealthCareLicenseType.Cache.BOARD_CERTIFICATION.getEntity()).getState().getName(),
-                eq("Virginia"));
-        assertThat(savedDoctor.getLicense(HealthCareLicenseType.Cache.BOARD_CERTIFICATION.getEntity()).getLicenseNumber(),
-                eq("007"));
-        assertThat(savedDoctor.getLicense(HealthCareLicenseType.Cache.BOARD_CERTIFICATION.getEntity()).isExpired(),
-                eq(false));
-        assertThat(savedDoctor.getLicense(HealthCareLicenseType.Cache.OTHER.getEntity()).getLicenseId(),
-                eq(license2.getLicenseId()));
-        assertThat(savedDoctor.getLicense(HealthCareLicenseType.Cache.OTHER.getEntity()).getDescription(),
-                eq("Voodoo License"));
-        assertThat(savedDoctor.getLicense(HealthCareLicenseType.Cache.OTHER.getEntity()).getLicenseNumber(),
-                eq("XXX"));
-        assertThat(savedDoctor.getLicense(HealthCareLicenseType.Cache.OTHER.getEntity()).isExpired(),
-                eq(true));
+        final HealthCareLicense newLicense = savedDoctor.getLicense(HealthCareLicenseType.Cache.BOARD_CERTIFICATION.getEntity());
+        assertThat(newLicense.getLicenseId(), eq(license.getLicenseId()));
+        assertThat(newLicense.getState().getName(), eq("Virginia"));
+        assertThat(newLicense.getLicenseNumber(), eq("007"));
+        assertThat(newLicense.isExpired(), eq(false));
+        final HealthCareLicense otherLicense = savedDoctor.getLicense(HealthCareLicenseType.Cache.OTHER.getEntity());
+        assertThat(otherLicense.getLicenseId(), eq(license2.getLicenseId()));
+        assertThat(otherLicense.getDescription(), eq("Voodoo License"));
+        assertThat(otherLicense.getLicenseNumber(), eq("XXX"));
+        assertThat(otherLicense.isExpired(), eq(true));
 
     }
 }

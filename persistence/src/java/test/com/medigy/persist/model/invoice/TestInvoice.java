@@ -54,9 +54,6 @@ public class TestInvoice  extends TestCase
 
     public void testInvoice()
     {
-        Party sysglobal = (Party) HibernateUtil.getSession().load(Party.class, new Long(1));
-        assertNotNull(sysglobal);
-
         final Invoice invoice = new Invoice();
         invoice.setDescription("New invoice");
 
@@ -72,34 +69,37 @@ public class TestInvoice  extends TestCase
         term.setTermValue(new Long(30));
         invoice.getInvoiceTerms().add(term);
         HibernateUtil.getSession().save(invoice);
-        HibernateUtil.closeSession();
-        
-        final Invoice newInvoice = (Invoice) HibernateUtil.getSession().load(Invoice.class, invoice.getInvoiceId());
-        assertEquals(1, newInvoice.getInvoiceTerms().size());
-        InvoiceTerm savedInvoiceTerm = (InvoiceTerm) newInvoice.getInvoiceTerms().toArray()[0];
-        assertEquals(savedInvoiceTerm.getTermValue(), new Long(30));
-        assertEquals(savedInvoiceTerm.getInvoice().getInvoiceId(), invoice.getInvoiceId());
 
         Calendar cal = Calendar.getInstance();
         cal.set(2005, 1, 10);
         final InvoiceStatus status = new InvoiceStatus();
-        status.setType(InvoiceStatusType.Cache.SENT.getEntity());
+        status.setType(InvoiceStatusType.Cache.ON_HOLD.getEntity());
         status.setDate(cal.getTime());
-        status.setInvoice(newInvoice);
-        newInvoice.getInvoiceStatuses().add(status);
+        invoice.addInvoiceStatus(status);
 
         cal.set(2005, 1, 11);
         final InvoiceStatus voidStatus = new InvoiceStatus();
         voidStatus.setType(InvoiceStatusType.Cache.VOID.getEntity());
         voidStatus.setDate(cal.getTime());
-        voidStatus.setInvoice(newInvoice);
-        newInvoice.getInvoiceStatuses().add(voidStatus);
+        invoice.addInvoiceStatus(voidStatus);
+
+        final InvoiceItem item1 = new InvoiceItem();
+        item1.setAmount(new Float(100.50));
+        invoice.addInvoiceItem(item1);
+
+        final InvoiceItem item2 = new InvoiceItem();
+        item2.setAmount(new Float(200.00));
+        invoice.addInvoiceItem(item2);
  
         HibernateUtil.getSession().flush();
         HibernateUtil.closeSession();
 
-        final Long invoiceId = newInvoice.getInvoiceId();
+        final Long invoiceId = invoice.getInvoiceId();
         Invoice savedInvoice = (Invoice) HibernateUtil.getSession().load(Invoice.class, invoiceId);
+        assertEquals(1, savedInvoice.getInvoiceTerms().size());
+        InvoiceTerm savedInvoiceTerm = (InvoiceTerm) savedInvoice.getInvoiceTerms().toArray()[0];
+        assertEquals(savedInvoiceTerm.getTermValue(), new Long(30));
+
         assertEquals("New invoice", savedInvoice.getDescription());
         log.info("VALID: Invoice");
         assertEquals(2, savedInvoice.getInvoiceStatuses().size());
@@ -114,8 +114,5 @@ public class TestInvoice  extends TestCase
         HibernateUtil.closeSession();
     }
 
-    public String getDataSetFile()
-    {
-        return "/com/medigy/persist/model/invoice/TestInvoice.xml";
-    }
+    
 }

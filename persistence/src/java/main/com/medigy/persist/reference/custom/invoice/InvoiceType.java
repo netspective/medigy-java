@@ -35,37 +35,31 @@
  * CAUSED AND REGARDLESS OF THE THEORY OF LIABILITY, ARISING OUT OF THE USE OF OR INABILITY TO USE THE SOFTWARE, EVEN
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
- * @author Aye Thu
  */
-package com.medigy.persist.reference.custom.party;
+package com.medigy.persist.reference.custom.invoice;
 
 import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
 import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
 import com.medigy.persist.reference.custom.CustomReferenceEntity;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratorType;
 import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.GeneratorType;
+import javax.persistence.Column;
 
 @Entity
-@Table(name = "Party_Rel_Type")
-public class PartyRelationshipType extends AbstractCustomReferenceEntity
+public class InvoiceType extends AbstractCustomReferenceEntity
 {
-    public static final String PK_COLUMN_NAME = "party_rel_type_id";
+    public static final String PK_COLUMN_NAME = "invoice_type_id";
+
     public enum Cache implements CachedCustomReferenceEntity
     {
-        FAMILY("FAMILY", "Family"),
-        PATIENT_RESPONSIBLE_PARTY("PRR", "Patient Responsible Party"),        // describes relationship between the patient and the responsible party
-        ORGANIZATION_ROLLUP("ORG_ROLLUP", "Organization Rollup"),
-        PARTNERSHIP("PARTNER", "Partnership"),
-        CARE_PROVIDER_SELECTION("CARE_PROVIDER", "Care Provider Relationship"),
-        OTHER("OTHER", "Other");
+        HCFA_1500("HCFA", "HCFA 1500 Claim"),
+        SERVICES("SERVICE", "Services Rendered");
 
         private final String label;
         private final String code;
-        private PartyRelationshipType entity;
+        private InvoiceType entity;
 
         Cache(final String code, final String label)
         {
@@ -78,14 +72,14 @@ public class PartyRelationshipType extends AbstractCustomReferenceEntity
             return code;
         }
 
-        public PartyRelationshipType getEntity()
+        public InvoiceType getEntity()
         {
             return entity;
         }
 
         public void setEntity(final CustomReferenceEntity entity)
         {
-            this.entity = (PartyRelationshipType) entity;
+            this.entity = (InvoiceType) entity;
         }
 
         public String getLabel()
@@ -94,19 +88,16 @@ public class PartyRelationshipType extends AbstractCustomReferenceEntity
         }
     }
 
-    public PartyRelationshipType()
-    {
-    }
-
     @Id(generate = GeneratorType.AUTO)
     @Column(name = PK_COLUMN_NAME)
-    public Long getPartyRelationshipTypeId()
+    public Long getInvoiceTypeId()
     {
         return super.getSystemId();
     }
 
-    protected void setPartyRelationshipTypeId(final Long id)
+    protected void setInvoiceTypeId(final Long id)
     {
         super.setSystemId(id);
     }
 }
+

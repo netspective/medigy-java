@@ -38,8 +38,8 @@
  */
 package com.medigy.persist.model.contact;
 
-import java.util.HashSet;
-import java.util.Set;
+import com.medigy.persist.reference.custom.GeographicBoundaryType;
+import com.medigy.persist.model.health.HealthCareLicense;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -49,8 +49,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
-
-import com.medigy.persist.reference.custom.GeographicBoundaryType;
+import javax.persistence.FetchType;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -60,6 +61,8 @@ public class State extends GeographicBoundary
     private Set<City> cities = new HashSet<City>();
     private Set<County> counties = new HashSet<County>();
     private Set<PostalCode> postalCodes = new HashSet<PostalCode>();
+
+    private Set<HealthCareLicense> healthCareLicenses = new HashSet<HealthCareLicense>();
 
     public State()
     {
@@ -170,12 +173,14 @@ public class State extends GeographicBoundary
     {
         final PostalCode pc = new PostalCode();
         pc.setCodeValue(code);
+        pc.setState(this);
         this.postalCodes.add(pc);
     }
 
     @Transient
     public void addPostalCode(final PostalCode code)
     {
+        code.setState(this);
         this.postalCodes.add(code);
     }
 
@@ -246,6 +251,7 @@ public class State extends GeographicBoundary
     @Transient
     public void addCounty(final County county)
     {
+        county.setState(this);
         getCounties().add(county);
     }
 
@@ -258,5 +264,16 @@ public class State extends GeographicBoundary
             return pc;
         }
         return null;
+    }
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "state", fetch = FetchType.LAZY)
+    public Set<HealthCareLicense> getHealthCareLicenses()
+    {
+        return healthCareLicenses;
+    }
+
+    public void setHealthCareLicenses(final Set<HealthCareLicense> healthCareLicenses)
+    {
+        this.healthCareLicenses = healthCareLicenses;
     }
 }

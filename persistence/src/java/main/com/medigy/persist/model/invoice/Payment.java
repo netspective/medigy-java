@@ -38,9 +38,11 @@
  */
 package com.medigy.persist.model.invoice;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import com.medigy.persist.model.claim.ClaimSettlementAmount;
+import com.medigy.persist.model.common.AbstractTopLevelEntity;
+import com.medigy.persist.model.party.Party;
+import com.medigy.persist.reference.custom.invoice.PaymentMethodType;
+import com.medigy.persist.reference.custom.invoice.PaymentType;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -49,12 +51,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-
-import com.medigy.persist.model.claim.ClaimSettlementAmount;
-import com.medigy.persist.model.common.AbstractTopLevelEntity;
-import com.medigy.persist.model.party.Party;
-import com.medigy.persist.reference.custom.invoice.PaymentMethodType;
-import com.medigy.persist.reference.custom.invoice.PaymentType;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Payment extends AbstractTopLevelEntity
@@ -69,6 +68,7 @@ public class Payment extends AbstractTopLevelEntity
     private Party fromParty;
     private PaymentType type;
     private PaymentMethodType paymentMethodType;
+    private String paymentMethodDescription;
 
     private Set<ClaimSettlementAmount> settlementAmounts = new HashSet<ClaimSettlementAmount>();
 
@@ -187,5 +187,19 @@ public class Payment extends AbstractTopLevelEntity
     public void setSettlementAmounts(final Set<ClaimSettlementAmount> settlementAmounts)
     {
         this.settlementAmounts = settlementAmounts;
+    }
+
+    /**
+     * Gets the payment method description. Used when the payment method type is OTHER.
+     * @return  payment method description
+     */
+    public String getPaymentMethodDescription()
+    {
+        return paymentMethodDescription;
+    }
+
+    public void setPaymentMethodDescription(final String paymentMethodDescription)
+    {
+        this.paymentMethodDescription = paymentMethodDescription;
     }
 }

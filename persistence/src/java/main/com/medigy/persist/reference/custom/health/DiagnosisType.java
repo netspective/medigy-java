@@ -51,7 +51,7 @@ public class DiagnosisType extends AbstractCustomReferenceEntity
 {
     public enum Cache implements CachedCustomReferenceEntity
     {
-        ICD9_CODE("ICD9"),
+        ICD9_CODE("ICD9"),      // remember that ICD9 or ICD10 has their own list of CODES
         ICD10_CODE("ICD10");
 
         private final String label;

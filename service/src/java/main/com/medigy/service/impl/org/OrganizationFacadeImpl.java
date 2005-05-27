@@ -30,7 +30,7 @@ public class OrganizationFacadeImpl implements OrganizationFacade
         childOrg.setOrganizationName(groupName);
         
         final PartyRole childRole = new PartyRole();
-        childRole.setType(OrganizationRoleType.Cache.GROUP.getEntity());
+        childRole.setType(OrganizationRoleType.Cache.HOSPITAL.getEntity());
         childRole.setParty(childOrg);
         childOrg.addPartyRole(childRole);
         HibernateUtil.getSession().save(childOrg);

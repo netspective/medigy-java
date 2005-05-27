@@ -7,7 +7,6 @@ import com.medigy.persist.reference.custom.party.PartyRelationshipType;
 import com.medigy.persist.util.HibernateUtil;
 import com.medigy.service.TestCase;
 import com.medigy.service.impl.org.OrganizationFacadeImpl;
-import com.medigy.service.org.OrganizationFacade;
 
 import java.util.List;
 
@@ -28,7 +27,7 @@ public class TestOrganizationFacade extends TestCase
         assertEquals(PartyRelationshipType.Cache.ORGANIZATION_ROLLUP.getEntity(), relationship.getType());
         assertEquals(parentOrg.getPartyId(), relationship.getPartyTo().getPartyId());
         assertEquals("Software Developers", relationship.getPartyFrom().getPartyName());
-        assertTrue(relationship.getPartyFrom().hasPartyRole(OrganizationRoleType.Cache.GROUP.getEntity()));
+        assertTrue(relationship.getPartyFrom().hasPartyRole(OrganizationRoleType.Cache.OTHER_ORG_UNIT.getEntity()));
 
         // TEST listInsuranceGroups()
         final List groups = facade.listInsuranceGroups(parentOrg);

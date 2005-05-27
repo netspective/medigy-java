@@ -41,6 +41,7 @@ package com.medigy.persist.model.claim;
 import com.medigy.persist.model.common.AbstractTopLevelEntity;
 import com.medigy.persist.model.health.HealthCareDelivery;
 import com.medigy.persist.model.insurance.InsurancePolicy;
+import com.medigy.persist.model.invoice.Invoice;
 import com.medigy.persist.reference.custom.claim.ClaimType;
 
 import javax.persistence.CascadeType;
@@ -65,6 +66,7 @@ public class Claim extends AbstractTopLevelEntity
     private Date claimSubmissionDate;
     private ClaimType type;
     private InsurancePolicy insurancePolicy;
+    private Invoice  invoice;
 
     private Set<ClaimItem> claimItems = new HashSet<ClaimItem>();
     private Set<ClaimStatus> claimStatuses = new HashSet<ClaimStatus>();
@@ -205,4 +207,15 @@ public class Claim extends AbstractTopLevelEntity
         this.claimRoles = claimRoles;
     }
 
+    @ManyToOne
+    @JoinColumn(name = Invoice.PK_COLUMN_NAME)
+    public Invoice getInvoice()
+    {
+        return invoice;
+    }
+
+    public void setInvoice(final Invoice invoice)
+    {
+        this.invoice = invoice;
+    }
 }

@@ -53,19 +53,55 @@ public class PersonRoleType extends PartyRoleType
 
     public enum Cache implements CachedCustomReferenceEntity
     {
+        /**
+         * <enum>Self</enum>
+            <enum>Spouse</enum>
+            <enum>Mother</enum>
+            <enum>Father</enum>
+            <enum>Natural/Adopted Child (Insured has Financial Responsibility)</enum>
+            <enum>Natural/Adopted Child (Insured does not have Financial Resp.)</enum>
+            <enum>Step Child</enum>
+            <enum>Foster Child</enum>
+            <enum>Ward of the Court</enum>
+            <enum>Sister</enum>
+            <enum>Brother</enum>
+            <enum>Employee</enum>
+            <enum>Unknown/Other</enum>
+            <enum>Handicapped Dependent</enum>
+            <enum>Organ Donor</enum>
+            <enum>Cadaver Donor</enum>
+            <enum>Grandchild</enum>
+            <enum>Niece/Nephew</enum>
+            <enum>Injured Plaintiff</enum>
+            <enum>Sponsored Dependent</enum>
+            <enum>Minor Dependent of a Minor Dependent</enum>
+            <enum>Parent</enum>
+            <enum>Grandparent</enum>
+            <enum>Cousin</enum>
+            <enum>Emergency Contact</enum>
+            <enum>Care Provider</enum>
+            <enum>Other</enum>
+         */
         SELF("SELF", "Self"),
-        CHILD("CHILD", "Child"),
-        PARENT("PARENT", "Parent"),
+        SPOUSE("SPOUSE", "Spouse"),
+        MOTHER("MOTHER", "Mother"),
+        FATHER("FATHER", "Father"),
+        CHILD("CHILD", "Natural/Adopted Child"),
+        STEP_CHILD("STEP_CHILD", "Step Child"),
+        FOSTER_CHILD("FOSTER_CHILD", "Foster Child"),
+        SISTER("SISTER", "Sister"),
+        BROTHER("BROTHER", "Brother"),
         FAMILY_MEMBER("F", "Family Member"),
         EMPLOYEE("E", "Employee"),
         DEPENDENT("DEP", "Dependent"),
-        SPOUSE("SPOUSE", "Spouse"),
-
+        PARENT("PARENT", "Parent"),
+        GRANDPARENT("GPARENT", "Grandparent"),
+        GRANDCHILD("GCHILD", "Grandchild"),
+        COUSIN("COUSIN", "Cousin"),
+        NIECE_NEPHEW("NIECE_NEP", "Niece/Nephew"),
+        INDIVIDUAL_HEALTH_CARE_PRACTITIONER("IND_HCP", "Individual Health Care Practitioner"),
         PATIENT("PATIENT", "Patient"),
-        INSURED_DEPENDENT("INS_DEP", "Insured Dependent"),
-        INSURED_CONTRACT_HOLDER("INS_PER", "Insured Contract Holder"),
-        INSURED_ORG("INS_ORG", "Insured Organization"),
-        INDIVIDUAL_HEALTH_CARE_PRACTITIONER("IND_HCP", "Individual Health Care Practitioner");
+        OTHER("PERSON_OTHER", "Other");
 
         private final String label;
         private final String code;

@@ -41,7 +41,7 @@ package com.medigy.persist.model.invoice;
 import com.medigy.persist.model.common.AbstractTopLevelEntity;
 import com.medigy.persist.reference.custom.invoice.InvoiceItemType;
 
-import javax.persistence.Column;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
@@ -57,6 +57,8 @@ import java.util.Set;
 @Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"invoice_id", "invoice_item_seq_id"})})
 public class InvoiceItem extends AbstractTopLevelEntity
 {
+    public static final String PK_COLUMN_NAME = "invoice_item_id";
+
     private Long invoiceItemId;
     private Long invoiceItemSeqId;
     private Boolean taxableFlag;
@@ -132,7 +134,6 @@ public class InvoiceItem extends AbstractTopLevelEntity
         this.quantity = quantity;
     }
 
-    @Column(nullable = false)
     public Float getUnitPrice()
     {
         return unitPrice;
@@ -156,7 +157,7 @@ public class InvoiceItem extends AbstractTopLevelEntity
     }
 
     @ManyToOne
-    @JoinColumn(name = "invoice_id", nullable = false)
+    @JoinColumn(name = Invoice.PK_COLUMN_NAME, nullable = false)
     public Invoice getInvoice()
     {
         return invoice;
@@ -168,7 +169,7 @@ public class InvoiceItem extends AbstractTopLevelEntity
     }
 
     @ManyToOne
-    @JoinColumn(name = "parent_invoice_item_id", referencedColumnName = "invoice_item_id")
+    @JoinColumn(name = "parent_invoice_item_id", referencedColumnName = PK_COLUMN_NAME)
     public InvoiceItem getRelatedInvoiceItems()
     {
         return parentInvoiceItem;
@@ -189,8 +190,7 @@ public class InvoiceItem extends AbstractTopLevelEntity
         this.amount = amount;
     }
 
-    @OneToMany
-    @JoinColumn(name = "invoice_item_id")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "invoiceItem")
     public Set<InvoiceTerm> getInvoiceTerms()
     {
         return invoiceTerms;

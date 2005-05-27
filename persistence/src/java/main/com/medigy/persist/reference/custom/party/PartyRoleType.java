@@ -39,7 +39,7 @@
 package com.medigy.persist.reference.custom.party;
 
 import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
-import com.medigy.persist.model.party.ValidFinancialResponsiblePartyRelationship;
+import com.medigy.persist.model.party.ValidResponsiblePartyRole;
 
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
@@ -66,8 +66,7 @@ public class PartyRoleType extends AbstractCustomReferenceEntity
 {
     public static final String PK_COLUMN_NAME = "party_role_type_id";
 
-    private Set<ValidFinancialResponsiblePartyRelationship> responsiblePartyRelationships = new HashSet<ValidFinancialResponsiblePartyRelationship>();
-    private Set<ValidFinancialResponsiblePartyRelationship> validPatientRelationships = new HashSet<ValidFinancialResponsiblePartyRelationship>();
+    private Set<ValidResponsiblePartyRole> responsiblePartyRelationships = new HashSet<ValidResponsiblePartyRole>();
 
     public PartyRoleType()
     {
@@ -86,24 +85,15 @@ public class PartyRoleType extends AbstractCustomReferenceEntity
     }
 
     @OneToMany(mappedBy = "responsiblePartyRoleType")
-    public Set<ValidFinancialResponsiblePartyRelationship> getResponsiblePartyRelationships()
+    public Set<ValidResponsiblePartyRole> getResponsiblePartyRelationships()
     {
         return responsiblePartyRelationships;
     }
 
-    public void setResponsiblePartyRelationships(final Set<ValidFinancialResponsiblePartyRelationship> responsiblePartyRelationships)
+    public void setResponsiblePartyRelationships(final Set<ValidResponsiblePartyRole> responsiblePartyRelationships)
     {
         this.responsiblePartyRelationships = responsiblePartyRelationships;
     }
 
-    @OneToMany(mappedBy = "patientRoleType")
-    public Set<ValidFinancialResponsiblePartyRelationship> getValidPatientRelationships()
-    {
-        return validPatientRelationships;
-    }
-
-    public void setValidPatientRelationships(final Set<ValidFinancialResponsiblePartyRelationship> validPatientRelationships)
-    {
-        this.validPatientRelationships = validPatientRelationships;
-    }
+   
 }

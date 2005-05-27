@@ -73,6 +73,7 @@ public class Organization extends Party
     private Set<InsurancePlan> insurancePlan = new HashSet<InsurancePlan>();
     private Set<Enrollment> enrollments = new HashSet<Enrollment>();
 
+
     public Organization()
     {
         super();
@@ -189,5 +190,6 @@ public class Organization extends Party
     {
         this.enrollments = enrollments;
     }
+
 
 }

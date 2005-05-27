@@ -54,9 +54,24 @@ public class InvoiceItemType extends AbstractCustomReferenceEntity
 {
     public enum Cache implements CachedCustomReferenceEntity
     {
-        SHIPPING("SHIP", "Shipping"),
-        SALES_TAX("TAX", "Sales Tax"),
-        FEE("FEE", "Fee");
+        /**
+         * <enum>Invoice</enum>
+		<enum>Service</enum>
+		<enum>Lab</enum>
+		<enum>Co-pay</enum>
+		<enum>Co-insurance</enum>
+		<enum>Adjustment</enum>
+		<enum>Deductible</enum>
+		<enum>Void</enum>
+         */
+        INVOICE("INVOICE", "Invoice"),
+        SERVICE("SERVICE", "Service"),
+        LAB("LAB", "Lab"),
+        COPAY("COPAY", "Copay"),
+        COINSURNACE("COINS", "Coinsurance"),
+        ADJUSTMENT("ADJUST", "Adjustment"),
+        DEDUCTIBLE("DEDUCT", "Deductible"),
+        VOID("VOID", "Void");
 
         private final String label;
         private final String code;

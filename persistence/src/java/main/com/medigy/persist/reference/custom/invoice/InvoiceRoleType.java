@@ -38,15 +38,54 @@
  */
 package com.medigy.persist.reference.custom.invoice;
 
+import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
+import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
+import com.medigy.persist.reference.custom.CustomReferenceEntity;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
 
-import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
-
 @Entity
 public class InvoiceRoleType extends AbstractCustomReferenceEntity
 {
+    public enum Cache implements CachedCustomReferenceEntity
+    {
+        CREATE_PARTY("SUBMITTER", "Submitter Person"),
+        TARGET_PARTY("TARGET", "Target Party"),     // The person who will receive the invoice.  This is also the person who would probably be responsible for paying it
+        ISSUE_PARTY("ISSUER", "Issuing Organization");
+
+        private final String label;
+        private final String code;
+        private InvoiceRoleType entity;
+
+        Cache(final String code, final String label)
+        {
+            this.code = code;
+            this.label = label;
+        }
+
+        public String getCode()
+        {
+            return code;
+        }
+
+        public InvoiceRoleType getEntity()
+        {
+            return entity;
+        }
+
+        public void setEntity(final CustomReferenceEntity entity)
+        {
+            this.entity = (InvoiceRoleType) entity;
+        }
+
+        public String getLabel()
+        {
+            return label;
+        }
+    }
+
     @Id(generate = GeneratorType.AUTO)
     public Long getInvoiceRoleTypeId()
     {

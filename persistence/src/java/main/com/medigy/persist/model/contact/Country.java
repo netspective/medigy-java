@@ -103,6 +103,7 @@ public class Country extends GeographicBoundary
     @Transient
     public void addState(final State state)
     {
+        state.setCountry(this);
         this.states.add(state);
     }
 

@@ -42,13 +42,14 @@ import com.medigy.persist.model.party.Party;
 import com.medigy.persist.model.party.PartyRelationship;
 import com.medigy.persist.model.party.PartyRole;
 import com.medigy.persist.model.party.ValidPartyRelationshipRole;
+import com.medigy.persist.model.party.ValidResponsiblePartyRole;
 import com.medigy.persist.model.person.Person;
-import com.medigy.persist.model.org.Organization;
-import com.medigy.persist.model.insurance.FinancialResponsiblePartySelection;
 import com.medigy.persist.reference.custom.party.PartyRelationshipType;
+import com.medigy.persist.reference.custom.party.PartyRoleType;
 import com.medigy.persist.reference.custom.person.PersonRoleType;
 import com.medigy.persist.util.HibernateUtil;
 import com.medigy.service.party.PartyRelationshipFacade;
+import com.medigy.service.util.AbstractFacade;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
@@ -56,8 +57,9 @@ import org.hibernate.criterion.Expression;
 
 import java.util.Date;
 import java.util.List;
+import java.util.ArrayList;
 
-public class PartyRelationshipFacadeImpl implements PartyRelationshipFacade
+public class PartyRelationshipFacadeImpl extends AbstractFacade implements PartyRelationshipFacade
 {
     private static Log log = LogFactory.getLog(PartyRelationshipFacadeImpl.class);
 
@@ -111,34 +113,46 @@ public class PartyRelationshipFacadeImpl implements PartyRelationshipFacade
     }
 
     /**
-     * Creates a new party relationship between the patient and the organization who will be
-     * financially responsible for the patient (or for a visit)
-     *
-     * @param patient                   patient person
-     * @param responsibleOrganization   financially responsible organization
+     * Lists all party role types that are valid for a responsible party 
+     * @return
      */
-    public void addFinancialResposibleOrganization(Person patient, Organization responsibleOrganization)
+    public List<PartyRoleType> listValidResponsiblePartyRoleTypes()
     {
-        PartyRole patientRole = patient.getPartyRole(PersonRoleType.Cache.PATIENT.getEntity());
-        if (patientRole == null)
+        List list  = HibernateUtil.getSession().createCriteria(ValidResponsiblePartyRole.class).list();
+        List<PartyRoleType> roleTypeList = new ArrayList<PartyRoleType>();
+        for (int i=0; i < list.size(); i++)
         {
-            patientRole = new PartyRole();
-            patientRole.setType(PersonRoleType.Cache.PATIENT.getEntity());
-            patientRole.setParty(patient);
-            patient.addPartyRole(patientRole);
+            roleTypeList.add(((ValidResponsiblePartyRole) list.get(i)).getResponsiblePartyRoleType());
         }
+        return roleTypeList;
     }
 
     /**
-     * Creates a new FinancialResponsiblePartySelection entry
-     * @param relationship
-     * @return
+     * Creates a new party relationship between the patient and the responsible party (org or person) who will be
+     * financially responsible for the patient (or for a visit)
+     *
+     * @param patient                   patient person
+     * @param responsibleParty          the financially responsible party for the patient
+     * @param responsiblePartyRoleType  the party role type of the responsible party (e.g. parent, employer)
+     * @return the newly created party relationship
      */
-    public FinancialResponsiblePartySelection addFinancialResposiblePerson(final PartyRelationship relationship)
+    public PartyRelationship addFinancialResposiblePartyRelationship(final Person patient, final Party responsibleParty,
+                                                                           final PartyRoleType responsiblePartyRoleType)
     {
-        final FinancialResponsiblePartySelection selection = new FinancialResponsiblePartySelection();
-        selection.setPartyRelationship(relationship);
+        if (!responsibleParty.hasPartyRole(responsiblePartyRoleType))
+            responsibleParty.addPartyRole(responsiblePartyRoleType);
+        if (!patient.hasPartyRole(PersonRoleType.Cache.PATIENT.getEntity()))
+            patient.addPartyRole(PersonRoleType.Cache.PATIENT.getEntity());
+
+        PartyRole patientRole = patient.getPartyRole(PersonRoleType.Cache.PATIENT.getEntity());
+        PartyRole responsiblePartyRole = responsibleParty.getPartyRole(responsiblePartyRoleType);
+        final PartyRelationship relationship = new PartyRelationship();
+        relationship.setPartyRoleFrom(patientRole);
+        relationship.setPartyRoleTo(responsiblePartyRole);
+        relationship.setType(PartyRelationshipType.Cache.PATIENT_RESPONSIBLE_PARTY.getEntity());
+        relationship.setFromDate(new Date());
+
         HibernateUtil.getSession().save(relationship);
-        return selection;
+        return relationship;
     }
 }

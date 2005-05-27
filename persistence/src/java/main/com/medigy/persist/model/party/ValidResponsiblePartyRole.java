@@ -39,6 +39,7 @@
 package com.medigy.persist.model.party;
 
 import com.medigy.persist.model.common.AbstractTopLevelEntity;
+import com.medigy.persist.reference.custom.party.OrganizationRoleType;
 import com.medigy.persist.reference.custom.party.PartyRoleType;
 import com.medigy.persist.reference.custom.person.PersonRoleType;
 
@@ -52,31 +53,29 @@ import javax.persistence.ManyToOne;
  * Describes the valid roles involved for a relationship between a patient and a financial responsible party.
  */
 @Entity
-public class ValidFinancialResponsiblePartyRelationship  extends AbstractTopLevelEntity
+public class ValidResponsiblePartyRole  extends AbstractTopLevelEntity
 {
     /**
      * The population of these cached entries can only be executed after the party role type tables
      * have been populated.
      */
-    /*
+
     public enum Cache
     {
-        SELF(PersonRoleType.Cache.SELF.getEntity(), PersonRoleType.Cache.SELF.getEntity()),
-        EMPLOYER(PersonRoleType.Cache.EMPLOYEE.getEntity(), OrganizationRoleType.Cache.EMPLOYER.getEntity()),
-        PARENT(PersonRoleType.Cache.CHILD.getEntity(), PersonRoleType.Cache.PARENT.getEntity()),
-        SPOUSE(PersonRoleType.Cache.SPOUSE.getEntity(), PersonRoleType.Cache.SPOUSE.getEntity());
+        SELF(PersonRoleType.Cache.SELF.getEntity()),
+        EMPLOYER(OrganizationRoleType.Cache.EMPLOYER.getEntity()),
+        PARENT(PersonRoleType.Cache.PARENT.getEntity()),
+        SPOUSE(PersonRoleType.Cache.SPOUSE.getEntity());
 
-        private PersonRoleType patientRoleType;
         private PartyRoleType responsiblePartyRoleType;
-        private ValidFinancialResponsiblePartyRelationship entity;
+        private ValidResponsiblePartyRole entity;
 
-        Cache(PersonRoleType patientRoleType, PartyRoleType roleType)
+        Cache(final PartyRoleType roleType)
         {
             this.responsiblePartyRoleType = roleType;
-            this.patientRoleType = patientRoleType;
         }
 
-        public void setEntity(ValidFinancialResponsiblePartyRelationship entity)
+        public void setEntity(ValidResponsiblePartyRole entity)
         {
             this.entity = entity;
         }
@@ -87,23 +86,18 @@ public class ValidFinancialResponsiblePartyRelationship  extends AbstractTopLeve
                 throw new RuntimeException(getClass() + " " + name() + "has not been initialized.");
         }
 
-        public PersonRoleType getPatientRoleType()
-        {
-            return patientRoleType;
-        }
-
         public PartyRoleType getResponsiblePartyRoleType()
         {
             return responsiblePartyRoleType;
         }
     }
-    */
-    public ValidFinancialResponsiblePartyRelationship()
+
+    public ValidResponsiblePartyRole()
     {
         
     }
 
-    public ValidFinancialResponsiblePartyRelationship(final Long responsiblePartyRoleId, final PartyRoleType role)
+    public ValidResponsiblePartyRole(final Long responsiblePartyRoleId, final PartyRoleType role)
     {
         this.responsiblePartyRoleId = responsiblePartyRoleId;
         this.responsiblePartyRoleType = role;
@@ -111,7 +105,6 @@ public class ValidFinancialResponsiblePartyRelationship  extends AbstractTopLeve
 
     private Long responsiblePartyRoleId;
     private PartyRoleType responsiblePartyRoleType;
-    private PersonRoleType patientRoleType;
 
     @Id(generate = GeneratorType.AUTO)
     public Long getResponsiblePartyRoleId()
@@ -140,19 +133,4 @@ public class ValidFinancialResponsiblePartyRelationship  extends AbstractTopLeve
         this.responsiblePartyRoleType = role;
     }
 
-    /**
-     * Gets the corresponding patient's role
-     * @return
-     */
-    @ManyToOne
-    @JoinColumn(name = "patient_role_type_id", referencedColumnName = PersonRoleType.PK_COLUMN_NAME, nullable = false)
-    public PersonRoleType getPatientRoleType()
-    {
-        return patientRoleType;
-    }
-
-    public void setPatientRoleType(final PersonRoleType patientRoleType)
-    {
-        this.patientRoleType = patientRoleType;
-    }
 }

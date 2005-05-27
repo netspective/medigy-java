@@ -38,12 +38,12 @@
  */
 package com.medigy.persist.model.insurance;
 
+import com.medigy.persist.model.claim.Claim;
 import com.medigy.persist.model.common.AbstractDateDurationEntity;
 import com.medigy.persist.model.org.Organization;
 import com.medigy.persist.model.person.Person;
-import com.medigy.persist.model.claim.Claim;
-import com.medigy.persist.reference.custom.insurance.InsurancePolicyType;
 import com.medigy.persist.reference.custom.insurance.CoverageLevelType;
+import com.medigy.persist.reference.custom.insurance.InsurancePolicyType;
 import com.medigy.persist.reference.custom.invoice.BillSequenceType;
 
 import javax.persistence.CascadeType;
@@ -301,4 +301,7 @@ public class InsurancePolicy extends AbstractDateDurationEntity
         }
         return null;
     }
+
+
+
 }

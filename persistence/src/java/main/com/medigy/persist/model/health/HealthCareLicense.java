@@ -111,7 +111,7 @@ public class HealthCareLicense extends AbstractDateDurationEntity
      * Gets the geographic boundary where this license is valid
      * @return
      */
-    @ManyToOne()
+    @ManyToOne
     @JoinColumn(name = State.PK_COLUMN_NAME)
     public State getState()
     {

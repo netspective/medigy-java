@@ -122,8 +122,7 @@ public class EntitySeedDataPopulator
                                     writeMethod.invoke(entityObj, enumMethod.invoke(enumObj));
                                 }
                             }
-                            HibernateUtil.getSession().save(entityObj);
-                            log.info("ENTITY CACHE: " + entityClass.getName() + " enum " + enumObj + " processed.");
+                            HibernateUtil.getSession().save(entityObj);                            
                         }
                     }
                     catch (IntrospectionException e)

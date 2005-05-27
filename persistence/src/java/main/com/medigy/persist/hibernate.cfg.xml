@@ -62,6 +62,7 @@
         <mapping class="com.medigy.persist.reference.custom.invoice.PaymentType"/>
         <mapping class="com.medigy.persist.reference.custom.invoice.BillRemittanceType"/>
         <mapping class="com.medigy.persist.reference.custom.invoice.BillSequenceType"/>
+        <mapping class="com.medigy.persist.reference.custom.invoice.InvoiceType"/>
 
         <!--mapping package="com.medigy.persist.reference.custom.party"/-->
         <mapping class="com.medigy.persist.reference.custom.party.PartyRoleType"/>
@@ -120,7 +121,7 @@
         <mapping class="com.medigy.persist.model.party.PostalAddressBoundary"/>
         <mapping class="com.medigy.persist.model.party.ValidContactMechanismRole"/>
         <mapping class="com.medigy.persist.model.party.ValidPartyRelationshipRole"/>
-        <mapping class="com.medigy.persist.model.party.ValidFinancialResponsiblePartyRelationship"/>
+        <mapping class="com.medigy.persist.model.party.ValidResponsiblePartyRole"/>
 
         <!--mapping package="com.medigy.persist.model.claim"/-->
         <mapping class="com.medigy.persist.model.claim.Claim"/>

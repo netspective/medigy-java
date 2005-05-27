@@ -38,40 +38,55 @@
  */
 package com.medigy.persist.model.invoice;
 
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.TreeSet;
+import com.medigy.persist.model.common.AbstractTopLevelEntity;
+import com.medigy.persist.model.health.HealthCareVisit;
+import com.medigy.persist.model.party.Party;
+import com.medigy.persist.model.claim.Claim;
+import com.medigy.persist.reference.custom.invoice.InvoiceRoleType;
+import com.medigy.persist.reference.custom.invoice.InvoiceType;
+import com.medigy.persist.reference.custom.invoice.InvoiceStatusType;
 
 import javax.persistence.CascadeType;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Transient;
-
-import com.medigy.persist.model.common.AbstractTopLevelEntity;
+import javax.persistence.Column;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.TreeSet;
 
 @Entity
 public class Invoice  extends AbstractTopLevelEntity
 {
+    public static final String PK_COLUMN_NAME = "invoice_id";
+
     private Long invoiceId;
     private Date invoiceDate;
+    private Date submitDate;
     private String description;
     private String message;
+    private String invoiceNumber;
+    private InvoiceType type;
 
     private BillingAccount billingAccount;
+    private HealthCareVisit visit;
 
     private Set<InvoiceItem> items = new HashSet<InvoiceItem>();
     private Set<InvoiceRole> invoiceRoles = new HashSet<InvoiceRole>();
     private Set<InvoiceStatus> invoiceStatuses = new HashSet<InvoiceStatus>();
     private Set<InvoiceTerm> invoiceTerms = new HashSet<InvoiceTerm>();
 
+    private Set<Claim> claims = new HashSet<Claim>();
+
     @Id(generate = GeneratorType.AUTO)
+    @Column(name = PK_COLUMN_NAME)
     public Long getInvoiceId()
     {
         return invoiceId;
@@ -82,6 +97,38 @@ public class Invoice  extends AbstractTopLevelEntity
         this.invoiceId = invoiceId;
     }
 
+    /**
+     * Gets the date the invoice was submitted
+     * @return
+     */
+    public Date getSubmitDate()
+    {
+        return submitDate;
+    }
+
+    public void setSubmitDate(final Date submitDate)
+    {
+        this.submitDate = submitDate;
+    }
+
+    /**
+     * Gets the invoice number specific to the organization that created it.
+     * @return
+     */
+    public String getInvoiceNumber()
+    {
+        return invoiceNumber;
+    }
+
+    public void setInvoiceNumber(final String invoiceNumber)
+    {
+        this.invoiceNumber = invoiceNumber;
+    }
+
+    /**
+     * The Invoice date.  This could be different from the date it was created.
+     * @return
+     */
     public Date getInvoiceDate()
     {
         return invoiceDate;
@@ -112,8 +159,7 @@ public class Invoice  extends AbstractTopLevelEntity
         this.message = message;
     }
 
-    @OneToMany(mappedBy = "invoice")
-    @Embedded
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "invoice")
     public Set<InvoiceItem> getItems()
     {
         return items;
@@ -124,8 +170,7 @@ public class Invoice  extends AbstractTopLevelEntity
         this.items = items;
     }
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "invoice_id")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "invoice")
     public Set<InvoiceRole> getInvoiceRoles()
     {
         return invoiceRoles;
@@ -136,8 +181,68 @@ public class Invoice  extends AbstractTopLevelEntity
         this.invoiceRoles = invoiceRoles;
     }
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "invoice_id")
+    @Transient
+    public void addInvoiceRole(final InvoiceRole role)
+    {
+        role.setInvoice(this);
+        invoiceRoles.add(role);
+    }
+
+    @Transient
+    public void addInvoiceRole(final Party party, final InvoiceRoleType type)
+    {
+        final InvoiceRole newRole = new InvoiceRole();
+        newRole.setType(type);
+        newRole.setParty(party);
+        addInvoiceRole(newRole);
+    }
+
+    /**
+     * Gets the party that is issuing the invoice
+     * @return
+     */
+    @Transient
+    public Party getIssuingParty()
+    {
+        for (InvoiceRole role : invoiceRoles)
+        {
+            if (role.getType().equals(InvoiceRoleType.Cache.ISSUE_PARTY))
+                return role.getParty();
+        }
+        return null;
+    }
+
+    /**
+     * Gets the party the invoice is being issued for
+     * @return
+     */
+    @Transient
+    public Party getTargetParty()
+    {
+        for (InvoiceRole role : invoiceRoles)
+        {
+            if (role.getType().equals(InvoiceRoleType.Cache.TARGET_PARTY))
+                return role.getParty();
+        }
+        return null;
+    }
+
+    /**
+     * Gets the person who is creating/submitting the invoice
+     * @return
+     */
+    @Transient
+    public Party getCreateParty()
+    {
+        for (InvoiceRole role : invoiceRoles)
+        {
+            if (role.getType().equals(InvoiceRoleType.Cache.CREATE_PARTY))
+                return role.getParty();
+        }
+        return null;
+    }
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "invoice")
     public Set<InvoiceStatus> getInvoiceStatuses()
     {
         return invoiceStatuses;
@@ -146,6 +251,22 @@ public class Invoice  extends AbstractTopLevelEntity
     public void setInvoiceStatuses(final Set<InvoiceStatus> invoiceStatuses)
     {
         this.invoiceStatuses = invoiceStatuses;
+    }
+
+    @Transient
+    public void addInvoiceStatus(final InvoiceStatusType type)
+    {
+        final InvoiceStatus status = new InvoiceStatus();
+        status.setType(type);
+        status.setDate(new Date());
+        addInvoiceStatus(status);
+    }
+
+    @Transient
+    public void addInvoiceStatus(final InvoiceStatus status)
+    {
+        status.setInvoice(this);
+        invoiceStatuses.add(status);
     }
 
     @Transient
@@ -160,8 +281,7 @@ public class Invoice  extends AbstractTopLevelEntity
         return inverseSorted.first();
     }
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "invoice_id")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "invoice")
     public Set<InvoiceTerm> getInvoiceTerms()
     {
         return invoiceTerms;
@@ -182,5 +302,47 @@ public class Invoice  extends AbstractTopLevelEntity
     public void setBillingAccount(final BillingAccount billingAccount)
     {
         this.billingAccount = billingAccount;
+    }
+
+    @OneToOne
+    @JoinColumn(name = HealthCareVisit.PK_COLUMN_NAME)
+    public HealthCareVisit getVisit()
+    {
+        return visit;
+    }
+
+    public void setVisit(final HealthCareVisit visit)
+    {
+        this.visit = visit;
+    }
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "invoice")
+    public Set<Claim> getClaims()
+    {
+        return claims;
+    }
+
+    public void setClaims(final Set<Claim> claims)
+    {
+        this.claims = claims;
+    }
+
+    @Transient
+    public void addInvoiceItem(final InvoiceItem item)
+    {
+        item.setInvoice(this);
+        items.add(item);
+    }
+
+    @ManyToOne
+    @JoinColumn(name = InvoiceType.PK_COLUMN_NAME)
+    public InvoiceType getType()
+    {
+        return type;
+    }
+
+    public void setType(final InvoiceType type)
+    {
+        this.type = type;
     }
 }

@@ -52,21 +52,20 @@ public class OrganizationRoleType extends PartyRoleType
     
     public enum Cache implements CachedCustomReferenceEntity
     {
-        INSURANCE_AGENCY("INS_AGENCY", "Insurance Agency"),
-        INSURANCE_BROKER("INS_BROKER", "Insurance Broker"),
-
-        GROUP("G", "Group"),
-        DIVISION("DIV", "Divison"),
+        TRIAL_SPONSOR("TRIAL_SPON", "Trial Sponsor"),
+        TRIAL_SITE("TRIAL_SITE", "Trial Site"),
+        PRACTICE("PRACTICE", "Practice"),
+        CLINIC("CLINIC", "Clinic"),
+        DIAGNOSTIC_SERVICES("DIAG_SERV", "Diagnostic Services"),
+        HOSPITAL("HOSPITAL", "Hospital"),
+        THERAPEUTIC_SERVICES("THERA_SERV", "Therapeutic Services"),
+        INSURANCE_PROVIDER("INS_PROV", "Insurance Carrier"),
         OTHER_ORG_UNIT("OORG", "Other"),
-        DEPARTMENT("DEPT", "Department"),
-        SUBSIDIARY("SORG", "Subsidiary"),
         PARENT_ORG("PORG", "Parent Organization"),
+        IPA("IPA", "IPA"),
         EMPLOYER("EMPLOYER", "Employer"),
-        SUPPLIER("SUPPLIER", "Supplier"),
-
-        INSURANCE_PROVIDER("INS_PROV", "Insurance Provider"),
-        HEALTH_CARE_ASSOCIATION("HL_ASSC", "Health Care association"),
-        THIRD_PARTY_ADMINISTRATOR("THIRD_PARTY", "Third Party Adinistrator");
+        ANCILLIARY_SERVICE("ANC_SERV", "Ancilliary Service"),
+        PHARMACY("PHARMACY", "Pharmacy");
 
         private final String label;
         private final String code;

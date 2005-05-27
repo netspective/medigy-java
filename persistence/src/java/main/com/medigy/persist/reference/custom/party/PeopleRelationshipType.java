@@ -35,32 +35,30 @@
  * CAUSED AND REGARDLESS OF THE THEORY OF LIABILITY, ARISING OUT OF THE USE OF OR INABILITY TO USE THE SOFTWARE, EVEN
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
- * @author Aye Thu
  */
 package com.medigy.persist.reference.custom.party;
 
-import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
 import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
 import com.medigy.persist.reference.custom.CustomReferenceEntity;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratorType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 
 @Entity
-@Table(name = "Party_Rel_Type")
-public class PartyRelationshipType extends AbstractCustomReferenceEntity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE, discriminatorValue = PeopleRelationshipType.RELATIONSHIP_TYPE_NAME)
+public class PeopleRelationshipType extends PartyRelationshipType
 {
-    public static final String PK_COLUMN_NAME = "party_rel_type_id";
+    public static final String RELATIONSHIP_TYPE_NAME = "person-to-person";
+
     public enum Cache implements CachedCustomReferenceEntity
     {
-        FAMILY("FAMILY", "Family"),
-        PATIENT_RESPONSIBLE_PARTY("PRR", "Patient Responsible Party"),        // describes relationship between the patient and the responsible party
-        ORGANIZATION_ROLLUP("ORG_ROLLUP", "Organization Rollup"),
-        PARTNERSHIP("PARTNER", "Partnership"),
-        CARE_PROVIDER_SELECTION("CARE_PROVIDER", "Care Provider Relationship"),
+        PARENT_CHILD("PARENT_CHILD", "Parent/Child Relationship"),
+        DOMESTIC_PARTNERSHIP("DOMESTIC", "Domestic Partnership"),
+        MARRIAGE("MARRIAGE", "Marriage"),
+        DIVORCED("DIVORCE", "Divorced"),
+        SIBLING("SIBLING", "Sibling"),
+        RELATIVE("RELATIVE", "Relative"),
         OTHER("OTHER", "Other");
 
         private final String label;
@@ -94,19 +92,4 @@ public class PartyRelationshipType extends AbstractCustomReferenceEntity
         }
     }
 
-    public PartyRelationshipType()
-    {
-    }
-
-    @Id(generate = GeneratorType.AUTO)
-    @Column(name = PK_COLUMN_NAME)
-    public Long getPartyRelationshipTypeId()
-    {
-        return super.getSystemId();
-    }
-
-    protected void setPartyRelationshipTypeId(final Long id)
-    {
-        super.setSystemId(id);
-    }
 }

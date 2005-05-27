@@ -219,6 +219,11 @@ public class Party extends AbstractTopLevelEntity
         this.partyRoles.add(role);
     }
 
+    /**
+     * Adds a party role of the requested type to the list of roles assigned to the party.
+     *
+     * @param type  party role type
+     */
     @Transient
     public void addPartyRole(final PartyRoleType type)
     {
@@ -422,5 +427,9 @@ public class Party extends AbstractTopLevelEntity
         this.partyQualifications = partyQualifications;
     }
 
-   
+    @Transient
+    public void addInvoiceRole(final InvoiceRole role)
+    {
+        invoiceRoles.add(role);
+    }
 }

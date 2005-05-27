@@ -38,7 +38,9 @@
  */
 package com.medigy.persist.model.invoice;
 
-import java.util.Date;
+import com.medigy.persist.model.common.AbstractTopLevelEntity;
+import com.medigy.persist.model.party.Party;
+import com.medigy.persist.reference.custom.invoice.InvoiceRoleType;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
@@ -47,10 +49,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-
-import com.medigy.persist.model.common.AbstractTopLevelEntity;
-import com.medigy.persist.model.party.Party;
-import com.medigy.persist.reference.custom.invoice.InvoiceRoleType;
+import java.util.Date;
 
 @Entity
 @Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"invoice_id", "party_id", "invoice_role_type_id"})})
@@ -58,10 +57,10 @@ public class InvoiceRole extends AbstractTopLevelEntity
 {
     private Long invoiceRoleId;
     private Date date;
-    private Float percentage;
+    //private Float percentage;
     private Invoice invoice;
     private Party party;
-    private InvoiceRoleType invoiceRoleType;
+    private InvoiceRoleType type;
 
     @Id(generate = GeneratorType.AUTO)
     public Long getInvoiceRoleId()
@@ -76,14 +75,14 @@ public class InvoiceRole extends AbstractTopLevelEntity
 
     @ManyToOne
     @JoinColumn(name = "invoice_role_type_id")
-    public InvoiceRoleType getInvoiceRoleType()
+    public InvoiceRoleType getType()
     {
-        return invoiceRoleType;
+        return type;
     }
 
-    public void setInvoiceRoleType(final InvoiceRoleType invoiceRoleType)
+    public void setType(final InvoiceRoleType type)
     {
-        this.invoiceRoleType = invoiceRoleType;
+        this.type = type;
     }
 
     @ManyToOne
@@ -118,15 +117,5 @@ public class InvoiceRole extends AbstractTopLevelEntity
     public void setDate(final Date date)
     {
         this.date = date;
-    }
-
-    public Float getPercentage()
-    {
-        return percentage;
-    }
-
-    public void setPercentage(final Float percentage)
-    {
-        this.percentage = percentage;
     }
 }

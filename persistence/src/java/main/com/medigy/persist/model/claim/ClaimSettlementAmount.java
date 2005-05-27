@@ -38,6 +38,9 @@
  */
 package com.medigy.persist.model.claim;
 
+import com.medigy.persist.model.common.AbstractTopLevelEntity;
+import com.medigy.persist.model.invoice.Payment;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
@@ -45,9 +48,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import com.medigy.persist.model.common.AbstractTopLevelEntity;
-import com.medigy.persist.model.invoice.Payment;
-
+/**
+ *
+ */
 @Entity
 public class ClaimSettlementAmount extends AbstractTopLevelEntity
 {
@@ -79,6 +82,11 @@ public class ClaimSettlementAmount extends AbstractTopLevelEntity
         this.claimSettlement = claimSettlement;
     }
 
+    /**
+     * Gets the payment associated with this claim settlement amount. One Payment can be made to settle
+     * multiple claims.  
+     * @return
+     */
     @ManyToOne
     @JoinColumn(name = "payment_id")
     public Payment getPayment()

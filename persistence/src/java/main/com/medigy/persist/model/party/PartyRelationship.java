@@ -72,6 +72,7 @@ public class PartyRelationship extends AbstractDateDurationEntity
     private PriorityType priorityType;
 
 
+
     public PartyRelationship()
     {
     }
@@ -125,7 +126,7 @@ public class PartyRelationship extends AbstractDateDurationEntity
     }
 
     @ManyToOne(cascade = CascadeType.MERGE)
-    @JoinColumn(name = "party_role_id_from", referencedColumnName = "party_role_id", nullable = false)
+    @JoinColumn(name = "party_role_id_from", referencedColumnName = PartyRole.PK_COLUMN_NAME, nullable = false)
     public PartyRole getPartyRoleFrom()
     {
         return partyRoleFrom;
@@ -134,11 +135,12 @@ public class PartyRelationship extends AbstractDateDurationEntity
     public void setPartyRoleFrom(final PartyRole partyRoleFrom)
     {
         this.partyRoleFrom = partyRoleFrom;
+        this.partyRoleFrom.addFromPartyRelationship(this);
         this.partyFrom = partyRoleFrom.getParty();
     }
 
     @ManyToOne(cascade = CascadeType.MERGE)
-    @JoinColumn(name = "party_role_id_to", referencedColumnName = "party_role_id", nullable = false)
+    @JoinColumn(name = "party_role_id_to", referencedColumnName = PartyRole.PK_COLUMN_NAME, nullable = false)
     public PartyRole getPartyRoleTo()
     {
         return partyRoleTo;
@@ -147,6 +149,7 @@ public class PartyRelationship extends AbstractDateDurationEntity
     public void setPartyRoleTo(final PartyRole partyRoleTo)
     {
         this.partyRoleTo = partyRoleTo;
+        this.partyRoleTo.addToPartyRelationship(this);
         this.partyTo = partyRoleTo.getParty();
     }
 

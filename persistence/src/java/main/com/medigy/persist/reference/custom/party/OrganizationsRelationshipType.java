@@ -36,42 +36,56 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.persist.model.party;
+package com.medigy.persist.reference.custom.party;
 
-import com.medigy.persist.TestCase;
-import com.medigy.persist.reference.custom.person.PersonRoleType;
-import com.medigy.persist.reference.custom.party.OrganizationRoleType;
-import com.medigy.persist.util.HibernateUtil;
+import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
+import com.medigy.persist.reference.custom.CustomReferenceEntity;
 
-import java.util.List;
+import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 
-public class TestValidFinancialResponsiblePartyRelationship extends TestCase
+@Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE, discriminatorValue = OrganizationsRelationshipType.RELATIONSHIP_TYPE_NAME)
+public class OrganizationsRelationshipType extends PartyRelationshipType
 {
-    public void testValidFinancialResponsiblePartyRelationship()
+    public static final String RELATIONSHIP_TYPE_NAME = "org-to-org";
+
+    public enum Cache implements CachedCustomReferenceEntity
     {
-        ValidFinancialResponsiblePartyRelationship rel = new ValidFinancialResponsiblePartyRelationship();
-        rel.setPatientRoleType(PersonRoleType.Cache.CHILD.getEntity());
-        rel.setResponsiblePartyRoleType(PersonRoleType.Cache.PARENT.getEntity());
-        HibernateUtil.getSession().save(rel);
+        ORGANIZATION_ROLLUP("ORG_ROLLUP", "Organization Rollup"),
+        PARTNERSHIP("PARTNER", "Partnership"),
+        OTHER("OTHER", "Other");
 
-        rel = new ValidFinancialResponsiblePartyRelationship();
-        rel.setPatientRoleType(PersonRoleType.Cache.SELF.getEntity());
-        rel.setResponsiblePartyRoleType(PersonRoleType.Cache.SELF.getEntity());
-        HibernateUtil.getSession().save(rel);
+        private final String label;
+        private final String code;
+        private OrganizationsRelationshipType entity;
 
-        rel = new ValidFinancialResponsiblePartyRelationship();
-        rel.setPatientRoleType(PersonRoleType.Cache.SPOUSE.getEntity());
-        rel.setResponsiblePartyRoleType(PersonRoleType.Cache.SPOUSE.getEntity());
-        HibernateUtil.getSession().save(rel);
+        Cache(final String code, final String label)
+        {
+            this.code = code;
+            this.label = label;
+        }
 
-        rel = new ValidFinancialResponsiblePartyRelationship();
-        rel.setPatientRoleType(PersonRoleType.Cache.EMPLOYEE.getEntity());
-        rel.setResponsiblePartyRoleType(OrganizationRoleType.Cache.EMPLOYER.getEntity());
-        HibernateUtil.getSession().save(rel);
+        public String getCode()
+        {
+            return code;
+        }
 
-        List list = HibernateUtil.getSession().createCriteria(ValidFinancialResponsiblePartyRelationship.class).list();
+        public OrganizationsRelationshipType getEntity()
+        {
+            return entity;
+        }
 
-        //assertThat(list.size(), eq(ValidFinancialResponsiblePartyRelationship.Cache.class.getEnumConstants().length));
+        public void setEntity(final CustomReferenceEntity entity)
+        {
+            this.entity = (OrganizationsRelationshipType) entity;
+        }
 
+        public String getLabel()
+        {
+            return label;
+        }
     }
+
 }

@@ -51,9 +51,46 @@ public class InvoiceStatusType extends AbstractCustomReferenceEntity
 {
     public enum Cache implements CachedCustomReferenceEntity
     {
+        /**
+         * <enum>Created</enum>
+		<enum>Incomplete</enum>
+		<enum>Pending</enum>
+		<enum>On Hold</enum>
+		<enum>Submitted</enum>
+		<enum>Transferred</enum>
+		<enum>Approved Internal</enum>
+		<enum>Rejected Internal</enum>
+		<enum>Electronically Transmitted to Carrier</enum>
+		<enum>Transmitted to Carrier via Paper</enum>
+		<enum>Approved External</enum>
+		<enum>Rejected External</enum>
+		<enum>Awaiting Insurance Payment</enum>
+		<enum>Payments Applied</enum>
+		<enum>Appealed</enum>
+		<enum>Closed</enum>
+		<enum>Void</enum>
+		<enum>Paper Claim Printed</enum>
+		<enum>Awaiting Client Payment</enum>
+         */
+        CREATED("CREATED", "Created"),
+        INCOMPLETE("INCOMPLETE", "Incomplete"),
+        PENDING("PENDING", "Pending"),
+        ON_HOLD("ONHOLD", "On Hold"),
+        SUBMITTED("SUBMITTED", "Submitted"),
+        TRANSFERRED("TRANSFERRED", "Transferred"),
+        APPROVED_INTERNAL("APPROVED_INT", "Approved Internal"),
+        REJECTED_INTERNAL("REJECTED_INT", "Rejected Internal"),
+        ELECTRONIC_TRANSMITTED("ELECTRONIC", "Electronically Transmitted to Carrier"),
+        TRANSMITTED_VIA_PAPER("TRANSMITTED_PAPER", "Transmitted to Carrier via Paper"),
+        APPROVED_EXTERNAL("APPROVED_EXT", "Approved External"),
+        REJECTED_EXTERNAL("REJECTED_EXT", "Rejected External"),
+        AWAITING_INSURANCE("AWAIT_INS", "Awaiting Insurance Payment"),
+        PAYMENTS_APPLIED("APPLIED", "Payments Applied"),
+        APPEALED("APPEAL", "APPEALED"),
+        CLOSED("CLOSED", "Closed"),
         VOID("VOID", "Void"),
-        SENT("SENT", "Sent"),
-        APPROVED("APPROVED", "Approved");;
+        CLAIM_PRINTED("PRINTED", "Paper Claim Printed"),
+        AWAITING_CLIENT("AWAIT_CLIENT", "Awaiting Client Payment");
 
         private final String label;
         private final String code;
