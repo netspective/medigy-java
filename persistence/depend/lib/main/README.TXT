@@ -15,8 +15,8 @@ commons-logging-1.0.4.jar           Medigy
 dom4j-1.6.jar                       Hibernate
 ehcache-1.1.jar                     Hibernate
 ejb-3.0-edr2.jar                    Hibernate Annotations
-hibernate-3.0.3.jar                 Medigy
-hibernate-annotations-3.0beta1.jar  Medigy
+hibernate-3.0.4.jar                 Medigy
+hibernate-annotations-3.0beta2.jar  Medigy
 jdbc2_0-stdext.jar                  Medigy, Hibernate
 jta.jar                             Hibernate
 log4j-1.2.9.jar                     Medigy
