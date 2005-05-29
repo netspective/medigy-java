@@ -3,7 +3,7 @@
 	"http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
 
 <hibernate-configuration>
-	<session-factory>
+    <session-factory>
         <!--mapping package="com.medigy.persist.reference"/-->
         <mapping class="com.medigy.persist.reference.ModelVersion"/>
 
@@ -228,5 +228,8 @@
         <!--mapping package="com.medigy.persist.model.work"/-->
         <mapping class="com.medigy.persist.model.work.WorkEffort"/>
 
-	</session-factory>
+        <listener type="pre-update" class="org.hibernate.validator.event.ValidatePreUpdateEventListener"/>
+        <listener type="pre-insert" class="org.hibernate.validator.event.ValidatePreInsertEventListener"/>
+        
+    </session-factory>
 </hibernate-configuration>

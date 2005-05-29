@@ -39,6 +39,7 @@
 package com.medigy.service.dto.person;
 
 import com.medigy.service.ServiceVersion;
+import org.hibernate.validator.NotNull;
 
 import java.util.Date;
 
@@ -51,12 +52,14 @@ public interface RegisterPatientParameters extends ServiceVersion
      * Gets the patient's first name. REQUIRED.
      * @return
      */
+    @NotNull
     public String getFirstName();
 
     /**
      * Gets the patient's last name. REQUIRED.
      * @return
      */
+    @NotNull
     public String getLastName();
 
     /**
@@ -75,6 +78,7 @@ public interface RegisterPatientParameters extends ServiceVersion
      * Get's the patient's birth date. REQUIRED.
      * @return
      */
+    @NotNull
     public Date getBirthDate();
 
     /**
@@ -82,7 +86,7 @@ public interface RegisterPatientParameters extends ServiceVersion
      * @return
      * @see com.medigy.persist.reference.type.GenderType#getCode()
      */
-    //@referenceType
+    @NotNull
     public String getGender();
 
     /**

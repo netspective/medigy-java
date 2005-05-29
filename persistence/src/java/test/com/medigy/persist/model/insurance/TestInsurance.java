@@ -48,9 +48,12 @@ import com.medigy.persist.reference.custom.insurance.InsuranceProductType;
 import com.medigy.persist.reference.custom.org.OrganizationClassificationType;
 import com.medigy.persist.reference.custom.party.PartyRelationshipType;
 import com.medigy.persist.reference.custom.person.PersonRoleType;
+import com.medigy.persist.reference.type.GenderType;
+import com.medigy.persist.reference.type.LanguageType;
 import com.medigy.persist.util.HibernateUtil;
 
 import java.util.Date;
+import java.util.Calendar;
 
 public class TestInsurance extends TestCase
 {
@@ -90,18 +93,28 @@ public class TestInsurance extends TestCase
         assertThat(product.getInsurancePlan("Super Plan 1").getName(), eq("Super Plan 1"));
         assertThat(product.getInsurancePlan("Super Plan 2").getName(), eq("Super Plan 2"));
 
+        Calendar cal = Calendar.getInstance();
+        cal.set(1965, 1, 1);
         final Person johnDoe = new Person();
         johnDoe.setFirstName("John");
         johnDoe.setLastName("Doe");
+        johnDoe.setBirthDate(cal.getTime());
+        johnDoe.addGender(GenderType.Cache.MALE.getEntity());
+        johnDoe.addLanguage(LanguageType.Cache.ENGLISH.getEntity());
 
         final PartyRole parentRole = new PartyRole();
         parentRole.setType(PersonRoleType.Cache.PARENT.getEntity());
         parentRole.setParty(johnDoe);
         johnDoe.addPartyRole(parentRole);
 
+        cal.set(1985, 1, 1);
         final Person patient = new Person();
         patient.setLastName("Doe");
         patient.setFirstName("Jane");
+        patient.setBirthDate(cal.getTime());
+        patient.addGender(GenderType.Cache.FEMALE.getEntity());
+        patient.addLanguage(LanguageType.Cache.ENGLISH.getEntity());
+
 
         final PartyRole childRole = new PartyRole();
         childRole.setType(PersonRoleType.Cache.PARENT.getEntity());

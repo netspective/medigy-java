@@ -36,51 +36,114 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.service.dto.insurance;
+package com.medigy.service.insurance;
 
-import com.medigy.service.dto.ServiceParameters;
+import com.medigy.service.TestCase;
+import com.medigy.service.ServiceVersion;
+import com.medigy.service.dto.insurance.AddInsuranceCoverageParameters;
+import com.medigy.service.dto.insurance.NewInsuranceCoverageData;
 import org.hibernate.validator.NotNull;
 
 import java.io.Serializable;
 import java.util.Date;
 
-public interface AddInsuranceCoverageParameters  extends ServiceParameters
+public class TestAddInsuranceCoverageService extends TestCase
 {
-    @NotNull
-    public Serializable getPatientId();
+    public void testAddInsuranceCoverageService()
+    {
+        final AddInsuranceCoverageService service = (AddInsuranceCoverageService) getRegistry().getService(AddInsuranceCoverageService.class);
 
-    @NotNull
-    public Serializable getInsuranceCarrierId();
+        final AddInsuranceCoverageParameters params  = new AddInsuranceCoverageParameters() {
+            @NotNull
+            public Serializable getPatientId()
+            {
+                return new Long(999);
+            }
 
+            @NotNull
+            public Serializable getInsuranceCarrierId()
+            {
+                return new Long(2);
+            }
 
-    public Serializable getInsuranceProductId();
+            public Serializable getInsuranceProductId()
+            {
+                return null;
+            }
 
-    @NotNull
-    public Serializable getInsurancePlanId();
+            @NotNull
+            public Serializable getInsurancePlanId()
+            {
+                return new Long(1);
+            }
 
-    @NotNull
-    public String getInsurancePolicyNumber();
+            @NotNull
+            public String getInsurancePolicyNumber()
+            {
+                return "999";
+            }
 
-    @NotNull
-    public String getInsuranceGroupNumber();
+            @NotNull
+            public String getInsuranceGroupNumber()
+            {
+                return "X123";
+            }
 
-    @NotNull
-    public Serializable getInsuranceContractHolderId();
+            @NotNull
+            public Serializable getInsuranceContractHolderId()
+            {
+                return "1000";
+            }
 
-    @NotNull
-    public String getInsuranceContractHolderRole();
+            @NotNull
+            public String getInsuranceContractHolderRole()
+            {
+                return null;
+            }
 
-    public Date getCoverageStartDate();
+            public Date getCoverageStartDate()
+            {
+                return null;
+            }
 
-    public Date getCoverageEndDate();
+            public Date getCoverageEndDate()
+            {
+                return null;
+            }
 
-    public Float getIndividualDeductibleAmount();
+            public Float getIndividualDeductibleAmount()
+            {
+                return null;
+            }
 
-    public Float getFamilyDeductibleAmount();
+            public Float getFamilyDeductibleAmount()
+            {
+                return null;
+            }
 
-    public Float getOfficeVisitCoPay();
+            public Float getOfficeVisitCoPay()
+            {
+                return null;
+            }
 
-    public Float getPercentagePay();
+            public Float getPercentagePay()
+            {
+                return null;
+            }
 
-    public Float getMaxThresholdAmount();
+            public Float getMaxThresholdAmount()
+            {
+                return null;
+            }
+
+            public ServiceVersion getServiceVersion()
+            {
+                return null;
+            }
+        };
+
+        final NewInsuranceCoverageData newInsuranceCoverageData = service.add(params);
+        assertThat(newInsuranceCoverageData.getErrorMessage(), NULL);
+
+    }
 }

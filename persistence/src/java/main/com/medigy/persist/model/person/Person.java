@@ -49,18 +49,19 @@ import com.medigy.persist.model.health.HealthCareVisit;
 import com.medigy.persist.model.insurance.InsurancePolicy;
 import com.medigy.persist.model.party.Party;
 import com.medigy.persist.model.party.PartyIdentifier;
-import com.medigy.persist.model.party.PartyRole;
+import com.medigy.persist.reference.custom.health.HealthCareLicenseType;
 import com.medigy.persist.reference.custom.party.PartyIdentifierType;
 import com.medigy.persist.reference.custom.person.EthnicityType;
 import com.medigy.persist.reference.custom.person.PersonIdentifierType;
-import com.medigy.persist.reference.custom.person.PhysicalCharacteristicType;
 import com.medigy.persist.reference.custom.person.PersonRoleType;
-import com.medigy.persist.reference.custom.health.HealthCareLicenseType;
+import com.medigy.persist.reference.custom.person.PhysicalCharacteristicType;
 import com.medigy.persist.reference.type.GenderType;
 import com.medigy.persist.reference.type.LanguageType;
 import com.medigy.persist.reference.type.MaritalStatusType;
 import com.medigy.persist.reference.type.party.PartyType;
 import org.apache.commons.codec.language.Soundex;
+import org.hibernate.validator.Past;
+import org.hibernate.validator.Size;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -230,6 +231,7 @@ public class Person extends Party
     }
 
     @Column()
+    @Past
     public Date getBirthDate()
     {
         return birthDate;
@@ -241,6 +243,7 @@ public class Person extends Party
     }
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "person")
+    @Size(min = 1)
     public Set<Gender> getGenders()
     {
         return genders;
@@ -414,7 +417,7 @@ public class Person extends Party
         return false;
     }
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "person", fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "person", fetch = FetchType.LAZY)    
     public Set<Language> getLanguages()
     {
         return languages;

@@ -40,27 +40,42 @@ package com.medigy.service.health;
 
 import com.medigy.persist.model.person.Person;
 import com.medigy.persist.reference.custom.health.HealthCareReferralType;
+import com.medigy.persist.reference.type.GenderType;
+import com.medigy.persist.reference.type.LanguageType;
 import com.medigy.persist.util.HibernateUtil;
 import com.medigy.service.TestCase;
 import com.medigy.service.impl.health.HealthCareReferralFacadeImpl;
 
 import java.util.List;
+import java.util.Calendar;
 
 public class TestHealthCareReferral  extends TestCase
 {
     public void testHealthCareReferral()
     {
+        Calendar cal = Calendar.getInstance();
+        cal.set(1965, 1, 1);
         final Person patient = Person.createNewPatient();
         patient.setLastName("Hackett");
         patient.setFirstName("Ryan");
+        patient.setBirthDate(cal.getTime());
+        patient.addGender(GenderType.Cache.MALE.getEntity());
+        patient.addLanguage(LanguageType.Cache.ENGLISH.getEntity());
+
 
         final Person requestorDoctor = Person.createNewPhysician();
         requestorDoctor.setLastName("Doctor");
         requestorDoctor.setFirstName("Requestor");
+        requestorDoctor.setBirthDate(cal.getTime());
+        requestorDoctor.addGender(GenderType.Cache.MALE.getEntity());
+        requestorDoctor.addLanguage(LanguageType.Cache.ENGLISH.getEntity());
 
         final Person provider = Person.createNewPhysician();
         provider.setLastName("Doctor");
         provider.setFirstName("Provider");
+        provider.setBirthDate(cal.getTime());
+        provider.addGender(GenderType.Cache.MALE.getEntity());
+        provider.addLanguage(LanguageType.Cache.ENGLISH.getEntity());
 
         HibernateUtil.getSession().save(patient);
         HibernateUtil.getSession().save(requestorDoctor);

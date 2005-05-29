@@ -44,6 +44,7 @@ import com.medigy.persist.model.contact.State;
 import com.medigy.persist.model.person.Person;
 import com.medigy.persist.reference.custom.health.HealthCareLicenseType;
 import com.medigy.persist.reference.type.GenderType;
+import com.medigy.persist.reference.type.LanguageType;
 import com.medigy.persist.util.HibernateUtil;
 
 import java.util.Calendar;
@@ -52,10 +53,14 @@ public class TestHealthCareLicense  extends TestCase
 {
     public void testHealthCareLicense()
     {
+        Calendar cal = Calendar.getInstance();
+        cal.set(1965, 1, 1);
         final Person doctor = new Person();
         doctor.setLastName("Bond");
         doctor.setFirstName("James");
+        doctor.setBirthDate(cal.getTime());
         doctor.addGender(GenderType.Cache.MALE.getEntity());
+        doctor.addLanguage(LanguageType.Cache.ENGLISH.getEntity());
 
         final Country country = new Country();
         country.setName("USA");

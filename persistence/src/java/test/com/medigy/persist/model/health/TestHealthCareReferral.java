@@ -43,6 +43,8 @@ import com.medigy.persist.model.party.PartyRole;
 import com.medigy.persist.model.person.Person;
 import com.medigy.persist.reference.custom.health.HealthCareReferralType;
 import com.medigy.persist.reference.custom.person.PersonRoleType;
+import com.medigy.persist.reference.type.GenderType;
+import com.medigy.persist.reference.type.LanguageType;
 import com.medigy.persist.util.HibernateUtil;
 
 import java.util.Calendar;
@@ -51,9 +53,15 @@ public class TestHealthCareReferral extends TestCase
 {
     public void testHealthCareReferral()
     {
+        Calendar cal = Calendar.getInstance();
+        cal.set(1965, 1, 1);
         final Person patient = Person.createNewPatient();
         patient.setLastName("Hackett");
         patient.setFirstName("Ryan");
+        patient.setBirthDate(cal.getTime());
+        patient.addGender(GenderType.Cache.MALE.getEntity());
+        patient.addLanguage(LanguageType.Cache.ENGLISH.getEntity());
+
 
         final PartyRole patientRole = new PartyRole();
         patientRole.setType(PersonRoleType.Cache.PATIENT.getEntity());
@@ -63,6 +71,9 @@ public class TestHealthCareReferral extends TestCase
         final Person requestorDoctor = Person.createNewPhysician();
         requestorDoctor.setLastName("Doctor");
         requestorDoctor.setFirstName("Requestor");
+        requestorDoctor.setBirthDate(cal.getTime());
+        requestorDoctor.addGender(GenderType.Cache.MALE.getEntity());
+        requestorDoctor.addLanguage(LanguageType.Cache.ENGLISH.getEntity());
 
         final PartyRole requestorRole = new PartyRole();
         requestorRole.setType(PersonRoleType.Cache.INDIVIDUAL_HEALTH_CARE_PRACTITIONER.getEntity());
@@ -72,6 +83,9 @@ public class TestHealthCareReferral extends TestCase
         final Person provider = Person.createNewPhysician();
         provider.setLastName("Doctor");
         provider.setFirstName("Provider");
+        provider.setBirthDate(cal.getTime());
+        provider.addGender(GenderType.Cache.MALE.getEntity());
+        provider.addLanguage(LanguageType.Cache.ENGLISH.getEntity());
 
         final PartyRole providerRole = new PartyRole();
         providerRole.setType(PersonRoleType.Cache.INDIVIDUAL_HEALTH_CARE_PRACTITIONER.getEntity());
@@ -82,7 +96,6 @@ public class TestHealthCareReferral extends TestCase
         HibernateUtil.getSession().save(requestorDoctor);
         HibernateUtil.getSession().save(provider);
 
-        Calendar cal = Calendar.getInstance();
         cal.set(2005, 5, 16);
         final HealthCareReferral referral = new HealthCareReferral();
         referral.setPatientRole(patientRole);

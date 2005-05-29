@@ -45,6 +45,7 @@ import com.medigy.persist.model.person.Person;
 import com.medigy.persist.reference.custom.insurance.CoverageLevelType;
 import com.medigy.persist.reference.custom.insurance.InsurancePolicyType;
 import com.medigy.persist.reference.custom.invoice.BillSequenceType;
+import org.hibernate.validator.NotNull;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -193,7 +194,7 @@ public class InsurancePolicy extends AbstractDateDurationEntity
         this.careProviderSelections = careProviderSelections;
     }
 
-    @Column(length = 10)
+    @Column(length = 10)    
     public String getGroupNumber()
     {
         return groupNumber;
@@ -205,6 +206,7 @@ public class InsurancePolicy extends AbstractDateDurationEntity
     }
 
     @Column(length = 15, nullable = false)
+    @NotNull
     public String getPolicyNumber()
     {
         return policyNumber;

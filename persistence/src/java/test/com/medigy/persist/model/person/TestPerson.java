@@ -51,6 +51,8 @@ import com.medigy.persist.reference.type.MaritalStatusType;
 import com.medigy.persist.util.HibernateUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.validator.InvalidStateException;
+import org.hibernate.validator.InvalidValue;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -62,12 +64,31 @@ public class TestPerson extends TestCase
     public void testPerson()
     {
         final Calendar calendar = Calendar.getInstance();
-        HibernateUtil.beginTransaction();
+        calendar.set(3000, 1, 1);
+        Person invalidPerson = new Person();
+        invalidPerson.setFirstName("Ryan");
+        invalidPerson.setLastName("Hackett");
+        invalidPerson.setBirthDate(calendar.getTime());
+        try
+        {
+            HibernateUtil.getSession().save(invalidPerson);
+        }
+        catch (InvalidStateException e)
+        {
+            final InvalidValue[] invalidValues = e.getInvalidValues();
+            assertThat(invalidValues.length, eq(2));
+            assertThat(invalidValues[0].getPropertyName(), eq("birthDate"));
+            assertThat(invalidValues[1].getPropertyName(),  eq("genders"));            
+        }
+        HibernateUtil.closeSession();
 
+        Calendar cal = Calendar.getInstance();
+        cal.set(1975, 1, 1);
         Person newPerson = new Person();
         newPerson.setFirstName("Ryan");
         newPerson.setMiddleName("Bluegrass");
         newPerson.setLastName("Hackett");
+        newPerson.setBirthDate(cal.getTime());
 
         calendar.set(1990, 6, 14);
         newPerson.addMaritalStatus(MaritalStatusType.Cache.SINGLE.getEntity(), calendar.getTime(), new Date());
@@ -84,7 +105,6 @@ public class TestPerson extends TestCase
         newPerson.setSsn("000-00-0000");
 
         HibernateUtil.getSession().save(newPerson);
-        HibernateUtil.commitTransaction();
         HibernateUtil.closeSession();
 
         final Person persistedPerson = (Person) HibernateUtil.getSession().load(Person.class, newPerson.getPersonId());

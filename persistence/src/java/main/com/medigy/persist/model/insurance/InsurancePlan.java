@@ -40,8 +40,9 @@ package com.medigy.persist.model.insurance;
 
 import com.medigy.persist.model.common.AbstractDateDurationEntity;
 import com.medigy.persist.model.org.Organization;
-import com.medigy.persist.reference.custom.invoice.BillRemittanceType;
 import com.medigy.persist.reference.custom.insurance.CoverageLevelType;
+import com.medigy.persist.reference.custom.invoice.BillRemittanceType;
+import org.hibernate.validator.NotNull;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -196,6 +197,7 @@ public class InsurancePlan extends AbstractDateDurationEntity
 
     @ManyToOne
     @JoinColumn(name = Organization.PK_COLUMN_NAME, nullable = false)
+    @NotNull
     public Organization getOrganization()
     {
         return organization;
