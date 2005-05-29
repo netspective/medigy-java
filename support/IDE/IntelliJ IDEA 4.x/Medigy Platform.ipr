@@ -39,6 +39,13 @@
       <maximumHeapSize value="128" />
       <properties />
     </buildFile>
+    <buildFile url="file://$PROJECT_DIR$/../../../pbs/support/build/build.xml">
+      <additionalClassPath />
+      <antReference projectDefault="true" />
+      <customJdkName value="" />
+      <maximumHeapSize value="128" />
+      <properties />
+    </buildFile>
   </component>
   <component name="CodeStyleSettingsManager">
     <option name="PER_PROJECT_SETTINGS" />
@@ -47,7 +54,7 @@
   <component name="CompilerConfiguration">
     <option name="DEFAULT_COMPILER" value="Javac" />
     <option name="CLEAR_OUTPUT_DIRECTORY" value="false" />
-    <option name="DEPLOY_AFTER_MAKE" value="0" />
+    <option name="DEPLOY_AFTER_MAKE" value="2" />
     <resourceExtensions>
       <entry name=".+\.(properties|xml|html|dtd|tld)" />
       <entry name=".+\.(gif|png|jpeg|jpg)" />
@@ -216,8 +223,10 @@
       <module fileurl="file://$PROJECT_DIR$/../../../graphviz/support/GraphViz.iml" filepath="$PROJECT_DIR$/../../../graphviz/support/GraphViz.iml" />
       <module fileurl="file://$PROJECT_DIR$/../../../common/support/common.iml" filepath="$PROJECT_DIR$/../../../common/support/common.iml" />
       <module fileurl="file://$PROJECT_DIR$/../../../hibernate-doc/support/hibernate-doc.iml" filepath="$PROJECT_DIR$/../../../hibernate-doc/support/hibernate-doc.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../../../pbs/support/pbs.iml" filepath="$PROJECT_DIR$/../../../pbs/support/pbs.iml" />
       <module fileurl="file://$PROJECT_DIR$/../../../persistence/support/persistence.iml" filepath="$PROJECT_DIR$/../../../persistence/support/persistence.iml" />
       <module fileurl="file://$PROJECT_DIR$/../../../persistence-tools/support/persistence-tools.iml" filepath="$PROJECT_DIR$/../../../persistence-tools/support/persistence-tools.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../../../presentation/support/presentation.iml" filepath="$PROJECT_DIR$/../../../presentation/support/presentation.iml" />
       <module fileurl="file://$PROJECT_DIR$/../../../scheduler/support/scheduler.iml" filepath="$PROJECT_DIR$/../../../scheduler/support/scheduler.iml" />
       <module fileurl="file://$PROJECT_DIR$/../../../service/support/service.iml" filepath="$PROJECT_DIR$/../../../service/support/service.iml" />
       <module fileurl="file://$PROJECT_DIR$/../../support.iml" filepath="$PROJECT_DIR$/../../support.iml" />
@@ -283,6 +292,35 @@
         <root url="jar://$PROJECT_DIR$/../../../common/depend/lib/test/emma-2.0.4217.jar!/" />
         <root url="jar://$PROJECT_DIR$/../../../common/depend/lib/test/emma_ant-2.0.4217.jar!/" />
         <root url="jar://$PROJECT_DIR$/../../../common/depend/lib/test/jmock-1.0.1.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="Presentation Dependencies (Build)">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/../../../presentation/depend/lib/build/servletapi-2.3.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="Presentation Dependencies (Main)">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/../../../presentation/depend/lib/main/commons-logging-1.0.4.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../../../presentation/depend/lib/main/concurrent-1.3.3.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../../../presentation/depend/lib/main/dom4j-1.4.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../../../presentation/depend/lib/main/ognl-2.6.7.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../../../presentation/depend/lib/main/wicket-1.0.0-rc3.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="Service Dependencies (Main)">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/../../../service/depend/lib/main/oro-2.0.6.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../../../service/depend/lib/main/hivemind-1.1-beta-1.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../../../service/depend/lib/main/hivemind-lib-1.1-beta-1.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../../../service/depend/lib/main/javassist-3.0.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../../../service/depend/lib/main/hivemind-jmx-1.1-beta-1.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />

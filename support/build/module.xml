@@ -225,6 +225,10 @@
         <jar jarfile="${module.artifacts.jar}" basedir="${module.artifacts.classes.main.home}">
             <include name="**/*"/>
         </jar>
+        <jar jarfile="${module.artifacts.jar}" basedir="${module.src.main.home}" update="true">
+            <!-- put all resources into the JAR file -->
+            <exclude name="**/*.java"/>
+        </jar>
     </target>
 
     <target name="jar.publish-ivy" depends="compile.main" if="ivy.repository.home">
