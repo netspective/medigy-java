@@ -107,7 +107,7 @@ public class DefaultApplication extends WebApplication
 
     public File getDevelopmentEnvironmentProjectHome()
     {
-        final String projectDirNamePropValue = System.getProperty("com.medigy.project.home", DEFAULT_DEVL_ENV_PROJECT_HOME);
+        final String projectDirNamePropValue = System.getProperty("medigy.project.home", DEFAULT_DEVL_ENV_PROJECT_HOME);
         return new File(projectDirNamePropValue);
     }
 
