@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<project name="medigy-app" default="all">
+
+    <import file="../../../support/build/module.xml"/>
+
+    <target name="init.define-properties" depends="module.init.define-properties">
+        <property name="presentation.home" value="${repository.home}/presentation"/>
+        <property name="presentation.src.main.home" value="${repository.home}/presentation/src/java/main"/>
+
+        <property name="module.webapp.home" value="${module.home}/webapp"/>
+        <property name="module.WEB-INF.home" value="${module.webapp.home}/WEB-INF"/>
+        <property name="module.WEB-INF.lib.home" value="${module.WEB-INF.home}/lib"/>
+
+        <property name="module.artifacts.webapp.home" value="${module.artifacts.home}/webapp"/>
+        <property name="module.artifacts.WEB-INF.home" value="${module.artifacts.webapp.home}/WEB-INF"/>
+        <property name="module.artifacts.WEB-INF.lib.home" value="${module.artifacts.WEB-INF.home}/lib"/>
+    </target>
+
+    <target name="module.init.prepare-exploded-dependencies" depends="init.define-properties">
+        <copy todir="${module.WEB-INF.lib.home}">
+            <fileset dir="${presentation.home}/depend/lib/main" includes="*.jar"/>
+        </copy>
+    </target>
+
+    <target name="war.init.prepare-stage" depends="init.define-properties">
+        <delete dir="${module.artifacts.webapp.home}"/>
+        <copy todir="${module.artifacts.webapp.home}">
+            <fileset dir="${module.webapp.home}">
+                <exclude name="WEB-INF/classes/**"/>
+                <exclude name="WEB-INF/web.xml"/> <!-- we're going to specify this explicitly -->
+                <exclude name="WEB-INF/tmp/**"/>
+                <exclude name="WEB-INF/work/**"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <target name="war.init.common.presentation-lib" depends="init.define-properties">
+        <ant dir="${presentation.home}/support/build" target="jar" inheritall="false" inheritrefs="false"/>
+    </target>
+
+    <target name="war.init.prepare-lib" depends="war.init.prepare-stage,war.init.common.presentation-lib,jar">
+        <copy todir="${module.artifacts.webapp.home}/WEB-INF/lib">
+            <fileset dir="${presentation.home}/depend/lib/main" includes="*.jar"/>
+        </copy>
+
+        <!-- unjar all the items in the JAR files we need so that we can do some global replacements -->
+        <property name="app.jar.stage.home" value="${module.artifacts.home}/work/regexp"/>
+        <unjar dest="${app.jar.stage.home}">
+            <fileset dir="${module.artifacts.home}" includes="*.jar"/>
+            <fileset dir="${presentation.home}/support/build/artifacts" includes="*.jar"/>
+        </unjar>
+
+        <!-- we use href="/medigy/resources/... in development environment to refer to global resources so we need to replace it for production/test use -->
+        <replaceregexp match="href=&quot;/medigy/resources/" replace="href=&quot;/${module.name}/resources/" byline="yes">
+             <fileset dir="${app.jar.stage.home}">
+                <include name="**/*.html"/>
+            </fileset>
+        </replaceregexp>
+
+        <!-- jar up all the application classes and resources into a single jar file now -->
+        <jar destfile="${module.artifacts.WEB-INF.lib.home}/${module.name}.jar" basedir="${app.jar.stage.home}"/>
+
+        <!-- copy the common resources but don't overwrite the application defined ones -->
+        <copy todir="${module.artifacts.webapp.home}" overwrite="false">
+            <fileset dir="${presentation.home}">
+                <include name="resources/**"/>
+            </fileset>
+        </copy>
+    </target>
+ 
+    <target name="war.init.create-war" depends="war.init.prepare-lib">
+        <property name="app.war.name" value="${module.name}.war"/>
+        <property name="app.war.dest" value="${module.artifacts.home}/${app.war.name}"/>
+        <delete file="${app.war.dest}"/>
+        <war destfile="${app.war.dest}" webxml="${app.war.webxml}" basedir="${module.artifacts.webapp.home}"/>
+    </target>
+
+    <target name="war.init.resin-3.0-war" depends="init.define-properties">
+        <property name="app.war.webxml" value="${module.home}/support/conf/web.xml"/>
+    </target>
+
+    <target name="war.create-resin-3.0-war" depends="war.init.resin-3.0-war,war.init.prepare-lib,war.init.create-war"/>
+
+</project>
