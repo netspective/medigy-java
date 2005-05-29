@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<project name="medigy-pbs" default="all">
+
+    <import file="../../../presentation/support/build/build.xml"/>
+
+    <target name="init.define-module.dependencies.build.classpath" depends="init.define-properties">
+        <path id="module.dependencies.build.classpath">
+            <fileset dir="${repository.home}/common/depend/lib/build" includes="*.jar"/>
+        </path>
+    </target>
+
+    <target name="init.define-module.dependencies.main.classpath" depends="init.define-properties">
+        <path id="module.dependencies.main.classpath">
+            <fileset dir="${repository.home}/common/depend/lib/build" includes="*.jar"/>
+            <fileset dir="${repository.home}/common/depend/lib/main" includes="*.jar"/>
+
+            <fileset dir="${repository.home}/presentation/depend/lib/build" includes="*.jar"/>
+            <fileset dir="${repository.home}/presentation/depend/lib/main" includes="*.jar"/>
+
+            <fileset dir="${repository.home}/presentation/support/build/artifacts" includes="*.jar"/>
+        </path>
+    </target>
+
+    <target name="init.define-module.dependencies.test.classpath" depends="init.define-properties">
+        <path id="module.dependencies.test.classpath">
+            <fileset dir="${repository.home}/common/depend/lib/build" includes="*.jar"/>
+            <fileset dir="${repository.home}/common/depend/lib/main" includes="*.jar"/>
+            <fileset dir="${repository.home}/common/depend/lib/test" includes="*.jar"/>
+
+            <fileset dir="${repository.home}/presentation/depend/lib/build" includes="*.jar"/>
+            <fileset dir="${repository.home}/presentation/depend/lib/main" includes="*.jar"/>
+
+            <fileset dir="${repository.home}/presentation/support/build/artifacts" includes="*.jar"/>
+        </path>
+    </target>
+
+</project>
