@@ -210,6 +210,7 @@ public class CoverageLevel extends AbstractTopLevelEntity
     @Transient
     public void addInsurancePlanCoverageLevel(final InsurancePlanCoverageLevel insPlanCoverageLevel)
     {
+        insPlanCoverageLevel.setCoverageLevel(this);
         this.insurancePlanRelationships.add(insPlanCoverageLevel);
     }
 
@@ -227,6 +228,7 @@ public class CoverageLevel extends AbstractTopLevelEntity
     @Transient
     public void addInsurancePolicyCoverageLevel(final InsurancePolicyCoverageLevel insPolicyCoverageLevel)
     {
+        insPolicyCoverageLevel.setCoverageLevel(this);
         this.insurancePolicyRelationships.add(insPolicyCoverageLevel);
     }
 

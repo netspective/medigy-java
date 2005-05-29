@@ -233,6 +233,21 @@ public class InsurancePlan extends AbstractDateDurationEntity
     @Transient
     public void addInsurancePolicy(final InsurancePolicy insPolicy)
     {
+        addInsurancePolicy(insPolicy, true);
+    }
+
+    @Transient
+    public void addInsurancePolicy(final InsurancePolicy insPolicy, final boolean copyCoverageLevels)
+    {
+        insPolicy.setInsurancePlan(this);
         insurancePolicies.add(insPolicy);
+
+        for (InsurancePlanCoverageLevel levelRelationship : coverageLevelRelationships)
+        {
+            final CoverageLevel coverageLevel = levelRelationship.getCoverageLevel();
+            final InsurancePolicyCoverageLevel policyCoverageLevel = new InsurancePolicyCoverageLevel();
+            coverageLevel.addInsurancePolicyCoverageLevel(policyCoverageLevel);
+            insPolicy.addCoverageLevelRelationship(policyCoverageLevel);
+        }
     }
 }

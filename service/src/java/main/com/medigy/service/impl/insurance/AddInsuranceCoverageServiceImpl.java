@@ -38,23 +38,23 @@
  */
 package com.medigy.service.impl.insurance;
 
-import com.medigy.service.insurance.AddInsuranceCoverageService;
+import com.medigy.persist.model.insurance.Coverage;
+import com.medigy.persist.model.insurance.CoverageLevel;
+import com.medigy.persist.model.insurance.InsurancePlan;
+import com.medigy.persist.model.insurance.InsurancePolicy;
+import com.medigy.persist.model.insurance.InsurancePolicyCoverageLevel;
+import com.medigy.persist.model.person.Person;
+import com.medigy.persist.reference.custom.insurance.CoverageLevelType;
+import com.medigy.persist.reference.custom.insurance.InsurancePolicyType;
+import com.medigy.persist.util.HibernateUtil;
 import com.medigy.service.ServiceVersion;
 import com.medigy.service.dto.ServiceParameters;
 import com.medigy.service.dto.ServiceReturnValues;
 import com.medigy.service.dto.insurance.AddInsuranceCoverageParameters;
 import com.medigy.service.dto.insurance.NewInsuranceCoverageData;
-import com.medigy.persist.model.person.Person;
-import com.medigy.persist.model.insurance.InsurancePlan;
-import com.medigy.persist.model.insurance.InsurancePolicy;
-import com.medigy.persist.model.insurance.InsurancePlanCoverageLevel;
-import com.medigy.persist.model.insurance.CoverageLevel;
-import com.medigy.persist.model.insurance.InsurancePolicyCoverageLevel;
-import com.medigy.persist.util.HibernateUtil;
-import com.medigy.persist.reference.custom.insurance.CoverageLevelType;
+import com.medigy.service.insurance.AddInsuranceCoverageService;
 
 import java.io.Serializable;
-import java.util.Set;
 
 public class AddInsuranceCoverageServiceImpl implements AddInsuranceCoverageService
 {
@@ -77,19 +77,12 @@ public class AddInsuranceCoverageServiceImpl implements AddInsuranceCoverageServ
         insPolicy.setPolicyNumber(params.getInsurancePolicyNumber());
         insPolicy.setInsuredPerson(person);
         insPolicy.setContractHolderPerson(contractHolderPerson);
-        insPolicy.setInsurancePlan(insPlan);
-        insPlan.addInsurancePolicy(insPolicy);
-
+        // TODO: Handle policy type in the input params
+        insPolicy.setType(InsurancePolicyType.Cache.INDIVIDUAL_INSURANCE_POLICY.getEntity());
         // handle the coverages
         // 1. first copy the plans coverages into the policy
-        final Set<InsurancePlanCoverageLevel> coverageLevelRelationships = insPlan.getCoverageLevelRelationships();
-        for (InsurancePlanCoverageLevel level : coverageLevelRelationships)
-        {
-            final CoverageLevel coverageLevel = level.getCoverageLevel();
-            final InsurancePolicyCoverageLevel policyCoverageLevel = new InsurancePolicyCoverageLevel();
-            policyCoverageLevel.setCoverageLevel(coverageLevel);
-            insPolicy.addCoverageLevelRelationship(policyCoverageLevel);
-        }
+        insPlan.addInsurancePolicy(insPolicy);
+        HibernateUtil.getSession().save(insPolicy);
 
         // 2. now override(create) coverage levels for policy
         final Float indDeductible = params.getIndividualDeductibleAmount();
@@ -100,11 +93,11 @@ public class AddInsuranceCoverageServiceImpl implements AddInsuranceCoverageServ
             // if the patient supplied value equals the plan's then no need to do anything.
             CoverageLevel newLevel = new CoverageLevel();
             newLevel.setType(CoverageLevelType.Cache.INDIVIDUAL_DEDUCTIBLE.getEntity());
-
+            newLevel.setValue(indDeductible);
             // right now the basis is not being accepted at the service level so copy current basises into the new level
             newLevel.setCoverageLevelBasises(existingCoverageLevel.getCoverageLevelBasises());
-            newLevel.setCoverage(existingCoverageLevel.getCoverage());
-            existingCoverageLevel.getCoverage().addCoverageLevel(newLevel);
+            final Coverage coverage = existingCoverageLevel.getCoverage();
+            coverage.addCoverageLevel(newLevel);
             indDeductibleCoverageLevel.setCoverageLevel(newLevel);
         }
 

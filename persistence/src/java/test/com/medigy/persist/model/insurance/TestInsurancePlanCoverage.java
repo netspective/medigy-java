@@ -45,7 +45,12 @@ import com.medigy.persist.reference.custom.insurance.CoverageLevelType;
 import com.medigy.persist.reference.custom.insurance.CoverageLevelBasisType;
 import com.medigy.persist.reference.custom.insurance.CoverageType;
 import com.medigy.persist.reference.custom.insurance.InsuranceProductType;
+import com.medigy.persist.reference.custom.insurance.InsurancePolicyType;
+import com.medigy.persist.reference.type.GenderType;
 import com.medigy.persist.model.org.Organization;
+import com.medigy.persist.model.person.Person;
+
+import java.util.Calendar;
 
 public class TestInsurancePlanCoverage extends TestCase
 {
@@ -106,5 +111,45 @@ public class TestInsurancePlanCoverage extends TestCase
             eq(planRel.getInsurancePlanCoverageId()));
         assertThat(newPlan.getCoverageLevelRelationship(CoverageLevelType.Cache.FAMILY_DEDUCTIBLE.getEntity()).getInsurancePlanCoverageId(),
             eq(planFamRel.getInsurancePlanCoverageId()));
+
+        Calendar cal = Calendar.getInstance();
+        cal.set(1970, 1, 1);
+        final Person person = new Person();
+        person.setLastName("Hackett");
+        person.setFirstName("Ryan");
+        person.setBirthDate(cal.getTime());
+        person.addGender(GenderType.Cache.MALE.getEntity());
+        HibernateUtil.getSession().save(person);
+
+        final InsurancePolicy newPolicy = new InsurancePolicy();
+        newPolicy.setPolicyNumber("123");
+        newPolicy.setGroupNumber("XXX");
+        newPolicy.setType(InsurancePolicyType.Cache.INDIVIDUAL_INSURANCE_POLICY.getEntity());
+        newPlan.addInsurancePolicy(newPolicy);
+        person.addInsurancePolicy(newPolicy);
+        HibernateUtil.getSession().save(newPolicy);
+
+        assertThat(newPolicy.getInsurancePlan().getInsurancePlanId(), eq(newPlan.getInsurancePlanId()));
+        assertThat(newPolicy.getCoverageLevelRelationships().size(), eq(2));
+        assertThat(newPolicy.hasCoverageLevelRelationship(CoverageLevelType.Cache.INDIVIDUAL_DEDUCTIBLE.getEntity()),
+            eq(true));
+        assertThat(newPolicy.hasCoverageLevelRelationship(CoverageLevelType.Cache.FAMILY_DEDUCTIBLE.getEntity()),
+            eq(true));
+        final CoverageLevel oldIndCoverageLevel = newPolicy.getCoverageLevelRelationship(CoverageLevelType.Cache.INDIVIDUAL_DEDUCTIBLE.getEntity()).getCoverageLevel();
+        assertThat(oldIndCoverageLevel.getCoverageLevelId(), eq(indDeductibleLevel.getCoverageLevelId()));
+
+        // now give the policy the new coverage lvl
+        final CoverageLevel newIndDeductibleLevel = new CoverageLevel();
+        newIndDeductibleLevel.setType(CoverageLevelType.Cache.INDIVIDUAL_DEDUCTIBLE.getEntity());
+        newIndDeductibleLevel.setValue(new Float(300));
+        newIndDeductibleLevel.addCoverageLevelBasis(CoverageLevelBasisType.Cache.PER_YEAR.getEntity());
+        oldIndCoverageLevel.getCoverage().addCoverageLevel(newIndDeductibleLevel);
+        HibernateUtil.getSession().flush();
+
+        newPolicy.addCoverageLevelRelationship(newIndDeductibleLevel);
+        HibernateUtil.getSession().flush();
+        assertThat(newPolicy.getCoverageLevelRelationships().size(), eq(2));
+        assertThat(newPolicy.getCoverageLevelRelationship(CoverageLevelType.Cache.INDIVIDUAL_DEDUCTIBLE.getEntity()).getCoverageLevel().getCoverageLevelId(),
+                eq(newIndDeductibleLevel.getCoverageLevelId()));
     }
 }

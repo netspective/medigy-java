@@ -105,6 +105,7 @@ public class Coverage extends AbstractTopLevelEntity
     @Transient
     public void addCoverageLevel(final CoverageLevel level)
     {
+        level.setCoverage(this);
         getCoverageLevels().add(level);
     }
 

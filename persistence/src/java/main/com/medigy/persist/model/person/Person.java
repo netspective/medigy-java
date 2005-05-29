@@ -627,6 +627,7 @@ public class Person extends Party
     @Transient
     public void addInsurancePolicy(final InsurancePolicy policy)
     {
+        policy.setInsuredPerson(this);
         this.insurancePolicies.add(policy);
     }
 

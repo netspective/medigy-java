@@ -38,32 +38,100 @@
  */
 package com.medigy.service.insurance;
 
-import com.medigy.service.TestCase;
+import com.medigy.persist.model.insurance.InsurancePlan;
+import com.medigy.persist.model.insurance.Coverage;
+import com.medigy.persist.model.insurance.CoverageLevel;
+import com.medigy.persist.model.insurance.InsurancePlanCoverageLevel;
+import com.medigy.persist.model.org.Organization;
+import com.medigy.persist.model.person.Person;
+import com.medigy.persist.reference.custom.person.PersonRoleType;
+import com.medigy.persist.reference.custom.insurance.CoverageLevelType;
+import com.medigy.persist.reference.custom.insurance.CoverageLevelBasisType;
+import com.medigy.persist.reference.custom.insurance.CoverageType;
+import com.medigy.persist.reference.type.GenderType;
+import com.medigy.persist.util.HibernateUtil;
 import com.medigy.service.ServiceVersion;
+import com.medigy.service.TestCase;
 import com.medigy.service.dto.insurance.AddInsuranceCoverageParameters;
 import com.medigy.service.dto.insurance.NewInsuranceCoverageData;
 import org.hibernate.validator.NotNull;
 
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Date;
 
 public class TestAddInsuranceCoverageService extends TestCase
 {
+    protected void setUp() throws Exception
+    {
+        super.setUp();
+
+    }
+
     public void testAddInsuranceCoverageService()
     {
+        Calendar cal = Calendar.getInstance();
+        cal.set(1970, 1, 1);
+        final Person patient = Person.createNewPatient();
+        patient.setLastName("Hackett");
+        patient.setFirstName("Ryan");
+        patient.setBirthDate(cal.getTime());
+        patient.addGender(GenderType.Cache.MALE.getEntity());
+
+        final Person patientFather = new Person();
+        patientFather.setLastName("Hackett");
+        patientFather.setFirstName("John");
+        patientFather.setBirthDate(cal.getTime());
+        patientFather.addGender(GenderType.Cache.MALE.getEntity());
+
+        final Organization anthem = new Organization();
+        anthem.setOrganizationName("Anthem");
+
+        final InsurancePlan ppoPlan = new InsurancePlan();
+        ppoPlan.setName("PPO Plan");
+        ppoPlan.setOrganization(anthem);
+        anthem.addInsurancePlan(ppoPlan);
+
+        HibernateUtil.getSession().save(patient);
+        HibernateUtil.getSession().save(patientFather);
+        HibernateUtil.getSession().save(anthem);
+
+        final Coverage coverage = new Coverage();
+        final CoverageLevel indDeductibleLevel = new CoverageLevel();
+        indDeductibleLevel.setType(CoverageLevelType.Cache.INDIVIDUAL_DEDUCTIBLE.getEntity());
+        indDeductibleLevel.setValue(new Float(500));
+        indDeductibleLevel.addCoverageLevelBasis(CoverageLevelBasisType.Cache.PER_YEAR.getEntity());
+        coverage.addCoverageLevel(indDeductibleLevel);
+
+        final CoverageLevel famDeductibleLevel = new CoverageLevel();
+        famDeductibleLevel.setType(CoverageLevelType.Cache.FAMILY_DEDUCTIBLE.getEntity());
+        famDeductibleLevel.setValue(new Float(5000));
+        famDeductibleLevel.addCoverageLevelBasis(CoverageLevelBasisType.Cache.PER_YEAR.getEntity());
+        coverage.addCoverageLevel(famDeductibleLevel);
+
+        coverage.setType(CoverageType.Cache.MAJOR_MEDICAL.getEntity());
+        HibernateUtil.getSession().save(coverage);
+
+        InsurancePlanCoverageLevel planRel = new InsurancePlanCoverageLevel();
+        planRel.setCoverageLevel(indDeductibleLevel);
+        planRel.setInsurancePlan(ppoPlan);
+        ppoPlan.addCoverageLevelRelationship(planRel);
+        HibernateUtil.getSession().save(planRel);
+        HibernateUtil.closeSession();
+
         final AddInsuranceCoverageService service = (AddInsuranceCoverageService) getRegistry().getService(AddInsuranceCoverageService.class);
 
         final AddInsuranceCoverageParameters params  = new AddInsuranceCoverageParameters() {
             @NotNull
             public Serializable getPatientId()
             {
-                return new Long(999);
+                return patient.getPartyId();
             }
 
             @NotNull
             public Serializable getInsuranceCarrierId()
             {
-                return new Long(2);
+                return anthem.getOrgId();
             }
 
             public Serializable getInsuranceProductId()
@@ -74,7 +142,7 @@ public class TestAddInsuranceCoverageService extends TestCase
             @NotNull
             public Serializable getInsurancePlanId()
             {
-                return new Long(1);
+                return ppoPlan.getInsurancePlanId();
             }
 
             @NotNull
@@ -92,18 +160,18 @@ public class TestAddInsuranceCoverageService extends TestCase
             @NotNull
             public Serializable getInsuranceContractHolderId()
             {
-                return "1000";
+                return patientFather.getPartyId();
             }
 
             @NotNull
             public String getInsuranceContractHolderRole()
             {
-                return null;
+                return PersonRoleType.Cache.MOTHER.getEntity().getCode();
             }
 
             public Date getCoverageStartDate()
             {
-                return null;
+                return new Date();
             }
 
             public Date getCoverageEndDate()
@@ -113,17 +181,17 @@ public class TestAddInsuranceCoverageService extends TestCase
 
             public Float getIndividualDeductibleAmount()
             {
-                return null;
+                return new Float(100);
             }
 
             public Float getFamilyDeductibleAmount()
             {
-                return null;
+                return new Float(500);
             }
 
             public Float getOfficeVisitCoPay()
             {
-                return null;
+                return new Float(10);
             }
 
             public Float getPercentagePay()
@@ -144,6 +212,8 @@ public class TestAddInsuranceCoverageService extends TestCase
 
         final NewInsuranceCoverageData newInsuranceCoverageData = service.add(params);
         assertThat(newInsuranceCoverageData.getErrorMessage(), NULL);
+
+
 
     }
 }

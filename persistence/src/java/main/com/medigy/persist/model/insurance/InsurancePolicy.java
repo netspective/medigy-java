@@ -98,7 +98,7 @@ public class InsurancePolicy extends AbstractDateDurationEntity
     private Person contractHolderPerson;
 
     @ManyToOne
-    @JoinColumn(name = "insured_person_id", referencedColumnName = Person.PK_COLUMN_NAME)
+    @JoinColumn(name = "insured_person_id", referencedColumnName = Person.PK_COLUMN_NAME, nullable = false)
     public Person getInsuredPerson()
     {
         return insuredPerson;
@@ -283,9 +283,36 @@ public class InsurancePolicy extends AbstractDateDurationEntity
     }
 
     @Transient
+    public boolean hasCoverageLevelRelationship(final CoverageLevelType type)
+    {
+        for (InsurancePolicyCoverageLevel rel : coverageLevelRelationships)
+        {
+            if (rel.getCoverageLevel().getType().equals(type))
+            return true;
+        }
+        return false;
+    }
+
+    @Transient
     public void addCoverageLevelRelationship(final InsurancePolicyCoverageLevel rel)
     {
+        final InsurancePolicyCoverageLevel coverageLevelRelationship = getCoverageLevelRelationship(rel.getCoverageLevel().getType());
+        if (coverageLevelRelationship != null)
+        {
+            // there's already a relationship to a coverage level with the same type so remove the relationship
+            // TODO: find out how to delete that coverage lvl if no no one else is pointing to it
+            coverageLevelRelationships.remove(coverageLevelRelationship);
+        }
+        rel.setInsurancePolicy(this);
         this.coverageLevelRelationships.add(rel);
+    }
+
+    @Transient
+    public void addCoverageLevelRelationship(final CoverageLevel level)
+    {
+        final InsurancePolicyCoverageLevel newRelationship = new InsurancePolicyCoverageLevel();
+        level.addInsurancePolicyCoverageLevel(newRelationship);
+        addCoverageLevelRelationship(newRelationship);
     }
 
     /**
