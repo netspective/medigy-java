@@ -1,6 +1,6 @@
 /*
- * $Id: SignInPanel.java,v 1.1 2005-05-29 00:23:24 shahid.shah Exp $
- * $Revision: 1.1 $ $Date: 2005-05-29 00:23:24 $
+ * $Id: SignInPanel.java,v 1.2 2005-05-29 22:41:39 shahid.shah Exp $
+ * $Revision: 1.2 $ $Date: 2005-05-29 22:41:39 $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -17,20 +17,17 @@
  */
 package com.medigy.wicket.panel;
 
+import com.medigy.wicket.border.StandardPanelBorder;
+import com.medigy.wicket.form.BaseForm;
 import wicket.IFeedback;
 import wicket.PageParameters;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.form.CheckBox;
-import wicket.markup.html.form.Form;
 import wicket.markup.html.form.PasswordTextField;
-import wicket.markup.html.form.TextField;
 import wicket.markup.html.form.RequiredTextField;
 import wicket.markup.html.panel.FeedbackPanel;
-import wicket.markup.html.panel.Panel;
 import wicket.model.PropertyModel;
 import wicket.util.value.ValueMap;
-import com.medigy.wicket.form.BaseForm;
-import com.medigy.wicket.border.StandardPanelBorder;
 
 /**
  * Reusable user sign in panel with username and password as well as support for

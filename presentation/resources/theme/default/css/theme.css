@@ -37,29 +37,61 @@ table.inner {
   text-align: left;
 }
 
-td.left_shadow {
+table.main td.left_shadow {
   width: 10px;
   background: url(../images/navigation/shadow-left.png) repeat-y;
 }
 
-td.right_shadow {
+table.main td.right_shadow {
   width: 10px;
   background: url(../images/navigation/shadow-right.png) repeat-y;
 }
 
-td.left_bot_shadow {
+table.main td.left_top_shadow {
+  width: 10px;
+  height: 10px;
+  background: url(../images/navigation/shadow-left-t.png) no-repeat bottom left;
+}
+
+table.main td.right_top_shadow {
+  width: 20px;
+  height: 10px;
+  background: url(../images/navigation/shadow-right-t.png) no-repeat bottom left;
+}
+
+table.main td.top {
+  text-align: center;
+  height: 10px;
+  line-height: 10px;
+  vertical-align: top;
+  background: url(../images/navigation/shadow-t2.png) bottom left repeat-x;
+}
+
+table.main div.top_l {
+	height: 10px;
+	width: 20px;
+	background: url(../images/navigation/shadow-t1.png) bottom left no-repeat;
+}
+
+table.main div.top_r {
+	height: 10px;
+	width: 20px;
+	background: url(../images/navigation/shadow-t3.png) bottom right no-repeat;
+}
+
+table.main td.left_bot_shadow {
   width: 10px;
   height: 20px;
   background: url(../images/navigation/shadow-left-b.png) no-repeat;
 }
 
-td.right_bot_shadow {
+table.main td.right_bot_shadow {
   width: 20px;
   height: 20px;
   background: url(../images/navigation/shadow-right-b.png) no-repeat;
 }
 
-td.bottom {
+table.main td.bottom {
   text-align: center;
   height: 20px;
   line-height: 20px;
@@ -67,19 +99,17 @@ td.bottom {
   background: url(../images/navigation/shadow-b2.png) bottom left repeat-x;
 }
 
-div.bottom_l {
+table.main div.bottom_l {
 	height: 20px;
 	width: 20px;
 	background: url(../images/navigation/shadow-b1.png) bottom left no-repeat;
 }
 
-div.bottom_r {
+table.main div.bottom_r {
 	height: 20px;
 	width: 20px;
 	background: url(../images/navigation/shadow-b3.png) bottom right no-repeat;
 }
-
-div.bottomspacer { height: 15px; }
 
 /*********************************************************************
  ** MASTHEAD                                                        **
@@ -87,12 +117,19 @@ div.bottomspacer { height: 15px; }
 
 div.masthead {
 	background: #e1e1e1 url(../images/navigation/masthead.jpg) no-repeat;
-	height: 73px;
+	height: 63px;
 	font-size: 24pt;
 	font-family: Arial;
 	font-weight: bold;
 	text-align: right;
+	padding-top: 10px;
+	padding-right: 10px;
 }
+
+div.masthead-divider {
+    background: url(../images/navigation/main-menu-bg.png) repeat-x; height: 2px;
+    line-height: 2px;
+    }
 
 /*********************************************************************
  ** MAIN MENU                                                       **
@@ -278,6 +315,7 @@ div.footer-menu a {
   line-height: 25px;
   padding: 0 15px;
   color: #999;
+  text-decoration: none;
 }
 
 div.footer-menu a:visited { color: #999; }

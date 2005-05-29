@@ -1,15 +1,15 @@
 package com.medigy.wicket.page;
 
-import wicket.PageParameters;
-import com.medigy.wicket.session.User;
-import com.medigy.wicket.session.AuthenticatedSession;
 import com.medigy.wicket.panel.SignInPanel;
+import com.medigy.wicket.session.AuthenticatedSession;
+import com.medigy.wicket.session.User;
+import wicket.PageParameters;
 
 public final class SignInPage extends BasePage
 {
     public SignInPage(final PageParameters parameters)
     {
-        add(new SignInPanel("signInPanel")
+        add(new SignInPanel("signInPanel", false)
         {
             public boolean signIn(final String username, final String password)
             {

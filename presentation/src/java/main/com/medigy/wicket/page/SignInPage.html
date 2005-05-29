@@ -1,15 +1,39 @@
-<html xmlns:wicket="http://wicket.sourceforge.net/">
-<head>
-    <title>Wicket Examples - library</title>
-    <link rel="stylesheet" type="text/css" href="/medigy/resources/theme/default/css/theme.css"/>
-</head>
-<body>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-    <!--<span wicket:id = "mainNavigation"/>-->
-    <p>
-    <i>Username and password are both "medigy"</i>
-    </p>
-    <span wicket:id = "signInPanel"/>
-
-</body>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.sourceforge.net/">
+    <head>
+        <link rel="stylesheet" type="text/css" href="/medigy/resources/theme/default/css/theme.css"/>
+    </head>
+    <body class="page">
+        <div class="center" align="center" style="padding:100px">
+            <div class="wrapper">
+                <table cellpadding="0" cellspacing="0" width="100%" class="main">
+                    <tr>
+                        <td class="left_top_shadow"></td>
+                        <td class="top"><div class="top_l">&nbsp;</div></td>
+                        <td class="right_top_shadow"></td>
+                    </tr>
+                    <tr valign="top">
+                        <td class="left_shadow" style="height: 1px; width: 10px"><div style="height: 1px; width: 10px"></div></td>
+                        <td width="100%">
+                            <div class="masthead">Medigy Platform Demo</div>
+                            <div class="masthead-divider">&nbsp;</div>
+                            <p>
+                                <center>
+                                    <span wicket:id = "signInPanel"/>
+                                    <i>Demo username and password are "<b>medigy</b>".</i>
+                                </center>
+                            </p>
+                        </td>
+                        <td class="right_shadow"><div style="height: 1px; width: 10px"></div></td>
+                    </tr>
+                    <tr>
+                        <td class="left_bot_shadow"></td>
+                        <td class="bottom"><div class="bottom_l"></div></td>
+                        <td class="right_bot_shadow"></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </body>
 </html>
