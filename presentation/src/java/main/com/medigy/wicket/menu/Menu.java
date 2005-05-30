@@ -41,90 +41,11 @@
 /*
  * Copyright (c) 2005 Your Corporation. All Rights Reserved.
  */
-package com.medigy.wicket;
+package com.medigy.wicket.menu;
 
-import com.medigy.wicket.menu.Menu;
-import com.medigy.wicket.session.AuthenticatedSession;
-import wicket.ApplicationSettings;
-import wicket.ISessionFactory;
-import wicket.Session;
-import wicket.protocol.http.WebApplication;
-import wicket.util.file.File;
-import wicket.util.file.Folder;
-import wicket.util.file.Path;
-import wicket.util.time.Duration;
+import java.util.List;
 
-public abstract class DefaultApplication extends WebApplication
+public interface Menu extends MenuItem
 {
-    public static final String DEFAULT_DEVL_ENV_PROJECT_HOME = "c:\\Projects\\Medigy";
-    private static final String DEFAULT_THEME = "default";
-    private final boolean devlEnvironment;
-    private final File devlEnvHome;
-
-    public DefaultApplication()
-    {
-        final ApplicationSettings settings = getSettings();
-        settings.setStripComments(true);
-        settings.setStripWicketTags(true);
-
-        devlEnvHome = getDevelopmentEnvironmentProjectHome();
-        if(devlEnvHome != null && devlEnvHome.exists())
-        {
-            getSettings().setResourcePollFrequency(Duration.ONE_SECOND);
-            getSettings().setResourcePath(new Path(new Folder[] {
-                new Folder(devlEnvHome, "pbs/src/java/main"),
-                new Folder(devlEnvHome, "presentation/src/java/main"),
-            }));
-
-            System.out.println("Initialized development environment mode in folder " + devlEnvHome);
-            devlEnvironment = true;
-        }
-        else
-        {
-            devlEnvironment = false;
-        }
-    }
-
-    public boolean isDevlEnvironment()
-    {
-        return devlEnvironment;
-    }
-
-    public File getDevlEnvHome()
-    {
-        return devlEnvHome;
-    }
-
-    public ISessionFactory getSessionFactory()
-    {
-        return new ISessionFactory()
-        {
-            public Session newSession()
-            {
-                return new AuthenticatedSession(DefaultApplication.this, DEFAULT_THEME);
-            }
-        };
-    }
-
-    public File getDevelopmentEnvironmentProjectHome()
-    {
-        final String projectDirNamePropValue = System.getProperty("medigy.project.home", DEFAULT_DEVL_ENV_PROJECT_HOME);
-        return new File(projectDirNamePropValue);
-    }
-
-    public abstract Menu getMainMenu();
-
-/*
-    TODO: add secure URLs to prevent snooping
-    
-	protected WebRequest newWebRequest(HttpServletRequest servletRequest)
-	{
-		return new WebRequestWithCryptedUrl(servletRequest);
-	}
-
-	protected WebResponse newWebResponse(HttpServletResponse servletResponse) throws IOException
-	{
-		return new WebResponseWithCryptedUrl(servletResponse);
-	}
-*/
+    public List<MenuItem> getMenuItems();
 }

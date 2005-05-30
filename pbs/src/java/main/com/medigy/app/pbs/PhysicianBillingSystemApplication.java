@@ -43,16 +43,86 @@
  */
 package com.medigy.app.pbs;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.medigy.app.pbs.page.HomePage;
+import com.medigy.app.pbs.page.TestPage1;
+import com.medigy.app.pbs.page.TestPage2;
 import com.medigy.wicket.DefaultApplication;
-import wicket.util.time.Duration;
-import wicket.util.file.Folder;
-import wicket.util.file.Path;
+import com.medigy.wicket.menu.Menu;
+import com.medigy.wicket.menu.MenuItem;
 
 public class PhysicianBillingSystemApplication extends DefaultApplication
 {
+    private Menu mainMenu = new MainMenu();
+
     public PhysicianBillingSystemApplication()
     {
         getPages().setHomePage(HomePage.class);
+    }
+
+    public Menu getMainMenu()
+    {
+        return mainMenu;
+    }
+
+    protected class MainMenu implements Menu
+    {
+        private List<MenuItem> menuItems = new ArrayList<MenuItem>();
+
+        public MainMenu()
+        {
+            menuItems.add(new MainMenuItem("Home", HomePage.class));
+            menuItems.add(new MainMenuItem("TestPage1", TestPage1.class));
+            menuItems.add(new MainMenuItem("TestPage2", TestPage2.class));
+        }
+
+        public String getLabel()
+        {
+            return "Main Menu";
+        }
+
+        public Class getPage()
+        {
+            return null;
+        }
+
+        public boolean isDisabled()
+        {
+            return false;
+        }
+
+        public List<MenuItem> getMenuItems()
+        {
+            return menuItems;
+        }
+
+        protected class MainMenuItem implements MenuItem
+        {
+            private String label;
+            private Class pageClass;
+
+            public MainMenuItem(final String label, final Class pageClass)
+            {
+                this.label = label;
+                this.pageClass = pageClass;
+            }
+
+            public String getLabel()
+            {
+                return label;
+            }
+
+            public Class getPage()
+            {
+                return pageClass;
+            }
+
+            public boolean isDisabled()
+            {
+                return false;
+            }
+        }
     }
 }

@@ -22,11 +22,13 @@
                                         <td width="100%">
                                             <div class="masthead">Medigy Platform Demo</div>
                                             <div class="main-menu">
-                                                <a href="?">Home</a>
-                                                <a href="#">Schedule</a>
-                                                <a href="#">Records</a>
-                                                <a href="#">Worklists</a>
-                                                <a href="#">Help</a>
+                                                <span wicket:id="main-menu"><a wicket:id="main-menu-item" href="?"><span wicket:id="main-menu-item-label">Home</span></a></span>
+                                                <wicket:remove>
+                                                    <a href="#">Schedule</a>
+                                                    <a href="#">Records</a>
+                                                    <a href="#">Worklists</a>
+                                                    <a href="#">Help</a>
+                                                </wicket:remove>
                                             </div>
                                             <div class="page-path">
                                                 <a class="first" href="?">Home</a>
