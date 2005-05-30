@@ -1,7 +1,7 @@
 /*
- * $Id: DefaultPageBodyBorder.java,v 1.2 2005-05-30 02:26:27 shahid.shah Exp $
- * $Revision: 1.2 $
- * $Date: 2005-05-30 02:26:27 $
+ * $Id: DefaultPageBodyBorder.java,v 1.3 2005-05-30 02:33:54 shahid.shah Exp $
+ * $Revision: 1.3 $
+ * $Date: 2005-05-30 02:33:54 $
  *
  * ====================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,9 +26,6 @@ import wicket.model.Model;
 
 public class DefaultPageBodyBorder extends Border
 {
-    private boolean navigatorPanelVisible;
-    private boolean calloutPanelVisible;
-
     private WebMarkupContainer navigatorPanelCell;
     private WebMarkupContainer navigatorPanelSeparatorCell;
     private WebMarkupContainer calloutPanelCell;
@@ -55,24 +52,22 @@ public class DefaultPageBodyBorder extends Border
 
     public boolean isCalloutPanelVisible()
     {
-        return calloutPanelVisible;
+        return calloutPanelCell.isVisible();
     }
 
     public void setCalloutPanelVisible(boolean calloutPanelVisible)
     {
-        this.calloutPanelVisible = calloutPanelVisible;
         calloutPanelCell.setVisible(calloutPanelVisible);
         calloutPanelBottomCell.setVisible(calloutPanelVisible);
     }
 
     public boolean isNavigatorPanelVisible()
     {
-        return navigatorPanelVisible;
+        return navigatorPanelCell.isVisible();
     }
 
     public void setNavigatorPanelVisible(boolean navigatorPanelVisible)
     {
-        this.navigatorPanelVisible = navigatorPanelVisible;
         navigatorPanelCell.setVisible(navigatorPanelVisible);
         navigatorPanelSeparatorCell.setVisible(navigatorPanelVisible);
     }
