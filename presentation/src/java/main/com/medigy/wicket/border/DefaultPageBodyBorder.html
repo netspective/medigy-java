@@ -22,14 +22,14 @@
                                         <td width="100%">
                                             <div class="masthead">Medigy Platform Demo</div>
                                             <div class="main-menu">
-                                                <a href="#">Home</a>
+                                                <a href="?">Home</a>
                                                 <a href="#">Schedule</a>
                                                 <a href="#">Records</a>
                                                 <a href="#">Worklists</a>
                                                 <a href="#">Help</a>
                                             </div>
                                             <div class="page-path">
-                                                <a class="first" href="#">Home</a>
+                                                <a class="first" href="?">Home</a>
                                                 <a class="middle" href="#">Other Page</a>
                                                 <a class="last" href="#">Active Page</a>
                                             </div>
@@ -49,7 +49,7 @@
                                         <td>
                                             <table cellpadding="0" cellspacing="0" width="100%">
                                                 <tr valign="top">
-                                                    <td width="164" class="page-navigation-panel">
+                                                    <td wicket:id="page-navigation-panel" class="page-navigation-panel" width="164">
                                                         <div class="heading">A Heading</div>
 
                                                         Some text right underneath the left heading.
@@ -62,7 +62,7 @@
 
                                                         <div style="height: 1px; width: 164px"></div>
                                                     </td>
-                                                    <td class="page-nav-and-main-content-separator"><div style="height: 10px; width: 1px"></div></td>
+                                                    <td wicket:id="page-nav-and-main-content-separator" class="page-nav-and-main-content-separator"><div style="height: 10px; width: 1px"></div></td>
                                                     <td width="100%">
                                                         <div class="main-content-panel">
                                                             <div class="heading">Page Header</div>
@@ -73,12 +73,9 @@
                                                         </div>
                                                     </td>
                                                 </tr>
-                                                <tr>
-                                                    <td colspan="3"><div style="height: 1px; width: 10px"></div></td>
-                                                </tr>
                                             </table>
                                         </td>
-                                        <td class="callout-panel">
+                                        <td wicket:id="callout-panel" class="callout-panel">
                                             <div class="top"></div>
                                             <div class="content">
                                                  This is some text (perhaps help or otherwise) that we can put on the right side.
@@ -96,7 +93,7 @@
                                     </tr>
 
                                     <tr valign="top">
-                                        <td class="footer-bar">
+                                        <td wicket:id="footer-bar" class="footer-bar">
                                             <div class="footer-menu">
                                                 <ul>
                                                     <li><a href="#">Links</a></li>
@@ -107,7 +104,7 @@
                                             </div>
                                             <div class="footer-content">Anything we want in the footer.</div>
                                         </td>
-                                        <td class="callout-panel-bottom"><div style="height: 50px; width: 183px"></div></td>
+                                        <td wicket:id="callout-panel-bottom" class="callout-panel-bottom"><div style="height: 50px; width: 183px"></div></td>
                                     </tr>
                                 </table>
                             </td>

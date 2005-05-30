@@ -3,12 +3,12 @@
  */
 package com.medigy.wicket.page;
 
-import wicket.Component;
-import wicket.MarkupContainer;
-import wicket.model.IModel;
-import wicket.markup.html.border.Border;
 import com.medigy.wicket.border.DefaultPageBodyBorder;
 import com.medigy.wicket.session.AuthenticatedSession;
+import wicket.Component;
+import wicket.MarkupContainer;
+import wicket.markup.html.border.Border;
+import wicket.model.IModel;
 
 /**
  * Ensures that user is authenticated in session.  If no user is signed in, a sign
@@ -28,11 +28,26 @@ public class AuthenticatedWebPage extends BasePage
 
     public AuthenticatedWebPage()
     {
+        border = createBorder("border");
+        super.add(border);
     }
 
     public AuthenticatedWebPage(IModel iModel)
     {
         super(iModel);
+    }
+
+    protected Border createBorder(final String componentName)
+    {
+        final DefaultPageBodyBorder border = new DefaultPageBodyBorder(componentName);
+        border.setNavigatorPanelVisible(this instanceof PageNavigationPanelProvider);
+        border.setCalloutPanelVisible(this instanceof PageCalloutPanelProvider);
+        return border;
+    }
+
+    public Border getBorder()
+    {
+        return border;
     }
 
     /**
@@ -42,13 +57,6 @@ public class AuthenticatedWebPage extends BasePage
      */
     public MarkupContainer add(final Component child)
     {
-        // Add children of the page to the page's border component
-        if (border == null)
-        {
-            // Create border and add it to the page
-            border = new DefaultPageBodyBorder("border");
-            super.add(border);
-        }
         border.add(child);
         return this;
     }
