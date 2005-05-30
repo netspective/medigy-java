@@ -1,0 +1,84 @@
+<caucho.com>
+
+<log id='/log' href='stderr:' timestamp='[%Y-%m-%d %H:%M:%S.%s]'/>
+
+<java compiler="internal" compiler-args=""/>
+<jsp precompile='true' static-encoding='true' recompile-on-error='true'/>
+
+<http-server>
+  <http port='80'/>
+  <srun host='127.0.0.1' port='6880'/>
+
+  <resource-ref>
+      <res-ref-name>jdbc/PARTweb/main</res-ref-name>
+      <res-type>javax.sql.DataSource</res-type>
+      <init-param driver-name="COM.ibm.db2.jdbc.net.DB2Driver"/>
+      <init-param url="jdbc:db2://192.168.0.108:8192/PARTWEB"/>
+      <init-param user="db2admin"/>
+      <init-param password="admin"/>
+      <init-param max-connections="20"/>
+      <init-param max-idle-time="30"/>
+  </resource-ref>
+
+  <!--
+     - If starting bin/httpd.sh as root on Unix, specify the user name
+     - and group name for the web server user.  Note: Linux users must
+     - either have the new thread package (RedHat 9.0 or later) or use
+     - bin/resin.
+     -
+     - <user-name>resin</user-name>
+     - <group-name>resin</group-name>
+    -->
+
+  <class-update-interval>2s</class-update-interval>
+  <servlet-classloader-hack>false</servlet-classloader-hack>
+  <caucho-status>true</caucho-status>
+  <thread-max>150</thread-max>
+  <thread-keepalive id='100'/>
+  <request-timeout id='65s'/>
+  <accept-buffer-size id='256'/>
+  <thread-min id='5'/>
+  <ignore-client-disconnect>true</ignore-client-disconnect>
+
+  <cache dir='cache' size='1024' entries='8192'/>
+  <cache-mapping url-pattern='/' expires='2s'/>
+
+  <servlet-mapping url-pattern='*.jsp' servlet-name='jsp'/>
+  <servlet-mapping url-pattern='/servlet/*' servlet-name='invoker'/>
+
+  <welcome-file-list>index.jsp, index.html</welcome-file-list>
+
+  <!-- make sure to use Xerces and Xalan and not Resin XML/XSLT parsers! -->
+  <system-property javax.xml.transform.TransformerFactory="org.apache.xalan.processor.TransformerFactoryImpl"/>
+  <system-property javax.xml.parsers.DocumentBuilderFactory="org.apache.xerces.jaxp.DocumentBuilderFactoryImpl"/>
+  <system-property javax.xml.parsers.SAXParserFactory="org.apache.xerces.jaxp.SAXParserFactoryImpl"/>
+
+  <!-- default host if no other host matches -->
+  <host id=''>
+    <access-log id='logs/nefs-access.log'
+          format='%h %l %u %t "%r" %s %b "%{Referer}i" "%{User-Agent}i"'
+          rollover-period='1W'/>
+
+    <error-log id='logs/nefs-error.log'/>
+
+    <!--
+    *********************************************************************
+    * Setup the URL mapping so that any application requested is mapped *
+    * to webapps/<app-name>.                                            *
+    *********************************************************************
+    -->
+    <web-app id='/medigy-pbs' app-dir='C:/Projects/Medigy/pbs/webapp'>
+        <classpath id='WEB-INF/classes' source='WEB-INF/classes' compile='false'/>
+        <classpath id='WEB-INF/lib' library-dir='true'/>
+
+        <!-- the compiler should be set to put classes in this directory for exploded use -->
+        <classpath id="C:/Projects/Medigy/presentation/depend/lib/main" library-dir='true'/>
+        <classpath id="C:/Projects/Medigy/presentation/support/build/artifacts/classes/main"/>
+        <classpath id="C:/Projects/Medigy/pbs/support/build/artifacts/classes/main"/>
+    </web-app>
+
+      <web-app id='/medigy' app-dir='C:/Projects/Medigy/presentation'/>
+  </host>
+
+</http-server>
+</caucho.com>
