@@ -49,6 +49,7 @@ import java.util.List;
 import com.medigy.app.pbs.page.HomePage;
 import com.medigy.app.pbs.page.TestPage1;
 import com.medigy.app.pbs.page.TestPage2;
+import com.medigy.app.pbs.page.TestPage3;
 import com.medigy.wicket.DefaultApplication;
 import com.medigy.wicket.menu.Menu;
 import com.medigy.wicket.menu.MenuItem;
@@ -76,6 +77,7 @@ public class PhysicianBillingSystemApplication extends DefaultApplication
             menuItems.add(new MainMenuItem("Home", HomePage.class));
             menuItems.add(new MainMenuItem("TestPage1", TestPage1.class));
             menuItems.add(new MainMenuItem("TestPage2", TestPage2.class));
+            menuItems.add(new MainMenuItem("TestPage3", TestPage3.class));
         }
 
         public String getLabel()
