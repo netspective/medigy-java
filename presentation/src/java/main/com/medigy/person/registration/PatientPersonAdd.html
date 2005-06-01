@@ -1,284 +1,281 @@
 <html xmlns:wicket="http://wicket.sourceforge.net/">
-<head>
-    <title>Patient/Person Add</title>
-    <link rel="stylesheet" type="text/css" href="../../../../../../../resources/theme/default/css/theme.css"/>
-</head>
-<body>
-    <span wicket:id="mainNavigation">
-        <wicket:border>
-        <table class="panel" id="inputFormTable" cellpadding='0' cellspacing='0'>
-          <tr class="heading">
-		          <td class="heading">
-		              <table class="heading">
-		                  <tr class="tab">
-		                      <td class="tab-left" width="9">&nbsp;</td>
-		                      <td class="label" nowrap><span wicket:id="heading">Add Patient/Person</span></td>
-		                      <td class="tab-right" width="9">&nbsp;</td>
-		                      <td class="rule"></td>
-		                      <td class="right" width="9">&nbsp;</td>
-		                  </tr>
-		              </table>
-		          </td>
-          </tr>
-          <tr class="content">
-		          <td class="top">
-		              <fieldset>
-                      <legend><font face="arial" size="1" color="#667766">Profile Information</font></legend>
-		              <table class="content" cellpadding="0" cellspacing="0" width="100%" class="main">
-		                  <tr>
-						  	  <td class="left_top_shadow"></td>
-                              <td class="top"><div class="top_l">&nbsp;</div></td>
-                              <td class="right_top_shadow"></td>
-					      </tr>
-		                  <tr class="middle">
-		                      <td class="left" width="9">&nbsp;</td>
-		                      <td class="middle">
-		                          <div class="body">
-		                              <wicket:body>
-		                                  <tr>
-		                                  <td><font face="arial" size="2" color="#667766"><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Last Name / First Name</b> / Middle Name / Suffix:</font>
-										  	<input value="Smith" type="text" wicket:id="lastName" size="20" name="" id="lastName"/>
-							              </td>
-							              <td>
-										  	 <input value="L." type="text" wicket:id="middleName" size="20" name="" id="middleName"/>
-										  </td>
-										  <td>
-										     <input value="Sam" type="text" wicket:id="firstName" size="20" name="firstName" id="firstName"/>
-										  </td>
-										  <td>
-										      <select wicket:id="suffixSelect" name="suffixSelect" onchange="">
-										          <option selected="selected"value="0">Mr.</option>
-										          <option value="1">Ms.</option>
-										  	      <option value="2">Mrs.</option>
-										          <option value="3">Dr.</option>
-							                  </select>
-			  							  </td>
-			  							  </tr>
-			  							  <tr>
-										      <td>
-								    		  	  <font face="arial" size="2" color="#667766">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Social Security / <b>Date of Birth</b>:</font>
-										      	  <input value="000-00-0000" type="text" wicket:id="socialSecurity" size="20" name="" id="firstName"/>
-										      </td>
-										  	  <td>
-										  		  <input value="10/03/1975" type="text" wicket:id="" size="20" name="0.inputForm.integerProperty" id="integerProperty"/>
-										      </td>
-										   </tr>
-										   <tr>
-										  	  <td>
-										  		  <font face="arial" size="2" color="#667766"><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Gender</b> / Marital Status:</font>
-										  		  <select wicket:id="suffixSelect" name="suffixSelect" onchange="">
-												  	  <option selected="selected"value="0">Male</option>
-									                  <option value="1">Female</option>
-										          </select>
-										      </td>
-										      <td>
-										 		  <select wicket:id="suffixSelect" name="suffixSelect" onchange="">
-										 		      <option selected="selected"value="0">Married</option>
-										 		      <option value="1">Not Married</option>
-										          </select>
-										  	  </td>
-		                                   </tr>
-										   <tr>
-											   <td>
-												   <font face="arial" size="2" color="#667766">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Blood Type:</font>
-												   <select wicket:id="suffixSelect" name="suffixSelect" onchange="">
-												       <option selected="selected"value="0">Unknown</option>
-												   	   <option value="1">A</option>
-												       <option value="2">B</option>
-											           <option value="3">AB</option>
-											          <option value="4">O</option>
-											        </select>
-												</td>
-										    </tr>
-										    <tr>
-									        	  <td valign="center">
-									        		  <font face="arial" size="2" color="#667766">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ethinicity:</font>
-												      <input wicket:id="booleanProperty" id="booleanProperty" type="checkbox"/>
-										    	      <label for="booleanProperty"><font face="arial" size="2" color="#667766">Native-American</font></label>
-										          </td>
-										          <td>
-										    	  	  <input wicket:id="booleanProperty" id="booleanProperty" type="checkbox"/>
-												  	  <label for="booleanProperty"><font face="arial" size="2" color="#667766">Caucasian</font></label>
-										          </td>
-											      <td>
-												  	  <input wicket:id="booleanProperty" id="booleanProperty" type="checkbox"/>
-												  	  <label for="booleanProperty"><font face="arial" size="2" color="#667766">African-American</font></label>
-											      </td>
-											      <td>
-												  	  <input wicket:id="booleanProperty" id="booleanProperty" type="checkbox"/>
-												  	  <label for="booleanProperty"><font face="arial" size="2" color="#667766">Asian-American</font></label>
-											      </td>
-										             <td valign="center">
-												  	  <input wicket:id="booleanProperty" id="booleanProperty" type="checkbox"/>
-												      <label for="booleanProperty"><font face="arial" size="2" color="#667766">Hispanic</font></label>
-											      </td>
-		                                    </tr>
-		                                    <tr>
-											    <td>
-												    <font face="arial" size="2" color="#667766">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Responsible Party:</font>
-											    	  <input value="" type="text" wicket:id="" size="20" name="" id=""/>
-											    </td>
-											 </tr>
-											 <tr>
-												<td>
-											       <font face="arial" size="2" color="#667766"><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Relationship To Responsible Party</b>:</font>
-											       <select wicket:id="suffixSelect" name="suffixSelect" onchange="">
-													    <option selected="selected"value="0">Self</option>
-								     				    <option value="1">Spouse</option>
-										           </select>
-											    </td>
-											 </tr>
-											 <tr>
-											 	<td>
-											 	   <font face="arial" size="2" color="#667766">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Driver's License Number / State:</font>
-											 	   <input value="" type="text" wicket:id="" size="20" name="license" id="license"/>
-											    </td>
-											    <td>
-												   <input value="" type="text" wicket:id="" size="5" name="state" id="state"/>
-										        </td>
-											 </tr>
-											 <tr>
-											 	<td colspan="4">
-											 	   <font face="arial" size="2" color="#667766">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Misc. Notes:</font>
-											       <input value="" type="text" wicket:id="" size="50" name="license" id="license"/>
-											 	</td>
-											 </tr>
+    <head>
+        <title>Patient/Person Add</title>
+        <link rel="stylesheet" type="text/css" href="../../../../../../../resources/theme/default/css/theme.css"/>
+    </head>
+    <body>
+        <wicket:panel>
+            <form wicket-id="main-form">
+                <div class="form-body">
+                    <fieldset class="top-level">
+                        <legend wicket:id="patientId-group-label">Patient Identification</legend>
+                        <table class="vertical-fields">
+                            <tr class="field">
+                                <td class="label">
+                                    <label wicket:id="lastName-label">Last Name</label> /
+                                    <label wicket:id="firstName-label">First Name</label> /
+                                    <label wicket:id="middleName-label">Middle Name</label> /
+                                    <label wicket:id="suffix-label">Suffix</label>
+                                </td>
+                                <td class="control">
+                                    <input type="text" wicket:id="lastName-control" value="Hackett"/>
+                                    <input type="text" wicket:id="firstName-control" value="Ryan"/>
+                                    <input type="text" wicket:id="middleName-control" value="A."/>
+                                    <select wicket:id="suffix-control">
+                                        <option selected="selected" value="0">Mr.</option>
+                                        <option value="1">Ms.</option>
+                                        <option value="2">Mrs.</option>
+                                        <option value="3">Dr.</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="label">
+                                    <label wicket:id="socialSecurityNumber-label">Social Security</label> /
+                                    <label wicket:id="dateOfBirth-label">Date of Birth</label>
+                                </td>
+                                <td class="control">
+                                    <input type="text" wicket:id="socialSecurityNumber-control" value="999-99-9999"/>
+                                    <input type="text" wicket:id="dateOfBirth-control" value="09/13/1968"/>
+                                </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="label">
+                                    <label wicket:id="gender-label">Gender</label> /
+                                    <label wicket:id="maritalStatus-label">Marital Status</label>
+                                </td>
+                                <td class="control">
+                                    <select wicket:id="gender-control">
+                                        <option>Male</option>
+                                        <option>Female</option>
+                                    </select>
+                                    <select wicket:id="maritalStatus-control">
+                                        <option>Married</option>
+                                        <option>Unmarried</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr class="field">
+							    <td class="label">
+							        <label wicket:id="blood-type">Blood Type</label>
+							    </td>
+							    <td class="control">
+							        <select wicket:id="bloodType-control">
+							            <option>A</option>
+							            <option>B</option>
+							            <option>AB</option>
+							            <option>O</option>
+							        </select>
+							     </td>
+                            </tr>
+                            <tr>
+                                <td class="label">
+							        <label wicket:id="ethnicity">Ethnicity</label>
+							    </td>
+                                <td>
+							        <table class="vertical-form">
+                                        <tr class="field">
+							                <td class="control">
+                                                <input type="checkbox" wicket:id="ethnicityNativeAmericanCheckbox-control"/>
+                                                <label wicket:id="ethnicityNativeAmerican-label">Native-American</label>
+                                            </td>
+                                            <td class="control">
+                                                <input type="checkbox" wicket:id="ethnicityCaucasianCheckbox-control"/>
+                                                <label wicket:id="ethnicityCaucasian-label">Caucasian</label>
+                                            </td>
+                                            <td class="control">
+                                                <input type="checkbox" wicket:id="ethnicityAfricanAmericanCheckbox-control"/>
+                                                <label wicket:id="ethnicityAfricanAmerican-label">African-American</label>
+                                            </td>
+                                            <td class="control">
+                                                <input type="checkbox" wicket:id="ethnicityAsianAmericanCheckbox-control"/>
+                                                <label wicket:id="ethnicityAsianAmerican-label">Asian-American</label>
+                                            </td>
+                                            <td class="control">
+                                                <input type="checkbox" wicket:id="ethnicityHispanicCheckbox-control"/>
+                                                <label wicket:id="ethnicityHispanic-label">Hispanic</label>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="label">
+                                    <label wicket:id="responsibleParty-label">Responsible Party</label>
+                                </td>
+                                <td class="control">
+                                    <input type="text" wicket:id="responsibleParty-control" value=""/>
+                                </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="label">
+                                    <label wicket:id="relationshipToResponsible-label">Relationship To Responsible Party</label> /
+                                    <label wicket:id="otherRelationship-label">Other Relationship Name</label>
+                                </td>
+                                <td class="control">
+                                    <select wicket:id="relationshipToResponsible-control">
+                                        <option>Self</option>
+                                        <option>Spouse</option>
+                                    </select>
+                                    <input type="text" wicket:id="otherRelationship-control" value=""/>
+                                </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="label">
+                                    <label wicket:id="driverLicense-label">Driver's License Number</label> /
+                                    <label wicket:id="state-label">State</label>
+                                </td>
+                                <td class="control">
+                                    <input type="text" wicket:id="driverLicense-control" value=""/>
+                                    <input type="text" wicket:id="state-control" value=""/>
+                                </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="label">
+                                    <label wicket:id="miscNotes-label">Misc Notes</label>
+                                </td>
+                                <td class="control">
+                                    <input type="memo" wicket:id="miscNotes-control" value=""/>
+                                </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="label">
+                                    <label wicket:id="homePhone-label">Home Phone</label> /
+                                    <label wicket:id="workPhone-label">Work Phone</label>
+                                </td>
+                                <td class="control">
+                                    <input type="text" wicket:id="homePhone-control" value=""/>
+                                    <input type="text" wicket:id="workPhone-control" value=""/>
+                                </td>
+                            </tr>
+                        </table>
+                    </fieldset>
+                    <fieldset class="top-level">
+                        <legend wicket:id="contactMethods-label">Contact Methods</legend>
+                        <table class="vertical-fields">
+                            <tr class="field">
+                                <td class="label">
+                                    <label wicket:id="homePhone-label">Home Phone</label> /
+                                    <label wicket:id="workPhone-label">Work Phone</label>
+                                </td>
+                                <td class="control">
+                                    <input type="text" wicket:id="homePhone-control" value=""/>
+                                    <input type="text" wicket:id="workPhone-control" value=""/>
+                                </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="label">
+                                    <label wicket:id="cellPhone-label">Cell Phone</label> /
+                                    <label wicket:id="pager-label">Pager</label>
+                                </td>
+                                <td class="control">
+                                    <input type="text" wicket:id="cellPhone-control" value="703-345-7752"/>
+                                    <input type="text" wicket:id="pager-control" value=""/>
+                                </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="label">
+                                    <label wicket:id="alternate-label">Alternate</label>
+                                </td>
+                                <td class="control">
+                                    <input type="text" wicket:id="alternate-control" value=""/>
+                                </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="label">
+                                    <label wicket:id="homeAddress-label">Home Address</label>
+                                </td>
+                                <td class="control">
+                                    <input type="text" wicket:id="homeAddress-control" value=""/>
+                                </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="label">
+                                    <label wicket:id="homeAddress2-label"></label>
+                                </td>
+                                <td class="control">
+                                    <input type="text" wicket:id="homeAddress2-control" value=""/>
+                                </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="label">
+                                    <label wicket:id="city-label">City</label> /
+                                    <label wicket:id="state-label">State</label> /
+                                    <label wicket:id="zip-label">Zip</label>
+                                </td>
+                                <td class="control">
+                                    <input type="text" wicket:id="city-control" value=""/>
+                                    <input type="text" wicket:id="state-control" value=""/>
+                                    <input type="text" wicket:id="zip-control" value=""/>
+                                </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="label">
+                                    <label wicket:id="email-label">Email</label>
+                                </td>
+                                <td class="control">
+                                    <input type="text" wicket:id="email-control" value=""/>
+                                </td>
+                            </tr>
+                        </table>
+                    </fieldset>
+                    <fieldset class="top-level">
+                        <legend wicket:id="employment-label">Employment</legend>
+                        <table class="vertical-fields">
+                            <tr class="field">
+                                <td class="label">
+                                    <label wicket:id="employerID-label">Employer ID</label>
+                                </td>
+                                <td class="control">
+                                    <input type="text" wicket:id="employerId-control" value=""/>
+                                </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="label">
+                                    <label wicket:id="employmentStatus-label">Employment Status</label>
+                                </td>
+                                <td class="control">
+                                    <select wicket:id="employmentStatus-control">
+                                        <option>Employed (Full-Time)</option>
+                                        <option>Employed (Part-Time)</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="label">
+                                    <label wicket:id="occupation-label">Occupation</label>
+                                </td>
+                                <td class="control">
+                                    <input type="text" wicket:id="occupation-control" value=""/>
+                                </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="label">
+                                    <label wicket:id="phoneNumber-label">Phone Number</label>
+                                </td>
+                                <td class="control">
+                                    <input type="text" wicket:id="phoneNumber-control" value=""/>
+                                </td>
+                            </tr>
 
-		                              </wicket:body>
-		                          </div>
-		                      </td>
-		                      <td class="right" width="9">&nbsp;</td>
-		                  </tr>
-		                  <tr>
-						      <td class="left_bot_shadow"></td>
-						      <td class="bottom"><div class="bottom_l"></div></td>
-					          <td class="right_bot_shadow"></td>
-					     </tr>
-		              </table>
-		              </fieldset>
-		          </td>
-          </tr>
-
-          <tr class="content">
-		          <td class="top">
-		              <fieldset>
-                      <legend><font face="arial" size="1" color="#667766">Contact Methods</font></legend>
-		              <table class="content" cellpadding="0" cellspacing="0" width="100%" class="main">
-		                  <tr>
-						  	  <td class="left_top_shadow"></td>
-                              <td class="top"><div class="top_l">&nbsp;</div></td>
-                              <td class="right_top_shadow"></td>
-					      </tr>
-		                  <tr class="middle">
-		                      <td class="left" width="9">&nbsp;</td>
-		                      <td class="middle">
-		                          <div class="body">
-		                              <wicket:body>
-		                                  <tr>
-		                                  <td colspan="2"><font face="arial" size="2" color="#667766"><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Home Phone</b> / Work Phone:</font>
-										  	<input value="703-234-4432" type="text" wicket:id="homePhone" size="20" name="" id="homePhone"/>
-							              </td>
-										  <td></td>
-										  <td></td>
-			  							  </tr>
-			  							  <tr align="left">
-										      <td>
-								    		  	  <font face="arial" size="2" color="#667766">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Cell Phone / Pager:</font>
-										      	  <input value="" type="text" wicket:id="cellPhone" size="20" name="" id="cellPhone"/>
-										      </td>
-										   </tr>
-										   <tr>
-										  	  <td>
-										  		  <font face="arial" size="2" color="#667766">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Alternate:</font>
-										  		  <input value="" type="text" wicket:id="alternate" size="20" name="" id=""/>
-										      </td>
-		                                   </tr>
-										   <tr>
-											   <td>
-												   <font face="arial" size="2" color="#667766">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Home Address</b>:</font>
-												   <input value="" type="text" wicket:id="alternate" size="20" name="" id=""/>
-												</td>
-										   </tr>
-										   <tr>
-												<td>
-												    <font face="arial" size="2" color="#667766">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Email</b>:</font>
-												    <input value="" type="text" wicket:id="alternate" size="20" name="" id=""/>
-												</td>
-										    </tr>
-
-
-		                              </wicket:body>
-		                          </div>
-		                      </td>
-		                      <td class="right" width="9">&nbsp;</td>
-		                  </tr>
-		                  <tr>
-						      <td class="left_bot_shadow"></td>
-						      <td class="bottom"><div class="bottom_l"></div></td>
-					          <td class="right_bot_shadow"></td>
-					     </tr>
-		              </table>
-		              </fieldset>
-		          </td>
-          </tr>
-
-          <tr class="content">
-		          <td class="top">
-		              <fieldset>
-                      <legend><font face="arial" size="1" color="#667766">Employment</font></legend>
-		              <table class="content" cellpadding="0" cellspacing="0" width="100%" class="main">
-		                  <tr>
-						  	  <td class="left_top_shadow"></td>
-                              <td class="top"><div class="top_l">&nbsp;</div></td>
-                              <td class="right_top_shadow"></td>
-					      </tr>
-		                  <tr class="middle">
-		                      <td class="left" width="9">&nbsp;</td>
-		                      <td class="middle">
-		                          <div class="body">
-		                              <wicket:body>
-		                                  <tr>
-		                                  <td><font face="arial" size="2" color="#667766">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Employer ID:</font>
-										  	<input value="" type="text" wicket:id="employerId" size="20" name="" id="employerId"/>
-							              </td>
-			  							  </tr>
-			  							  <tr>
-										      <td>
-								    		  	  <font face="arial" size="2" color="#667766">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Employment Status:</font>
-										      	  <input value="" type="text" wicket:id="cellPhone" size="20" name="" id="cellPhone"/>
-										      </td>
-										   </tr>
-										   <tr>
-										  	  <td>
-										  		  <font face="arial" size="2" color="#667766">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Occupation:</font>
-										  		  <input value="" type="text" wicket:id="alternate" size="20" name="" id=""/>
-										      </td>
-		                                   </tr>
-										   <tr>
-											   <td>
-												   <font face="arial" size="2" color="#667766">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Phone Number:</font>
-												   <input value="" type="text" wicket:id="alternate" size="20" name="" id=""/>
-												</td>
-										   </tr>
-		                              </wicket:body>
-		                          </div>
-		                      </td>
-		                      <td class="right" width="9">&nbsp;</td>
-		                  </tr>
-		                  <tr>
-						      <td class="left_bot_shadow"></td>
-						      <td class="bottom"><div class="bottom_l"></div></td>
-					          <td class="right_bot_shadow"></td>
-					     </tr>
-		              </table>
-		              </fieldset>
-		          </td>
-          </tr>
-
-		 </table>
-		 </wicket:border>
-         </wicket:panel>
-         </span>
-    </div>
-</body>
+                        </table>
+                    </fieldset>
+                    <div class="director">
+                        <tr class="field">
+                                <td class="label">
+                                    <label wicket:id="nextAction-label">Next Action</label>
+                                </td>
+                                <td class="control">
+                                    <select wicket:id="nextAction-control">
+                                        <option>Add Insurance Coverage</option>
+                                    </select>
+                                </td>
+                            </tr>
+                        <input class="button" wicket:id="form-submit-control" type="submit" value="OK"/>
+                        <input class="button" wicket:id="form-reset-control" type="reset" value="Reset"/>
+                    </div>
+                </div>
+            </form>
+        </wicket:panel>
+    </body>
 </html>
