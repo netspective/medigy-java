@@ -244,16 +244,22 @@ td.callout-panel-bottom { background: url(../images/navigation/callout-panel-bot
  ** VERTICAL FORM                                                   **
  *********************************************************************/
 
-fieldset.group { font-family: Georgia; font-size: 10pt; color: black; font-weight: bold; }
+div.form-body input { font-family: Georgia; font-size: 10pt; }
+div.form-body select { font-family: Georgia; font-size: 9pt; }
+div.form-body fieldset { font-family: Georgia; font-size: 10pt; color: black; font-weight: bold; }
  
-table.vertical-form {padding: 5px; }
+div.form-body table.vertical-fields {padding: 5px; }
+div.form-body table.vertical-fields tr.field { }
+div.form-body table.vertical-fields td { font-family: Georgia; font-size: 10pt; color: black; }
+div.form-body table.vertical-fields td.label { padding: 5px; text-align: right; }
+div.form-body table.vertical-fields td.control { padding: 5px; text-align: left; }
+div.form-body table.vertical-fields tr.director td.control { text-align: right; padding-top: 20px;}
 
-table.vertical-form tr.field { }
-table.vertical-form td { font-family: Georgia; font-size: 10pt; color: black; }
-table.vertical-form td.label { padding: 5px; text-align: right; }
-table.vertical-form td.control { padding: 5px; text-align: left; }
-table.vertical-form input { font-family: Georgia; font-size: 10pt; }
-table.vertical-form tr.director td.control { text-align: right; padding-top: 20px;}
+div.form-body table.container { padding-top: 20px; }
+div.form-body table.container td.container-separator { width: 20px; }
+
+div.form-body div.director { padding-top: 10px; text-align: center; }
+div.form-body div.director input.button { padding-left: 10px; padding-right: 10px; }
 
 /*********************************************************************
  ** BODY PANEL                                                      **
