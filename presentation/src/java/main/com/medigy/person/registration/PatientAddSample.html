@@ -1,0 +1,116 @@
+<html xmlns:wicket="http://wicket.sourceforge.net/">
+    <head>
+        <title>Patient/Person Add</title>
+        <link rel="stylesheet" type="text/css" href="../../../../../../../resources/theme/default/css/theme.css"/>
+    </head>
+    <body>
+        <wicket:panel>
+            <form wicket-id="main-form">
+                <fieldset class="group">
+                    <legend wicket:id="patientId-group-label">Patient Identification</legend>
+                    <table class="vertical-form">
+                        <tr class="field">
+                            <td class="label">
+                                <label wicket:id="lastName-label">Last Name</label> /
+                                <label wicket:id="firstName-label">First Name</label> /
+                                <label wicket:id="middleName-label">Middle Name</label> /
+                                <label wicket:id="suffix-label">Suffix</label>
+                            </td>
+                            <td class="control">
+                                <input type="text" wicket:id="lastName-control" value="Hackett"/>
+                                <input type="text" wicket:id="firstName-control" value="Ryan"/>
+                                <input type="text" wicket:id="middleName-control" value="A."/>
+                                <select wicket:id="suffix-control">
+                                    <option selected="selected" value="0">Mr.</option>
+                                    <option value="1">Ms.</option>
+                                    <option value="2">Mrs.</option>
+                                    <option value="3">Dr.</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr class="field">
+                            <td class="label">
+                                <label wicket:id="socialSecurityNumber-label">Social Security</label> /
+                                <label wicket:id="dateOfBirth-label">Date of Birth</label>
+                            </td>
+                            <td class="control">
+                                <input type="text" wicket:id="socialSecurityNumber-control" value="999-99-9999"/>
+                                <input type="text" wicket:id="dateOfBirth-control" value="09/13/1968"/>
+                            </td>
+                        </tr>
+                        <tr class="field">
+                            <td class="label">
+                                <label wicket:id="gender-label">Gender</label> /
+                                <label wicket:id="maritalStatus-label">Marital Status</label>
+                            </td>
+                            <td class="control">
+                                <select wicket:id="gender-control">
+                                    <option>Male</option>
+                                    <option>Female</option>
+                                </select>
+                                <select wicket:id="maritalStatus-control">
+                                    <option>Married</option>
+                                    <option>Unmarried</option>
+                                </select>
+                            </td>
+                        </tr>
+                    </table>
+                </fieldset>
+                <table class="layout" cellspacing="0" cellpadding="0">
+                    <tr>
+                        <td colspan="3">&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <fieldset class="group">
+                                <legend wicket:id="sample-group-label">Field Group with simple fields</legend>
+                                <table class="vertical-form">
+                                    <tr class="field">
+                                        <td class="label">
+                                            <label wicket:id="sample1-label">Sample 1</label>
+                                        </td>
+                                        <td class="control">
+                                            <input type="text" wicket:id="sample1-control" value="Sample 1 Value"/>
+                                        </td>
+                                    </tr>
+                                    <tr class="field">
+                                        <td class="label">
+                                            <label wicket:id="sample2-label">Sample 2</label>
+                                        </td>
+                                        <td class="control">
+                                            <input type="text" wicket:id="sample2-control" value="Sample 2 Value"/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </fieldset>
+                        </td>
+                        <td colspan="3">&nbsp;&nbsp;&nbsp;</td>
+                        <td>
+                            <fieldset class="group">
+                                <legend wicket:id="sample-group-label">Another Field Group</legend>
+                                <table class="vertical-form">
+                                    <tr class="field">
+                                        <td class="label">
+                                            <label wicket:id="sample3-label">Sample 3</label>
+                                        </td>
+                                        <td class="control">
+                                            <input type="text" wicket:id="sample3-control" value="Sample 3 Value"/>
+                                        </td>
+                                    </tr>
+                                    <tr class="field">
+                                        <td class="label">
+                                            <label wicket:id="sample4-label">Sample 4</label>
+                                        </td>
+                                        <td class="control">
+                                            <input type="text" wicket:id="sample4-control" value="Sample 4 Value"/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </fieldset>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </wicket:panel>
+    </body>
+</html>

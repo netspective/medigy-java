@@ -244,8 +244,11 @@ td.callout-panel-bottom { background: url(../images/navigation/callout-panel-bot
  ** VERTICAL FORM                                                   **
  *********************************************************************/
 
+fieldset.group { font-family: Georgia; font-size: 10pt; color: black; font-weight: bold; }
+ 
 table.vertical-form {padding: 5px; }
 
+table.vertical-form tr.field { }
 table.vertical-form td { font-family: Georgia; font-size: 10pt; color: black; }
 table.vertical-form td.label { padding: 5px; text-align: right; }
 table.vertical-form td.control { padding: 5px; text-align: left; }
