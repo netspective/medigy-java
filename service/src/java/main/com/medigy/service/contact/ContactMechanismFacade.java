@@ -40,6 +40,8 @@ package com.medigy.service.contact;
 
 import com.medigy.persist.model.party.ContactMechanism;
 import com.medigy.persist.model.party.Party;
+import com.medigy.persist.model.party.PostalAddress;
+import com.medigy.persist.model.party.PhoneNumber;
 import com.medigy.persist.model.contact.Country;
 import com.medigy.persist.model.contact.State;
 import com.medigy.service.util.Facade;
@@ -60,6 +62,21 @@ public interface ContactMechanismFacade extends Facade
     public void addPartyContactMechanism(final ContactMechanism cm, final Party party, final String purposeType,
                                          final String purposeDescription)  throws UnknownReferenceTypeException;
 
+
+    public PostalAddress addPostalAddress(final String street1, final String street2, final String cityName,
+                                 final String stateCode, final String provinceCode, final String countyName,
+                                 final String postalCode, final String countryCode);
+
+    /**
+     * Creates a new phone number entry
+     * @param countryCode
+     * @param areaCode
+     * @param number
+     * @param extension
+     * @return
+     */
+    public PhoneNumber addPhone(final String countryCode, final String areaCode, final String number,
+                                final String extension);
 
     /**
      * Gets a country geographic boundary based on the name.

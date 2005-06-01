@@ -123,7 +123,7 @@ public class RegisterHealthCareProviderServiceImpl implements RegisterHealthCare
             final String stateString = licenseParam.getState();
             final String countryString = licenseParam.getCountry();
 
-            Country country = (Country) HibernateUtil.getSession().createCriteria(Country.class).add(Restrictions.eq("name", countryString)).uniqueResult();
+            Country country = (Country) HibernateUtil.getSession().createCriteria(Country.class).add(Restrictions.eq("countryName", countryString)).uniqueResult();
             if (country == null)
             {
                 // COUNTRY AND STATE MUST EXIST

@@ -40,23 +40,32 @@ package com.medigy.service.party;
 
 import com.medigy.persist.model.party.PartyContactMechanism;
 import com.medigy.persist.model.party.PhoneNumber;
+import com.medigy.persist.model.party.PostalAddress;
 import com.medigy.persist.model.person.Person;
+import com.medigy.persist.model.contact.Country;
+import com.medigy.persist.model.contact.State;
 import com.medigy.persist.reference.custom.party.ContactMechanismPurposeType;
+import com.medigy.persist.reference.type.GenderType;
 import com.medigy.persist.util.HibernateUtil;
 import com.medigy.service.TestCase;
 import com.medigy.service.contact.ContactMechanismFacade;
 
 import java.util.List;
+import java.util.Calendar;
 
 public class TestContactMechanismFacade extends TestCase
 {
     public void testAddPartyContactMechanism() throws Exception
     {
         HibernateUtil.beginTransaction();
+        Calendar cal = Calendar.getInstance();
+        cal.set(1970, 1, 1);
 
         final Person person = new Person();
         person.setLastName("Hackett");
         person.setFirstName("Josh");
+        person.addGender(GenderType.Cache.MALE.getEntity());
+        person.setBirthDate(cal.getTime());
         HibernateUtil.getSession().save(person);
 
         final PhoneNumber phone = new PhoneNumber();
@@ -80,6 +89,33 @@ public class TestContactMechanismFacade extends TestCase
         mech =  (PartyContactMechanism) contactMechList.toArray()[1];
         assertThat(mech.hasPurpose(ContactMechanismPurposeType.Cache.OTHER.getEntity()), eq(true));
         assertThat(mech.getPurpose(ContactMechanismPurposeType.Cache.OTHER.getEntity()).getDescription(), eq("The Bat Phone"));
+
+    }
+
+    public void testAddPostalAddress()
+    {
+        final Country country = new Country();
+        country.setCountryName("United States of America");
+        country.setCountryAbbreviation("USA");
+
+        final State virginia = new State();
+        virginia.setStateName("Virginia");
+        virginia.setStateAbbreviation("VA");
+        country.addState(virginia);
+
+        HibernateUtil.getSession().save(country);
+        HibernateUtil.closeSession();
+
+        ContactMechanismFacade facade = (ContactMechanismFacade) getRegistry().getService(ContactMechanismFacade.class);
+        final PostalAddress postalAddress = facade.addPostalAddress("123 Acme Road", null, "Fairfax", "VA", null, "Fairfax County", "22033", "USA");
+
+        assertThat(postalAddress, NOT_NULL);
+        assertThat(postalAddress.getAddressBoundaries().size(), eq(5));
+        assertThat(postalAddress.getState(), eq(virginia));
+        assertThat(postalAddress.getAddress1(), eq("123 Acme Road"));
+        assertThat(postalAddress.getCity().getCityName(), eq("Fairfax"));
+        assertThat(postalAddress.getCounty().getCountyName(), eq("Fairfax County"));
+        assertThat(postalAddress.getPostalCode().getCodeValue(), eq("22033"));
 
     }
 }

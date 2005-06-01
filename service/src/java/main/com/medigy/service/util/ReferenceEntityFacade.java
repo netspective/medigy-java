@@ -50,7 +50,7 @@ import com.medigy.persist.reference.type.MaritalStatusType;
 
 public interface ReferenceEntityFacade extends Facade
 {
-    public InsurancePolicyType getInsurancePolicyType(final String code) throws UnknownReferenceTypeException;
+    public InsurancePolicyType getInsurancePolicyType(final String code);
 
     public LanguageType getLanguageType(final String code);
 

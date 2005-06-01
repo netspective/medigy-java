@@ -45,13 +45,14 @@ import com.medigy.persist.model.org.Organization;
 import com.medigy.persist.model.person.Person;
 import com.medigy.persist.reference.custom.insurance.InsurancePolicyType;
 import com.medigy.persist.reference.custom.insurance.InsuranceProductType;
+import com.medigy.persist.reference.type.GenderType;
 import com.medigy.persist.util.HibernateUtil;
 import com.medigy.service.TestCase;
 import com.medigy.service.impl.insurance.InsurancePolicyFacadeImpl;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.hibernate.criterion.Restrictions;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -62,41 +63,63 @@ public class TestInsurancePolicyFacade extends TestCase
 
     public void testListInsuranceProducts()
     {
-        final Organization policyProvider = (Organization) HibernateUtil.getSession().load(Organization.class, new Long(2));
+        Organization blueCross = new Organization();
+        blueCross.setOrganizationName("Blue Cross");
+        InsuranceProduct insProduct = new InsuranceProduct();
+        insProduct.setOrganization(blueCross);
+        insProduct.setType(InsuranceProductType.Cache.PPO.getEntity());
+        blueCross.addInsuranceProduct(insProduct);
+        HibernateUtil.getSession().save(blueCross);
+
 
         final InsurancePolicyFacade facade = new InsurancePolicyFacadeImpl();
-        List<InsuranceProduct> productList = facade.listInsuranceProducts(policyProvider);
+        List<InsuranceProduct> productList = facade.listInsuranceProducts(blueCross);
         assertEquals(1, productList.size());
         final InsuranceProduct newProduct = productList.get(0);
-        assertThat(newProduct.getType(), eq(InsuranceProductType.Cache.PPO.getEntity()));
+        assertThat(newProduct.getType().getInsuranceProductTypeId(), eq(InsuranceProductType.Cache.PPO.getEntity().getInsuranceProductTypeId()));
 
     }
-
-    /*
-    public void testListCoverageLevels()
-    {
-        final InsuranceProduct product = (InsuranceProduct) HibernateUtil.getSession().load(InsuranceProduct.class, new Long(1));
-        final InsurancePolicyFacade facade = new InsurancePolicyFacadeImpl();
-        List<CoverageLevel> levels = facade.listCoverageLevels(product);
-        
-    }
-   */
 
     public void testCreateIndividualInsurancePolicy()
     {
-        final Organization policyProvider = (Organization) HibernateUtil.getSession().load(Organization.class, new Long(2));
-        final InsuranceProduct product = policyProvider.getInsuranceProduct(InsuranceProductType.Cache.PPO.getEntity());
-        final InsurancePlan plan = product.getInsurancePlan("Super Plan");
+        final Organization blueCross = new Organization();
+        blueCross.setOrganizationName("Blue Cross");
+        final InsuranceProduct insProduct = new InsuranceProduct();
+        insProduct.setOrganization(blueCross);
+        insProduct.setType(InsuranceProductType.Cache.PPO.getEntity());
+        blueCross.addInsuranceProduct(insProduct);
+        final InsurancePlan insPlan = new InsurancePlan();
+        insPlan.setName("Super Plan");
+        insPlan.setInsuranceProduct(insProduct);
+        insPlan.setOrganization(blueCross);
+        blueCross.addInsurancePlan(insPlan);
+        insProduct.addInsurancePlan(insPlan);
+        HibernateUtil.getSession().save(blueCross);
 
-        final Person policyHolder = (Person) HibernateUtil.getSession().load(Person.class, new Long(3));
-        final List insuredDependentList = HibernateUtil.getSession().createCriteria(Person.class).add(Restrictions.gt("partyId", new Long(3))).list();
-        final Person[] insuredDependents = (Person[]) insuredDependentList.toArray(new Person[0]);
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(1980,1,1);
+
+        Person policyHolder = new Person();
+        policyHolder.setLastName("A");
+        policyHolder.setFirstName("Person");
+        policyHolder.setBirthDate(calendar.getTime());
+        policyHolder.addGender(GenderType.Cache.FEMALE.getEntity());
+
+        Person dependent = new Person();
+        dependent.setLastName("B");
+        dependent.setFirstName("Person");
+        dependent.setBirthDate(calendar.getTime());
+        dependent.addGender(GenderType.Cache.FEMALE.getEntity());
+        HibernateUtil.getSession().save(policyHolder);
+        HibernateUtil.getSession().save(dependent);
+
+        final Person[] insuredDependents = new Person[] { dependent };
 
         final InsurancePolicyFacade facade = new InsurancePolicyFacadeImpl();
         for (Person depdendent : insuredDependents)
         {
-            final InsurancePolicy policy = facade.createInsurancePolicy(depdendent, policyHolder, plan, "12345", "XXX",
-                InsurancePolicyType.Cache.INDIVIDUAL_INSURANCE_POLICY.getEntity(), new Date());
+            final InsurancePolicy policy = facade.createInsurancePolicy(depdendent, policyHolder, insPlan, "12345", "XXX",
+                InsurancePolicyType.Cache.INDIVIDUAL_INSURANCE_POLICY.getEntity(), new Date(), null);
             HibernateUtil.getSession().flush();
         }
         final List newPolicies =  HibernateUtil.getSession().createCriteria(InsurancePolicy.class).list();
@@ -111,8 +134,10 @@ public class TestInsurancePolicyFacade extends TestCase
 
     }
 
+    /*
     public String getDataSetFile()
     {
         return "/com/medigy/service/insurance/TestInsurancePolicyFacade.xml";
     }
+    */
 }

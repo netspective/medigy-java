@@ -38,17 +38,14 @@
  */
 package com.medigy.service.dto.party;
 
+import com.medigy.service.ServiceVersion;
+import com.medigy.service.dto.ServiceParameters;
+
 import java.io.Serializable;
 
-public interface AddPhoneParameters
+public interface AddPhoneParameters extends ServiceParameters
 {
     public Serializable getPartyId();
-    public String getCountryCode();
-    public String getCityCode();
-    public String getAreaCode();
-    public String getNumber();
-    public String getExtension();
-    public String getPurposeType();
 
-    public String getPurposeDescription();
+    public PhoneParameters getPhoneParameters();
 }

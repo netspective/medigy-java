@@ -38,12 +38,6 @@
  */
 package com.medigy.service.impl.contact;
 
-import com.medigy.persist.model.contact.City;
-import com.medigy.persist.model.contact.Country;
-import com.medigy.persist.model.contact.County;
-import com.medigy.persist.model.contact.PostalCode;
-import com.medigy.persist.model.contact.Province;
-import com.medigy.persist.model.contact.State;
 import com.medigy.persist.model.party.ContactMechanism;
 import com.medigy.persist.model.party.ElectronicAddress;
 import com.medigy.persist.model.party.Party;
@@ -60,10 +54,10 @@ import com.medigy.service.dto.party.AddPostalAddressParameters;
 import com.medigy.service.dto.party.NewEmail;
 import com.medigy.service.dto.party.NewPhone;
 import com.medigy.service.dto.party.NewPostalAddress;
+import com.medigy.service.dto.party.PostalAddressParameters;
 import com.medigy.service.util.UnknownReferenceTypeException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.hibernate.criterion.Restrictions;
 
 import java.io.Serializable;
 
@@ -135,8 +129,9 @@ public class AddContactMechanismServiceImpl implements AddContactMechanismServic
             };
     }
 
-    public void validatePostalAddress(final AddPostalAddressParameters param)
+    public void validatePostalAddress(final AddPostalAddressParameters addParams)
     {
+        final PostalAddressParameters param = addParams.getPostalAddressParameters();
         assert (param.getStreet1() != null && param.getStreet1().length() > 0) : "Street Address value cannot be empty.";
         assert (param.getCity() != null && param.getCity().length() > 0) : "City value cannot be  empty";
         assert (param.getState() != null && param.getState().length() > 0) : "State value cannot be empty";
@@ -155,97 +150,13 @@ public class AddContactMechanismServiceImpl implements AddContactMechanismServic
     }
 
 
-    public NewPostalAddress addPostalAddress(final AddPostalAddressParameters param)
+    public NewPostalAddress addPostalAddress(final AddPostalAddressParameters addParams)
     {
-        final Party party = (Party) HibernateUtil.getSession().load(Party.class, param.getPartyId());
+        final Party party = (Party) HibernateUtil.getSession().load(Party.class, addParams.getPartyId());
+        final PostalAddressParameters param = addParams.getPostalAddressParameters();
 
-        final PostalAddress address = new PostalAddress();
-        address.setAddress1(param.getStreet1());
-        address.setAddress2(param.getStreet2());
-        HibernateUtil.getSession().save(address);
-
-        final String countryName = param.getCountry();
-        boolean newCountry = false;
-        Country country = (Country) HibernateUtil.getSession().createCriteria(Country.class).add(Restrictions.eq("name", countryName).ignoreCase()).uniqueResult();
-        if (country == null)
-        {
-            country =  new Country();
-            country.setCountryName(countryName);
-            // if country is new then assume that the rest of the geo boundaries are new too!
-            newCountry = true;
-        }
-        address.addPostalAddressBoundary(country);
-        // country exists so check the state/province
-        if (param.getState() != null)
-        {
-            boolean newState = false;
-            State state = newCountry ? null : country.getStateByName(param.getState());
-            if (state == null)
-            {
-                // this is a new state for this country
-                state = new State();
-                state.setStateName(param.getState());
-                state.setCountry(country);
-                country.addState(state);
-                newState = true;
-            }
-            address.addPostalAddressBoundary(state);
-            if (param.getCounty() != null)
-            {
-                County county = newState ? null : state.getCountyByName(param.getCounty());
-                if (county == null)
-                {
-                    county = new County();
-                    county.setCountyName(param.getCounty());
-                    county.setState(state);
-                    state.addCounty(county);
-                }
-                address.addPostalAddressBoundary(county);
-            }
-            // now add the city
-            City city = newState ? null :  state.getCityByName(param.getCity());
-            if (city == null)
-            {
-                city = new City();
-                city.setCityName(param.getCity());
-                city.setState(state);
-                state.addCity(city);
-            }
-            address.addPostalAddressBoundary(city);
-            PostalCode postalCode = newState ? null : state.getPostalCodeByValue(param.getPostalCode());
-            if (postalCode == null)
-            {
-                postalCode = new PostalCode();
-                postalCode.setCodeValue(param.getPostalCode());
-                postalCode.setState(state);
-                state.addPostalCode(postalCode);
-            }
-            address.addPostalAddressBoundary(postalCode);
-
-        }
-        else if (param.getProvince() != null)
-        {
-            boolean newProvince = false;
-            Province province = newCountry ? null : country.getProvinceByName(param.getProvince());
-            if (province == null)
-            {
-                // this is a new province for this country
-                province = new Province();
-                province.setProvinceName(param.getProvince());
-                province.setCountry(country);
-                country.addProvince(province);
-                newProvince = true;
-            }
-            address.addPostalAddressBoundary(province);
-            City city = newProvince ? null : province.getCityByName(param.getCity());
-            if (city == null)
-                province.addCity(param.getCity());
-            address.addPostalAddressBoundary(city);
-        }
-        if (newCountry)
-            HibernateUtil.getSession().save(country);
-        else
-            HibernateUtil.getSession().flush();
+        final PostalAddress address = contactMechanismFacade.addPostalAddress(param.getStreet1(), param.getStreet2(),
+            param.getCity(), param.getState(), param.getProvince(), param.getCounty(),  param.getPostalCode(), param.getCountry());
 
         // NOTE: using the PostalAddress as the contact mechanism introduces multiple
         // PartyContactMechanisms so don't use the PostalAddress, instead use ContactMechanism
@@ -258,7 +169,7 @@ public class AddContactMechanismServiceImpl implements AddContactMechanismServic
         catch (UnknownReferenceTypeException e)
         {
             final String error = e.getMessage();
-            return createErrorResponse(param, error);
+            return createErrorResponse(addParams, error);
         }
 
         return new NewPostalAddress()
@@ -270,7 +181,7 @@ public class AddContactMechanismServiceImpl implements AddContactMechanismServic
 
             public AddPostalAddressParameters getAddPostalAddressParameters()
             {
-                return param;
+                return addParams;
             }
 
             public String getErrorMessage()
@@ -326,17 +237,18 @@ public class AddContactMechanismServiceImpl implements AddContactMechanismServic
     {
         final Party party = (Party) HibernateUtil.getSession().load(Party.class, param.getPartyId());
         final PhoneNumber phone = new PhoneNumber();
-        phone.setCountryCode(param.getCountryCode());
-        phone.setNumber(param.getNumber());
-        phone.setAreaCode(param.getAreaCode());
-        phone.setExtension(param.getExtension());
+        phone.setCountryCode(param.getPhoneParameters().getCountryCode());
+        phone.setNumber(param.getPhoneParameters().getNumber());
+        phone.setAreaCode(param.getPhoneParameters().getAreaCode());
+        phone.setExtension(param.getPhoneParameters().getExtension());
         HibernateUtil.getSession().save(phone);
 
         final ContactMechanism cm = (ContactMechanism) HibernateUtil.getSession().load(ContactMechanism.class,
                 phone.getContactMechanismId());
         try
         {
-            contactMechanismFacade.addPartyContactMechanism(cm, party, param.getPurposeType(), param.getPurposeDescription());
+            contactMechanismFacade.addPartyContactMechanism(cm, party, param.getPhoneParameters().getPurposeCode(),
+                    param.getPhoneParameters().getPurposeDescription());
         }
         catch (UnknownReferenceTypeException e)
         {

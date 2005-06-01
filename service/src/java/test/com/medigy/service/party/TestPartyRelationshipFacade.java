@@ -43,29 +43,39 @@ import com.medigy.persist.model.party.PartyRole;
 import com.medigy.persist.model.person.Person;
 import com.medigy.persist.reference.custom.party.PartyRelationshipType;
 import com.medigy.persist.reference.custom.person.PersonRoleType;
+import com.medigy.persist.reference.type.GenderType;
 import com.medigy.persist.util.HibernateUtil;
 import com.medigy.service.TestCase;
-import com.medigy.service.party.PartyRelationshipFacade;
 import com.medigy.service.impl.party.PartyRelationshipFacadeImpl;
 
+import java.util.Calendar;
 import java.util.List;
 
 public class TestPartyRelationshipFacade extends TestCase
 {
-    public String getDataSetFile()
-    {
-        return "/com/medigy/service/party/TestPartyRelationshipFacade.xml";
-    }
-
+  
     public void testAddPartyRelationship()
     {
-        Person personA = (Person) HibernateUtil.getSession().load(Person.class, new Long(2));
-        Person personB = (Person) HibernateUtil.getSession().load(Person.class, new Long(3));
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(1980,1,1);
+
+        Person personA = new Person();
+        personA.setLastName("A");
+        personA.setFirstName("Person");
+        personA.setBirthDate(calendar.getTime());
+        personA.addGender(GenderType.Cache.FEMALE.getEntity());
+
+        Person personB = new Person();
+        personB.setLastName("B");
+        personB.setFirstName("Person");
+        personB.setBirthDate(calendar.getTime());
+        personB.addGender(GenderType.Cache.FEMALE.getEntity());
 
         personA.addPartyRole(PersonRoleType.Cache.CHILD.getEntity());
         personB.addPartyRole(PersonRoleType.Cache.PARENT.getEntity());
 
-        HibernateUtil.getSession().flush();
+        HibernateUtil.getSession().save(personA);
+        HibernateUtil.getSession().save(personB);
         HibernateUtil.closeSession();
         assertNotNull(personA.getPartyRoles());
         assertNotNull(personB.getPartyRoles());

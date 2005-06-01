@@ -36,38 +36,16 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.service;
+package com.medigy.service.dto.party;
 
-import com.medigy.service.health.TestHealthCareReferral;
-import com.medigy.service.insurance.TestInsurancePolicyFacade;
-import com.medigy.service.insurance.TestAddInsuranceCoverageService;
-import com.medigy.service.party.TestAddContactMechanismService;
-import com.medigy.service.party.TestPartyRelationshipFacade;
-import com.medigy.service.party.TestContactMechanismFacade;
-import com.medigy.service.person.TestPersonFacade;
-import com.medigy.service.person.TestRegisterHealthCareProviderService;
-import com.medigy.service.contact.TestEditContactMechanismService;
-import junit.framework.Test;
-
-public class TestSuite extends junit.framework.TestSuite
+public interface PhoneParameters
 {
-    public static Test suite()
-    {
-        TestSuite suite= new TestSuite();
+    public String getCountryCode();
+    public String getCityCode();
+    public String getAreaCode();
+    public String getNumber();
+    public String getExtension();
+    public String getPurposeCode();
+    public String getPurposeDescription();
 
-        // test services and facades
-        suite.addTest(new junit.framework.TestSuite(TestContactMechanismFacade.class));
-        suite.addTest(new junit.framework.TestSuite(TestPartyRelationshipFacade.class));
-        suite.addTest(new junit.framework.TestSuite(TestPersonFacade.class));
-        suite.addTest(new junit.framework.TestSuite(TestAddContactMechanismService.class));
-        suite.addTest(new junit.framework.TestSuite(TestInsurancePolicyFacade.class));
-        suite.addTest(new junit.framework.TestSuite(TestHealthCareReferral.class));
-        suite.addTest(new junit.framework.TestSuite(TestEditContactMechanismService.class));
-        suite.addTest(new junit.framework.TestSuite(TestRegisterHealthCareProviderService.class));
-        suite.addTest(new junit.framework.TestSuite(TestAddInsuranceCoverageService.class));
-        //suite.addTest(new junit.framework.TestSuite(TestSelectCareProviderService.class));
-        //suite.addTest(new junit.framework.TestSuite(TestPatientRegistrationService.class));
-
-        return suite;
-    }
 }

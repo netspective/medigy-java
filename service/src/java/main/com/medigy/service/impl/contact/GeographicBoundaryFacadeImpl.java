@@ -139,7 +139,7 @@ public class GeographicBoundaryFacadeImpl implements GeographicBoundaryFacade
                                                  final GeographicBoundary parentBoundary)
     {
         final GeographicBoundaryAssociation assc = new  GeographicBoundaryAssociation();
-        assc.setState(boundary);
+        assc.setParentState(boundary);
         assc.setParentGeographicBoundary(boundary);
         HibernateUtil.getSession().save(assc);
         return assc;

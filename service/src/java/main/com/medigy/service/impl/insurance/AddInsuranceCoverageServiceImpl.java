@@ -38,11 +38,8 @@
  */
 package com.medigy.service.impl.insurance;
 
-import com.medigy.persist.model.insurance.Coverage;
-import com.medigy.persist.model.insurance.CoverageLevel;
 import com.medigy.persist.model.insurance.InsurancePlan;
 import com.medigy.persist.model.insurance.InsurancePolicy;
-import com.medigy.persist.model.insurance.InsurancePolicyCoverageLevel;
 import com.medigy.persist.model.person.Person;
 import com.medigy.persist.reference.custom.insurance.CoverageLevelType;
 import com.medigy.persist.reference.custom.insurance.InsurancePolicyType;
@@ -51,60 +48,69 @@ import com.medigy.service.ServiceVersion;
 import com.medigy.service.dto.ServiceParameters;
 import com.medigy.service.dto.ServiceReturnValues;
 import com.medigy.service.dto.insurance.AddInsuranceCoverageParameters;
+import com.medigy.service.dto.insurance.InsuranceCoverageParameters;
 import com.medigy.service.dto.insurance.NewInsuranceCoverageData;
 import com.medigy.service.insurance.AddInsuranceCoverageService;
+import com.medigy.service.insurance.InsurancePolicyFacade;
+import com.medigy.service.util.ReferenceEntityFacade;
 
 import java.io.Serializable;
 
 public class AddInsuranceCoverageServiceImpl implements AddInsuranceCoverageService
 {
+    private InsurancePolicyFacade insurancePolicyFacade;
+    private ReferenceEntityFacade referenceEntityFacade;
+
+    public ReferenceEntityFacade getReferenceEntityFacade()
+    {
+        return referenceEntityFacade;
+    }
+
+    public void setReferenceEntityFacade(final ReferenceEntityFacade referenceEntityFacade)
+    {
+        this.referenceEntityFacade = referenceEntityFacade;
+    }
+
+    public InsurancePolicyFacade getInsurancePolicyFacade()
+    {
+        return insurancePolicyFacade;
+    }
+
+    public void setInsurancePolicyFacade(final InsurancePolicyFacade insurancePolicyFacade)
+    {
+        this.insurancePolicyFacade = insurancePolicyFacade;
+    }
+
     public NewInsuranceCoverageData add(final AddInsuranceCoverageParameters params)
     {
         final Person person = (Person) HibernateUtil.getSession().load(Person.class, params.getPatientId());
         if (person == null)
             return (NewInsuranceCoverageData) createErrorResponse(params, "Unknown patient ID");
 
-        final Person contractHolderPerson = (Person) HibernateUtil.getSession().load(Person.class, params.getInsuranceContractHolderId());
+        final InsuranceCoverageParameters insuranceCoverage = params.getInsuranceCoverage();
+        final Person contractHolderPerson = (Person) HibernateUtil.getSession().load(Person.class, insuranceCoverage.getInsuranceContractHolderId());
         if (contractHolderPerson == null)
             return (NewInsuranceCoverageData) createErrorResponse(params, "Unknown contract holder ID");
 
-        final InsurancePlan insPlan = (InsurancePlan) HibernateUtil.getSession().load(InsurancePlan.class, params.getInsurancePlanId());
+        final InsurancePlan insPlan = (InsurancePlan) HibernateUtil.getSession().load(InsurancePlan.class, insuranceCoverage.getInsurancePlanId());
         if (insPlan == null)
             return (NewInsuranceCoverageData) createErrorResponse(params, "Unknown insurance plan ID");
 
-        final InsurancePolicy insPolicy =  new InsurancePolicy();
-        insPolicy.setGroupNumber(params.getInsuranceGroupNumber());
-        insPolicy.setPolicyNumber(params.getInsurancePolicyNumber());
-        insPolicy.setInsuredPerson(person);
-        insPolicy.setContractHolderPerson(contractHolderPerson);
-        // TODO: Handle policy type in the input params
-        insPolicy.setType(InsurancePolicyType.Cache.INDIVIDUAL_INSURANCE_POLICY.getEntity());
-        // handle the coverages
-        // 1. first copy the plans coverages into the policy
-        insPlan.addInsurancePolicy(insPolicy);
-        HibernateUtil.getSession().save(insPolicy);
+        final InsurancePolicyType type = referenceEntityFacade.getInsurancePolicyType(insuranceCoverage.getInsurancePolicyTypeCode());
+        if (type == null)
+            return (NewInsuranceCoverageData) createErrorResponse(params, "Invalid insurance type");
 
-        // 2. now override(create) coverage levels for policy
-        final Float indDeductible = params.getIndividualDeductibleAmount();
-        InsurancePolicyCoverageLevel indDeductibleCoverageLevel = insPolicy.getCoverageLevelRelationship(CoverageLevelType.Cache.INDIVIDUAL_DEDUCTIBLE.getEntity());
-        final CoverageLevel existingCoverageLevel = indDeductibleCoverageLevel.getCoverageLevel();
-        if (!existingCoverageLevel.getValue().equals(indDeductible))
-        {
-            // if the patient supplied value equals the plan's then no need to do anything.
-            CoverageLevel newLevel = new CoverageLevel();
-            newLevel.setType(CoverageLevelType.Cache.INDIVIDUAL_DEDUCTIBLE.getEntity());
-            newLevel.setValue(indDeductible);
-            // right now the basis is not being accepted at the service level so copy current basises into the new level
-            newLevel.setCoverageLevelBasises(existingCoverageLevel.getCoverageLevelBasises());
-            final Coverage coverage = existingCoverageLevel.getCoverage();
-            coverage.addCoverageLevel(newLevel);
-            indDeductibleCoverageLevel.setCoverageLevel(newLevel);
-        }
+        final InsurancePolicy insPolicy =  insurancePolicyFacade.createInsurancePolicy(person, contractHolderPerson, insPlan, insuranceCoverage.getInsurancePolicyNumber(),
+            insuranceCoverage.getInsuranceGroupNumber(), type, insuranceCoverage.getCoverageStartDate(), insuranceCoverage.getCoverageEndDate());
 
-        // TODO: Handle the family deductible
-        final Float famDeductible = params.getFamilyDeductibleAmount();
+        final Float indDeductible = insuranceCoverage.getIndividualDeductibleAmount();
+        insurancePolicyFacade.addInsurancePolicyCoverageLevel(insPolicy, CoverageLevelType.Cache.INDIVIDUAL_DEDUCTIBLE.getEntity(), indDeductible);
 
-        HibernateUtil.getSession().save(insPolicy);
+        final Float famDeductible = insuranceCoverage.getFamilyDeductibleAmount();
+        insurancePolicyFacade.addInsurancePolicyCoverageLevel(insPolicy, CoverageLevelType.Cache.FAMILY_DEDUCTIBLE.getEntity(), famDeductible);
+
+        HibernateUtil.getSession().flush();
+
         return new NewInsuranceCoverageData() {
             public AddInsuranceCoverageParameters getAddInsuranceCoverageParameters()
             {

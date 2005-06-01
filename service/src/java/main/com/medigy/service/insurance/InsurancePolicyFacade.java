@@ -45,6 +45,7 @@ import com.medigy.persist.model.insurance.CoverageLevel;
 import com.medigy.persist.model.org.Organization;
 import com.medigy.persist.model.person.Person;
 import com.medigy.persist.reference.custom.insurance.InsurancePolicyType;
+import com.medigy.persist.reference.custom.insurance.CoverageLevelType;
 import com.medigy.service.util.Facade;
 
 import java.io.Serializable;
@@ -61,7 +62,10 @@ public interface InsurancePolicyFacade extends Facade
                                                  final String policyNumber, 
                                                  final String groupNumber,
                                                  final InsurancePolicyType type,
-                                                 final Date startDate);
+                                                 final Date startDate,
+                                                 final Date endDate);
+
+    public void addInsurancePolicyCoverageLevel(final InsurancePolicy insPolicy, final CoverageLevelType type, final Float indDeductible);
 
     public List<CoverageLevel> listCoverageLevels(final InsuranceProduct product);
 
@@ -81,4 +85,6 @@ public interface InsurancePolicyFacade extends Facade
      * @return
      */
     public List<InsuranceProduct> listInsuranceProducts(final Organization org);
+
+    public InsurancePlan getInsurancePlanById(final Serializable insurancePlanId);
 }

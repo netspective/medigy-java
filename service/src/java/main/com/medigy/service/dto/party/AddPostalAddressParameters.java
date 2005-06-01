@@ -46,24 +46,6 @@ public interface AddPostalAddressParameters extends ServiceParameters
 {
     public Serializable getPartyId();
 
-    public String getStreet1();
+    public PostalAddressParameters getPostalAddressParameters();
 
-    public String getStreet2();
-
-    public String getCity();
-
-    public String getState();
-
-    public String getProvince();
-
-    public String getPostalCode();
-
-    public String getCounty();
-
-    public String getCountry();
-
-    // TODO: Make this into multiple purposes
-    public String getPurposeType();
-
-    public String getPurposeDescription();
 }

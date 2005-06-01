@@ -51,7 +51,7 @@
 
     <service-point id="RegisterHealthCareProviderService" interface="com.medigy.service.person.RegisterHealthCareProviderService">
         <interceptor service-id="hivemind.LoggingInterceptor"/>
-        <invoke-factory>
+        <invoke-factory>                                                         
             <!-- Autowires service properties based on interface! -->
             <construct class="impl.person.RegisterHealthCareProviderServiceImpl"/>
         </invoke-factory>
@@ -74,6 +74,11 @@
 
     <service-point id="PersonFacade" interface="com.medigy.service.person.PersonFacade">
         <create-instance class="impl.person.PersonFacadeImpl"/>
+         <interceptor service-id="hivemind.LoggingInterceptor"/>
+    </service-point>
+
+    <service-point id="InsurancePolicyFacade" interface="com.medigy.service.insurance.InsurancePolicyFacade">
+        <create-instance class="impl.insurance.InsurancePolicyFacadeImpl"/>
          <interceptor service-id="hivemind.LoggingInterceptor"/>
     </service-point>
 </module>

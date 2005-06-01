@@ -123,7 +123,7 @@ public class EditContactMechanismServiceImpl implements EditContactMechanismServ
         {
             zip = new PostalCode();
             zip.setCodeValue(params.getPostalCode());
-            zip.setState(state);
+            zip.setParentState(state);
             state.addPostalCode(zip);
         }
         address.setPostalCode(zip);
@@ -134,8 +134,8 @@ public class EditContactMechanismServiceImpl implements EditContactMechanismServ
             if (county == null)
             {
                 county= new County();
-                county.setName(params.getCounty());
-                county.setState(state);
+                county.setCountyName(params.getCounty());
+                county.setParentState(state);
                 state.addCounty(county);
             }
             address.setCounty(county);
@@ -150,8 +150,8 @@ public class EditContactMechanismServiceImpl implements EditContactMechanismServ
         if (city == null)
         {
             city = new City();
-            city.setName(params.getCity());
-            city.setState(state);
+            city.setCityName(params.getCity());
+            city.setParentState(state);
             state.addCity(city);
         }
         address.setCity(city);

@@ -42,17 +42,27 @@ import com.medigy.persist.model.party.ContactMechanism;
 import com.medigy.persist.model.party.Party;
 import com.medigy.persist.model.party.PartyContactMechanism;
 import com.medigy.persist.model.party.PartyContactMechanismPurpose;
+import com.medigy.persist.model.party.PostalAddress;
+import com.medigy.persist.model.party.PhoneNumber;
 import com.medigy.persist.model.contact.Country;
 import com.medigy.persist.model.contact.State;
+import com.medigy.persist.model.contact.County;
+import com.medigy.persist.model.contact.City;
+import com.medigy.persist.model.contact.PostalCode;
+import com.medigy.persist.model.contact.Province;
 import com.medigy.persist.reference.custom.party.ContactMechanismPurposeType;
 import com.medigy.persist.util.HibernateUtil;
 import com.medigy.service.util.ReferenceEntityFacade;
 import com.medigy.service.util.UnknownReferenceTypeException;
 import com.medigy.service.contact.ContactMechanismFacade;
 import org.hibernate.criterion.Restrictions;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 public class ContactMechanismFacadeImpl implements ContactMechanismFacade
 {
+    private static final Log log = LogFactory.getLog(PostalAddress.class);
+
     private ReferenceEntityFacade  referenceEntityFacade;
 
     public ReferenceEntityFacade getReferenceEntityFacade()
@@ -100,13 +110,94 @@ public class ContactMechanismFacadeImpl implements ContactMechanismFacade
         HibernateUtil.getSession().save(mech);
     }
 
+    public PostalAddress addPostalAddress(final String street1, final String street2, final String cityName,
+                                          final String stateCode, final String provinceCode, final String countyName,
+                                          final String postalCode, final String countryCode)
+    {
+        final PostalAddress address = new PostalAddress();
+        address.setAddress1(street1);
+        address.setAddress2(street2);
+
+        Country country = (Country) HibernateUtil.getSession().createCriteria(Country.class).add(Restrictions.eq("countryAbbreviation", countryCode).ignoreCase()).uniqueResult();
+        address.setCountry(country);
+
+        if (stateCode != null)
+        {
+            State state = country.getStateByCode(stateCode);
+            address.setState(state);
+
+            if (countyName != null && countyName.length() > 0)
+            {
+                County county =  state.getCountyByName(countyName);
+                if (county == null)
+                {
+                    county = new County();
+                    county.setCountyName(countyName);
+                    state.addCounty(county);
+                    HibernateUtil.getSession().save(county);
+                }
+                address.setCounty(county);
+            }
+            // now add the city
+            City city = state.getCityByName(cityName);
+            if (city == null)
+            {
+                city = new City();
+                city.setCityName(cityName);
+                state.addCity(city);
+                HibernateUtil.getSession().save(city);
+            }
+            address.setCity(city);
+
+            PostalCode zip = state.getPostalCodeByValue(postalCode);
+            if (zip == null)
+            {
+                zip = new PostalCode();
+                zip.setCodeValue(postalCode);
+                state.addPostalCode(zip);
+                HibernateUtil.getSession().save(zip);
+            }
+            address.setPostalCode(zip);
+        }
+        else if (provinceCode != null)
+        {
+            Province province = country.getProvinceByName(provinceCode);
+            address.setProvince(province);
+            City city = province.getCityByName(cityName);
+            if (city == null)
+            {
+                city = new City();
+                city.setCityName(cityName);
+                province.addCity(city);
+                HibernateUtil.getSession().save(city);
+            }
+            address.setCity(city);
+        }
+        HibernateUtil.getSession().flush();
+        HibernateUtil.getSession().save(address);
+
+        return address;
+    }
+
+    public PhoneNumber addPhone(final String countryCode,  final String areaCode, final String number,
+                                final String extension)
+    {
+        final PhoneNumber phone = new PhoneNumber();
+        phone.setCountryCode(countryCode);
+        phone.setNumber(number);
+        phone.setAreaCode(areaCode);
+        phone.setExtension(extension);
+        HibernateUtil.getSession().save(phone);
+        return phone;
+    }
+
     public Country getCountry(final String countryName)
     {
-        return (Country) HibernateUtil.getSession().createCriteria(Country.class).add(Restrictions.eq("name", countryName)).uniqueResult();
+        return (Country) HibernateUtil.getSession().createCriteria(Country.class).add(Restrictions.eq("countryName", countryName)).uniqueResult();
     }
 
     public State getState(final String stateName)
     {
-        return (State) HibernateUtil.getSession().createCriteria(State.class).add(Restrictions.eq("name", stateName)).uniqueResult();
+        return (State) HibernateUtil.getSession().createCriteria(State.class).add(Restrictions.eq("stateName", stateName)).uniqueResult();
     }
 }

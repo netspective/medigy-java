@@ -57,7 +57,7 @@ import org.hibernate.criterion.Restrictions;
 public class ReferenceEntityFacadeImpl implements ReferenceEntityFacade
 {
 
-    public InsurancePolicyType getInsurancePolicyType(final String code) throws UnknownReferenceTypeException
+    public InsurancePolicyType getInsurancePolicyType(final String code)
     {
         InsurancePolicyType type = InsurancePolicyType.Cache.getEntity(code);
         if (type == null)
@@ -65,8 +65,6 @@ public class ReferenceEntityFacadeImpl implements ReferenceEntityFacade
             final Criteria criteria = HibernateUtil.getSession().createCriteria(InsurancePolicyType.class);
             criteria.add(Restrictions.eq("code", code));
             type = (InsurancePolicyType) criteria.uniqueResult();
-            if (type == null)
-                throw new UnknownReferenceTypeException();
         }
         return type;
     }

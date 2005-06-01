@@ -36,17 +36,49 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.service.dto.party;
+package com.medigy.service.dto.insurance;
+
+import org.hibernate.validator.NotNull;
 
 import java.io.Serializable;
+import java.util.Date;
 
-public interface BasicPhoneParameters
+public interface InsuranceCoverageParameters
 {
-    public Serializable getPartyId();
-    public String getCountryCode();
-    public String getCityCode();
-    public String getAreaCode();
-    public String getNumber();
-    public String getExtension();
-    public String getPurpose();
+    @NotNull
+    public Serializable getInsuranceCarrierId();
+
+
+    public Serializable getInsuranceProductId();
+
+    @NotNull
+    public Serializable getInsurancePlanId();
+
+    @NotNull
+    public String getInsurancePolicyNumber();
+
+    public String getInsurancePolicyTypeCode();
+
+    @NotNull
+    public String getInsuranceGroupNumber();
+
+    @NotNull
+    public Serializable getInsuranceContractHolderId();
+
+    @NotNull
+    public String getInsuranceContractHolderRole();
+
+    public Date getCoverageStartDate();
+
+    public Date getCoverageEndDate();
+
+    public Float getIndividualDeductibleAmount();
+
+    public Float getFamilyDeductibleAmount();
+
+    public Float getOfficeVisitCoPay();
+
+    public Float getPercentagePay();
+
+    public Float getMaxThresholdAmount();
 }

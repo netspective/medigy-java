@@ -38,16 +38,20 @@
  */
 package com.medigy.service.impl.insurance;
 
+import com.medigy.persist.model.insurance.Coverage;
 import com.medigy.persist.model.insurance.CoverageLevel;
 import com.medigy.persist.model.insurance.InsurancePlan;
 import com.medigy.persist.model.insurance.InsurancePolicy;
+import com.medigy.persist.model.insurance.InsurancePolicyCoverageLevel;
 import com.medigy.persist.model.insurance.InsuranceProduct;
+import com.medigy.persist.model.insurance.CoverageLevelBasis;
 import com.medigy.persist.model.org.Organization;
 import com.medigy.persist.model.person.Person;
+import com.medigy.persist.reference.custom.insurance.CoverageLevelType;
 import com.medigy.persist.reference.custom.insurance.InsurancePolicyType;
 import com.medigy.persist.util.HibernateUtil;
-import com.medigy.service.util.AbstractFacade;
 import com.medigy.service.insurance.InsurancePolicyFacade;
+import com.medigy.service.util.AbstractFacade;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
@@ -68,22 +72,51 @@ public class InsurancePolicyFacadeImpl extends AbstractFacade implements Insuran
                                                  final String policyNumber,
                                                  final String groupNumber,
                                                  final InsurancePolicyType type,
-                                                 final Date startDate)
+                                                 final Date startDate,
+                                                 final Date endDate)
     {
         // create the new policy
-        InsurancePolicy policy = new InsurancePolicy();
-        policy.setPolicyNumber(policyNumber);
-        policy.setGroupNumber(groupNumber);
-        policy.setInsuredPerson(insuredPerson);
-        policy.setContractHolderPerson(contractHolder);
-        policy.setInsurancePlan(plan);
-        policy.setFromDate(startDate);
-        policy.setType(type);
-        insuredPerson.addInsurancePolicy(policy);
-        contractHolder.addResponsibleInsurancePolicy(policy);
+        final InsurancePolicy insPolicy =  new InsurancePolicy();
+        insPolicy.setGroupNumber(groupNumber);
+        insPolicy.setPolicyNumber(policyNumber);
+        insPolicy.setInsuredPerson(insuredPerson);
+        insPolicy.setContractHolderPerson(contractHolder);
+        insPolicy.setFromDate(startDate);
+        insPolicy.setThroughDate(endDate);
+        insPolicy.setType(type);
+        plan.addInsurancePolicy(insPolicy);
+        HibernateUtil.getSession().save(insPolicy);
+        return insPolicy;
+    }
 
-        HibernateUtil.getSession().save(policy);
-        return policy;
+    /**
+     * Adds a insurance coverage level for an existing insurance policy.
+     * @param insPolicy
+     * @param type
+     * @param indDeductible
+     */
+    public void addInsurancePolicyCoverageLevel(final InsurancePolicy insPolicy, final CoverageLevelType type, final Float indDeductible)
+    {
+        InsurancePolicyCoverageLevel indDeductibleCoverageLevel = insPolicy.getCoverageLevelRelationship(type);
+        final CoverageLevel existingCoverageLevel = indDeductibleCoverageLevel.getCoverageLevel();
+        if (!existingCoverageLevel.getValue().equals(indDeductible))
+        {
+            // if the patient supplied value equals the plan's then no need to do anything.
+            CoverageLevel newLevel = new CoverageLevel();
+            newLevel.setType(type);
+            newLevel.setValue(indDeductible);
+            
+            for (CoverageLevelBasis basis: existingCoverageLevel.getCoverageLevelBasises())
+            {
+                newLevel.addCoverageLevelBasis(basis.getType());
+            }
+            final Coverage coverage = existingCoverageLevel.getCoverage();
+            coverage.addCoverageLevel(newLevel);
+            newLevel.addInsurancePolicyCoverageLevel(indDeductibleCoverageLevel);
+            indDeductibleCoverageLevel.setCoverageLevel(newLevel);
+
+            HibernateUtil.getSession().save(newLevel);
+        }
     }
 
     public List<CoverageLevel> listCoverageLevels(final InsuranceProduct product)
@@ -115,6 +148,11 @@ public class InsurancePolicyFacadeImpl extends AbstractFacade implements Insuran
         List<InsuranceProduct> products = new ArrayList<InsuranceProduct>(list.size());
         convert(InsuranceProduct.class, list, products);
         return products;
+    }
+
+    public InsurancePlan getInsurancePlanById(final Serializable insurancePlanId)
+    {
+        return (InsurancePlan) HibernateUtil.getSession().createCriteria(InsurancePlan.class).add(Restrictions.eq("insurancePlanId", insurancePlanId)).uniqueResult();
     }
 
 

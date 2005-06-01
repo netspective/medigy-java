@@ -48,12 +48,14 @@ import com.medigy.persist.reference.custom.person.PersonRoleType;
 import com.medigy.persist.reference.custom.insurance.CoverageLevelType;
 import com.medigy.persist.reference.custom.insurance.CoverageLevelBasisType;
 import com.medigy.persist.reference.custom.insurance.CoverageType;
+import com.medigy.persist.reference.custom.insurance.InsurancePolicyType;
 import com.medigy.persist.reference.type.GenderType;
 import com.medigy.persist.util.HibernateUtil;
 import com.medigy.service.ServiceVersion;
 import com.medigy.service.TestCase;
-import com.medigy.service.dto.insurance.AddInsuranceCoverageParameters;
+import com.medigy.service.dto.insurance.InsuranceCoverageParameters;
 import com.medigy.service.dto.insurance.NewInsuranceCoverageData;
+import com.medigy.service.dto.insurance.AddInsuranceCoverageParameters;
 import org.hibernate.validator.NotNull;
 
 import java.io.Serializable;
@@ -116,93 +118,107 @@ public class TestAddInsuranceCoverageService extends TestCase
         planRel.setCoverageLevel(indDeductibleLevel);
         planRel.setInsurancePlan(ppoPlan);
         ppoPlan.addCoverageLevelRelationship(planRel);
+
+        InsurancePlanCoverageLevel famDeductRel = new InsurancePlanCoverageLevel();
+        famDeductRel.setCoverageLevel(famDeductibleLevel);
+        famDeductRel.setInsurancePlan(ppoPlan);
+        ppoPlan.addCoverageLevelRelationship(famDeductRel);
+
         HibernateUtil.getSession().save(planRel);
+        HibernateUtil.getSession().save(famDeductRel);
         HibernateUtil.closeSession();
 
         final AddInsuranceCoverageService service = (AddInsuranceCoverageService) getRegistry().getService(AddInsuranceCoverageService.class);
 
         final AddInsuranceCoverageParameters params  = new AddInsuranceCoverageParameters() {
-            @NotNull
             public Serializable getPatientId()
             {
                 return patient.getPartyId();
             }
 
-            @NotNull
-            public Serializable getInsuranceCarrierId()
+            public InsuranceCoverageParameters getInsuranceCoverage()
             {
-                return anthem.getOrgId();
+                return new InsuranceCoverageParameters() {
+                    public Serializable getInsuranceCarrierId()
+                    {
+                        return anthem.getOrgId();
+                    }
+
+                    public Serializable getInsuranceProductId()
+                    {
+                        return null;
+                    }
+
+                    public Serializable getInsurancePlanId()
+                    {
+                        return ppoPlan.getInsurancePlanId();
+                    }
+
+                    public String getInsurancePolicyNumber()
+                    {
+                        return "999";
+                    }
+
+                    @NotNull
+                    public String getInsuranceGroupNumber()
+                    {
+                        return "X123";
+                    }
+
+                    @NotNull
+                    public Serializable getInsuranceContractHolderId()
+                    {
+                        return patientFather.getPartyId();
+                    }
+
+                    @NotNull
+                    public String getInsuranceContractHolderRole()
+                    {
+                        return PersonRoleType.Cache.MOTHER.getEntity().getCode();
+                    }
+
+                    public Date getCoverageStartDate()
+                    {
+                        return new Date();
+                    }
+
+                    public Date getCoverageEndDate()
+                    {
+                        return null;
+                    }
+
+                    public Float getIndividualDeductibleAmount()
+                    {
+                        return new Float(100);
+                    }
+
+                    public Float getFamilyDeductibleAmount()
+                    {
+                        return new Float(500);
+                    }
+
+                    public Float getOfficeVisitCoPay()
+                    {
+                        return new Float(10);
+                    }
+
+                    public Float getPercentagePay()
+                    {
+                        return null;
+                    }
+
+                    public Float getMaxThresholdAmount()
+                    {
+                        return null;
+                    }
+
+                    public String getInsurancePolicyTypeCode()
+                    {
+                        return InsurancePolicyType.Cache.GROUP_INSURANCE_POLICY.getEntity().getCode();
+                    }
+                };
             }
 
-            public Serializable getInsuranceProductId()
-            {
-                return null;
-            }
-
-            @NotNull
-            public Serializable getInsurancePlanId()
-            {
-                return ppoPlan.getInsurancePlanId();
-            }
-
-            @NotNull
-            public String getInsurancePolicyNumber()
-            {
-                return "999";
-            }
-
-            @NotNull
-            public String getInsuranceGroupNumber()
-            {
-                return "X123";
-            }
-
-            @NotNull
-            public Serializable getInsuranceContractHolderId()
-            {
-                return patientFather.getPartyId();
-            }
-
-            @NotNull
-            public String getInsuranceContractHolderRole()
-            {
-                return PersonRoleType.Cache.MOTHER.getEntity().getCode();
-            }
-
-            public Date getCoverageStartDate()
-            {
-                return new Date();
-            }
-
-            public Date getCoverageEndDate()
-            {
-                return null;
-            }
-
-            public Float getIndividualDeductibleAmount()
-            {
-                return new Float(100);
-            }
-
-            public Float getFamilyDeductibleAmount()
-            {
-                return new Float(500);
-            }
-
-            public Float getOfficeVisitCoPay()
-            {
-                return new Float(10);
-            }
-
-            public Float getPercentagePay()
-            {
-                return null;
-            }
-
-            public Float getMaxThresholdAmount()
-            {
-                return null;
-            }
 
             public ServiceVersion getServiceVersion()
             {

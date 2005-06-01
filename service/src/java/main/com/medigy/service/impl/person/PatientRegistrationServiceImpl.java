@@ -38,24 +38,27 @@
  */
 package com.medigy.service.impl.person;
 
-import com.medigy.persist.model.org.Organization;
-import com.medigy.persist.model.party.PartyRole;
+import com.medigy.persist.model.insurance.InsurancePlan;
+import com.medigy.persist.model.insurance.InsurancePolicy;
+import com.medigy.persist.model.party.ContactMechanism;
+import com.medigy.persist.model.party.PhoneNumber;
+import com.medigy.persist.model.party.PostalAddress;
 import com.medigy.persist.model.person.Person;
+import com.medigy.persist.reference.custom.insurance.CoverageLevelType;
 import com.medigy.persist.reference.custom.insurance.InsurancePolicyType;
-import com.medigy.persist.reference.custom.party.ContactMechanismPurposeType;
-import com.medigy.persist.reference.custom.party.OrganizationRoleType;
-import com.medigy.persist.reference.custom.person.PatientResponsiblePartyRoleType;
-import com.medigy.persist.reference.custom.person.PersonRoleType;
 import com.medigy.persist.reference.type.GenderType;
 import com.medigy.persist.reference.type.MaritalStatusType;
 import com.medigy.persist.util.HibernateUtil;
 import com.medigy.service.ServiceVersion;
-import com.medigy.service.contact.AddContactMechanismService;
+import com.medigy.service.contact.ContactMechanismFacade;
 import com.medigy.service.dto.ServiceParameters;
-import com.medigy.service.dto.party.AddPhoneParameters;
-import com.medigy.service.dto.party.AddPostalAddressParameters;
+import com.medigy.service.dto.insurance.InsuranceCoverageParameters;
+import com.medigy.service.dto.party.PhoneParameters;
+import com.medigy.service.dto.party.PostalAddressParameters;
+import com.medigy.service.dto.person.PersonParameters;
 import com.medigy.service.dto.person.RegisterPatientParameters;
 import com.medigy.service.dto.person.RegisteredPatient;
+import com.medigy.service.insurance.InsurancePolicyFacade;
 import com.medigy.service.person.PatientRegistrationService;
 import com.medigy.service.person.PersonFacade;
 import com.medigy.service.util.ReferenceEntityFacade;
@@ -75,9 +78,30 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
     private boolean createInsuranceProviderIfUnknown = true;
 
 
-    private AddContactMechanismService addContactMechanismService;
     private ReferenceEntityFacade referenceEntityFacade;
     private PersonFacade personFacade;
+    private ContactMechanismFacade contactMechanismFacade;
+    private InsurancePolicyFacade insurancePolicyFacade;
+
+    public InsurancePolicyFacade getInsurancePolicyFacade()
+    {
+        return insurancePolicyFacade;
+    }
+
+    public void setInsurancePolicyFacade(final InsurancePolicyFacade insurancePolicyFacade)
+    {
+        this.insurancePolicyFacade = insurancePolicyFacade;
+    }
+
+    public ContactMechanismFacade getContactMechanismFacade()
+    {
+        return contactMechanismFacade;
+    }
+
+    public void setContactMechanismFacade(final ContactMechanismFacade contactMechanismFacade)
+    {
+        this.contactMechanismFacade = contactMechanismFacade;
+    }
 
     public PersonFacade getPersonFacade()
     {
@@ -99,15 +123,6 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
         this.referenceEntityFacade = referenceEntityFacade;
     }
 
-    public AddContactMechanismService getAddContactMechanismService()
-    {
-        return addContactMechanismService;
-    }
-
-    public void setAddContactMechanismService(final AddContactMechanismService addContactMechanismService)
-    {
-        this.addContactMechanismService = addContactMechanismService;
-    }
 
     public ServiceVersion[] getSupportedServiceVersions()
     {
@@ -147,94 +162,28 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
         return Long.parseLong(keyString);
     }
 
-    protected void registerInsuranceInformation(final Person person, final Person responsibleParty, final RegisterPatientParameters params) throws Exception
+    protected void registerInsuranceInformation(final Person person, final RegisterPatientParameters params) throws Exception
     {
-        // usually there is one primary insurance and one possible secondary
-        final String[] policyNumbers = params.getInsurancePolicyNumbers();
-        final String[] policyTypes = params.getInsurancePolicyTypes();
-        final String[] contractHolderIds = params.getInsurancePolicyHolderId();
-        final String[] contractHolderLastNames = params.getInsurancePolicyHolderLastNames();
-        final String[] contractHolderFirstNames = params.getInsurancePolicyHolderFirstNames();
-        final String[] policyProviders = params.getInsurancePolicyProviders();
-        final String[] policyProviderIds = params.getInsurancePolicyProviderIds();
-
-        for (int i=0; i < policyNumbers.length; i++)
+        final InsuranceCoverageParameters[] insurancePolicies = params.getInsuranceCoverages();
+        for (InsuranceCoverageParameters param: insurancePolicies)
         {
-            final String policyType = params.getInsurancePolicyTypes()[i];
-            final String contractHolderId = contractHolderIds[i];
-            final String contractHolderFirstName = contractHolderFirstNames[i];
-            final String contractHolderLastName = contractHolderLastNames[i];
-            final String policyProvider = policyProviders[i];
-            final String policyProviderId = policyProviderIds[i];
+            final Person contractHolder = personFacade.getPersonById(param.getInsuranceContractHolderId());
+            final InsurancePlan insPlan = insurancePolicyFacade.getInsurancePlanById(param.getInsurancePlanId());
+            final InsurancePolicyType type = referenceEntityFacade.getInsurancePolicyType(param.getInsurancePolicyTypeCode());
 
-            Person policyHolder = null;
-            if (contractHolderId != null)
-            {
-                policyHolder = (Person) HibernateUtil.getSession().load(Person.class,
-                    getPrimaryKey(contractHolderId));
-            }
-            else if (contractHolderLastName.equals(person.getLastName()) && contractHolderFirstName.equals(person.getFirstName()))
-            {
-                // the policy holder is self
-                policyHolder = person;
-            }
-            else if (params.getResponsiblePartyLastName().equals(contractHolderLastName) &&
-                    params.getResponsiblePartyFirstName().equals(contractHolderFirstName))
-            {
-                // TODO: The responsible party and policy Holder's names are the same so they're essentially the same person
-                policyHolder = responsibleParty;
-            }
-            else
-            {
-                policyHolder = new Person();
-                policyHolder.setLastName(contractHolderLastName);
-                policyHolder.setFirstName(contractHolderFirstName);
-                HibernateUtil.getSession().save(policyHolder);
-            }
+            final InsurancePolicy policy = insurancePolicyFacade.createInsurancePolicy(person, contractHolder, insPlan, param.getInsurancePolicyNumber(),
+                param.getInsuranceGroupNumber(), type, param.getCoverageStartDate(), param.getCoverageEndDate());
 
-            Organization providerOrg = null;
-            if (policyProviderId != null)
-            {
-                providerOrg = (Organization) HibernateUtil.getSession().load(Organization.class,
-                        getPrimaryKey(policyProviderId));
-            }
-            else
-            {
-                // TODO: Determine if provider look up should be done using the Name also instead of just the ID
-                if (isCreateInsuranceProviderIfUnknown())
-                {
-                    providerOrg = new Organization();
-                    providerOrg.setOrganizationName(policyProvider);
-                    providerOrg.addPartyRole(OrganizationRoleType.Cache.INSURANCE_PROVIDER.getEntity());
-                    HibernateUtil.getSession().save(providerOrg);
-                }
-                else
-                {
-                    throw new Exception("Unknown policy provider: " + policyProvider);
-                }
-            }
-            processInsurancePolicy(policyNumbers[i], policyType, providerOrg, policyHolder, person);
+            if (param.getIndividualDeductibleAmount() != null)
+                insurancePolicyFacade.addInsurancePolicyCoverageLevel(policy, CoverageLevelType.Cache.INDIVIDUAL_DEDUCTIBLE.getEntity(),
+                    param.getIndividualDeductibleAmount());
+
+            if (param.getFamilyDeductibleAmount() != null)
+                insurancePolicyFacade.addInsurancePolicyCoverageLevel(policy, CoverageLevelType.Cache.FAMILY_DEDUCTIBLE.getEntity(),
+                    param.getFamilyDeductibleAmount());
         }
+
     }
-
-    /**
-     * Process the insurance policy. If the policy already exists, update the policy and if it doesn't create a new one.
-     * @param policyNumber
-     * @param providerOrg
-     * @param policyHolder
-     * @param insuredDependent
-     */
-    protected void processInsurancePolicy(final String policyNumber,
-                                          final String policyType,
-                                          final Organization providerOrg,
-                                          final Person policyHolder,
-                                          final Person insuredDependent) throws UnknownReferenceTypeException
-    {
-        final InsurancePolicyType type = referenceEntityFacade.getInsurancePolicyType(policyType);
-
-        // TODO: Need to figure how what's going to be available during registration for INSURANCE (e.g. Product, Plan, etc)
-    }
-
 
     /**
      * Registers a responsible party associated with a new patient. This is a sub-task belonging to the
@@ -243,33 +192,10 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
      * @param person
      * @param patientParameters
      */
-    protected Person registerResponsibleParty(final Person person, final RegisterPatientParameters patientParameters)
+    protected void registerResponsibleParty(final Person person, final RegisterPatientParameters patientParameters)
     {
         // TODO: FINANCIAL responsible party can be an organization and it can be changed per visit too. Need table to relate to PARTY_RELATIONSHIP.
 
-        // Create a patient role for the new patient
-        final PartyRole patientRole = personFacade.addPersonRole(person, PersonRoleType.Cache.PATIENT.getEntity());
-
-        String respLastName = patientParameters.getResponsiblePartyLastName();
-        Person respParty = null;
-        // if the responsible party ID is available then the person already exists
-        if (patientParameters.getResponsiblePartyId() != null)
-        {
-            respParty = personFacade.getPersonById(patientParameters.getResponsiblePartyId());
-        }
-        else
-        {
-            respParty = new Person();
-            respParty.setLastName(patientParameters.getResponsiblePartyLastName());
-            respParty.setFirstName(patientParameters.getResponsiblePartyFirstName());
-            personFacade.addPerson(respParty);
-        }
-        // responsible party processing
-        final PatientResponsiblePartyRoleType entity = PatientResponsiblePartyRoleType.Cache.getEntity(patientParameters.getResponsiblePartyRole());
-        final PartyRole respPartyRole = personFacade.addPersonRole(respParty, entity);
-
-        //partyRelFacade.addPartyRelationship(PartyRelationshipType.Cache.PATIENT_RESPONSIBLE_PARTY.getEntity(), patientRole, respPartyRole);
-        return respParty;
     }
 
     /**
@@ -281,101 +207,36 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
     protected void registerPrimaryCareProvider(final Person patient, final RegisterPatientParameters patientParameters)
     {
 
-        patientParameters.getPrimaryCareProviderId();
 
-        //partyRelFacade.addPartyRelationship(PartyRelationshipType.Cache..getEntity(), patientRole, respPartyRole);
     }
 
-    protected void registerPostalAddress(final Person patient, final RegisterPatientParameters patientParameters)
+    protected void registerPostalAddress(final Person patient, final RegisterPatientParameters patientParameters) throws UnknownReferenceTypeException
     {
+        final PostalAddressParameters param = patientParameters.getPostalAddress();
+        final PostalAddress address = contactMechanismFacade.addPostalAddress(param.getStreet1(), param.getStreet2(),
+            param.getCity(), param.getState(), param.getProvince(), param.getCounty(),  param.getPostalCode(), param.getCountry());
 
-        try
-        {
-            addContactMechanismService.addPostalAddress(new AddPostalAddressParameters() {
-                public Serializable getPartyId()
-                {
-                    return patient.getPartyId();
-                }
+        // NOTE: using the PostalAddress as the contact mechanism introduces multiple
+        // PartyContactMechanisms so don't use the PostalAddress, instead use ContactMechanism
+        ContactMechanism cm = (ContactMechanism) HibernateUtil.getSession().load(ContactMechanism.class, address.getContactMechanismId());
+        contactMechanismFacade.addPartyContactMechanism(cm, patient, param.getPurposeType(), param.getPurposeDescription());
 
-                public String getStreet1()
-                {
-                    return patientParameters.getStreetAddress1();
-                }
-
-                public String getStreet2()
-                {
-                    return patientParameters.getStreetAddress2();
-                }
-
-                public String getCity()
-                {
-                    return patientParameters.getCity();
-                }
-
-                public String getState()
-                {
-                    return patientParameters.getState();
-                }
-
-                public String getProvince()
-                {
-                    return patientParameters.getProvince();
-                }
-
-                public String getPostalCode()
-                {
-                    return patientParameters.getPostalCode();
-                }
-
-                public String getCounty()
-                {
-                    return patientParameters.getCounty();
-                }
-
-                public String getCountry()
-                {
-                    return patientParameters.getCountry();
-                }
-
-                public String getPurposeType()
-                {
-                    return null;
-                    //return patientParameters.getAddressPurpose();
-                }
-
-                public String getPurposeDescription()
-                {
-                    return null;
-                }
-
-                public ServiceVersion getServiceVersion()
-                {
-                    return null;
-                }
-
-                public String getComponentVersion()
-                {
-                    return null;
-                }
-            });
-        }
-        catch (Exception e)
-        {
-            log.error(e);
-        }
     }
 
-    public RegisteredPatient registerPatient(final RegisterPatientParameters patientParameters)
+    public RegisteredPatient registerPatient(final RegisterPatientParameters params)
     {
-        Person person = new Person();
+        Person person = Person.createNewPatient();
         try
         {
+            final PersonParameters patientParameters = params.getPerson();
+
             person.setLastName(patientParameters.getLastName());
             person.setFirstName(patientParameters.getFirstName());
             person.setMiddleName(patientParameters.getMiddleName());
+            person.setBirthDate(patientParameters.getBirthDate());
 
-            final GenderType genderType = referenceEntityFacade.getGenderType(patientParameters.getGender());
-            final MaritalStatusType maritalStatusType = referenceEntityFacade.getMaritalStatusType(patientParameters.getMaritalStatus());
+            final GenderType genderType = referenceEntityFacade.getGenderType(patientParameters.getGenderCode());
+            final MaritalStatusType maritalStatusType = referenceEntityFacade.getMaritalStatusType(patientParameters.getMaritalStatusCode());
             person.addMaritalStatus(maritalStatusType);
             person.addGender(genderType);
 
@@ -392,12 +253,10 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
             if (patientParameters.getDriversLicenseNumber() != null)
                 person.setDriversLicenseNumber(patientParameters.getDriversLicenseNumber());
                 
-            // Finally add the person
-            personFacade.addPerson(person);
-            registerPostalAddress(person, patientParameters);
-            Person responsibleParty = registerResponsibleParty(person, patientParameters);
-            registerInsuranceInformation(person, responsibleParty, patientParameters);
-            registerHomePhone(person, patientParameters);
+            HibernateUtil.getSession().save(person);
+            registerPostalAddress(person, params);
+            registerInsuranceInformation(person, params);
+            registerHomePhone(person, params);
 
             final Long patientId = (Long) person.getPersonId();
             final RegisteredPatient patient = new RegisteredPatient()
@@ -409,7 +268,7 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
 
                 public RegisterPatientParameters getRegisterPatientParameters()
                 {
-                    return patientParameters;
+                    return params;
                 }
 
                 /**
@@ -438,7 +297,7 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
 
                 public RegisterPatientParameters getRegisterPatientParameters()
                 {
-                    return patientParameters;
+                    return params;
                 }
 
                 /**
@@ -457,68 +316,27 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
 
     private void registerHomePhone(final Person person, final RegisterPatientParameters params)
     {
-        addContactMechanismService.addPhone(new AddPhoneParameters() {
-            public Serializable getPartyId()
-            {
-                return person;
-            }
+        final PhoneParameters homePhone = params.getHomePhone();
+        final PhoneNumber phone = contactMechanismFacade.addPhone(homePhone.getCountryCode(), homePhone.getAreaCode(), homePhone.getNumber(),
+            homePhone.getExtension());
+        
 
-            public String getCountryCode()
-            {
-                return params.getHomePhoneCountryCode();
-            }
-
-            public String getCityCode()
-            {
-                return params.getHomePhoneCityCode();
-            }
-
-            public String getAreaCode()
-            {
-                return params.getHomePhoneAreaCode();
-            }
-
-            public String getNumber()
-            {
-                return params.getHomePhoneNumber();
-            }
-
-            public String getExtension()
-            {
-                return null;
-            }
-
-            public String getPurposeDescription()
-            {
-                return null;
-            }
-
-            public String getPurposeType()
-            {
-                return ContactMechanismPurposeType.Cache.HOME_PHONE.getCode();
-            }
-        });
     }
 
     // TODO: Put a validator and return a list of errors/warnings
     public boolean isValid(ServiceParameters params)
     {
         RegisterPatientParameters patientParameters = (RegisterPatientParameters) params;
-        assert  patientParameters.getGender() != null :
+        assert  patientParameters.getPerson().getGenderCode() != null :
             "Gender cannot be empty.";
-        final String[] languageCodes = patientParameters.getLanguageCodes();
+        final String[] languageCodes = patientParameters.getPerson().getLanguageCodes();
         assert languageCodes != null && languageCodes.length > 0 :
             "There must be at least one language.";
-        final String[] ethnicities = patientParameters.getEthnicityCodes();
+        final String[] ethnicities = patientParameters.getPerson().getEthnicityCodes();
         assert ethnicities != null && ethnicities.length > 0 :
             "There must be at least one ethnicity.";
-        assert patientParameters.getStreetAddress1() != null :
-            "Home address cannot be empty.";
-        assert patientParameters.getHomePhoneAreaCode() != null && patientParameters.getHomePhoneNumber() != null :
-            "Home phone cannot be empty.";
-        assert patientParameters.getResponsiblePartyLastName() != null :
-            "Responsible party cannot be empty.";
-        return false;
+
+        return true;
     }
 
     public RegisteredPatient createErrorResponse(final ServiceParameters params, final String errorMessage)

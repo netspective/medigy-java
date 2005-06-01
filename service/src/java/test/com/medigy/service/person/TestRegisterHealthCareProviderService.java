@@ -63,10 +63,9 @@ public class TestRegisterHealthCareProviderService extends TestCase
         super.setUp();
 
         HibernateUtil.beginTransaction();
-        final Country usa = new Country();
-        usa.setName("United States of America");
+        final Country usa = new Country("United States of America", "USA");
         final State va = new State("Virginia", "VA");
-        va.setCountry(usa);
+        va.setParentCountry(usa);
         usa.addState(va);
         HibernateUtil.getSession().save(usa);
         HibernateUtil.commitTransaction();

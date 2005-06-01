@@ -43,14 +43,18 @@ import com.medigy.persist.model.party.PartyContactMechanism;
 import com.medigy.persist.model.party.PartyContactMechanismPurpose;
 import com.medigy.persist.model.party.PostalAddress;
 import com.medigy.persist.model.person.Person;
+import com.medigy.persist.model.contact.Country;
+import com.medigy.persist.model.contact.State;
 import com.medigy.persist.reference.custom.party.ContactMechanismPurposeType;
 import com.medigy.persist.reference.type.ContactMechanismType;
+import com.medigy.persist.reference.type.GenderType;
 import com.medigy.persist.util.HibernateUtil;
 import com.medigy.service.TestCase;
 import com.medigy.service.ServiceVersion;
 import com.medigy.service.contact.AddContactMechanismService;
 import com.medigy.service.dto.party.AddPostalAddressParameters;
 import com.medigy.service.dto.party.NewPostalAddress;
+import com.medigy.service.dto.party.PostalAddressParameters;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
@@ -58,21 +62,38 @@ import org.hibernate.criterion.Restrictions;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Date;
 
 public class TestAddContactMechanismService extends TestCase
 {
     private static final Log log = LogFactory.getLog(TestAddContactMechanismService.class);
 
+    /*
     public String getDataSetFile()
     {
         return "/com/medigy/service/party/TestAddContactMechanismService.xml";
+    }
+    */
+
+    protected void setUp() throws Exception
+    {
+        super.setUp();
+        Country country = new Country("United States of America",  "USA");
+        State state = new State("Virginia", "VA");
+        country.addState(state);
+        HibernateUtil.getSession().save(country);
     }
 
     public void testAddPostalAddress() throws Exception
     {
         // the dataset inserted this person
-        final Person p = (Person) HibernateUtil.getSession().load(Person.class, new Long(2));
-        assertEquals(p.getPartyContactMechanisms().size(), 0);
+        final Person p = new Person();
+        p.setLastName("Hackett");
+        p.setFirstName("Ryan");
+        p.addGender(GenderType.Cache.MALE.getEntity());
+        p.setBirthDate(new Date(123456));
+
+        HibernateUtil.getSession().save(p);
 
         AddContactMechanismService service =  (AddContactMechanismService) getRegistry().getService(AddContactMechanismService.class);
         final NewPostalAddress address = service.addPostalAddress(new AddPostalAddressParameters() {
@@ -81,71 +102,78 @@ public class TestAddContactMechanismService extends TestCase
                     return p.getPartyId();
                 }
 
-                public String getStreet1()
-                {
-                    return "123 Acme Road";
-                }
-
-                public String getStreet2()
-                {
-                    return "Suite 100";
-                }
-
-                public String getCity()
-                {
-                    return "Fairfax";
-                }
-
-                public String getState()
-                {
-                    return "VA";
-                }
-
-                public String getProvince()
-                {
-                    return null;
-                }
-
-                public String getPostalCode()
-                {
-                    return "22033";
-                }
-
-                public String getCounty()
-                {
-                    return "Fairfax County";
-                }
-
-                public String getCountry()
-                {
-                    return "USA";
-                }
-
-                public String getPurposeDescription()
-                {
-                    return null;
-                }
-
                 public ServiceVersion getServiceVersion()
                 {
                     return null;
                 }
 
-                public String getPurposeType()
+                public PostalAddressParameters getPostalAddressParameters()
                 {
-                    return ContactMechanismPurposeType.Cache.HOME_ADDRESS.getCode();
-                }
-            });
+                    return  new PostalAddressParameters() {
+                        public String getStreet1()
+                        {
+                            return "123 Acme Road";
+                        }
 
+                        public String getStreet2()
+                        {
+                            return "Suite 100";
+                        }
+
+                        public String getCity()
+                        {
+                            return "Fairfax";
+                        }
+
+                        public String getState()
+                        {
+                            return "VA";
+                        }
+
+                        public String getProvince()
+                        {
+                            return null;
+                        }
+
+                        public String getPostalCode()
+                        {
+                            return "22033";
+                        }
+
+                        public String getCounty()
+                        {
+                            return "Fairfax County";
+                        }
+
+                        public String getCountry()
+                        {
+                            return "USA";
+                        }
+
+                        public String getPurposeDescription()
+                        {
+                            return null;
+                        }
+
+                        public ServiceVersion getServiceVersion()
+                        {
+                            return null;
+                        }
+
+                        public String getPurposeType()
+                        {
+                            return ContactMechanismPurposeType.Cache.HOME_ADDRESS.getCode();
+                        }
+
+                    };
+                }
+
+            });
         // first check the relationship table between the actual contact mechanism and the party
         Criteria criteria = HibernateUtil.getSession().createCriteria(PartyContactMechanism.class);
         criteria.createCriteria("party").add(Restrictions.eq("partyId", p.getPartyId()));
         List partyContactMechList = criteria.list();
-        Object[] objects = partyContactMechList.toArray();
-        for (int i=0; i < objects.length; i++)
-        {
-            log.info(((PartyContactMechanism)objects[i]).getContactMechanism().getContactMechanismId());
-        }
+
         assertEquals(partyContactMechList.size(), 1);
         PartyContactMechanism partyContactMechanism = ((PartyContactMechanism)partyContactMechList.toArray()[0]);
         final Party party = partyContactMechanism.getParty();
@@ -160,11 +188,11 @@ public class TestAddContactMechanismService extends TestCase
         assertEquals(ps.getAddress1(), "123 Acme Road");
         assertEquals(ps.getAddress2(), "Suite 100");
         assertEquals(5, ps.getAddressBoundaries().size());
-        assertEquals(ps.getCity().getName(), "Fairfax");
-        assertEquals(ps.getState().getName(), "VA");
-        assertEquals(ps.getPostalCode().getName(), "22033");
-        assertEquals(ps.getCounty().getName(), "Fairfax County");
-        assertEquals(ps.getCountry().getName(), "USA");
+        assertEquals(ps.getCity().getCityName(), "Fairfax");
+        assertEquals(ps.getState().getStateAbbreviation(), "VA");
+        assertEquals(ps.getPostalCode().getCodeValue(), "22033");
+        assertEquals(ps.getCounty().getCountyName(), "Fairfax County");
+        assertEquals(ps.getCountry().getCountryAbbreviation(), "USA");
     }
 
     public void testAddEmail()
