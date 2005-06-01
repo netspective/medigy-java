@@ -38,6 +38,8 @@
  */
 package com.medigy.persist.model.contact;
 
+import com.medigy.persist.reference.custom.GeographicBoundaryType;
+
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
@@ -45,25 +47,26 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 
-import com.medigy.persist.reference.custom.GeographicBoundaryType;
-
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED )
 public class City extends GeographicBoundary
 {
-    private State state;
-    private County county;
-    private Province province;
+    private String cityName;
+
+    private State parentState;
+    private County parentCounty;
+    private Province parentProvince;
 
     public City()
     {
+        super();
         setType(GeographicBoundaryType.Cache.CITY.getEntity());
     }
 
     public City(final String name)
     {
         setType(GeographicBoundaryType.Cache.CITY.getEntity());
-        setName(name);
+        setCityName(name);
     }
 
     @Transient
@@ -79,48 +82,47 @@ public class City extends GeographicBoundary
 
     @ManyToOne
     @JoinColumn(name = "state_id", referencedColumnName = "geo_id")
-    public State getState()
+    public State getParentState()
     {
-        return state;
+        return parentState;
     }
 
-    public void setState(final State state)
+    public void setParentState(final State parentState)
     {
-        this.state = state;
+        this.parentState = parentState;
     }
 
     @ManyToOne
     @JoinColumn(name = "county_id", referencedColumnName = "geo_id")
-    public County getCounty()
+    public County getParentCounty()
     {
-        return county;
+        return parentCounty;
     }
 
-    public void setCounty(final County county)
+    public void setParentCounty(final County parentCounty)
     {
-        this.county = county;
+        this.parentCounty = parentCounty;
     }
 
     @ManyToOne
     @JoinColumn(name = "province_id", referencedColumnName = "geo_id")        
-    public Province getProvince()
+    public Province getParentProvince()
     {
-        return province;
+        return parentProvince;
     }
 
-    public void setProvince(final Province province)
+    public void setParentProvince(final Province parentProvince)
     {
-        this.province = province;
+        this.parentProvince = parentProvince;
     }
 
-    @Transient
     public String getCityName()
     {
-        return getName();
+        return cityName;
     }
 
-    public void setCityName(final String name)
+    public void setCityName(final String cityName)
     {
-        setName(name);
+        this.cityName = cityName;
     }
 }

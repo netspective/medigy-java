@@ -45,6 +45,7 @@ import com.medigy.persist.model.contact.County;
 import com.medigy.persist.model.contact.GeographicBoundary;
 import com.medigy.persist.model.contact.PostalCode;
 import com.medigy.persist.model.contact.State;
+import com.medigy.persist.model.contact.Province;
 import com.medigy.persist.reference.custom.GeographicBoundaryType;
 import com.medigy.persist.reference.type.ContactMechanismType;
 import org.apache.commons.logging.Log;
@@ -136,6 +137,13 @@ public class PostalAddress extends ContactMechanism
         this.addressBoundaries = addressBoundaries;
     }
 
+    @Transient
+    public void addAddressBoundary(final PostalAddressBoundary boundary)
+    {
+        boundary.setPostalAddress(this);
+        addressBoundaries.add(boundary);
+    }
+
     /*
     @ManyToMany(targetEntity= "com.medigy.persist.model.contact.GeographicBoundary", cascade ={CascadeType.PERSIST, CascadeType.MERGE})
     @AssociationTable(
@@ -170,6 +178,7 @@ public class PostalAddress extends ContactMechanism
             removePostalAddressBoundary(GeographicBoundaryType.Cache.CITY.getEntity());
             return;
         }
+        setBoundry(boundary);
     }
 
     @Transient
@@ -202,6 +211,19 @@ public class PostalAddress extends ContactMechanism
             return;
         }
         setBoundry(boundary);
+    }
+
+     @Transient
+    public void setProvince(final Province province)
+    {
+        if (province == null)
+        {
+            // the association to the state is being removed so just removed the relationship PostalAddressBoundary
+            // and leave the state entity itself
+            removePostalAddressBoundary(GeographicBoundaryType.Cache.PROVINCE.getEntity());
+            return;
+        }
+        setBoundry(province);
     }
 
     /**
@@ -289,7 +311,7 @@ public class PostalAddress extends ContactMechanism
         {
             if (boundary.getGeographicBoundary().getType().equals(newBoundary.getGeographicBoundary().getType()))
             {
-                if (boundary.getGeographicBoundary().getName().equals(newBoundary.getGeographicBoundary().getName()))
+                if (boundary.getGeographicBoundary().equals(newBoundary.getGeographicBoundary()))
                 {
                     // relationship already exists so  no need to do anything
                     if (log.isDebugEnabled())
@@ -300,10 +322,11 @@ public class PostalAddress extends ContactMechanism
                     // a  relationship with this type already exists so replace it
                     if (log.isDebugEnabled())
                         log.debug("Geo Boundary Type already exists. Replacing... " +
-                                boundary.getGeographicBoundary().getName() +  " with " + newBoundary.getGeographicBoundary().getName());
+                                boundary.getGeographicBoundary().getGeoId() +  " with " + newBoundary.getGeographicBoundary().getGeoId());
                     boundary.setGeographicBoundary(newBoundary.getGeographicBoundary());
                 }
                 newBoundaryRelation = false;
+                System.out.println("AAAAA");
                 break;
             }
         }
@@ -327,39 +350,39 @@ public class PostalAddress extends ContactMechanism
     }
 
     @Transient
-    public GeographicBoundary getCity()
+    public City getCity()
     {
-        return getPostalAddressBoundary(GeographicBoundaryType.Cache.CITY.getEntity());
+        return (City) getPostalAddressBoundary(GeographicBoundaryType.Cache.CITY.getEntity());
     }
 
     @Transient
-    public GeographicBoundary getState()
+    public State getState()
     {
-        return getPostalAddressBoundary(GeographicBoundaryType.Cache.STATE.getEntity());
+        return (State) getPostalAddressBoundary(GeographicBoundaryType.Cache.STATE.getEntity());
     }
 
     @Transient
-    public GeographicBoundary getPostalCode()
+    public PostalCode getPostalCode()
     {
-        return getPostalAddressBoundary(GeographicBoundaryType.Cache.POSTAL_CODE.getEntity());
+        return (PostalCode) getPostalAddressBoundary(GeographicBoundaryType.Cache.POSTAL_CODE.getEntity());
     }
 
     @Transient
-    public GeographicBoundary getCounty()
+    public County getCounty()
     {
-        return getPostalAddressBoundary(GeographicBoundaryType.Cache.COUNTY.getEntity());
+        return (County) getPostalAddressBoundary(GeographicBoundaryType.Cache.COUNTY.getEntity());
     }
 
     @Transient
-    public GeographicBoundary getProvince()
+    public Province getProvince()
     {
-        return getPostalAddressBoundary(GeographicBoundaryType.Cache.PROVINCE.getEntity());
+        return (Province) getPostalAddressBoundary(GeographicBoundaryType.Cache.PROVINCE.getEntity());
     }
 
     @Transient
-    public GeographicBoundary getCountry()
+    public Country getCountry()
     {
-        return getPostalAddressBoundary(GeographicBoundaryType.Cache.COUNTRY.getEntity());
+        return (Country) getPostalAddressBoundary(GeographicBoundaryType.Cache.COUNTRY.getEntity());
     }
 
     @Transient
@@ -370,4 +393,6 @@ public class PostalAddress extends ContactMechanism
         pab.setPostalAddress(this);
         addressBoundaries.add(pab);
     }
+
+
 }

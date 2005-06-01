@@ -56,29 +56,20 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED )
+@Inheritance(strategy = InheritanceType.JOINED)
 public class GeographicBoundary extends AbstractTopLevelEntity
 {
     public static final String PK_COLUMN_NAME = "geo_id";
 
     private Long geoId;
-    private String name;
-    private String abbreviation;
-    private GeographicBoundaryType type;
+    protected GeographicBoundaryType type;
 
     private Set<IncidentGeographicBoundary> incidentGeographicBoundary = new HashSet<IncidentGeographicBoundary>();
     private Set<PostalAddressBoundary> postalAddressBoundary = new HashSet<PostalAddressBoundary>();
-    //private Set<GeographicBoundaryAssociation> parentBoundaryAssociations = new HashSet<GeographicBoundaryAssociation>();
-    //private Set<GeographicBoundaryAssociation> childBoundaryAssociations = new HashSet<GeographicBoundaryAssociation>();
+
 
     public GeographicBoundary()
     {
-    }
-
-    public GeographicBoundary(String name, GeographicBoundaryType type)
-    {
-        this.name = name;
-        this.type = type;
     }
 
     @Id(generate = GeneratorType.AUTO)
@@ -91,30 +82,6 @@ public class GeographicBoundary extends AbstractTopLevelEntity
     protected final void setGeoId(final Long geoId)
     {
         this.geoId = geoId;
-    }
-
-    @Column(length = 100, nullable = false)
-    public final String getName()
-    {
-        return name;
-    }
-
-    public final void setName(final String name)
-    {
-        this.name = name;
-        if (this.abbreviation == null)
-            this.abbreviation = name;
-    }
-
-    @Column(length = 10)
-    public final String getAbbreviation()
-    {
-        return abbreviation;
-    }
-
-    public final void setAbbreviation(final String abbreviation)
-    {
-        this.abbreviation = abbreviation;
     }
 
     @ManyToOne
@@ -150,6 +117,7 @@ public class GeographicBoundary extends AbstractTopLevelEntity
     {
         this.incidentGeographicBoundary = incidentGeographicBoundary;
     }
+
 
     public boolean equals(Object obj)
     {

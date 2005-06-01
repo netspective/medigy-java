@@ -54,6 +54,9 @@ import java.util.Set;
 @Inheritance(strategy = InheritanceType.JOINED )
 public class Country extends GeographicBoundary
 {
+    private String countryName;
+    private String countryAbbreviation;
+
     private Set<State> states = new HashSet<State>();
     private Set<Province> provinces = new HashSet<Province>();
 
@@ -80,7 +83,7 @@ public class Country extends GeographicBoundary
         setGeoId(id);
     }
 
-    @OneToMany(mappedBy = "country", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "parentCountry", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     public Set<State> getStates()
     {
         return states;
@@ -103,7 +106,7 @@ public class Country extends GeographicBoundary
     @Transient
     public void addState(final State state)
     {
-        state.setCountry(this);
+        state.setParentCountry(this);
         this.states.add(state);
     }
 
@@ -157,7 +160,7 @@ public class Country extends GeographicBoundary
         return null;
     }
 
-    @OneToMany(mappedBy = "country", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "parentCountry", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     public Set<Province> getProvinces()
     {
         return provinces;
@@ -171,7 +174,6 @@ public class Country extends GeographicBoundary
     @Transient
     public boolean hasProvince(final Province province)
     {
-        final Set<Province> provinces = getProvinces();
         for (Province p : provinces)
         {
             if (p.equals(province))
@@ -180,45 +182,26 @@ public class Country extends GeographicBoundary
         return false;
     }
 
-    @Transient
     public String getCountryName()
     {
-        return getName();
+        return countryName;
     }
 
-    public void setCountryName(final String name)
+    public void setCountryName(final String countryName)
     {
-        setName(name);
+        this.countryName = countryName;
     }
 
-    @Transient
     public String getCountryAbbreviation()
     {
-        return getAbbreviation();
+        return countryAbbreviation;
     }
 
-    public void setCountryAbbreviation(final String abbrev)
+    public void setCountryAbbreviation(final String countryAbbreviation)
     {
-        setAbbreviation(abbrev);
+        this.countryAbbreviation = countryAbbreviation;
     }
-
-    public boolean equals(Object obj)
-    {
-        if (obj == null)
-            return false;
-        final Country compareCountry = (Country) obj;
-        if (getCountryId() != null && compareCountry.getCountryId() != null &&
-            getCountryId().longValue() == compareCountry.getCountryId().longValue())
-            return true;
-        else if (getCountryName() != null && getCountryAbbreviation() != null &&
-            getCountryName().equals(compareCountry.getCountryName()) &&
-            getCountryAbbreviation().equals(compareCountry.getCountryAbbreviation()))
-        {
-            return true;
-        }
-        return false;
-    }
-
+    
     @Transient
     public void addProvince(final Province province)
     {
@@ -230,7 +213,19 @@ public class Country extends GeographicBoundary
     {
         final Province province = new Province();
         province.setProvinceName(provinceName);
-        province.setCountry(this);
+        province.setParentCountry(this);
         this.provinces.add(province);
+    }
+
+    @Transient
+    public State getStateByCode(final String stateCode)
+    {
+        final Set<State> states = getStates();
+        for (State state : states)
+        {
+            if (state.getStateAbbreviation().equals(stateCode))
+                return state;
+        }
+        return null;
     }
 }

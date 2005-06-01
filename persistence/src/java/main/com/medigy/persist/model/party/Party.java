@@ -230,7 +230,7 @@ public class Party extends AbstractTopLevelEntity
         final PartyRole partyRole = new PartyRole();
         partyRole.setType(type);
         partyRole.setParty(this);
-        getPartyRoles().add(partyRole);
+        addPartyRole(partyRole);
     }
 
     /**

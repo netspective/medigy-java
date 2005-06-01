@@ -63,7 +63,7 @@ public class TestHealthCareLicense  extends TestCase
         doctor.addLanguage(LanguageType.Cache.ENGLISH.getEntity());
 
         final Country country = new Country();
-        country.setName("USA");
+        country.setCountryName("USA");
         final State state = new State("Virginia", "VA");
         country.addState(state);
 
@@ -94,7 +94,7 @@ public class TestHealthCareLicense  extends TestCase
         assertThat(savedDoctor.getLicenses().size(), eq(2));
         final HealthCareLicense newLicense = savedDoctor.getLicense(HealthCareLicenseType.Cache.BOARD_CERTIFICATION.getEntity());
         assertThat(newLicense.getLicenseId(), eq(license.getLicenseId()));
-        assertThat(newLicense.getState().getName(), eq("Virginia"));
+        assertThat(newLicense.getState().getStateName(), eq("Virginia"));
         assertThat(newLicense.getLicenseNumber(), eq("007"));
         assertThat(newLicense.isExpired(), eq(false));
         final HealthCareLicense otherLicense = savedDoctor.getLicense(HealthCareLicenseType.Cache.OTHER.getEntity());

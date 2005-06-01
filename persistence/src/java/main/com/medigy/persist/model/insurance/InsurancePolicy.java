@@ -117,7 +117,7 @@ public class InsurancePolicy extends AbstractDateDurationEntity
     }
 
     public void setContractHolderPerson(final Person contractHolderPerson)
-    {
+    {        
         this.contractHolderPerson = contractHolderPerson;
     }
 

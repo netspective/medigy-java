@@ -38,8 +38,7 @@
  */
 package com.medigy.persist.model.contact;
 
-import java.util.HashSet;
-import java.util.Set;
+import com.medigy.persist.reference.custom.GeographicBoundaryType;
 
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
@@ -48,14 +47,15 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
-
-import com.medigy.persist.reference.custom.GeographicBoundaryType;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED )
 public class County extends GeographicBoundary
 {
-    private State state;
+    private String countyName;
+    private State parentState;
     private Set<City> cities = new HashSet<City>();
 
     public County()
@@ -69,15 +69,14 @@ public class County extends GeographicBoundary
         setCountyName(name);
     }
 
-    @Transient
     public String getCountyName()
     {
-        return getName();
+        return countyName;
     }
 
-    public void setCountyName(final String name)
+    public void setCountyName(final String countyName)
     {
-        setName(name);
+        this.countyName = countyName;
     }
 
     @Transient
@@ -93,17 +92,17 @@ public class County extends GeographicBoundary
 
     @ManyToOne
     @JoinColumn(name = "state_id", referencedColumnName = "geo_id", nullable = false)
-    public State getState()
+    public State getParentState()
     {
-        return state;
+        return parentState;
     }
 
-    public void setState(final State state)
+    public void setParentState(final State parentState)
     {
-        this.state = state;
+        this.parentState = parentState;
     }
 
-    @OneToMany(mappedBy = "county")
+    @OneToMany(mappedBy = "parentCounty")
     public Set<City> getCities()
     {
         return cities;

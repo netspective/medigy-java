@@ -57,7 +57,10 @@ import java.util.Set;
 @Inheritance(strategy = InheritanceType.JOINED)
 public class State extends GeographicBoundary
 {
-    private Country country;
+    private String stateName;
+    private String stateAbbreviation;
+
+    private Country parentCountry;
     private Set<City> cities = new HashSet<City>();
     private Set<County> counties = new HashSet<County>();
     private Set<PostalCode> postalCodes = new HashSet<PostalCode>();
@@ -87,7 +90,7 @@ public class State extends GeographicBoundary
         setGeoId(id);
     }
 
-    @OneToMany(mappedBy = "state", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "parentState", cascade = CascadeType.ALL)
     public Set<City> getCities()
     {
         return cities;
@@ -102,17 +105,18 @@ public class State extends GeographicBoundary
     public void addCity(final String cityName)
     {
         final City city = new City(cityName);
-        city.setState(this);
+        city.setParentState(this);
         cities.add(city);
     }
 
     @Transient
     public void addCity(final City city)
     {
+        city.setParentState(this);
         cities.add(city);
     }
 
-    @OneToMany(mappedBy = "state", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "parentState", cascade = CascadeType.ALL)
     public Set<County> getCounties()
     {
         return counties;
@@ -125,39 +129,37 @@ public class State extends GeographicBoundary
 
     @ManyToOne
     @JoinColumn(name = "country_id", referencedColumnName = "geo_id", nullable = false)
-    public Country getCountry()
+    public Country getParentCountry()
     {
-        return country;
+        return parentCountry;
     }
 
-    public void setCountry(final Country country)
+    public void setParentCountry(final Country parentCountry)
     {
-        this.country = country;
+        this.parentCountry = parentCountry;
     }
 
-    @Transient
     public String getStateName()
     {
-        return getName();
+        return stateName;
     }
 
-    public void setStateName(final String name)
+    public void setStateName(final String stateName)
     {
-        setName(name);
+        this.stateName = stateName;
     }
 
-    @Transient
     public String getStateAbbreviation()
     {
-        return getAbbreviation();
+        return stateAbbreviation;
     }
 
-    public void setStateAbbreviation(final String abbrev)
+    public void setStateAbbreviation(final String stateAbbreviation)
     {
-        setAbbreviation(abbrev);
+        this.stateAbbreviation = stateAbbreviation;
     }
 
-    @OneToMany(mappedBy = "state", cascade =  CascadeType.ALL)
+    @OneToMany(mappedBy = "parentState", cascade =  CascadeType.ALL)
     public Set<PostalCode> getPostalCodes()
     {
         return postalCodes;
@@ -173,14 +175,14 @@ public class State extends GeographicBoundary
     {
         final PostalCode pc = new PostalCode();
         pc.setCodeValue(code);
-        pc.setState(this);
+        pc.setParentState(this);
         this.postalCodes.add(pc);
     }
 
     @Transient
     public void addPostalCode(final PostalCode code)
     {
-        code.setState(this);
+        code.setParentState(this);
         this.postalCodes.add(code);
     }
 
@@ -200,7 +202,7 @@ public class State extends GeographicBoundary
         {
             if (getStateName().equals(compareState.getStateName()) &&
                 getStateAbbreviation().equals(compareState.getStateAbbreviation()) &&
-                (getCountry() != null && getCountry().equals(compareState.getCountry())))
+                (getParentCountry() != null && getParentCountry().equals(compareState.getParentCountry())))
                 return true;
             else
                 return false;
@@ -243,15 +245,15 @@ public class State extends GeographicBoundary
     public void addCounty(final String countyName)
     {
         final County county = new County();
-        county.setName(countyName);
-        county.setState(this);
+        county.setCountyName(countyName);
+        county.setParentState(this);
         getCounties().add(county);
     }
     
     @Transient
     public void addCounty(final County county)
     {
-        county.setState(this);
+        county.setParentState(this);
         getCounties().add(county);
     }
 

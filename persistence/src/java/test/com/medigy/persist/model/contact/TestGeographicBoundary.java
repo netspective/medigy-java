@@ -79,46 +79,35 @@ public class TestGeographicBoundary extends TestCase
         country.setCountryName("United States of America");
         country.setCountryAbbreviation("USA");
 
-        final State stateA = new State();
-        stateA.setStateName("Virginia");
-        stateA.setStateAbbreviation("VA");
-        stateA.setCountry(country);
-        country.addState(stateA);
-        
-        final PostalAddressBoundary countryRel  = new PostalAddressBoundary();
-        countryRel.setGeographicBoundary(country);
-        countryRel.setPostalAddress(address);
-        address.getAddressBoundaries().add(countryRel);
+        final State virginia = new State();
+        virginia.setStateName("Virginia");
+        virginia.setStateAbbreviation("VA");
+        country.addState(virginia);
 
-        final PostalAddressBoundary stateRel  = new PostalAddressBoundary();
-        stateRel.setGeographicBoundary(country);
-        stateRel.setPostalAddress(address);
-        address.getAddressBoundaries().add(stateRel);
+        final County county = new County();
+        county.setCountyName("Fairfax County");
+        virginia.addCounty(county);
+        
+        address.setCountry(country);
+        address.setState(virginia);
+        address.setCounty(county);
 
         HibernateUtil.getSession().save(country);
-
         HibernateUtil.getSession().save(address);
         HibernateUtil.closeSession();
 
-        assertEquals(2, HibernateUtil.getSession().createCriteria(PostalAddressBoundary.class).list().size());
+        final PostalAddress newAddress = (PostalAddress) HibernateUtil.getSession().load(PostalAddress.class, address.getPostalAddressId());
+        assertThat(newAddress.getState(), eq(virginia));
+        assertThat(newAddress.getCountry(), eq(country));
+        assertThat(newAddress.getCounty(), eq(county));
+        assertThat(newAddress.getProvince(), NULL);
 
-        final PostalAddressBoundary countryBoundary = (PostalAddressBoundary) HibernateUtil.getSession().load(PostalAddressBoundary.class, countryRel.getPostalAddressBoundaryId());
-        assertNotNull(countryBoundary);
-        assertEquals(countryBoundary, countryRel);
+        assertThat(HibernateUtil.getSession().createCriteria(PostalAddressBoundary.class).list().size(), eq(3));
 
-        final PostalAddressBoundary stateBoundary = (PostalAddressBoundary) HibernateUtil.getSession().load(PostalAddressBoundary.class, stateRel.getPostalAddressBoundaryId());
-        assertNotNull(stateBoundary);
-        assertEquals(stateBoundary, stateRel);
-
-        final GeographicBoundary parentBoundary =
-                (GeographicBoundary) HibernateUtil.getSession().load(GeographicBoundary.class, countryRel.getGeographicBoundary().getGeoId());
-        assertNotNull(parentBoundary);
-        assertEquals(GeographicBoundaryType.Cache.COUNTRY.getEntity(), parentBoundary.getType());
-
+        
         final List countrList = HibernateUtil.getSession().createCriteria(Country.class).list();
         assertEquals(1, countrList.size());
 
-        this.extractFullDataset("c:\\temp\\PostalAddressData.xml");
     }
 
     /**
@@ -141,33 +130,33 @@ public class TestGeographicBoundary extends TestCase
         final State stateA = new State();
         stateA.setStateName("Virginia");
         stateA.setStateAbbreviation("VA");
-        stateA.setCountry(country);
+        stateA.setParentCountry(country);
         country.addState(stateA);
 
         final State stateB = new State();
         stateB.setStateName("Maryland");
         stateB.setStateAbbreviation("MD");
-        stateB.setCountry(country);
+        stateB.setParentCountry(country);
         country.addState(stateB);
 
         final Province province = new Province();
         province.setProvinceName("Alberta");
-        province.setCountry(countryB);
+        province.setParentCountry(countryB);
         countryB.addProvince(province);
 
         final City city = new City();
         city.setCityName("Fairfax");
-        city.setState(stateA);
+        city.setParentState(stateA);
         stateA.addCity(city);
 
         final City cityB = new City();
         cityB.setCityName("Edmonton");
-        cityB.setProvince(province);
+        cityB.setParentProvince(province);
         province.addCity(cityB);
 
         final PostalCode code = new PostalCode();
         code.setCodeValue("12345");
-        code.setState(stateA);
+        code.setParentState(stateA);
         stateA.addPostalCode(code);
 
         HibernateUtil.getSession().flush();
@@ -193,10 +182,10 @@ public class TestGeographicBoundary extends TestCase
         assertEquals("Canada", canada.getCountryName());
         assertEquals("CAN", canada.getCountryAbbreviation());
         assertEquals(1, canada.getProvinces().size());
-        assertTrue(canada.hasProvince(province));
+        assertThat(canada.hasProvince(province), eq(true));
 
         final State ohio = new State("Ohio", "OH");
-        ohio.setCountry(usa);
+        ohio.setParentCountry(usa);
         usa.addState(ohio);
         HibernateUtil.getSession().flush();
         HibernateUtil.closeSession();

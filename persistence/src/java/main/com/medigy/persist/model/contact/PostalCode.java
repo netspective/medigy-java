@@ -38,6 +38,11 @@
  */
 package com.medigy.persist.model.contact;
 
+import com.medigy.persist.reference.custom.GeographicBoundaryType;
+import org.hibernate.validator.Length;
+import org.hibernate.validator.NotNull;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
@@ -45,13 +50,14 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 
-import com.medigy.persist.reference.custom.GeographicBoundaryType;
-
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED )
 public class PostalCode extends GeographicBoundary
 {
-    private State state;
+    private String codeValue;
+    private String extensionCodeValue;
+
+    private State parentState;
 
     public PostalCode()
     {
@@ -77,24 +83,37 @@ public class PostalCode extends GeographicBoundary
 
     @ManyToOne
     @JoinColumn(name = "state_id", referencedColumnName = "geo_id", nullable = false)
-    public State getState()
+    public State getParentState()
     {
-        return state;
+        return parentState;
     }
 
-    public void setState(final State state)
+    public void setParentState(final State parentState)
     {
-        this.state = state;
+        this.parentState = parentState;
     }
 
-    @Transient
+    @Column(length = 5, nullable = false)
+    @NotNull @Length(min=5, max=5)
     public String getCodeValue()
     {
-        return getName();
+        return codeValue;
     }
 
-    public void setCodeValue(final String code)
+    public void setCodeValue(final String codeValue)
     {
-        setName(code);
+        this.codeValue = codeValue;
+    }
+
+    @Column(length = 4)
+    @Length(min=4, max=4)
+    public String getExtensionCodeValue()
+    {
+        return extensionCodeValue;
+    }
+
+    public void setExtensionCodeValue(final String extensionCodeValue)
+    {
+        this.extensionCodeValue = extensionCodeValue;
     }
 }

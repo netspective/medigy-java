@@ -73,7 +73,10 @@ public class HibernateUtil
         try
         {
             if (sessionFactory != null)
-                sessionFactory.close();    
+            {
+                connectionProvider.close();
+                sessionFactory.close();
+            }
             sessionFactory = cfg.buildSessionFactory();
             connectionProvider = ConnectionProviderFactory.newConnectionProvider(cfg.getProperties());
         }

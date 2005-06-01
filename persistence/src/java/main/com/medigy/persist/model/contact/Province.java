@@ -38,8 +38,7 @@
  */
 package com.medigy.persist.model.contact;
 
-import java.util.HashSet;
-import java.util.Set;
+import com.medigy.persist.reference.custom.GeographicBoundaryType;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -49,14 +48,17 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
-
-import com.medigy.persist.reference.custom.GeographicBoundaryType;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED )
 public class Province extends GeographicBoundary
 {
-    private Country country;
+    private String provinceName;
+    private String provinceAbbreviation;
+
+    private Country parentCountry;
     private Set<City> cities = new HashSet<City>();
 
     public Province()
@@ -77,39 +79,37 @@ public class Province extends GeographicBoundary
 
     @ManyToOne
     @JoinColumn(name = "country_id", referencedColumnName = "geo_id")
-    public Country getCountry()
+    public Country getParentCountry()
     {
-        return country;
+        return parentCountry;
     }
 
-    public void setCountry(final Country country)
+    public void setParentCountry(final Country parentCountry)
     {
-        this.country = country;
+        this.parentCountry = parentCountry;
     }
 
-    @Transient
     public String getProvinceName()
     {
-        return getName();
+        return provinceName;
     }
 
-    public void setProvinceName(final String name)
+    public void setProvinceName(final String provinceName)
     {
-        setName(name);
+        this.provinceName = provinceName;
     }
 
-    @Transient
     public String getProvinceAbbreviation()
     {
-        return getAbbreviation();
+        return provinceAbbreviation;
     }
 
-    public void setProvinceAbbreviation(final String abbrev)
+    public void setProvinceAbbreviation(final String provinceAbbreviation)
     {
-        setAbbreviation(abbrev);
+        this.provinceAbbreviation = provinceAbbreviation;
     }
 
-    @OneToMany(mappedBy = "province", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "parentProvince", cascade = CascadeType.ALL)
     public Set<City> getCities()
     {
         return cities;
@@ -130,7 +130,7 @@ public class Province extends GeographicBoundary
     public void addCity(final String cityName)
     {
         final City city = new City(cityName);
-        city.setProvince(this);
+        city.setParentProvince(this);
         this.cities.add(city);
     }
 
@@ -150,10 +150,7 @@ public class Province extends GeographicBoundary
         if (obj == null)
             return false;
         final Province testProvince = (Province) obj;
-        if ((getProvinceName() != null && testProvince.getProvinceName() != null &&
-             getProvinceName().equals(testProvince.getProvinceName())) &&
-            (getProvinceAbbreviation() != null && getProvinceAbbreviation().equals(testProvince.getProvinceAbbreviation())) &&
-            (getCountry() != null && getCountry().equals(testProvince.getCountry())))
+        if (getGeoId().equals(testProvince.getGeoId()))
         {
             return true;
         }

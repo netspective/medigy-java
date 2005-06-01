@@ -197,13 +197,12 @@ public abstract class TestCase extends MockObjectTestCase
     {
         if (useExternalModelData)
         {
-            IDatabaseConnection dbUnitConn = null;
-            dbUnitConn = getDbUnitConnection();
+            IDatabaseConnection dbUnitConn = getDbUnitConnection();
             //DatabaseOperation.REFRESH.execute(dbUnitConn, getDataSet());
             DatabaseOperation.CLEAN_INSERT.execute(dbUnitConn, getDataSet());
             dbUnitConn.getConnection().commit();
-            dbUnitConn.close();
             dbUnitConn.getConnection().close();
+            dbUnitConn.close();
         }
         if (!useExternalModelData)
             new ModelInitializer(HibernateUtil.getSession(),
@@ -230,11 +229,13 @@ public abstract class TestCase extends MockObjectTestCase
         if (useExternalModelData)
             DatabaseOperation.NONE.execute(getDbUnitConnection(), getDataSet());
         super.tearDown();
+
         SessionManager.getInstance().popActiveSession();
         HibernateUtil.closeSession();
 
         try
         {
+
             final File[] dbFiles = databaseDirectory.listFiles();
             for (File file : dbFiles)
                 file.delete();
