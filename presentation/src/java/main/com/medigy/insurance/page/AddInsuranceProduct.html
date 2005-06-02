@@ -1,0 +1,153 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.sourceforge.net/">
+    <head>
+        <title>Add Insurance Carrier</title>
+        <link rel="stylesheet" type="text/css" href="../../../../../../../resources/theme/default/css/theme.css"/>
+    </head>
+
+    <body>
+        <wicket:panel>
+            <form wicket-id="main-form">
+                <div class="form-body">
+                    <fieldset class="top-level">
+                    <legend wicket:id="insproduct-profile-label">Profile</legend>
+                        <table class="vertical-fields">
+                            <tr class="field">
+                                <td class="label">
+                                    <label wicket:id="insuranceCarrier-label">Insurance Carrier Organization</label>
+                                </td>
+                                <td class="control">
+                                    <input type="text" wicket:id="insuranceCarrier-control" size="36"/>
+                                </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="label">
+                                    <label wicket:id="productName-label">Product Name</label>
+                                </td>
+                                <td class="control">
+                                    <input type="text" wicket:id="productName-control" size="36"/>
+                                </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="label">
+                                    <label wicket:id="productType-label">Product Type</label>
+                                </td>
+                                <td class="control">
+                                    <select type="text" wicket:id="productType-control">
+                                        <option />
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="label">
+                                    <label wicket:id="feeScheduleId-label">Fee Schedule ID</label>
+                                </td>
+                                <td class="control">
+                                    <input type="text" wicket:id="feeScheduleId-control" />
+                                </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="label">
+                                    <label wicket:id="medigapId-label">Medigap ID</label>
+                                </td>
+                                <td class="control">
+                                    <input type="text" wicket:id="medigapId-control" />
+                                </td>
+                            </tr>
+                        </table>
+                    </fieldset>
+                    <fieldset class="top-level">
+                        <legend wicket:id="contact-info-label">Contact Information</legend>
+                        <table class="vertical-fields">
+                            <tr class="field">
+                                <td class="label">
+                                    <label wicket:id="billingAddress-label">Billing Address</label>
+                                </td>
+                                <td class="control">
+                                    <input type="text" wicket:id="billingAddress1-control" size="36"/><br/>
+                                    <input type="text" wicket:id="billingAddress2-control" size="36"/>
+                                </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="label">
+                                    <label wicket:id="billingAddressCity-label">City</label>  \
+                                    <label wicket:id="billingAddressState-label">State</label> \
+                                    <label wicket:id="billingAddressZip-label">Zip</label>
+                                </td>
+                                <td class="control">
+                                    <input type="text" wicket:id="billingAddressCity-control" size="36"/>
+                                    <select wicket:id="billingAddressState-control">
+                                        <option/>
+                                        <option>Virginia</option>
+                                    </select>
+                                    <input type="text" wicket:id="billingAddressZip-control" size="5"/>-
+                                    <input type="text" wicket:id="billingAddressZipExt-control" size="4"/>
+                                </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="label">
+                                    <label wicket:id="phone-label">Phone</label> \
+                                    <label wicket:id="fax-label">Fax</label>
+                                </td>
+                                <td class="control">
+                                    <input type="text" wicket:id="phone-control" />
+                                    <input type="text" wicket:id="fax-control" />
+                                </td>
+                            </tr>
+                        </table>
+                    </fieldset>
+                    <fieldset class="top-level">
+                        <legend wicket:id="remittance-info-label">Remittance Information</legend>
+                        <table class="vertical-fields">
+                            <tr class="field">
+                                <td class="label">
+                                    <label wicket:id="remitType-label">Remittance Type</label>
+                                </td>
+                                <td class="control">
+                                    <select wicket:id="remitType-control" >
+                                        <option>Paper</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="label">
+                                    <label wicket:id="eRemittanceId-label">E-remittance Payer ID</label>
+                                </td>
+                                <td class="control">
+                                    <input type="text" wicket:id="eRemittanceId-control" size="15"/> <br\>
+                                    <span>Only for non-paper types</span>
+                                </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="label">
+                                    <label wicket:id="remitPayerName-label">Remit Payer Name</label>
+                                </td>
+                                <td class="control">
+                                    <input type="text" wicket:id="remitPayerName-control" size="35"/>
+                                </td>
+                            </tr>
+                        </table>
+                    </fieldset>
+                </div>
+                <div class="director">
+                    <table class="vertical-fields">
+                        <tr class="field">
+                            <td class="label">
+                                <label wicket:id="nextAction-label">Next Action</label>
+                            </td>
+                            <td class="control">
+                                <select wicket:id="nextAction-control">
+                                    <option>Add Insurance Plan</option>
+                                    <option>Add Insurance Product</option>
+                                    <option>Go to Org Summary</option>
+                                </select>
+                                <input class="button" wicket:id="form-submit-control" type="submit" value="OK"/>
+                                <input class="button" wicket:id="form-reset-control" type="reset" value="Reset"/>
+                            </td>
+                        </tr>
+                    </table>
+
+                </div>
+            </form>
+        </wicket:panel>
+    </body>
+</html>
