@@ -252,6 +252,7 @@ div.form-body table.vertical-fields {padding: 5px; }
 div.form-body table.vertical-fields tr.field { }
 div.form-body table.vertical-fields td { font-family: Georgia; font-size: 10pt; color: black; }
 div.form-body table.vertical-fields td.label { padding: 5px; text-align: right; }
+div.form-body table.vertical-fields td.label-top { padding: 5px; text-align: center; }
 div.form-body table.vertical-fields td.control { padding: 5px; text-align: left; }
 div.form-body table.vertical-fields tr.director td.control { text-align: right; padding-top: 20px;}
 
