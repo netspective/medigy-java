@@ -1,0 +1,271 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.sourceforge.net/">
+    <head>
+        <title>Add Insurance Carrier</title>
+        <link rel="stylesheet" type="text/css" href="../../../../../../../resources/theme/default/css/theme.css"/>
+    </head>
+
+    <body>
+        <wicket:panel>
+            <form wicket-id="main-form">
+                <div class="form-body">
+                    <fieldset class="top-level">
+                        <legend wicket:id="org-profile-label">Profile</legend>
+                        <table class="vertical-fields">
+                            <tr class="field">
+                                <td class="label">
+                                    <label wicket:id="parentOrganizationName-label">Parent Organization</label>
+                                </td>
+                                <td class="control">
+                                    <input type="text" wicket:id="parentOrganizationName-control" size="36"/>
+                                </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="label">
+                                    <label wicket:id="organizationName-label">Organization Name</label>
+                                </td>
+                                <td class="control">
+                                    <input type="text" wicket:id="organizationName-control" size="36"/>
+                                </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="label">
+                                    <label wicket:id="tradeName-label">Doing Business As</label>
+                                </td>
+                                <td class="control">
+                                    <input type="text" wicket:id="tradeName-control" size="36"/>
+                                </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="label">
+                                    <label wicket:id="fiscalYearStart-label">Fiscal Year Starts</label>
+                                </td>
+                                <td class="control">
+                                    <select wicket:id="fiscalYearStart-control">
+                                        <option/>
+                                        <option>January</option>
+                                    </select>
+                                </td>
+                            </tr>
+
+                        </table>
+                    </fieldset>
+                    <fieldset class="top-level">
+                        <legend wicket:id="contactInformation-label">Contact Information</legend>
+                        <table class="vertical-fields">
+                            <tr class="field">
+                                <td class="label">
+                                    <label wicket:id="phone-label">Phone</label> /
+                                    <label wicket:id="fax-label">Fax</label>
+                                </td>
+
+                                <td class="control">
+                                    <input type="text" wicket:id="phone-control" value=""/>
+                                    <input type="text" wicket:id="fax-control" value=""/>
+                                </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="label">
+                                    <label wicket:id="address-label">Mailing Address</label>
+                                </td>
+                                <td class="control">
+                                    <input type="text" wicket:id="street1-control" size="50"/><br/>
+                                    <input type="text" wicket:id="street2-control" size="50"/>
+                                </td>
+                            </tr>
+                            <tr  class="field">
+                                <td class="label">
+                                    <label wicket:id="city-label">City</label> /
+                                    <label wicket:id="state-label">State</label>  /
+                                    <label wicket:id="zip-label">Zip</label>
+                                </td>
+                                <td class="control">
+                                    <input type="text" wicket:id="city-control" size="25"/>
+                                    <select wicket:id="state-control">
+                                        <option />
+                                        <option>Virginia</option>
+                                    </select>
+                                    <input type="text" wicket:id="zip-control" size="5" value="00000"/>-
+                                    <input type="text" wicket:id="zipExt-control" size="4" value="0000"/>
+                                </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="label">
+                                    <label wicket:id="email-label">Email</label>
+                                </td>
+                                <td class="control">
+                                    <input type="text" wicket:id="email-control" size="50" value="info@medigy.com"/>
+                                </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="label">
+                                    <label wicket:id="website-label">Website</label>
+                                </td>
+                                <td class="control">
+                                    <input type="text" wicket:id="website-control" size="50" value="http://www.yahoo.com"/>
+                                </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="label">
+                                    <label wicket:id="website-label">Hours of Operation</label> /
+                                    <label wicket:id="website-label">Timezone</label>
+                                </td>
+                                <td class="control">
+                                    <input type="text" wicket:id="hours-label" value="8:00 AM to 5:00 PM"/>
+                                    <select wicket:id="timezone-label">
+                                        <option>EST</option>
+                                        <option>CST</option>
+                                        <option>PST</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="label">
+                                    <label wicket:id="billing-contact-label">Billing Contact</label>/
+                                    <label wicket:id="billing-phone-label">Phone</label>
+                                </td>
+                                <td class="control">
+                                    <input type="text" wicket:id="billing-contact-control" value="John Doe"/>
+                                    <input type="text" wicket:id="billing-phone-control"  value="800-123-4567"/>
+                                </td>
+                            </tr>
+                        </table>
+                    </fieldset>
+                    <fieldset class="top-level">
+                        <legend wicket:id="idList-label">Identification List</legend>
+                        <table class="vertical-fields">
+                            <tr class="field">
+                                <td class="label">
+                                    <label wicket:id="taxId-label">Tax ID</label>
+                                </td>
+                                <td class="control">
+                                    <input type="text" wicket:id="taxId-control" value=""/>
+                                </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="label">
+                                    <label wicket:id="employerId-label">Employer ID</label>
+                                </td>
+                                <td class="control">
+                                    <input type="text" wicket:id="employerId-control" value=""/>
+                                </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="label">
+                                    <label wicket:id="stateId-label">State ID</label>
+                                </td>
+                                <td class="control">
+                                    <input type="text" wicket:id="stateId-control" value=""/>
+                                </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="label">
+                                    <label wicket:id="medicaidId-label">Medicaid ID</label>
+                                </td>
+                                <td class="control">
+                                    <input type="text" wicket:id="medicaidId-control" value=""/>
+                                </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="label">
+                                    <label wicket:id="workersCompId-label">Worker's Comp ID</label>
+                                </td>
+                                <td class="control">
+                                    <input type="text" wicket:id="workersCompId-control" value=""/>
+                                </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="label">
+                                    <label wicket:id="bcbsId-label">Blue Cross Blue Shield ID</label>
+                                </td>
+                                <td class="control">
+                                    <input type="text" wicket:id="bcbsId-control" value=""/>
+                                </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="label">
+                                    <label wicket:id="medicareId-label">Medicare ID</label>
+                                </td>
+                                <td class="control">
+                                    <input type="text" wicket:id="medicareId-control" value=""/>
+                                </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="label">
+                                    <label wicket:id="cliaId-label">CLIA ID</label>
+                                </td>
+                                <td class="control">
+                                    <input type="text" wicket:id="cliaId-control" value=""/>
+                                </td>
+                            </tr>
+                        </table>
+                    </fieldset>
+                    <fieldset class="top-level">
+                        <legend wicket:id="service-label">Service Information</legend>
+                        <table class="vertical-fields">
+                            <tr class="field">
+                                <td class="label">
+                                    <label wicket:id="hcfaServicePlace-label">HCFA Service Place</label>
+                                </td>
+                                <td class="control">
+                                    <input type="text" wicket:id="hcfaServicePlace-control" value=""/>
+                                </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="label">
+                                    <label wicket:id="medicareGpciLocation-label">Medicare GPCI Location</label>
+                                </td>
+                                <td class="control">
+                                    <input type="text" wicket:id="medicareGpciLocation-control" value=""/>
+                                </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="label">
+                                    <label wicket:id="medicareFacilityPricing-label">Medicare Facility Pricing</label>
+                                </td>
+                                <td class="control">
+                                    <input type="radio" wicket:id="medicareFacilityPricing-control" value=""> Non-Facility</input>
+                                    <input type="radio" wicket:id="medicareFacilityPricing-control" value=""> Facility</input>
+                                </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="label">
+                                    <label wicket:id="serviceArea-label">Area Served</label>
+                                </td>
+                                <td class="control">
+                                    <select wicket:id="serviceArea-control">
+                                        <option/>
+                                        <option>National</option>
+                                        <option>State</option>
+                                        <option>Regional</option>
+                                    </select>
+                                </td>
+                            </tr>
+                        </table>
+                    </fieldset>
+
+                </div>
+                <div class="director">
+                    <table class="vertical-fields">
+                        <tr class="field">
+                            <td class="label">
+                                <label wicket:id="nextAction-label">Next Action</label>
+                            </td>
+                            <td class="control">
+                                <select wicket:id="nextAction-control">
+                                    <option>Add Another Insurance Carrier</option>
+                                    <option>Add Insurance Product</option>
+                                    <option>Go to Directory</option>
+                                    <option>Go to Work List</option>
+                                    <option>Return to Home</option>
+                                </select>
+                                <input class="button" wicket:id="form-submit-control" type="submit" value="OK"/>
+                                <input class="button" wicket:id="form-reset-control" type="reset" value="Reset"/>
+                            </td>
+                        </tr>
+                    </table>
+
+                </div>
+            </form>
+        </wicket:panel>
+    </body>
+</html>
