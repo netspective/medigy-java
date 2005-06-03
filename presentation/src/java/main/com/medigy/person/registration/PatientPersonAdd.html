@@ -7,8 +7,31 @@
 	        <wicket:panel>
 	            <form wicket-id="main-form">
 	                <div class="form-body">
-	                    <fieldset class="top-level">
+	                     <fieldset class="top-level">
 	                        <legend wicket:id="patientId-group-label">Patient Identification</legend>
+	                        <table class="vertical-fields">
+	                            <tr class="field">
+	                                <td class="label">
+	                                    <label wicket:id="patientPersonId-label">Patient / Person ID</label>
+	                                </td>
+	                                <td class="control">
+	                                    <input type="text" wicket:id="patientPersonId-control" value=""/>
+	                                </td>
+	                            </tr>
+	                            <tr class="field">
+	                                <td class="label">
+	                                    <label wicket:id="account-label">Account</label> /
+	                                    <label wicket:id="chartNumber-label">Chart Number</label>
+	                                </td>
+	                                <td class="control">
+	                                    <input type="text" wicket:id="account-control" value=""/>
+	                                    <input type="text" wicket:id="chartNumber-control" value=""/>
+	                                </td>
+	                            </tr>
+	                        </table>
+	                    </fieldset>
+	                    <fieldset class="top-level">
+	                        <legend wicket:id="patientId-group-label">Profile Information</legend>
 	                        <table class="vertical-fields">
 	                            <tr class="field">
 	                                <td class="label">
