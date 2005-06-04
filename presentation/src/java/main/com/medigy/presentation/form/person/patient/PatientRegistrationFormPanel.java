@@ -48,9 +48,9 @@ import com.medigy.wicket.form.FieldGroupLabel;
 import com.medigy.wicket.panel.DefaultFormPanel;
 import wicket.IFeedback;
 
-public class RegisterPatientFormPanel extends DefaultFormPanel
+public class PatientRegistrationFormPanel extends DefaultFormPanel
 {
-    public RegisterPatientFormPanel(final String componentName)
+    public PatientRegistrationFormPanel(final String componentName)
     {
         super(componentName);
     }

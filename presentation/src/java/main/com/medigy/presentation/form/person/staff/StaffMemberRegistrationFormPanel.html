@@ -1,44 +1,21 @@
 <html xmlns:wicket="http://wicket.sourceforge.net/">
     <head>
-        <title>Nursing Staff Add</title>
-        <link rel="stylesheet" type="text/css" href="../../../../../../../resources/theme/default/css/theme.css"/>
+        <title>Staff Member Add</title>
+        <link rel="stylesheet" type="text/css" href="../../../../../../../../../resources/theme/default/css/theme.css"/>
     </head>
     <body>
         <wicket:panel>
             <form wicket-id="main-form">
                 <div class="form-body">
                     <fieldset class="top-level">
-	                    <legend wicket:id="nurseId-group-label">Nurse Identification</legend>
+	                    <legend wicket:id="staffId-group-label">Staff Identification</legend>
 	                    <table class="vertical-fields">
 	                        <tr class="field">
 	                            <td class="label">
-	                                <label wicket:id="nurseId-label">Nurse ID</label>
+	                                <label wicket:id="staffId-label">Staff ID</label>
 	                            </td>
 	                            <td class="control">
-	                                <input type="text" wicket:id="nurseId-control" value=""/>
-	                            </td>
-	                        </tr>
-	                        <tr>
-	                            <td class="label">
-	                                <label wicket:id="personTitleJobCode">Person Title / Job Code</label>
-	                            </td>
-	                            <td>
-	                                <table class="vertical-form">
-	                                    <tr class="field">
-	                                        <td class="control">
-	                                            <input type="checkbox" wicket:id="lvnLpnCheckbox-control"/>
-	                                            <label wicket:id="lvnLpn-label">LVN/LPN</label>
-	                                        </td>
-	                                        <td class="control">
-	                                            <input type="checkbox" wicket:id="rnCheckbox-control"/>
-	                                            <label wicket:id="rn-label">RN</label>
-	                                        </td>
-	                                        <td class="control">
-	                                            <input type="checkbox" wicket:id="otherCheckbox-control"/>
-	                                            <label wicket:id="other-label">Other</label>
-	                                        </td>
-	                                    </tr>
-	                                </table>
+	                                <input type="text" wicket:id="staffId-control" value=""/>
 	                            </td>
 	                        </tr>
 	                        <tr class="field">
@@ -116,7 +93,6 @@
 	                        </tr>
 	                    </table>
 	                </fieldset>
-
                     <fieldset class="top-level">
                         <legend wicket:id="contactMethods-label">Contact Methods</legend>
                         <table class="vertical-fields">
@@ -184,82 +160,6 @@
                                     <input type="text" wicket:id="email-control" value=""/>
                                 </td>
                             </tr>
-                        </table>
-                    </fieldset>
-
-
-
-
-                    <fieldset class="top-level">
-                        <legend wicket:id="certification-label">Certification</legend>
-                        <table class="vertical-fields">
-						    <tr class="field">
-						        <td class="label">
-                                    <label wicket:id="nursingLicense-label">Nursing License</label> /
-                                    <label wicket:id="expDate-label">Exp Date</label> /
-                                    <label wicket:id="licenseRequired-label">License Required</label>
-                                </td>
-                                <td class="control">
-                                    <input type="text" wicket:id="license-control" value=""/>
-                                    <input type="text" wicket:id="expDate-control" value=""/>
-	                                <input type="checkbox" wicket:id="licenseRequiredCheckbox-control"/>
-	                                <label wicket:id="licenseRequired2-label">License Required</label>
-	                            </td>
-                            </tr>
-                            <tr>
-							    <td class="label">
-                                    <label wicket:id="license-label">License Certification</label> /
-                                    <label wicket:id="number-label">Number</label> /
-                                    <label wicket:id="expDate-label">Exp Date</label>
-                                </td>
-                                <td class="control">
-                                    <select wicket:id="licenseCertification-control">
-							            <option>DEA</option>
-							            <option>DPS</option>
-							            <option>BCBS</option>
-                 			            <option>EPSDT</option>
-                                        <option>EPSDT WERTOS VB</option>
-				                    </select>
-                                    <input type="text" wicket:id="number-control" value=""/>
-                                    <input type="text" wicket:id="expDate-control" value=""/>
-                                </td>
-                            </tr>
-                            <tr>
-							    <td class="label">
-                                    <label wicket:id="license-label">License Certification</label> /
-                                    <label wicket:id="number-label">Number</label> /
-                                    <label wicket:id="expDate-label">Exp Date</label>
-                                </td>
-                                <td class="control">
-                                    <select wicket:id="licenseCertification-control">
-							            <option>DEA</option>
-							            <option>DPS</option>
-							            <option>BCBS</option>
-                 			            <option>EPSDT</option>
-                                        <option>EPSDT WERTOS VB</option>
-				                    </select>
-                                    <input type="text" wicket:id="number-control" value=""/>
-                                    <input type="text" wicket:id="expDate-control" value=""/>
-                                </td>
-                            </tr>
-                            <tr>
-							    <td class="label">
-                                    <label wicket:id="license-label">License Certification</label> /
-                                    <label wicket:id="number-label">Number</label> /
-                                    <label wicket:id="expDate-label">Exp Date</label>
-                                </td>
-                                <td class="control">
-                                    <select wicket:id="licenseCertification-control">
-							            <option>DEA</option>
-							            <option>DPS</option>
-							            <option>BCBS</option>
-                 			            <option>EPSDT</option>
-                                        <option>EPSDT WERTOS VB</option>
-				                    </select>
-                                    <input type="text" wicket:id="number-control" value=""/>
-                                    <input type="text" wicket:id="expDate-control" value=""/>
-                                </td>
-                            </tr>
                             <tr>
 							    <td class="label">
                                     <label wicket:id="employeeId-label">Employee ID</label> /
@@ -271,36 +171,29 @@
                                 </td>
                             </tr>
                             <tr>
-	                            <td class="label">
-								    <label wicket:id="associatedPhysicians">Associated Physicians</label>
-								</td>
-	                            <td>
-								    <table class="vertical-form">
-	                                    <tr class="field">
-								            <td class="control">
-	                                            <input type="checkbox" wicket:id="barryDickensCheckbox-control"/>
-	                                            <label wicket:id="barryDickens-label">Barry Dickens</label>
-	                                        </td>
-	                                        <td class="control">
-	                                            <input type="checkbox" wicket:id="aliceHamilCheckbox-control"/>
-	                                            <label wicket:id="aliceHamil-label">Alice Hamil</label>
-	                                        </td>
-	                                        <td class="control">
-	                                            <input type="checkbox" wicket:id="robertHydeCheckbox-control"/>
-	                                            <label wicket:id="robertHyde-label">Robert K Hyde</label>
-	                                        </td>
-	                                        <td class="control">
-	                                            <input type="checkbox" wicket:id="geraldMorrisCheckbox-control"/>
-	                                            <label wicket:id="geralsMorris-label">Gerald Morris</label>
-	                                        </td>
-	                                        <td class="control">
-	                                            <input type="checkbox" wicket:id="michaelNelsonCheckbox-control"/>
-	                                            <label wicket:id="michaelNelson-label">Michael Nelson</label>
-	                                        </td>
-	                                    </tr>
-	                                 </table>
-	                             </td>
-	                         </tr>
+							    <td class="label">
+                                    <label wicket:id="license-label">Certification</label> /
+                                    <label wicket:id="number-label">Number</label> /
+                                    <label wicket:id="expDate-label">Exp Date</label>
+                                </td>
+                                <td class="control">
+                                    <input type="text" wicket:id="certification-control" value=""/>
+                                    <input type="text" wicket:id="number-control" value=""/>
+                                    <input type="text" wicket:id="expDate-control" value=""/>
+                                </td>
+                            </tr>
+                            <tr>
+							    <td class="label">
+                                    <label wicket:id="license-label">Certification</label> /
+                                    <label wicket:id="number-label">Number</label> /
+                                    <label wicket:id="expDate-label">Exp Date</label>
+                                </td>
+                                <td class="control">
+				                    <input type="text" wicket:id="certification-control" value=""/>
+				                    <input type="text" wicket:id="number-control" value=""/>
+                                    <input type="text" wicket:id="expDate-control" value=""/>
+                                </td>
+                            </tr>
                         </table>
                     </fieldset>
                     <div class="director">
@@ -310,7 +203,7 @@
                                 </td>
                                 <td class="control">
                                     <select wicket:id="nextAction-control">
-                                        <option>View Nurse Summary</option>
+                                        <option>View Staff Summary</option>
                                     </select>
                                 </td>
                             </tr>
