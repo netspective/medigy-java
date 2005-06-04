@@ -43,79 +43,15 @@
  */
 package com.medigy.wicket.form;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
-import wicket.IFeedback;
-import wicket.markup.html.form.DropDownChoice;
-import wicket.markup.html.form.Form;
-import wicket.markup.html.form.RadioChoice;
-import wicket.markup.html.form.model.IChoice;
-
-public class BaseForm extends Form
+public interface FieldFlags
 {
-    public static final String FIELD_LABEL_SUFFIX = "-label";
-    public static final String FIELD_CONTROL_SUFFIX = "-control";
-    protected static final Collection TEST_CHOICES = new ArrayList();
+    public static final long DEFAULT_FLAGS = 0;
 
-    static
-    {
-        TEST_CHOICES.add(new IChoice()
-        {
-            public String getDisplayValue()
-            {
-                return "Test";
-            }
-
-            public String getId()
-            {
-                return "Id";
-            }
-
-            public Object getObject()
-            {
-                return "Test";
-            }
-        });
-    }
-
-    public BaseForm(final String componentName)
-    {
-        super(componentName);
-    }
-
-    public BaseForm(final String componentName, final IFeedback feedback)
-    {
-        super(componentName, feedback);
-    }
-
-    protected void addLabeledTextField(final String fieldName, int fieldFlags)
-    {
-        add(new FieldLabel(fieldName));
-        add(new TextField(fieldName, fieldFlags));
-    }
-
-    protected void addLabeledTextField(final String fieldName)
-    {
-        add(new FieldLabel(fieldName));
-        add(new TextField(fieldName));
-    }
-
-    protected void addLabeledDateField(final String fieldName)
-    {
-        add(new FieldLabel(fieldName));
-        add(new TextField(fieldName));
-    }
-
-    protected void addLabeledSelectField(final String fieldName)
-    {
-        add(new FieldLabel(fieldName));
-        add(new DropDownChoice(fieldName + FIELD_CONTROL_SUFFIX, TEST_CHOICES));
-    }
-
-    protected void addLabeledRadioChoiceField(final String fieldName)
-    {
-        add(new FieldLabel(fieldName));
-        add(new RadioChoice(fieldName + FIELD_CONTROL_SUFFIX, TEST_CHOICES));
-    }
+    public static final long REQUIRED = 1;
+    public static final long PRIMARY_KEY = REQUIRED * 2;
+    public static final long PRIMARY_KEY_GENERATED = PRIMARY_KEY * 2;
+    public static final long UNAVAILABLE = PRIMARY_KEY_GENERATED * 2;
+    public static final long READ_ONLY = UNAVAILABLE * 2;
+    public static final long INITIAL_FOCUS = READ_ONLY * 2;
+    public static final long PERSIST = INITIAL_FOCUS * 2;
 }

@@ -41,81 +41,17 @@
 /*
  * Copyright (c) 2005 Your Corporation. All Rights Reserved.
  */
-package com.medigy.wicket.form;
+package com.medigy.app.pbs.page;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import com.medigy.presentation.form.person.patient.RegisterPatientFormPanel;
+import com.medigy.wicket.page.DefaultFormPage;
+import com.medigy.wicket.page.PageCalloutPanelProvider;
+import com.medigy.wicket.page.PageNavigationPanelProvider;
 
-import wicket.IFeedback;
-import wicket.markup.html.form.DropDownChoice;
-import wicket.markup.html.form.Form;
-import wicket.markup.html.form.RadioChoice;
-import wicket.markup.html.form.model.IChoice;
-
-public class BaseForm extends Form
+public class FormTestPage1 extends DefaultFormPage implements PageNavigationPanelProvider, PageCalloutPanelProvider
 {
-    public static final String FIELD_LABEL_SUFFIX = "-label";
-    public static final String FIELD_CONTROL_SUFFIX = "-control";
-    protected static final Collection TEST_CHOICES = new ArrayList();
-
-    static
+    public FormTestPage1()
     {
-        TEST_CHOICES.add(new IChoice()
-        {
-            public String getDisplayValue()
-            {
-                return "Test";
-            }
-
-            public String getId()
-            {
-                return "Id";
-            }
-
-            public Object getObject()
-            {
-                return "Test";
-            }
-        });
-    }
-
-    public BaseForm(final String componentName)
-    {
-        super(componentName);
-    }
-
-    public BaseForm(final String componentName, final IFeedback feedback)
-    {
-        super(componentName, feedback);
-    }
-
-    protected void addLabeledTextField(final String fieldName, int fieldFlags)
-    {
-        add(new FieldLabel(fieldName));
-        add(new TextField(fieldName, fieldFlags));
-    }
-
-    protected void addLabeledTextField(final String fieldName)
-    {
-        add(new FieldLabel(fieldName));
-        add(new TextField(fieldName));
-    }
-
-    protected void addLabeledDateField(final String fieldName)
-    {
-        add(new FieldLabel(fieldName));
-        add(new TextField(fieldName));
-    }
-
-    protected void addLabeledSelectField(final String fieldName)
-    {
-        add(new FieldLabel(fieldName));
-        add(new DropDownChoice(fieldName + FIELD_CONTROL_SUFFIX, TEST_CHOICES));
-    }
-
-    protected void addLabeledRadioChoiceField(final String fieldName)
-    {
-        add(new FieldLabel(fieldName));
-        add(new RadioChoice(fieldName + FIELD_CONTROL_SUFFIX, TEST_CHOICES));
+        super(RegisterPatientFormPanel.class);
     }
 }

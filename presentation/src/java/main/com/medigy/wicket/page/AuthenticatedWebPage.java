@@ -94,6 +94,8 @@ public class AuthenticatedWebPage extends BasePage
     /**
      * @see wicket.Page#checkAccess()
      */
+/*
+    TODO: turn this back on when we can log someone in
     protected boolean checkAccess()
     {
         // Is user signed in?
@@ -109,6 +111,7 @@ public class AuthenticatedWebPage extends BasePage
             return false;
         }
     }
+*/
 }
 
 

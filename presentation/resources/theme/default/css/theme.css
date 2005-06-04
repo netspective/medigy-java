@@ -246,8 +246,8 @@ td.callout-panel-bottom { background: url(../images/navigation/callout-panel-bot
 
 div.form-body input { font-family: Georgia; font-size: 10pt; }
 div.form-body select { font-family: Georgia; font-size: 9pt; }
-div.form-body fieldset { font-family: Georgia; font-size: 10pt; color: black; font-weight: bold; }
- 
+div.form-body fieldset legend { font-family: Georgia; font-size: 10pt; color: black; font-weight: bold; }
+
 div.form-body table.vertical-fields {padding: 5px; }
 div.form-body table.vertical-fields tr.field { }
 div.form-body table.vertical-fields td { font-family: Georgia; font-size: 10pt; color: black; }

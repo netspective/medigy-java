@@ -8,30 +8,32 @@
     <div wicket:id="panel-border">
         <span wicket:id="feedback"/>
         <form wicket:id="signInForm">
-            <table class="vertical-form">
-                <tr class="field">
-                    <td class="label"><label for="username">Username</label></td>
-                    <td class="control">
-                        <input wicket:id="username" id="username" type="text" value="foo@goo.moo" size="30"/>
-                    </td>
-                </tr>
-                <tr class="field">
-                    <td class="label"><label for="password">Password</label></td>
-                    <td class="control">
-                        <input wicket:id="password" id="password" type="password" value="password" size="30"/>
-                    </td>
-                </tr>
-                <tr wicket:id="rememberMeRow" class="field">
-                    <td>&nbsp;</td>
-                    <td><input wicket:id="rememberMe" type="checkbox"/>Remember Me</td>
-                </tr>
-                <tr class="director">
-                    <td colspan="2" class="control">
-                        <input type="submit" name="submit" value="Sign In"/>
-                        <input type="reset" value="Reset"/>
-                    </td>
-                </tr>
-            </table>
+            <div class="form-body">
+                <table class="vertical-fields">
+                    <tr class="field">
+                        <td class="label"><label for="username">Username</label></td>
+                        <td class="control">
+                            <input wicket:id="username" id="username" type="text" value="foo@goo.moo" size="30"/>
+                        </td>
+                    </tr>
+                    <tr class="field">
+                        <td class="label"><label for="password">Password</label></td>
+                        <td class="control">
+                            <input wicket:id="password" id="password" type="password" value="password" size="30"/>
+                        </td>
+                    </tr>
+                    <tr wicket:id="rememberMeRow" class="field">
+                        <td>&nbsp;</td>
+                        <td><input wicket:id="rememberMe" type="checkbox"/>Remember Me</td>
+                    </tr>
+                    <tr class="director">
+                        <td colspan="2" class="control">
+                            <input type="submit" name="submit" value="Sign In"/>
+                            <input type="reset" value="Reset"/>
+                        </td>
+                    </tr>
+                </table>
+            </div>
         </form>
     </div>
 </wicket:panel>

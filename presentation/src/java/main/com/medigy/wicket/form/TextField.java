@@ -43,79 +43,37 @@
  */
 package com.medigy.wicket.form;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import wicket.markup.ComponentTag;
+import wicket.markup.html.form.validation.RequiredValidator;
+import wicket.util.value.ValueMap;
 
-import wicket.IFeedback;
-import wicket.markup.html.form.DropDownChoice;
-import wicket.markup.html.form.Form;
-import wicket.markup.html.form.RadioChoice;
-import wicket.markup.html.form.model.IChoice;
-
-public class BaseForm extends Form
+public class TextField extends wicket.markup.html.form.TextField
 {
-    public static final String FIELD_LABEL_SUFFIX = "-label";
-    public static final String FIELD_CONTROL_SUFFIX = "-control";
-    protected static final Collection TEST_CHOICES = new ArrayList();
+    private String fieldName;
+    private long fieldFlags;
 
-    static
+    public TextField(final String fieldName, long fieldFlags)
     {
-        TEST_CHOICES.add(new IChoice()
-        {
-            public String getDisplayValue()
-            {
-                return "Test";
-            }
+        super(fieldName + BaseForm.FIELD_CONTROL_SUFFIX);
+        this.fieldName = fieldName;
+        this.fieldFlags = fieldFlags;
 
-            public String getId()
-            {
-                return "Id";
-            }
-
-            public Object getObject()
-            {
-                return "Test";
-            }
-        });
+        if((this.fieldFlags & FieldFlags.REQUIRED) != 0)
+            add(RequiredValidator.getInstance());
     }
 
-    public BaseForm(final String componentName)
+    public TextField(final String componentName)
     {
-        super(componentName);
+        this(componentName, FieldFlags.DEFAULT_FLAGS);
     }
 
-    public BaseForm(final String componentName, final IFeedback feedback)
+    protected void onComponentTag(final ComponentTag componentTag)
     {
-        super(componentName, feedback);
-    }
+        final ValueMap attributes = componentTag.getAttributes();
+        final String idAttr = attributes.getString("id");
+        if(idAttr == null)
+            attributes.put("id", fieldName + BaseForm.FIELD_CONTROL_SUFFIX);  // label will point to this ID using for="{fieldName}-control"
 
-    protected void addLabeledTextField(final String fieldName, int fieldFlags)
-    {
-        add(new FieldLabel(fieldName));
-        add(new TextField(fieldName, fieldFlags));
-    }
-
-    protected void addLabeledTextField(final String fieldName)
-    {
-        add(new FieldLabel(fieldName));
-        add(new TextField(fieldName));
-    }
-
-    protected void addLabeledDateField(final String fieldName)
-    {
-        add(new FieldLabel(fieldName));
-        add(new TextField(fieldName));
-    }
-
-    protected void addLabeledSelectField(final String fieldName)
-    {
-        add(new FieldLabel(fieldName));
-        add(new DropDownChoice(fieldName + FIELD_CONTROL_SUFFIX, TEST_CHOICES));
-    }
-
-    protected void addLabeledRadioChoiceField(final String fieldName)
-    {
-        add(new FieldLabel(fieldName));
-        add(new RadioChoice(fieldName + FIELD_CONTROL_SUFFIX, TEST_CHOICES));
+        super.onComponentTag(componentTag);
     }
 }

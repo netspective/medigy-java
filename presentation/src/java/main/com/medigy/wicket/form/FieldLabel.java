@@ -43,79 +43,37 @@
  */
 package com.medigy.wicket.form;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import wicket.markup.ComponentTag;
+import wicket.markup.MarkupStream;
+import wicket.markup.html.WebMarkupContainer;
+import wicket.util.value.ValueMap;
 
-import wicket.IFeedback;
-import wicket.markup.html.form.DropDownChoice;
-import wicket.markup.html.form.Form;
-import wicket.markup.html.form.RadioChoice;
-import wicket.markup.html.form.model.IChoice;
-
-public class BaseForm extends Form
+public class FieldLabel extends WebMarkupContainer
 {
-    public static final String FIELD_LABEL_SUFFIX = "-label";
-    public static final String FIELD_CONTROL_SUFFIX = "-control";
-    protected static final Collection TEST_CHOICES = new ArrayList();
+    private final String fieldName;
 
-    static
+    public FieldLabel(final String fieldName)
     {
-        TEST_CHOICES.add(new IChoice()
-        {
-            public String getDisplayValue()
-            {
-                return "Test";
-            }
-
-            public String getId()
-            {
-                return "Id";
-            }
-
-            public Object getObject()
-            {
-                return "Test";
-            }
-        });
+        super(fieldName + BaseForm.FIELD_LABEL_SUFFIX);
+        this.fieldName = fieldName;
     }
 
-    public BaseForm(final String componentName)
+    protected void onComponentTag(final ComponentTag componentTag)
     {
-        super(componentName);
+        final ValueMap attributes = componentTag.getAttributes();
+        final String forAttr = attributes.getString("for");
+        if(forAttr == null)
+            attributes.put("for", fieldName + BaseForm.FIELD_CONTROL_SUFFIX);
+
+        super.onComponentTag(componentTag);
     }
 
-    public BaseForm(final String componentName, final IFeedback feedback)
+    protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag componentTag)
     {
-        super(componentName, feedback);
-    }
-
-    protected void addLabeledTextField(final String fieldName, int fieldFlags)
-    {
-        add(new FieldLabel(fieldName));
-        add(new TextField(fieldName, fieldFlags));
-    }
-
-    protected void addLabeledTextField(final String fieldName)
-    {
-        add(new FieldLabel(fieldName));
-        add(new TextField(fieldName));
-    }
-
-    protected void addLabeledDateField(final String fieldName)
-    {
-        add(new FieldLabel(fieldName));
-        add(new TextField(fieldName));
-    }
-
-    protected void addLabeledSelectField(final String fieldName)
-    {
-        add(new FieldLabel(fieldName));
-        add(new DropDownChoice(fieldName + FIELD_CONTROL_SUFFIX, TEST_CHOICES));
-    }
-
-    protected void addLabeledRadioChoiceField(final String fieldName)
-    {
-        add(new FieldLabel(fieldName));
-        add(new RadioChoice(fieldName + FIELD_CONTROL_SUFFIX, TEST_CHOICES));
+        // if we have the label already in the markup and a model is not provided, leave the markup label as-is
+        if(getModel() != null)
+            super.onComponentTagBody(markupStream, componentTag);
+        else
+            renderComponentTagBody(markupStream, componentTag);
     }
 }

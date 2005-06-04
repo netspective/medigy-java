@@ -41,81 +41,36 @@
 /*
  * Copyright (c) 2005 Your Corporation. All Rights Reserved.
  */
-package com.medigy.wicket.form;
+package com.medigy.wicket.page;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.lang.reflect.InvocationTargetException;
 
-import wicket.IFeedback;
-import wicket.markup.html.form.DropDownChoice;
-import wicket.markup.html.form.Form;
-import wicket.markup.html.form.RadioChoice;
-import wicket.markup.html.form.model.IChoice;
+import wicket.Component;
 
-public class BaseForm extends Form
+public class DefaultFormPage extends AuthenticatedWebPage
 {
-    public static final String FIELD_LABEL_SUFFIX = "-label";
-    public static final String FIELD_CONTROL_SUFFIX = "-control";
-    protected static final Collection TEST_CHOICES = new ArrayList();
-
-    static
+    public DefaultFormPage(final Class formPanelClass)
     {
-        TEST_CHOICES.add(new IChoice()
+        try
         {
-            public String getDisplayValue()
-            {
-                return "Test";
-            }
-
-            public String getId()
-            {
-                return "Id";
-            }
-
-            public Object getObject()
-            {
-                return "Test";
-            }
-        });
-    }
-
-    public BaseForm(final String componentName)
-    {
-        super(componentName);
-    }
-
-    public BaseForm(final String componentName, final IFeedback feedback)
-    {
-        super(componentName, feedback);
-    }
-
-    protected void addLabeledTextField(final String fieldName, int fieldFlags)
-    {
-        add(new FieldLabel(fieldName));
-        add(new TextField(fieldName, fieldFlags));
-    }
-
-    protected void addLabeledTextField(final String fieldName)
-    {
-        add(new FieldLabel(fieldName));
-        add(new TextField(fieldName));
-    }
-
-    protected void addLabeledDateField(final String fieldName)
-    {
-        add(new FieldLabel(fieldName));
-        add(new TextField(fieldName));
-    }
-
-    protected void addLabeledSelectField(final String fieldName)
-    {
-        add(new FieldLabel(fieldName));
-        add(new DropDownChoice(fieldName + FIELD_CONTROL_SUFFIX, TEST_CHOICES));
-    }
-
-    protected void addLabeledRadioChoiceField(final String fieldName)
-    {
-        add(new FieldLabel(fieldName));
-        add(new RadioChoice(fieldName + FIELD_CONTROL_SUFFIX, TEST_CHOICES));
+            final Component formPanel = (Component) formPanelClass.getConstructor(new Class[] { String.class }).newInstance("form-panel");
+            add(formPanel);
+        }
+        catch (InstantiationException e)
+        {
+            throw new RuntimeException(e);
+        }
+        catch (IllegalAccessException e)
+        {
+            throw new RuntimeException(e);
+        }
+        catch (InvocationTargetException e)
+        {
+            throw new RuntimeException(e);
+        }
+        catch (NoSuchMethodException e)
+        {
+            throw new RuntimeException(e);
+        }
     }
 }
