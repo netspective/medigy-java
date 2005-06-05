@@ -123,6 +123,12 @@ public class BaseForm extends Form
         add(new RadioChoice(fieldName + FIELD_CONTROL_SUFFIX, TEST_CHOICES));
     }
 
+    protected void addLabeledCheckBox(final String fieldName)
+    {
+        add(new FieldLabel(fieldName));
+        add(new CheckBox(fieldName));
+    }
+
     protected void onFormComponentTag(final ComponentTag componentTag, final String fieldControlId, final long fieldFlags)
     {
         final ValueMap attributes = componentTag.getAttributes();
