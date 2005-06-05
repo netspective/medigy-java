@@ -227,80 +227,88 @@
                             </tr>
                         </table>
                     </fieldset>
-                    <fieldset class="top-level">
-                        <legend wicket:id="employment-group-label">Employment</legend>
-                        <table class="vertical-fields">
-                            <tr class="field">
-                                <td class="label">
-                                    <label wicket:id="employerId-label">Employer ID</label>
-                                </td>
-                                <td class="control">
-                                    <input type="text" wicket:id="employerId-control" value=""/>
-                                </td>
-                            </tr>
-                            <tr class="field">
-                                <td class="label">
-                                    <label wicket:id="employmentStatus-label">Employment Status</label>
-                                </td>
-                                <td class="control">
-                                    <select wicket:id="employmentStatus-control">
-                                        <option>Employed (Full-Time)</option>
-                                        <option>Employed (Part-Time)</option>
-                                    </select>
-                                </td>
-                            </tr>
-                            <tr class="field">
-                                <td class="label">
-                                    <label wicket:id="occupation-label">Occupation</label>
-                                </td>
-                                <td class="control">
-                                    <input type="text" wicket:id="occupation-control" value=""/>
-                                </td>
-                            </tr>
-                            <tr class="field">
-                                <td class="label">
-                                    <label wicket:id="employerPhoneNumber-label">Phone Number</label>
-                                </td>
-                                <td class="control">
-                                    <input type="text" wicket:id="employerPhoneNumber-control" value=""/>
-                                </td>
-                            </tr>
-
-                        </table>
-                    </fieldset>
-                    <fieldset class="top-level">
-                        <legend wicket:id="insurance-group-label">Personal Insurance Coverage</legend>
-                        <table class="vertical-fields">
-                            <tr class="field">
-                                <td class="label">
-                                    <label wicket:id="insuranceSequence-label">Insurance Sequence</label>
-                                </td>
-                                <td class="control">
-                                    <select wicket:id="insuranceSequence-control">
-                                        <option>Primary</option>
-                                        <option>Secondary</option>
-                                        <option>Tertiary</option>
-                                    </select>
-                                </td>
-                            </tr>
-                            <tr class="field">
-                                <td class="label">
-                                    <label wicket:id="insuranceProduct-label">Insurance Product</label>
-                                </td>
-                                <td class="control">
-                                    <input type="text" wicket:id="insuranceProduct-control" value=""/>
-                                </td>
-                            </tr>
-                            <tr class="field">
-                                <td class="label">
-                                    <label wicket:id="insurancePlan-label">Insurance Plan</label>
-                                </td>
-                                <td class="control">
-                                    <input type="text" wicket:id="insurancePlan-control" value=""/>
-                                </td>
-                            </tr>
-                        </table>
-                    </fieldset>
+                    <table class="container" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td>
+                                <fieldset class="group">
+                                    <legend wicket:id="employment-group-label">Employment</legend>
+                                    <table class="vertical-fields">
+                                        <tr class="field">
+                                            <td class="label">
+                                                <label wicket:id="employerId-label">Employer ID</label>
+                                            </td>
+                                            <td class="control">
+                                                <input type="text" wicket:id="employerId-control" value=""/>
+                                            </td>
+                                        </tr>
+                                        <tr class="field">
+                                            <td class="label">
+                                                <label wicket:id="employmentStatus-label">Employment Status</label>
+                                            </td>
+                                            <td class="control">
+                                                <select wicket:id="employmentStatus-control">
+                                                    <option>Employed (Full-Time)</option>
+                                                    <option>Employed (Part-Time)</option>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr class="field">
+                                           <td class="label">
+                                               <label wicket:id="occupation-label">Occupation</label>
+                                           </td>
+                                           <td class="control">
+                                               <input type="text" wicket:id="occupation-control" value=""/>
+                                           </td>
+                                       </tr>
+                                       <tr class="field">
+                                           <td class="label">
+                                               <label wicket:id="employerPhoneNumber-label">Phone Number</label>
+                                           </td>
+                                           <td class="control">
+                                               <input type="text" wicket:id="employerPhoneNumber-control" value=""/>
+                                           </td>
+                                       </tr>
+                                   </table>
+                               </fieldset>
+	                      </td>
+                          <td class="container-separator">&nbsp;</td>
+                          <td>
+                              <fieldset class="top-level">
+                                  <legend wicket:id="insurance-group-label">Personal Insurance Coverage</legend>
+                                  <table class="vertical-fields">
+                                      <tr class="field">
+                                          <td class="label">
+                                              <label wicket:id="insuranceSequence-label">Insurance Sequence</label>
+                                          </td>
+                                          <td class="control">
+                                              <select wicket:id="insuranceSequence-control">
+                                                  <option>Primary</option>
+                                                  <option>Secondary</option>
+                                                  <option>Tertiary</option>
+                                              </select>
+                                          </td>
+                                      </tr>
+                                      <tr class="field">
+                                          <td class="label">
+                                              <label wicket:id="insuranceProduct-label">Insurance Product</label>
+                                          </td>
+                                          <td class="control">
+                                              <input type="text" wicket:id="insuranceProduct-control" value=""/>
+                                          </td>
+                                      </tr>
+                                      <tr class="field">
+                                          <td class="label">
+                                              <label wicket:id="insurancePlan-label">Insurance Plan</label>
+                                          </td>
+                                          <td class="control">
+                                              <input type="text" wicket:id="insurancePlan-control" value=""/>
+                                          </td>
+                                      </tr>
+                                </table>
+                                </fieldset>
+					        </td>
+                        </tr>
+                    </table>
                     <fieldset class="top-level">
                         <legend wicket:id="generalPlanInformation-group-label">General Plan Information</legend>
                         <table class="vertical-fields">
