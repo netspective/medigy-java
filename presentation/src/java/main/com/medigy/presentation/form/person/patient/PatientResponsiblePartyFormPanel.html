@@ -1,0 +1,135 @@
+<html xmlns:wicket="http://wicket.sourceforge.net/">
+    <head>
+        <title>Responsible Party Add</title>
+        <link rel="stylesheet" type="text/css" href="../../../../../../../../../resources/theme/default/css/theme.css"/>
+    </head>
+    <body>
+        <wicket:panel>
+            <div wicket:id="panel-border">
+                <div wicket:id="feedback" class="form-feedback"/>
+                <form wicket:id="form">
+                <div class="form-body">
+                     <fieldset class="top-level">
+                        <legend wicket:id="responsiblePartyId-group-label">Responsible Party</legend>
+                        <table class="vertical-fields">
+                            <tr class="field">
+                                <td class="label">
+                                    <label wicket:id="personId-label">Patient/Person ID</label>
+                                </td>
+                                <td class="control">
+                                    <input type="text" wicket:id="personId-control" value=""/>
+                                </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="label">
+                                    <label wicket:id="lastName-label">Last Name</label> /
+                                    <label wicket:id="firstName-label">First Name</label> /
+                                    <label wicket:id="middleName-label">Middle Name</label> /
+                                    <label wicket:id="suffix-label">Suffix</label>
+                                </td>
+                                <td class="control">
+                                    <input type="text" wicket:id="lastName-control" value="Hackett"/>
+                                    <input type="text" wicket:id="firstName-control" value="Ryan"/>
+                                    <input type="text" wicket:id="middleName-control" value="A."/>
+                                    <select wicket:id="suffix-control">
+                                        <option selected="selected" value="0">Mr.</option>
+                                        <option value="1">Ms.</option>
+                                        <option value="2">Mrs.</option>
+                                        <option value="3">Dr.</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="label">
+                                    <label wicket:id="socialSecurityNumber-label">Social Security</label> /
+                                    <label wicket:id="dateOfBirth-label">Date of Birth</label>
+                                </td>
+                                <td class="control">
+                                    <input type="text" wicket:id="socialSecurityNumber-control" value="999-99-9999"/>
+                                    <input type="text" wicket:id="dateOfBirth-control" value="09/13/1968"/>
+                                </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="label">
+                                    <label wicket:id="gender-label">Gender</label> /
+                                    <label wicket:id="maritalStatus-label">Marital Status</label>
+                                </td>
+                                <td class="control">
+                                    <select wicket:id="gender-control">
+                                        <option>Male</option>
+                                        <option>Female</option>
+                                    </select>
+                                    <select wicket:id="maritalStatus-control">
+                                        <option>Married</option>
+                                        <option>Unmarried</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="label">
+                                    <label wicket:id="driversLicenseNumber-label">Driver's License Number</label> /
+                                   <label wicket:id="driversLicenseState-label">State</label>
+                                </td>
+                                <td class="control">
+                                    <input type="text" wicket:id="driversLicenseNumber-control" value=""/>
+                                    <input type="text" wicket:id="driversLicenseState-control" value=""/>
+                                </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="label">
+                                    <label wicket:id="homeAddress-label">Home Address</label>
+                                </td>
+                                <td class="control">
+                                    <input type="text" wicket:id="homeAddress-control" value=""/>
+                                </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="label">
+                                    <label wicket:id="homeAddress2-label"></label>
+                                </td>
+                                <td class="control">
+                                    <input type="text" wicket:id="homeAddress2-control" value=""/>
+                                </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="label">
+                                    <label wicket:id="city-label">City</label> /
+                                    <label wicket:id="state-label">State</label> /
+                                    <label wicket:id="zip-label">Zip</label>
+                                </td>
+                                <td class="control">
+                                    <input type="text" wicket:id="city-control" value=""/>
+                                    <input type="text" wicket:id="state-control" value=""/>
+                                    <input type="text" wicket:id="zip-control" value=""/>
+                                </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="label">
+                                    <label wicket:id="email-label">Email</label>
+                                </td>
+                                <td class="control">
+                                    <input type="text" wicket:id="email-control" value=""/>
+                                </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="label">
+                                    <label wicket:id="homePhone-label">Home Phone</label> /
+                                    <label wicket:id="workPhone-label">Work Phone</label>
+                                </td>
+                                <td class="control">
+                                    <input type="text" wicket:id="homePhone-control" value=""/>
+                                    <input type="text" wicket:id="workPhone-control" value=""/>
+                                </td>
+                            </tr>
+                        </table>
+                    </fieldset>
+                    <div class="director">
+                        <input class="button" type="submit" value="OK"/>
+                        <input class="button" type="reset" value="Reset"/>
+                    </div>
+                </div>
+                </form>
+            </div>
+        </wicket:panel>
+    </body>
+</html>
