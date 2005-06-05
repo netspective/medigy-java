@@ -291,6 +291,7 @@ function Dialog_isValid()
                 this.control.value = field.encryption.getEncryptedValue(this.control.value);
         }
 	}
+
 	return isValid;
 }
 
@@ -390,7 +391,7 @@ function DialogField_setValue(value)
 
 function DialogField_getLabel()
 {
-    return this.labelElement == null ? (this.control.id + " does not have a label.") : labelElement.innerText;
+    return this.labelElement == null ? (this.control.id + " does not have a label.") : this.labelElement.childNodes[0].nodeValue;
 }
 
 function DialogField_getLabelElement()

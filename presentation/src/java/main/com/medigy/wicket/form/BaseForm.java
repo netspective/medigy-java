@@ -146,6 +146,12 @@ public class BaseForm extends Form
             componentTag.put("class", "required");
     }
 
+    protected void onComponentTag(ComponentTag componentTag)
+    {
+        super.onComponentTag(componentTag);
+        componentTag.put("onsubmit", "return(document.forms[0].dialog.isValid())");
+    }
+
     protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag componentTag)
     {
         final StringBuffer script = new StringBuffer("\n<script>\nvar dialog = new Dialog(document.forms[0], true, false, true);\n");
