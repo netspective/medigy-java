@@ -65,5 +65,5 @@ public interface FieldFlags
     public static final int SUBMIT_ONBLUR = AUTO_BLUR * 2;
     public static final int CREATE_ADJACENT_AREA_HIDDEN = SUBMIT_ONBLUR * 2;
     public static final int CLEAR_TEXT_ON_VALIDATE_ERROR = CREATE_ADJACENT_AREA_HIDDEN * 2;
-    public static final int ALWAYS_SHOW_HINT = CLEAR_TEXT_ON_VALIDATE_ERROR * 2; 
+    public static final int ALWAYS_SHOW_HINT = CLEAR_TEXT_ON_VALIDATE_ERROR * 2;
 }

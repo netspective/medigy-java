@@ -171,7 +171,6 @@ function constructUrlWithParamsRetained(url, retainParams)
 // Forms management
 // **************************************************************************
 
-var DIALOGS = null; // will be set in dialog object constructor and will contain a list of all dialogs on the page in the order they were created
 var anyControlChangedEventCalled = false;
 var submittedDialogValid = false;
 var cancelBubbleOnError = true;
@@ -219,10 +218,7 @@ function Dialog(form, allowClientValidation, clearTextOnValidateError, showDataC
 	this.allowValidation = Dialog_allowValidation;
 	this.isShowDataChangedMessageOnLeave = Dialog_isShowDataChangedMessageOnLeave;
 
-	if(DIALOGS == null)
-	    DIALOGS = new Array();
-	DIALOGS[DIALOGS.length] = this;
-    form.dialog = this; // if we have access to the form, set the dialog so we have it available
+    form.dialog = this; // associate the extra dialog information with the form that it's attached to
 
 	return this;
 }
@@ -333,7 +329,7 @@ var DATE_DTTYPE_TIMEONLY = 1;
 var DATE_DTTYPE_BOTH     = 2;
 var DATE_DTTYPE_MONTH_YEAR_ONLY = 3;
 
-function DialogField(control, type, flags, hintElement)
+function DialogField(control, type, flags, hintElement, adjacentAreaElement)
 {
     this.dialog = null;    // this will be set when the field is added using Dialog_registerField
 	this.fieldIndex = -1;  // this will be set when the field is added using Dialog_registerField
@@ -353,6 +349,7 @@ function DialogField(control, type, flags, hintElement)
 	this.getLabelElement = DialogField_getLabelElement;
 	this.labelElement = this.getLabelElement();
 	this.hintElement = hintElement;
+	this.adjacentAreaElement = adjacentAreaElement;
 
 	this.originalControlClassName = this.control.className;
 	this.originalLabelClassName = this.labelElement == null ? null : this.labelElement.className;
@@ -360,7 +357,6 @@ function DialogField(control, type, flags, hintElement)
 	this.getControlIndexInForm = DialogField_getControlIndexInForm;
 	this.controlIndexInForm = this.getControlIndexInForm();
 
-	this.getAdjacentArea = DialogField_getAdjacentArea;
 	this.evaluateConditionals = DialogField_evaluateConditionals;
 	this.finalizeContents = DialogField_finalizeContents;
 	this.isValid = DialogField_isValid;
@@ -382,6 +378,52 @@ function DialogField(control, type, flags, hintElement)
 	this.getLabel = DialogField_getLabel;
 	this.appendToClassName = DialogField_appendToClassName;
 	this.resetClassName = DialogField_resetClassName;
+	this.createAdjancentArea = DialogField_createAdjancentArea;
+	this.populateAdjacentArea = DialogField_populateAdjacentArea;
+}
+
+function DialogField_createAdjancentArea()
+{
+    // it's possible that we were provided with an adjacent area element so don't do anything if it's already available
+	if(this.adjacentAreaElement != null)
+	    return;
+
+    this.adjacentAreaElement = document.createElement("span");
+    this.adjacentAreaElement.className = "control-adjacent";
+    if((this.flags & FLDFLAG_CREATE_ADJACENT_AREA_HIDDEN) != 0) this.adjacentAreaElement.visibility = 'hide';
+
+    // seems the DOM doesn't have an "insertAfter" method so we simulate one (adjacent area is right next to the control)
+    var parent = this.control.parentNode;
+    var refChild = this.control.nextSibling;
+    if(refChild != null)
+        parent.insertBefore(this.adjacentAreaElement, refChild);
+    else
+        parent.appendChild(this.adjacentAreaElement);
+}
+
+function DialogField_populateAdjacentArea(content)
+{
+    if(this.adjacentAreaElement == null)
+        this.createAdjancentArea();
+
+    // remove any content that might already be in the node
+    while(this.adjacentAreaElement.childNodes.length > 0)
+        this.adjacentAreaElement.removeChild(this.adjacentAreaElement.childNodes[0]);
+
+    // we probably just want to clear the adjacent area
+    if(content == null)
+        return;
+
+    if(typeof(content) == 'array')
+    {
+        for(var i = 0; i < content.lenght; i++)
+            this.adjacentAreaElement.appendChild(content[i]);
+    }
+    else if(typeof(content) == 'string')
+        this.adjacentAreaElement.appendChild(document.createTextNode(content));
+    else
+        // probably just a plain DOM node
+        this.adjacentAreaElement.appendChild(content);
 }
 
 function DialogField_setValue(value)
@@ -391,7 +433,7 @@ function DialogField_setValue(value)
 
 function DialogField_getLabel()
 {
-    return this.labelElement == null ? (this.control.id + " does not have a label.") : this.labelElement.childNodes[0].nodeValue;
+    return this.labelElement == null ? (this.control.name + " does not have a label.") : this.labelElement.childNodes[0].nodeValue;
 }
 
 function DialogField_getLabelElement()
@@ -498,20 +540,6 @@ function DialogField_isClearTextOnValidateError()
 function DialogField_isHideHintUntilFocus()
 {
 	return ((this.flags & FLDFLAG_ALWAYS_SHOW_HINT) == 0);
-}
-
-function DialogField_getAdjacentArea()
-{
-	if((this.flags & FLDFLAG_CREATE_ADJACENT_AREA) != 0 )
-	{
-		return document.getElementById(this.qualifiedName + "-adjacent");
-	}
-	else if((this.flags & FLDFLAG_CREATE_ADJACENT_AREA_HIDDEN) != 0 )
-	{
-		return document.getElementById(this.qualifiedName + "-adjacent");
-	}
-	else
-		return null;
 }
 
 function DialogField_finalizeContents()
@@ -990,6 +1018,7 @@ function controlOnFocus(control, event)
 		else
 			return true;
 	}
+
 }
 
 function controlOnChange(control, event)
@@ -1497,11 +1526,11 @@ function SelectField_isValid(field, control)
 			}
 			else
 			{
-				adjacentArea = field.getAdjacentArea();
-				if(adjacentArea != null)
+				if(this.createAdjancentArea != null)
 				{
 					// alert("Adjacent set to " + field.choicesValue[valid]);
-					adjacentArea.innerHTML = field.choicesValue[valid];
+					this.createAdjancentArea.childNodes.length = 0;
+					this.createAdjancentArea.appendChild(document.createTextNode(field.choicesValue[valid]));
 				}
 				return true;
 			}
@@ -1959,10 +1988,10 @@ function scanField_changeDisplayValue(field, control)
 
 function documentOnLeave()
 {
-    if(DIALOGS == null)
+    if(document.forms.length == 0)
         return;
 
-	if(DIALOGS[0].isShowDataChangedMessageOnLeave() && anyControlChangedEventCalled && ! submittedDialogValid)
+	if(document.forms[0].dialog.isShowDataChangedMessageOnLeave() && anyControlChangedEventCalled && ! submittedDialogValid)
 		return "You have changed data on this page. If you leave, you will lose the data.";
 }
 

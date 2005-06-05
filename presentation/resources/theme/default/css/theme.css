@@ -256,14 +256,14 @@ div.form-body table.vertical-fields td.label-top { padding: 5px; text-align: cen
 div.form-body table.vertical-fields td.control { padding: 5px; text-align: left; }
 div.form-body table.vertical-fields tr.director td.control { text-align: right; padding-top: 20px;}
 
-div.form-body input.focused { background-color: lightyellow; }
+div.form-body input.focused { background-color: LightGoldenRodYellow; }
 div.form-body input.required { background: white url(../images/input-required-bg.gif) no-repeat right top; padding-left: 3px; border: solid 1px #009; }
-div.form-body input.required-focused { background: lightred url(../images/input-required-bg.gif) no-repeat right top; padding-left: 3px; border: solid 1px #009; }
+div.form-body input.required-focused { background: LightGoldenRodYellow url(../images/input-required-bg.gif) no-repeat right top; padding-left: 3px; border: solid 1px #009; }
 
-div.form-body label { color: #454545; }
-div.form-body label.focused { color: black; background-color: silver; }
+div.form-body label { color: #454545; padding-top: 1px; padding-bottom: 1px; padding-left: 2px; padding-right: 2px; }
+div.form-body label.focused { color: black; border: solid 1px silver; background-color: LightGoldenRodYellow; }
 div.form-body label.required { font-weight: bold; }
-div.form-body label.required-focused { font-weight: bold; color: black; background-color: silver; }
+div.form-body label.required-focused { font-weight: bold; color: black; border: solid 1px silver; background-color: LightGoldenRodYellow; }
 
 div.form-body table.container { padding-top: 20px; }
 div.form-body table.container td.container-separator { width: 20px; }
