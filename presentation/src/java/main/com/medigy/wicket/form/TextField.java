@@ -45,11 +45,11 @@ package com.medigy.wicket.form;
 
 import wicket.markup.ComponentTag;
 import wicket.markup.html.form.validation.RequiredValidator;
-import wicket.util.value.ValueMap;
 
-public class TextField extends wicket.markup.html.form.TextField
+public class TextField extends wicket.markup.html.form.TextField implements JavaScriptProvider
 {
     private String fieldName;
+    private String fieldControlId;
     private long fieldFlags;
 
     public TextField(final String fieldName, long fieldFlags)
@@ -57,6 +57,7 @@ public class TextField extends wicket.markup.html.form.TextField
         super(fieldName + BaseForm.FIELD_CONTROL_SUFFIX);
         this.fieldName = fieldName;
         this.fieldFlags = fieldFlags;
+        this.fieldControlId = fieldName + BaseForm.FIELD_CONTROL_SUFFIX;
 
         if((this.fieldFlags & FieldFlags.REQUIRED) != 0)
             add(RequiredValidator.getInstance());
@@ -69,11 +70,17 @@ public class TextField extends wicket.markup.html.form.TextField
 
     protected void onComponentTag(final ComponentTag componentTag)
     {
-        final ValueMap attributes = componentTag.getAttributes();
-        final String idAttr = attributes.getString("id");
-        if(idAttr == null)
-            attributes.put("id", fieldName + BaseForm.FIELD_CONTROL_SUFFIX);  // label will point to this ID using for="{fieldName}-control"
-
+        ((BaseForm) getForm()).onFormComponentTag(componentTag, getFieldId(), fieldFlags);
         super.onComponentTag(componentTag);
+    }
+
+    protected String getFieldId()
+    {
+        return this.fieldControlId;
+    }
+
+    public String getJavaScript(final String dialogVarName, final String formObjectName)
+    {
+        return "var field = dialog.createField("+ formObjectName +"[\""+ getFieldId() +"\"], \""+ getClass().getName() +"\", "+ fieldFlags +", null);\n";
     }
 }

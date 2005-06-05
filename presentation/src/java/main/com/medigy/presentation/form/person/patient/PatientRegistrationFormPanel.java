@@ -44,6 +44,7 @@
 package com.medigy.presentation.form.person.patient;
 
 import com.medigy.wicket.form.BaseForm;
+import com.medigy.wicket.form.FieldFlags;
 import com.medigy.wicket.form.FieldGroupLabel;
 import com.medigy.wicket.panel.DefaultFormPanel;
 import wicket.IFeedback;
@@ -67,17 +68,17 @@ public class PatientRegistrationFormPanel extends DefaultFormPanel
             super(componentName, feedback);
             add(new FieldGroupLabel("patientId"));
 
-            addLabeledTextField("personId");
+            addLabeledTextField("personId", FieldFlags.REQUIRED);
             addLabeledTextField("account");
             addLabeledTextField("chartNumber");
 
-            addLabeledTextField("lastName");
-            addLabeledTextField("firstName");
+            addLabeledTextField("lastName", FieldFlags.REQUIRED);
+            addLabeledTextField("firstName", FieldFlags.REQUIRED);
             addLabeledTextField("middleName");
             addLabeledSelectField("suffix");
 
-            addLabeledTextField("socialSecurityNumber");
-            addLabeledTextField("dateOfBirth");
+            addLabeledTextField("socialSecurityNumber", FieldFlags.REQUIRED);
+            addLabeledTextField("dateOfBirth", FieldFlags.REQUIRED);
 
             addLabeledSelectField("gender");
             addLabeledSelectField("maritalStatus");

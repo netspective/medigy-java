@@ -47,10 +47,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import wicket.IFeedback;
+import wicket.markup.ComponentTag;
+import wicket.markup.MarkupStream;
 import wicket.markup.html.form.DropDownChoice;
 import wicket.markup.html.form.Form;
+import wicket.markup.html.form.FormComponent;
 import wicket.markup.html.form.RadioChoice;
 import wicket.markup.html.form.model.IChoice;
+import wicket.util.value.ValueMap;
 
 public class BaseForm extends Form
 {
@@ -117,5 +121,42 @@ public class BaseForm extends Form
     {
         add(new FieldLabel(fieldName));
         add(new RadioChoice(fieldName + FIELD_CONTROL_SUFFIX, TEST_CHOICES));
+    }
+
+    protected void onFormComponentTag(final ComponentTag componentTag, final String fieldControlId, final long fieldFlags)
+    {
+        final ValueMap attributes = componentTag.getAttributes();
+        final String idAttr = attributes.getString("id");
+        if(idAttr == null)
+            attributes.put("id", fieldControlId);  // label will point to this ID using for="{fieldName}-control"
+
+        componentTag.put("onfocus", "return controlOnFocus(this, event)");
+        componentTag.put("onchange", "controlOnChange(this, event)");
+        componentTag.put("onblur", "controlOnBlur(this, event)");
+        componentTag.put("onkeypress", "return controlOnKeypress(this, event)");
+        componentTag.put("onclick", "controlOnClick(this, event)");
+
+        if((fieldFlags & FieldFlags.REQUIRED) != 0)
+            componentTag.put("class", "required");
+    }
+
+    protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag componentTag)
+    {
+        final StringBuffer script = new StringBuffer("\n<script>\nvar dialog = new Dialog(document.forms[0], true, false, true);\n");
+        visitFormComponents(new FormComponent.IVisitor()
+        {
+            public void formComponent(final FormComponent formComponent)
+            {
+                if(formComponent instanceof JavaScriptProvider)
+                {
+                    JavaScriptProvider jsProvider = (JavaScriptProvider) formComponent;
+                    script.append(jsProvider.getJavaScript("dialog", "document.forms[0]"));
+                }
+            }
+        });
+        script.append("dialog.finalizeContents();\n</script>");
+
+        super.onComponentTagBody(markupStream, componentTag);
+        getResponse().write(script.toString());
     }
 }

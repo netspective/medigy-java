@@ -1,7 +1,7 @@
 /*
- * $Id: DefaultPageBodyBorder.java,v 1.4 2005-05-30 18:05:45 shahid.shah Exp $
- * $Revision: 1.4 $
- * $Date: 2005-05-30 18:05:45 $
+ * $Id: DefaultPageBodyBorder.java,v 1.5 2005-06-05 04:03:28 shahid.shah Exp $
+ * $Revision: 1.5 $
+ * $Date: 2005-06-05 04:03:28 $
  *
  * ====================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -38,6 +38,7 @@ public class DefaultPageBodyBorder extends Border
     private WebMarkupContainer navigatorPanelSeparatorCell;
     private WebMarkupContainer calloutPanelCell;
     private WebMarkupContainer calloutPanelBottomCell;
+    private WebMarkupContainer mainContentCell;
     private WebMarkupContainer footerBarCell;
 
     public DefaultPageBodyBorder(final String componentName)
@@ -45,10 +46,19 @@ public class DefaultPageBodyBorder extends Border
         super(componentName);
         add(mainMenuElem = new MainMenu("main-menu", ((DefaultApplication) getApplication()).getMainMenu()));
 
-        add(navigatorPanelCell = new WebMarkupContainer("page-navigation-panel"));
-        add(navigatorPanelSeparatorCell = new WebMarkupContainer("page-nav-and-main-content-separator"));
         add(calloutPanelCell = new WebMarkupContainer("callout-panel"));
         add(calloutPanelBottomCell = new WebMarkupContainer("callout-panel-bottom"));
+
+        add(mainContentCell = new WebMarkupContainer("main-content-cell"));
+        mainContentCell.add(new AttributeModifier("colspan", true, new Model() {
+            public Object getObject(final Component component)
+            {
+                // if there is no callout panel we want the footer to extend the entire page width
+                return isCalloutPanelVisible() ? "1" : "2";
+            }
+        }));
+        mainContentCell.add(navigatorPanelCell = new WebMarkupContainer("page-navigation-panel"));
+        mainContentCell.add(navigatorPanelSeparatorCell = new WebMarkupContainer("page-nav-and-main-content-separator"));
 
         add(footerBarCell = new WebMarkupContainer("footer-bar"));
         footerBarCell.add(new AttributeModifier("colspan", true, new Model() {

@@ -45,10 +45,8 @@ package com.medigy.app.pbs.page;
 
 import com.medigy.presentation.form.person.patient.PatientRegistrationFormPanel;
 import com.medigy.wicket.page.DefaultFormPage;
-import com.medigy.wicket.page.PageCalloutPanelProvider;
-import com.medigy.wicket.page.PageNavigationPanelProvider;
 
-public class FormTestPage1 extends DefaultFormPage implements PageNavigationPanelProvider, PageCalloutPanelProvider
+public class FormTestPage1 extends DefaultFormPage
 {
     public FormTestPage1()
     {

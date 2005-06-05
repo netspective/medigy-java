@@ -43,27 +43,7 @@
  */
 package com.medigy.wicket.form;
 
-public interface FieldFlags
+public interface JavaScriptProvider
 {
-    public static final long DEFAULT_FLAGS = 0;
-
-    // These constants MUST be kept identical to what is in theme.js FLDFLAG_* constants
-
-    public static final int REQUIRED = 1;
-    public static final int PRIMARY_KEY = REQUIRED * 2;
-    public static final int PRIMARY_KEY_GENERATED = PRIMARY_KEY * 2;
-    public static final int UNAVAILABLE = PRIMARY_KEY_GENERATED * 2;
-    public static final int READ_ONLY = UNAVAILABLE * 2;
-    public static final int INITIAL_FOCUS = READ_ONLY * 2;
-    public static final int PERSIST = INITIAL_FOCUS * 2;
-    public static final int CREATE_ADJACENT_AREA = PERSIST * 2;
-    public static final int INPUT_HIDDEN = CREATE_ADJACENT_AREA * 2;
-    public static final int BROWSER_READONLY = INPUT_HIDDEN * 2;
-    public static final int DOUBLE_ENTRY = BROWSER_READONLY * 2;
-    public static final int SCANNABLE = DOUBLE_ENTRY * 2;
-    public static final int AUTO_BLUR = SCANNABLE * 2;
-    public static final int SUBMIT_ONBLUR = AUTO_BLUR * 2;
-    public static final int CREATE_ADJACENT_AREA_HIDDEN = SUBMIT_ONBLUR * 2;
-    public static final int CLEAR_TEXT_ON_VALIDATE_ERROR = CREATE_ADJACENT_AREA_HIDDEN * 2;
-    public static final int ALWAYS_SHOW_HINT = CLEAR_TEXT_ON_VALIDATE_ERROR * 2; 
+    public String getJavaScript(final String dialogVarName, final String formObjectName);
 }
