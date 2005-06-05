@@ -75,6 +75,9 @@
         <classpath id="C:/Projects/Medigy/presentation/depend/lib/main" library-dir='true'/>
         <classpath id="C:/Projects/Medigy/presentation/support/build/artifacts/classes/main"/>
         <classpath id="C:/Projects/Medigy/pbs/support/build/artifacts/classes/main"/>
+
+        <classpath id="C:/Projects/Medigy/persistence/support/build/artifacts/classes/main"/>
+        <classpath id="C:/Projects/Medigy/persistence/depend/lib/main" library-dir='true'/>
     </web-app>
 
       <web-app id='/medigy' app-dir='C:/Projects/Medigy/presentation'/>

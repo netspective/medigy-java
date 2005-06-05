@@ -17,6 +17,8 @@
     <orderEntry type="library" name="Presentation Dependencies (Build)" level="project" />
     <orderEntry type="library" name="Presentation Dependencies (Main)" level="project" />
     <orderEntry type="module" module-name="presentation" />
+    <orderEntry type="module" module-name="persistence" />
+    <orderEntry type="library" name="Persistence Dependencies (Main)" level="project" />
     <orderEntryProperties />
   </component>
 </module>

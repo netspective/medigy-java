@@ -43,6 +43,8 @@
  */
 package com.medigy.presentation.form.person.patient;
 
+import com.medigy.persist.reference.type.GenderType;
+import com.medigy.persist.reference.type.MaritalStatusType;
 import com.medigy.wicket.form.BaseForm;
 import com.medigy.wicket.form.FieldFlags;
 import com.medigy.wicket.form.FieldGroupLabel;
@@ -80,8 +82,8 @@ public class PatientRegistrationFormPanel extends DefaultFormPanel
             addLabeledTextField("socialSecurityNumber", FieldFlags.REQUIRED);
             addLabeledTextField("dateOfBirth", FieldFlags.REQUIRED);
 
-            addLabeledSelectField("gender");
-            addLabeledSelectField("maritalStatus");
+            addLabeledSelectField("gender", GenderType.class);
+            addLabeledSelectField("maritalStatus", MaritalStatusType.class);
             addLabeledSelectField("bloodType");
 
             addLabeledRadioChoiceField("ethnicity");  //TODO: convert to checkbox

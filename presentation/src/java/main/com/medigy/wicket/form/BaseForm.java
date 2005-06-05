@@ -46,6 +46,7 @@ package com.medigy.wicket.form;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import com.medigy.presentation.model.ChoicesFactory;
 import wicket.IFeedback;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
@@ -115,6 +116,12 @@ public class BaseForm extends Form
     {
         add(new FieldLabel(fieldName));
         add(new DropDownChoice(fieldName + FIELD_CONTROL_SUFFIX, TEST_CHOICES));
+    }
+
+    protected void addLabeledSelectField(final String fieldName, final Class referenceEntity)
+    {
+        add(new FieldLabel(fieldName));
+        add(new DropDownChoice(fieldName + FIELD_CONTROL_SUFFIX, ChoicesFactory.getInstance().getReferenceEntityChoices(referenceEntity)));
     }
 
     protected void addLabeledRadioChoiceField(final String fieldName)
