@@ -61,7 +61,7 @@ public class Payment extends AbstractTopLevelEntity
     private Long paymentId;
     private Date effectiveDate;
     private Float amount;
-    private String comment;
+    private String notes;
     private String paymentRefNumber; // e.g paychecks, e-transfer ID
 
     private Party toParty;
@@ -109,14 +109,14 @@ public class Payment extends AbstractTopLevelEntity
     }
 
     @Column(length = 100)
-    public String getComment()
+    public String getNotes()
     {
-        return comment;
+        return notes;
     }
 
-    public void setComment(final String comment)
+    public void setNotes(final String notes)
     {
-        this.comment = comment;
+        this.notes = notes;
     }
 
     public String getPaymentRefNumber()

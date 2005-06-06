@@ -38,7 +38,8 @@
  */
 package com.medigy.persist.model.health;
 
-import java.util.Date;
+import com.medigy.persist.model.common.AbstractTopLevelEntity;
+import com.medigy.persist.reference.custom.health.HealthCareVisitStatusType;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -46,15 +47,13 @@ import javax.persistence.GeneratorType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-
-import com.medigy.persist.model.common.AbstractTopLevelEntity;
-import com.medigy.persist.reference.custom.health.HealthCareVisitStatusType;
+import java.util.Date;
 
 @Entity
 public class HealthCareVisitStatus extends AbstractTopLevelEntity
 {
     private Long visitStatusId;
-    private Date date;
+    private Date statusDate;
     private HealthCareVisit visit;
     private HealthCareVisitStatusType type;
 
@@ -70,14 +69,14 @@ public class HealthCareVisitStatus extends AbstractTopLevelEntity
     }
 
     @Column(nullable = false)
-    public Date getDate()
+    public Date getStatusDate()
     {
-        return date;
+        return statusDate;
     }
 
-    public void setDate(final Date date)
+    public void setStatusDate(final Date statusDate)
     {
-        this.date = date;
+        this.statusDate = statusDate;
     }
 
     @ManyToOne

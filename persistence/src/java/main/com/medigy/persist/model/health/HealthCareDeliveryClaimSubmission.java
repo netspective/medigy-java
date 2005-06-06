@@ -38,17 +38,19 @@
  */
 package com.medigy.persist.model.health;
 
+import com.medigy.persist.model.claim.Claim;
+import com.medigy.persist.model.claim.ClaimItem;
+import com.medigy.persist.model.common.AbstractTopLevelEntity;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-
-import com.medigy.persist.model.claim.Claim;
-import com.medigy.persist.model.claim.ClaimItem;
-import com.medigy.persist.model.common.AbstractTopLevelEntity;
+import javax.persistence.Table;
 
 @Entity
+@Table(name = "Delivery_Claim_Submission")
 public class HealthCareDeliveryClaimSubmission extends AbstractTopLevelEntity
 {
     private Long deliveryClaimSubmissionId;

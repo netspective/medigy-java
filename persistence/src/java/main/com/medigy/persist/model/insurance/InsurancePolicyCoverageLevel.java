@@ -9,11 +9,13 @@ import javax.persistence.GeneratorType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 @Entity
+@Table(name = "Ins_Policy_Coverage_Lvl")
 public class InsurancePolicyCoverageLevel  extends CoverageLevelRelationship
 {
-    public static final String PK_COLUMN_NAME = "ins_policy_coverage_level_id";
+    public static final String PK_COLUMN_NAME = "ins_policy_coverage_lvl_id";
 
     private Long insuranceProductCoverageLevelId;
     private InsurancePolicy insurancePolicy;

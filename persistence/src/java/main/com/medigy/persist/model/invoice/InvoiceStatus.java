@@ -38,22 +38,21 @@
  */
 package com.medigy.persist.model.invoice;
 
-import java.util.Date;
+import com.medigy.persist.model.common.AbstractTopLevelEntity;
+import com.medigy.persist.reference.custom.invoice.InvoiceStatusType;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-
-import com.medigy.persist.model.common.AbstractTopLevelEntity;
-import com.medigy.persist.reference.custom.invoice.InvoiceStatusType;
+import java.util.Date;
 
 @Entity
 public class InvoiceStatus extends AbstractTopLevelEntity implements Comparable
 {
     private Long invoiceStatusId;
-    private Date date;
+    private Date invoiceStatusDate;
     private Invoice invoice;
     private InvoiceStatusType type;
 
@@ -72,14 +71,14 @@ public class InvoiceStatus extends AbstractTopLevelEntity implements Comparable
         this.invoiceStatusId = invoiceStatusId;
     }
 
-    public Date getDate()
+    public Date getInvoiceStatusDate()
     {
-        return date;
+        return invoiceStatusDate;
     }
 
-    public void setDate(final Date date)
+    public void setInvoiceStatusDate(final Date invoiceStatusDate)
     {
-        this.date = date;
+        this.invoiceStatusDate = invoiceStatusDate;
     }
 
     @ManyToOne
@@ -112,6 +111,6 @@ public class InvoiceStatus extends AbstractTopLevelEntity implements Comparable
             return 0;
 
         final InvoiceStatus otherStatus = (InvoiceStatus) o;        
-        return  getDate().compareTo(otherStatus.getDate());
+        return  getInvoiceStatusDate().compareTo(otherStatus.getInvoiceStatusDate());
     }
 }

@@ -58,6 +58,7 @@ import javax.persistence.InheritanceType;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.persistence.Column;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -73,6 +74,7 @@ public class Organization extends Party
     private Set<InsurancePlan> insurancePlan = new HashSet<InsurancePlan>();
     private Set<Enrollment> enrollments = new HashSet<Enrollment>();
 
+    private String tradeName;
 
     public Organization()
     {
@@ -160,6 +162,7 @@ public class Organization extends Party
     @Transient
     public void addInsuranceProduct(final InsuranceProduct product)
     {
+        product.setOrganization(this);
         getInsuranceProducts().add(product);
     }
 
@@ -177,6 +180,7 @@ public class Organization extends Party
     @Transient
     public void addInsurancePlan(final InsurancePlan plan)
     {
+        plan.setOrganization(this);
         insurancePlan.add(plan);
     }
 
@@ -191,5 +195,14 @@ public class Organization extends Party
         this.enrollments = enrollments;
     }
 
+    @Column(length = 128)
+    public String getTradeName()
+    {
+        return tradeName;
+    }
 
+    public void setTradeName(final String tradeName)
+    {
+        this.tradeName = tradeName;
+    }
 }

@@ -36,66 +36,58 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.persist.model.insurance;
+package com.medigy.persist.reference.type.insurance;
 
-import com.medigy.persist.model.common.AbstractDateDurationEntity;
-import com.medigy.persist.model.party.PartyRelationship;
+import com.medigy.persist.reference.AbstractReferenceEntity;
+import com.medigy.persist.reference.CachedReferenceEntity;
+import com.medigy.persist.reference.ReferenceEntity;
 
 import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.GeneratorType;
-import javax.persistence.Column;
-import javax.persistence.ManyToOne;
-import javax.persistence.JoinColumn;
-import javax.persistence.Table;
 
-/**
- * Class for holding party relationships that have been used as the financial responsible party
- * for an insurance policy. 
- */
 @Entity
-@Table(name = "Finance_Resp_Party_Sel")
-public class FinancialResponsiblePartySelection extends AbstractDateDurationEntity
+public class IcdAge extends AbstractReferenceEntity
 {
-    public static final String PK_COLUMN_NAME = "selection_id";
-
-    public Long selectionId;
-    public InsurancePolicy insurancePolicy;
-    public PartyRelationship partyRelationship;
-
-    @Id(generate = GeneratorType.AUTO)
-    @Column(name = PK_COLUMN_NAME)
-    public Long getSelectionId()
+    public enum Cache  implements CachedReferenceEntity
     {
-        return selectionId;
-    }
+        ADULT("A", "Adult 14 and up"),
+        MATERNAL("M", "Maternal, 12-55"),
+        NEWBORN("N", "Newborn less than 1"),
+        PEDIATRIC("P", "Pediatric 0-17");
 
-    public void setSelectionId(final Long selectionId)
-    {
-        this.selectionId = selectionId;
-    }
+        private String code;
+        private String label;
+        private String description;
+        private IcdAge entity;
 
-    @ManyToOne
-    @JoinColumn(name = InsurancePolicy.PK_COLUMN_NAME, nullable = false)
-    public InsurancePolicy getInsurancePolicy()
-    {
-        return insurancePolicy;
-    }
+        Cache(final String code, final String label)
+        {
+            this.code = code;
+            this.label = label;
+        }
 
-    public void setInsurancePolicy(final InsurancePolicy insurancePolicy)
-    {
-        this.insurancePolicy = insurancePolicy;
-    }
+        public String getCode()
+        {
+            return code;
+        }
 
-    @ManyToOne
-    @JoinColumn(name = PartyRelationship.PK_COLUMN_NAME, nullable = false)
-    public PartyRelationship getPartyRelationship()
-    {
-        return partyRelationship;
-    }
+        public String getLabel()
+        {
+            return label;
+        }
 
-    public void setPartyRelationship(final PartyRelationship partyRelationship)
-    {
-        this.partyRelationship = partyRelationship;
+        public String getDescription()
+        {
+            return description;
+        }
+
+        public IcdAge getEntity()
+        {
+            return entity;
+        }
+
+        public void setEntity(final ReferenceEntity entity)
+        {
+            this.entity = (IcdAge) entity;
+        }
     }
 }

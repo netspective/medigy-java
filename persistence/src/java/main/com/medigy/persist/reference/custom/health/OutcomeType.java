@@ -38,11 +38,11 @@
  */
 package com.medigy.persist.reference.custom.health;
 
+import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
-
-import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
 
 @Entity
 public class OutcomeType extends AbstractCustomReferenceEntity
@@ -52,12 +52,12 @@ public class OutcomeType extends AbstractCustomReferenceEntity
     }
 
     @Id(generate = GeneratorType.AUTO)
-    public Long getHealthCareDeliveryOutcomeTypeId()
+    public Long getOutcomeTypeId()
     {
         return super.getSystemId();
     }
 
-    protected void setHealthCareDeliveryOutcomeTypeId(final Long id)
+    protected void setOutcomeTypeId(final Long id)
     {
         super.setSystemId(id);
     }

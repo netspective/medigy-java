@@ -46,11 +46,14 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Column;
 
 @Entity
-@Table(name = "Physical_Char_Type")        
+@Table(name = "Physical_Char_Type")
 public class PhysicalCharacteristicType extends AbstractCustomReferenceEntity
 {
+    public static final String PK_COLUMN_NAME = "physical_char_type_id";
+
     public enum Cache implements CachedCustomReferenceEntity
     {
         HEIGHT("HEIGHT", "Height"),
@@ -67,7 +70,7 @@ public class PhysicalCharacteristicType extends AbstractCustomReferenceEntity
             this.code = code;
             this.label = label;
         }
-     
+
         public String getCode()
         {
             return code;
@@ -90,6 +93,7 @@ public class PhysicalCharacteristicType extends AbstractCustomReferenceEntity
     }
 
     @Id(generate = GeneratorType.AUTO)
+    @Column(name = PK_COLUMN_NAME)
     public Long getPhysicalCharacteristicTypeId()
     {
         return super.getSystemId();

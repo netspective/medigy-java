@@ -74,13 +74,13 @@ public class TestInvoice  extends TestCase
         cal.set(2005, 1, 10);
         final InvoiceStatus status = new InvoiceStatus();
         status.setType(InvoiceStatusType.Cache.ON_HOLD.getEntity());
-        status.setDate(cal.getTime());
+        status.setInvoiceStatusDate(cal.getTime());
         invoice.addInvoiceStatus(status);
 
         cal.set(2005, 1, 11);
         final InvoiceStatus voidStatus = new InvoiceStatus();
         voidStatus.setType(InvoiceStatusType.Cache.VOID.getEntity());
-        voidStatus.setDate(cal.getTime());
+        voidStatus.setInvoiceStatusDate(cal.getTime());
         invoice.addInvoiceStatus(voidStatus);
 
         final InvoiceItem item1 = new InvoiceItem();

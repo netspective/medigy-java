@@ -41,6 +41,7 @@ package com.medigy.persist.model.insurance;
 import com.medigy.persist.model.common.AbstractTopLevelEntity;
 import com.medigy.persist.model.org.Organization;
 import com.medigy.persist.reference.custom.insurance.InsuranceProductType;
+import com.medigy.persist.reference.custom.invoice.BillRemittanceType;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -63,11 +64,17 @@ public class InsuranceProduct extends AbstractTopLevelEntity
     public static final String PK_COLUMN_NAME = "ins_product_id";
 
     private Long insuranceProductId;
+    private String name;
     private InsuranceProductType type;
     private Organization organization;
+    private BillRemittanceType remittanceType;
+    private String remittanceTypeDescription;
+    private String remittancePayerName;
+
     private Set<InsuranceProductCoverage> insuranceProductCoverages = new HashSet<InsuranceProductCoverage>();
     private Set<InsurancePlan> insurancePlans = new HashSet<InsurancePlan>();
     private Set<InsuranceProductCoverageLevel> coverageLevelRelationships = new HashSet<InsuranceProductCoverageLevel>();
+    private Set<InsuranceProductContactMechanism> productContactMechanisms = new HashSet<InsuranceProductContactMechanism>();
 
     @Id(generate = GeneratorType.AUTO)
     @Column(name = PK_COLUMN_NAME)
@@ -79,6 +86,17 @@ public class InsuranceProduct extends AbstractTopLevelEntity
     public void setInsuranceProductId(final Long insuranceProductId)
     {
         this.insuranceProductId = insuranceProductId;
+    }
+
+    @Column(length = 128)
+    public String getName()
+    {
+        return name;
+    }
+
+    public void setName(final String name)
+    {
+        this.name = name;
     }
 
     @ManyToOne
@@ -171,5 +189,62 @@ public class InsuranceProduct extends AbstractTopLevelEntity
     public void addCoverageRelationship(final InsuranceProductCoverage rel)
     {
         this.insuranceProductCoverages.add(rel);
+    }
+
+    @OneToMany(mappedBy = "insuranceProduct", cascade = CascadeType.ALL)
+    public Set<InsuranceProductContactMechanism> getProductContactMechanisms()
+    {
+        return productContactMechanisms;
+    }
+
+    public void setProductContactMechanisms(final Set<InsuranceProductContactMechanism> productContactMechanisms)
+    {
+        this.productContactMechanisms = productContactMechanisms;
+    }
+
+    @Transient
+    public void addProductContactMechanism(final InsuranceProductContactMechanism rel)
+    {
+        rel.setInsuranceProduct(this);
+        productContactMechanisms.add(rel);
+
+    }
+
+    @ManyToOne
+    @JoinColumn(name = BillRemittanceType.PK_COLUMN_NAME)
+    public BillRemittanceType getRemittanceType()
+    {
+        return remittanceType;
+    }
+
+    public void setRemittanceType(final BillRemittanceType remittanceType)
+    {
+        this.remittanceType = remittanceType;
+    }
+
+    /**
+     * Gets the remittance type description. Used when the the getRemittanceType() returns OTHER.
+     * @return
+     */
+    @Column(length = 128)
+    public String getRemittanceTypeDescription()
+    {
+        return remittanceTypeDescription;
+    }
+
+    public void setRemittanceTypeDescription(final String remittanceTypeDescription)
+    {
+        this.remittanceTypeDescription = remittanceTypeDescription;
+    }
+
+    @Column(length = 128)
+    public String getRemittancePayerName()
+    {
+        return remittancePayerName;
+    }
+
+    public void setRemittancePayerName(final String remittancePayerName)
+    {
+        this.remittancePayerName = remittancePayerName;
     }
 }

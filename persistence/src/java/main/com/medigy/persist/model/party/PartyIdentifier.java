@@ -39,15 +39,16 @@
  */
 package com.medigy.persist.model.party;
 
+import com.medigy.persist.model.common.AbstractEntity;
+import com.medigy.persist.model.contact.GeographicBoundary;
+import com.medigy.persist.reference.custom.party.PartyIdentifierType;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-
-import com.medigy.persist.model.common.AbstractEntity;
-import com.medigy.persist.reference.custom.party.PartyIdentifierType;
 
 @Entity
 public class PartyIdentifier extends AbstractEntity
@@ -56,6 +57,8 @@ public class PartyIdentifier extends AbstractEntity
     private Party party;
     private PartyIdentifierType type;
     private String identifierValue;
+
+    private GeographicBoundary geographicBoundary;
 
     public PartyIdentifier()
     {
@@ -106,5 +109,21 @@ public class PartyIdentifier extends AbstractEntity
     public void setIdentifierValue(final String identifierValue)
     {
         this.identifierValue = identifierValue;
+    }
+
+    /**
+     * Gets the geographic boundary this identifier is associated with
+     * @return
+     */
+    @ManyToOne
+    @JoinColumn(name = "geo_id")
+    public GeographicBoundary getGeographicBoundary()
+    {
+        return geographicBoundary;
+    }
+
+    public void setGeographicBoundary(final GeographicBoundary geographicBoundary)
+    {
+        this.geographicBoundary = geographicBoundary;
     }
 }

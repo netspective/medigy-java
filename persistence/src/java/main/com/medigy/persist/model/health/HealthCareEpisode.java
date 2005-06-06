@@ -60,7 +60,7 @@ public class HealthCareEpisode extends AbstractTopLevelEntity
     private Long healthCareEpisodeId;
     private Incident incident;
     private String description;
-    private Date date; // create date
+    private Date episodeDate; // create episodeDate
     private EpisodeType type;
     private Person person;
 
@@ -125,14 +125,14 @@ public class HealthCareEpisode extends AbstractTopLevelEntity
         this.description = description;
     }
 
-    public Date getDate()
+    public Date getEpisodeDate()
     {
-        return date;
+        return episodeDate;
     }
 
-    public void setDate(final Date date)
+    public void setEpisodeDate(final Date episodeDate)
     {
-        this.date = date;
+        this.episodeDate = episodeDate;
     }
 
     @OneToMany(cascade = CascadeType.ALL)

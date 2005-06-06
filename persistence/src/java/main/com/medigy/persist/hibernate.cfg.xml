@@ -15,6 +15,10 @@
         <mapping class="com.medigy.persist.reference.type.MaritalStatusType"/>
         <mapping class="com.medigy.persist.reference.type.PriorityType"/>
         <mapping class="com.medigy.persist.reference.type.UnitOfMeasureType"/>
+        <mapping class="com.medigy.persist.reference.type.insurance.CPT"/>
+        <mapping class="com.medigy.persist.reference.type.insurance.HCPCS"/>
+        <mapping class="com.medigy.persist.reference.type.insurance.IcdAge"/>
+        <mapping class="com.medigy.persist.reference.type.insurance.Icd"/>
 
         <!--mapping package="com.medigy.persist.reference.type.party"/-->
         <mapping class="com.medigy.persist.reference.type.party.PartyFacilityRoleType"/>
@@ -51,6 +55,7 @@
         <mapping class="com.medigy.persist.reference.custom.insurance.InsurancePolicyRoleType"/>
         <mapping class="com.medigy.persist.reference.custom.insurance.InsurancePolicyType"/>
         <mapping class="com.medigy.persist.reference.custom.insurance.InsuranceProductType"/>
+        <mapping class="com.medigy.persist.reference.custom.insurance.InsurancePlanAttributeType"/>
 
         <!--mapping package="com.medigy.persist.reference.custom.invoice"/-->
         <mapping class="com.medigy.persist.reference.custom.invoice.BillingAccountRoleType"/>
@@ -210,7 +215,10 @@
         <!--mapping class="com.medigy.persist.model.insurance.InsurancePolicyItem"/-->
         <!--mapping class="com.medigy.persist.model.insurance.InsurancePolicyRole"/-->
         <mapping class="com.medigy.persist.model.insurance.InsuranceProduct"/>
+        <mapping class="com.medigy.persist.model.insurance.InsuranceProductContactMechanism"/>
+        <mapping class="com.medigy.persist.model.insurance.InsuranceProductContactMechanismPurpose"/>    
         <mapping class="com.medigy.persist.model.insurance.InsurancePlan"/>
+        <mapping class="com.medigy.persist.model.insurance.InsurancePlanAttribute"/>
         <mapping class="com.medigy.persist.model.insurance.InsurancePlanContactMechanism"/>
         <mapping class="com.medigy.persist.model.insurance.InsurancePlanContactMechanismPurpose"/>
         <mapping class="com.medigy.persist.model.insurance.InsuranceProductCoverage"/>

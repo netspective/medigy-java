@@ -55,8 +55,8 @@ public class BillRemittanceType extends AbstractCustomReferenceEntity
     public enum Cache implements CachedCustomReferenceEntity
     {
         PAPER("PAPER", "Paper"),
-        ELECTRONIC("ELECTRONIC", "Electronic");
-
+        ELECTRONIC("ELECTRONIC", "Electronic"),
+        OTHER("OTHER", "Other");
 
         private final String label;
         private final String code;
@@ -86,6 +86,16 @@ public class BillRemittanceType extends AbstractCustomReferenceEntity
         public String getLabel()
         {
             return label;
+        }
+
+        public static BillRemittanceType getEntity(String code)
+        {
+            for (BillRemittanceType.Cache geo : BillRemittanceType.Cache.values())
+            {
+                if (geo.getCode().equals(code))
+                    return geo.getEntity();
+            }
+            return null;
         }
     }
 

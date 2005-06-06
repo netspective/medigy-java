@@ -42,6 +42,7 @@ package com.medigy.persist.model.party;
 import com.medigy.persist.model.common.AbstractTopLevelEntity;
 import com.medigy.persist.reference.type.ContactMechanismType;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
@@ -52,7 +53,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.CascadeType;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -66,7 +66,7 @@ public class ContactMechanism extends AbstractTopLevelEntity
     private Long contactMechanismId;
     protected ContactMechanismType type;
 
-    private Set<PartyContactMechanism> partyContactMechanisms = new HashSet<PartyContactMechanism>();
+    private Set<PartyContactMechanism> partyContactMechanisms = new HashSet<PartyContactMechanism>();    
 
     public ContactMechanism()
     {

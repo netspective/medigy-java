@@ -48,6 +48,7 @@ import com.medigy.persist.reference.type.LanguageType;
 import com.medigy.persist.util.HibernateUtil;
 
 import java.util.Calendar;
+import java.util.Date;
 
 public class TestHealthCareReferral extends TestCase
 {
@@ -101,16 +102,20 @@ public class TestHealthCareReferral extends TestCase
         referral.setPatientRole(patientRole);
         referral.setProviderRole(providerRole);
         referral.setRequesterRole(requestorRole);
-        referral.setReferralDate(cal.getTime());
+        final Date time = cal.getTime();
+        referral.setReferralDate(time);
         referral.setType(HealthCareReferralType.Cache.CONSULTATION.getEntity());
         HibernateUtil.getSession().save(referral);
         HibernateUtil.closeSession();
 
         final HealthCareReferral newReferral = (HealthCareReferral) HibernateUtil.getSession().load(HealthCareReferral.class, referral.getHealthCareReferralId());
-        assertThat(newReferral.getReferralDate(), eq(cal.getTime()));
+        cal.setTime(newReferral.getReferralDate());
+        assertThat(cal.get(Calendar.YEAR), eq(2005));
+        assertThat(cal.get(Calendar.MONTH), eq(5));
+        assertThat(cal.get(Calendar.DATE), eq(16));
         assertThat(newReferral.getPatientRole(), eq(patientRole));
         assertThat(newReferral.getRequesterRole(), eq(requestorRole));
         assertThat(newReferral.getProviderRole(), eq(providerRole));
-        
+
     }
 }

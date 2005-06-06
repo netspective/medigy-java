@@ -36,66 +36,71 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.persist.model.insurance;
+package com.medigy.persist.reference.custom.insurance;
 
-import com.medigy.persist.model.common.AbstractDateDurationEntity;
-import com.medigy.persist.model.party.PartyRelationship;
+import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
+import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
+import com.medigy.persist.reference.custom.CustomReferenceEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.GeneratorType;
 import javax.persistence.Column;
-import javax.persistence.ManyToOne;
-import javax.persistence.JoinColumn;
-import javax.persistence.Table;
 
-/**
- * Class for holding party relationships that have been used as the financial responsible party
- * for an insurance policy. 
- */
 @Entity
-@Table(name = "Finance_Resp_Party_Sel")
-public class FinancialResponsiblePartySelection extends AbstractDateDurationEntity
+public class FeeScheduleItemType  extends AbstractCustomReferenceEntity
 {
-    public static final String PK_COLUMN_NAME = "selection_id";
+    public static final String PK_COLUMN_NAME = "fee_schedule_item_type_id";
 
-    public Long selectionId;
-    public InsurancePolicy insurancePolicy;
-    public PartyRelationship partyRelationship;
+    public enum Cache implements CachedCustomReferenceEntity
+    {
+        ICD9("ICD9", "ICD-9"),
+        ICD10("ICD10", "ICD-10"),
+        CPT("CPT", "CPT"),
+        HCPCS("HCPCS", "HCPCS"),
+        EPSDT("EPSDT", "EPSDT");
+
+        private final String label;
+        private final String code;
+        private FeeScheduleItemType entity;
+
+        Cache(final String code, final String label)
+        {
+            this.code = code;
+            this.label = label;
+        }
+
+        public String getCode()
+        {
+            return code;
+        }
+
+        public FeeScheduleItemType getEntity()
+        {
+            return entity;
+        }
+
+        public void setEntity(final CustomReferenceEntity entity)
+        {
+            this.entity = (FeeScheduleItemType) entity;
+        }
+
+        public String getLabel()
+        {
+            return label;
+        }
+    }
+
 
     @Id(generate = GeneratorType.AUTO)
     @Column(name = PK_COLUMN_NAME)
-    public Long getSelectionId()
+    public Long getFeeScheduleItemTypeId()
     {
-        return selectionId;
+        return getSystemId();
     }
 
-    public void setSelectionId(final Long selectionId)
+    public void setFeeScheduleItemTypeId(final Long feeScheduleItemTypeId)
     {
-        this.selectionId = selectionId;
-    }
-
-    @ManyToOne
-    @JoinColumn(name = InsurancePolicy.PK_COLUMN_NAME, nullable = false)
-    public InsurancePolicy getInsurancePolicy()
-    {
-        return insurancePolicy;
-    }
-
-    public void setInsurancePolicy(final InsurancePolicy insurancePolicy)
-    {
-        this.insurancePolicy = insurancePolicy;
-    }
-
-    @ManyToOne
-    @JoinColumn(name = PartyRelationship.PK_COLUMN_NAME, nullable = false)
-    public PartyRelationship getPartyRelationship()
-    {
-        return partyRelationship;
-    }
-
-    public void setPartyRelationship(final PartyRelationship partyRelationship)
-    {
-        this.partyRelationship = partyRelationship;
+        setSystemId(feeScheduleItemTypeId);
     }
 }

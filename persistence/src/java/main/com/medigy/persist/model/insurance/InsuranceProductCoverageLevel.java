@@ -8,16 +8,20 @@ import javax.persistence.ManyToOne;
 import javax.persistence.JoinColumn;
 import javax.persistence.Id;
 import javax.persistence.GeneratorType;
+import javax.persistence.Table;
+import javax.persistence.Column;
 
 @Entity
+@Table(name = "Ins_Product_Coverage_Lvl")
 public class InsuranceProductCoverageLevel extends CoverageLevelRelationship
 {
-    public static final String PK_COLUMN_NAME = "ins_product_coverage_level_id";
+    public static final String PK_COLUMN_NAME = "ins_product_coverage_lvl_id";
 
     private Long insuranceProductCoverageLevelId;
     private InsuranceProduct insuranceProduct;
 
     @Id(generate = GeneratorType.AUTO)
+    @Column(name = PK_COLUMN_NAME)
     public Long getInsuranceProductCoverageLevelId()
     {
         return insuranceProductCoverageLevelId;

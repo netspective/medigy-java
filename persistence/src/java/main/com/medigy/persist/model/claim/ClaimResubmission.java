@@ -38,14 +38,14 @@
  */
 package com.medigy.persist.model.claim;
 
+import com.medigy.persist.model.common.AbstractTopLevelEntity;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-
-import com.medigy.persist.model.common.AbstractTopLevelEntity;
 
 @Entity
 public class ClaimResubmission extends AbstractTopLevelEntity
@@ -54,7 +54,7 @@ public class ClaimResubmission extends AbstractTopLevelEntity
     private Long claimResubmissionId;
     private Claim claimFor;
     private Claim claimWith;
-    private String comment;
+    private String notes;
 
     @Id(generate = GeneratorType.AUTO)
     public Long getClaimResubmissionId()
@@ -92,13 +92,13 @@ public class ClaimResubmission extends AbstractTopLevelEntity
     }
 
     @Column(length = 100)
-    public String getComment()
+    public String getNotes()
     {
-        return comment;
+        return notes;
     }
 
-    public void setComment(final String comment)
+    public void setNotes(final String notes)
     {
-        this.comment = comment;
+        this.notes = notes;
     }
 }

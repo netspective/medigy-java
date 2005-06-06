@@ -55,7 +55,7 @@ import javax.persistence.JoinColumn;
 public class InsurancePlanContactMechanismPurpose  extends AbstractDateDurationEntity
 {
     private Long purposeId;
-    private InsurancePlanContactMechanism contactMechanism;
+    private InsurancePlanContactMechanism insurancePlanContactMechanism;
     private ContactMechanismPurposeType type;
 
     @Id(generate = GeneratorType.AUTO)
@@ -70,15 +70,15 @@ public class InsurancePlanContactMechanismPurpose  extends AbstractDateDurationE
     }
 
     @ManyToOne
-    @JoinColumn(name = "ins_plan_contact_mech_id")
-    public InsurancePlanContactMechanism getContactMechanism()
+    @JoinColumn(name = InsurancePlanContactMechanism.PK_COLUMN_NAME)
+    public InsurancePlanContactMechanism getInsurancePlanContactMechanism()
     {
-        return contactMechanism;
+        return insurancePlanContactMechanism;
     }
 
-    public void setContactMechanism(final InsurancePlanContactMechanism contactMechanism)
+    public void setInsurancePlanContactMechanism(final InsurancePlanContactMechanism insurancePlanContactMechanism)
     {
-        this.contactMechanism = contactMechanism;
+        this.insurancePlanContactMechanism = insurancePlanContactMechanism;
     }
 
     @ManyToOne

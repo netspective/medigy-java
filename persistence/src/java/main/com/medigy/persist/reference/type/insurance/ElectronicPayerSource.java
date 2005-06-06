@@ -36,66 +36,66 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.persist.model.insurance;
+package com.medigy.persist.reference.type.insurance;
 
-import com.medigy.persist.model.common.AbstractDateDurationEntity;
-import com.medigy.persist.model.party.PartyRelationship;
+import com.medigy.persist.reference.CachedReferenceEntity;
+import com.medigy.persist.reference.ReferenceEntity;
+import com.medigy.persist.reference.AbstractReferenceEntity;
 
 import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.GeneratorType;
-import javax.persistence.Column;
-import javax.persistence.ManyToOne;
-import javax.persistence.JoinColumn;
-import javax.persistence.Table;
 
-/**
- * Class for holding party relationships that have been used as the financial responsible party
- * for an insurance policy. 
- */
 @Entity
-@Table(name = "Finance_Resp_Party_Sel")
-public class FinancialResponsiblePartySelection extends AbstractDateDurationEntity
+public class ElectronicPayerSource extends AbstractReferenceEntity
 {
-    public static final String PK_COLUMN_NAME = "selection_id";
+    /**
+     * <enum id="0">Direct</enum>
+        <enum id="1">Envoy</enum>
+        <enum id="2">Perse</enum>
+        <enum id="3">Thin Net</enum>
+     */
 
-    public Long selectionId;
-    public InsurancePolicy insurancePolicy;
-    public PartyRelationship partyRelationship;
-
-    @Id(generate = GeneratorType.AUTO)
-    @Column(name = PK_COLUMN_NAME)
-    public Long getSelectionId()
+    public enum Cache implements CachedReferenceEntity
     {
-        return selectionId;
-    }
+        DIRECT("DIRECT", "Direct",  "Direct"),
+        ENVOY("ENVOY", "Envoy", "Envoy"),
+        PERSE("PERSE", "Perse", "Perse"),
+        THIN_NET("THIN_NET", "Thin Net", "Thin Net");
 
-    public void setSelectionId(final Long selectionId)
-    {
-        this.selectionId = selectionId;
-    }
+        private String code;
+        private String label;
+        private String description;
+        private ElectronicPayerSource entity;
 
-    @ManyToOne
-    @JoinColumn(name = InsurancePolicy.PK_COLUMN_NAME, nullable = false)
-    public InsurancePolicy getInsurancePolicy()
-    {
-        return insurancePolicy;
-    }
+        Cache(final String code, final String label, final String description)
+        {
+            this.code = code;
+            this.label = label;
+            this.description = description;
+        }
 
-    public void setInsurancePolicy(final InsurancePolicy insurancePolicy)
-    {
-        this.insurancePolicy = insurancePolicy;
-    }
+        public String getCode()
+        {
+            return code;
+        }
 
-    @ManyToOne
-    @JoinColumn(name = PartyRelationship.PK_COLUMN_NAME, nullable = false)
-    public PartyRelationship getPartyRelationship()
-    {
-        return partyRelationship;
-    }
+        public String getLabel()
+        {
+            return label;
+        }
 
-    public void setPartyRelationship(final PartyRelationship partyRelationship)
-    {
-        this.partyRelationship = partyRelationship;
+        public String getDescription()
+        {
+            return description;
+        }
+
+        public ElectronicPayerSource getEntity()
+        {
+            return entity;
+        }
+
+        public void setEntity(final ReferenceEntity entity)
+        {
+            this.entity = (ElectronicPayerSource) entity;
+        }
     }
 }

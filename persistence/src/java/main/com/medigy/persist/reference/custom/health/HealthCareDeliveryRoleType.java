@@ -46,11 +46,14 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Column;
 
 @Entity
-@Table(name = "Health_Care_Del_Role_Type")        
+@Table(name = "Delivery_Role_Type")
 public class HealthCareDeliveryRoleType extends AbstractCustomReferenceEntity
 {
+    public static final String PK_COLUMN_NAME = "delivery_role_type_id";
+
     public enum Cache implements CachedCustomReferenceEntity
     {
         TECHNICIAN("TECH", "Technician"),
@@ -90,6 +93,7 @@ public class HealthCareDeliveryRoleType extends AbstractCustomReferenceEntity
     }
 
     @Id(generate = GeneratorType.AUTO)
+    @Column(name = PK_COLUMN_NAME)
     public Long getHealthCareDeliveryRoleTypeId()
     {
         return super.getSystemId();

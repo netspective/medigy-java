@@ -47,8 +47,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Column;
+import javax.persistence.Table;
 
 @Entity
+@Table(name = "Party_Contact_Mech_Purpose")
 public class PartyContactMechanismPurpose extends AbstractDateDurationEntity
 {
     private Long purposeId;

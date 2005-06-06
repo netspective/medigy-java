@@ -63,7 +63,7 @@ public class HealthCareReferral extends AbstractEntity
 
     public Long healthCareReferralId;
     private String referralReason;
-    private String comment;
+    private String notes;
     private String authorizationNumber;
     private Date referralDate;
     private Long allowedVisits;
@@ -125,14 +125,14 @@ public class HealthCareReferral extends AbstractEntity
         this.referralReason = referralReason;
     }
 
-    public String getComment()
+    public String getNotes()
     {
-        return comment;
+        return notes;
     }
 
-    public void setComment(final String comment)
+    public void setNotes(final String notes)
     {
-        this.comment = comment;
+        this.notes = notes;
     }
 
     public Date getReferralDate()

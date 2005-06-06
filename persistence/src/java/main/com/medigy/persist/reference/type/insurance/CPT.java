@@ -36,66 +36,137 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.persist.model.insurance;
+package com.medigy.persist.reference.type.insurance;
 
-import com.medigy.persist.model.common.AbstractDateDurationEntity;
-import com.medigy.persist.model.party.PartyRelationship;
+import com.medigy.persist.reference.AbstractReferenceEntity;
+import com.medigy.persist.reference.type.GenderType;
 
 import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.GeneratorType;
 import javax.persistence.Column;
 import javax.persistence.ManyToOne;
 import javax.persistence.JoinColumn;
-import javax.persistence.Table;
 
-/**
- * Class for holding party relationships that have been used as the financial responsible party
- * for an insurance policy. 
- */
 @Entity
-@Table(name = "Finance_Resp_Party_Sel")
-public class FinancialResponsiblePartySelection extends AbstractDateDurationEntity
+public class CPT extends AbstractReferenceEntity
 {
-    public static final String PK_COLUMN_NAME = "selection_id";
+    private String comprehensiveCompoundCpts;
+    private String comprehensiveCompoundFlags;
+    private String mutualExclusiveCpts;
+    private String mutualExclusiveFlags;
+    private GenderType gender;
+    private Boolean unlisted;
+    private Boolean questionable;
+    private Boolean nonRep;
+    private Boolean nonCov;
+    private Boolean ambulatorySurgeryCtr;
 
-    public Long selectionId;
-    public InsurancePolicy insurancePolicy;
-    public PartyRelationship partyRelationship;
-
-    @Id(generate = GeneratorType.AUTO)
-    @Column(name = PK_COLUMN_NAME)
-    public Long getSelectionId()
+    @Column(length = 4000, name = "comprehensive_cmpd_cpts")
+    public String getComprehensiveCompoundCpts()
     {
-        return selectionId;
+        return comprehensiveCompoundCpts;
     }
 
-    public void setSelectionId(final Long selectionId)
+    public void setComprehensiveCompoundCpts(final String comprehensiveCompoundCpts)
     {
-        this.selectionId = selectionId;
+        this.comprehensiveCompoundCpts = comprehensiveCompoundCpts;
+    }
+
+    @Column(length = 4000, name = "comprehensive_cmpd_flags")
+    public String getComprehensiveCompoundFlags()
+    {
+        return comprehensiveCompoundFlags;
+    }
+
+    public void setComprehensiveCompoundFlags(final String comprehensiveCompoundFlags)
+    {
+        this.comprehensiveCompoundFlags = comprehensiveCompoundFlags;
+    }
+
+    public String getMutualExclusiveCpts()
+    {
+        return mutualExclusiveCpts;
+    }
+
+    public void setMutualExclusiveCpts(final String mutualExclusiveCpts)
+    {
+        this.mutualExclusiveCpts = mutualExclusiveCpts;
+    }
+
+    @Column(length = 4000)
+    public String getMutualExclusiveFlags()
+    {
+        return mutualExclusiveFlags;
+    }
+
+    public void setMutualExclusiveFlags(final String mutualExclusiveFlags)
+    {
+        this.mutualExclusiveFlags = mutualExclusiveFlags;
     }
 
     @ManyToOne
-    @JoinColumn(name = InsurancePolicy.PK_COLUMN_NAME, nullable = false)
-    public InsurancePolicy getInsurancePolicy()
+    @JoinColumn(name = GenderType.PK_COLUMN_NAME)
+    public GenderType getGender()
     {
-        return insurancePolicy;
+        return gender;
     }
 
-    public void setInsurancePolicy(final InsurancePolicy insurancePolicy)
+    public void setGender(final GenderType gender)
     {
-        this.insurancePolicy = insurancePolicy;
+        this.gender = gender;
     }
 
-    @ManyToOne
-    @JoinColumn(name = PartyRelationship.PK_COLUMN_NAME, nullable = false)
-    public PartyRelationship getPartyRelationship()
+    public Boolean getUnlisted()
     {
-        return partyRelationship;
+        return unlisted;
     }
 
-    public void setPartyRelationship(final PartyRelationship partyRelationship)
+    public void setUnlisted(final Boolean unlisted)
     {
-        this.partyRelationship = partyRelationship;
+        this.unlisted = unlisted;
+    }
+
+    public Boolean getQuestionable()
+    {
+        return questionable;
+    }
+
+    public void setQuestionable(final Boolean questionable)
+    {
+        this.questionable = questionable;
+    }
+
+    public Boolean getNonRep()
+    {
+        return nonRep;
+    }
+
+    public void setNonRep(final Boolean nonRep)
+    {
+        this.nonRep = nonRep;
+    }
+
+    public Boolean getNonCov()
+    {
+        return nonCov;
+    }
+
+    public void setNonCov(final Boolean nonCov)
+    {
+        this.nonCov = nonCov;
+    }
+
+    /**
+     * Gets the CPT's status of being payable in  Ambulatory Surgery Centers (ASC)
+     *
+     * @return True if the CPT code is a part of the ASC list of covered procedures
+     */
+    public Boolean getAmbulatorySurgeryCtr()
+    {
+        return ambulatorySurgeryCtr;
+    }
+
+    public void setAmbulatorySurgeryCtr(final Boolean ambulatorySurgeryCtr)
+    {
+        this.ambulatorySurgeryCtr = ambulatorySurgeryCtr;
     }
 }

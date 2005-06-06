@@ -58,6 +58,7 @@ public class PartyRelationshipType extends AbstractCustomReferenceEntity
     {
         FAMILY("FAMILY", "Family"),
         PATIENT_RESPONSIBLE_PARTY("PRR", "Patient Responsible Party"),        // describes relationship between the patient and the responsible party
+        
         ORGANIZATION_ROLLUP("ORG_ROLLUP", "Organization Rollup"),
         PARTNERSHIP("PARTNER", "Partnership"),
         CARE_PROVIDER_SELECTION("CARE_PROVIDER", "Care Provider Relationship"),

@@ -38,10 +38,11 @@
  */
 package com.medigy.persist.model.data;
 
+import com.medigy.persist.model.common.Entity;
 import com.medigy.persist.model.party.Party;
 import com.medigy.persist.model.session.ProcessSession;
 import com.medigy.persist.model.session.SessionManager;
-import com.medigy.persist.model.common.Entity;
+import com.medigy.persist.reference.AbstractReferenceEntity;
 import com.medigy.persist.reference.CachedReferenceEntity;
 import com.medigy.persist.reference.ReferenceEntity;
 import com.medigy.persist.reference.custom.CachedCustomHierarchyReferenceEntity;
@@ -49,26 +50,35 @@ import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
 import com.medigy.persist.reference.custom.CustomReferenceEntity;
 import com.medigy.persist.util.HibernateConfiguration;
 import com.medigy.persist.util.HibernateUtil;
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
+import org.hibernate.cfg.Environment;
 import org.hibernate.mapping.PersistentClass;
 
 import java.beans.BeanInfo;
+import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
-import java.beans.IntrospectionException;
-import java.lang.reflect.Method;
+import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Hashtable;
-import java.util.Map;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Scanner;
+import java.util.regex.MatchResult;
 
 public class EntitySeedDataPopulator
 {
     private final Log log = LogFactory.getLog(EntitySeedDataPopulator.class);
+
+    public static final String EXTERNAL_DATA_PROPERTY_FILE = "data-mappings.properties";
 
     private Session session;
     private HibernateConfiguration configuration;
@@ -78,6 +88,69 @@ public class EntitySeedDataPopulator
     {
         this.session = session;
         this.configuration = configuration;
+    }
+
+     /**
+     * Loads the reference data contained in separate data files
+     */
+    protected void loadExternalReferenceData()
+    {
+        try
+        {
+            InputStream propertyFileStream = Environment.class.getResourceAsStream(EXTERNAL_DATA_PROPERTY_FILE);
+            if (propertyFileStream == null)
+                propertyFileStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(EXTERNAL_DATA_PROPERTY_FILE);
+            if (propertyFileStream == null)
+            {
+                log.warn("'" + EXTERNAL_DATA_PROPERTY_FILE + "' property file not found for loading reference data contained " +
+                        "in external files.");
+                return;
+            }
+            Properties props = new java.util.Properties();
+            props.load(propertyFileStream);
+
+            final Enumeration keys = props.keys();
+            while (keys.hasMoreElements())
+            {
+                final String className = (String)keys.nextElement();
+                final String dataFileName = props.getProperty(className);
+                InputStream stream = Environment.class.getResourceAsStream(dataFileName);
+                if (stream == null)
+                    stream = Thread.currentThread().getContextClassLoader().getResourceAsStream(dataFileName);
+                Scanner sc = new Scanner(stream);
+                int rowsAdded = 0;
+                if (sc.hasNextLine())
+                {
+                    sc.findInLine("\\\"([ \\.0-9a-zA-Z]*)\\\"\\s*\\\"([ \\.0-9a-zA-Z]*)\\\"\\s*\\\"([ \\.0-9a-zA-Z]*)\\\"\\s*\\\"([ \\.0-9a-zA-Z]*)\\\"");
+                    try
+                    {
+                        MatchResult result = sc.match();
+                        final Class refClass = Class.forName(className);
+                        final Object refObject = refClass.newInstance();
+                        if (refObject instanceof AbstractReferenceEntity)
+                        {
+                            final AbstractReferenceEntity refEntity = (AbstractReferenceEntity) refObject;
+                            refEntity.setCode(result.group(0));
+                            refEntity.setLabel(result.group(1));
+                            refEntity.setDescription(result.group(2));
+                            HibernateUtil.getSession().save(refEntity);
+                            rowsAdded++;
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                         log.error(className + ": Error at data row count = " + rowsAdded + " \n" + ExceptionUtils.getStackTrace(e));
+                    }
+                }
+                sc.close();
+                log.info(className + ", Rows Added = " + rowsAdded);
+            }
+            //InputStream stream = new FileInputStream("e:\\netspective\\medigy\\persistence\\database\\refdata\\icd9-codes.txt");
+        }
+        catch (Exception e)
+        {
+            log.error(ExceptionUtils.getStackTrace(e));
+        }
     }
 
     public void populateEntityCacheData() throws HibernateException
@@ -122,7 +195,7 @@ public class EntitySeedDataPopulator
                                     writeMethod.invoke(entityObj, enumMethod.invoke(enumObj));
                                 }
                             }
-                            HibernateUtil.getSession().save(entityObj);                            
+                            HibernateUtil.getSession().save(entityObj);
                         }
                     }
                     catch (IntrospectionException e)
@@ -155,7 +228,7 @@ public class EntitySeedDataPopulator
         com.medigy.persist.model.session.Session session = new ProcessSession();
         session.setProcessName(EntitySeedDataPopulator.class.getName());
 
-        HibernateUtil.beginTransaction();        
+        HibernateUtil.beginTransaction();
         HibernateUtil.getSession().save(session);
         SessionManager.getInstance().pushActiveSession(session);
 
@@ -203,17 +276,17 @@ public class EntitySeedDataPopulator
                 log.info(aClass.getCanonicalName() + " cached custom enums addded.");
             populateCachedCustomReferenceEntities(HibernateUtil.getSession(), aClass, cachedEntities, new String[] {"code", "label", "party", "parentEntity"}, data);
         }
-
+        //loadExternalReferenceData();
         //populateEntityCacheData();
         HibernateUtil.commitTransaction();
         SessionManager.getInstance().popActiveSession();
     }
 
     protected void  populateCachedCustomReferenceEntities(final Session session,
-                                   final Class entityClass,
-                                   final CachedCustomReferenceEntity[] cachedEntities,
-                                   final String[] propertyList,
-                                   final Object[][] data)  throws HibernateException
+                                                          final Class entityClass,
+                                                          final CachedCustomReferenceEntity[] cachedEntities,
+                                                          final String[] propertyList,
+                                                          final Object[][] data)  throws HibernateException
     {
         try
         {
@@ -257,10 +330,10 @@ public class EntitySeedDataPopulator
     }
 
     protected void  populateCachedReferenceEntities(final Session session,
-                                   final Class entityClass,
-                                   final CachedReferenceEntity[] cachedEntities,
-                                   final String[] propertyList,
-                                   final Object[][] data)  throws HibernateException
+                                                    final Class entityClass,
+                                                    final CachedReferenceEntity[] cachedEntities,
+                                                    final String[] propertyList,
+                                                    final Object[][] data)  throws HibernateException
     {
         try
         {

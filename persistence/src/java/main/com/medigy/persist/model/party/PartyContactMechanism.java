@@ -60,7 +60,7 @@ import java.util.Set;
 public class PartyContactMechanism extends AbstractDateDurationEntity
 {
     private Long partyContactMechanismId;
-    private String comment;
+    private String notes;
     private boolean nonSolicitation;
     private Party party;
     private ContactMechanism contactMechanism;
@@ -84,14 +84,14 @@ public class PartyContactMechanism extends AbstractDateDurationEntity
     }
 
     @Column(length = 1000)
-    public String getComment()
+    public String getNotes()
     {
-        return comment;
+        return notes;
     }
 
-    public void setComment(final String comment)
+    public void setNotes(final String notes)
     {
-        this.comment = comment;
+        this.notes = notes;
     }
 
     @ManyToOne

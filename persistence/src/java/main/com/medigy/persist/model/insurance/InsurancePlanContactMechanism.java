@@ -38,19 +38,22 @@
  */
 package com.medigy.persist.model.insurance;
 
-import com.medigy.persist.model.party.ContactMechanism;
-import com.medigy.persist.model.party.PartyContactMechanismPurpose;
 import com.medigy.persist.model.common.AbstractDateDurationEntity;
+import com.medigy.persist.model.party.ContactMechanism;
+import com.medigy.persist.reference.custom.party.ContactMechanismPurposeType;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Id;
-import javax.persistence.GeneratorType;
 import javax.persistence.Column;
-import javax.persistence.ManyToOne;
+import javax.persistence.Entity;
+import javax.persistence.GeneratorType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import java.util.Set;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.OneToMany;
+import javax.persistence.CascadeType;
+import javax.persistence.Transient;
 import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Class for relating an insurance plan to contact mechanisms. The contact mechanisms might be totally different from
@@ -60,15 +63,17 @@ import java.util.HashSet;
 @Table(name = "Ins_Plan_Contact_Mech")
 public class InsurancePlanContactMechanism extends AbstractDateDurationEntity
 {
+    public static final String PK_COLUMN_NAME = "ins_plan_contact_mech_id";
+
     private Long insurancePlanContactMechanismId;
-    private String comment;
+    private String notes;
     private InsurancePlan insurancePlan;
     private ContactMechanism contactMechanism;
 
-    private Set<PartyContactMechanismPurpose> purposes = new HashSet<PartyContactMechanismPurpose>();
+    private Set<InsurancePlanContactMechanismPurpose> purposes = new HashSet<InsurancePlanContactMechanismPurpose>();
 
     @Id(generate = GeneratorType.AUTO)
-    @Column(name = "ins_plan_contact_mech_id")
+    @Column(name = PK_COLUMN_NAME)
     public Long getInsurancePlanContactMechanismId()
     {
         return insurancePlanContactMechanismId;
@@ -80,14 +85,14 @@ public class InsurancePlanContactMechanism extends AbstractDateDurationEntity
     }
 
     @Column(length = 100)
-    public String getComment()
+    public String getNotes()
     {
-        return comment;
+        return notes;
     }
 
-    public void setComment(String comment)
+    public void setNotes(String notes)
     {
-        this.comment = comment;
+        this.notes = notes;
     }
 
     @ManyToOne
@@ -112,5 +117,32 @@ public class InsurancePlanContactMechanism extends AbstractDateDurationEntity
     public void setContactMechanism(final ContactMechanism contactMechanism)
     {
         this.contactMechanism = contactMechanism;
+    }
+
+    @OneToMany(mappedBy = "insurancePlanContactMechanism", cascade = CascadeType.ALL)
+    public Set<InsurancePlanContactMechanismPurpose> getPurposes()
+    {
+        return purposes;
+    }
+
+    public void setPurposes(final Set<InsurancePlanContactMechanismPurpose> purposes)
+    {
+        this.purposes = purposes;
+    }
+
+    @Transient
+    public void addPurpose(final InsurancePlanContactMechanismPurpose purpose)
+    {
+        purpose.setInsurancePlanContactMechanism(this);
+        purposes.add(purpose);
+    }
+
+    @Transient
+    public void addPurpose(final ContactMechanismPurposeType type)
+    {
+        final InsurancePlanContactMechanismPurpose rel = new InsurancePlanContactMechanismPurpose();
+        rel.setType(type);
+        rel.setInsurancePlanContactMechanism(this);
+        purposes.add(rel);
     }
 }

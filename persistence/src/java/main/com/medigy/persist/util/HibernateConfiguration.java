@@ -114,7 +114,7 @@ public class HibernateConfiguration extends AnnotationConfiguration
                 }
 
                 if (!foundCache)
-                    throw new HibernateException(aClass + " is marked as a ReferenceEntity but does not contain a ReferenceEntityCache enum.");
+                    log.warn(aClass + " is marked as a ReferenceEntity but does not contain a ReferenceEntityCache enum.");
 
                 // TODO: find out how to ensure the new mapping for reference type is immutable and read only
                 // final PersistentClass pClass = getClassMapping(aClass.getLabel());

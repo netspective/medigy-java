@@ -38,16 +38,15 @@
  */
 package com.medigy.persist.model.claim;
 
-import java.util.Date;
+import com.medigy.persist.model.common.AbstractTopLevelEntity;
+import com.medigy.persist.reference.custom.claim.ClaimStatusType;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-
-import com.medigy.persist.model.common.AbstractTopLevelEntity;
-import com.medigy.persist.reference.custom.claim.ClaimStatusType;
+import java.util.Date;
 
 @Entity
 public class ClaimStatus extends AbstractTopLevelEntity
@@ -55,7 +54,7 @@ public class ClaimStatus extends AbstractTopLevelEntity
     private Long claimStatusId;
     private Claim claim;
     private ClaimStatusType type;
-    private Date date;
+    private Date claimStatusDate;
 
     @Id(generate = GeneratorType.AUTO)
     public Long getClaimStatusId()
@@ -69,7 +68,7 @@ public class ClaimStatus extends AbstractTopLevelEntity
     }
 
     @ManyToOne
-    @JoinColumn(name = "claim_id")
+    @JoinColumn(name = Claim.PK_COLUMN_NAME)
     public Claim getClaim()
     {
         return claim;
@@ -93,16 +92,16 @@ public class ClaimStatus extends AbstractTopLevelEntity
     }
 
     /**
-     * Gets the date/time for when this claim status was assigned to the claim
+     * Gets the claimStatusDate/time for when this claim status was assigned to the claim
      * @return
      */
-    public Date getDate()
+    public Date getClaimStatusDate()
     {
-        return date;
+        return claimStatusDate;
     }
 
-    public void setDate(final Date date)
+    public void setClaimStatusDate(final Date claimStatusDate)
     {
-        this.date = date;
+        this.claimStatusDate = claimStatusDate;
     }
 }

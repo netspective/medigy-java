@@ -54,6 +54,93 @@ public class ClaimType extends AbstractCustomReferenceEntity
 
     public enum Cache implements CachedCustomReferenceEntity
     {
+        INSURANCE("INSURANCE", "Insurance"),
+        WORKERS_COMPENSATION("WORKERS_COMP", "Workers Compensation"),
+        THIRD_PARTY("THIRD_PARTY", "Third Party Payer"),
+        
+        /**
+         * <data>
+			<row>
+				<col name="id">0</col>
+				<col name="caption">Self-Pay</col>
+			</row>
+			<row>
+				<col name="id">1</col>
+				<col name="caption">Insurance</col>
+				<col name="group_name">insurance</col>
+			</row>
+			<row>
+				<col name="id">2</col>
+				<col name="caption">HMO(cap)</col>
+				<col name="group_name">insurance</col>
+			</row>
+			<row>
+				<col name="id">3</col>
+				<col name="caption">PPO</col>
+				<col name="group_name">insurance</col>
+			</row>
+			<row>
+				<col name="id">4</col>
+				<col name="caption">Medicare</col>
+				<col name="group_name">insurance</col>
+			</row>
+			<row>
+				<col name="id">5</col>
+				<col name="caption">Medicaid</col>
+				<col name="group_name">insurance</col>
+			</row>
+			<row>
+				<col name="id">6</col>
+				<col name="caption">Workers Compensation</col>
+				<col name="group_name">workers compensation</col>
+			</row>
+			<row>
+				<col name="id">7</col>
+				<col name="caption">Third-Party Payer</col>
+				<col name="group_name">third-party</col>
+			</row>
+			<row>
+				<col name="id">8</col>
+				<col name="caption">Champus</col>
+				<col name="group_name">insurance</col>
+			</row>
+			<row>
+				<col name="id">9</col>
+				<col name="caption">ChampVA</col>
+				<col name="group_name">insurance</col>
+			</row>
+			<row>
+				<col name="id">10</col>
+				<col name="caption">FECA Blk Lung</col>
+				<col name="group_name">insurance</col>
+			</row>
+			<row>
+				<col name="id">11</col>
+				<col name="caption">BCBS</col>
+				<col name="group_name">insurance</col>
+			</row>
+			<row>
+				<col name="id">12</col>
+				<col name="caption">HMO(non-cap)</col>
+				<col name="group_name">insurance</col>
+			</row>
+			<row>
+				<col name="id">13</col>
+				<col name="caption">MC(managed care choice)</col>
+				<col name="group_name">insurance</col>
+			</row>
+			<row>
+				<col name="id">14</col>
+				<col name="caption">POS(point of service)</col>
+				<col name="group_name">insurance</col>
+			</row>
+			<row>
+				<col name="id">15</col>
+				<col name="caption">Railroad Medicare</col>
+				<col name="group_name">insurance</col>
+			</row>
+		</data>
+         */
         INSTITUTIONAL("INST", "UB-92 Forms"),
         MEDICAL("MED", "HCFA 1500 Forms"),
         DENTAL("DENT", "ADA-94"),

@@ -39,13 +39,13 @@
  */
 package com.medigy.persist.model.party;
 
+import com.medigy.persist.reference.type.ContactMechanismType;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.Transient;
-
-import com.medigy.persist.reference.type.ContactMechanismType;
 
 @Entity
 @Inheritance(strategy=InheritanceType.JOINED)
@@ -54,7 +54,7 @@ public class PhoneNumber extends ContactMechanism
 
     private String countryCode;
     private String areaCode;
-    private String number;
+    private String numberValue;
     private String extension;
 
     public PhoneNumber()
@@ -96,14 +96,14 @@ public class PhoneNumber extends ContactMechanism
     }
 
     @Column(length = 7)
-    public String getNumber()
+    public String getNumberValue()
     {
-        return number;
+        return numberValue;
     }
 
-    public void setNumber(final String number)
+    public void setNumberValue(final String numberValue)
     {
-        this.number = number;
+        this.numberValue = numberValue;
     }
 
     @Column(length = 5)

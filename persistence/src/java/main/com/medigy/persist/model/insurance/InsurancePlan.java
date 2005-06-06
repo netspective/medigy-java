@@ -40,6 +40,7 @@ package com.medigy.persist.model.insurance;
 
 import com.medigy.persist.model.common.AbstractDateDurationEntity;
 import com.medigy.persist.model.org.Organization;
+import com.medigy.persist.model.party.ContactMechanism;
 import com.medigy.persist.reference.custom.insurance.CoverageLevelType;
 import com.medigy.persist.reference.custom.invoice.BillRemittanceType;
 import org.hibernate.validator.NotNull;
@@ -75,6 +76,8 @@ public class InsurancePlan extends AbstractDateDurationEntity
     private Set<InsurancePolicy> insurancePolicies = new HashSet<InsurancePolicy>();
     private Set<InsurancePlanContactMechanism> insurancePlanContactMechanisms = new HashSet<InsurancePlanContactMechanism>();
     private Set<InsurancePlanCoverageLevel> coverageLevelRelationships = new HashSet<InsurancePlanCoverageLevel>();
+
+    private Set<InsurancePlanAttribute> insurancePlanAttributes = new HashSet<InsurancePlanAttribute>();
 
     @Id(generate = GeneratorType.AUTO)
     @Column(name = PK_COLUMN_NAME)
@@ -249,5 +252,43 @@ public class InsurancePlan extends AbstractDateDurationEntity
             coverageLevel.addInsurancePolicyCoverageLevel(policyCoverageLevel);
             insPolicy.addCoverageLevelRelationship(policyCoverageLevel);
         }
+    }
+
+    @Transient
+    public void addContactMechanismRelationship(final InsurancePlanContactMechanism cm)
+    {
+        cm.setInsurancePlan(this);
+        insurancePlanContactMechanisms.add(cm);
+    }
+
+    @Transient
+    public void addContactMechanismRelationship(final ContactMechanism cm)
+    {
+        final InsurancePlanContactMechanism ipcm = new InsurancePlanContactMechanism();
+        ipcm.setContactMechanism(cm);
+        ipcm.setInsurancePlan(this);
+        insurancePlanContactMechanisms.add(ipcm);
+    }
+
+    /**
+     * Gets all the various attributes associated with the insurance plan. 
+     * @return
+     */
+    @OneToMany(mappedBy = "insurancePlan", cascade = CascadeType.ALL)
+    public Set<InsurancePlanAttribute> getInsurancePlanAttributes()
+    {
+        return insurancePlanAttributes;
+    }
+
+    public void setInsurancePlanAttributes(final Set<InsurancePlanAttribute> insurancePlanAttributes)
+    {
+        this.insurancePlanAttributes = insurancePlanAttributes;
+    }
+
+    @Transient
+    public void addInsurancePlanAttribute(final InsurancePlanAttribute attr)
+    {
+        attr.setInsurancePlan(this);
+        insurancePlanAttributes.add(attr);
     }
 }

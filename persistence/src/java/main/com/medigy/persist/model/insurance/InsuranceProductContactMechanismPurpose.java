@@ -39,63 +39,59 @@
 package com.medigy.persist.model.insurance;
 
 import com.medigy.persist.model.common.AbstractDateDurationEntity;
-import com.medigy.persist.model.party.PartyRelationship;
+import com.medigy.persist.reference.custom.party.ContactMechanismPurposeType;
 
-import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.GeneratorType;
-import javax.persistence.Column;
 import javax.persistence.ManyToOne;
 import javax.persistence.JoinColumn;
+import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Column;
 
-/**
- * Class for holding party relationships that have been used as the financial responsible party
- * for an insurance policy. 
- */
 @Entity
-@Table(name = "Finance_Resp_Party_Sel")
-public class FinancialResponsiblePartySelection extends AbstractDateDurationEntity
+@Table(name = "Ins_Prod_Contact_Mech_Purpose")
+public class InsuranceProductContactMechanismPurpose extends AbstractDateDurationEntity
 {
-    public static final String PK_COLUMN_NAME = "selection_id";
+    public static final String PK_COLUMN_NAME = "purpose_id";
 
-    public Long selectionId;
-    public InsurancePolicy insurancePolicy;
-    public PartyRelationship partyRelationship;
+    private Long purposeId;
+    private InsuranceProductContactMechanism insuranceProductContactMechanism;
+    private ContactMechanismPurposeType type;
 
     @Id(generate = GeneratorType.AUTO)
     @Column(name = PK_COLUMN_NAME)
-    public Long getSelectionId()
+    public Long getPurposeId()
     {
-        return selectionId;
+        return purposeId;
     }
 
-    public void setSelectionId(final Long selectionId)
+    protected void setPurposeId(final Long purposeId)
     {
-        this.selectionId = selectionId;
-    }
-
-    @ManyToOne
-    @JoinColumn(name = InsurancePolicy.PK_COLUMN_NAME, nullable = false)
-    public InsurancePolicy getInsurancePolicy()
-    {
-        return insurancePolicy;
-    }
-
-    public void setInsurancePolicy(final InsurancePolicy insurancePolicy)
-    {
-        this.insurancePolicy = insurancePolicy;
+        this.purposeId = purposeId;
     }
 
     @ManyToOne
-    @JoinColumn(name = PartyRelationship.PK_COLUMN_NAME, nullable = false)
-    public PartyRelationship getPartyRelationship()
+    @JoinColumn(name = InsuranceProductContactMechanism.PK_COLUMN_NAME)
+    public InsuranceProductContactMechanism getInsuranceProductContactMechanism()
     {
-        return partyRelationship;
+        return insuranceProductContactMechanism;
     }
 
-    public void setPartyRelationship(final PartyRelationship partyRelationship)
+    public void setInsuranceProductContactMechanism(final InsuranceProductContactMechanism productContactMechanism)
     {
-        this.partyRelationship = partyRelationship;
+        this.insuranceProductContactMechanism = productContactMechanism;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "contact_mech_purpose_type_id")
+    public ContactMechanismPurposeType getType()
+    {
+        return type;
+    }
+
+    public void setType(final ContactMechanismPurposeType type)
+    {
+        this.type = type;
     }
 }

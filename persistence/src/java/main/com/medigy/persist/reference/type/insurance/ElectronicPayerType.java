@@ -36,66 +36,64 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.persist.model.insurance;
+package com.medigy.persist.reference.type.insurance;
 
-import com.medigy.persist.model.common.AbstractDateDurationEntity;
-import com.medigy.persist.model.party.PartyRelationship;
+import com.medigy.persist.reference.AbstractReferenceEntity;
+import com.medigy.persist.reference.CachedReferenceEntity;
+import com.medigy.persist.reference.ReferenceEntity;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.GeneratorType;
-import javax.persistence.Column;
-import javax.persistence.ManyToOne;
-import javax.persistence.JoinColumn;
-import javax.persistence.Table;
-
-/**
- * Class for holding party relationships that have been used as the financial responsible party
- * for an insurance policy. 
- */
-@Entity
-@Table(name = "Finance_Resp_Party_Sel")
-public class FinancialResponsiblePartySelection extends AbstractDateDurationEntity
+public class ElectronicPayerType   extends AbstractReferenceEntity
 {
-    public static final String PK_COLUMN_NAME = "selection_id";
-
-    public Long selectionId;
-    public InsurancePolicy insurancePolicy;
-    public PartyRelationship partyRelationship;
-
-    @Id(generate = GeneratorType.AUTO)
-    @Column(name = PK_COLUMN_NAME)
-    public Long getSelectionId()
+    /**
+     * <enum id="0">Non-Commercial</enum>
+		<enum id="100">Commercial - Medical</enum>
+		<enum id="200">Blue Cross/Blue Shield - Medical</enum>
+		<enum id="300">Medicare - Medical</enum>
+		<enum id="400">Medicaid - Medical</enum>
+     */
+    public enum Cache implements CachedReferenceEntity
     {
-        return selectionId;
-    }
+        NON_COMMERCIAL("NON_COMM", "Non-commercial",  "Non-commercial"),
+        COMMERCIAL_MEDICAL("COMM_MED", "Commercial - Medical", "Commercial - Medical"),
+        BCBS_MEDICAL("BCBS_MED", "Perse", "Perse"),
+        MEDICARE_MEDICAL("MEDICARE_MED", "Thin Net", "Thin Net"),
+        MEDICAID_MEDICAL("MEDICAID_MED", "Thin Net", "Thin Net");
 
-    public void setSelectionId(final Long selectionId)
-    {
-        this.selectionId = selectionId;
-    }
+        private String code;
+        private String label;
+        private String description;
+        private ElectronicPayerType entity;
 
-    @ManyToOne
-    @JoinColumn(name = InsurancePolicy.PK_COLUMN_NAME, nullable = false)
-    public InsurancePolicy getInsurancePolicy()
-    {
-        return insurancePolicy;
-    }
+        Cache(final String code, final String label, final String description)
+        {
+            this.code = code;
+            this.label = label;
+            this.description = description;
+        }
 
-    public void setInsurancePolicy(final InsurancePolicy insurancePolicy)
-    {
-        this.insurancePolicy = insurancePolicy;
-    }
+        public String getCode()
+        {
+            return code;
+        }
 
-    @ManyToOne
-    @JoinColumn(name = PartyRelationship.PK_COLUMN_NAME, nullable = false)
-    public PartyRelationship getPartyRelationship()
-    {
-        return partyRelationship;
-    }
+        public String getLabel()
+        {
+            return label;
+        }
 
-    public void setPartyRelationship(final PartyRelationship partyRelationship)
-    {
-        this.partyRelationship = partyRelationship;
+        public String getDescription()
+        {
+            return description;
+        }
+
+        public ElectronicPayerType getEntity()
+        {
+            return entity;
+        }
+
+        public void setEntity(final ReferenceEntity entity)
+        {
+            this.entity = (ElectronicPayerType) entity;
+        }
     }
 }

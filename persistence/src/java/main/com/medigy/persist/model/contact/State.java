@@ -57,6 +57,102 @@ import java.util.Set;
 @Inheritance(strategy = InheritanceType.JOINED)
 public class State extends GeographicBoundary
 {
+    public enum Cache
+    {
+        ALABAMA("ALABAMA", "AL"),
+        ALASKA("ALASKA", "AK"),
+        AMERICAN_SAMOA("AMERICAN SAMOA", "AS"),
+        ARIZONA("ARIZONA", "AZ"),
+        ARKANSAS("ARKANSAS", "AR"),
+        CALIFORNIA("CALIFORNIA", "CA"),
+        COLORADO("COLORADO", "CO"),
+        CONNECTICUT("CONNECTICUT", "CT"),
+        DELAWARE("DELAWARE", "DE"),
+        DC("DISTRICT OF COLUMBIA", "DC"),
+        MICRONESIA("FEDERATED STATES OF MICRONESIA", "FM"),
+        FLORIDA("FLORIDA", "FL"),
+        GEORGIA("GEORGIA", "GA"),
+        GUAM("GUAM", "GU"),
+        HAWAII("HAWAII",  "HI"),
+        IDAHO("IDAHO", "ID"),
+        ILLINOIS("ILLINOIS", "IL"),
+        INDIANA("INDIANA", "IN"),
+        IOWA("IOWA", "IA"),
+        KANSAS("KANSAS", "KS"),
+        KENTUCKY("KENTUCKY", "KY"),
+        LOUISIANA("LOUISIANA", "LA"),
+        MAINE("MAINE", "ME"),
+        MARSHALL_ISLANDS("MARSHALL ISLANDS", "MH"),
+        MARYLAND("MARYLAND", "MD"),
+        MASSACHUSETTS("MASSACHUSETTS", "MA"),
+        MICHIGAN("MICHIGAN", "MI"),
+        MINNESOTA("MINNESOTA", "MN"),
+        MISSISSIPPI("MISSISSIPPI", "MS"),
+        MISSOURI("MISSOURI", "MO"),
+        MONTANA("MONTANA", "MT"),
+        NEBRASKA("NEBRASKA", "NE"),
+        NEVADA("NEVADA", "NV"),
+        NEW_HAMPSHIRE("NEW HAMPSHIRE", "NH"),
+        NEW_JERSEY("NEW JERSEY", "NJ"),
+        NEW_MEXICO("NEW MEXICO", "NM"),
+        NEW_YORK("NEW YORK",  "NY"),
+        NORTH_CAROLINA("NORTH CAROLINA",  "NC"),
+        NORTH_DAKOTA("NORTH DAKOTA", "ND"),
+        NORTHERN_MARIANA_ISLANDS("NORTHERN MARIANA ISLANDS", "MP"),
+        OHIO("OHIO", "OH"),
+        OKLAHOMA("OKLAHOMA", "OK"),
+        OREGON("OREGON", "OR"),
+        PALAU("PALAU", "PW"),
+        PENNSYLVANIA("PENNSYLVANIA", "PA"),
+        PUERTO_RICO("PUERTO RICO", "PR"),
+        RHODE_ISLAND("RHODE ISLAND", "RI"),
+        SOUTH_CAROLINA("SOUTH CAROLINA", "SC"),
+        SOUTH_DAKOTA("SOUTH DAKOTA", "SD"),
+        TENNESSEE("TENNESSEE", "TN"),
+        TEXAS("TEXAS", "TX"),
+        UTAH("UTAH", "UT"),
+        VERMONT("VERMONT", "VT"),
+        VIRGIN_ISLANDS("VIRGIN ISLANDS", "VI"),
+        VIRGINIA("VIRGINIA", "VA"),
+        WASHINGTON("WASHINGTON", "WA"),
+        WEST_VIRGINIA("WEST VIRGINIA", "WV"),
+        WISCONSIN("WISCONSIN", "WI"),
+        WYOMING("WYOMING", "WY");
+
+        private String stateName;
+        private String stateAbbreviation;
+        private State entity;
+
+        Cache(final String name, final String abbrev)
+        {
+            this.stateName = name;
+            this.stateAbbreviation = abbrev;
+        }
+
+        public String getStateName()
+        {
+            return this.stateName;
+        }
+
+        public String getStateAbbreviation()
+        {
+            return this.stateAbbreviation;
+        }
+
+        public State getEntity()
+        {
+            if (entity == null)
+                throw new RuntimeException(getClass() + " "+ name() + " has not been initialized");
+            return entity;
+        }
+
+        public void setEntity(final State entity)
+        {
+            this.entity = entity;
+        }
+    }
+
+
     private String stateName;
     private String stateAbbreviation;
 
@@ -212,7 +308,7 @@ public class State extends GeographicBoundary
     /**
      * Gets the city belonging to this state by the city's name
      * @param cityName
-     * @return Null if no city with the exact name is found
+     * @return Null if no city with the exact stateName is found
      */
     @Transient
     public City getCityByName(final String cityName)

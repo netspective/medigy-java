@@ -61,7 +61,7 @@ public class PartyRelationship extends AbstractDateDurationEntity
     public static final String PK_COLUMN_NAME = "party_rel_id";
 
     private Long partyRelationshipId;
-    private String comment;
+    private String notes;
 
     private Party partyFrom;
     private Party partyTo;
@@ -155,14 +155,14 @@ public class PartyRelationship extends AbstractDateDurationEntity
 
 
     @Column(length = 256)
-    public String getComment()
+    public String getNotes()
     {
-        return comment;
+        return notes;
     }
 
-    public void setComment(final String comment)
+    public void setNotes(final String notes)
     {
-        this.comment = comment;
+        this.notes = notes;
     }
 
     @ManyToOne

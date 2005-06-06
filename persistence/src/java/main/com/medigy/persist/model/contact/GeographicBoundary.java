@@ -41,6 +41,7 @@ package com.medigy.persist.model.contact;
 import com.medigy.persist.model.common.AbstractTopLevelEntity;
 import com.medigy.persist.model.health.IncidentGeographicBoundary;
 import com.medigy.persist.model.party.PostalAddressBoundary;
+import com.medigy.persist.model.party.PartyIdentifier;
 import com.medigy.persist.reference.custom.GeographicBoundaryType;
 
 import javax.persistence.Column;
@@ -66,7 +67,7 @@ public class GeographicBoundary extends AbstractTopLevelEntity
 
     private Set<IncidentGeographicBoundary> incidentGeographicBoundary = new HashSet<IncidentGeographicBoundary>();
     private Set<PostalAddressBoundary> postalAddressBoundary = new HashSet<PostalAddressBoundary>();
-
+    private Set<PartyIdentifier> partyIdentifiers = new HashSet<PartyIdentifier>();
 
     public GeographicBoundary()
     {
@@ -116,6 +117,17 @@ public class GeographicBoundary extends AbstractTopLevelEntity
     public void setIncidentGeographicBoundary(final Set<IncidentGeographicBoundary> incidentGeographicBoundary)
     {
         this.incidentGeographicBoundary = incidentGeographicBoundary;
+    }
+
+    @OneToMany(mappedBy = "geographicBoundary")
+    public Set<PartyIdentifier> getPartyIdentifiers()
+    {
+        return partyIdentifiers;
+    }
+
+    public void setPartyIdentifiers(final Set<PartyIdentifier> partyIdentifiers)
+    {
+        this.partyIdentifiers = partyIdentifiers;
     }
 
 

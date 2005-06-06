@@ -59,6 +59,7 @@ public class ContactMechanismPurposeType  extends AbstractCustomReferenceEntity
         HOME_ADDRESS("HOME_ADDR", "Home Address"),
         HOME_EMAIL("HOME_EMAIL", "Home Email"),
         WORK_PHONE("WORK_PH", "Work Phone"),
+        BILLING_ADDRESS("BILL_ADDR", "Billing Address"),
         WORK_ADDRESS("WORK_ADDR", "Work Address"),
         WORK_EMAIL("WORK_EMAIL", "Work Email"),
         PERSONAL_EMAIL("EMAIL", "Personal Email"),

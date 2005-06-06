@@ -56,7 +56,7 @@ import java.util.Date;
 public class InvoiceRole extends AbstractTopLevelEntity
 {
     private Long invoiceRoleId;
-    private Date date;
+    private Date invoiceDate;
     //private Float percentage;
     private Invoice invoice;
     private Party party;
@@ -109,13 +109,13 @@ public class InvoiceRole extends AbstractTopLevelEntity
         this.invoice = invoice;
     }
 
-    public Date getDate()
+    public Date getInvoiceDate()
     {
-        return date;
+        return invoiceDate;
     }
 
-    public void setDate(final Date date)
+    public void setInvoiceDate(final Date invoiceDate)
     {
-        this.date = date;
+        this.invoiceDate = invoiceDate;
     }
 }

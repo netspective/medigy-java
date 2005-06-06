@@ -258,7 +258,7 @@ public class Invoice  extends AbstractTopLevelEntity
     {
         final InvoiceStatus status = new InvoiceStatus();
         status.setType(type);
-        status.setDate(new Date());
+        status.setInvoiceStatusDate(new Date());
         addInvoiceStatus(status);
     }
 

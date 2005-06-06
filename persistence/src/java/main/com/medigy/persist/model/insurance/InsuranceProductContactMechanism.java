@@ -39,63 +39,107 @@
 package com.medigy.persist.model.insurance;
 
 import com.medigy.persist.model.common.AbstractDateDurationEntity;
-import com.medigy.persist.model.party.PartyRelationship;
+import com.medigy.persist.model.party.ContactMechanism;
+import com.medigy.persist.reference.custom.party.ContactMechanismPurposeType;
 
-import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.GeneratorType;
 import javax.persistence.Column;
+import javax.persistence.GeneratorType;
 import javax.persistence.ManyToOne;
 import javax.persistence.JoinColumn;
+import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.OneToMany;
+import javax.persistence.CascadeType;
+import javax.persistence.Transient;
+import java.util.Set;
+import java.util.HashSet;
 
-/**
- * Class for holding party relationships that have been used as the financial responsible party
- * for an insurance policy. 
- */
 @Entity
-@Table(name = "Finance_Resp_Party_Sel")
-public class FinancialResponsiblePartySelection extends AbstractDateDurationEntity
+@Table(name = "Ins_Product_Contact_Mech")
+public class InsuranceProductContactMechanism extends AbstractDateDurationEntity
 {
-    public static final String PK_COLUMN_NAME = "selection_id";
+    public static final String PK_COLUMN_NAME = "ins_product_contact_mech_id";
 
-    public Long selectionId;
-    public InsurancePolicy insurancePolicy;
-    public PartyRelationship partyRelationship;
+    private Long insuranceProductContactMechanismId;
+    private String notes;
+    private InsuranceProduct insuranceProduct;
+    private ContactMechanism contactMechanism;
+
+    private Set<InsuranceProductContactMechanismPurpose> purposes = new HashSet<InsuranceProductContactMechanismPurpose>();
 
     @Id(generate = GeneratorType.AUTO)
     @Column(name = PK_COLUMN_NAME)
-    public Long getSelectionId()
+    public Long getInsuranceProductContactMechanismId()
     {
-        return selectionId;
+        return insuranceProductContactMechanismId;
     }
 
-    public void setSelectionId(final Long selectionId)
+    public void setInsuranceProductContactMechanismId(final Long insuranceProductContactMechanismId)
     {
-        this.selectionId = selectionId;
+        this.insuranceProductContactMechanismId = insuranceProductContactMechanismId;
+    }
+
+    @Column(length = 256)
+    public String getNotes()
+    {
+        return notes;
+    }
+
+    public void setNotes(final String notes)
+    {
+        this.notes = notes;
     }
 
     @ManyToOne
-    @JoinColumn(name = InsurancePolicy.PK_COLUMN_NAME, nullable = false)
-    public InsurancePolicy getInsurancePolicy()
+    @JoinColumn(name = InsuranceProduct.PK_COLUMN_NAME)
+    public InsuranceProduct getInsuranceProduct()
     {
-        return insurancePolicy;
+        return insuranceProduct;
     }
 
-    public void setInsurancePolicy(final InsurancePolicy insurancePolicy)
+    public void setInsuranceProduct(final InsuranceProduct insuranceProduct)
     {
-        this.insurancePolicy = insurancePolicy;
+        this.insuranceProduct = insuranceProduct;
     }
 
     @ManyToOne
-    @JoinColumn(name = PartyRelationship.PK_COLUMN_NAME, nullable = false)
-    public PartyRelationship getPartyRelationship()
+    @JoinColumn(name = ContactMechanism.PK_COLUMN_NAME)
+    public ContactMechanism getContactMechanism()
     {
-        return partyRelationship;
+        return contactMechanism;
     }
 
-    public void setPartyRelationship(final PartyRelationship partyRelationship)
+    public void setContactMechanism(final ContactMechanism contactMechanism)
     {
-        this.partyRelationship = partyRelationship;
+        this.contactMechanism = contactMechanism;
     }
+
+    @OneToMany(mappedBy = "insuranceProductContactMechanism", cascade = CascadeType.ALL)
+    public Set<InsuranceProductContactMechanismPurpose> getPurposes()
+    {
+        return purposes;
+    }
+
+    public void setPurposes(final Set<InsuranceProductContactMechanismPurpose> purposes)
+    {
+        this.purposes = purposes;
+    }
+
+    @Transient
+    public void addPurpose(final InsuranceProductContactMechanismPurpose purpose)
+    {
+        purpose.setInsuranceProductContactMechanism(this);
+        purposes.add(purpose);
+    }
+
+    @Transient
+    public void addPurpose(final ContactMechanismPurposeType purposeType)
+    {
+        final InsuranceProductContactMechanismPurpose productCmp = new InsuranceProductContactMechanismPurpose();
+        productCmp.setType(purposeType);
+        productCmp.setInsuranceProductContactMechanism(this);
+        purposes.add(productCmp);
+    }
+
 }

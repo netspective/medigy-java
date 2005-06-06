@@ -38,8 +38,7 @@
  */
 package com.medigy.persist.model.insurance;
 
-import com.medigy.persist.model.common.AbstractDateDurationEntity;
-import com.medigy.persist.model.party.PartyRelationship;
+import com.medigy.persist.model.common.AbstractTopLevelEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -47,55 +46,71 @@ import javax.persistence.GeneratorType;
 import javax.persistence.Column;
 import javax.persistence.ManyToOne;
 import javax.persistence.JoinColumn;
-import javax.persistence.Table;
 
-/**
- * Class for holding party relationships that have been used as the financial responsible party
- * for an insurance policy. 
- */
 @Entity
-@Table(name = "Finance_Resp_Party_Sel")
-public class FinancialResponsiblePartySelection extends AbstractDateDurationEntity
+public class FeeScheduleItem extends AbstractTopLevelEntity
 {
-    public static final String PK_COLUMN_NAME = "selection_id";
+    public static final String PK_COLUMN_NAME = "fee_schedule_item_id";
 
-    public Long selectionId;
-    public InsurancePolicy insurancePolicy;
-    public PartyRelationship partyRelationship;
+    private Long feeScheduleItemId;
+    private FeeSchedule feeSchedule;
+    private String code; // CPT code???
+    private String name;
+    private Long sequenceNumber;
 
     @Id(generate = GeneratorType.AUTO)
     @Column(name = PK_COLUMN_NAME)
-    public Long getSelectionId()
+    public Long getFeeScheduleItemId()
     {
-        return selectionId;
+        return feeScheduleItemId;
     }
 
-    public void setSelectionId(final Long selectionId)
+    public void setFeeScheduleItemId(final Long feeScheduleItemId)
     {
-        this.selectionId = selectionId;
-    }
-
-    @ManyToOne
-    @JoinColumn(name = InsurancePolicy.PK_COLUMN_NAME, nullable = false)
-    public InsurancePolicy getInsurancePolicy()
-    {
-        return insurancePolicy;
-    }
-
-    public void setInsurancePolicy(final InsurancePolicy insurancePolicy)
-    {
-        this.insurancePolicy = insurancePolicy;
+        this.feeScheduleItemId = feeScheduleItemId;
     }
 
     @ManyToOne
-    @JoinColumn(name = PartyRelationship.PK_COLUMN_NAME, nullable = false)
-    public PartyRelationship getPartyRelationship()
+    @JoinColumn(name = FeeSchedule.PK_COLUMN_NAME)
+    public FeeSchedule getFeeSchedule()
     {
-        return partyRelationship;
+        return feeSchedule;
     }
 
-    public void setPartyRelationship(final PartyRelationship partyRelationship)
+    public void setFeeSchedule(final FeeSchedule feeSchedule)
     {
-        this.partyRelationship = partyRelationship;
+        this.feeSchedule = feeSchedule;
+    }
+
+
+    public String getCode()
+    {
+        return code;
+    }
+
+    public void setCode(final String code)
+    {
+        this.code = code;
+    }
+
+    @Column(length = 64)
+    public String getName()
+    {
+        return name;
+    }
+
+    public void setName(final String name)
+    {
+        this.name = name;
+    }
+
+    public Long getSequenceNumber()
+    {
+        return sequenceNumber;
+    }
+
+    public void setSequenceNumber(final Long sequenceNumber)
+    {
+        this.sequenceNumber = sequenceNumber;
     }
 }

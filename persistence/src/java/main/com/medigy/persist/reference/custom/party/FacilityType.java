@@ -46,8 +46,11 @@ import com.medigy.persist.reference.custom.CustomReferenceEntity;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 
 @Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE, discriminatorValue = "General")
 public class FacilityType extends AbstractCustomReferenceEntity
 {
     public enum Cache implements CachedCustomReferenceEntity

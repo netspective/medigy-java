@@ -38,6 +38,9 @@
  */
 package com.medigy.persist.model.health;
 
+import com.medigy.persist.model.common.AbstractTopLevelEntity;
+import com.medigy.persist.reference.custom.health.OutcomeType;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
@@ -45,26 +48,26 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import com.medigy.persist.model.common.AbstractTopLevelEntity;
-import com.medigy.persist.reference.custom.health.OutcomeType;
-
 @Entity
 public class DeliveryOutcome extends AbstractTopLevelEntity
 {
-    private Long healthCareDeliveryOutcomeId;
+    public static final String PK_COLUMN_NAME = "delivery_outcome_id";
+
+    private Long deliveryOutcomeId;
     private HealthCareDelivery healthCareDelivery;
     private String explanation;
     private OutcomeType type;
 
     @Id (generate = GeneratorType.AUTO)
-    public Long getHealthCareDeliveryOutcomeId()
+    @Column(name  = PK_COLUMN_NAME)
+    public Long getDeliveryOutcomeId()
     {
-        return healthCareDeliveryOutcomeId;
+        return deliveryOutcomeId;
     }
 
-    protected void setHealthCareDeliveryOutcomeId(final Long healthCareDeliveryOutcomeId)
+    protected void setDeliveryOutcomeId(final Long deliveryOutcomeId)
     {
-        this.healthCareDeliveryOutcomeId = healthCareDeliveryOutcomeId;
+        this.deliveryOutcomeId = deliveryOutcomeId;
     }
 
     @ManyToOne
