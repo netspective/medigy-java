@@ -238,7 +238,7 @@ public class AddContactMechanismServiceImpl implements AddContactMechanismServic
         final Party party = (Party) HibernateUtil.getSession().load(Party.class, param.getPartyId());
         final PhoneNumber phone = new PhoneNumber();
         phone.setCountryCode(param.getPhoneParameters().getCountryCode());
-        phone.setNumber(param.getPhoneParameters().getNumber());
+        phone.setNumberValue(param.getPhoneParameters().getNumber());
         phone.setAreaCode(param.getPhoneParameters().getAreaCode());
         phone.setExtension(param.getPhoneParameters().getExtension());
         HibernateUtil.getSession().save(phone);

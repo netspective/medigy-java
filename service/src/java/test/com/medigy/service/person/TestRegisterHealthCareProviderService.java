@@ -38,21 +38,21 @@
  */
 package com.medigy.service.person;
 
-import com.medigy.persist.reference.custom.health.HealthCareLicenseType;
-import com.medigy.persist.reference.custom.person.EthnicityType;
-import com.medigy.persist.reference.type.LanguageType;
-import com.medigy.persist.reference.type.GenderType;
-import com.medigy.persist.util.HibernateUtil;
 import com.medigy.persist.model.contact.Country;
 import com.medigy.persist.model.contact.State;
-import com.medigy.persist.model.person.Person;
 import com.medigy.persist.model.health.HealthCareLicense;
+import com.medigy.persist.model.person.Person;
+import com.medigy.persist.reference.custom.health.HealthCareLicenseType;
+import com.medigy.persist.reference.custom.person.EthnicityType;
+import com.medigy.persist.reference.type.GenderType;
+import com.medigy.persist.reference.type.LanguageType;
+import com.medigy.persist.util.HibernateUtil;
 import com.medigy.service.TestCase;
 import com.medigy.service.dto.person.HealthCareLicenseParameters;
+import com.medigy.service.dto.person.PersonParameters;
 import com.medigy.service.dto.person.RegisterHealthCareProviderParameters;
 import com.medigy.service.dto.person.RegisteredProvider;
 
-import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -83,57 +83,88 @@ public class TestRegisterHealthCareProviderService extends TestCase
 
         HibernateUtil.beginTransaction();
         final RegisteredProvider newProvider = service.register(new RegisterHealthCareProviderParameters() {
-            public String getLastName()
+            public PersonParameters getPerson()
             {
-                return "Bond";
+                return new PersonParameters() {
+                    public String getMaritalStatusCode()
+                    {
+                        return null;
+                    }
+
+                    public String getDriversLicenseNumber()
+                    {
+                        return null;
+                    }
+
+                    public String getDriversLicenseStateCode()
+                    {
+                        return null;
+                    }
+
+                    public String getEmployerName()
+                    {
+                        return null;
+                    }
+
+                    public String getOccupation()
+                    {
+                        return null;
+                    }
+
+                    public String getLastName()
+                    {
+                        return "Bond";
+                    }
+
+                    public String getFirstName()
+                    {
+                        return "James";
+                    }
+
+                    public String getMiddleName()
+                    {
+                        return null;
+                    }
+
+                    public String getSuffix()
+                    {
+                        return null;
+                    }
+
+                    public Date getBirthDate()
+                    {
+                        final Calendar calendar = Calendar.getInstance();
+                        calendar.set(1970, 1, 1);
+                        return calendar.getTime();
+                    }
+
+                    public String getSsn()
+                    {
+                        return "123456789";
+                    }
+
+                    public String getGenderCode()
+                    {
+                        return GenderType.Cache.MALE.getEntity().getCode();
+                    }
+
+                    public String[] getEthnicityCodes()
+                    {
+                        return new String[] { EthnicityType.Cache.AFRICAN_AMERICAN.getEntity().getCode(), EthnicityType.Cache.ASIAN_PACIFIC_ISLANDER.getEntity().getCode()};
+                    }
+
+                    public String[] getLanguageCodes()
+                    {
+                        return new String[] { LanguageType.Cache.ENGLISH.getEntity().getCode(), LanguageType.Cache.FRENCH.getEntity().getCode()};
+                    }
+
+                    public String getEmployerId()
+                    {
+                        return null;
+                    }
+                };
             }
 
-            public String getFirstName()
-            {
-                return "James";
-            }
-
-            public String getMiddleName()
-            {
-                return null;
-            }
-
-            public String getSuffix()
-            {
-                return null;
-            }
-
-            public Date getBirthDate()
-            {
-                final Calendar calendar = Calendar.getInstance();
-                calendar.set(1970, 1, 1);
-                return calendar.getTime();
-            }
-
-            public String getSsn()
-            {
-                return "123456789";
-            }
-
-            public String getGenderCode()
-            {
-                return GenderType.Cache.MALE.getEntity().getCode();
-            }
-
-            public String[] getEthnicityCodes()
-            {
-                return new String[] { EthnicityType.Cache.AFRICAN_AMERICAN.getEntity().getCode(), EthnicityType.Cache.ASIAN_PACIFIC_ISLANDER.getEntity().getCode()};
-            }
-
-            public String[] getLanguageCodes()
-            {
-                return new String[] { LanguageType.Cache.ENGLISH.getEntity().getCode(), LanguageType.Cache.FRENCH.getEntity().getCode()};
-            }
-
-            public Serializable getEmployerId()
-            {
-                return null;
-            }
 
             public HealthCareLicenseParameters[] getLicenseParameters()
             {

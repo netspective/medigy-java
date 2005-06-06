@@ -70,7 +70,7 @@ public class TestContactMechanismFacade extends TestCase
 
         final PhoneNumber phone = new PhoneNumber();
         phone.setCountryCode("123");
-        phone.setNumber("1234567");
+        phone.setNumberValue("1234567");
         phone.setAreaCode("703");
         phone.setExtension(null);
         HibernateUtil.getSession().save(phone);

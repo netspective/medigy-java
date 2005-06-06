@@ -45,7 +45,6 @@ public class TestCase extends com.medigy.persist.TestCase
 {
     private Registry hivemindRegistry;
 
-
     public void buildRegistry()
     {
         /*

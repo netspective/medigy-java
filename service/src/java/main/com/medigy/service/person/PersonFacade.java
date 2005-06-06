@@ -46,6 +46,7 @@ import com.medigy.persist.model.contact.State;
 import com.medigy.persist.reference.custom.person.PersonRoleType;
 import com.medigy.persist.reference.custom.health.HealthCareLicenseType;
 import com.medigy.service.util.Facade;
+import com.medigy.service.dto.person.PersonParameters;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -75,4 +76,5 @@ public interface PersonFacade extends Facade
                                                   Date certificationDate,
                                                   Date expirationDate);
 
+    public Person createPerson(PersonParameters params) throws Exception;
 }

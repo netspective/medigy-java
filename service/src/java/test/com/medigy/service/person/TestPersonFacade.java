@@ -38,28 +38,45 @@
  */
 package com.medigy.service.person;
 
+import com.medigy.persist.model.contact.State;
 import com.medigy.persist.model.person.Person;
+import com.medigy.persist.reference.custom.person.EthnicityType;
+import com.medigy.persist.reference.type.GenderType;
+import com.medigy.persist.reference.type.LanguageType;
+import com.medigy.persist.reference.type.MaritalStatusType;
+import com.medigy.persist.util.HibernateUtil;
 import com.medigy.service.TestCase;
-import com.medigy.service.impl.person.PersonFacadeImpl;
-import com.medigy.service.person.PersonFacade;
+import com.medigy.service.dto.person.PersonParameters;
+
+import java.util.Calendar;
+import java.util.Date;
 
 public class TestPersonFacade extends TestCase
 {
-    private PersonFacade personFacade;
-
-    protected void setUp() throws Exception
-    {
-        super.setUp();
-        personFacade =  new PersonFacadeImpl();
-    }
-
-    public String getDataSetFile()
-    {
-        return "/com/medigy/service/person/TestPersonFacade.xml";
-    }
 
     public void testListPersonByLastName() throws Exception
     {
+        final Calendar cal = Calendar.getInstance();
+        cal.set(1980, 1, 1);
+
+        Person personA = new Person();
+        personA.setLastName("Doe");
+        personA.setFirstName("John");
+        personA.setMiddleName("D");
+        personA.setBirthDate(cal.getTime());
+        personA.addGender(GenderType.Cache.MALE.getEntity());
+        HibernateUtil.getSession().save(personA);
+
+        Person personB = new Person();
+        personB.setLastName("Hackett");
+        personB.setFirstName("Brian");
+        personB.setBirthDate(cal.getTime());
+        personB.addGender(GenderType.Cache.MALE.getEntity());
+        HibernateUtil.getSession().save(personB);
+        HibernateUtil.closeSession();
+
+        final PersonFacade personFacade = (PersonFacade) getRegistry().getService(PersonFacade.class);
+
         Person[] personList = personFacade.listPersonByLastName("d%", false);
         assertNotNull(personList);
         assertEquals(personList.length, 1);
@@ -82,5 +99,99 @@ public class TestPersonFacade extends TestCase
         assertEquals(personList[0].getMiddleName(), "D");
         assertEquals(personList[1].getFirstName(), "Brian");
         assertEquals(personList[1].getLastName(), "Hackett");
+    }
+
+    public void testCreatePerson()  throws Exception
+    {
+        final Calendar cal = Calendar.getInstance();
+        cal.set(1980, 1, 1);
+        final PersonFacade personFacade = (PersonFacade) getRegistry().getService(PersonFacade.class);
+        final Person person = personFacade.createPerson(new PersonParameters() {
+            public String getFirstName()
+            {
+                return "Ryan";
+            }
+
+            public String getLastName()
+            {
+                return "Hackett";
+            }
+
+            public String getMiddleName()
+            {
+                return "P";
+            }
+
+            public String getSuffix()
+            {
+                return "Sr.";
+            }
+
+            public Date getBirthDate()
+            {
+                return cal.getTime();
+            }
+
+            public String getGenderCode()
+            {
+                return GenderType.Cache.MALE.getEntity().getCode();
+            }
+
+            public String getMaritalStatusCode()
+            {
+                return MaritalStatusType.Cache.SINGLE.getEntity().getCode();
+            }
+
+            public String getSsn()
+            {
+                return "123456789";
+            }
+
+            public String getDriversLicenseNumber()
+            {
+                return "000000000";
+            }
+
+            public String getDriversLicenseStateCode()
+            {
+                return State.Cache.VIRGINIA.getEntity().getStateAbbreviation();
+            }
+
+            public String getEmployerName()
+            {
+                return null;
+            }
+
+            public String getEmployerId()
+            {
+                return null;
+            }
+
+            public String getOccupation()
+            {
+                return null;
+            }
+
+            public String[] getEthnicityCodes()
+            {
+                return new String[] { EthnicityType.Cache.AFRICAN_AMERICAN.getEntity().getCode() };
+            }
+
+            public String[] getLanguageCodes()
+            {
+                return new String[] { LanguageType.Cache.ENGLISH.getEntity().getCode()};
+            }
+        });
+
+        assertThat(person, NOT_NULL);
+        assertThat(person.getLastName(), eq("Hackett"));
+        assertThat(person.getFirstName(), eq("Ryan"));
+        assertThat(person.getMiddleName(), eq("P"));
+        cal.setTime(person.getBirthDate());
+        assertThat(cal.get(Calendar.YEAR), eq(1980));
+        //assertThat(person.getSsn(), eq("123456789"));
+        //assertThat(person.getDriversLicenseNumber(), eq("000000000"));
+        assertThat(person.hasEthnicity(EthnicityType.Cache.AFRICAN_AMERICAN.getEntity()), eq(true));
+        assertThat(person.speaksLanguage(LanguageType.Cache.ENGLISH.getEntity()), eq(true));
     }
 }

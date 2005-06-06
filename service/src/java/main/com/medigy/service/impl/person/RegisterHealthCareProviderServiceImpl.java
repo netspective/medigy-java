@@ -43,13 +43,11 @@ import com.medigy.persist.model.contact.State;
 import com.medigy.persist.model.person.Person;
 import com.medigy.persist.reference.custom.health.HealthCareLicenseType;
 import com.medigy.persist.reference.custom.person.PersonRoleType;
-import com.medigy.persist.reference.custom.person.EthnicityType;
-import com.medigy.persist.reference.type.GenderType;
-import com.medigy.persist.reference.type.LanguageType;
 import com.medigy.persist.util.HibernateUtil;
 import com.medigy.service.ServiceVersion;
 import com.medigy.service.dto.ServiceParameters;
 import com.medigy.service.dto.person.HealthCareLicenseParameters;
+import com.medigy.service.dto.person.PersonParameters;
 import com.medigy.service.dto.person.RegisterHealthCareProviderParameters;
 import com.medigy.service.dto.person.RegisteredProvider;
 import com.medigy.service.person.PersonFacade;
@@ -84,40 +82,23 @@ public class RegisterHealthCareProviderServiceImpl implements RegisterHealthCare
         this.personFacade = personFacade;
     }
 
-    public RegisteredProvider register(final RegisterHealthCareProviderParameters params)
+    public RegisteredProvider register(final RegisterHealthCareProviderParameters providerParams)
     {
-        final Person person = new Person();
-        person.setLastName(params.getLastName());
-        person.setFirstName(params.getFirstName());
-        person.setMiddleName(params.getMiddleName());
-        person.setSuffix(params.getSuffix());
+        final PersonParameters params = providerParams.getPerson();
+        final Person person;
 
-        final GenderType genderType = referenceEntityFacade.getGenderType(params.getGenderCode());
-        if (genderType == null)
-            return createErrorResponse(params, "Unknown gender");
-        person.addGender(genderType);
-
-        for (String languageCode : params.getLanguageCodes())
+        try
         {
-            final LanguageType langType = referenceEntityFacade.getLanguageType(languageCode);
-            if (langType == null)
-                return createErrorResponse(params, "Unknown language");
-            person.addLanguage(langType);
+            person = personFacade.createPerson(params);
         }
-
-        for (String ethnicityCode : params.getEthnicityCodes())
+        catch (Exception e)
         {
-            final EthnicityType ethType = referenceEntityFacade.getEthnicityType(ethnicityCode);
-            if (ethType == null)
-                return createErrorResponse(params, "Unknown ethnicity");
-            person.addEthnicity(ethType);
+            return createErrorResponse(providerParams, e.getMessage());
         }
-
-        HibernateUtil.getSession().save(person);
 
         personFacade.addPersonRole(person, PersonRoleType.Cache.INDIVIDUAL_HEALTH_CARE_PRACTITIONER.getEntity());
 
-        final HealthCareLicenseParameters[] licenseParams =  params.getLicenseParameters();
+        final HealthCareLicenseParameters[] licenseParams =  providerParams.getLicenseParameters();
         for (HealthCareLicenseParameters licenseParam : licenseParams)
         {
             final String stateString = licenseParam.getState();
@@ -127,22 +108,22 @@ public class RegisterHealthCareProviderServiceImpl implements RegisterHealthCare
             if (country == null)
             {
                 // COUNTRY AND STATE MUST EXIST
-                return createErrorResponse(params, "Country is unknown");
+                return createErrorResponse(providerParams, "Country is unknown");
             }
             final State state = country.getStateByName(stateString);
             if (state == null)
-                return createErrorResponse(params, "State is unknown");
+                return createErrorResponse(providerParams, "State is unknown");
 
             final HealthCareLicenseType type = referenceEntityFacade.getLicenseType(licenseParam.getLicenseType());
             if (type == null)
-                return createErrorResponse(params, "License type is unknown");
+                return createErrorResponse(providerParams, "License type is unknown");
             personFacade.addHealthCareLicense(person, licenseParam.getLicenseNumber(), type, licenseParam.getDescription(), state,
                     licenseParam.getCertificationDate(), licenseParam.getExpirationDate());
         }
         return new RegisteredProvider() {
             public RegisterHealthCareProviderParameters getParameters()
             {
-                return params;
+                return providerParams;
             }
 
             public Serializable getRegisteredProviderId()

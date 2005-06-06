@@ -184,7 +184,7 @@ public class ContactMechanismFacadeImpl implements ContactMechanismFacade
     {
         final PhoneNumber phone = new PhoneNumber();
         phone.setCountryCode(countryCode);
-        phone.setNumber(number);
+        phone.setNumberValue(number);
         phone.setAreaCode(areaCode);
         phone.setExtension(extension);
         HibernateUtil.getSession().save(phone);

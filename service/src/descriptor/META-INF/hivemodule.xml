@@ -73,8 +73,11 @@
     </service-point>
 
     <service-point id="PersonFacade" interface="com.medigy.service.person.PersonFacade">
-        <create-instance class="impl.person.PersonFacadeImpl"/>
-         <interceptor service-id="hivemind.LoggingInterceptor"/>
+        <interceptor service-id="hivemind.LoggingInterceptor"/>
+        <invoke-factory>
+            <!-- Autowires service properties based on interface! -->
+            <construct class="impl.person.PersonFacadeImpl"/>
+        </invoke-factory>
     </service-point>
 
     <service-point id="InsurancePolicyFacade" interface="com.medigy.service.insurance.InsurancePolicyFacade">

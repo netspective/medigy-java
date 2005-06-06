@@ -288,39 +288,17 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
         catch (final Exception e)
         {
             log.error(e);
-            RegisteredPatient patient = new RegisteredPatient()
-            {
-                public Serializable getPatientId()
-                {
-                    return null;
-                }
-
-                public RegisterPatientParameters getRegisterPatientParameters()
-                {
-                    return params;
-                }
-
-                /**
-                 * Locale specific error message
-                 *
-                 * @return
-                 */
-                public String getErrorMessage()
-                {
-                    return e.getMessage();
-                }
-            };
-            return patient;
+            return createErrorResponse(params, e.getMessage());
         }
     }
 
-    private void registerHomePhone(final Person person, final RegisterPatientParameters params)
+    private PhoneNumber registerHomePhone(final Person person, final RegisterPatientParameters params)
     {
         final PhoneParameters homePhone = params.getHomePhone();
         final PhoneNumber phone = contactMechanismFacade.addPhone(homePhone.getCountryCode(), homePhone.getAreaCode(), homePhone.getNumber(),
             homePhone.getExtension());
         
-
+        return phone;
     }
 
     // TODO: Put a validator and return a list of errors/warnings

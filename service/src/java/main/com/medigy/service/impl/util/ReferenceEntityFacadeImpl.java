@@ -40,10 +40,12 @@ package com.medigy.service.impl.util;
 
 import com.medigy.persist.reference.custom.health.HealthCareLicenseType;
 import com.medigy.persist.reference.custom.insurance.InsurancePolicyType;
+import com.medigy.persist.reference.custom.insurance.InsuranceProductType;
 import com.medigy.persist.reference.custom.party.ContactMechanismPurposeType;
 import com.medigy.persist.reference.custom.party.OrganizationRoleType;
 import com.medigy.persist.reference.custom.person.EthnicityType;
 import com.medigy.persist.reference.custom.person.PersonRoleType;
+import com.medigy.persist.reference.custom.invoice.BillRemittanceType;
 import com.medigy.persist.reference.type.GenderType;
 import com.medigy.persist.reference.type.LanguageType;
 import com.medigy.persist.reference.type.MaritalStatusType;
@@ -170,6 +172,30 @@ public class ReferenceEntityFacadeImpl implements ReferenceEntityFacade
             final Criteria criteria = HibernateUtil.getSession().createCriteria(HealthCareLicenseType.class);
             criteria.add(Expression.eq("code", licenseType));
             type = (HealthCareLicenseType) criteria.uniqueResult();
+        }
+        return type;
+    }
+
+    public InsuranceProductType getInsuranceProductType(final String productTypeCode)
+    {
+        InsuranceProductType type = InsuranceProductType.Cache.getEntity(productTypeCode);
+        if (type == null)
+        {
+            final Criteria criteria = HibernateUtil.getSession().createCriteria(InsurancePolicyType.class);
+            criteria.add(Restrictions.eq("code", productTypeCode));
+            type = (InsuranceProductType) criteria.uniqueResult();
+        }
+        return type;
+    }
+
+    public BillRemittanceType getBillRemittanceType(final String remittanceTypeCode)
+    {
+        BillRemittanceType type = BillRemittanceType.Cache.getEntity(remittanceTypeCode);
+        if (type == null)
+        {
+            final Criteria criteria = HibernateUtil.getSession().createCriteria(InsurancePolicyType.class);
+            criteria.add(Restrictions.eq("code", remittanceTypeCode));
+            type = (BillRemittanceType) criteria.uniqueResult();
         }
         return type;
     }

@@ -36,45 +36,20 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.service.dto.person;
+package com.medigy.service.dto.insurance;
 
-import com.medigy.service.dto.ServiceParameters;
-import com.medigy.service.dto.insurance.InsuranceCoverageParameters;
-import com.medigy.service.dto.party.PhoneParameters;
-import com.medigy.service.dto.party.PostalAddressParameters;
+import com.medigy.service.dto.ServiceReturnValues;
 
-/**
- * Interface for DTO containing data specific to the Add Patient service
- */
-public interface RegisterPatientParameters extends ServiceParameters
+import java.io.Serializable;
+
+public interface NewInsurancePolicyHolderValues extends ServiceReturnValues
 {
-    public PersonParameters getPerson();
+    public Serializable getPolicyHolderId();
 
     /**
-     * Get's the responsible party's unique ID.
+     * Gets the input parameters given to the patient registration service
+     *
      * @return
      */
-    public String getResponsiblePartyId();
-
-    /**
-     * Get's the relationship of the responsible party to the patient
-     * @return
-     * @see com.medigy.persist.reference.custom.person.PatientResponsiblePartyRoleType#getCode()
-     */
-    public String getResponsiblePartyRole();
-
-    public PhoneParameters getHomePhone();
-    public PhoneParameters getWorkPhone();
-    public PhoneParameters getMobilePhone();
-
-
-    public PostalAddressParameters getPostalAddress();
-
-    /**
-     * Get's the patient's primary care provider ID
-     * @return
-     */
-    public String getPrimaryCareProviderId();
-
-    public InsuranceCoverageParameters[] getInsuranceCoverages();
+    public AddInsurancePolicyHolderParameters getAddInsurancePolicyHolderParameters();
 }

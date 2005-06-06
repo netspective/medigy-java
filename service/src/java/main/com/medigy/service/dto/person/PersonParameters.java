@@ -69,6 +69,8 @@ public interface PersonParameters
      */
     public String getDriversLicenseNumber();
 
+    public String getDriversLicenseStateCode();
+
     /**
      * Get's the patient's employer name
      * @return

@@ -47,10 +47,15 @@ import com.medigy.persist.model.health.HealthCareLicense;
 import com.medigy.persist.model.contact.State;
 import com.medigy.persist.reference.custom.party.ContactMechanismPurposeType;
 import com.medigy.persist.reference.custom.person.PersonRoleType;
+import com.medigy.persist.reference.custom.person.EthnicityType;
 import com.medigy.persist.reference.custom.health.HealthCareLicenseType;
 import com.medigy.persist.reference.type.ContactMechanismType;
+import com.medigy.persist.reference.type.GenderType;
+import com.medigy.persist.reference.type.LanguageType;
 import com.medigy.persist.util.HibernateUtil;
 import com.medigy.service.person.PersonFacade;
+import com.medigy.service.dto.person.PersonParameters;
+import com.medigy.service.util.ReferenceEntityFacade;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
@@ -66,6 +71,17 @@ public class PersonFacadeImpl implements PersonFacade
 {
     private static final Log log = LogFactory.getLog(PersonFacadeImpl.class);
 
+    private ReferenceEntityFacade referenceEntityFacade;
+
+    public ReferenceEntityFacade getReferenceEntityFacade()
+    {
+        return referenceEntityFacade;
+    }
+
+    public void setReferenceEntityFacade(final ReferenceEntityFacade referenceEntityFacade)
+    {
+        this.referenceEntityFacade = referenceEntityFacade;
+    }
 
     /**
      * Lists all patients with the same last name. This query is not case sensitive.
@@ -181,6 +197,46 @@ public class PersonFacadeImpl implements PersonFacade
         person.addLicense(license);
         HibernateUtil.getSession().save(license);
         return license;
+    }
+
+    /**
+     * Creates a new person record using the service person parameters
+     * @param params
+     * @return
+     * @throws Exception
+     */
+    public Person createPerson(PersonParameters params) throws Exception
+    {
+        final Person person = new Person();
+        person.setLastName(params.getLastName());
+        person.setFirstName(params.getFirstName());
+        person.setMiddleName(params.getMiddleName());
+        person.setSuffix(params.getSuffix());
+        person.setBirthDate(params.getBirthDate());
+
+        final GenderType genderType = referenceEntityFacade.getGenderType(params.getGenderCode());
+        if (genderType == null)
+            throw new Exception("Unknown gender");
+        person.addGender(genderType);
+
+        for (String languageCode : params.getLanguageCodes())
+        {
+            final LanguageType langType = referenceEntityFacade.getLanguageType(languageCode);
+            if (langType == null)
+                throw new Exception("Unknown language");
+            person.addLanguage(langType);
+        }
+
+        for (String ethnicityCode : params.getEthnicityCodes())
+        {
+            final EthnicityType ethType = referenceEntityFacade.getEthnicityType(ethnicityCode);
+            if (ethType == null)
+                throw new Exception("Unknown ethnicity");
+            person.addEthnicity(ethType);
+        }
+
+        HibernateUtil.getSession().save(person);
+        return person;
     }
 
 

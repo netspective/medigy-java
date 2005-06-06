@@ -40,30 +40,9 @@ package com.medigy.service.dto.person;
 
 import com.medigy.service.ServiceVersion;
 
-import java.io.Serializable;
-import java.util.Date;
-
 public interface RegisterHealthCareProviderParameters  extends ServiceVersion
 {
-    public String getLastName();
-
-    public String getFirstName();
-
-    public String getMiddleName();
-
-    public String getSuffix();
-
-    public Date getBirthDate();
-
-    public String getSsn();
-
-    public String getGenderCode();
-
-    public String[] getEthnicityCodes();
-
-    public String[] getLanguageCodes();
-
-    public Serializable getEmployerId();
+    public PersonParameters getPerson();
 
     public HealthCareLicenseParameters[] getLicenseParameters();
 

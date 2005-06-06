@@ -40,6 +40,7 @@ package com.medigy.service.person;
 
 
 import com.medigy.persist.model.person.Person;
+import com.medigy.persist.model.contact.State;
 import com.medigy.persist.reference.custom.insurance.InsurancePolicyType;
 import com.medigy.persist.reference.custom.party.ContactMechanismPurposeType;
 import com.medigy.persist.reference.custom.party.PartyRelationshipType;
@@ -49,6 +50,7 @@ import com.medigy.persist.reference.type.LanguageType;
 import com.medigy.persist.reference.type.MaritalStatusType;
 import com.medigy.persist.util.HibernateUtil;
 import com.medigy.service.TestCase;
+import com.medigy.service.ServiceVersion;
 import com.medigy.service.dto.insurance.InsuranceCoverageParameters;
 import com.medigy.service.dto.party.PhoneParameters;
 import com.medigy.service.dto.party.PostalAddressParameters;
@@ -143,6 +145,11 @@ public class TestPatientRegistrationService extends TestCase
                                 public String getDriversLicenseNumber()
                                 {
                                     return "999999999";
+                                }
+
+                                public String getDriversLicenseStateCode()
+                                {
+                                    return State.Cache.VIRGINIA.getEntity().getStateAbbreviation();
                                 }
                             };
                         }
@@ -333,23 +340,7 @@ public class TestPatientRegistrationService extends TestCase
                             };
                         }
 
-
-                        public String getPrimaryCareProviderLastName()
-                        {
-                            return null;
-                        }
-
                         public String getPrimaryCareProviderId()
-                        {
-                            return null;
-                        }
-
-                        /**
-                         * Gets the patient's primary care provider first name
-                         *
-                         * @return
-                         */
-                        public String getPrimaryCareProviderFirstName()
                         {
                             return null;
                         }
@@ -436,7 +427,7 @@ public class TestPatientRegistrationService extends TestCase
                             };
                         }
 
-                        public String getComponentVersion()
+                        public ServiceVersion getServiceVersion()
                         {
                             return null;
                         }
