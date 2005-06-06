@@ -60,6 +60,9 @@
         <property name="module.src.main.home" value="${module.src.home}/java/main"/>
         <property name="module.src.test.home" value="${module.src.home}/java/test"/>
 
+        <property name="module.database.home" value="${module.home}/database"/>
+        <property name="module.database.refdata.home" value="${module.database.home}/refdata"/>
+
         <property name="module.jar.name" value="${module.name}.jar"/>
         <property name="module.artifacts.jar" value="${module.artifacts.home}/${module.jar.name}"/>
 
@@ -252,6 +255,7 @@
                 <pathelement location="${module.artifacts.classes.main.home}"/>
                 <pathelement location="${module.artifacts.classes.test.home}"/>
                 <pathelement location="${module.src.descriptor.home}"/>
+                <pathelement location="${module.database.refdata.home}"/>
                 <path refid="module.dependencies.test.classpath"/>
             </classpath>
 
@@ -279,6 +283,7 @@
                 <pathelement location="${module.artifacts.test.coverage.instr.home}" />
                 <pathelement location="${module.artifacts.classes.test.home}"/>
                 <pathelement location="${module.artifacts.classes.main.home}"/>
+                <pathelement location="${module.database.refdata.home}"/>
                 <pathelement location="${module.src.descriptor.home}"/>
             </classpath>
 
