@@ -168,9 +168,9 @@ public abstract class TestCase extends MockObjectTestCase
         final String databaseUserName = System.getProperty(TEST_DB_USER_PROPERTY);
         final String databasePassword = System.getProperty(TEST_DB_PASSWD_PROPERTY);
 
-        if (databaseType.equals(MYSQL_TEST_DB))
+        if (databaseType != null && databaseType.equals(MYSQL_TEST_DB))
             config.addProperties(setupMysql(databaseUrl, databaseUserName, databasePassword));
-        else if (databaseType.equals(ORACLE_TEST_DB))
+        else if (databaseType != null && databaseType.equals(ORACLE_TEST_DB))
             config.addProperties(setupMysql(databaseUrl, databaseUserName, databasePassword));
         else
             config.addProperties(setupHsqldb());
