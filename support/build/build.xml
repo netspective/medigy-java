@@ -226,6 +226,7 @@
 
     <target name="publish" depends="init.define-properties" if="build.publish.latest.home">
         <delete dir="${build.publish.latest.home}"/>
+        <mkdir dir="${build.publish.latest.home}"/>
         <copy todir="${build.publish.latest.home}/dbdd">
             <fileset dir="${consolidated.artifacts.doc.home}/dbdd"/>
         </copy>
