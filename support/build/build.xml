@@ -233,11 +233,14 @@
         <copy todir="${build.publish.latest.home}/javadoc">
             <fileset dir="${consolidated.artifacts.doc.home}/javadoc"/>
         </copy>
-        <copy todir="${build.publish.latest.home}/javadoc/junit">
+        <copy todir="${build.publish.latest.home}/junit">
             <fileset dir="${consolidated.artifacts.test.junit.home}"/>
         </copy>
-        <copy todir="${build.publish.latest.home}/javadoc/coverage">
-            <fileset dir="${consolidated.artifacts.doc.home}/reports/coverage"/>
+        <copy todir="${build.publish.latest.home}/coverage">
+            <fileset dir="${consolidated.artifacts.home}/reports/coverage"/>
+        </copy>
+        <copy todir="${build.publish.latest.home}/ddl">
+            <fileset dir="${consolidated.artifacts.home}/ddl"/>
         </copy>
     </target>
 
