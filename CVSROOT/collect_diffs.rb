@@ -92,29 +92,16 @@ def get_commitinfo_tag(filename)
   return $commitinfo_tags[filename]
 end
 
-def process_log(cvs_info)
-  cvsroot = ENV['CVSROOT']
 
-  $datadir = find_data_dir()
+# cvs_info comes from the command line, ultimately as the expansion of the
+# %{sVv} in $CVSROOT/loginfo.  It isn't possible to parse this value
+# unambiguously, but we make an effort to get it right in as many cases as
+# possible.
+def collect_antique_style_args(cvs_info)
+  # remove leading slashes that may appear due to the user entering trailing
+  # slashes in their CVSROOT specification
+  cvs_info.sub!(/^\/+/, "")
 
-  raise "missing data dir (#{$tmpdir}/#{$dirtemplate}-XXXXXX)" if $datadir==nil
-
-  line = $stdin.gets
-  unless line =~ /^Update of (.+)/
-    fail "Log preamble looks suspect (doesn't start 'Update of ...')"
-  end
-
-  # cvs_info comes from the command line, ultimately as the expansion of the
-  # %{sVv} in $CVSROOT/loginfo.  It isn't possible to parse this value
-  # unambiguously, but we make an effort to get it right in as many cases as
-  # possible.
-
-  $path = $1
-  unless $path.slice(0,cvsroot.length) == cvsroot
-    fail "CVSROOT ('#{cvsroot}') doesn't match log preamble ('#{$path}')"
-  end
-
-  $repository_path = $path.slice(cvsroot.length+1, $path.length-cvsroot.length-1)
   unless cvs_info.slice(0, $repository_path.length+1) == "#{$repository_path} "
     fail "calculated repository path ('#{$repository_path}') doesn't match start of command line arg ('#{cvs_info}')"
   end
@@ -131,6 +118,53 @@ def process_log(cvs_info)
     changes << ChangeInfo.new($1, $2, $3)
   end
 
+  return changes
+end
+
+
+def collect_modern_style_args(cvs_info)
+#  unless cvs_info[0] == $repository_path
+#    fail "calculated repository path ('#{$repository_path}') doesn't match first command line arg ('#{cvs_info[0]}')"
+#  end
+  changes = Array.new
+  i = 0
+  while i < cvs_info.length
+    changes << ChangeInfo.new(cvs_info[i], cvs_info[i+=1], cvs_info[i+=1])
+    i+=1
+  end
+  return changes
+end
+
+# Replace multiple adjecent forward slashes with a single slash.
+def sanitise_path(path)
+  path.gsub(/\/+/, "/")
+end
+
+def process_log(cvs_info)
+  cvsroot = sanitise_path(ENV['CVSROOT'])
+
+  $datadir = find_data_dir()
+
+  raise "missing data dir (#{$tmpdir}/#{$dirtemplate}-XXXXXX)" if $datadir==nil
+
+  line = $stdin.gets
+  unless line =~ /^Update of (.+)/
+    fail "Log preamble looks suspect (doesn't start 'Update of ...')"
+  end
+
+  $path = sanitise_path($1)
+  unless $path.slice(0,cvsroot.length) == cvsroot
+    fail "CVSROOT ('#{cvsroot}') doesn't match log preamble ('#{$path}')"
+  end
+
+  $repository_path = $path.slice(cvsroot.length+1, $path.length-cvsroot.length-1)
+
+  if $use_modern_argument_list
+    changes = collect_modern_style_args(cvs_info)
+  else
+    changes = collect_antique_style_args(cvs_info)
+  end
+
   # look for the start of the user's comment
   $stdin.each do |line|
     break if line =~ /^Log Message/
@@ -142,7 +176,19 @@ def process_log(cvs_info)
 
   File.open("#{$datadir}/logfile", File::WRONLY|File::CREAT|File::APPEND) do |file|
     $stdin.each do |line|
-      file.puts "#> #{line}"
+      # remove any trailing whitespace; we don't want the split() below to
+      # produce empty trailing items due to '\r' at the end of the line
+      # (if input is 'DOS' style),
+      line.sub!(/\s*$/, "")
+      
+      # 'Mac' clients sending logs to a unix server may denote end-of-line with
+      # a carriage-return, defeating the $stdin.each above (i.e. the whole log
+      # message will appear as a single line containing '\r's).  We handle this
+      # case explicitly here, so that cvsspam.rb's Subject header generation
+      # doesn't break,
+      line.split(/\r/).each do |part|
+        file.puts "#> #{part}"
+      end
     end
 
     changes.each do |change|
@@ -159,7 +205,7 @@ def process_log(cvs_info)
         safer_popen($cvs_prog, "-nq", "status", change.file) do |io|
           status = io.read
         end
-        fail "couldn't get cvs status: #{$!}" unless ($?>>8)==0
+        fail "couldn't get cvs status: #{$!} (exited with #{$?})" unless ($?>>8)==0
 
 	if status =~ /^\s*Sticky Tag:\s*(.+) \(branch: +/m
 	  tag = $1
@@ -206,21 +252,22 @@ def process_log(cvs_info)
 end
 
 
-def choose_operation(op)
-  if op =~ / - New directory$/
-    blah("No action taken on directory creation")
-  elsif op =~ / - Imported sources$/
-    blah("Imported not handled")
-  else
-    process_log(op)
-    mailtest
-  end
+# sometimes, CVS would exit with an error like,
+# 
+#   cvs [server aborted]: received broken pipe signal
+# 
+# consuming all the data on our standard input seems to stop this error
+# happening.  (This problem may have been fixed in CVS 1.12.6, looking at
+# a message in the NEWS file.)
+def consume_stdin()
+  $stdin.read()
 end
+
 
 def mailtest
   lastdir = nil
   File.open("#{$datadir}/lastdir") do |file|
-    lastdir = file.gets
+    lastdir = sanitise_path(file.gets)
   end
   if $path == lastdir
     blah("sending spam.  (I am #{$0})")
@@ -242,6 +289,34 @@ def mailtest
   end
 end
 
+
+class CVSConfig
+  def initialize(filename)
+    @data = Hash.new
+    File.open(filename) do |io|
+      read(io)
+    end
+  end
+
+  def read(io)
+    io.each do |line|
+      parse_line(line)
+    end
+  end
+
+  def parse_line(line)
+    # strip any comment (assumes values can't contain '#')
+    line.sub!(/#.*$/, "")
+    if line =~ /^\s*(.*?)\s*=\s*(.*?)\s*$/
+      @data[$1] = $2
+    end
+  end
+
+  def [](key)
+    @data[key]
+  end
+end
+
 $config = nil
 $cvs_prog = "cvs"
 $debug = false
@@ -250,6 +325,29 @@ $task_keywords = []
 
 unless ENV.has_key?('CVSROOT')
   fail "$CVSROOT not defined.  It should be when I am invoked from CVSROOT/loginfo"
+end
+
+
+def handle_operation?(args)
+  # The CVS 1.12.x series pass an argument with the value "- New directory"
+  # whereas previous versions passed "some/path - New directory".  The newer
+  # syntax looks like a command-line switch, and confuses GetOpt.  We check
+  # for that case before GetOpt processing
+  unless ARGV.detect{|el| el =~ /- New directory$/}.nil?
+    blah("No action taken on directory creation")
+    return false
+  end
+  unless ARGV.detect{|el| el =~ /- Imported sources$/}.nil?
+    blah("Imported not handled")
+    return false
+  end
+  return true
+end
+
+
+unless handle_operation?(ARGV)
+  consume_stdin()
+  exit
 end
 
 
@@ -276,11 +374,13 @@ opts.each do |opt, arg|
 end
 
 blah("CVSROOT is #{ENV['CVSROOT']}")
-blah("ARGV is '#{ARGV.join(', ')}'")
+blah("ARGV is <#{ARGV.join('>, <')}>")
+
+cvsroot_dir = "#{ENV['CVSROOT']}/CVSROOT"
 
 if $config == nil
-  if FileTest.exists?("#{ENV['CVSROOT']}/CVSROOT/cvsspam.conf")
-    $config = "#{ENV['CVSROOT']}/CVSROOT/cvsspam.conf"
+  if FileTest.exists?("#{cvsroot_dir}/cvsspam.conf")
+    $config = "#{cvsroot_dir}/cvsspam.conf"
   elsif FileTest.exists?("/etc/cvsspam/cvsspam.conf")
     $config = "/etc/cvsspam/cvsspam.conf"
   end
@@ -288,6 +388,17 @@ if $config == nil
   if $config != nil
     $passthroughArgs << "--config" << $config
   end
+end
+
+
+$use_modern_argument_list = false
+
+cvs_config_filename = "#{cvsroot_dir}/config"
+
+if FileTest.exists?(cvs_config_filename)
+  cvs_config = CVSConfig.new(cvs_config_filename)
+
+  $use_modern_argument_list = cvs_config["UseNewInfoFmtStrings"] == "yes"
 end
 
 if $config != nil
@@ -304,11 +415,19 @@ if $config != nil
   end
 end
 
-if ARGV.length != 1
-  $stderr.puts "Expected arguments missing"
-  $stderr.puts "* You shouldn't run collect_diffs by hand, but from a CVSROOT/loginfo entry *"
-  $stderr.puts "Usage: collect_diffs.rb [ --to <email> ] [ --config <file> ] %{sVv}"
-  $stderr.puts "       (the sequence '%{sVv}' is expanded by CVS, when found in CVSROOT/loginfo)"
-  exit
+if $use_modern_argument_list
+  if ARGV.length % 3 != 0
+    $stderr.puts "Expected 3 arguments for each file"
+  end
+  process_log(ARGV)
+else
+  if ARGV.length != 1
+    $stderr.puts "Expected arguments missing"
+    $stderr.puts "* You shouldn't run collect_diffs by hand, but from a CVSROOT/loginfo entry *"
+    $stderr.puts "Usage: collect_diffs.rb [ --to <email> ] [ --config <file> ] %{sVv}"
+    $stderr.puts "       (the sequence '%{sVv}' is expanded by CVS, when found in CVSROOT/loginfo)"
+    exit
+  end
+  process_log(ARGV[0])
 end
-choose_operation(ARGV[0])
+mailtest

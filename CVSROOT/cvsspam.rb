@@ -9,7 +9,7 @@
 
 # TODO: exemplify syntax for 'cvs admin -m' when log message is missing
 # TODO: make max-line limit on diff output configurable
-# TODO: put max size limit on whole email
+# TODO: put more exact max size limit on whole email
 # TODO: support non-html mail too (text/plain, multipart/alternative)
 
 # If you want another 'todo keyword' (TODO & FIXME are highlighted by default)
@@ -18,7 +18,7 @@
 # to your cvssppam.conf
 
 
-$version = "0.2.9"
+$version = "0.2.11"
 
 
 $maxSubjectLength = 200
@@ -35,9 +35,15 @@ def min(a, b)
   a<b ? a : b
 end
 
+# NB must ensure the time is UTC
+# (the Ruby Time object's strftime() doesn't supply a numeric timezone)
+DATE_HEADER_FORMAT = "%a, %d %b %Y %H:%M:%S +0000"
 
+# Perform (possibly) multiple global substitutions on a string.
 # the regexps given as keys must not use capturing subexpressions '(...)'
 class MultiSub
+  # hash has regular expression fragments (as strings) as keys, mapped to
+  # Procs that will generate replacement text, given the matched value.
   def initialize(hash)
     @mash = Array.new
     expr = nil
@@ -49,6 +55,8 @@ class MultiSub
     @re = Regexp.new(expr)
   end
 
+  # perform a global multi-sub on the given text, modifiying the passed string
+  # 'in place'
   def gsub!(text)
     text.gsub!(@re) { |match|
       idx = -1
@@ -61,6 +69,11 @@ class MultiSub
   end
 end
 
+# returns the character-code of the given character
+def chr(txt)
+  txt[0]
+end
+
 # Limited support for encoding non-US_ASCII characters in mail headers
 class HeaderEncoder
   def initialize
@@ -69,8 +82,12 @@ class HeaderEncoder
     @charset = nil # TODO: some better default?
   end
 
+  # character set to be used if any encoding is required.  defaults to nil,
+  # which will cause an exception if encoding is attempted without another
+  # value being specified
   attr_accessor :charset
 
+  # write an encoded version of the header name/value to the given io
   def encode_header(io, name, value)
     name = name + ": "
     if requires_rfc2047?(value)
@@ -81,6 +98,9 @@ class HeaderEncoder
   end
 
 
+ private
+  # word wrap long headers, putting a space at the begining of wraped lines
+  # (i.e. SMTP header continuations)
   def wrap_basic_header(io, start, rest)
     rest.scan(/\s*\S+/) do |match|
       if start.length>0 && start.length+match.length>@right_margin
@@ -93,10 +113,13 @@ class HeaderEncoder
     io.puts(start)
   end
 
-  UNDERSCORE = "_"[0]
-  SPACE = " "[0]
-  TAB = "\t"[0]
+  UNDERSCORE = chr("_")
+  SPACE = chr(" ")
+  TAB = chr("\t")
 
+  # encode a header value according to the RFC-2047 quoted-printable spec,
+  # allowing non-ASCII characters to appear in header values, and wrapping
+  # long values with header continuation lines as needed
   def rfc2047_encode_quoted(io, start, rest)
     raise "no charset" if @charset.nil?
     code_begin = "=?#{@charset}?#{@encoding}?"
@@ -119,13 +142,18 @@ class HeaderEncoder
     io.puts(start + "?=")
   end
 
- private
+  # test to see of the given string contains non-ASCII characters
   def requires_rfc2047?(word)
     (word =~ /[\177-\377]/) != nil
   end
 end
 
 
+# Provides access to the datafile previously created by collect_diffs.rb.
+# Each call to getLines() will return an object that will read lines of the
+# same 'type' (e.g. lines of commit log comment) from the file, and stop when
+# lines of a different type (e.g. line giving the next file's name) are
+# encountered.
 class LogReader
   def initialize(logIO)
     @io = logIO
@@ -184,6 +212,8 @@ class LogReader
 end
 
 
+# returns a copy of the fiven string with instances of the HTML special
+# characters '&', '<' and '>' encoded as their HTML entity equivalents.
 def htmlEncode(text)
   text.gsub(/./) do
     case $&
@@ -195,6 +225,8 @@ def htmlEncode(text)
   end
 end
 
+# Encodes characters that would otherwise be special in a URL using the
+# "%XX" syntax (where XX are hex digits).
 # actually, allows '/' to appear
 def urlEncode(text)
   text.sub(/[^a-zA-Z0-9\-,.*_\/]/) do
@@ -202,7 +234,11 @@ def urlEncode(text)
   end
 end
 
-# a top-level directory under the $CVSROOT
+
+# Represents a top-level directory under the $CVSROOT (which is properly called
+# a module -- this class is named incorrectly).  Collects a list of
+# all #FileEntry objects that are 'in' this repository.  Class methods provide
+# a list of all repositories (ick!)
 class Repository
   @@repositories = Hash.new
 
@@ -212,6 +248,9 @@ class Repository
     @all_tags = Hash.new
   end
 
+  # records that the given branch tag name was used for some file that was
+  # committed to this repository.  The argument nil is taken to signify the
+  # MAIN branch, or 'trunk' of the project.
   def add_tag(tag_name)
     if @all_tags[tag_name]
       @all_tags[tag_name] += 1
@@ -220,24 +259,32 @@ class Repository
     end 
   end
 
+  # true, if #add_tag has been passed more than one distinct value
   def has_multiple_tags
     @all_tags.length > 1
   end
 
+  # iterate over the tags that have been recorded against this Repository
   def each_tag
     @all_tags.each_key do |tag|
       yield tag
     end
   end
 
+  # true if the only tag that has been recorded against this repository was
+  # the 'trunk', i.e. no branch tags at all
   def trunk_only?
     @all_tags.length==1 && @all_tags[nil]!=nil
   end
 
+  # true if the files committed to this Repository have been of more than one
+  # branch (not a common situation, I've only seen it in real life when things
+  # are b0rked in someone's working directory).
   def mixed_tags?
     @all_tags.length>1
   end
 
+  # returns the number of tags seen during the commit to this Repository
   def tag_count
     @all_tags.length
   end
@@ -265,6 +312,7 @@ class Repository
 
   attr_reader :name, :common_prefix
 
+  # gets the Repository object for the first component of the given path
   def Repository.get(name)
     name =~ /^[^\/]+/
     name = $&
@@ -276,20 +324,27 @@ class Repository
     rep
   end
 
+  # returns the total number of top-level directories seen during this commit
   def Repository.count
     @@repositories.size
   end
 
+  # iterate over all the Repository objects created for this commit
   def Repository.each
     @@repositories.each_value do |rep|
       yield rep
     end
   end
 
+  # returns an array of all the repository objects seen during this commit
   def Repository.array
     @@repositories.values
   end
 
+  # get a string representation of the repository to appear in email subjects.
+  # This will be the repository name, plus (possibly) the name of the branch
+  # on which the commit occured.  If the commit was to multiple branches, the
+  # text '..' is used, rather than a branch name
   def to_s
     if trunk_only?
       @name
@@ -301,6 +356,7 @@ class Repository
   end
 end
 
+# Records properties of a file that was changed during this commit
 class FileEntry
   def initialize(path)
     @path = path
@@ -308,52 +364,106 @@ class FileEntry
     @repository = Repository.get(path)
     @repository.merge_common_prefix(basedir())
     @isEmpty = @isBinary = false
+    @has_diff = nil
   end
 
-  attr_accessor :path, :type, :lineAdditions, :lineRemovals, :isBinary, :isEmpty, :fromVer, :toVer
+  # the full path and filename within the repository
+  attr_accessor :path
+  # the type of change committed 'M'=modified, 'A'=added, 'R'=removed
+  attr_accessor :type
+  # records number of 'addition' lines in diff output, once counted
+  attr_accessor :lineAdditions
+  # records number of 'removal' lines in diff output, once counted
+  attr_accessor :lineRemovals
+  # records whether 'cvs diff' reported this as a binary file
+  attr_accessor :isBinary
+  # records if diff output (and therefore the added file) was empty
+  attr_accessor :isEmpty
+  # file version number before the commit
+  attr_accessor :fromVer
+  # file version number after the commit
+  attr_accessor :toVer
 
+  # works out the filename part of #path
   def file
     @path =~ /.*\/(.*)/
     $1
   end
 
+  # set the branch on which this change was committed, and add it to the list
+  # of branches for which we've seen commits (in the #Repository)
   def tag=(name)
     @tag = name
     @repository.add_tag(name)
   end
 
+  # gives the branch on which this change was committed
   def tag
     @tag
   end
 
+  # works out the directory part of #path
   def basedir
     @path =~ /(.*)\/.*/
     $1
   end
 
+  # gives the Repository object this file was automatically associated with
+  # on construction
   def repository
     @repository
   end
 
+  # gets the part of #path that comes after the prefix common to all files
+  # in the commit to #repository
   def name_after_common_prefix
     @path.slice(@repository.common_prefix.size+1,@path.size-@repository.common_prefix.size-1)
   end
 
+  # was this file removed during the commit?
   def removal?
     @type == "R"
   end
 
+  # was this file added during the commit?
   def addition?
     @type == "A"
   end
 
+  # was this file simply modified during the commit?
   def modification?
     @type == "M"
   end
+
+  # passing true, this object remembers that a diff will appear in the email,
+  # passing false, this object remembers that no diff will appear in the email.
+  # Once the value is set, it will not be changed
+  def has_diff=(diff)
+    # TODO: this 'if @has_diff.nil?' is counterintuitive; remove!
+    @has_diff = diff if @has_diff.nil?
+  end
+
+  # true if this file has had a diff recorded
+  def has_diff?
+    @has_diff
+  end
+
+  # true only if this file's diff (if any) should be included in the email,
+  # taking into account global diff-inclusion settings.
+  def wants_diff_in_mail?
+    !($no_diff ||
+      removal? && $no_removed_file_diff ||
+      addition? && $no_added_file_diff)
+  end
 end
 
-
+# Superclass for things that eat lines of input, and turn them into output
+# for our email.  The 'input' will be provided by #LogReader
+# Subclasses of LineConsumer will be registered in the global $handlers later
+# on in this file.
 class LineConsumer
+  # passes each line from 'lines' to the consume() method (which must be
+  # implemented by subclasses).
   def handleLines(lines, emailIO)
     @emailIO = emailIO
     @lineCount = 0
@@ -365,20 +475,27 @@ class LineConsumer
     teardown
   end
 
+  # Template method called by handleLines to do any subclass-specific setup
+  # required.  Default implementation does nothing
   def setup
   end
 
+  # Template method called by handleLines to do any subclass-specific cleanup
+  # required.  Default implementation does nothing
   def teardown
   end
 
+  # Returns the number of lines handleLines() has seen so far
   def lineno
     @lineCount
   end
 
+  # adds a line to the output
   def println(text)
     @emailIO.puts(text)
   end
 
+  # adds a string to the current output line
   def print(text)
     @emailIO.print(text)
   end
@@ -403,7 +520,7 @@ commentSubstitutions = {
 		'(?:mailto:)?[\w\.\-\+\=]+\@[\w\-]+(?:\.[\w\-]+)+\b' => mailSub,
 		'\b(?:http|https|ftp):[^ \t\n<>"]+[\w/]' => urlSub}
 
-
+# outputs commit log comment text supplied by LogReader as preformatted HTML
 class CommentHandler < LineConsumer
   def initialize
     @lastComment = nil
@@ -440,6 +557,10 @@ class CommentHandler < LineConsumer
 end
 
 
+# Handle lines from LogReader that represent the name of the branch tag for
+# the next file in the log.  When files are committed to the trunk, the log
+# will not contain a line specifying the branch tag name, and getLastTag
+# will return nil.
 class TagHandler < LineConsumer
   def initialize
     @tag = nil
@@ -450,6 +571,8 @@ class TagHandler < LineConsumer
     @tag = line
   end
 
+  # returns the last tag name this object recorded, and resets the record, such
+  # that a subsequent call to this method will return nil
   def getLastTag
     tmp = @tag
     @tag = nil
@@ -457,6 +580,9 @@ class TagHandler < LineConsumer
   end
 end
 
+# records, from the log file, a line specifying the old and new revision numbers
+# for the next file to appear in the log.  The values are recorded in the global
+# variables $fromVer and $toVer
 class VersionHandler < LineConsumer
   def consume(line)
     # TODO: check there is only one line
@@ -464,19 +590,20 @@ class VersionHandler < LineConsumer
   end
 end
 
-
+# Reads a line giving the path and name of the current file being considered
+# from our log of all files changed in this commit.  Subclasses make different
+# records depending on whether this commit adds, removes, or just modifies this
+# file
 class FileHandler < LineConsumer
   def setTagHandler(handler)
     @tagHandler = handler
   end
 
-  def setup
-    $fileHeaderHtml = ''
-    println("<hr /><a name=\"file#{$fileEntries.size+1}\" /><div class=\"file\">")
-  end
-
   def consume(line)
     $file = FileEntry.new(line)
+    if $diff_output_limiter.choose_to_limit?
+      $file.has_diff = false
+    end
     $fileEntries << $file
     $file.tag = getTag
     handleFile($file)
@@ -486,27 +613,26 @@ class FileHandler < LineConsumer
   def getTag
     @tagHandler.getLastTag
   end
-
-  def println(text)
-    $fileHeaderHtml << text << "\n"
-  end
-
-  def print(text)
-    $fileHeaderHtml << text
-  end
 end
 
-
-# don't make any links
+# A do-nothing superclass for objects that know how to create hyperlinks to
+# web CVS interfaces (e.g. CVSweb).  Subclasses overide these methods to
+# wrap HTML link tags arround the text that this classes methods generate.
 class NoFrontend
+  # Just returns an HTML-encoded version of the 'path' argument.  Subclasses
+  # should turn this into a link to a webpage view of this CVS directory
   def path(path, tag)
     htmlEncode(path)
   end
 
+  # Just returns the value of the 'version' argument.  Subclasses should change
+  # this into a link to the given version of the file.
   def version(path, version)
     version
   end
 
+  # Gerarates a little 'arrow' that superclasses may turn into links that will
+  # give an alternative 'diff' view of a change.
   def diff(file)
     '-&gt;'
   end
@@ -515,8 +641,12 @@ end
 # Superclass for objects that can link to CVS frontends on the web (ViewCVS,
 # Chora, etc.).
 class WebFrontend < NoFrontend
+
+  attr_accessor :repository_name
+
   def initialize(base_url)
     @base_url = base_url
+    @repository_name = nil
   end
 
   def path(path, tag)
@@ -528,7 +658,12 @@ class WebFrontend < NoFrontend
         path_for_href << "/"
       end
       path_for_href << component
-      result << "<a href=\"#{path_url(path_for_href, tag)}\">#{htmlEncode(component)}</a>"
+      # The link is split over two lines so that long paths don't create
+      # huge HTML source-lines in the resulting email.  This is an attempt to
+      # avoid having to prroduce a quoted-printable message (so that long lines
+      # can be dealt with properly),
+      result << "<a\n"
+      result << "href=\"#{path_url(path_for_href, tag)}\">#{htmlEncode(component)}</a>"
     end
     result
   end
@@ -557,12 +692,8 @@ end
 
 # Link to ViewCVS
 class ViewCVSFrontend < WebFrontend
-
-  attr_accessor :repository_name
-
   def initialize(base_url)
     super(base_url)
-    @repository_name = nil
   end
 
   def path_url(path, tag)
@@ -620,41 +751,34 @@ end
 
 # in need of refactoring...
 
+# Note when LogReader finds record of a file that was added in this commit
 class AddedFileHandler < FileHandler
   def handleFile(file)
     file.type="A"
     file.toVer=$toVer
-    print("<span class=\"pathname\" id=\"added\">")
-    print($frontend.path(file.basedir, file.tag))
-    println("<br /></span>")
-    println("<div class=\"fileheader\" id=\"added\"><big><b>#{htmlEncode(file.file)}</b></big> <small id=\"info\">added at #{$frontend.version(file.path,file.toVer)}</small></div>")
   end
 end
 
+# Note when LogReader finds record of a file that was removed in this commit
 class RemovedFileHandler < FileHandler
   def handleFile(file)
     file.type="R"
     file.fromVer=$fromVer
-    print("<span class=\"pathname\" id=\"removed\">")
-    print($frontend.path(file.basedir, file.tag))
-    println("<br /></span>")
-    println("<div class=\"fileheader\" id=\"removed\"><big><b>#{htmlEncode(file.file)}</b></big> <small id=\"info\">removed after #{$frontend.version(file.path,file.fromVer)}</small></div>")
   end
 end
 
+# Note when LogReader finds record of a file that was modified in this commit
 class ModifiedFileHandler < FileHandler
   def handleFile(file)
     file.type="M"
     file.fromVer=$fromVer
     file.toVer=$toVer
-    print("<span class=\"pathname\">")
-    print($frontend.path(file.basedir, file.tag))
-    println("<br /></span>")
-    println("<div class=\"fileheader\"><big><b>#{htmlEncode(file.file)}</b></big> <small id=\"info\">#{$frontend.version(file.path,file.fromVer)} #{$frontend.diff(file)} #{$frontend.version(file.path,file.toVer)}</small></div>")
   end
 end
 
 
+# Used by UnifiedDiffHandler to record the number of added and removed lines
+# appearing in a unidiff.
 class UnifiedDiffStats
   def initialize
     @diffLines=3  # the three initial lines in the unidiff
@@ -677,6 +801,8 @@ end
 #       set of lines just removed with the set of lines just added, but
 #       it currently considers just a single line
 
+# Used by UnifiedDiffHandler to produce an HTML, 'highlighted' version of
+# the input unidiff text.
 class UnifiedDiffColouriser < LineConsumer
   def initialize
     @currentState = "@"
@@ -802,6 +928,32 @@ class UnifiedDiffColouriser < LineConsumer
     end
   end
 
+  # start the diff output, using the given lines as the 'preamble' bit
+  def start_output(*lines)
+    println("<hr /><a name=\"file#{$fileEntries.size+1}\" /><div class=\"file\">")
+    case $file.type
+      when "A"
+        print("<span class=\"pathname\" id=\"added\">")
+        print($frontend.path($file.basedir, $file.tag))
+        println("</span><br />")
+        println("<div class=\"fileheader\" id=\"added\"><big><b>#{htmlEncode($file.file)}</b></big> <small id=\"info\">added at #{$frontend.version($file.path,$file.toVer)}</small></div>")
+      when "R"
+        print("<span class=\"pathname\" id=\"removed\">")
+        print($frontend.path($file.basedir, $file.tag))
+        println("</span><br />")
+        println("<div class=\"fileheader\" id=\"removed\"><big><b>#{htmlEncode($file.file)}</b></big> <small id=\"info\">removed after #{$frontend.version($file.path,$file.fromVer)}</small></div>")
+      when "M"
+        print("<span class=\"pathname\">")
+        print($frontend.path($file.basedir, $file.tag))
+        println("</span><br />")
+        println("<div class=\"fileheader\"><big><b>#{htmlEncode($file.file)}</b></big> <small id=\"info\">#{$frontend.version($file.path,$file.fromVer)} #{$frontend.diff($file)} #{$frontend.version($file.path,$file.toVer)}</small></div>")
+    end
+    print("<pre class=\"diff\"><small id=\"info\">")
+    lines.each do |line|
+      println(htmlEncode(line))
+    end
+  end
+
  private
 
   def formatChange(text)
@@ -845,6 +997,8 @@ class UnifiedDiffColouriser < LineConsumer
 end
 
 
+# Handle lines from LogReader that are the output from 'cvs diff -u' for the
+# particular file under consideration
 class UnifiedDiffHandler < LineConsumer
   def setup
     @stats = UnifiedDiffStats.new
@@ -860,21 +1014,18 @@ class UnifiedDiffHandler < LineConsumer
      when 2
       @lookahead = line
      when 3
-      println($fileHeaderHtml)
-      # TODO: move to UnifiedDiffColouriser
-      print("<pre class=\"diff\"><small id=\"info\">")
-      println(htmlEncode(@diffline))  # 'diff ...'
-      println(htmlEncode(@lookahead)) # '--- ...'
-      println(htmlEncode(line))      # '+++ ...'
-     else
-      unless $file.removal? && $no_removed_file_diff
-        @stats.consume(line)
+      if $file.wants_diff_in_mail?
+        @colour.start_output(@diffline, @lookahead, line)
       end
-      if @stats.diffLines < $maxLinesPerDiff
-        @colour.consume(line)
-      elsif @stats.diffLines == $maxLinesPerDiff
-        @colour.consume(line)
-        @colour.teardown
+     else
+      @stats.consume(line)
+      if $file.wants_diff_in_mail?
+        if @stats.diffLines < $maxLinesPerDiff
+          @colour.consume(line)
+        elsif @stats.diffLines == $maxLinesPerDiff
+          @colour.consume(line)
+          @colour.teardown
+        end
       end
     end
   end
@@ -885,7 +1036,7 @@ class UnifiedDiffHandler < LineConsumer
     elsif @lookahead  =~ /Binary files .* and .* differ/
       $file.isBinary = true
     else
-      unless $file.removal? && $no_removed_file_diff
+      if $file.wants_diff_in_mail?
         if @stats.diffLines > $maxLinesPerDiff
           println("</pre>")
           println("<strong class=\"error\">[truncated at #{$maxLinesPerDiff} lines; #{@stats.diffLines-$maxLinesPerDiff} more skipped]</strong>")
@@ -893,16 +1044,106 @@ class UnifiedDiffHandler < LineConsumer
           @colour.teardown
         end
         println("</div>") # end of "file" div
+	$file.has_diff = true
       end
     end
   end
 end
 
 
+# a filter that counts the number of characters output to the underlying object
+class OutputCounter
+  # TODO: This should probably be a subclass of IO
+  # TODO: assumes unix end-of-line convention
+
+  def initialize(io)
+    @io = io
+    # TODO: use real number of chars representing end of line (for platform)
+    @eol_size = 1
+    @count = 0;
+  end
+
+  def puts(text)
+    @count += text.length
+    @count += @eol_size unless text =~ /\n$/
+    @io.puts(text)
+  end
+
+  def print(text)
+    @count += text.length
+    @io.print(text)
+  end
+
+  attr_reader :count
+end
 
 
+# a filter that can be told to stop outputing data to the underlying object
+class OutputDropper
+  def initialize(io)
+    @io = io
+    @drop = false
+  end
+
+  def puts(text)
+    @io.puts(text) unless @drop
+  end
+
+  def print(text)
+    @io.print(text) unless @drop
+  end
+
+  attr_accessor :drop
+end
 
 
+# TODO: the current implementation of the size-limit continues to generate
+# HTML-ified diff output, but doesn't add it to the email.  This means we
+# can report 'what you would have won', but is less efficient than turning
+# of the diff highlighting code.  Does this matter?
+
+# Counts the amount of data written, and when choose_to_limit? is called,
+# checks this count against the configured limit, discarding any further
+# output if the limit is exceeded.  We aren't strict about the limit becase
+# we don't want to chop-off the end of a tag and produce invalid HTML, etc.
+class OutputSizeLimiter
+  def initialize(io, limit)
+    @dropper = OutputDropper.new(io)
+    @counter = OutputCounter.new(@dropper)
+    @limit = limit
+    @written_count = nil
+  end
+
+  def puts(text)
+    @counter.puts(text)
+  end
+
+  def print(text)
+    @counter.print(text)
+  end
+
+  def choose_to_limit?
+    return true if @dropper.drop
+    if @counter.count >= @limit
+      @dropper.drop = true
+      @written_count = @counter.count
+      return true
+    end
+    return false
+  end
+
+  def total_count
+    @counter.count
+  end
+
+  def written_count
+    if @written_count.nil?
+      total_count
+    else
+      @written_count
+    end
+  end
+end
 
 
 cvsroot_dir = "#{ENV['CVSROOT']}/CVSROOT"
@@ -913,6 +1154,8 @@ $debug = false
 $recipients = Array.new
 $sendmail_prog = "/usr/sbin/sendmail"
 $no_removed_file_diff = false
+$no_added_file_diff = false
+$no_diff = false
 $task_keywords = ['TODO', 'FIXME']
 $bugzillaURL = nil
 $jiraURL = nil
@@ -925,6 +1168,8 @@ $subjectPrefix = nil
 $files_in_subject = false;
 $smtp_host = nil
 $repository_name = nil
+# 2MiB limit on attached diffs,
+$mail_size_limit = 1024 * 1024 * 2
 
 require 'getoptlong'
 
@@ -959,7 +1204,7 @@ $logfile = ARGV[0]
 $additionalHeaders = Array.new
 $problemHeaders = Array.new
 
-# helper functions called from the 'config file'
+# helper function called from the 'config file'
 def addHeader(name, value)
   if name =~ /^[!-9;-~]+$/
     $additionalHeaders << [name, value]
@@ -967,9 +1212,11 @@ def addHeader(name, value)
     $problemHeaders << [name, value]
   end
 end
+# helper function called from the 'config file'
 def addRecipient(email)
   $recipients << email
 end
+# 'constant' used from the 'config file'
 class GUESS
 end
 
@@ -1039,6 +1286,8 @@ $allTags = Hash.new
 
 File.open("#{$logfile}.emailtmp", File::RDWR|File::CREAT|File::TRUNC) do |mail|
 
+  $diff_output_limiter = OutputSizeLimiter.new(mail, $mail_size_limit)
+
   File.open($logfile) do |log|
     reader = LogReader.new(log)
 
@@ -1047,13 +1296,14 @@ File.open("#{$logfile}.emailtmp", File::RDWR|File::CREAT|File::TRUNC) do |mail|
       if handler == nil
         raise "No handler file lines marked '##{reader.currentLineCode}'"
       end
-      handler.handleLines(reader.getLines, mail)
+      handler.handleLines(reader.getLines, $diff_output_limiter)
     end
   end
+
 end
 
 if $subjectPrefix == nil
-  $subjectPrefix = "[CVS Medigy/#{Repository.array.join(',')}]"
+  $subjectPrefix = "[CVS #{Repository.array.join(',')}]"
 end
 
 if $files_in_subject
@@ -1078,6 +1328,8 @@ $encoder = HeaderEncoder.new
 $encoder.charset = $charset.nil? ? "ISO-8859-1" : $charset
 
 
+# generate the email header (and footer) having already generated the diffs
+# for the email body to a temp file (which is simply included in the middle)
 def make_html_email(mail)
   mail.puts(<<HEAD)
 <html>
@@ -1153,7 +1405,7 @@ HEAD
         last_repository.each_tag do |tag|
           tagCount += 1
           if tagCount > 1
-            mail.print tagCount<last_repository.tag_count ? ", " : " & "
+            mail.print tagCount<last_repository.tag_count ? ", " : " &amp; "
           end
           mail.print tag ? htmlEncode(tag) : "<span id=\"info\">MAIN</span>"
         end
@@ -1192,10 +1444,10 @@ HEAD
     elsif file.removal?
       name = "<span id=\"removed\">#{name}</span>"
     end
-    if file.isEmpty || file.isBinary || (file.removal? && $no_removed_file_diff)
-      mail.print("<td><tt>#{prefix}#{name}</tt></td>")
-    else
+    if file.has_diff?
       mail.print("<td><tt>#{prefix}<a href=\"#file#{file_count}\">#{name}</a></tt></td>")
+    else
+      mail.print("<td><tt>#{prefix}#{name}</tt></td>")
     end
     if file.isEmpty
       mail.print("<td colspan=\"2\" align=\"center\"><small id=\"info\">[empty]</small></td>")
@@ -1292,6 +1544,11 @@ HEAD
       mail.puts(line.chomp)
     end
   end
+  if $diff_output_limiter.choose_to_limit?
+    mail.puts("<p><strong class=\"error\">[Reached #{$diff_output_limiter.written_count} bytes of diffs.")
+    mail.puts("Since the limit is about #{$mail_size_limit} bytes,")
+    mail.puts("a further #{$diff_output_limiter.total_count-$diff_output_limiter.written_count} were skipped.]</strong></p>")
+  end
   if $debug
     blah("leaving file #{$logfile}.emailtmp")
   else
@@ -1304,11 +1561,14 @@ HEAD
 
 end
 
+# Tries to look up an 'alias' email address for the given string in the
+# CVSROOT/users file, if the file exists.  The argument is returned unchanged
+# if no alias is found.
 def sender_alias(address)
   if File.exists?($users_file)
     File.open($users_file) do |io|
       io.each_line do |line|
-        if line =~ /^([^:]+)\s*:\s*([^\s]+)/
+        if line =~ /^([^:]+)\s*:\s*([^\n\r]+)/
           if address == $1
             return $2
           end
@@ -1319,12 +1579,18 @@ def sender_alias(address)
   address
 end
 
+# A handle for code that needs to add headers and a body to an email being
+# sent.  This wraps an underlying IO object, and is responsible for doing
+# sensible header formatting, and for ensuring that the body is seperated
+# from the message headers by a blank line (as it is required to be).
 class MailContext
   def initialize(io)
     @done_headers = false
     @io = io
   end
 
+  # add a header to the email.  raises an exception if #body has already been
+  # called
   def header(name, value)
     raise "headers already commited" if @done_headers
     if name == "Subject"
@@ -1334,6 +1600,7 @@ class MailContext
     end
   end
 
+  # yields an IO that should be used to write the message body
   def body
     @done_headers = true
     @io.puts
@@ -1341,18 +1608,27 @@ class MailContext
   end
 end
 
+# provides a send() method for sending email by invoking the 'sendmail'
+# command-line program
 class SendmailMailer
   def send(from, recipients)
-    blah("invoking #{$sendmail_prog} -t")
-    IO.popen("#{$sendmail_prog} -t", "w") do |mail|
+    # The -t option causes sendmail to take message headers, as well as the
+    # message body, from its input.  The -oi option stops a dot on a line on
+    # its own from being interpreted as the end of the message body (so
+    # messages that have such a line don't fail part-way though sending),
+    cmd = "#{$sendmail_prog} -t -oi"
+    blah("invoking '#{cmd}'")
+    IO.popen(cmd, "w") do |mail|
       ctx = MailContext.new(mail) 
-      ctx.header("Bcc", recipients.join(','))
+      ctx.header("To", recipients.join(','))
       ctx.header("From", from) if from
       yield ctx
     end
   end
 end
 
+# provides a send() method for sending email by connecting to an SMTP server
+# using the Ruby Net::SMTP package.
 class SMTPMailer
   def initialize(smtp_host)
     @smtp_host = smtp_host
@@ -1385,6 +1661,7 @@ class SMTPMailer
       ctx = MailContext.new(IOAdapter.new(mail))
       ctx.header("To", recipients.join(','))
       ctx.header("From", from) if from
+      ctx.header("Date", Time.now.utc.strftime(DATE_HEADER_FORMAT))
       yield ctx
     end
   end
