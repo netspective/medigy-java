@@ -237,7 +237,7 @@
             <fileset dir="${consolidated.artifacts.test.junit.home}"/>
         </copy>
         <copy todir="${build.publish.latest.home}/coverage">
-            <fileset dir="${consolidated.artifacts.home}/reports/coverage"/>
+            <fileset dir="${consolidated.artifacts.test.coverage.home}"/>
         </copy>
         <copy todir="${build.publish.latest.home}/ddl">
             <fileset dir="${consolidated.artifacts.home}/ddl"/>
