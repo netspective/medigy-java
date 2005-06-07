@@ -224,5 +224,21 @@
         </ant>
     </target>
 
+    <target name="publish" depends="init.define-properties" if="build.publish.latest.home">
+        <delete dir="${build.publish.latest.home}"/>
+        <copy todir="${build.publish.latest.home}/dbdd">
+            <fileset dir="${consolidated.artifacts.doc.home}/dbdd"/>
+        </copy>
+        <copy todir="${build.publish.latest.home}/javadoc">
+            <fileset dir="${consolidated.artifacts.doc.home}/javadoc"/>
+        </copy>
+        <copy todir="${build.publish.latest.home}/javadoc/junit">
+            <fileset dir="${consolidated.artifacts.test.junit.home}"/>
+        </copy>
+        <copy todir="${build.publish.latest.home}/javadoc/coverage">
+            <fileset dir="${consolidated.artifacts.doc.home}/reports/coverage"/>
+        </copy>
+    </target>
+
     <target name="all" depends="clean,jar"/>
 </project>
