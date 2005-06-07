@@ -35,83 +35,54 @@
  * CAUSED AND REGARDLESS OF THE THEORY OF LIABILITY, ARISING OUT OF THE USE OF OR INABILITY TO USE THE SOFTWARE, EVEN
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
- * @author Shahid N. Shah
  */
 
 /*
  * Copyright (c) 2005 Your Corporation. All Rights Reserved.
  */
-package com.medigy.presentation.model;
+package com.medigy.wicket.form;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import wicket.markup.ComponentTag;
+import wicket.markup.html.form.validation.RequiredValidator;
+import wicket.markup.html.form.validation.TypeValidator;
 
-public class ChoicesFactory
+public class IntegerField extends wicket.markup.html.form.TextField implements JavaScriptProvider
 {
-    protected static final ChoicesFactory INSTANCE = new ChoicesFactory();
+    private String fieldName;
+    private String fieldControlId;
+    private long fieldFlags;
 
-    public static final ChoicesFactory getInstance()
+    public IntegerField(final String fieldName, long fieldFlags)
     {
-        return INSTANCE;
+        super(fieldName + BaseForm.FIELD_CONTROL_SUFFIX);
+        this.fieldName = fieldName;
+        this.fieldFlags = fieldFlags;
+        this.fieldControlId = fieldName + BaseForm.FIELD_CONTROL_SUFFIX;
+
+        if((this.fieldFlags & FieldFlags.REQUIRED) != 0)
+            add(RequiredValidator.getInstance());
+
+        add(new TypeValidator(Integer.class));
     }
 
-    private Map<Class, ReferenceEntityChoices> referenceEntityChoices = Collections.synchronizedMap(new HashMap<Class, ReferenceEntityChoices>());
-    private Map<Class, MultiListChoices> multiListChoices = Collections.synchronizedMap(new HashMap<Class, MultiListChoices>());
-    private Map<Class, MultiCheckChoices> multiCheckChoices = Collections.synchronizedMap(new HashMap<Class, MultiCheckChoices>());
-
-    public ChoicesFactory()
+    public IntegerField(final String componentName)
     {
+        this(componentName, FieldFlags.DEFAULT_FLAGS);
     }
 
-    public ReferenceEntityChoices getReferenceEntityChoices(final Class entity)
+    protected void onComponentTag(final ComponentTag componentTag)
     {
-        ReferenceEntityChoices result = referenceEntityChoices.get(entity);
-        if(result == null)
-        {
-            result = new ReferenceEntityChoices(entity);
-            referenceEntityChoices.put(entity, result);
-        }
-
-        return result;
+        ((BaseForm) getForm()).onFormComponentTag(componentTag, getFieldId(), fieldFlags);
+        super.onComponentTag(componentTag);
     }
 
-    public Map<Class, ReferenceEntityChoices> getReferenceEntityChoices()
+    protected String getFieldId()
     {
-        return referenceEntityChoices;
+        return this.fieldControlId;
     }
 
-    public MultiListChoices getMultiListChoices(final Class entity)
+    public String getJavaScript(final String dialogVarName, final String formObjectName)
     {
-        MultiListChoices result = multiListChoices.get(entity);
-        if(result == null)
-        {
-            result = new MultiListChoices(entity);
-            multiListChoices.put(entity, result);
-        }
-
-        return result;
-    }
-
-    public Map<Class, MultiListChoices> getMultiListChoices()
-    {
-        return multiListChoices;
-    }
-
-    public MultiCheckChoices getMultiCheckChoices(final Class entity)
-    {
-        MultiCheckChoices result = multiCheckChoices.get(entity);
-        if(result == null)
-        {
-            result = new MultiCheckChoices(entity);
-            multiCheckChoices.put(entity, result);
-        }
-
-        return result;
-    }
-
-    public Map<Class, MultiCheckChoices> getCheckListChoices()
-    {
-        return multiCheckChoices;
+        return "var field = dialog.createField("+ formObjectName +"[\""+ getFieldId() +"\"], \""+ getClass().getName() +"\", "+ fieldFlags +", null);\n";
     }
 }

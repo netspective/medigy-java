@@ -35,83 +35,81 @@
  * CAUSED AND REGARDLESS OF THE THEORY OF LIABILITY, ARISING OUT OF THE USE OF OR INABILITY TO USE THE SOFTWARE, EVEN
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
- * @author Shahid N. Shah
  */
 
 /*
  * Copyright (c) 2005 Your Corporation. All Rights Reserved.
  */
-package com.medigy.presentation.model;
+package com.medigy.wicket.form;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import wicket.markup.ComponentTag;
+import wicket.markup.html.form.validation.RequiredValidator;
+import wicket.markup.html.form.validation.PatternValidator;
 
-public class ChoicesFactory
+import java.util.regex.Pattern;
+
+public class PhoneField extends wicket.markup.html.form.TextField implements JavaScriptProvider
 {
-    protected static final ChoicesFactory INSTANCE = new ChoicesFactory();
+    private static final Pattern DASH_VALIDATE_PATTERN = Pattern.compile("^([\\d][\\d][\\d])[\\.-]?([\\d][\\d][\\d])[\\.-]?([\\d]{4})([ ][x][\\d]{1,5})?$");
+    private static final Pattern BRACKET_VALIDATE_PATTERN = Pattern.compile("^([\\d][\\d][\\d])[\\.-]?([\\d][\\d][\\d])[\\.-]?([\\d]{4})([ ][x][\\d]{1,5})?$");
 
-    public static final ChoicesFactory getInstance()
+    public static enum Style
     {
-        return INSTANCE;
+        DASH ,
+        BRACKET ;
     }
 
-    private Map<Class, ReferenceEntityChoices> referenceEntityChoices = Collections.synchronizedMap(new HashMap<Class, ReferenceEntityChoices>());
-    private Map<Class, MultiListChoices> multiListChoices = Collections.synchronizedMap(new HashMap<Class, MultiListChoices>());
-    private Map<Class, MultiCheckChoices> multiCheckChoices = Collections.synchronizedMap(new HashMap<Class, MultiCheckChoices>());
+    private String fieldName;
+    private String fieldControlId;
+    private long fieldFlags;
+    private Style style;
 
-    public ChoicesFactory()
+    public PhoneField(final String fieldName, long fieldFlags)
     {
+        super(fieldName + BaseForm.FIELD_CONTROL_SUFFIX);
+        this.fieldName = fieldName;
+        this.fieldFlags = fieldFlags;
+        this.fieldControlId = fieldName + BaseForm.FIELD_CONTROL_SUFFIX;
+
+        if((this.fieldFlags & FieldFlags.REQUIRED) != 0)
+            add(RequiredValidator.getInstance());
+
+        setStyle(Style.DASH);
     }
 
-    public ReferenceEntityChoices getReferenceEntityChoices(final Class entity)
+    public PhoneField(final String componentName)
     {
-        ReferenceEntityChoices result = referenceEntityChoices.get(entity);
-        if(result == null)
+        this(componentName, FieldFlags.DEFAULT_FLAGS);
+    }
+
+    protected void onComponentTag(final ComponentTag componentTag)
+    {
+        ((BaseForm) getForm()).onFormComponentTag(componentTag, getFieldId(), fieldFlags);
+        super.onComponentTag(componentTag);
+    }
+
+    protected String getFieldId()
+    {
+        return this.fieldControlId;
+    }
+
+    public String getJavaScript(final String dialogVarName, final String formObjectName)
+    {
+        return "var field = dialog.createField("+ formObjectName +"[\""+ getFieldId() +"\"], FIELD_TYPES[\""+ getClass().getName() +"\"], "+ fieldFlags +", null);\n";
+    }
+
+    public void setStyle(PhoneField.Style style)
+    {
+        this.style = style;
+        switch(this.style)
         {
-            result = new ReferenceEntityChoices(entity);
-            referenceEntityChoices.put(entity, result);
+            case DASH:
+                add(new PatternValidator(DASH_VALIDATE_PATTERN));
+                break;
+
+            case BRACKET:
+                add(new PatternValidator(BRACKET_VALIDATE_PATTERN));
+                break;
         }
-
-        return result;
-    }
-
-    public Map<Class, ReferenceEntityChoices> getReferenceEntityChoices()
-    {
-        return referenceEntityChoices;
-    }
-
-    public MultiListChoices getMultiListChoices(final Class entity)
-    {
-        MultiListChoices result = multiListChoices.get(entity);
-        if(result == null)
-        {
-            result = new MultiListChoices(entity);
-            multiListChoices.put(entity, result);
-        }
-
-        return result;
-    }
-
-    public Map<Class, MultiListChoices> getMultiListChoices()
-    {
-        return multiListChoices;
-    }
-
-    public MultiCheckChoices getMultiCheckChoices(final Class entity)
-    {
-        MultiCheckChoices result = multiCheckChoices.get(entity);
-        if(result == null)
-        {
-            result = new MultiCheckChoices(entity);
-            multiCheckChoices.put(entity, result);
-        }
-
-        return result;
-    }
-
-    public Map<Class, MultiCheckChoices> getCheckListChoices()
-    {
-        return multiCheckChoices;
     }
 }

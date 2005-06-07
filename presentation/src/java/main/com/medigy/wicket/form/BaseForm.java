@@ -50,10 +50,7 @@ import com.medigy.presentation.model.ChoicesFactory;
 import wicket.IFeedback;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
-import wicket.markup.html.form.DropDownChoice;
-import wicket.markup.html.form.Form;
-import wicket.markup.html.form.FormComponent;
-import wicket.markup.html.form.RadioChoice;
+import wicket.markup.html.form.*;
 import wicket.markup.html.form.model.IChoice;
 import wicket.util.value.ValueMap;
 
@@ -112,6 +109,24 @@ public class BaseForm extends Form
         add(new TextField(fieldName));
     }
 
+    protected void addLabeledPhoneField(final String fieldName)
+    {
+        add(new FieldLabel(fieldName));
+        add(new PhoneField(fieldName));
+    }
+
+    protected void addLabeledBooleanField(final String fieldName)
+    {
+        add(new FieldLabel(fieldName));
+        add(new BooleanField(fieldName));
+    }
+
+    protected void addLabeledCurrencyField(final String fieldName)
+    {
+        add(new FieldLabel(fieldName));
+        add(new CurrencyField(fieldName));
+    }
+
     protected void addLabeledSelectField(final String fieldName)
     {
         add(new FieldLabel(fieldName));
@@ -122,6 +137,18 @@ public class BaseForm extends Form
     {
         add(new FieldLabel(fieldName));
         add(new DropDownChoice(fieldName + FIELD_CONTROL_SUFFIX, ChoicesFactory.getInstance().getReferenceEntityChoices(referenceEntity)));
+    }
+
+    protected void addLabeledMultiListField(final String fieldName, final Class multiListChoices)
+    {
+        add(new FieldLabel(fieldName));
+        add(new ListMultipleChoice(fieldName + FIELD_CONTROL_SUFFIX, ChoicesFactory.getInstance().getMultiListChoices(multiListChoices)));
+    }
+
+    protected void addLabeledMultiCheckField(final String fieldName, final Class multiCheckChoices)
+    {
+        add(new FieldLabel(fieldName));
+        add(new ListMultipleChoice(fieldName + FIELD_CONTROL_SUFFIX, ChoicesFactory.getInstance().getMultiCheckChoices(multiCheckChoices)));
     }
 
     protected void addLabeledRadioChoiceField(final String fieldName)
