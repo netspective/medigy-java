@@ -1,4 +1,4 @@
-#!/usr/local/bin/ruby -w
+#!/usr/bin/ruby -w
 
 # Part of CVSspam
 #   http://www.badgers-in-foil.co.uk/projects/cvsspam/

@@ -25,4 +25,4 @@
 #DEFAULT (echo ""; id; echo %s; date; cat) >> $CVSROOT/CVSROOT/commitlog
 # or
 #DEFAULT (echo ""; id; echo %{sVv}; date; cat) >> $CVSROOT/CVSROOT/commitlog
-ALL /home/netspective/cvs/Medigy/CVSROOT/collect_diffs.rb --from $USER %{sVv}
+ALL /home/cvs/repos/medigy/CVSROOT/collect_diffs.rb --from $USER %{sVv}
