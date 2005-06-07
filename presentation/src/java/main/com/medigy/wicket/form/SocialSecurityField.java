@@ -45,9 +45,14 @@ package com.medigy.wicket.form;
 
 import wicket.markup.ComponentTag;
 import wicket.markup.html.form.validation.RequiredValidator;
+import wicket.markup.html.form.validation.PatternValidator;
+
+import java.util.regex.Pattern;
 
 public class SocialSecurityField extends wicket.markup.html.form.TextField implements JavaScriptProvider
 {
+    private static final Pattern SOCIAL_SECURITY_PATTERN = Pattern.compile("^([\\d]{3})[-]?([\\d]{2})[-]?([\\d]{4})$");
+
     private String fieldName;
     private String fieldControlId;
     private long fieldFlags;
@@ -61,6 +66,8 @@ public class SocialSecurityField extends wicket.markup.html.form.TextField imple
 
         if((this.fieldFlags & FieldFlags.REQUIRED) != 0)
             add(RequiredValidator.getInstance());
+
+        add(new PatternValidator(SOCIAL_SECURITY_PATTERN));
     }
 
     public SocialSecurityField(final String componentName)
