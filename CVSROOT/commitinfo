@@ -13,4 +13,4 @@
 #
 # If the name "ALL" appears as a regular expression it is always used
 # in addition to the first matching regex or "DEFAULT".
-ALL /home/cvs/repos/medigy/CVSROOT/record_lastdir.rb " %r/%p %s"
+ALL /home/cvs/repos/medigy/CVSROOT/record_lastdir.rb
