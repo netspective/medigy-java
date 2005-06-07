@@ -11,6 +11,7 @@
         <mapping class="com.medigy.persist.reference.type.ContactMechanismType"/>
         <mapping class="com.medigy.persist.reference.type.DataEncryptionType"/>
         <mapping class="com.medigy.persist.reference.type.GenderType"/>
+        <mapping class="com.medigy.persist.reference.type.BloodType"/>
         <mapping class="com.medigy.persist.reference.type.LanguageType"/>
         <mapping class="com.medigy.persist.reference.type.MaritalStatusType"/>
         <mapping class="com.medigy.persist.reference.type.PriorityType"/>
