@@ -45,6 +45,7 @@ package com.medigy.wicket.form;
 
 import wicket.markup.ComponentTag;
 import wicket.markup.html.form.validation.RequiredValidator;
+import wicket.markup.html.form.validation.TypeValidator;
 
 public class FloatField extends wicket.markup.html.form.TextField implements JavaScriptProvider
 {
@@ -61,6 +62,8 @@ public class FloatField extends wicket.markup.html.form.TextField implements Jav
 
         if((this.fieldFlags & FieldFlags.REQUIRED) != 0)
             add(RequiredValidator.getInstance());
+
+        add(new TypeValidator(Float.class));
     }
 
     public FloatField(final String componentName)
