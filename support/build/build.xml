@@ -3,6 +3,7 @@
 <project name="medigy-platform" default="all">
 
     <target name="init.define-properties">
+
         <!-- *********************************************************************************************************
              ** Remember, Ant properties are immutable once assigned. This means that any property assignments here **
              ** may be overridden by the command line or items in the build.properties file                         **
