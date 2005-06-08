@@ -39,13 +39,21 @@
 package com.medigy.persist.model.insurance;
 
 import com.medigy.persist.model.common.AbstractTopLevelEntity;
+import com.medigy.persist.reference.custom.insurance.FeeScheduleItemCostType;
+import org.hibernate.validator.Size;
+import org.hibernate.validator.Length;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.GeneratorType;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.ManyToOne;
+import javax.persistence.Entity;
+import javax.persistence.GeneratorType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Transient;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class FeeScheduleItem extends AbstractTopLevelEntity
@@ -55,8 +63,18 @@ public class FeeScheduleItem extends AbstractTopLevelEntity
     private Long feeScheduleItemId;
     private FeeSchedule feeSchedule;
     private String code; // CPT code???
+    private String codeModifier;
     private String name;
+    private String description;
     private Long sequenceNumber;
+    private FeeScheduleItem parentFeeScheduleItem;
+    private FeeScheduleItemCostType costType;
+    private Long unitsAvailable;
+    private Boolean isTaxable;
+    private Float unitCost;
+    private Long defaultUnits;
+
+    private Set<FeeScheduleItem> childFeeSchduleItems = new HashSet<FeeScheduleItem>();
 
     @Id(generate = GeneratorType.AUTO)
     @Column(name = PK_COLUMN_NAME)
@@ -71,7 +89,7 @@ public class FeeScheduleItem extends AbstractTopLevelEntity
     }
 
     @ManyToOne
-    @JoinColumn(name = FeeSchedule.PK_COLUMN_NAME)
+    @JoinColumn(name = FeeSchedule.PK_COLUMN_NAME, nullable = false)
     public FeeSchedule getFeeSchedule()
     {
         return feeSchedule;
@@ -94,6 +112,17 @@ public class FeeScheduleItem extends AbstractTopLevelEntity
     }
 
     @Column(length = 64)
+    public String getCodeModifier()
+    {
+        return codeModifier;
+    }
+
+    public void setCodeModifier(final String codeModifier)
+    {
+        this.codeModifier = codeModifier;
+    }
+
+    @Column(length = 64)
     public String getName()
     {
         return name;
@@ -112,5 +141,106 @@ public class FeeScheduleItem extends AbstractTopLevelEntity
     public void setSequenceNumber(final Long sequenceNumber)
     {
         this.sequenceNumber = sequenceNumber;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "parent_item_id", referencedColumnName = PK_COLUMN_NAME)
+    public FeeScheduleItem getParentFeeScheduleItem()
+    {
+        return parentFeeScheduleItem;
+    }
+
+    public void setParentFeeScheduleItem(final FeeScheduleItem parentFeeScheduleItem)
+    {
+        this.parentFeeScheduleItem = parentFeeScheduleItem;
+    }
+
+    @OneToMany(mappedBy = "parentFeeScheduleItem", cascade = CascadeType.ALL)
+    public Set<FeeScheduleItem> getChildFeeSchduleItems()
+    {
+        return childFeeSchduleItems;
+    }
+
+    public void setChildFeeSchduleItems(final Set<FeeScheduleItem> childFeeSchduleItems)
+    {
+        this.childFeeSchduleItems = childFeeSchduleItems;
+    }
+
+    @Transient
+    public void addChildFeeScheduleItem(final FeeScheduleItem childItem)
+    {
+        childItem.setParentFeeScheduleItem(this);
+        childFeeSchduleItems.add(childItem);
+    }
+
+    @ManyToOne
+    @JoinColumn(name = FeeScheduleItemCostType.PK_COLUMN_NAME)
+    public FeeScheduleItemCostType getCostType()
+    {
+        return costType;
+    }
+
+    public void setCostType(final FeeScheduleItemCostType costType)
+    {
+        this.costType = costType;
+    }
+
+    @Size(max = 99999999)
+    public Long getUnitsAvailable()
+    {
+        return unitsAvailable;
+    }
+
+    public void setUnitsAvailable(final Long unitsAvailable)
+    {
+        this.unitsAvailable = unitsAvailable;
+    }
+
+    /**
+     * Gets the description of the item (overrides REF_CPT, REF_ICD, REF_HCPCS if not null)
+     * @return
+     */
+    @Column(length = 1024)
+    @Length(max = 1024)
+    public String getDescription()
+    {
+        return description;
+    }
+
+    public void setDescription(final String description)
+    {
+        this.description = description;
+    }
+
+    public Boolean getTaxable()
+    {
+        return isTaxable;
+    }
+
+    public void setTaxable(final Boolean taxable)
+    {
+        isTaxable = taxable;
+    }
+
+    @Column(precision = 12, scale = 2)
+    public Float getUnitCost()
+    {
+        return unitCost;
+    }
+
+    public void setUnitCost(final Float unitCost)
+    {
+        this.unitCost = unitCost;
+    }
+
+    @Column(columnDefinition = "NUMBER DEFAULT 1")
+    public Long getDefaultUnits()
+    {
+        return defaultUnits;
+    }
+
+    public void setDefaultUnits(final Long defaultUnits)
+    {
+        this.defaultUnits = defaultUnits;
     }
 }

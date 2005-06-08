@@ -57,7 +57,8 @@
         <mapping class="com.medigy.persist.reference.custom.insurance.InsurancePolicyType"/>
         <mapping class="com.medigy.persist.reference.custom.insurance.InsuranceProductType"/>
         <mapping class="com.medigy.persist.reference.custom.insurance.InsurancePlanAttributeType"/>
-
+        <mapping class="com.medigy.persist.reference.custom.insurance.FeeScheduleItemType"/>
+        <mapping class="com.medigy.persist.reference.custom.insurance.FeeScheduleItemCostType"/>
         <!--mapping package="com.medigy.persist.reference.custom.invoice"/-->
         <mapping class="com.medigy.persist.reference.custom.invoice.BillingAccountRoleType"/>
         <mapping class="com.medigy.persist.reference.custom.invoice.InvoiceItemType"/>
@@ -228,6 +229,8 @@
         <mapping class="com.medigy.persist.model.insurance.InsuranceProductCoverageLevel"/>
         <mapping class="com.medigy.persist.model.insurance.InsurancePlanCoverageLevel"/>
         <mapping class="com.medigy.persist.model.insurance.InsurancePolicyCoverageLevel"/>
+        <mapping class="com.medigy.persist.model.insurance.FeeSchedule"/>
+        <mapping class="com.medigy.persist.model.insurance.FeeScheduleItem"/>
 
         <!--mapping package="com.medigy.persist.model.session"/-->
         <mapping class="com.medigy.persist.model.session.Session"/>

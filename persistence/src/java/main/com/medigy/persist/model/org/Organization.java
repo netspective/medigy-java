@@ -47,6 +47,8 @@ import com.medigy.persist.model.insurance.Enrollment;
 import com.medigy.persist.model.insurance.InsurancePlan;
 import com.medigy.persist.model.insurance.InsuranceProduct;
 import com.medigy.persist.model.party.Party;
+import com.medigy.persist.model.party.Facility;
+import com.medigy.persist.model.health.HealthCareOffering;
 import com.medigy.persist.reference.custom.insurance.InsuranceProductType;
 import com.medigy.persist.reference.custom.org.OrganizationClassificationType;
 import com.medigy.persist.reference.type.party.PartyType;
@@ -59,6 +61,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.persistence.Column;
+import javax.persistence.FetchType;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -73,6 +76,9 @@ public class Organization extends Party
     private Set<InsuranceProduct> insuranceProducts = new HashSet<InsuranceProduct>();
     private Set<InsurancePlan> insurancePlan = new HashSet<InsurancePlan>();
     private Set<Enrollment> enrollments = new HashSet<Enrollment>();
+    private Set<Facility> facilities = new HashSet<Facility>();
+
+    private Set<HealthCareOffering> healthCareOfferings = new HashSet<HealthCareOffering>();
 
     private String tradeName;
 
@@ -204,5 +210,16 @@ public class Organization extends Party
     public void setTradeName(final String tradeName)
     {
         this.tradeName = tradeName;
+    }
+
+    @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    public Set<Facility> getFacilities()
+    {
+        return facilities;
+    }
+
+    public void setFacilities(final Set<Facility> facilities)
+    {
+        this.facilities = facilities;
     }
 }

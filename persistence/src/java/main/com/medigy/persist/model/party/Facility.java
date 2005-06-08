@@ -41,6 +41,7 @@ package com.medigy.persist.model.party;
 
 import com.medigy.persist.model.common.AbstractTopLevelEntity;
 import com.medigy.persist.model.health.HealthCareVisit;
+import com.medigy.persist.model.org.Organization;
 import com.medigy.persist.reference.custom.party.FacilityType;
 
 import javax.persistence.CascadeType;
@@ -64,6 +65,8 @@ public class Facility extends AbstractTopLevelEntity
     private Float squareFootage;
     private Facility parentFacility;
     private FacilityType type;
+    private Organization organization;
+
     // children childFacilities (e.g Rooms on a Floor, offices in a building)
     private Set<Facility> childFacilities = new HashSet<Facility>();
     private Set<PartyFacilityRole> facilityRole = new HashSet<PartyFacilityRole>();
@@ -170,5 +173,21 @@ public class Facility extends AbstractTopLevelEntity
     public void setVisits(final Set<HealthCareVisit> visits)
     {
         this.visits = visits;
+    }
+
+    /**
+     * Gets the organization this facility is associated with
+     * @return
+     */
+    @ManyToOne
+    @JoinColumn(name = Organization.PK_COLUMN_NAME)
+    public Organization getOrganization()
+    {
+        return organization;
+    }
+
+    public void setOrganization(final Organization organization)
+    {
+        this.organization = organization;
     }
 }

@@ -54,20 +54,23 @@ public class FeeScheduleItemType  extends AbstractCustomReferenceEntity
 
     public enum Cache implements CachedCustomReferenceEntity
     {
-        ICD9("ICD9", "ICD-9"),
-        ICD10("ICD10", "ICD-10"),
-        CPT("CPT", "CPT"),
-        HCPCS("HCPCS", "HCPCS"),
-        EPSDT("EPSDT", "EPSDT");
+        //ICD9("ICD9", "ICD-9", "International Classification of Diseases - Ninth Revision"),     // diagnosis
+        //ICD10("ICD10", "ICD-10", "International Classification of Diseases - Tenth Revision"),  // diagnosis
+        CPT("CPT", "CPT", "Current Procedural Terminology"),                                    // service
+        HCPCS("HCPCS", "HCPCS", "Healthcare Common Procedure Coding System"),                   // products
+        EPSDT("EPSDT", "EPSDT", "Early and Periodic Screening, Diagnostic, and Treatment"),
+        MISC("MISC", "MISC", "Misc");
 
         private final String label;
         private final String code;
+        private final String description;
         private FeeScheduleItemType entity;
 
-        Cache(final String code, final String label)
+        Cache(final String code, final String label, final String description)
         {
             this.code = code;
             this.label = label;
+            this.description = description;
         }
 
         public String getCode()

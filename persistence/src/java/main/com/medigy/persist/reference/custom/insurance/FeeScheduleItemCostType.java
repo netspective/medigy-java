@@ -36,139 +36,91 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.persist.model.insurance;
+package com.medigy.persist.reference.custom.insurance;
 
-import com.medigy.persist.model.common.AbstractDateDurationEntity;
-import com.medigy.persist.model.org.Organization;
-import com.medigy.persist.model.person.Person;
-import com.medigy.persist.model.party.Facility;
+import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
+import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
+import com.medigy.persist.reference.custom.CustomReferenceEntity;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratorType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import java.util.Set;
-import java.util.HashSet;
+import javax.persistence.GeneratorType;
+import javax.persistence.Column;
 
 @Entity
-public class FeeSchedule extends AbstractDateDurationEntity
+public class FeeScheduleItemCostType extends AbstractCustomReferenceEntity
 {
-    public static final String PK_COLUMN_NAME = "fee_schedule_id";
+    public static final String PK_COLUMN_NAME = "item_cost_type_id";
 
-    private Long feeScheduleId;
-    private String name;
-    private Organization organization;
-    private String description;
-    private String caption;
-    private Long sequenceNumber;
-    private Float rvrbsMultiplier;
+    public enum Cache implements CachedCustomReferenceEntity
+    {
+    /**
+     * <enum>No Cost</enum>
+    <enum>Specific Dollar</enum>
+    <enum>Multiple of Group</enum>
+    <enum>Multiple of Parent</enum>
+    <enum>Medicare Value</enum>
+    <enum>Multiple of RVU</enum>
+    <enum>UCR 75% Value</enum>
+     */
+        NO_COST("NC", "No Cost"),
+        SPECIFIC_DOLLAR("SPEC_DLR", "Specific Dollar"),
+        MULTIPLE_OF_GROUP("MULT_GRP", "Multiple of Group"),
+        MULTIPLE_OF_PARENT("MULT_PRNT", "Multiple of Parent"),
+        MEDICARE_VALUE("MED_VAL", "Medicare Value"),
+        MULTIPLE_OF_RVU("MULT_RVU", "Multiple of RVU"),
+        UCR_75("UCR_75", "UCR 75% Value");
 
-    private Person person;
-    private Facility facility;
+        private final String label;
+        private final String code;
+        private FeeScheduleItemCostType entity;
 
-    private Set<FeeScheduleItem> feeScheduleItems = new HashSet<FeeScheduleItem>();
+        Cache(final String code, final String label)
+        {
+            this.code = code;
+            this.label = label;
+        }
+
+        public String getCode()
+        {
+            return code;
+        }
+
+        public FeeScheduleItemCostType getEntity()
+        {
+            return entity;
+        }
+
+        public void setEntity(final CustomReferenceEntity entity)
+        {
+            this.entity = (FeeScheduleItemCostType) entity;
+        }
+
+        public String getLabel()
+        {
+            return label;
+        }
+
+        public static FeeScheduleItemCostType getEntity(String code)
+        {
+            for (FeeScheduleItemCostType.Cache geo : FeeScheduleItemCostType.Cache.values())
+            {
+                if (geo.getCode().equals(code))
+                    return geo.getEntity();
+            }
+            return null;
+        }
+    }
 
     @Id(generate = GeneratorType.AUTO)
     @Column(name = PK_COLUMN_NAME)
-    public Long getFeeScheduleId()
+    public Long getFeeScheduleItemCostType()
     {
-        return feeScheduleId;
+        return getSystemId();
     }
 
-    public void setFeeScheduleId(final Long feeScheduleId)
+    public void setFeeScheduleItemCostType(final Long feeScheduleItemTypeId)
     {
-        this.feeScheduleId = feeScheduleId;
+        setSystemId(feeScheduleItemTypeId);
     }
-
-    @Column(length = 64, nullable = false)
-    public String getName()
-    {
-        return name;
-    }
-
-    public void setName(final String name)
-    {
-        this.name = name;
-    }
-
-    public Organization getOrganization()
-    {
-        return organization;
-    }
-
-    public void setOrganization(final Organization organization)
-    {
-        this.organization = organization;
-    }
-
-    public String getDescription()
-    {
-        return description;
-    }
-
-    public void setDescription(final String description)
-    {
-        this.description = description;
-    }
-
-    public String getCaption()
-    {
-        return caption;
-    }
-
-    public void setCaption(final String caption)
-    {
-        this.caption = caption;
-    }
-
-    public Long getSequenceNumber()
-    {
-        return sequenceNumber;
-    }
-
-    public void setSequenceNumber(final Long sequenceNumber)
-    {
-        this.sequenceNumber = sequenceNumber;
-    }
-
-    public Float getRvrbsMultiplier()
-    {
-        return rvrbsMultiplier;
-    }
-
-    public void setRvrbsMultiplier(final Float rvrbsMultiplier)
-    {
-        this.rvrbsMultiplier = rvrbsMultiplier;
-    }
-
-    /**
-     * Gets the physician associated with this fee schedule
-     * @return
-     */
-    @ManyToOne
-    @JoinColumn(name = Person.PK_COLUMN_NAME)
-    public Person getPerson()
-    {
-        return person;
-    }
-
-    public void setPerson(final Person person)
-    {
-        this.person = person;
-    }
-
-    @ManyToOne
-    @JoinColumn(name = Facility.PK_COLUMN_NAME)
-    public Facility getFacility()
-    {
-        return facility;
-    }
-
-    public void setFacility(final Facility facility)
-    {
-        this.facility = facility;
-    }
-
 }
