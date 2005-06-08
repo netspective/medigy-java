@@ -41,6 +41,22 @@
         </invoke-factory>
     </service-point>
 
+    <service-point id="AddFeeScheduleService" interface="com.medigy.service.insurance.AddFeeScheduleService">
+        <interceptor service-id="hivemind.LoggingInterceptor"/>
+        <invoke-factory>
+            <!-- Autowires service properties based on interface! -->
+            <construct class="impl.insurance.AddFeeScheduleServiceImpl"/>
+        </invoke-factory>
+    </service-point>
+
+    <service-point id="AddFeeScheduleItemService" interface="com.medigy.service.insurance.AddFeeScheduleItemService">
+        <interceptor service-id="hivemind.LoggingInterceptor"/>
+        <invoke-factory>
+            <!-- Autowires service properties based on interface! -->
+            <construct class="impl.insurance.AddFeeScheduleItemServiceImpl"/>
+        </invoke-factory>
+    </service-point>
+
     <service-point id="PatientRegistrationService" interface="com.medigy.service.person.PatientRegistrationService">
         <interceptor service-id="hivemind.LoggingInterceptor"/>
         <invoke-factory>

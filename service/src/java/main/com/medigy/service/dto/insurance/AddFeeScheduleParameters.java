@@ -36,44 +36,45 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.service.util;
+package com.medigy.service.dto.insurance;
 
-import com.medigy.persist.reference.custom.health.HealthCareLicenseType;
-import com.medigy.persist.reference.custom.insurance.InsurancePolicyType;
-import com.medigy.persist.reference.custom.insurance.InsuranceProductType;
-import com.medigy.persist.reference.custom.insurance.FeeScheduleItemCostType;
-import com.medigy.persist.reference.custom.party.ContactMechanismPurposeType;
-import com.medigy.persist.reference.custom.party.OrganizationRoleType;
-import com.medigy.persist.reference.custom.person.EthnicityType;
-import com.medigy.persist.reference.custom.person.PersonRoleType;
-import com.medigy.persist.reference.custom.invoice.BillRemittanceType;
-import com.medigy.persist.reference.type.GenderType;
-import com.medigy.persist.reference.type.LanguageType;
-import com.medigy.persist.reference.type.MaritalStatusType;
+import com.medigy.service.dto.ServiceParameters;
 
-public interface ReferenceEntityFacade extends Facade
+import java.io.Serializable;
+import java.util.Date;
+
+public interface AddFeeScheduleParameters extends ServiceParameters
 {
-    public InsurancePolicyType getInsurancePolicyType(final String code);
+    public Serializable getOrganizationId();
 
-    public LanguageType getLanguageType(final String code);
+    public String getFeeScheduleName();
 
-    public GenderType getGenderType(final String genderCode);
+    public String getCatalogTypeCode();
 
-    public EthnicityType getEthnicityType(final String ethnicityCode);
+    public String getFeeScheduleCaption();
 
-    public MaritalStatusType getMaritalStatusType(String statusCode) throws UnknownReferenceTypeException;
+    public String getDescription();
 
-    public PersonRoleType getPersonRoleType(String roleCode);
+    public Date getStartDate();
 
-    public OrganizationRoleType getOrganizationRoleType(String roleCode);
+    public Date getEndDate();
 
-    public ContactMechanismPurposeType getContactMechanismPurposeType(String purposeCode)  throws UnknownReferenceTypeException;
+    public Float getRvrbsMultiplier();
 
-    public HealthCareLicenseType getLicenseType(final String licenseType);
+    public Serializable getParentFeeScheduleId();
 
-    public InsuranceProductType getInsuranceProductType(final String productTypeCode);
+    public boolean isCapitatedContract();
 
-    public BillRemittanceType getBillRemittanceType(final String remittanceTypeCode);
+    /**
+     * Gets the physician ID if the fee schedule is  for a specific physician/provider.
+     * @return
+     */
+    public Serializable getPhysicianId();
 
-    public FeeScheduleItemCostType getFeeScheduleItemCostType(final String costTypeCode);
+    /**
+     * Gets the site ID if the fee schedle is specific for a site
+     * @return
+     */
+    public Serializable getSiteId();
+
 }

@@ -41,6 +41,7 @@ package com.medigy.service.impl.util;
 import com.medigy.persist.reference.custom.health.HealthCareLicenseType;
 import com.medigy.persist.reference.custom.insurance.InsurancePolicyType;
 import com.medigy.persist.reference.custom.insurance.InsuranceProductType;
+import com.medigy.persist.reference.custom.insurance.FeeScheduleItemCostType;
 import com.medigy.persist.reference.custom.party.ContactMechanismPurposeType;
 import com.medigy.persist.reference.custom.party.OrganizationRoleType;
 import com.medigy.persist.reference.custom.person.EthnicityType;
@@ -193,9 +194,21 @@ public class ReferenceEntityFacadeImpl implements ReferenceEntityFacade
         BillRemittanceType type = BillRemittanceType.Cache.getEntity(remittanceTypeCode);
         if (type == null)
         {
-            final Criteria criteria = HibernateUtil.getSession().createCriteria(InsurancePolicyType.class);
+            final Criteria criteria = HibernateUtil.getSession().createCriteria(BillRemittanceType.class);
             criteria.add(Restrictions.eq("code", remittanceTypeCode));
             type = (BillRemittanceType) criteria.uniqueResult();
+        }
+        return type;
+    }
+
+    public FeeScheduleItemCostType getFeeScheduleItemCostType(final String costTypeCode)
+    {
+        FeeScheduleItemCostType type = FeeScheduleItemCostType.Cache.getEntity(costTypeCode);
+        if (type == null)
+        {
+            final Criteria criteria = HibernateUtil.getSession().createCriteria(FeeScheduleItemCostType.class);
+            criteria.add(Restrictions.eq("code", costTypeCode));
+            type = (FeeScheduleItemCostType) criteria.uniqueResult();
         }
         return type;
     }
