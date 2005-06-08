@@ -42,26 +42,28 @@ import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
 import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
 import com.medigy.persist.reference.custom.CustomReferenceEntity;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratorType;
 import javax.persistence.Id;
+import javax.persistence.GeneratorType;
+import javax.persistence.Column;
 
 @Entity
-public class HealthCareVisitRoleType extends AbstractCustomReferenceEntity
+public class VisitDuration extends AbstractCustomReferenceEntity
 {
-    public static final String PK_COLUMN_NAME = "visit_role_type_id";
+    public static final String PK_COLUMN_NAME = "visit_duration_id";
 
     public enum Cache implements CachedCustomReferenceEntity
     {
-        REQ_PHYSICIAN("REQ_PHY", "Requested Physician"),
-        VISIT_PHYSICIAN("VISIT_PHY", "Visit Physician"),
-        APPT_CONFIRMER("APPT_CONFIRM", "Appointment Confirmer"),
-        APPT_TAKER("APPT_TAKER", "Appointment Taker");
+        TEN_MINUTES("10", "10 minutes"),
+        FIFTEEN_MINUTES("15", "15 minutes"),
+        TWENTY_MINUTES("20", "20 minutes"),
+        THIRTY_MINUTES("30", "30 minutes"),
+        FORTYFIVE_MINUTES("45", "45 minutes"),
+        ONE_HOUR("60", "1 hour");
 
         private String code;
         private String label;
-        private HealthCareVisitRoleType entity;
+        private VisitDuration entity;
 
         Cache(final String code, final String label)
         {
@@ -74,14 +76,14 @@ public class HealthCareVisitRoleType extends AbstractCustomReferenceEntity
             return code;
         }
 
-        public HealthCareVisitRoleType getEntity()
+        public VisitDuration getEntity()
         {
             return entity;
         }
 
         public void setEntity(final CustomReferenceEntity entity)
         {
-            this.entity = (HealthCareVisitRoleType) entity;
+            this.entity = (VisitDuration) entity;
         }
 
         public String getLabel()
@@ -91,13 +93,13 @@ public class HealthCareVisitRoleType extends AbstractCustomReferenceEntity
     }
 
     @Id(generate = GeneratorType.AUTO)
-    @Column(name = PK_COLUMN_NAME)        
-    public Long getHealthCareVisitRoleTypeId()
+    @Column(name = PK_COLUMN_NAME)
+    public Long getVisitDurationId()
     {
         return super.getSystemId();
     }
 
-    public void setHealthCareVisitRoleTypeId(final Long id)
+    public void setVisitDurationId(final Long id)
     {
         super.setSystemId(id);
     }

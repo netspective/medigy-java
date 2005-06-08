@@ -45,6 +45,7 @@
         <mapping class="com.medigy.persist.reference.custom.health.HealthCareLicenseType"/>
         <mapping class="com.medigy.persist.reference.custom.health.HealthCareReferralType"/>
         <mapping class="com.medigy.persist.reference.custom.health.HealthCareDeliveryType"/>
+        <mapping class="com.medigy.persist.reference.custom.health.VisitDuration"/>
 
         <!--mapping package="com.medigy.persist.reference.custom.product"/-->
         <mapping class="com.medigy.persist.reference.custom.product.ProductType"/>
@@ -95,6 +96,7 @@
         <mapping class="com.medigy.persist.reference.custom.person.PhysicalCharacteristicType"/>
         <mapping class="com.medigy.persist.reference.custom.person.PatientResponsiblePartyRoleType"/>
         <mapping class="com.medigy.persist.reference.custom.person.PersonClassificationType"/>
+        <mapping class="com.medigy.persist.reference.custom.person.PatientType"/>
 
         <!--mapping package="com.medigy.persist.reference.custom.org"/-->
         <mapping class="com.medigy.persist.reference.custom.org.OrganizationClassificationType"/>

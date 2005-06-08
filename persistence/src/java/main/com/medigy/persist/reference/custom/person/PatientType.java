@@ -36,32 +36,31 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.persist.reference.custom.health;
+package com.medigy.persist.reference.custom.person;
 
-import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
-import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
 import com.medigy.persist.reference.custom.CustomReferenceEntity;
+import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
+import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratorType;
 import javax.persistence.Id;
+import javax.persistence.GeneratorType;
+import javax.persistence.Column;
 
 @Entity
-public class HealthCareVisitRoleType extends AbstractCustomReferenceEntity
+public class PatientType extends AbstractCustomReferenceEntity
 {
-    public static final String PK_COLUMN_NAME = "visit_role_type_id";
+    public static final String PK_COLUMN_NAME = "patient_type_id";
 
     public enum Cache implements CachedCustomReferenceEntity
     {
-        REQ_PHYSICIAN("REQ_PHY", "Requested Physician"),
-        VISIT_PHYSICIAN("VISIT_PHY", "Visit Physician"),
-        APPT_CONFIRMER("APPT_CONFIRM", "Appointment Confirmer"),
-        APPT_TAKER("APPT_TAKER", "Appointment Taker");
+        NEW("NEW", "New Patient"),
+        ESTABLISHED("ESTABLISHED", "Established Patient"),
+        TEMPORARY("TEMPORARY", "Temporary Patient");
 
         private String code;
         private String label;
-        private HealthCareVisitRoleType entity;
+        private PatientType entity;
 
         Cache(final String code, final String label)
         {
@@ -74,30 +73,40 @@ public class HealthCareVisitRoleType extends AbstractCustomReferenceEntity
             return code;
         }
 
-        public HealthCareVisitRoleType getEntity()
+        public PatientType getEntity()
         {
             return entity;
         }
 
         public void setEntity(final CustomReferenceEntity entity)
         {
-            this.entity = (HealthCareVisitRoleType) entity;
+            this.entity = (PatientType) entity;
         }
 
         public String getLabel()
         {
             return label;
         }
+
+        public static PatientType getEntity(String code)
+        {
+            for (PatientType.Cache geo : PatientType.Cache.values())
+            {
+                if (geo.getCode().equals(code))
+                    return geo.getEntity();
+            }
+            return null;
+        }
     }
 
     @Id(generate = GeneratorType.AUTO)
-    @Column(name = PK_COLUMN_NAME)        
-    public Long getHealthCareVisitRoleTypeId()
+    @Column(name = PK_COLUMN_NAME)
+    public Long getPatientTypeId()
     {
         return super.getSystemId();
     }
 
-    public void setHealthCareVisitRoleTypeId(final Long id)
+    public void setPatientTypeId(final Long id)
     {
         super.setSystemId(id);
     }

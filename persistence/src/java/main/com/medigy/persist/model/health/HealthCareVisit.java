@@ -41,6 +41,8 @@ package com.medigy.persist.model.health;
 import com.medigy.persist.model.common.AbstractDateDurationEntity;
 import com.medigy.persist.model.party.Facility;
 import com.medigy.persist.model.person.Person;
+import com.medigy.persist.reference.custom.health.HealthCareVisitRoleType;
+import com.medigy.persist.reference.custom.person.PatientType;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -68,6 +70,7 @@ public class HealthCareVisit  extends AbstractDateDurationEntity
     private Long healthCareVisitId;
     private Facility facility;
     private Person patient;
+    private PatientType patientType;
 
     private Date scheduledTime;
     private Date startTime;
@@ -181,6 +184,40 @@ public class HealthCareVisit  extends AbstractDateDurationEntity
         this.roles = roles;
     }
 
+    @Transient
+    public void setRequestedPhysician(final Person person)
+    {
+        addRole(person, HealthCareVisitRoleType.Cache.REQ_PHYSICIAN.getEntity());
+    }
+
+    @Transient
+    public void setVisitPhysician(final Person person)
+    {
+        addRole(person, HealthCareVisitRoleType.Cache.VISIT_PHYSICIAN.getEntity());
+    }
+
+    @Transient
+    public void setAppointmentTaker(final Person person)
+    {
+        addRole(person, HealthCareVisitRoleType.Cache.APPT_TAKER.getEntity());
+    }
+
+    @Transient
+    public void setAppointmentConfirmPerson(final Person person)
+    {
+        addRole(person, HealthCareVisitRoleType.Cache.APPT_CONFIRMER.getEntity());
+    }
+
+    @Transient
+    protected void addRole(final Person person, final HealthCareVisitRoleType type)
+    {
+        final HealthCareVisitRole role = new HealthCareVisitRole();
+        role.setPerson(person);
+        role.setType(type);
+        role.setVisit(this);
+        roles.add(role);
+    }
+
     /**
      * Gets all the reasons associated with the visit
      * @return
@@ -202,6 +239,15 @@ public class HealthCareVisit  extends AbstractDateDurationEntity
         this.reasons.add(reason);
     }
 
+    @Transient
+    public void addReason(final String reason)
+    {
+        final VisitReason visitReason = new VisitReason();
+        visitReason.setDescription(reason);
+        visitReason.setVisit(this);
+        reasons.add(visitReason);
+    }
+
     /**
      * Gets all the halth care deliveries (services) performed during the visit
      * @return
@@ -215,5 +261,17 @@ public class HealthCareVisit  extends AbstractDateDurationEntity
     public void setHealthCareDeliveries(final Set<HealthCareDelivery> healthCareDeliveries)
     {
         this.healthCareDeliveries = healthCareDeliveries;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = PatientType.PK_COLUMN_NAME)
+    public PatientType getPatientType()
+    {
+        return patientType;
+    }
+
+    public void setPatientType(final PatientType patientType)
+    {
+        this.patientType = patientType;
     }
 }
