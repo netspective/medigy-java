@@ -142,13 +142,13 @@ public class BaseForm extends Form
     protected void addLabeledMultiListField(final String fieldName, final Class multiListChoices)
     {
         add(new FieldLabel(fieldName));
-        add(new ListMultipleChoice(fieldName + FIELD_CONTROL_SUFFIX, ChoicesFactory.getInstance().getMultiListChoices(multiListChoices)));
+        add(new ListMultipleChoice(fieldName + FIELD_CONTROL_SUFFIX, ChoicesFactory.getInstance().getReferenceEntityChoices(multiListChoices)));
     }
 
     protected void addLabeledMultiCheckField(final String fieldName, final Class multiCheckChoices)
     {
         add(new FieldLabel(fieldName));
-        add(new ListMultipleChoice(fieldName + FIELD_CONTROL_SUFFIX, ChoicesFactory.getInstance().getMultiCheckChoices(multiCheckChoices)));
+        add(new ListMultipleChoice(fieldName + FIELD_CONTROL_SUFFIX, ChoicesFactory.getInstance().getReferenceEntityChoices(multiCheckChoices)));
     }
 
     protected void addLabeledRadioChoiceField(final String fieldName)

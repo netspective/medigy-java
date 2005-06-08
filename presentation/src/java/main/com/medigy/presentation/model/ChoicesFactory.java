@@ -57,8 +57,6 @@ public class ChoicesFactory
     }
 
     private Map<Class, ReferenceEntityChoices> referenceEntityChoices = Collections.synchronizedMap(new HashMap<Class, ReferenceEntityChoices>());
-    private Map<Class, MultiListChoices> multiListChoices = Collections.synchronizedMap(new HashMap<Class, MultiListChoices>());
-    private Map<Class, MultiCheckChoices> multiCheckChoices = Collections.synchronizedMap(new HashMap<Class, MultiCheckChoices>());
 
     public ChoicesFactory()
     {
@@ -79,39 +77,5 @@ public class ChoicesFactory
     public Map<Class, ReferenceEntityChoices> getReferenceEntityChoices()
     {
         return referenceEntityChoices;
-    }
-
-    public MultiListChoices getMultiListChoices(final Class entity)
-    {
-        MultiListChoices result = multiListChoices.get(entity);
-        if(result == null)
-        {
-            result = new MultiListChoices(entity);
-            multiListChoices.put(entity, result);
-        }
-
-        return result;
-    }
-
-    public Map<Class, MultiListChoices> getMultiListChoices()
-    {
-        return multiListChoices;
-    }
-
-    public MultiCheckChoices getMultiCheckChoices(final Class entity)
-    {
-        MultiCheckChoices result = multiCheckChoices.get(entity);
-        if(result == null)
-        {
-            result = new MultiCheckChoices(entity);
-            multiCheckChoices.put(entity, result);
-        }
-
-        return result;
-    }
-
-    public Map<Class, MultiCheckChoices> getCheckListChoices()
-    {
-        return multiCheckChoices;
     }
 }
