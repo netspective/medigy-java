@@ -1589,7 +1589,7 @@ function SelectField_isValid(field, control)
 addFieldType("com.medigy.wicket.form.TextField", null, TextField_isValid, null, TextField_onFocus, TextField_valueChanged, null, null);
 addFieldType("com.netspective.sparx.form.field.type.SelectField", null, SelectField_isValid, null, null, SelectField_loseFocus, null, SelectField_onClick);
 addFieldType("com.medigy.wicket.form.BooleanField", null, null, null, null, null, null, BooleanField_onClick);
-addFieldType("com.netspective.sparx.form.field.type.MemoField", null, MemoField_isValid, null, null, null, MemoField_onKeyPress);
+addFieldType("com.medigy.wicket.form.MemoField", null, MemoField_isValid, null, null, null, MemoField_onKeyPress);
 addFieldType("com.netspective.sparx.form.field.type.DateTimeField", DateField_finalizeDefn, DateField_isValid, null, null, DateField_valueChanged, DateField_onKeyPress, null);
 addFieldType("com.medigy.wicket.form.IntegerField", null, IntegerField_isValid, null, null, null, IntegerField_onKeyPress, null);
 addFieldType("com.medigy.wicket.form.FloatField", null, FloatField_isValid, null, null, null, FloatField_onKeyPress, null);
