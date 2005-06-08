@@ -46,6 +46,7 @@ import com.medigy.persist.reference.custom.party.ContactMechanismPurposeType;
 import com.medigy.persist.reference.custom.party.OrganizationRoleType;
 import com.medigy.persist.reference.custom.person.EthnicityType;
 import com.medigy.persist.reference.custom.person.PersonRoleType;
+import com.medigy.persist.reference.custom.person.PatientType;
 import com.medigy.persist.reference.custom.invoice.BillRemittanceType;
 import com.medigy.persist.reference.type.GenderType;
 import com.medigy.persist.reference.type.LanguageType;
@@ -209,6 +210,18 @@ public class ReferenceEntityFacadeImpl implements ReferenceEntityFacade
             final Criteria criteria = HibernateUtil.getSession().createCriteria(FeeScheduleItemCostType.class);
             criteria.add(Restrictions.eq("code", costTypeCode));
             type = (FeeScheduleItemCostType) criteria.uniqueResult();
+        }
+        return type;
+    }
+
+    public PatientType getPatientType(final String patientTypeCode)
+    {
+        PatientType type = PatientType.Cache.getEntity(patientTypeCode);
+        if (type == null)
+        {
+            final Criteria criteria = HibernateUtil.getSession().createCriteria(PatientType.class);
+            criteria.add(Restrictions.eq("code", patientTypeCode));
+            type = (PatientType) criteria.uniqueResult();
         }
         return type;
     }

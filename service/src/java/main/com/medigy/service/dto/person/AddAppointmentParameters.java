@@ -36,47 +36,30 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.service.util;
+package com.medigy.service.dto.person;
 
-import com.medigy.persist.reference.custom.health.HealthCareLicenseType;
-import com.medigy.persist.reference.custom.insurance.InsurancePolicyType;
-import com.medigy.persist.reference.custom.insurance.InsuranceProductType;
-import com.medigy.persist.reference.custom.insurance.FeeScheduleItemCostType;
-import com.medigy.persist.reference.custom.party.ContactMechanismPurposeType;
-import com.medigy.persist.reference.custom.party.OrganizationRoleType;
-import com.medigy.persist.reference.custom.person.EthnicityType;
-import com.medigy.persist.reference.custom.person.PersonRoleType;
-import com.medigy.persist.reference.custom.person.PatientType;
-import com.medigy.persist.reference.custom.invoice.BillRemittanceType;
-import com.medigy.persist.reference.type.GenderType;
-import com.medigy.persist.reference.type.LanguageType;
-import com.medigy.persist.reference.type.MaritalStatusType;
+import com.medigy.service.dto.ServiceParameters;
 
-public interface ReferenceEntityFacade extends Facade
+import java.io.Serializable;
+import java.util.Date;
+
+public interface AddAppointmentParameters extends ServiceParameters
 {
-    public InsurancePolicyType getInsurancePolicyType(final String code);
+    public Serializable getPatientId();
 
-    public LanguageType getLanguageType(final String code);
+    public String getPatientTypeCode();
 
-    public GenderType getGenderType(final String genderCode);
+    public String[] getVisitReasons();
 
-    public EthnicityType getEthnicityType(final String ethnicityCode);
+    public String getSymptoms();
 
-    public MaritalStatusType getMaritalStatusType(String statusCode) throws UnknownReferenceTypeException;
+    public Date getAppointmentDateAndTime();
 
-    public PersonRoleType getPersonRoleType(String roleCode);
+    public Boolean checkForConflicts();
 
-    public OrganizationRoleType getOrganizationRoleType(String roleCode);
+    public Serializable getPhysicianId();
 
-    public ContactMechanismPurposeType getContactMechanismPurposeType(String purposeCode)  throws UnknownReferenceTypeException;
+    public Serializable getFacilityId();
 
-    public HealthCareLicenseType getLicenseType(final String licenseType);
-
-    public InsuranceProductType getInsuranceProductType(final String productTypeCode);
-
-    public BillRemittanceType getBillRemittanceType(final String remittanceTypeCode);
-
-    public FeeScheduleItemCostType getFeeScheduleItemCostType(final String costTypeCode);
-
-    public PatientType getPatientType(final String patientTypeCode);
+    public Serializable getAppointmentTakerId();
 }

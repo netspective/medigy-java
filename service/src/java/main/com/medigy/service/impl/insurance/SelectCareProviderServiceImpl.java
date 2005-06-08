@@ -89,7 +89,7 @@ public class SelectCareProviderServiceImpl implements SelectCareProviderService
             };
         }
 
-        InsurancePolicyRole insuredPersonRole = policy.getInsuredPersonRole(params.getPersonId());
+        InsurancePolicyRole insuredPersonRole = policy.getInsuredPersonRole(params.getPatientId());
         if (insuredPersonRole == null)
         {
             return new CareProviderSelectionData() {
@@ -106,7 +106,7 @@ public class SelectCareProviderServiceImpl implements SelectCareProviderService
                 public String getErrorMessage()
                 {
                     // TODO: This needs to be calculated based on Locale
-                    return "No insured person was found with the following ID: " + params.getPersonId();
+                    return "No insured person was found with the following ID: " + params.getPatientId();
                 }
 
             };
