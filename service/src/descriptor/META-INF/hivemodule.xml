@@ -81,6 +81,14 @@
         </invoke-factory>
     </service-point>
 
+    <service-point id="AddAppointmentTypeService" interface="com.medigy.service.health.AddAppointmentTypeService">
+        <interceptor service-id="hivemind.LoggingInterceptor"/>
+        <invoke-factory>
+            <!-- Autowires service properties based on interface! -->
+            <construct class="impl.health.AddAppointmentTypeServiceImpl"/>
+        </invoke-factory>
+    </service-point>
+
     <service-point id="RegisterHealthCareProviderService" interface="com.medigy.service.person.RegisterHealthCareProviderService">
         <interceptor service-id="hivemind.LoggingInterceptor"/>
         <invoke-factory>                                                         

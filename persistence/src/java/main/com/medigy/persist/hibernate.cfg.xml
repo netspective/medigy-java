@@ -176,6 +176,8 @@
         <mapping class="com.medigy.persist.model.health.VisitReason"/>
         <mapping class="com.medigy.persist.model.health.HealthCareLicense"/>
         <mapping class="com.medigy.persist.model.health.HealthCareReferral"/>
+        <mapping class="com.medigy.persist.model.health.VisitType"/>
+        <mapping class="com.medigy.persist.model.health.PersonVisitType"/>
 
         <!--mapping package="com.medigy.persist.model.product"/-->
         <!--mapping class="com.medigy.persist.model.product.Product"/>

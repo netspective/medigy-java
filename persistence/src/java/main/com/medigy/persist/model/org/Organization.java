@@ -49,8 +49,10 @@ import com.medigy.persist.model.insurance.InsuranceProduct;
 import com.medigy.persist.model.party.Party;
 import com.medigy.persist.model.party.Facility;
 import com.medigy.persist.model.health.HealthCareOffering;
+import com.medigy.persist.model.health.VisitType;
 import com.medigy.persist.reference.custom.insurance.InsuranceProductType;
 import com.medigy.persist.reference.custom.org.OrganizationClassificationType;
+import com.medigy.persist.reference.custom.party.FacilityType;
 import com.medigy.persist.reference.type.party.PartyType;
 
 import javax.persistence.CascadeType;
@@ -79,6 +81,7 @@ public class Organization extends Party
     private Set<Facility> facilities = new HashSet<Facility>();
 
     private Set<HealthCareOffering> healthCareOfferings = new HashSet<HealthCareOffering>();
+    private Set<VisitType> visitTypes = new HashSet<VisitType>();
 
     private String tradeName;
 
@@ -221,5 +224,36 @@ public class Organization extends Party
     public void setFacilities(final Set<Facility> facilities)
     {
         this.facilities = facilities;
+    }
+
+    @Transient
+    public void addFacility(final String facilityName, final FacilityType type)
+    {
+        final Facility facility = new Facility();
+        facility.setType(type);
+        facility.setOrganization(this);
+        facilities.add(facility);
+    }
+
+    @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL)
+    public Set<HealthCareOffering> getHealthCareOfferings()
+    {
+        return healthCareOfferings;
+    }
+
+    public void setHealthCareOfferings(final Set<HealthCareOffering> healthCareOfferings)
+    {
+        this.healthCareOfferings = healthCareOfferings;
+    }
+
+    @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL)
+    public Set<VisitType> getVisitTypes()
+    {
+        return visitTypes;
+    }
+
+    public void setVisitTypes(final Set<VisitType> visitTypes)
+    {
+        this.visitTypes = visitTypes;
     }
 }

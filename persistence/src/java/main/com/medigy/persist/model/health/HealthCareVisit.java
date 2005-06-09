@@ -58,8 +58,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * A health care visit may have been scheduled for several visit reasons: because of a health care episode
- * or because of various symptoms.
+ * A health care visit (also known as Appointment) may have been scheduled for several visit reasons: because of a
+ * health care episode or because of various symptoms.
  *
  */
 @Entity

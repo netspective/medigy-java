@@ -36,120 +36,51 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.persist.model.insurance;
+package com.medigy.persist.model.health;
 
-import com.medigy.persist.model.common.AbstractDateDurationEntity;
-import com.medigy.persist.model.org.Organization;
+import com.medigy.persist.model.common.AbstractEntity;
 import com.medigy.persist.model.person.Person;
-import com.medigy.persist.model.party.Facility;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratorType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
+import javax.persistence.GeneratorType;
+import javax.persistence.Column;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.CascadeType;
-import javax.persistence.Transient;
-import java.util.Set;
-import java.util.HashSet;
+import javax.persistence.JoinColumn;
 
 @Entity
-public class FeeSchedule extends AbstractDateDurationEntity
+public class PersonVisitType extends AbstractEntity
 {
-    public static final String PK_COLUMN_NAME = "fee_schedule_id";
+    public static final String PK_COLUMN_NAME = "person_visit_type_id";
 
-    private Long feeScheduleId;
-    private String name;
-    private Organization organization;
-    private String description;
-    private String caption;
-    private Long sequenceNumber;
-    private Float rvrbsMultiplier;
-
+    private Long personVisitTypeId;
+    private VisitType visitType;
     private Person person;
-    private Facility facility;
-
-    private Set<FeeScheduleItem> feeScheduleItems = new HashSet<FeeScheduleItem>();
 
     @Id(generate = GeneratorType.AUTO)
     @Column(name = PK_COLUMN_NAME)
-    public Long getFeeScheduleId()
+    public Long getPersonVisitTypeId()
     {
-        return feeScheduleId;
+        return personVisitTypeId;
     }
 
-    public void setFeeScheduleId(final Long feeScheduleId)
+    public void setPersonVisitTypeId(final Long personVisitTypeId)
     {
-        this.feeScheduleId = feeScheduleId;
+        this.personVisitTypeId = personVisitTypeId;
     }
 
-    @Column(length = 64, nullable = false)
-    public String getName()
+    @ManyToOne
+    @JoinColumn(name = VisitType.PK_COLUMN_NAME)
+    public VisitType getVisitType()
     {
-        return name;
+        return visitType;
     }
 
-    public void setName(final String name)
+    public void setVisitType(final VisitType visitType)
     {
-        this.name = name;
+        this.visitType = visitType;
     }
 
-    public Organization getOrganization()
-    {
-        return organization;
-    }
-
-    public void setOrganization(final Organization organization)
-    {
-        this.organization = organization;
-    }
-
-    public String getDescription()
-    {
-        return description;
-    }
-
-    public void setDescription(final String description)
-    {
-        this.description = description;
-    }
-
-    public String getCaption()
-    {
-        return caption;
-    }
-
-    public void setCaption(final String caption)
-    {
-        this.caption = caption;
-    }
-
-    public Long getSequenceNumber()
-    {
-        return sequenceNumber;
-    }
-
-    public void setSequenceNumber(final Long sequenceNumber)
-    {
-        this.sequenceNumber = sequenceNumber;
-    }
-
-    public Float getRvrbsMultiplier()
-    {
-        return rvrbsMultiplier;
-    }
-
-    public void setRvrbsMultiplier(final Float rvrbsMultiplier)
-    {
-        this.rvrbsMultiplier = rvrbsMultiplier;
-    }
-
-    /**
-     * Gets the physician associated with this fee schedule
-     * @return
-     */
     @ManyToOne
     @JoinColumn(name = Person.PK_COLUMN_NAME)
     public Person getPerson()
@@ -161,35 +92,4 @@ public class FeeSchedule extends AbstractDateDurationEntity
     {
         this.person = person;
     }
-
-    @ManyToOne
-    @JoinColumn(name = Facility.PK_COLUMN_NAME)
-    public Facility getFacility()
-    {
-        return facility;
-    }
-
-    public void setFacility(final Facility facility)
-    {
-        this.facility = facility;
-    }
-
-    @OneToMany(mappedBy = "feeSchedule", cascade = CascadeType.ALL)
-    public Set<FeeScheduleItem> getFeeScheduleItems()
-    {
-        return feeScheduleItems;
-    }
-
-    public void setFeeScheduleItems(final Set<FeeScheduleItem> feeScheduleItems)
-    {
-        this.feeScheduleItems = feeScheduleItems;
-    }
-
-    @Transient
-    public void addFeeScheduleItem(final FeeScheduleItem item)
-    {
-        item.setFeeSchedule(this);
-        this.feeScheduleItems.add(item);
-    }
-
 }
