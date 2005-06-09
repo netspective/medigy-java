@@ -39,10 +39,11 @@
 package com.medigy.persist.model.insurance;
 
 import com.medigy.persist.model.common.AbstractDateDurationEntity;
-import com.medigy.persist.model.org.Organization;
-import com.medigy.persist.model.person.Person;
+import com.medigy.persist.model.health.VisitType;
 import com.medigy.persist.model.party.Facility;
+import com.medigy.persist.model.person.Person;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
@@ -50,10 +51,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.CascadeType;
 import javax.persistence.Transient;
-import java.util.Set;
 import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class FeeSchedule extends AbstractDateDurationEntity
@@ -62,7 +62,6 @@ public class FeeSchedule extends AbstractDateDurationEntity
 
     private Long feeScheduleId;
     private String name;
-    private Organization organization;
     private String description;
     private String caption;
     private Long sequenceNumber;
@@ -72,6 +71,7 @@ public class FeeSchedule extends AbstractDateDurationEntity
     private Facility facility;
 
     private Set<FeeScheduleItem> feeScheduleItems = new HashSet<FeeScheduleItem>();
+    private Set<VisitType> visitTypes = new HashSet<VisitType>();
 
     @Id(generate = GeneratorType.AUTO)
     @Column(name = PK_COLUMN_NAME)
@@ -96,16 +96,7 @@ public class FeeSchedule extends AbstractDateDurationEntity
         this.name = name;
     }
 
-    public Organization getOrganization()
-    {
-        return organization;
-    }
-
-    public void setOrganization(final Organization organization)
-    {
-        this.organization = organization;
-    }
-
+    @Column(length = 128)
     public String getDescription()
     {
         return description;
@@ -116,6 +107,7 @@ public class FeeSchedule extends AbstractDateDurationEntity
         this.description = description;
     }
 
+    @Column(length =128)
     public String getCaption()
     {
         return caption;
@@ -190,6 +182,17 @@ public class FeeSchedule extends AbstractDateDurationEntity
     {
         item.setFeeSchedule(this);
         this.feeScheduleItems.add(item);
+    }
+
+    @OneToMany(mappedBy = "feeSchedule", cascade = CascadeType.ALL)
+    public Set<VisitType> getVisitTypes()
+    {
+        return visitTypes;
+    }
+
+    public void setVisitTypes(final Set<VisitType> visitTypes)
+    {
+        this.visitTypes = visitTypes;
     }
 
 }

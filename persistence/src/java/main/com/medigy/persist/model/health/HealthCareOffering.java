@@ -38,8 +38,9 @@
  */
 package com.medigy.persist.model.health;
 
-import java.util.HashSet;
-import java.util.Set;
+import com.medigy.persist.model.common.AbstractTopLevelEntity;
+import com.medigy.persist.model.org.Organization;
+import com.medigy.persist.reference.custom.health.HealthCareOfferingType;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -48,9 +49,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-
-import com.medigy.persist.model.common.AbstractTopLevelEntity;
-import com.medigy.persist.reference.custom.health.HealthCareOfferingType;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class HealthCareOffering extends AbstractTopLevelEntity
@@ -60,6 +60,7 @@ public class HealthCareOffering extends AbstractTopLevelEntity
     private String name;
     private Set<HealthCareDelivery> healthCareDeliveries = new HashSet<HealthCareDelivery>();
     private HealthCareOfferingType type;
+    private Organization organization;
 
     /*
     @EmbeddedId({
@@ -120,5 +121,17 @@ public class HealthCareOffering extends AbstractTopLevelEntity
     public void setType(HealthCareOfferingType type)
     {
         this.type = type;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = Organization.PK_COLUMN_NAME)
+    public Organization getOrganization()
+    {
+        return organization;
+    }
+
+    public void setOrganization(final Organization organization)
+    {
+        this.organization = organization;
     }
 }

@@ -66,7 +66,7 @@ public class VisitType extends AbstractTopLevelEntity
     public static final String PK_COLUMN_NAME = "visit_type_id";
 
     private Long visitTypeId;
-    private Long parentVisitTypeId;
+    private VisitType parentVisitType;
     private String caption;
     private Long duration;
     private Long lagTime;
@@ -82,6 +82,7 @@ public class VisitType extends AbstractTopLevelEntity
     private Long appointmentWidth;
 
     private Set<PersonVisitType> personVisitTypes = new HashSet<PersonVisitType>();
+    private Set<VisitType> childVisitTypes = new HashSet<VisitType>();
 
     @Id(generate = GeneratorType.AUTO)
     @Column(name = PK_COLUMN_NAME)
@@ -93,18 +94,6 @@ public class VisitType extends AbstractTopLevelEntity
     public void setVisitTypeId(final Long visitTypeId)
     {
         this.visitTypeId = visitTypeId;
-    }
-
-    @ManyToOne
-    @JoinColumn(name = "parent_visit_type_id", referencedColumnName = PK_COLUMN_NAME)
-    public Long getParentVisitTypeId()
-    {
-        return parentVisitTypeId;
-    }
-
-    public void setParentVisitTypeId(final Long parentVisitTypeId)
-    {
-        this.parentVisitTypeId = parentVisitTypeId;
     }
 
     @Column(nullable = false, length = 128)
@@ -223,6 +212,8 @@ public class VisitType extends AbstractTopLevelEntity
         this.organization = organization;
     }
 
+    @ManyToOne
+    @JoinColumn(name = FeeSchedule.PK_COLUMN_NAME)
     public FeeSchedule getFeeSchedule()
     {
         return feeSchedule;
@@ -266,6 +257,29 @@ public class VisitType extends AbstractTopLevelEntity
         pvt.setPerson(person);
         pvt.setVisitType(this);
         this.personVisitTypes.add(pvt);
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "parent_visit_type_id", referencedColumnName = VisitType.PK_COLUMN_NAME)
+    public VisitType getParentVisitType()
+    {
+        return parentVisitType;
+    }
+
+    public void setParentVisitType(final VisitType parentVisitType)
+    {
+        this.parentVisitType = parentVisitType;
+    }
+
+    @OneToMany(mappedBy = "parentVisitType", cascade = CascadeType.ALL)
+    public Set<VisitType> getChildVisitTypes()
+    {
+        return childVisitTypes;
+    }
+
+    public void setChildVisitTypes(final Set<VisitType> childVisitTypes)
+    {
+        this.childVisitTypes = childVisitTypes;
     }
 
 }
