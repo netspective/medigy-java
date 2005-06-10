@@ -52,8 +52,8 @@ import com.medigy.persist.reference.type.GenderType;
 import com.medigy.persist.reference.type.LanguageType;
 import com.medigy.persist.util.HibernateUtil;
 
-import java.util.Date;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Set;
 
 public class TestInsurance extends TestCase
@@ -85,7 +85,6 @@ public class TestInsurance extends TestCase
 
         blueCross.getInsuranceProducts().add(ppoProduct);
         HibernateUtil.getSession().save(blueCross);
-        HibernateUtil.closeSession();
 
         final Organization carrier = (Organization) HibernateUtil.getSession().load(Organization.class, blueCross.getOrgId());
         final Set<InsuranceProduct> insuranceProducts = carrier.getInsuranceProducts();
@@ -117,7 +116,6 @@ public class TestInsurance extends TestCase
         patient.addGender(GenderType.Cache.FEMALE.getEntity());
         patient.addLanguage(LanguageType.Cache.ENGLISH.getEntity());
 
-
         final PartyRole childRole = new PartyRole();
         childRole.setType(PersonRoleType.Cache.PARENT.getEntity());
         childRole.setParty(patient);
@@ -125,7 +123,6 @@ public class TestInsurance extends TestCase
 
         HibernateUtil.getSession().save(patient);
         HibernateUtil.getSession().save(johnDoe);
-        HibernateUtil.getSession().flush();
 
         final PartyRelationship relationship = new PartyRelationship();
         relationship.setPartyRoleFrom(childRole);
@@ -134,6 +131,7 @@ public class TestInsurance extends TestCase
         relationship.setType(PartyRelationshipType.Cache.FAMILY.getEntity());
         HibernateUtil.getSession().save(relationship);
 
+        HibernateUtil.beginTransaction();
         InsurancePolicy johnDoePolicy = new InsurancePolicy();
         johnDoePolicy.setInsurancePlan(plan1);
         johnDoePolicy.setInsuredPerson(johnDoe);
@@ -143,6 +141,7 @@ public class TestInsurance extends TestCase
         johnDoePolicy.setFromDate(new Date());
         johnDoePolicy.setType(InsurancePolicyType.Cache.INDIVIDUAL_INSURANCE_POLICY.getEntity());
         johnDoe.addInsurancePolicy(johnDoePolicy);
+        johnDoe.addResponsibleInsurancePolicy(johnDoePolicy);
 
         InsurancePolicy patientPolicy = new InsurancePolicy();
         patientPolicy.setInsurancePlan(plan1);
@@ -153,10 +152,11 @@ public class TestInsurance extends TestCase
         patientPolicy.setFromDate(new Date());
         patientPolicy.setType(InsurancePolicyType.Cache.INDIVIDUAL_INSURANCE_POLICY.getEntity());
         patient.addInsurancePolicy(patientPolicy);
+        johnDoe.addResponsibleInsurancePolicy(patientPolicy);
 
         HibernateUtil.getSession().save(johnDoePolicy);
         HibernateUtil.getSession().save(patientPolicy);
-        HibernateUtil.closeSession();
+        HibernateUtil.commitTransaction();
 
         final Person mainPerson = (Person) HibernateUtil.getSession().load(Person.class, johnDoe.getPartyId());
         final Set<InsurancePolicy> mainPersonInsurancePolicies = mainPerson.getInsurancePolicies();
