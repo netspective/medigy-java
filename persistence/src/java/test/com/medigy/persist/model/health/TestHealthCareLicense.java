@@ -48,15 +48,19 @@ import com.medigy.persist.reference.type.LanguageType;
 import com.medigy.persist.util.HibernateUtil;
 
 import java.util.Calendar;
+import java.util.Set;
 
-public class TestHealthCareLicense  extends TestCase
+public class TestHealthCareLicense extends TestCase
 {
     public void testHealthCareLicense()
     {
-        HibernateUtil.beginTransaction();
+        final Person doctor = new Person();
+        final HealthCareLicense license = new HealthCareLicense();
+        final HealthCareLicense license2 = new HealthCareLicense();
+
         Calendar cal = Calendar.getInstance();
         cal.set(1965, 1, 1);
-        final Person doctor = new Person();
+
         doctor.setLastName("Bond");
         doctor.setFirstName("James");
         doctor.setBirthDate(cal.getTime());
@@ -72,7 +76,7 @@ public class TestHealthCareLicense  extends TestCase
         HibernateUtil.getSession().save(doctor);
 
         final Calendar calendar = Calendar.getInstance();
-        final HealthCareLicense license = new HealthCareLicense();
+
         license.setType(HealthCareLicenseType.Cache.BOARD_CERTIFICATION.getEntity());
         license.setLicenseNumber("007");
 
@@ -82,18 +86,16 @@ public class TestHealthCareLicense  extends TestCase
         doctor.addLicense(license);
 
         calendar.set(2000, 5, 1);
-        final HealthCareLicense license2 = new HealthCareLicense();
         license2.setType(HealthCareLicenseType.Cache.OTHER.getEntity());
         license2.setDescription("Voodoo License");
         license2.setLicenseNumber("XXX");
         license2.setThroughDate(calendar.getTime());
         doctor.addLicense(license2);
 
-        HibernateUtil.getSession().flush();
-        HibernateUtil.commitTransaction();
-        HibernateUtil.closeSession();
-        final Person savedDoctor = (Person) HibernateUtil.getSession().load(Person.class, doctor.getPartyId());
-        assertThat(savedDoctor.getLicenses().size(), eq(2));
+        final Person savedDoctor = (Person) getSession().load(Person.class, doctor.getPartyId());
+        assertThat(savedDoctor, NOT_NULL);
+        final Set<HealthCareLicense> licenses = savedDoctor.getLicenses();
+        assertThat(licenses.size(), eq(2));
         final HealthCareLicense newLicense = savedDoctor.getLicense(HealthCareLicenseType.Cache.BOARD_CERTIFICATION.getEntity());
         assertThat(newLicense.getLicenseId(), eq(license.getLicenseId()));
         assertThat(newLicense.getState().getStateName(), eq("Virginia"));
