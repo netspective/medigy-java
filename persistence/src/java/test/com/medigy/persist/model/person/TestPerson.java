@@ -71,16 +71,18 @@ public class TestPerson extends TestCase
         invalidPerson.setBirthDate(calendar.getTime());
         try
         {
-            HibernateUtil.getSession().save(invalidPerson);
+            getSession().save(invalidPerson);
         }
         catch (InvalidStateException e)
         {
             final InvalidValue[] invalidValues = e.getInvalidValues();
             assertThat(invalidValues.length, eq(2));
             assertThat(invalidValues[0].getPropertyName(), eq("birthDate"));
-            assertThat(invalidValues[1].getPropertyName(),  eq("genders"));            
+            assertThat(invalidValues[1].getPropertyName(),  eq("genders"));
+            getSession().clear();
         }
-        HibernateUtil.closeSession();
+
+        HibernateUtil.beginTransaction();
 
         Calendar cal = Calendar.getInstance();
         cal.set(1975, 1, 1);
@@ -104,10 +106,11 @@ public class TestPerson extends TestCase
         newPerson.addLanguage(LanguageType.Cache.SPANISH.getEntity(), false);
         newPerson.setSsn("000-00-0000");
 
-        HibernateUtil.getSession().save(newPerson);
-        HibernateUtil.closeSession();
+        getSession().save(newPerson);
+        HibernateUtil.commitTransaction();
 
-        final Person persistedPerson = (Person) HibernateUtil.getSession().load(Person.class, newPerson.getPersonId());
+        final Person persistedPerson = (Person) getSession().load(Person.class, newPerson.getPersonId());
+        assertThat(persistedPerson, NOT_NULL);
         assertThat(persistedPerson.getFirstName(), eq("Ryan"));
         assertThat(persistedPerson.getMiddleName(), eq("Bluegrass"));
         assertThat(persistedPerson.getLastName(), eq("Hackett"));
