@@ -54,6 +54,7 @@ import com.medigy.persist.util.HibernateUtil;
 
 import java.util.Date;
 import java.util.Calendar;
+import java.util.Set;
 
 public class TestInsurance extends TestCase
 {
@@ -87,7 +88,8 @@ public class TestInsurance extends TestCase
         HibernateUtil.closeSession();
 
         final Organization carrier = (Organization) HibernateUtil.getSession().load(Organization.class, blueCross.getOrgId());
-        assertThat(carrier.getInsuranceProducts().size(), eq(1));
+        final Set<InsuranceProduct> insuranceProducts = carrier.getInsuranceProducts();
+        assertThat(insuranceProducts.size(), eq(1));
         final InsuranceProduct product = (InsuranceProduct) carrier.getInsuranceProducts().toArray()[0];
         assertThat(product.getInsurancePlans().size(), eq(2));
         assertThat(product.getInsurancePlan("Super Plan 1").getName(), eq("Super Plan 1"));
@@ -157,10 +159,12 @@ public class TestInsurance extends TestCase
         HibernateUtil.closeSession();
 
         final Person mainPerson = (Person) HibernateUtil.getSession().load(Person.class, johnDoe.getPartyId());
-        assertThat(mainPerson.getInsurancePolicies().size(), eq(1));
-        assertThat(mainPerson.getResponsibleInsurancePolicies().size(), eq(2));
+        final Set<InsurancePolicy> mainPersonInsurancePolicies = mainPerson.getInsurancePolicies();
+        assertThat(mainPersonInsurancePolicies.size(), eq(1));
+        final Set<InsurancePolicy> mainPersonResponsibleInsurancePolicies = mainPerson.getResponsibleInsurancePolicies();
+        assertThat(mainPersonResponsibleInsurancePolicies.size(), eq(2));
 
-        final InsurancePolicy jdPolicy = (InsurancePolicy) mainPerson.getInsurancePolicies().toArray()[0];
+        final InsurancePolicy jdPolicy = (InsurancePolicy) mainPersonInsurancePolicies.toArray()[0];
         assertThat(jdPolicy.getInsuredPerson().getPersonId(), eq(johnDoe.getPersonId()));
         assertThat(jdPolicy.getContractHolderPerson().getPersonId(), eq(johnDoe.getPersonId()));
         assertThat(jdPolicy.getPolicyNumber(), eq("12345"));
@@ -172,10 +176,12 @@ public class TestInsurance extends TestCase
         assertThat(jdPolicy.getInsurancePlan().getInsuranceProduct().getType(), eq(InsuranceProductType.Cache.MEDICAID.getEntity()));
 
         final Person secondPerson = (Person) HibernateUtil.getSession().load(Person.class, patient.getPartyId());
-        assertThat(secondPerson.getInsurancePolicies().size(), eq(1));
-        assertThat(secondPerson.getResponsibleInsurancePolicies().size(), eq(0));
+        final Set<InsurancePolicy> insurancePolicies = secondPerson.getInsurancePolicies();
+        assertThat(insurancePolicies.size(), eq(1));
+        final Set<InsurancePolicy> responsibleInsurancePolicies = secondPerson.getResponsibleInsurancePolicies();
+        assertThat(responsibleInsurancePolicies.size(), eq(0));
 
-        final InsurancePolicy secondPolicy = (InsurancePolicy) secondPerson.getInsurancePolicies().toArray()[0];
+        final InsurancePolicy secondPolicy = (InsurancePolicy) insurancePolicies.toArray()[0];
         assertThat(secondPolicy.getInsuredPerson().getPersonId(), eq(patient.getPersonId()));
         assertThat(secondPolicy.getContractHolderPerson().getPersonId(), eq(johnDoe.getPersonId()));
         assertThat(secondPolicy.getPolicyNumber(), eq("12345-1"));
