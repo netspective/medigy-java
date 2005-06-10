@@ -53,6 +53,7 @@ public class TestHealthCareLicense  extends TestCase
 {
     public void testHealthCareLicense()
     {
+        HibernateUtil.beginTransaction();
         Calendar cal = Calendar.getInstance();
         cal.set(1965, 1, 1);
         final Person doctor = new Person();
@@ -89,6 +90,7 @@ public class TestHealthCareLicense  extends TestCase
         doctor.addLicense(license2);
 
         HibernateUtil.getSession().flush();
+        HibernateUtil.commitTransaction();
         HibernateUtil.closeSession();
         final Person savedDoctor = (Person) HibernateUtil.getSession().load(Person.class, doctor.getPartyId());
         assertThat(savedDoctor.getLicenses().size(), eq(2));
