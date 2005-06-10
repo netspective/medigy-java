@@ -44,8 +44,8 @@
 package com.medigy.persist;
 
 import com.medigy.persist.model.session.ProcessSession;
-import com.medigy.persist.model.session.Session;
 import com.medigy.persist.model.session.SessionManager;
+import com.medigy.persist.model.session.Session;
 import com.medigy.persist.util.HibernateConfiguration;
 import com.medigy.persist.util.HibernateUtil;
 import com.medigy.persist.util.ModelInitializer;
@@ -362,4 +362,13 @@ public abstract class TestCase extends MockObjectTestCase
         IDataSet fullDataSet = connection.createDataSet();
         FlatXmlDataSet.write(fullDataSet, new FileOutputStream(datasetFileName));
    }
+
+    /**
+     * Gets the hibernate session
+     * @return
+     */
+    protected org.hibernate.Session getSession()
+    {
+        return HibernateUtil.getSession();
+    }
 }
