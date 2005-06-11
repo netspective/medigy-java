@@ -78,22 +78,25 @@ public class TestAddContactMechanismService extends TestCase
     protected void setUp() throws Exception
     {
         super.setUp();
+        HibernateUtil.beginTransaction();
         Country country = new Country("United States of America",  "USA");
         State state = new State("Virginia", "VA");
         country.addState(state);
-        HibernateUtil.getSession().save(country);
+        getSession().save(country);
+        HibernateUtil.commitTransaction();
     }
 
     public void testAddPostalAddress() throws Exception
     {
         // the dataset inserted this person
+        HibernateUtil.beginTransaction();
         final Person p = new Person();
         p.setLastName("Hackett");
         p.setFirstName("Ryan");
         p.addGender(GenderType.Cache.MALE.getEntity());
         p.setBirthDate(new Date(123456));
 
-        HibernateUtil.getSession().save(p);
+        getSession().save(p);
 
         AddContactMechanismService service =  (AddContactMechanismService) getRegistry().getService(AddContactMechanismService.class);
         final NewPostalAddress address = service.addPostalAddress(new AddPostalAddressParameters() {
@@ -169,6 +172,8 @@ public class TestAddContactMechanismService extends TestCase
                 }
 
             });
+        HibernateUtil.commitTransaction();
+        
         // first check the relationship table between the actual contact mechanism and the party
         Criteria criteria = HibernateUtil.getSession().createCriteria(PartyContactMechanism.class);
         criteria.createCriteria("party").add(Restrictions.eq("partyId", p.getPartyId()));

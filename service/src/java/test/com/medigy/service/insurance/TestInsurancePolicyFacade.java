@@ -63,14 +63,15 @@ public class TestInsurancePolicyFacade extends TestCase
 
     public void testListInsuranceProducts()
     {
+        HibernateUtil.beginTransaction();
         Organization blueCross = new Organization();
         blueCross.setOrganizationName("Blue Cross");
         InsuranceProduct insProduct = new InsuranceProduct();
         insProduct.setOrganization(blueCross);
         insProduct.setType(InsuranceProductType.Cache.PPO.getEntity());
         blueCross.addInsuranceProduct(insProduct);
-        HibernateUtil.getSession().save(blueCross);
-
+        getSession().save(blueCross);
+        HibernateUtil.commitTransaction();
 
         final InsurancePolicyFacade facade = new InsurancePolicyFacadeImpl();
         List<InsuranceProduct> productList = facade.listInsuranceProducts(blueCross);

@@ -72,6 +72,7 @@ public class TestAddInsuranceCoverageService extends TestCase
 
     public void testAddInsuranceCoverageService()
     {
+        HibernateUtil.beginTransaction();
         Calendar cal = Calendar.getInstance();
         cal.set(1970, 1, 1);
         final Person patient = Person.createNewPatient();
@@ -126,7 +127,7 @@ public class TestAddInsuranceCoverageService extends TestCase
 
         HibernateUtil.getSession().save(planRel);
         HibernateUtil.getSession().save(famDeductRel);
-        HibernateUtil.closeSession();
+
 
         final AddInsuranceCoverageService service = (AddInsuranceCoverageService) getRegistry().getService(AddInsuranceCoverageService.class);
 
@@ -227,6 +228,7 @@ public class TestAddInsuranceCoverageService extends TestCase
         };
 
         final NewInsuranceCoverageData newInsuranceCoverageData = service.add(params);
+        HibernateUtil.commitTransaction();
         assertThat(newInsuranceCoverageData.getErrorMessage(), NULL);
 
 

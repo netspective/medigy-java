@@ -215,10 +215,8 @@ public class TestRegisterHealthCareProviderService extends TestCase
         });
         assertThat(newProvider.getErrorMessage(), NULL);
         HibernateUtil.commitTransaction();
-        HibernateUtil.closeSession();
 
-
-        final Person person = (Person) HibernateUtil.getSession().load(Person.class, newProvider.getRegisteredProviderId());
+        final Person person = (Person) getSession().load(Person.class, newProvider.getRegisteredProviderId());
         assertThat(person, NOT_NULL);
         assertThat(person.getLastName(), eq("Bond"));
         assertThat(person.getFirstName(), eq("James"));
