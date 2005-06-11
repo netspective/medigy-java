@@ -62,27 +62,29 @@ public class TestOrganization  extends TestCase
      */
     public void testOrganization()
     {
+        HibernateUtil.beginTransaction();
         Organization org = new Organization();
         org.setOrganizationName("Netspective");
         HibernateUtil.getSession().save(org);
-        HibernateUtil.closeSession();
-        
+        HibernateUtil.commitTransaction();
+
         // check to make sure the org was saved successfully
-        Organization netspective = (Organization) HibernateUtil.getSession().load(Organization.class, org.getOrgId());
+        Organization netspective = (Organization) getSession().load(Organization.class, org.getOrgId());
         assertNotNull(netspective);
         assertEquals(org.getOrgId(), netspective.getOrgId());
         // make sure there is a PARTY entry also
-        Party netspectiveParty = (Party) HibernateUtil.getSession().load(Party.class, org.getOrgId());
+        Party netspectiveParty = (Party) getSession().load(Party.class, org.getOrgId());
         assertNotNull(netspectiveParty);
         assertEquals("Netspective", netspective.getOrganizationName());
         assertEquals(org.getOrgId(), netspectiveParty.getPartyId());
         assertEquals(PartyType.Cache.ORGANIZATION.getEntity(), netspectiveParty.getPartyType());
         
         // update the org
+        HibernateUtil.beginTransaction();
         netspective.setOrganizationName("Acme");
-        HibernateUtil.getSession().flush();
+        HibernateUtil.commitTransaction();
         
-        Organization acme = (Organization) HibernateUtil.getSession().load(Organization.class, netspective.getOrgId());
+        Organization acme = (Organization) getSession().load(Organization.class, netspective.getOrgId());
         assertEquals("Acme", acme.getOrganizationName());
     }
 }
