@@ -45,6 +45,7 @@ import com.medigy.persist.reference.custom.GeographicBoundaryType;
 import com.medigy.persist.util.HibernateUtil;
 
 import java.util.List;
+import java.util.Set;
 
 public class TestGeographicBoundary extends TestCase
 {
@@ -71,6 +72,7 @@ public class TestGeographicBoundary extends TestCase
      */
     public void testPostalAddress() throws Exception
     {
+        HibernateUtil.beginTransaction();
         final PostalAddress address = new PostalAddress();
         address.setAddress1("123 Acme Street");
         address.setAddress2("Suite 100");
@@ -87,14 +89,14 @@ public class TestGeographicBoundary extends TestCase
         final County county = new County();
         county.setCountyName("Fairfax County");
         virginia.addCounty(county);
-        
+
         address.setCountry(country);
         address.setState(virginia);
         address.setCounty(county);
 
         HibernateUtil.getSession().save(country);
         HibernateUtil.getSession().save(address);
-        HibernateUtil.closeSession();
+        HibernateUtil.commitTransaction();
 
         final PostalAddress newAddress = (PostalAddress) HibernateUtil.getSession().load(PostalAddress.class, address.getPostalAddressId());
         assertThat(newAddress.getState(), eq(virginia));
@@ -103,11 +105,8 @@ public class TestGeographicBoundary extends TestCase
         assertThat(newAddress.getProvince(), NULL);
 
         assertThat(HibernateUtil.getSession().createCriteria(PostalAddressBoundary.class).list().size(), eq(3));
-
-        
         final List countrList = HibernateUtil.getSession().createCriteria(Country.class).list();
-        assertEquals(1, countrList.size());
-
+        assertThat(countrList.size(), eq(1));
     }
 
     /**
@@ -115,7 +114,7 @@ public class TestGeographicBoundary extends TestCase
      */
     public void testCity()
     {
-        HibernateUtil.getSession().beginTransaction();
+        HibernateUtil.beginTransaction();
         final Country country = new Country();
         country.setCountryName("United States of America");
         country.setCountryAbbreviation("USA");
@@ -159,39 +158,34 @@ public class TestGeographicBoundary extends TestCase
         code.setParentState(stateA);
         stateA.addPostalCode(code);
 
-        HibernateUtil.getSession().flush();
         HibernateUtil.commitTransaction();
-        HibernateUtil.closeSession();
-
-        //List geoList = HibernateUtil.getSession().createCriteria(GeographicBoundary.class).list();
-        //assertEquals(8, geoList.size());
-
         List countryList = HibernateUtil.getSession().createCriteria(Country.class).list();
         assertEquals(2, countryList.size());
 
         final Country usa = (Country) HibernateUtil.getSession().load(Country.class, country.getCountryId());
-        assertEquals("United States of America", usa.getCountryName());
-        assertEquals("USA", usa.getCountryAbbreviation());
-        assertEquals(2, usa.getStates().size());
-        assertTrue(usa.hasState(stateA));
-        assertTrue(usa.hasState(stateB));
+        assertThat(usa.getCountryName(), eq("United States of America"));
+        assertThat(usa.getCountryAbbreviation(), eq("USA"));
+        assertThat(usa.getStates().size(), eq(2));
+        assertThat(usa.hasState(stateA), eq(true));
+        assertThat(usa.hasState(stateB), eq(true));
         assertEquals(usa.getStateByName("Virginia"), stateA);
         assertEquals(usa.getStateByName("Maryland"), stateB);
 
         final Country canada = (Country) HibernateUtil.getSession().load(Country.class, countryB.getCountryId());
-        assertEquals("Canada", canada.getCountryName());
-        assertEquals("CAN", canada.getCountryAbbreviation());
-        assertEquals(1, canada.getProvinces().size());
+        assertThat(canada.getCountryName(), eq("Canada"));
+        assertThat(canada.getCountryAbbreviation(), eq("CAN"));
+        assertThat(canada.getProvinces().size(), eq(1));
         assertThat(canada.hasProvince(province), eq(true));
 
+        HibernateUtil.beginTransaction();
         final State ohio = new State("Ohio", "OH");
         ohio.setParentCountry(usa);
         usa.addState(ohio);
-        HibernateUtil.getSession().flush();
-        HibernateUtil.closeSession();
+        HibernateUtil.commitTransaction();
 
         final Country updatedUsa = (Country) HibernateUtil.getSession().load(Country.class, usa.getCountryId());
-        assertEquals(3, updatedUsa.getStates().size());
+        final Set<State> states = updatedUsa.getStates();
+        assertThat(states.size(), eq(3));
         assertEquals(updatedUsa.getStateByName("Ohio"), ohio);
 
     }
