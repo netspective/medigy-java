@@ -44,8 +44,8 @@
 package com.medigy.persist;
 
 import com.medigy.persist.model.session.ProcessSession;
-import com.medigy.persist.model.session.SessionManager;
 import com.medigy.persist.model.session.Session;
+import com.medigy.persist.model.session.SessionManager;
 import com.medigy.persist.util.HibernateConfiguration;
 import com.medigy.persist.util.HibernateUtil;
 import com.medigy.persist.util.ModelInitializer;
@@ -62,8 +62,6 @@ import org.dbunit.operation.DatabaseOperation;
 import org.hibernate.HibernateException;
 import org.hibernate.cfg.Environment;
 import org.hibernate.dialect.HSQLDialect;
-import org.hibernate.dialect.MySQLDialect;
-import org.hibernate.dialect.OracleDialect;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
 import org.jmock.MockObjectTestCase;
 import org.jmock.core.Constraint;
@@ -83,13 +81,13 @@ public abstract class TestCase extends MockObjectTestCase
     private static final Log log = LogFactory.getLog(TestCase.class);
 
     public static final String BUILD_PROPERTY_PREFIX = "ant.build.";
-    public static final String TEST_DB_PROPERTY = BUILD_PROPERTY_PREFIX + "module.test.database";
-    public static final String TEST_DB_URL_PROPERTY = TEST_DB_PROPERTY + ".url";
-    public static final String TEST_DB_USER_PROPERTY = TEST_DB_PROPERTY + ".user";
-    public static final String TEST_DB_PASSWD_PROPERTY = TEST_DB_PROPERTY + ".password";
 
-    public static final String MYSQL_TEST_DB = "mysql";
-    public static final String ORACLE_TEST_DB = "oracle";
+    public static final String TEST_DB_PROPERTY_PREFIX = "module.test.database";
+    public static final String TEST_DB_DIALECT_PROPERTY = TEST_DB_PROPERTY_PREFIX + ".dialectClass";
+    public static final String TEST_DB_DRIVER_PROPERTY = TEST_DB_PROPERTY_PREFIX + ".driverClass";
+    public static final String TEST_DB_URL_PROPERTY = TEST_DB_PROPERTY_PREFIX + ".url";
+    public static final String TEST_DB_USER_PROPERTY = TEST_DB_PROPERTY_PREFIX + ".user";
+    public static final String TEST_DB_PASSWD_PROPERTY = TEST_DB_PROPERTY_PREFIX + ".password";
 
     protected File databaseDirectory;
     protected boolean useExternalModelData = false;
@@ -112,16 +110,19 @@ public abstract class TestCase extends MockObjectTestCase
         return classNameDelimPos != -1 ? pkgAndClassName.substring(classNameDelimPos + 1) : pkgAndClassName;
     }
 
-    protected Properties setupOracle(final String url, final String userName, final String password)
+    protected Properties setupDatabaseProperties(final String dialectClassName,
+                                                 final String jdbcDriverClassName,
+                                                 final String url, final String userName,
+                                                 final String password)
     {
         final Properties hibProperties = new Properties();
-        hibProperties.setProperty(Environment.DIALECT, OracleDialect.class.getName());
-        hibProperties.setProperty(Environment.CONNECTION_PREFIX + ".driver_class", "oracle.jdbc.driver.OracleDriver");
+        hibProperties.setProperty(Environment.DIALECT, dialectClassName);
+        hibProperties.setProperty(Environment.CONNECTION_PREFIX + ".driver_class", jdbcDriverClassName);
         hibProperties.setProperty(Environment.CONNECTION_PREFIX + ".url", url);
         hibProperties.setProperty(Environment.CONNECTION_PREFIX + ".username", userName);
         hibProperties.setProperty(Environment.CONNECTION_PREFIX + ".password", password);
         hibProperties.setProperty(Environment.HBM2DDL_AUTO, "create-drop");
-        hibProperties.setProperty(Environment.SHOW_SQL, "true");
+        hibProperties.setProperty(Environment.SHOW_SQL, "false");
         return hibProperties;
     }
 
@@ -138,19 +139,6 @@ public abstract class TestCase extends MockObjectTestCase
         return hibProperties;
     }
 
-    protected Properties setupMysql(final String url, final String userName, final String password)
-    {
-        final Properties hibProperties = new Properties();
-        hibProperties.setProperty(Environment.DIALECT, MySQLDialect.class.getName());
-        hibProperties.setProperty(Environment.CONNECTION_PREFIX + ".driver_class", "com.mysql.jdbc.Driver");
-        hibProperties.setProperty(Environment.CONNECTION_PREFIX + ".url", url);
-        hibProperties.setProperty(Environment.CONNECTION_PREFIX + ".username", userName);
-        hibProperties.setProperty(Environment.CONNECTION_PREFIX + ".password", password);
-        hibProperties.setProperty(Environment.HBM2DDL_AUTO, "create-drop");
-        hibProperties.setProperty(Environment.SHOW_SQL, "true");
-        return hibProperties;
-    }
-
     protected HibernateConfiguration getHibernateConfiguration() throws HibernateException, FileNotFoundException, IOException
     {
         final ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -163,17 +151,23 @@ public abstract class TestCase extends MockObjectTestCase
 
         setupDatabaseDirectory();
         final HibernateConfiguration config = new HibernateConfiguration();
-        final String databaseType = System.getProperty(TEST_DB_PROPERTY);
+        final String dialectName = System.getProperty(TEST_DB_DIALECT_PROPERTY);
         final String databaseUrl = System.getProperty(TEST_DB_URL_PROPERTY);
         final String databaseUserName = System.getProperty(TEST_DB_USER_PROPERTY);
         final String databasePassword = System.getProperty(TEST_DB_PASSWD_PROPERTY);
+        final String databaseDriver = System.getProperty(TEST_DB_DRIVER_PROPERTY);
 
-        if (databaseType != null && databaseType.equals(MYSQL_TEST_DB))
-            config.addProperties(setupMysql(databaseUrl, databaseUserName, databasePassword));
-        else if (databaseType != null && databaseType.equals(ORACLE_TEST_DB))
-            config.addProperties(setupMysql(databaseUrl, databaseUserName, databasePassword));
+        if (dialectName != null && dialectName.length() > 0)
+        {
+            config.addProperties(setupDatabaseProperties(dialectName, databaseDriver, databaseUrl, databaseUserName,
+                databasePassword));
+        }
         else
+        {
+            // assume HSQLDB
             config.addProperties(setupHsqldb());
+        }
+
 
         try
         {
