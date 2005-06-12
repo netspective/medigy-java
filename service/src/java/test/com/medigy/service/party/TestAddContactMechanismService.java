@@ -173,13 +173,14 @@ public class TestAddContactMechanismService extends TestCase
 
             });
         HibernateUtil.commitTransaction();
-        
+        assertThat(address.getErrorMessage(), NULL);
+
         // first check the relationship table between the actual contact mechanism and the party
         Criteria criteria = HibernateUtil.getSession().createCriteria(PartyContactMechanism.class);
         criteria.createCriteria("party").add(Restrictions.eq("partyId", p.getPartyId()));
         List partyContactMechList = criteria.list();
 
-        assertEquals(partyContactMechList.size(), 1);
+        assertThat(partyContactMechList.size(), eq(1));
         PartyContactMechanism partyContactMechanism = ((PartyContactMechanism)partyContactMechList.toArray()[0]);
         final Party party = partyContactMechanism.getParty();
         assertEquals(party.getPartyId(), p.getPartyId());
@@ -200,12 +201,5 @@ public class TestAddContactMechanismService extends TestCase
         assertEquals(ps.getCountry().getCountryAbbreviation(), "USA");
     }
 
-    public void testAddEmail()
-    {
-
-    }
-
-    public void testAddPhone()
-    {
-    }
+   
 }

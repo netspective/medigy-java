@@ -36,36 +36,23 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.service.impl.health;
+package com.medigy.service.dto.insurance;
 
-import com.medigy.service.health.HealthCareReferralFacade;
-import com.medigy.service.util.AbstractFacade;
+import java.util.Date;
 
-import java.io.Serializable;
-import java.util.List;
-
-public class HealthCareReferralFacadeImpl extends AbstractFacade implements HealthCareReferralFacade
+public interface ProcedureEntry
 {
-    /**
-     * Lists all referrals by the patient ID
-     * @param patientId
-     * @return
-     */
-    public List listReferralsByPatient(final Serializable patientId)
-    {
-        return getSession().createQuery("from HealthCareReferral  hcr " +
-                " where hcr.patientRole.party.partyId = "  + patientId).list();
-    }
+    public Date getStartDate();
 
-    /**
-     * List all referrals by the requesting physician ID
-     *
-     * @param physicianId
-     * @return
-     */
-    public List listReferralsByRequestor(final Serializable physicianId)
-    {
-        return getSession().createQuery("from HealthCareReferral  hcr " +
-                " where hcr.requesterRole.party.partyId = "  + physicianId).list();
-    }
+    public Date getEndDate();
+
+    public Boolean isEmergency();
+
+    public String getComments();
+
+    public String[] getDiagnosesCodes();
+
+    public String getCptModifier();
+
+    public Long getUnits();
 }

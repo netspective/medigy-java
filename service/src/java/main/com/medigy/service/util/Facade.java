@@ -38,6 +38,9 @@
  */
 package com.medigy.service.util;
 
+import org.hibernate.Session;
+
 public interface Facade
 {
+    public Session getSession();
 }

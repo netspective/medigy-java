@@ -54,12 +54,13 @@ import com.medigy.persist.reference.custom.party.ContactMechanismPurposeType;
 import com.medigy.persist.util.HibernateUtil;
 import com.medigy.service.util.ReferenceEntityFacade;
 import com.medigy.service.util.UnknownReferenceTypeException;
+import com.medigy.service.util.AbstractFacade;
 import com.medigy.service.contact.ContactMechanismFacade;
 import org.hibernate.criterion.Restrictions;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-public class ContactMechanismFacadeImpl implements ContactMechanismFacade
+public class ContactMechanismFacadeImpl extends AbstractFacade implements ContactMechanismFacade
 {
     private static final Log log = LogFactory.getLog(PostalAddress.class);
 
@@ -107,7 +108,7 @@ public class ContactMechanismFacadeImpl implements ContactMechanismFacade
 
         mech.addPurpose(purpose);
         mech.setContactMechanism(cm);
-        HibernateUtil.getSession().save(mech);
+        getSession().save(mech);
     }
 
     public PostalAddress addPostalAddress(final String street1, final String street2, final String cityName,
@@ -118,7 +119,7 @@ public class ContactMechanismFacadeImpl implements ContactMechanismFacade
         address.setAddress1(street1);
         address.setAddress2(street2);
 
-        Country country = (Country) HibernateUtil.getSession().createCriteria(Country.class).add(Restrictions.eq("countryAbbreviation", countryCode).ignoreCase()).uniqueResult();
+        Country country = (Country) getSession().createCriteria(Country.class).add(Restrictions.eq("countryAbbreviation", countryCode).ignoreCase()).uniqueResult();
         address.setCountry(country);
 
         if (stateCode != null)
@@ -173,8 +174,8 @@ public class ContactMechanismFacadeImpl implements ContactMechanismFacade
             }
             address.setCity(city);
         }
-        HibernateUtil.getSession().flush();
-        HibernateUtil.getSession().save(address);
+        getSession().flush();
+        getSession().save(address);
 
         return address;
     }
@@ -187,17 +188,17 @@ public class ContactMechanismFacadeImpl implements ContactMechanismFacade
         phone.setNumberValue(number);
         phone.setAreaCode(areaCode);
         phone.setExtension(extension);
-        HibernateUtil.getSession().save(phone);
+        getSession().save(phone);
         return phone;
     }
 
     public Country getCountry(final String countryName)
     {
-        return (Country) HibernateUtil.getSession().createCriteria(Country.class).add(Restrictions.eq("countryName", countryName)).uniqueResult();
+        return (Country) getSession().createCriteria(Country.class).add(Restrictions.eq("countryName", countryName)).uniqueResult();
     }
 
     public State getState(final String stateName)
     {
-        return (State) HibernateUtil.getSession().createCriteria(State.class).add(Restrictions.eq("stateName", stateName)).uniqueResult();
+        return (State) getSession().createCriteria(State.class).add(Restrictions.eq("stateName", stateName)).uniqueResult();
     }
 }

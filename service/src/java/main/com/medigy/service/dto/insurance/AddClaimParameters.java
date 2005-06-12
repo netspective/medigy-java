@@ -36,36 +36,108 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.service.impl.health;
+package com.medigy.service.dto.insurance;
 
-import com.medigy.service.health.HealthCareReferralFacade;
-import com.medigy.service.util.AbstractFacade;
+import com.medigy.service.dto.ServiceParameters;
+import org.hibernate.validator.NotNull;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.Date;
 
-public class HealthCareReferralFacadeImpl extends AbstractFacade implements HealthCareReferralFacade
+public interface AddClaimParameters extends ServiceParameters
 {
-    /**
-     * Lists all referrals by the patient ID
-     * @param patientId
-     * @return
-     */
-    public List listReferralsByPatient(final Serializable patientId)
-    {
-        return getSession().createQuery("from HealthCareReferral  hcr " +
-                " where hcr.patientRole.party.partyId = "  + patientId).list();
-    }
+    @NotNull
+    public String getPatientId();
+
+    @NotNull
+    public String getVisitTypeCode();
 
     /**
-     * List all referrals by the requesting physician ID
-     *
-     * @param physicianId
+     * Gets the type of accident
      * @return
      */
-    public List listReferralsByRequestor(final Serializable physicianId)
-    {
-        return getSession().createQuery("from HealthCareReferral  hcr " +
-                " where hcr.requesterRole.party.partyId = "  + physicianId).list();
-    }
+    public String getAccidentTypeCode();
+
+    /**
+     * Gets the state where the accident occurred
+     * @return
+     */
+    public String getAccidentStateCode();
+
+    /**
+     * Gets the ID of the physician who performed the service
+     * @return
+     */
+    public Serializable getServiceProviderId();
+
+    /**
+     * Gets the ID of the physician who referred the patient
+     * @return
+     */
+    public Serializable getReferringPhysicianId();
+
+
+    /**
+     * Gets the ID of the physician who is doing the billing
+     * @return
+     */
+    public Serializable getBillingProviderId();
+
+    /**
+     * Gets the ID of the facility where the health care service was performed
+     * @return
+     */
+    public Serializable getServiceFacilityId();
+
+    /**
+     * Gets the ID of the organization to which the health care facility belongs to
+     * @return
+     */
+    public Serializable getServiceOrganizationId();
+
+    /**
+     * Gets the ID of the billing organization
+     * @return
+     */
+    public Serializable getBillingOrganizationId();
+
+    /**
+     * Gets the ID of the organization to send payment to
+     * @return
+     */
+    public Serializable getPayToOrganizationId();
+
+    /**
+     * Gets the prior authorization ID
+     * @return
+     */
+    public String getPriorAuthroizationId();
+
+    public Date getSimilarIllnessDate();
+
+    public Date getCurrentIllnessDate();
+
+    /**
+     * Gets the disability start date. Used for Worker Compensation claims.
+     * @return
+     */
+    public Date getDisabilityStartDate();
+
+    /**
+     * Gets the disability end date. Used for Worker Compensation claims.
+     * @return
+     */
+    public Date getDisabilityEndDate();
+
+    public Date getHospitalAdmissionDate();
+
+    public Date getHospitalDischargeDate();
+
+    /**
+     * Gets general comments associated with the claim
+     * @return
+     */
+    public String getComments();
+
+    public ProcedureEntry[] getProcedureEntires();
 }

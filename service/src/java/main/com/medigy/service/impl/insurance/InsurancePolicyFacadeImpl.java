@@ -40,16 +40,15 @@ package com.medigy.service.impl.insurance;
 
 import com.medigy.persist.model.insurance.Coverage;
 import com.medigy.persist.model.insurance.CoverageLevel;
+import com.medigy.persist.model.insurance.CoverageLevelBasis;
 import com.medigy.persist.model.insurance.InsurancePlan;
 import com.medigy.persist.model.insurance.InsurancePolicy;
 import com.medigy.persist.model.insurance.InsurancePolicyCoverageLevel;
 import com.medigy.persist.model.insurance.InsuranceProduct;
-import com.medigy.persist.model.insurance.CoverageLevelBasis;
 import com.medigy.persist.model.org.Organization;
 import com.medigy.persist.model.person.Person;
 import com.medigy.persist.reference.custom.insurance.CoverageLevelType;
 import com.medigy.persist.reference.custom.insurance.InsurancePolicyType;
-import com.medigy.persist.util.HibernateUtil;
 import com.medigy.service.insurance.InsurancePolicyFacade;
 import com.medigy.service.util.AbstractFacade;
 import org.apache.commons.logging.Log;
@@ -85,7 +84,7 @@ public class InsurancePolicyFacadeImpl extends AbstractFacade implements Insuran
         insPolicy.setThroughDate(endDate);
         insPolicy.setType(type);
         plan.addInsurancePolicy(insPolicy);
-        HibernateUtil.getSession().save(insPolicy);
+        getSession().save(insPolicy);
         return insPolicy;
     }
 
@@ -115,7 +114,7 @@ public class InsurancePolicyFacadeImpl extends AbstractFacade implements Insuran
             newLevel.addInsurancePolicyCoverageLevel(indDeductibleCoverageLevel);
             indDeductibleCoverageLevel.setCoverageLevel(newLevel);
 
-            HibernateUtil.getSession().save(newLevel);
+            getSession().save(newLevel);
         }
     }
 
@@ -127,14 +126,14 @@ public class InsurancePolicyFacadeImpl extends AbstractFacade implements Insuran
 
     public List listInsurancePlans(final InsuranceProduct product)
     {
-        Criteria criteria = HibernateUtil.getSession().createCriteria(InsurancePlan.class);
+        Criteria criteria = getSession().createCriteria(InsurancePlan.class);
         criteria.createCriteria("insuranceProduct").add(Restrictions.eq("insuranceProductId", product.getInsuranceProductId()));
         return criteria.list();
     }
 
     public List<InsurancePolicy> listInsurancePolicies(final Serializable personId)
     {
-        List list = HibernateUtil.getSession().createQuery("from InsurancePolicy insPolicy where insPolicy.insuredPerson.partyId = " + personId).list();
+        List list = getSession().createQuery("from InsurancePolicy insPolicy where insPolicy.insuredPerson.partyId = " + personId).list();
         List<InsurancePolicy> policies = new ArrayList<InsurancePolicy>(list.size());;
         convert(InsurancePolicy.class, list, policies);
         return policies;
@@ -142,7 +141,7 @@ public class InsurancePolicyFacadeImpl extends AbstractFacade implements Insuran
 
     public List<InsuranceProduct> listInsuranceProducts(final Organization org)
     {
-        Criteria criteria = HibernateUtil.getSession().createCriteria(InsuranceProduct.class);
+        Criteria criteria = getSession().createCriteria(InsuranceProduct.class);
         criteria.createCriteria("organization").add(Restrictions.eq("partyId", org.getPartyId()));
         List list = criteria.list();
         List<InsuranceProduct> products = new ArrayList<InsuranceProduct>(list.size());
@@ -152,7 +151,7 @@ public class InsurancePolicyFacadeImpl extends AbstractFacade implements Insuran
 
     public InsurancePlan getInsurancePlanById(final Serializable insurancePlanId)
     {
-        return (InsurancePlan) HibernateUtil.getSession().createCriteria(InsurancePlan.class).add(Restrictions.eq("insurancePlanId", insurancePlanId)).uniqueResult();
+        return (InsurancePlan) getSession().createCriteria(InsurancePlan.class).add(Restrictions.eq("insurancePlanId", insurancePlanId)).uniqueResult();
     }
 
 

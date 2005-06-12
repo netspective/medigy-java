@@ -56,6 +56,7 @@ import com.medigy.persist.util.HibernateUtil;
 import com.medigy.service.person.PersonFacade;
 import com.medigy.service.dto.person.PersonParameters;
 import com.medigy.service.util.ReferenceEntityFacade;
+import com.medigy.service.util.AbstractFacade;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
@@ -67,7 +68,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.Date;
 
-public class PersonFacadeImpl implements PersonFacade
+public class PersonFacadeImpl extends AbstractFacade implements PersonFacade
 {
     private static final Log log = LogFactory.getLog(PersonFacadeImpl.class);
 
@@ -92,7 +93,7 @@ public class PersonFacadeImpl implements PersonFacade
      */
     public Person[] listPersonByLastName(final String lastName, boolean exactMatch)
     {
-        Criteria criteria = HibernateUtil.getSession().createCriteria(Person.class);
+        Criteria criteria = getSession().createCriteria(Person.class);
         if (!exactMatch)
             criteria.add(Expression.like("lastName", lastName).ignoreCase());
         else
@@ -109,7 +110,7 @@ public class PersonFacadeImpl implements PersonFacade
      */
     public Person getPersonById(final Serializable id)
     {
-        return (Person) HibernateUtil.getSession().load(Person.class, id);
+        return (Person) getSession().load(Person.class, id);
     }
 
     /**
@@ -119,7 +120,7 @@ public class PersonFacadeImpl implements PersonFacade
      */
     public void addPerson(final Person person)
     {
-        HibernateUtil.getSession().save(person);
+        getSession().save(person);
     }
 
     /**
@@ -146,7 +147,7 @@ public class PersonFacadeImpl implements PersonFacade
      */
     public PartyRole addPersonRole(final Person person, final PersonRoleType type)
     {
-        if (!HibernateUtil.getSession().contains(person))
+        if (!getSession().contains(person))
             throw new HibernateException("Party role cannot be added to a PERSON which is not in current session.");
         final PartyRole respPartyRole = new PartyRole();
         respPartyRole.setType(type);
@@ -173,7 +174,7 @@ public class PersonFacadeImpl implements PersonFacade
                 {
                     if (purpose.getType().equals(ContactMechanismPurposeType.Cache.HOME_ADDRESS.getEntity()))
                     {
-                        Criteria criteria = HibernateUtil.getSession().createCriteria(PostalAddress.class);
+                        Criteria criteria = getSession().createCriteria(PostalAddress.class);
                         criteria.add(Expression.eq("contactMechanismId", pcm.getContactMechanism().getContactMechanismId()));
                         return (PostalAddress) criteria.uniqueResult();
                     }
@@ -195,7 +196,7 @@ public class PersonFacadeImpl implements PersonFacade
         license.setState(state);
         license.setPerson(person);
         person.addLicense(license);
-        HibernateUtil.getSession().save(license);
+        getSession().save(license);
         return license;
     }
 
@@ -235,7 +236,7 @@ public class PersonFacadeImpl implements PersonFacade
             person.addEthnicity(ethType);
         }
 
-        HibernateUtil.getSession().save(person);
+        getSession().save(person);
         return person;
     }
 

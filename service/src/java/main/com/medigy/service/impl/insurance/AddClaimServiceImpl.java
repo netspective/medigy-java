@@ -36,36 +36,31 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.service.impl.health;
+package com.medigy.service.impl.insurance;
 
-import com.medigy.service.health.HealthCareReferralFacade;
-import com.medigy.service.util.AbstractFacade;
+import com.medigy.service.insurance.AddClaimService;
+import com.medigy.service.dto.insurance.AddClaimParameters;
+import com.medigy.service.dto.ServiceParameters;
+import com.medigy.service.ServiceVersion;
+import com.medigy.persist.model.claim.Claim;
 
-import java.io.Serializable;
-import java.util.List;
-
-public class HealthCareReferralFacadeImpl extends AbstractFacade implements HealthCareReferralFacade
+public class AddClaimServiceImpl implements AddClaimService
 {
-    /**
-     * Lists all referrals by the patient ID
-     * @param patientId
-     * @return
-     */
-    public List listReferralsByPatient(final Serializable patientId)
+    public NewClaimValues add(final AddClaimParameters paramaters)
     {
-        return getSession().createQuery("from HealthCareReferral  hcr " +
-                " where hcr.patientRole.party.partyId = "  + patientId).list();
+        final Claim claim = new Claim();
+        // TODO: Need to figure out the TRANSACTION and INVOICE table some more
+
+        return null;
     }
 
-    /**
-     * List all referrals by the requesting physician ID
-     *
-     * @param physicianId
-     * @return
-     */
-    public List listReferralsByRequestor(final Serializable physicianId)
+    public ServiceVersion[] getSupportedServiceVersions()
     {
-        return getSession().createQuery("from HealthCareReferral  hcr " +
-                " where hcr.requesterRole.party.partyId = "  + physicianId).list();
+        return new ServiceVersion[0];
+    }
+
+    public boolean isValid(ServiceParameters parameters)
+    {
+        return false;
     }
 }

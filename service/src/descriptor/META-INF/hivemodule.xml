@@ -57,6 +57,14 @@
         </invoke-factory>
     </service-point>
 
+    <service-point id="AddClaimService" interface="com.medigy.service.insurance.AddClaimService">
+        <interceptor service-id="hivemind.LoggingInterceptor"/>
+        <invoke-factory>
+            <!-- Autowires service properties based on interface! -->
+            <construct class="impl.insurance.AddClaimServiceImpl"/>
+        </invoke-factory>
+    </service-point>
+
     <service-point id="PatientRegistrationService" interface="com.medigy.service.person.PatientRegistrationService">
         <interceptor service-id="hivemind.LoggingInterceptor"/>
         <invoke-factory>

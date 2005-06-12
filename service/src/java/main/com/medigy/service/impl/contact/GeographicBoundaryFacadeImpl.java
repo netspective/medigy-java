@@ -40,14 +40,14 @@ package com.medigy.service.impl.contact;
 
 import com.medigy.persist.model.contact.GeographicBoundary;
 import com.medigy.persist.reference.custom.GeographicBoundaryType;
-import com.medigy.persist.util.HibernateUtil;
 import com.medigy.service.contact.GeographicBoundaryFacade;
+import com.medigy.service.util.AbstractFacade;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 
 import java.util.List;
 
-public class GeographicBoundaryFacadeImpl implements GeographicBoundaryFacade
+public class GeographicBoundaryFacadeImpl extends AbstractFacade implements GeographicBoundaryFacade
 {
     /**
      * Adds a new geographic boundary who has no parents
@@ -104,7 +104,7 @@ public class GeographicBoundaryFacadeImpl implements GeographicBoundaryFacade
      */
     public List listGeographicBoundaries(GeographicBoundaryType type)
     {
-        Criteria criteria = HibernateUtil.getSession().createCriteria(GeographicBoundary.class);
+        Criteria criteria = getSession().createCriteria(GeographicBoundary.class);
         criteria.createAlias("type", "type").add(Restrictions.eq("type.code", type.getCode()));
         return criteria.list();
     }
@@ -125,7 +125,7 @@ public class GeographicBoundaryFacadeImpl implements GeographicBoundaryFacade
     public GeographicBoundary getGeographicBoundary(String name, GeographicBoundaryType type, boolean addIfNew)
     {
         Criteria criteria =
-                HibernateUtil.getSession().createCriteria(GeographicBoundary.class).add(Restrictions.eq("name", name).ignoreCase());
+                getSession().createCriteria(GeographicBoundary.class).add(Restrictions.eq("name", name).ignoreCase());
         criteria.createAlias("type", "type").add(Restrictions.eq("type.code", type.getCode()));
         GeographicBoundary boundary = (GeographicBoundary) criteria.uniqueResult();
 

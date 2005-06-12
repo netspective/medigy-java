@@ -39,34 +39,33 @@
 package com.medigy.service.impl.util;
 
 import com.medigy.persist.reference.custom.health.HealthCareLicenseType;
+import com.medigy.persist.reference.custom.insurance.FeeScheduleItemCostType;
 import com.medigy.persist.reference.custom.insurance.InsurancePolicyType;
 import com.medigy.persist.reference.custom.insurance.InsuranceProductType;
-import com.medigy.persist.reference.custom.insurance.FeeScheduleItemCostType;
+import com.medigy.persist.reference.custom.invoice.BillRemittanceType;
 import com.medigy.persist.reference.custom.party.ContactMechanismPurposeType;
 import com.medigy.persist.reference.custom.party.OrganizationRoleType;
 import com.medigy.persist.reference.custom.person.EthnicityType;
-import com.medigy.persist.reference.custom.person.PersonRoleType;
 import com.medigy.persist.reference.custom.person.PatientType;
-import com.medigy.persist.reference.custom.invoice.BillRemittanceType;
+import com.medigy.persist.reference.custom.person.PersonRoleType;
 import com.medigy.persist.reference.type.GenderType;
 import com.medigy.persist.reference.type.LanguageType;
 import com.medigy.persist.reference.type.MaritalStatusType;
-import com.medigy.persist.util.HibernateUtil;
+import com.medigy.service.util.AbstractFacade;
 import com.medigy.service.util.ReferenceEntityFacade;
 import com.medigy.service.util.UnknownReferenceTypeException;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.Restrictions;
 
-public class ReferenceEntityFacadeImpl implements ReferenceEntityFacade
+public class ReferenceEntityFacadeImpl extends AbstractFacade implements ReferenceEntityFacade
 {
-
     public InsurancePolicyType getInsurancePolicyType(final String code)
     {
         InsurancePolicyType type = InsurancePolicyType.Cache.getEntity(code);
         if (type == null)
         {
-            final Criteria criteria = HibernateUtil.getSession().createCriteria(InsurancePolicyType.class);
+            final Criteria criteria = getSession().createCriteria(InsurancePolicyType.class);
             criteria.add(Restrictions.eq("code", code));
             type = (InsurancePolicyType) criteria.uniqueResult();
         }
@@ -107,7 +106,7 @@ public class ReferenceEntityFacadeImpl implements ReferenceEntityFacade
         EthnicityType type = EthnicityType.Cache.getEntity(ethnicityCode);
         if (type == null)
         {
-            final Criteria criteria = HibernateUtil.getSession().createCriteria(EthnicityType.class);
+            final Criteria criteria = getSession().createCriteria(EthnicityType.class);
             criteria.add(Expression.eq("code", ethnicityCode));
             type = (EthnicityType) criteria.uniqueResult();
         }
@@ -133,7 +132,7 @@ public class ReferenceEntityFacadeImpl implements ReferenceEntityFacade
         PersonRoleType  type = PersonRoleType.Cache.getEntity(roleCode);
         if (type == null)
         {
-            final Criteria criteria = HibernateUtil.getSession().createCriteria(PersonRoleType.class);
+            final Criteria criteria = getSession().createCriteria(PersonRoleType.class);
             criteria.add(Expression.eq("code", roleCode));
             type = (PersonRoleType) criteria.uniqueResult();
         }
@@ -145,7 +144,7 @@ public class ReferenceEntityFacadeImpl implements ReferenceEntityFacade
         OrganizationRoleType  type = OrganizationRoleType.Cache.getEntity(roleCode);
         if (type == null)
         {
-            final Criteria criteria = HibernateUtil.getSession().createCriteria(OrganizationRoleType.class);
+            final Criteria criteria = getSession().createCriteria(OrganizationRoleType.class);
             criteria.add(Expression.eq("code", roleCode));
             type = (OrganizationRoleType) criteria.uniqueResult();
         }
@@ -157,7 +156,7 @@ public class ReferenceEntityFacadeImpl implements ReferenceEntityFacade
         ContactMechanismPurposeType  type = ContactMechanismPurposeType.Cache.getEntity(purposeCode);
         if (type == null)
         {
-            final Criteria criteria = HibernateUtil.getSession().createCriteria(ContactMechanismPurposeType.class);
+            final Criteria criteria = getSession().createCriteria(ContactMechanismPurposeType.class);
             criteria.add(Expression.eq("code", purposeCode));
             type = (ContactMechanismPurposeType) criteria.uniqueResult();
             if (type == null)
@@ -171,7 +170,7 @@ public class ReferenceEntityFacadeImpl implements ReferenceEntityFacade
         HealthCareLicenseType type = HealthCareLicenseType.Cache.getEntity(licenseType);
         if (type == null)
         {
-            final Criteria criteria = HibernateUtil.getSession().createCriteria(HealthCareLicenseType.class);
+            final Criteria criteria = getSession().createCriteria(HealthCareLicenseType.class);
             criteria.add(Expression.eq("code", licenseType));
             type = (HealthCareLicenseType) criteria.uniqueResult();
         }
@@ -183,7 +182,7 @@ public class ReferenceEntityFacadeImpl implements ReferenceEntityFacade
         InsuranceProductType type = InsuranceProductType.Cache.getEntity(productTypeCode);
         if (type == null)
         {
-            final Criteria criteria = HibernateUtil.getSession().createCriteria(InsurancePolicyType.class);
+            final Criteria criteria = getSession().createCriteria(InsurancePolicyType.class);
             criteria.add(Restrictions.eq("code", productTypeCode));
             type = (InsuranceProductType) criteria.uniqueResult();
         }
@@ -195,7 +194,7 @@ public class ReferenceEntityFacadeImpl implements ReferenceEntityFacade
         BillRemittanceType type = BillRemittanceType.Cache.getEntity(remittanceTypeCode);
         if (type == null)
         {
-            final Criteria criteria = HibernateUtil.getSession().createCriteria(BillRemittanceType.class);
+            final Criteria criteria = getSession().createCriteria(BillRemittanceType.class);
             criteria.add(Restrictions.eq("code", remittanceTypeCode));
             type = (BillRemittanceType) criteria.uniqueResult();
         }
@@ -207,7 +206,7 @@ public class ReferenceEntityFacadeImpl implements ReferenceEntityFacade
         FeeScheduleItemCostType type = FeeScheduleItemCostType.Cache.getEntity(costTypeCode);
         if (type == null)
         {
-            final Criteria criteria = HibernateUtil.getSession().createCriteria(FeeScheduleItemCostType.class);
+            final Criteria criteria = getSession().createCriteria(FeeScheduleItemCostType.class);
             criteria.add(Restrictions.eq("code", costTypeCode));
             type = (FeeScheduleItemCostType) criteria.uniqueResult();
         }
@@ -219,7 +218,7 @@ public class ReferenceEntityFacadeImpl implements ReferenceEntityFacade
         PatientType type = PatientType.Cache.getEntity(patientTypeCode);
         if (type == null)
         {
-            final Criteria criteria = HibernateUtil.getSession().createCriteria(PatientType.class);
+            final Criteria criteria = getSession().createCriteria(PatientType.class);
             criteria.add(Restrictions.eq("code", patientTypeCode));
             type = (PatientType) criteria.uniqueResult();
         }

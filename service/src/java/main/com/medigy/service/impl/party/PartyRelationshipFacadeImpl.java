@@ -47,7 +47,6 @@ import com.medigy.persist.model.person.Person;
 import com.medigy.persist.reference.custom.party.PartyRelationshipType;
 import com.medigy.persist.reference.custom.party.PartyRoleType;
 import com.medigy.persist.reference.custom.person.PersonRoleType;
-import com.medigy.persist.util.HibernateUtil;
 import com.medigy.service.party.PartyRelationshipFacade;
 import com.medigy.service.util.AbstractFacade;
 import org.apache.commons.logging.Log;
@@ -55,9 +54,9 @@ import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Expression;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.ArrayList;
 
 public class PartyRelationshipFacadeImpl extends AbstractFacade implements PartyRelationshipFacade
 {
@@ -65,7 +64,7 @@ public class PartyRelationshipFacadeImpl extends AbstractFacade implements Party
 
     public List getValidPartyRolesByRelationshipType(PartyRelationshipType type)
     {
-        Criteria criteria = HibernateUtil.getSession().createCriteria(ValidPartyRelationshipRole.class);
+        Criteria criteria = getSession().createCriteria(ValidPartyRelationshipRole.class);
         Criteria relationshipCriteria = criteria.createCriteria("partyRelationshipType");
         relationshipCriteria.add(Expression.eq("code", type.getCode()));
 
@@ -82,7 +81,7 @@ public class PartyRelationshipFacadeImpl extends AbstractFacade implements Party
         rel.setPartyTo(toRole.getParty());
         rel.setFromDate(new Date());
 
-        HibernateUtil.getSession().save(rel);
+        getSession().save(rel);
         if(log.isInfoEnabled())
             log.info("New party relationship created: id = " + rel.getPartyRelationshipId());
         return rel;
@@ -91,7 +90,7 @@ public class PartyRelationshipFacadeImpl extends AbstractFacade implements Party
 
     public List listPartyRelationshipsByTypeAndFromRole(PartyRelationshipType type, PartyRole fromRole)
     {
-        Criteria criteria = HibernateUtil.getSession().createCriteria(PartyRelationship.class).createCriteria("partyRelationshipType");
+        Criteria criteria = getSession().createCriteria(PartyRelationship.class).createCriteria("partyRelationshipType");
         criteria.add(Expression.eq("code", type.getCode()));
         criteria.createCriteria("fromPartyRole").add(Expression.eq("partyRoleId", fromRole.getPartyRoleId()));
         return criteria.list();
@@ -105,7 +104,7 @@ public class PartyRelationshipFacadeImpl extends AbstractFacade implements Party
      */
     public List listPatientResponsiblePartyRelationship(Party patient)
     {
-        Criteria criteria = HibernateUtil.getSession().createCriteria(PartyRelationship.class);
+        Criteria criteria = getSession().createCriteria(PartyRelationship.class);
         Criteria partyRelTypeCriteria = criteria.createCriteria("type");
         partyRelTypeCriteria.add(Expression.eq("code", PartyRelationshipType.Cache.PATIENT_RESPONSIBLE_PARTY.getCode()));
         criteria.createCriteria("partyFrom").add(Expression.eq("partyId", patient.getPartyId()));
@@ -118,7 +117,7 @@ public class PartyRelationshipFacadeImpl extends AbstractFacade implements Party
      */
     public List<PartyRoleType> listValidResponsiblePartyRoleTypes()
     {
-        List list  = HibernateUtil.getSession().createCriteria(ValidResponsiblePartyRole.class).list();
+        List list  = getSession().createCriteria(ValidResponsiblePartyRole.class).list();
         List<PartyRoleType> roleTypeList = new ArrayList<PartyRoleType>();
         for (int i=0; i < list.size(); i++)
         {
@@ -152,7 +151,7 @@ public class PartyRelationshipFacadeImpl extends AbstractFacade implements Party
         relationship.setType(PartyRelationshipType.Cache.PATIENT_RESPONSIBLE_PARTY.getEntity());
         relationship.setFromDate(new Date());
 
-        HibernateUtil.getSession().save(relationship);
+        getSession().save(relationship);
         return relationship;
     }
 }

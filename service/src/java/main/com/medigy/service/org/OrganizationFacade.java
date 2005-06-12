@@ -1,10 +1,11 @@
 package com.medigy.service.org;
 
 import com.medigy.persist.model.org.Organization;
+import com.medigy.service.util.Facade;
 
 import java.util.List;
 
-public interface OrganizationFacade
+public interface OrganizationFacade extends Facade
 {
     /**
      * Adds a logical insurance group under a Employer organization. This could just

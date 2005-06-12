@@ -40,6 +40,7 @@ package com.medigy.service.contact;
 
 import com.medigy.persist.model.contact.GeographicBoundary;
 import com.medigy.persist.reference.custom.GeographicBoundaryType;
+import com.medigy.service.util.Facade;
 
 import java.util.List;
 
@@ -47,7 +48,7 @@ import java.util.List;
  * Interface class for geographic boundary related activities. Implementing classes
  * will be used by service layer classes to perform higher level functions.
  */
-public interface GeographicBoundaryFacade
+public interface GeographicBoundaryFacade extends Facade
 {
     /**
      * Adds a new geographic boundary who has no parents

@@ -7,12 +7,13 @@ import com.medigy.persist.reference.custom.party.OrganizationRoleType;
 import com.medigy.persist.reference.custom.party.PartyRelationshipType;
 import com.medigy.persist.util.HibernateUtil;
 import com.medigy.service.org.OrganizationFacade;
+import com.medigy.service.util.AbstractFacade;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Expression;
 
 import java.util.List;
 
-public class OrganizationFacadeImpl implements OrganizationFacade
+public class OrganizationFacadeImpl extends AbstractFacade implements OrganizationFacade
 {
     protected PartyRelationshipType getGroupToEmployerRelationshipType()
     {
@@ -43,7 +44,7 @@ public class OrganizationFacadeImpl implements OrganizationFacade
             parentRole.setType(OrganizationRoleType.Cache.EMPLOYER.getEntity());
             parentRole.setParty(parentOrg);
             parentOrg.addPartyRole(parentRole);
-            HibernateUtil.getSession().save(parentRole);
+            getSession().save(parentRole);
         }
         else
         {
@@ -57,12 +58,12 @@ public class OrganizationFacadeImpl implements OrganizationFacade
         relationship.setPartyFrom(childOrg);
         relationship.setPartyTo(parentOrg);
         
-        HibernateUtil.getSession().save(relationship);
+        getSession().save(relationship);
     }
 
     public List listInsuranceGroups(Organization parentOrg)
     {
-        Criteria criteria = HibernateUtil.getSession().createCriteria(Organization.class);
+        Criteria criteria = getSession().createCriteria(Organization.class);
         final Criteria relationshipCriteria = criteria.createCriteria("toPartyRelationships");
         relationshipCriteria.createCriteria("type").add(Expression.eq("partyRelationshipTypeId", getGroupToEmployerRelationshipType().getSystemId()));
         relationshipCriteria.createCriteria("partyTo").add(Expression.eq("partyId", parentOrg.getPartyId()));
