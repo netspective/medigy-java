@@ -45,6 +45,7 @@ package com.medigy.wicket.form;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.form.validation.RequiredValidator;
 import wicket.markup.html.form.validation.TypeValidator;
+import wicket.model.IModel;
 
 import java.util.Currency;
 
@@ -68,9 +69,28 @@ public class CurrencyField extends wicket.markup.html.form.TextField implements 
         // TODO Add formatting, locale, other validations?
     }
 
+    public CurrencyField(final String fieldName, IModel model, long fieldFlags)
+    {
+        super(fieldName + BaseForm.FIELD_CONTROL_SUFFIX, model);
+        this.fieldName = fieldName;
+        this.fieldFlags = fieldFlags;
+        this.fieldControlId = fieldName + BaseForm.FIELD_CONTROL_SUFFIX;
+
+        if((this.fieldFlags & FieldFlags.REQUIRED) != 0)
+            add(RequiredValidator.getInstance());
+
+        add(new TypeValidator(Currency.class));
+        // TODO Add formatting, locale, other validations?
+    }
+
     public CurrencyField(final String componentName)
     {
         this(componentName, FieldFlags.DEFAULT_FLAGS);
+    }
+
+    public CurrencyField(final String componentName, IModel model)
+    {
+        this(componentName, model, FieldFlags.DEFAULT_FLAGS);
     }
 
     protected void onComponentTag(final ComponentTag componentTag)

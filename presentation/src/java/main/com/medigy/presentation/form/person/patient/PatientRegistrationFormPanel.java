@@ -48,11 +48,14 @@ import com.medigy.persist.reference.type.MaritalStatusType;
 import com.medigy.wicket.form.BaseForm;
 import com.medigy.wicket.form.FieldFlags;
 import com.medigy.wicket.form.FieldGroupLabel;
+import com.medigy.wicket.form.TextField;
 import com.medigy.wicket.panel.DefaultFormPanel;
 import wicket.IFeedback;
 
 public class PatientRegistrationFormPanel extends DefaultFormPanel
 {
+    private TextField personId;
+
     public PatientRegistrationFormPanel(final String componentName)
     {
         super(componentName);
@@ -65,6 +68,7 @@ public class PatientRegistrationFormPanel extends DefaultFormPanel
 
     protected class Form extends BaseForm
     {
+
         public Form(final String componentName, final IFeedback feedback)
         {
             super(componentName, feedback);
@@ -146,5 +150,40 @@ public class PatientRegistrationFormPanel extends DefaultFormPanel
             addLabeledTextField("threshold");
             addLabeledTextField("officeVisitCoPay");
         }
+
+        /**
+		 * @see wicket.markup.html.form.Form#onSubmit()
+		 */
+		public final void onSubmit()
+		{
+            System.out.println("\n*****************  form submitted  ******************\n");
+//			if (signIn(getUsername(), getPassword()))
+//			{
+//				// If login has been called because the user was not yet
+//				// logged in, than continue to the original destination,
+//				// otherwise to the Home page
+//				if (getPage().continueToOriginalDestination())
+//				{
+//					// HTTP redirect response has been committed. No more data
+//					// shall be written to the response.
+//					setResponsePage(null);
+//				}
+//				else
+//				{
+//					setResponsePage(getApplicationSettings().getDefaultPageFactory()
+//							.newPage(getApplicationPages().getHomePage(),
+//									(PageParameters) null));
+//				}
+//			}
+//			else
+//			{
+//				// Try the component based localizer first. If not found try the
+//				// application localizer. Else use the default
+//				final String errmsg = getLocalizer().getString("loginError", this,
+//						"Unable to sign you in");
+//
+//				error(errmsg);
+//			}
+		}
     }
 }

@@ -71,7 +71,7 @@ public abstract class DefaultApplication extends WebApplication
         if(devlEnvHome != null && devlEnvHome.exists())
         {
             getSettings().setResourcePollFrequency(Duration.ONE_SECOND);
-            getSettings().setResourcePath(new Path(new Folder[] {
+            getSettings().setResourceFinder(new Path(new Folder[] {
                 new Folder(devlEnvHome, "pbs/src/java/main"),
                 new Folder(devlEnvHome, "presentation/src/java/main"),
             }));

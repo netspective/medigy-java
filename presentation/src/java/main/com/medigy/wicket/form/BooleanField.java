@@ -45,6 +45,7 @@ package com.medigy.wicket.form;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.form.validation.RequiredValidator;
 import wicket.markup.html.form.validation.TypeValidator;
+import wicket.model.IModel;
 
 public class BooleanField extends wicket.markup.html.form.TextField implements JavaScriptProvider
 {
@@ -65,9 +66,27 @@ public class BooleanField extends wicket.markup.html.form.TextField implements J
         add(new TypeValidator(Boolean.class));
     }
 
+    public BooleanField(final String fieldName, IModel model, long fieldFlags)
+    {
+        super(fieldName + BaseForm.FIELD_CONTROL_SUFFIX, model);
+        this.fieldName = fieldName;
+        this.fieldFlags = fieldFlags;
+        this.fieldControlId = fieldName + BaseForm.FIELD_CONTROL_SUFFIX;
+
+        if((this.fieldFlags & FieldFlags.REQUIRED) != 0)
+            add(RequiredValidator.getInstance());
+
+        add(new TypeValidator(Boolean.class));
+    }
+
     public BooleanField(final String componentName)
     {
         this(componentName, FieldFlags.DEFAULT_FLAGS);
+    }
+
+     public BooleanField(final String componentName, IModel model)
+    {
+        this(componentName, model, FieldFlags.DEFAULT_FLAGS);
     }
 
     protected void onComponentTag(final ComponentTag componentTag)

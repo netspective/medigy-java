@@ -48,6 +48,7 @@ import java.util.Collection;
 
 import com.medigy.presentation.model.ChoicesFactory;
 import wicket.IFeedback;
+import wicket.model.PropertyModel;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.form.*;
@@ -81,6 +82,10 @@ public class BaseForm extends Form
         });
     }
 
+    // TODO - This is used for test purposes only. Replace with more formal model.
+    // TODO - Check to see if we need add* methods for all Wicket model types.
+    private final ValueMap properties = new ValueMap();
+
     public BaseForm(final String componentName)
     {
         super(componentName);
@@ -94,37 +99,37 @@ public class BaseForm extends Form
     protected void addLabeledTextField(final String fieldName, int fieldFlags)
     {
         add(new FieldLabel(fieldName));
-        add(new TextField(fieldName, fieldFlags));
+        add(new TextField(fieldName, new PropertyModel(properties, fieldName), fieldFlags));
     }
 
     protected void addLabeledTextField(final String fieldName)
     {
         add(new FieldLabel(fieldName));
-        add(new TextField(fieldName));
+        add(new TextField(fieldName, new PropertyModel(properties, fieldName)));
     }
 
     protected void addLabeledDateField(final String fieldName)
     {
         add(new FieldLabel(fieldName));
-        add(new TextField(fieldName));
+        add(new TextField(fieldName, new PropertyModel(properties, fieldName)));
     }
 
     protected void addLabeledPhoneField(final String fieldName)
     {
         add(new FieldLabel(fieldName));
-        add(new PhoneField(fieldName));
+        add(new PhoneField(fieldName, new PropertyModel(properties, fieldName)));
     }
 
     protected void addLabeledBooleanField(final String fieldName)
     {
         add(new FieldLabel(fieldName));
-        add(new BooleanField(fieldName));
+        add(new BooleanField(fieldName, new PropertyModel(properties, fieldName)));
     }
 
     protected void addLabeledCurrencyField(final String fieldName)
     {
         add(new FieldLabel(fieldName));
-        add(new CurrencyField(fieldName));
+        add(new CurrencyField(fieldName, new PropertyModel(properties, fieldName)));
     }
 
     protected void addLabeledSelectField(final String fieldName)
@@ -160,7 +165,7 @@ public class BaseForm extends Form
     protected void addLabeledCheckBox(final String fieldName)
     {
         add(new FieldLabel(fieldName));
-        add(new CheckBox(fieldName));
+        add(new CheckBox(fieldName, new PropertyModel(properties, fieldName)));
     }
 
     protected void onFormComponentTag(final ComponentTag componentTag, final String fieldControlId, final long fieldFlags)
