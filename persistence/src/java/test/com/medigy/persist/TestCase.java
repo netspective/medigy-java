@@ -151,14 +151,24 @@ public abstract class TestCase extends MockObjectTestCase
 
         setupDatabaseDirectory();
         final HibernateConfiguration config = new HibernateConfiguration();
-        final String dialectName = System.getProperty(TEST_DB_DIALECT_PROPERTY);
-        final String databaseUrl = System.getProperty(TEST_DB_URL_PROPERTY);
-        final String databaseUserName = System.getProperty(TEST_DB_USER_PROPERTY);
-        final String databasePassword = System.getProperty(TEST_DB_PASSWD_PROPERTY);
-        final String databaseDriver = System.getProperty(TEST_DB_DRIVER_PROPERTY);
 
-        if (dialectName != null && dialectName.length() > 0)
+        if (System.getProperty(TEST_DB_DIALECT_PROPERTY) != null)
         {
+            final String dialectName = System.getProperty(TEST_DB_DIALECT_PROPERTY);
+            final String databaseUrl = System.getProperty(TEST_DB_URL_PROPERTY);
+            final String databaseUserName = System.getProperty(TEST_DB_USER_PROPERTY);
+            final String databasePassword = System.getProperty(TEST_DB_PASSWD_PROPERTY);
+            final String databaseDriver = System.getProperty(TEST_DB_DRIVER_PROPERTY);
+            config.addProperties(setupDatabaseProperties(dialectName, databaseDriver, databaseUrl, databaseUserName,
+                databasePassword));
+        }
+        else if (System.getProperty(BUILD_PROPERTY_PREFIX + TEST_DB_DIALECT_PROPERTY) != null)
+        {
+            final String dialectName = System.getProperty(BUILD_PROPERTY_PREFIX + TEST_DB_DIALECT_PROPERTY);
+            final String databaseUrl = System.getProperty(BUILD_PROPERTY_PREFIX + TEST_DB_URL_PROPERTY);
+            final String databaseUserName = System.getProperty(BUILD_PROPERTY_PREFIX + TEST_DB_USER_PROPERTY);
+            final String databasePassword = System.getProperty(BUILD_PROPERTY_PREFIX + TEST_DB_PASSWD_PROPERTY);
+            final String databaseDriver = System.getProperty(BUILD_PROPERTY_PREFIX + TEST_DB_DRIVER_PROPERTY);            
             config.addProperties(setupDatabaseProperties(dialectName, databaseDriver, databaseUrl, databaseUserName,
                 databasePassword));
         }
