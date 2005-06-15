@@ -42,6 +42,7 @@ import com.medigy.persist.model.org.Organization;
 import com.medigy.service.ServiceVersion;
 import com.medigy.service.insurance.SelectCareProviderService;
 import com.medigy.service.dto.ServiceParameters;
+import com.medigy.service.dto.ServiceReturnValues;
 import com.medigy.service.dto.insurance.CareProviderSelectionData;
 import com.medigy.service.dto.insurance.SelectCareProviderParameters;
 
@@ -49,9 +50,14 @@ import java.util.List;
 
 public class SelectCareProviderServiceImpl implements SelectCareProviderService
 {
-    public boolean isValid(ServiceParameters parameters)
+    public String[] isValid(ServiceParameters parameters)
     {
-        return false;
+        return null;
+    }
+
+    public ServiceReturnValues createErrorResponse(final ServiceParameters params, final String errorMessage)
+    {
+        return null;
     }
 
     public ServiceVersion[] getSupportedServiceVersions()

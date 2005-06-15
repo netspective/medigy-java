@@ -43,7 +43,7 @@ import com.medigy.persist.model.insurance.InsurancePolicy;
 import com.medigy.persist.model.person.Person;
 import com.medigy.persist.reference.custom.insurance.CoverageLevelType;
 import com.medigy.persist.reference.custom.insurance.InsurancePolicyType;
-import com.medigy.persist.util.HibernateUtil;
+import com.medigy.service.AbstractService;
 import com.medigy.service.ServiceVersion;
 import com.medigy.service.dto.ServiceParameters;
 import com.medigy.service.dto.ServiceReturnValues;
@@ -53,46 +53,35 @@ import com.medigy.service.dto.insurance.NewInsuranceCoverageData;
 import com.medigy.service.insurance.AddInsuranceCoverageService;
 import com.medigy.service.insurance.InsurancePolicyFacade;
 import com.medigy.service.util.ReferenceEntityFacade;
+import org.hibernate.SessionFactory;
 
 import java.io.Serializable;
 
-public class AddInsuranceCoverageServiceImpl implements AddInsuranceCoverageService
+public class AddInsuranceCoverageServiceImpl extends AbstractService implements AddInsuranceCoverageService
 {
     private InsurancePolicyFacade insurancePolicyFacade;
     private ReferenceEntityFacade referenceEntityFacade;
 
-    public ReferenceEntityFacade getReferenceEntityFacade()
+    public AddInsuranceCoverageServiceImpl(final SessionFactory sessionFactory, final ReferenceEntityFacade referenceEntityFacade,
+                                           final InsurancePolicyFacade insurancePolicyFacade)
     {
-        return referenceEntityFacade;
-    }
-
-    public void setReferenceEntityFacade(final ReferenceEntityFacade referenceEntityFacade)
-    {
+        super(sessionFactory);
         this.referenceEntityFacade = referenceEntityFacade;
-    }
-
-    public InsurancePolicyFacade getInsurancePolicyFacade()
-    {
-        return insurancePolicyFacade;
-    }
-
-    public void setInsurancePolicyFacade(final InsurancePolicyFacade insurancePolicyFacade)
-    {
         this.insurancePolicyFacade = insurancePolicyFacade;
     }
 
     public NewInsuranceCoverageData add(final AddInsuranceCoverageParameters params)
     {
-        final Person person = (Person) HibernateUtil.getSession().load(Person.class, params.getPatientId());
+        final Person person = (Person) getSession().load(Person.class, params.getPatientId());
         if (person == null)
             return (NewInsuranceCoverageData) createErrorResponse(params, "Unknown patient ID");
 
         final InsuranceCoverageParameters insuranceCoverage = params.getInsuranceCoverage();
-        final Person contractHolderPerson = (Person) HibernateUtil.getSession().load(Person.class, insuranceCoverage.getInsuranceContractHolderId());
+        final Person contractHolderPerson = (Person) getSession().load(Person.class, insuranceCoverage.getInsuranceContractHolderId());
         if (contractHolderPerson == null)
             return (NewInsuranceCoverageData) createErrorResponse(params, "Unknown contract holder ID");
 
-        final InsurancePlan insPlan = (InsurancePlan) HibernateUtil.getSession().load(InsurancePlan.class, insuranceCoverage.getInsurancePlanId());
+        final InsurancePlan insPlan = (InsurancePlan) getSession().load(InsurancePlan.class, insuranceCoverage.getInsurancePlanId());
         if (insPlan == null)
             return (NewInsuranceCoverageData) createErrorResponse(params, "Unknown insurance plan ID");
 
@@ -108,8 +97,6 @@ public class AddInsuranceCoverageServiceImpl implements AddInsuranceCoverageServ
 
         final Float famDeductible = insuranceCoverage.getFamilyDeductibleAmount();
         insurancePolicyFacade.addInsurancePolicyCoverageLevel(insPolicy, CoverageLevelType.Cache.FAMILY_DEDUCTIBLE.getEntity(), famDeductible);
-
-        HibernateUtil.getSession().flush();
 
         return new NewInsuranceCoverageData() {
             public AddInsuranceCoverageParameters getAddInsuranceCoverageParameters()
@@ -134,9 +121,9 @@ public class AddInsuranceCoverageServiceImpl implements AddInsuranceCoverageServ
         return new ServiceVersion[0];
     }
 
-    public boolean isValid(ServiceParameters parameters)
+    public String[] isValid(ServiceParameters parameters)
     {
-        return false;
+        return null;
     }
 
     public ServiceReturnValues createErrorResponse(final ServiceParameters params, final String errorMessage)

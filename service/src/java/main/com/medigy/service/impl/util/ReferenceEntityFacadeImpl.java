@@ -48,6 +48,7 @@ import com.medigy.persist.reference.custom.party.OrganizationRoleType;
 import com.medigy.persist.reference.custom.person.EthnicityType;
 import com.medigy.persist.reference.custom.person.PatientType;
 import com.medigy.persist.reference.custom.person.PersonRoleType;
+import com.medigy.persist.reference.custom.claim.ClaimType;
 import com.medigy.persist.reference.type.GenderType;
 import com.medigy.persist.reference.type.LanguageType;
 import com.medigy.persist.reference.type.MaritalStatusType;
@@ -55,11 +56,17 @@ import com.medigy.service.util.AbstractFacade;
 import com.medigy.service.util.ReferenceEntityFacade;
 import com.medigy.service.util.UnknownReferenceTypeException;
 import org.hibernate.Criteria;
+import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.Restrictions;
 
 public class ReferenceEntityFacadeImpl extends AbstractFacade implements ReferenceEntityFacade
 {
+    public ReferenceEntityFacadeImpl(final SessionFactory sessionFactory)
+    {
+        super(sessionFactory);
+    }
+
     public InsurancePolicyType getInsurancePolicyType(final String code)
     {
         InsurancePolicyType type = InsurancePolicyType.Cache.getEntity(code);
@@ -223,5 +230,10 @@ public class ReferenceEntityFacadeImpl extends AbstractFacade implements Referen
             type = (PatientType) criteria.uniqueResult();
         }
         return type;
+    }
+
+    public ClaimType getClaimType(final String claimTypeCode)
+    {
+        return ClaimType.Cache.getEntity(claimTypeCode);
     }
 }

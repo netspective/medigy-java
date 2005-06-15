@@ -38,35 +38,35 @@
  */
 package com.medigy.service.impl.person;
 
+import com.medigy.persist.model.contact.State;
+import com.medigy.persist.model.health.HealthCareLicense;
 import com.medigy.persist.model.party.PartyContactMechanism;
 import com.medigy.persist.model.party.PartyContactMechanismPurpose;
 import com.medigy.persist.model.party.PartyRole;
 import com.medigy.persist.model.party.PostalAddress;
 import com.medigy.persist.model.person.Person;
-import com.medigy.persist.model.health.HealthCareLicense;
-import com.medigy.persist.model.contact.State;
-import com.medigy.persist.reference.custom.party.ContactMechanismPurposeType;
-import com.medigy.persist.reference.custom.person.PersonRoleType;
-import com.medigy.persist.reference.custom.person.EthnicityType;
 import com.medigy.persist.reference.custom.health.HealthCareLicenseType;
+import com.medigy.persist.reference.custom.party.ContactMechanismPurposeType;
+import com.medigy.persist.reference.custom.person.EthnicityType;
+import com.medigy.persist.reference.custom.person.PersonRoleType;
 import com.medigy.persist.reference.type.ContactMechanismType;
 import com.medigy.persist.reference.type.GenderType;
 import com.medigy.persist.reference.type.LanguageType;
-import com.medigy.persist.util.HibernateUtil;
-import com.medigy.service.person.PersonFacade;
 import com.medigy.service.dto.person.PersonParameters;
-import com.medigy.service.util.ReferenceEntityFacade;
+import com.medigy.service.person.PersonFacade;
 import com.medigy.service.util.AbstractFacade;
+import com.medigy.service.util.ReferenceEntityFacade;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
+import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Expression;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
-import java.util.Date;
 
 public class PersonFacadeImpl extends AbstractFacade implements PersonFacade
 {
@@ -74,13 +74,9 @@ public class PersonFacadeImpl extends AbstractFacade implements PersonFacade
 
     private ReferenceEntityFacade referenceEntityFacade;
 
-    public ReferenceEntityFacade getReferenceEntityFacade()
+    public PersonFacadeImpl(final SessionFactory sessionFactory, final ReferenceEntityFacade referenceEntityFacade)
     {
-        return referenceEntityFacade;
-    }
-
-    public void setReferenceEntityFacade(final ReferenceEntityFacade referenceEntityFacade)
-    {
+        super(sessionFactory);
         this.referenceEntityFacade = referenceEntityFacade;
     }
 
@@ -153,7 +149,6 @@ public class PersonFacadeImpl extends AbstractFacade implements PersonFacade
         respPartyRole.setType(type);
         respPartyRole.setParty(person);
         person.addPartyRole(respPartyRole);
-        HibernateUtil.getSession().flush();
         return respPartyRole;
     }
 

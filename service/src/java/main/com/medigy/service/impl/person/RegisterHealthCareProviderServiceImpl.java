@@ -43,9 +43,10 @@ import com.medigy.persist.model.contact.State;
 import com.medigy.persist.model.person.Person;
 import com.medigy.persist.reference.custom.health.HealthCareLicenseType;
 import com.medigy.persist.reference.custom.person.PersonRoleType;
-import com.medigy.persist.util.HibernateUtil;
+import com.medigy.service.AbstractService;
 import com.medigy.service.ServiceVersion;
 import com.medigy.service.dto.ServiceParameters;
+import com.medigy.service.dto.ServiceReturnValues;
 import com.medigy.service.dto.person.HealthCareLicenseParameters;
 import com.medigy.service.dto.person.PersonParameters;
 import com.medigy.service.dto.person.RegisterHealthCareProviderParameters;
@@ -53,33 +54,41 @@ import com.medigy.service.dto.person.RegisteredProvider;
 import com.medigy.service.person.PersonFacade;
 import com.medigy.service.person.RegisterHealthCareProviderService;
 import com.medigy.service.util.ReferenceEntityFacade;
+import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 
 import java.io.Serializable;
 
-public class RegisterHealthCareProviderServiceImpl implements RegisterHealthCareProviderService
+public class RegisterHealthCareProviderServiceImpl extends AbstractService implements RegisterHealthCareProviderService
 {
     private PersonFacade personFacade;
     private ReferenceEntityFacade referenceEntityFacade;
 
-    public ReferenceEntityFacade getReferenceEntityFacade()
+    public RegisterHealthCareProviderServiceImpl(final SessionFactory sessionFactory, final PersonFacade personFacade, final ReferenceEntityFacade referenceEntityFacade)
     {
-        return referenceEntityFacade;
-    }
-
-    public void setReferenceEntityFacade(final ReferenceEntityFacade referenceEntityFacade)
-    {
+        super(sessionFactory);
+        this.personFacade = personFacade;
         this.referenceEntityFacade = referenceEntityFacade;
     }
 
-    public PersonFacade getPersonFacade()
+    public ServiceReturnValues createErrorResponse(final ServiceParameters params, final String errorMessage)
     {
-        return personFacade;
-    }
+        return new RegisteredProvider() {
+            public RegisterHealthCareProviderParameters getParameters()
+            {
+                return (RegisterHealthCareProviderParameters) params;
+            }
 
-    public void setPersonFacade(final PersonFacade personFacade)
-    {
-        this.personFacade = personFacade;
+            public Serializable getRegisteredProviderId()
+            {
+                return null;
+            }
+
+            public String getErrorMessage()
+            {
+                return errorMessage;
+            }
+        };
     }
 
     public RegisteredProvider register(final RegisterHealthCareProviderParameters providerParams)
@@ -104,7 +113,7 @@ public class RegisterHealthCareProviderServiceImpl implements RegisterHealthCare
             final String stateString = licenseParam.getState();
             final String countryString = licenseParam.getCountry();
 
-            Country country = (Country) HibernateUtil.getSession().createCriteria(Country.class).add(Restrictions.eq("countryName", countryString)).uniqueResult();
+            Country country = (Country) getSession().createCriteria(Country.class).add(Restrictions.eq("countryName", countryString)).uniqueResult();
             if (country == null)
             {
                 // COUNTRY AND STATE MUST EXIST
@@ -163,8 +172,8 @@ public class RegisterHealthCareProviderServiceImpl implements RegisterHealthCare
         return new ServiceVersion[0];
     }
 
-    public boolean isValid(ServiceParameters parameters)
+    public String[] isValid(ServiceParameters parameters)
     {
-        return false;
+        return null;
     }
 }

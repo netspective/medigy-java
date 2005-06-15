@@ -38,41 +38,40 @@
  */
 package com.medigy.service.insurance;
 
-import com.medigy.persist.model.insurance.InsurancePlan;
 import com.medigy.persist.model.insurance.Coverage;
 import com.medigy.persist.model.insurance.CoverageLevel;
+import com.medigy.persist.model.insurance.InsurancePlan;
 import com.medigy.persist.model.insurance.InsurancePlanCoverageLevel;
 import com.medigy.persist.model.org.Organization;
 import com.medigy.persist.model.person.Person;
-import com.medigy.persist.reference.custom.person.PersonRoleType;
-import com.medigy.persist.reference.custom.insurance.CoverageLevelType;
 import com.medigy.persist.reference.custom.insurance.CoverageLevelBasisType;
+import com.medigy.persist.reference.custom.insurance.CoverageLevelType;
 import com.medigy.persist.reference.custom.insurance.CoverageType;
 import com.medigy.persist.reference.custom.insurance.InsurancePolicyType;
+import com.medigy.persist.reference.custom.person.PersonRoleType;
 import com.medigy.persist.reference.type.GenderType;
-import com.medigy.persist.util.HibernateUtil;
+import com.medigy.service.AbstractSpringTestCase;
 import com.medigy.service.ServiceVersion;
-import com.medigy.service.TestCase;
+import com.medigy.service.dto.insurance.AddInsuranceCoverageParameters;
 import com.medigy.service.dto.insurance.InsuranceCoverageParameters;
 import com.medigy.service.dto.insurance.NewInsuranceCoverageData;
-import com.medigy.service.dto.insurance.AddInsuranceCoverageParameters;
 import org.hibernate.validator.NotNull;
 
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 
-public class TestAddInsuranceCoverageService extends TestCase
+public class TestAddInsuranceCoverageService extends AbstractSpringTestCase
 {
-    protected void setUp() throws Exception
-    {
-        super.setUp();
+    private AddInsuranceCoverageService addInsuranceCoverageService;
 
+    public void setAddInsuranceCoverageService(final AddInsuranceCoverageService addInsuranceCoverageService)
+    {
+        this.addInsuranceCoverageService = addInsuranceCoverageService;
     }
 
     public void testAddInsuranceCoverageService()
     {
-        HibernateUtil.beginTransaction();
         Calendar cal = Calendar.getInstance();
         cal.set(1970, 1, 1);
         final Person patient = Person.createNewPatient();
@@ -95,9 +94,9 @@ public class TestAddInsuranceCoverageService extends TestCase
         ppoPlan.setOrganization(anthem);
         anthem.addInsurancePlan(ppoPlan);
 
-        HibernateUtil.getSession().save(patient);
-        HibernateUtil.getSession().save(patientFather);
-        HibernateUtil.getSession().save(anthem);
+        getSession().save(patient);
+        getSession().save(patientFather);
+        getSession().save(anthem);
 
         final Coverage coverage = new Coverage();
         final CoverageLevel indDeductibleLevel = new CoverageLevel();
@@ -113,7 +112,7 @@ public class TestAddInsuranceCoverageService extends TestCase
         coverage.addCoverageLevel(famDeductibleLevel);
 
         coverage.setType(CoverageType.Cache.MAJOR_MEDICAL.getEntity());
-        HibernateUtil.getSession().save(coverage);
+        getSession().save(coverage);
 
         InsurancePlanCoverageLevel planRel = new InsurancePlanCoverageLevel();
         planRel.setCoverageLevel(indDeductibleLevel);
@@ -125,11 +124,8 @@ public class TestAddInsuranceCoverageService extends TestCase
         famDeductRel.setInsurancePlan(ppoPlan);
         ppoPlan.addCoverageLevelRelationship(famDeductRel);
 
-        HibernateUtil.getSession().save(planRel);
-        HibernateUtil.getSession().save(famDeductRel);
-
-
-        final AddInsuranceCoverageService service = (AddInsuranceCoverageService) getRegistry().getService(AddInsuranceCoverageService.class);
+        getSession().save(planRel);
+        getSession().save(famDeductRel);
 
         final AddInsuranceCoverageParameters params  = new AddInsuranceCoverageParameters() {
             public Serializable getPatientId()
@@ -227,11 +223,8 @@ public class TestAddInsuranceCoverageService extends TestCase
             }
         };
 
-        final NewInsuranceCoverageData newInsuranceCoverageData = service.add(params);
-        HibernateUtil.commitTransaction();
-        assertThat(newInsuranceCoverageData.getErrorMessage(), NULL);
-
-
-
+        final NewInsuranceCoverageData newInsuranceCoverageData = addInsuranceCoverageService.add(params);
+        assertNull(newInsuranceCoverageData.getErrorMessage());
     }
+
 }

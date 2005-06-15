@@ -42,15 +42,20 @@ import com.medigy.persist.model.person.Person;
 import com.medigy.persist.reference.custom.health.HealthCareReferralType;
 import com.medigy.persist.reference.type.GenderType;
 import com.medigy.persist.reference.type.LanguageType;
-import com.medigy.persist.util.HibernateUtil;
-import com.medigy.service.TestCase;
-import com.medigy.service.impl.health.HealthCareReferralFacadeImpl;
+import com.medigy.service.AbstractSpringTestCase;
 
-import java.util.List;
 import java.util.Calendar;
+import java.util.List;
 
-public class TestHealthCareReferral  extends TestCase
+public class TestHealthCareReferral  extends AbstractSpringTestCase
 {
+    private HealthCareReferralFacade healthCareReferralFacade;
+
+    public void setHealthCareReferralFacade(final HealthCareReferralFacade healthCareReferralFacade)
+    {
+        this.healthCareReferralFacade = healthCareReferralFacade;
+    }
+
     public void testHealthCareReferral()
     {
         Calendar cal = Calendar.getInstance();
@@ -77,22 +82,22 @@ public class TestHealthCareReferral  extends TestCase
         provider.addGender(GenderType.Cache.MALE.getEntity());
         provider.addLanguage(LanguageType.Cache.ENGLISH.getEntity());
 
-        HibernateUtil.getSession().save(patient);
-        HibernateUtil.getSession().save(requestorDoctor);
-        HibernateUtil.getSession().save(provider);
+        getSession().save(patient);
+        getSession().save(requestorDoctor);
+        getSession().save(provider);
 
         com.medigy.persist.model.health.HealthCareReferral referral = new com.medigy.persist.model.health.HealthCareReferral();
         referral.setPatient(patient);
         referral.setProvider(provider);
         referral.setRequestor(requestorDoctor);
         referral.setType(HealthCareReferralType.Cache.CONSULTATION.getEntity());
-        HibernateUtil.getSession().save(referral);
+        getSession().save(referral);
 
-        final HealthCareReferralFacade facade = new HealthCareReferralFacadeImpl();
-        List list = facade.listReferralsByPatient(patient.getPartyId());
-        assertThat(list.size(), eq(1));
+        List list = healthCareReferralFacade.listReferralsByPatient(patient.getPartyId());
+        assertEquals(list.size(), 1);
 
-        List requestorList = facade.listReferralsByRequestor(requestorDoctor.getPartyId());
-        assertThat(requestorList.size(), eq(1));
+        List requestorList = healthCareReferralFacade.listReferralsByRequestor(requestorDoctor.getPartyId());
+        assertEquals(requestorList.size(), 1);
     }
+
 }

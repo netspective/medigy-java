@@ -38,18 +38,17 @@
  */
 package com.medigy.service.party;
 
+import com.medigy.persist.model.contact.Country;
+import com.medigy.persist.model.contact.State;
 import com.medigy.persist.model.party.Party;
 import com.medigy.persist.model.party.PartyContactMechanism;
 import com.medigy.persist.model.party.PartyContactMechanismPurpose;
 import com.medigy.persist.model.party.PostalAddress;
 import com.medigy.persist.model.person.Person;
-import com.medigy.persist.model.contact.Country;
-import com.medigy.persist.model.contact.State;
 import com.medigy.persist.reference.custom.party.ContactMechanismPurposeType;
 import com.medigy.persist.reference.type.ContactMechanismType;
 import com.medigy.persist.reference.type.GenderType;
-import com.medigy.persist.util.HibernateUtil;
-import com.medigy.service.TestCase;
+import com.medigy.service.AbstractSpringTestCase;
 import com.medigy.service.ServiceVersion;
 import com.medigy.service.contact.AddContactMechanismService;
 import com.medigy.service.dto.party.AddPostalAddressParameters;
@@ -61,45 +60,36 @@ import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.Date;
+import java.util.List;
 
-public class TestAddContactMechanismService extends TestCase
+public class TestAddContactMechanismService extends AbstractSpringTestCase
 {
     private static final Log log = LogFactory.getLog(TestAddContactMechanismService.class);
 
-    /*
-    public String getDataSetFile()
-    {
-        return "/com/medigy/service/party/TestAddContactMechanismService.xml";
-    }
-    */
+    private AddContactMechanismService addContactMechanismService;
 
-    protected void setUp() throws Exception
+    public void setAddContactMechanismService(final AddContactMechanismService addContactMechanismService)
     {
-        super.setUp();
-        HibernateUtil.beginTransaction();
-        Country country = new Country("United States of America",  "USA");
-        State state = new State("Virginia", "VA");
-        country.addState(state);
-        getSession().save(country);
-        HibernateUtil.commitTransaction();
+        this.addContactMechanismService = addContactMechanismService;
     }
 
     public void testAddPostalAddress() throws Exception
     {
-        // the dataset inserted this person
-        HibernateUtil.beginTransaction();
+        Country country = new Country("United States of America",  "USA");
+        State state = new State("Virginia", "VA");
+        country.addState(state);
+        getSession().save(country);
+
         final Person p = new Person();
         p.setLastName("Hackett");
         p.setFirstName("Ryan");
         p.addGender(GenderType.Cache.MALE.getEntity());
         p.setBirthDate(new Date(123456));
-
         getSession().save(p);
 
-        AddContactMechanismService service =  (AddContactMechanismService) getRegistry().getService(AddContactMechanismService.class);
-        final NewPostalAddress address = service.addPostalAddress(new AddPostalAddressParameters() {
+        //AddContactMechanismService service =  (AddContactMechanismService) getRegistry().getService(AddContactMechanismService.class);
+        final NewPostalAddress address = addContactMechanismService.addPostalAddress(new AddPostalAddressParameters() {
                 public Serializable getPartyId()
                 {
                     return p.getPartyId();
@@ -172,15 +162,14 @@ public class TestAddContactMechanismService extends TestCase
                 }
 
             });
-        HibernateUtil.commitTransaction();
-        assertThat(address.getErrorMessage(), NULL);
+        assertNull(address.getErrorMessage());
 
         // first check the relationship table between the actual contact mechanism and the party
-        Criteria criteria = HibernateUtil.getSession().createCriteria(PartyContactMechanism.class);
+        Criteria criteria = getSession().createCriteria(PartyContactMechanism.class);
         criteria.createCriteria("party").add(Restrictions.eq("partyId", p.getPartyId()));
         List partyContactMechList = criteria.list();
 
-        assertThat(partyContactMechList.size(), eq(1));
+        assertEquals(partyContactMechList.size(), 1);
         PartyContactMechanism partyContactMechanism = ((PartyContactMechanism)partyContactMechList.toArray()[0]);
         final Party party = partyContactMechanism.getParty();
         assertEquals(party.getPartyId(), p.getPartyId());
@@ -190,7 +179,7 @@ public class TestAddContactMechanismService extends TestCase
         assertEquals(purpose.getType(), ContactMechanismPurposeType.Cache.HOME_ADDRESS.getEntity());
 
         // verify the contact mchanism data
-        final PostalAddress ps = (PostalAddress) HibernateUtil.getSession().load(PostalAddress.class, address.getPostalAddressId());
+        final PostalAddress ps = (PostalAddress) getSession().load(PostalAddress.class, address.getPostalAddressId());
         assertEquals(ps.getAddress1(), "123 Acme Road");
         assertEquals(ps.getAddress2(), "Suite 100");
         assertEquals(5, ps.getAddressBoundaries().size());
@@ -201,5 +190,5 @@ public class TestAddContactMechanismService extends TestCase
         assertEquals(ps.getCountry().getCountryAbbreviation(), "USA");
     }
 
-   
+
 }

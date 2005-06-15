@@ -44,18 +44,24 @@ import com.medigy.persist.model.person.Person;
 import com.medigy.persist.reference.custom.party.PartyRelationshipType;
 import com.medigy.persist.reference.custom.person.PersonRoleType;
 import com.medigy.persist.reference.type.GenderType;
-import com.medigy.persist.util.HibernateUtil;
-import com.medigy.service.TestCase;
-import com.medigy.service.impl.party.PartyRelationshipFacadeImpl;
+import com.medigy.service.AbstractSpringTestCase;
+import org.hibernate.Session;
 
 import java.util.Calendar;
 import java.util.List;
 
-public class TestPartyRelationshipFacade extends TestCase
+public class TestPartyRelationshipFacade extends AbstractSpringTestCase
 {
-  
+    private PartyRelationshipFacade partyRelationshipFacade;
+
+    public void setPartyRelationshipFacade(final PartyRelationshipFacade partyRelationshipFacade)
+    {
+        this.partyRelationshipFacade = partyRelationshipFacade;
+    }
+
     public void testAddPartyRelationship()
     {
+        final Session session = getSession();
         Calendar calendar = Calendar.getInstance();
         calendar.set(1980,1,1);
 
@@ -74,9 +80,9 @@ public class TestPartyRelationshipFacade extends TestCase
         personA.addPartyRole(PersonRoleType.Cache.CHILD.getEntity());
         personB.addPartyRole(PersonRoleType.Cache.PARENT.getEntity());
 
-        HibernateUtil.getSession().save(personA);
-        HibernateUtil.getSession().save(personB);
-        HibernateUtil.closeSession();
+        session.save(personA);
+        session.save(personB);
+
         assertNotNull(personA.getPartyRoles());
         assertNotNull(personB.getPartyRoles());
         assertEquals(1, personA.getPartyRoles().size());
@@ -88,11 +94,9 @@ public class TestPartyRelationshipFacade extends TestCase
         PartyRole roleB = personB.getPartyRole(PersonRoleType.Cache.PARENT.getEntity());
         assertEquals(PersonRoleType.Cache.PARENT.getEntity(), roleB.getType());
 
-        PartyRelationshipFacade facade = new PartyRelationshipFacadeImpl();
-        PartyRelationship rel = facade.addPartyRelationship(PartyRelationshipType.Cache.FAMILY.getEntity(), roleA, roleB);
-        HibernateUtil.closeSession();
+        PartyRelationship rel = partyRelationshipFacade.addPartyRelationship(PartyRelationshipType.Cache.FAMILY.getEntity(), roleA, roleB);
 
-        final List relationships = HibernateUtil.getSession().createCriteria(PartyRelationship.class).list();
+        final List relationships = session.createCriteria(PartyRelationship.class).list();
         assertEquals(1, relationships.size());
         PartyRelationship partyRelationship = ((PartyRelationship) relationships.toArray()[0]);
         PartyRelationshipType type = partyRelationship.getType();

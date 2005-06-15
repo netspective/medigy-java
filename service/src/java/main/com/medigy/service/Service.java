@@ -39,13 +39,15 @@
 package com.medigy.service;
 
 import com.medigy.service.dto.ServiceParameters;
+import com.medigy.service.dto.ServiceReturnValues;
 
 public interface Service
 {
     public ServiceVersion[] getSupportedServiceVersions();
 
-    public boolean isValid(ServiceParameters parameters);
+    public String[] isValid(ServiceParameters parameters);
 
-    //public ServiceReturnValues createErrorResponse(final ServiceParameters params, final String errorMessage);
+    public ServiceReturnValues createErrorResponse(final ServiceParameters params, final String errorMessage);
+    
 
 }

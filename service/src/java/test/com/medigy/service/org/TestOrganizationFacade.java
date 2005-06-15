@@ -5,20 +5,25 @@ import com.medigy.persist.model.party.PartyRelationship;
 import com.medigy.persist.reference.custom.party.OrganizationRoleType;
 import com.medigy.persist.reference.custom.party.PartyRelationshipType;
 import com.medigy.persist.util.HibernateUtil;
-import com.medigy.service.TestCase;
-import com.medigy.service.impl.org.OrganizationFacadeImpl;
+import com.medigy.service.AbstractSpringTestCase;
 
 import java.util.List;
 
-public class TestOrganizationFacade extends TestCase
+public class TestOrganizationFacade extends AbstractSpringTestCase
 {
+    private OrganizationFacade organizationFacade;
+
+    public void setOrganizationFacade(final OrganizationFacade organizationFacade)
+    {
+        this.organizationFacade = organizationFacade;
+    }
+
     public void testAddInsuranceGroup()
     {
         Organization parentOrg = (Organization) HibernateUtil.getSession().load(Organization.class, new Long(2));
-        OrganizationFacade facade = new OrganizationFacadeImpl();
 
         // TEST addInsuranceGroup
-        facade.addInsuranceGroup(parentOrg, "Software Developers");
+        organizationFacade.addInsuranceGroup(parentOrg, "Software Developers");
         HibernateUtil.closeSession();
 
         List list = HibernateUtil.getSession().createCriteria(PartyRelationship.class).list();
@@ -30,13 +35,8 @@ public class TestOrganizationFacade extends TestCase
         assertTrue(relationship.getPartyFrom().hasPartyRole(OrganizationRoleType.Cache.OTHER_ORG_UNIT.getEntity()));
 
         // TEST listInsuranceGroups()
-        final List groups = facade.listInsuranceGroups(parentOrg);
+        final List groups = organizationFacade.listInsuranceGroups(parentOrg);
         assertEquals(1, groups.size());
-    }
-    
-    public String getDataSetFile()
-    {
-        return "/com/medigy/service/org/TestOrganizationFacade.xml";
     }
 
 }

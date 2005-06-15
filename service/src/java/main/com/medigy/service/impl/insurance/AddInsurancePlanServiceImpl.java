@@ -110,8 +110,8 @@ public class AddInsurancePlanServiceImpl implements AddInsurancePlanService
         return new ServiceVersion[0];
     }
 
-    public boolean isValid(ServiceParameters parameters)
+    public String[] isValid(ServiceParameters parameters)
     {
-        return false;
+        return null;
     }
 }

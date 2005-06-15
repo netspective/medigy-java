@@ -52,6 +52,7 @@ import com.medigy.service.util.AbstractFacade;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
+import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Expression;
 
 import java.util.ArrayList;
@@ -61,6 +62,11 @@ import java.util.List;
 public class PartyRelationshipFacadeImpl extends AbstractFacade implements PartyRelationshipFacade
 {
     private static Log log = LogFactory.getLog(PartyRelationshipFacadeImpl.class);
+
+    public PartyRelationshipFacadeImpl(final SessionFactory sessionFactory)
+    {
+        super(sessionFactory);
+    }
 
     public List getValidPartyRolesByRelationshipType(PartyRelationshipType type)
     {

@@ -38,14 +38,14 @@
  */
 package com.medigy.service;
 
-import com.medigy.service.health.TestHealthCareReferral;
-import com.medigy.service.insurance.TestInsurancePolicyFacade;
-import com.medigy.service.insurance.TestAddInsuranceCoverageService;
-import com.medigy.service.party.TestAddContactMechanismService;
-import com.medigy.service.party.TestPartyRelationshipFacade;
 import com.medigy.service.party.TestContactMechanismFacade;
+import com.medigy.service.party.TestPartyRelationshipFacade;
+import com.medigy.service.party.TestAddContactMechanismService;
 import com.medigy.service.person.TestPersonFacade;
 import com.medigy.service.person.TestRegisterHealthCareProviderService;
+import com.medigy.service.insurance.TestInsurancePolicyFacade;
+import com.medigy.service.insurance.TestAddInsuranceCoverageService;
+import com.medigy.service.health.TestHealthCareReferral;
 import com.medigy.service.contact.TestEditContactMechanismService;
 import junit.framework.Test;
 

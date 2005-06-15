@@ -38,18 +38,24 @@
  */
 package com.medigy.service.contact;
 
-import com.medigy.service.dto.contact.EditPostalAddressParameters;
-import com.medigy.service.ServiceVersion;
-import com.medigy.persist.util.HibernateUtil;
-import com.medigy.persist.model.party.PostalAddress;
 import com.medigy.persist.model.contact.Country;
-import com.medigy.persist.model.contact.State;
 import com.medigy.persist.model.contact.County;
+import com.medigy.persist.model.contact.State;
+import com.medigy.persist.model.party.PostalAddress;
+import com.medigy.service.AbstractSpringTestCase;
+import com.medigy.service.ServiceVersion;
+import com.medigy.service.dto.contact.EditPostalAddressParameters;
 
 import java.io.Serializable;
 
-public class TestEditContactMechanismService extends com.medigy.service.TestCase
+public class TestEditContactMechanismService extends AbstractSpringTestCase
 {
+    private EditContactMechanismService editContactMechanismService;
+
+    public void setEditContactMechanismService(final EditContactMechanismService editContactMechanismService)
+    {
+        this.editContactMechanismService = editContactMechanismService;
+    }
     /*
     public String getDataSetFile()
     {
@@ -80,12 +86,10 @@ public class TestEditContactMechanismService extends com.medigy.service.TestCase
         address.setState(virginia);
         address.setCounty(county);
 
-        HibernateUtil.getSession().save(country);
-        HibernateUtil.getSession().save(address);
+        getSession().save(country);
+        getSession().save(address);
 
-        final EditContactMechanismService service = (EditContactMechanismService) getRegistry().getService(EditContactMechanismService.class);// getComponent(EditContactMechanismService.class);
-
-        service.editPostalAddress(new EditPostalAddressParameters() {
+        editContactMechanismService.editPostalAddress(new EditPostalAddressParameters() {
             public Serializable getPostalAddressId()
             {
                 return address.getPostalAddressId();
@@ -141,9 +145,9 @@ public class TestEditContactMechanismService extends com.medigy.service.TestCase
                 return null;
             }
         });
-        HibernateUtil.closeSession();
 
-        final PostalAddress updatedAddress = (PostalAddress) HibernateUtil.getSession().load(PostalAddress.class, address.getPostalAddressId());
+        final PostalAddress updatedAddress = (PostalAddress) getSession().load(PostalAddress.class, address.getPostalAddressId());
         assertNotNull(updatedAddress);
     }
+
 }

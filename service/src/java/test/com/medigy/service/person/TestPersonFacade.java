@@ -44,15 +44,20 @@ import com.medigy.persist.reference.custom.person.EthnicityType;
 import com.medigy.persist.reference.type.GenderType;
 import com.medigy.persist.reference.type.LanguageType;
 import com.medigy.persist.reference.type.MaritalStatusType;
-import com.medigy.persist.util.HibernateUtil;
-import com.medigy.service.TestCase;
+import com.medigy.service.AbstractSpringTestCase;
 import com.medigy.service.dto.person.PersonParameters;
 
 import java.util.Calendar;
 import java.util.Date;
 
-public class TestPersonFacade extends TestCase
+public class TestPersonFacade extends AbstractSpringTestCase
 {
+    private PersonFacade personFacade;
+
+    public void setPersonFacade(final PersonFacade personFacade)
+    {
+        this.personFacade = personFacade;
+    }
 
     public void testListPersonByLastName() throws Exception
     {
@@ -65,17 +70,14 @@ public class TestPersonFacade extends TestCase
         personA.setMiddleName("D");
         personA.setBirthDate(cal.getTime());
         personA.addGender(GenderType.Cache.MALE.getEntity());
-        HibernateUtil.getSession().save(personA);
+        getSession().save(personA);
 
         Person personB = new Person();
         personB.setLastName("Hackett");
         personB.setFirstName("Brian");
         personB.setBirthDate(cal.getTime());
         personB.addGender(GenderType.Cache.MALE.getEntity());
-        HibernateUtil.getSession().save(personB);
-        HibernateUtil.closeSession();
-
-        final PersonFacade personFacade = (PersonFacade) getRegistry().getService(PersonFacade.class);
+        getSession().save(personB);
 
         Person[] personList = personFacade.listPersonByLastName("d%", false);
         assertNotNull(personList);
@@ -93,7 +95,7 @@ public class TestPersonFacade extends TestCase
 
         personList = personFacade.listPersonByLastName("%", false);
         assertNotNull(personList);
-        assertEquals(personList.length, 2);
+        assertEquals(2, personList.length);
         assertEquals(personList[0].getFirstName(), "John");
         assertEquals(personList[0].getLastName(), "Doe");
         assertEquals(personList[0].getMiddleName(), "D");
@@ -105,7 +107,6 @@ public class TestPersonFacade extends TestCase
     {
         final Calendar cal = Calendar.getInstance();
         cal.set(1980, 1, 1);
-        final PersonFacade personFacade = (PersonFacade) getRegistry().getService(PersonFacade.class);
         final Person person = personFacade.createPerson(new PersonParameters() {
             public String getFirstName()
             {
@@ -183,15 +184,15 @@ public class TestPersonFacade extends TestCase
             }
         });
 
-        assertThat(person, NOT_NULL);
-        assertThat(person.getLastName(), eq("Hackett"));
-        assertThat(person.getFirstName(), eq("Ryan"));
-        assertThat(person.getMiddleName(), eq("P"));
+        assertNotNull(person);
+        assertEquals(person.getLastName(), ("Hackett"));
+        assertEquals(person.getFirstName(), ("Ryan"));
+        assertEquals(person.getMiddleName(), ("P"));
         cal.setTime(person.getBirthDate());
-        assertThat(cal.get(Calendar.YEAR), eq(1980));
+        assertEquals(cal.get(Calendar.YEAR), (1980));
         //assertThat(person.getSsn(), eq("123456789"));
         //assertThat(person.getDriversLicenseNumber(), eq("000000000"));
-        assertThat(person.hasEthnicity(EthnicityType.Cache.AFRICAN_AMERICAN.getEntity()), eq(true));
-        assertThat(person.speaksLanguage(LanguageType.Cache.ENGLISH.getEntity()), eq(true));
+        assertTrue(person.hasEthnicity(EthnicityType.Cache.AFRICAN_AMERICAN.getEntity()));
+        assertTrue(person.speaksLanguage(LanguageType.Cache.ENGLISH.getEntity()));
     }
 }

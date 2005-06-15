@@ -50,6 +50,7 @@ import com.medigy.persist.reference.type.GenderType;
 import com.medigy.persist.reference.type.MaritalStatusType;
 import com.medigy.persist.util.HibernateUtil;
 import com.medigy.service.ServiceVersion;
+import com.medigy.service.AbstractService;
 import com.medigy.service.contact.ContactMechanismFacade;
 import com.medigy.service.dto.ServiceParameters;
 import com.medigy.service.dto.insurance.InsuranceCoverageParameters;
@@ -65,13 +66,14 @@ import com.medigy.service.util.ReferenceEntityFacade;
 import com.medigy.service.util.UnknownReferenceTypeException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.SessionFactory;
 
 import java.io.Serializable;
 
 /**
  * Service class for registering a new patient
  */
-public class PatientRegistrationServiceImpl implements PatientRegistrationService
+public class PatientRegistrationServiceImpl extends AbstractService implements PatientRegistrationService
 {
     private static final Log log = LogFactory.getLog(PatientRegistrationServiceImpl.class);
     private boolean createEmployerIfUnknown = true;
@@ -83,46 +85,16 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
     private ContactMechanismFacade contactMechanismFacade;
     private InsurancePolicyFacade insurancePolicyFacade;
 
-    public InsurancePolicyFacade getInsurancePolicyFacade()
+    public PatientRegistrationServiceImpl(final SessionFactory sessionFactory, final ReferenceEntityFacade referenceEntityFacade,
+                                          final PersonFacade personFacade, final ContactMechanismFacade contactMechanismFacade,
+                                          final InsurancePolicyFacade insurancePolicyFacade)
     {
-        return insurancePolicyFacade;
-    }
-
-    public void setInsurancePolicyFacade(final InsurancePolicyFacade insurancePolicyFacade)
-    {
+        super(sessionFactory);
+        this.referenceEntityFacade = referenceEntityFacade;
+        this.personFacade = personFacade;
+        this.contactMechanismFacade = contactMechanismFacade;
         this.insurancePolicyFacade = insurancePolicyFacade;
     }
-
-    public ContactMechanismFacade getContactMechanismFacade()
-    {
-        return contactMechanismFacade;
-    }
-
-    public void setContactMechanismFacade(final ContactMechanismFacade contactMechanismFacade)
-    {
-        this.contactMechanismFacade = contactMechanismFacade;
-    }
-
-    public PersonFacade getPersonFacade()
-    {
-        return personFacade;
-    }
-
-    public void setPersonFacade(final PersonFacade personFacade)
-    {
-        this.personFacade = personFacade;
-    }
-
-    public ReferenceEntityFacade getReferenceEntityFacade()
-    {
-        return referenceEntityFacade;
-    }
-
-    public void setReferenceEntityFacade(final ReferenceEntityFacade referenceEntityFacade)
-    {
-        this.referenceEntityFacade = referenceEntityFacade;
-    }
-
 
     public ServiceVersion[] getSupportedServiceVersions()
     {
@@ -253,7 +225,7 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
             if (patientParameters.getDriversLicenseNumber() != null)
                 person.setDriversLicenseNumber(patientParameters.getDriversLicenseNumber());
                 
-            HibernateUtil.getSession().save(person);
+            getSession().save(person);
             registerPostalAddress(person, params);
             registerInsuranceInformation(person, params);
             registerHomePhone(person, params);
@@ -302,7 +274,7 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
     }
 
     // TODO: Put a validator and return a list of errors/warnings
-    public boolean isValid(ServiceParameters params)
+    public String[] isValid(ServiceParameters params)
     {
         RegisterPatientParameters patientParameters = (RegisterPatientParameters) params;
         assert  patientParameters.getPerson().getGenderCode() != null :
@@ -314,7 +286,7 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
         assert ethnicities != null && ethnicities.length > 0 :
             "There must be at least one ethnicity.";
 
-        return true;
+        return null;
     }
 
     public RegisteredPatient createErrorResponse(final ServiceParameters params, final String errorMessage)

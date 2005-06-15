@@ -12,6 +12,9 @@
             <fileset dir="${persistence.home}/depend/lib/build" includes="*.jar"/>
             <fileset dir="${persistence.home}/depend/lib/main" includes="*.jar"/>
 
+            <fileset dir="${service.home}/depend/lib/build" includes="*.jar"/>
+            <fileset dir="${service.home}/depend/lib/main" includes="*.jar"/>
+        
             <path location="${persistence.artifacts.home}/classes/main"/>
         </path>
     </target>

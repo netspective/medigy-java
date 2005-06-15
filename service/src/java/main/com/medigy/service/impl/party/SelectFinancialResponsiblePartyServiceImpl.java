@@ -45,6 +45,7 @@ import com.medigy.persist.reference.custom.party.PartyRoleType;
 import com.medigy.persist.util.HibernateUtil;
 import com.medigy.service.ServiceVersion;
 import com.medigy.service.dto.ServiceParameters;
+import com.medigy.service.dto.ServiceReturnValues;
 import com.medigy.service.dto.person.SelectFinancialResponsiblePartyParameters;
 import com.medigy.service.party.PartyRelationshipFacade;
 import com.medigy.service.party.SelectFinancialResponsiblePartyService;
@@ -83,6 +84,11 @@ public class SelectFinancialResponsiblePartyServiceImpl implements SelectFinanci
         this.referenceEntityFacade = referenceEntityFacade;
     }
 
+    public ServiceReturnValues createErrorResponse(final ServiceParameters params, final String errorMessage)
+    {
+        return null;
+    }
+
     public void select(final SelectFinancialResponsiblePartyParameters params)
     {
         final Serializable respPartyId = params.getResponsiblePartyId();
@@ -116,8 +122,8 @@ public class SelectFinancialResponsiblePartyServiceImpl implements SelectFinanci
         return new ServiceVersion[0];
     }
 
-    public boolean isValid(ServiceParameters parameters)
+    public String[] isValid(ServiceParameters parameters)
     {
-        return false;
+        return null;
     }
 }

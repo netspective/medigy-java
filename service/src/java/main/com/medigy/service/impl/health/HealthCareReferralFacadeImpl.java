@@ -40,12 +40,18 @@ package com.medigy.service.impl.health;
 
 import com.medigy.service.health.HealthCareReferralFacade;
 import com.medigy.service.util.AbstractFacade;
+import org.hibernate.SessionFactory;
 
 import java.io.Serializable;
 import java.util.List;
 
 public class HealthCareReferralFacadeImpl extends AbstractFacade implements HealthCareReferralFacade
 {
+    public HealthCareReferralFacadeImpl(final SessionFactory sessionFactory)
+    {
+        super(sessionFactory);
+    }
+
     /**
      * Lists all referrals by the patient ID
      * @param patientId

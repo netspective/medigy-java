@@ -43,12 +43,18 @@ import com.medigy.persist.reference.custom.GeographicBoundaryType;
 import com.medigy.service.contact.GeographicBoundaryFacade;
 import com.medigy.service.util.AbstractFacade;
 import org.hibernate.Criteria;
+import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 
 import java.util.List;
 
 public class GeographicBoundaryFacadeImpl extends AbstractFacade implements GeographicBoundaryFacade
 {
+    public GeographicBoundaryFacadeImpl(final SessionFactory sessionFactory)
+    {
+        super(sessionFactory);
+    }
+
     /**
      * Adds a new geographic boundary who has no parents
      *

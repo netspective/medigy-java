@@ -5,16 +5,21 @@ import com.medigy.persist.model.party.PartyRelationship;
 import com.medigy.persist.model.party.PartyRole;
 import com.medigy.persist.reference.custom.party.OrganizationRoleType;
 import com.medigy.persist.reference.custom.party.PartyRelationshipType;
-import com.medigy.persist.util.HibernateUtil;
 import com.medigy.service.org.OrganizationFacade;
 import com.medigy.service.util.AbstractFacade;
 import org.hibernate.Criteria;
+import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Expression;
 
 import java.util.List;
 
 public class OrganizationFacadeImpl extends AbstractFacade implements OrganizationFacade
 {
+    protected OrganizationFacadeImpl(final SessionFactory sessionFactory)
+    {
+        super(sessionFactory);
+    }
+
     protected PartyRelationshipType getGroupToEmployerRelationshipType()
     {
         return PartyRelationshipType.Cache.ORGANIZATION_ROLLUP.getEntity();
@@ -34,7 +39,7 @@ public class OrganizationFacadeImpl extends AbstractFacade implements Organizati
         childRole.setType(OrganizationRoleType.Cache.HOSPITAL.getEntity());
         childRole.setParty(childOrg);
         childOrg.addPartyRole(childRole);
-        HibernateUtil.getSession().save(childOrg);
+        getSession().save(childOrg);
 
         // the parent org might already have the parent role
         PartyRole parentRole = null;

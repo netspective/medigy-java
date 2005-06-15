@@ -44,6 +44,7 @@ import com.medigy.persist.model.party.Party;
 import com.medigy.persist.model.party.PhoneNumber;
 import com.medigy.persist.model.party.PostalAddress;
 import com.medigy.persist.util.HibernateUtil;
+import com.medigy.service.AbstractService;
 import com.medigy.service.ServiceVersion;
 import com.medigy.service.contact.AddContactMechanismService;
 import com.medigy.service.contact.ContactMechanismFacade;
@@ -58,12 +59,23 @@ import com.medigy.service.dto.party.PostalAddressParameters;
 import com.medigy.service.util.UnknownReferenceTypeException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.validator.ClassValidator;
+import org.hibernate.validator.InvalidValue;
+import org.hibernate.SessionFactory;
 
 import java.io.Serializable;
 
-public class AddContactMechanismServiceImpl implements AddContactMechanismService
+public class AddContactMechanismServiceImpl extends AbstractService implements AddContactMechanismService
 {
     private static final Log log = LogFactory.getLog(AddContactMechanismServiceImpl.class);
+    private static final ClassValidator postalAddressValidator = new ClassValidator(AddPostalAddressParameters.class);
+
+
+    public AddContactMechanismServiceImpl(final SessionFactory sessionFactory, final ContactMechanismFacade contactMechanismFacade)
+    {
+        super(sessionFactory);
+        this.contactMechanismFacade = contactMechanismFacade;
+    }
 
     private ContactMechanismFacade contactMechanismFacade;
 
@@ -82,21 +94,21 @@ public class AddContactMechanismServiceImpl implements AddContactMechanismServic
         return new ServiceVersion[0];
     }
 
-    public boolean isValid(ServiceParameters parameters)
+    public String[] isValid(ServiceParameters parameters)
     {
         if (parameters instanceof AddPostalAddressParameters)
         {
-            validatePostalAddress((AddPostalAddressParameters) parameters);
+            return validatePostalAddress((AddPostalAddressParameters) parameters);
         }
         else if (parameters instanceof AddEmailParameters)
         {
-            validateEmail((AddEmailParameters) parameters);
+            return validateEmail((AddEmailParameters) parameters);
         }
         else if (parameters instanceof AddPhoneParameters)
         {
-            validatePhone((AddPhoneParameters) parameters);
+            return validatePhone((AddPhoneParameters) parameters);
         }
-        return false;
+        return null;
     }
 
     public NewPostalAddress createErrorResponse(final ServiceParameters params, final String errorMessage)
@@ -129,30 +141,33 @@ public class AddContactMechanismServiceImpl implements AddContactMechanismServic
             };
     }
 
-    public void validatePostalAddress(final AddPostalAddressParameters addParams)
+    public String[] validatePostalAddress(final AddPostalAddressParameters addParams)
     {
-        final PostalAddressParameters param = addParams.getPostalAddressParameters();
-        assert (param.getStreet1() != null && param.getStreet1().length() > 0) : "Street Address value cannot be empty.";
-        assert (param.getCity() != null && param.getCity().length() > 0) : "City value cannot be  empty";
-        assert (param.getState() != null && param.getState().length() > 0) : "State value cannot be empty";
-        assert (param.getPostalCode() != null && param.getPostalCode().length() > 0) : "Postal Code value cannot be empty";
-        assert (param.getCountry() != null && param.getCountry().length() > 0) : "Country value cannot be empty";
+        InvalidValue[] validationMessages = postalAddressValidator.getInvalidValues(addParams);
+        String[] errorMessages = new String[validationMessages.length];
+        for (int i=0; i < validationMessages.length; i++)
+        {
+            errorMessages[i] = validationMessages[i].getMessage();
+        }
+        return errorMessages;
     }
 
-    public void validateEmail(final AddEmailParameters param)
+    public String[] validateEmail(final AddEmailParameters param)
     {
         // TODO: Add email validation rules
+        return null;
     }
 
-    public void validatePhone(final AddPhoneParameters param)
+    public String[] validatePhone(final AddPhoneParameters param)
     {
         // TODO: Add phone validation rules
+        return null;
     }
 
 
     public NewPostalAddress addPostalAddress(final AddPostalAddressParameters addParams)
     {
-        final Party party = (Party) HibernateUtil.getSession().load(Party.class, addParams.getPartyId());
+        final Party party = (Party) getSession().load(Party.class, addParams.getPartyId());
         final PostalAddressParameters param = addParams.getPostalAddressParameters();
 
         final PostalAddress address = contactMechanismFacade.addPostalAddress(param.getStreet1(), param.getStreet2(),
@@ -160,13 +175,12 @@ public class AddContactMechanismServiceImpl implements AddContactMechanismServic
 
         // NOTE: using the PostalAddress as the contact mechanism introduces multiple
         // PartyContactMechanisms so don't use the PostalAddress, instead use ContactMechanism
-        ContactMechanism cm = (ContactMechanism) HibernateUtil.getSession().load(ContactMechanism.class, address.getContactMechanismId());
-
         try
         {
+            ContactMechanism cm = contactMechanismFacade.getContactMechanismById(address.getContactMechanismId());
             contactMechanismFacade.addPartyContactMechanism(cm, party, param.getPurposeType(), param.getPurposeDescription());
         }
-        catch (UnknownReferenceTypeException e)
+        catch (Exception e)
         {
             final String error = e.getMessage();
             return createErrorResponse(addParams, error);

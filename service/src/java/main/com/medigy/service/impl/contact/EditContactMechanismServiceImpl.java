@@ -38,31 +38,28 @@
  */
 package com.medigy.service.impl.contact;
 
-import com.medigy.service.ServiceVersion;
-import com.medigy.service.contact.EditContactMechanismService;
-import com.medigy.service.contact.ContactMechanismFacade;
-import com.medigy.service.dto.contact.EditPostalAddressParameters;
-import com.medigy.service.dto.ServiceParameters;
-import com.medigy.service.dto.ServiceReturnValues;
-import com.medigy.persist.util.HibernateUtil;
-import com.medigy.persist.model.party.PostalAddress;
-import com.medigy.persist.model.contact.Country;
-import com.medigy.persist.model.contact.State;
 import com.medigy.persist.model.contact.City;
+import com.medigy.persist.model.contact.Country;
 import com.medigy.persist.model.contact.County;
 import com.medigy.persist.model.contact.PostalCode;
+import com.medigy.persist.model.contact.State;
+import com.medigy.persist.model.party.PostalAddress;
+import com.medigy.service.AbstractService;
+import com.medigy.service.ServiceVersion;
+import com.medigy.service.contact.ContactMechanismFacade;
+import com.medigy.service.contact.EditContactMechanismService;
+import com.medigy.service.dto.ServiceParameters;
+import com.medigy.service.dto.ServiceReturnValues;
+import com.medigy.service.dto.contact.EditPostalAddressParameters;
+import org.hibernate.SessionFactory;
 
-public class EditContactMechanismServiceImpl implements EditContactMechanismService
+public class EditContactMechanismServiceImpl extends AbstractService implements EditContactMechanismService
 {
     private ContactMechanismFacade contactMechanismFacade;
 
-    public ContactMechanismFacade getContactMechanismFacade()
+    protected EditContactMechanismServiceImpl(final SessionFactory sessionFactory, final ContactMechanismFacade contactMechanismFacade)
     {
-        return contactMechanismFacade;
-    }
-
-    public void setContactMechanismFacade(final ContactMechanismFacade contactMechanismFacade)
-    {
+        super(sessionFactory);
         this.contactMechanismFacade = contactMechanismFacade;
     }
 
@@ -71,13 +68,13 @@ public class EditContactMechanismServiceImpl implements EditContactMechanismServ
         return new ServiceVersion[0];
     }
 
-    public boolean isValid(ServiceParameters parameters)
+    public String[] isValid(ServiceParameters parameters)
     {
         if (parameters instanceof EditPostalAddressParameters)
         {
             isPostalAdressParametersValid((EditPostalAddressParameters) parameters);
         }
-        return true;
+        return null;
     }
 
     public ServiceReturnValues createErrorResponse(final ServiceParameters params, final String errorMessage)
@@ -89,7 +86,7 @@ public class EditContactMechanismServiceImpl implements EditContactMechanismServ
     {
         assert (params.getPostalAddressId() != null) : "The Postal Address ID cannot be null.";
 
-        Country country = getContactMechanismFacade().getCountry(params.getCountry());
+        Country country = contactMechanismFacade.getCountry(params.getCountry());
         assert (country != null) : "The Country is UNKNOWN";
 
         State state = country.getStateByName(params.getState());
@@ -100,8 +97,7 @@ public class EditContactMechanismServiceImpl implements EditContactMechanismServ
 
     public void editPostalAddress(final EditPostalAddressParameters params)
     {
-        HibernateUtil.beginTransaction();
-        final PostalAddress address = (PostalAddress) HibernateUtil.getSession().createQuery("from PostalAddress where contactMechanismId = " +
+        final PostalAddress address = (PostalAddress) getSession().createQuery("from PostalAddress where contactMechanismId = " +
                 params.getPostalAddressId()).uniqueResult();
 
         if (address == null)
@@ -113,7 +109,7 @@ public class EditContactMechanismServiceImpl implements EditContactMechanismServ
         address.setAddress1(params.getStreet1());
         address.setAddress2(params.getStreet2());
 
-        Country country = getContactMechanismFacade().getCountry(params.getCountry());
+        Country country = contactMechanismFacade.getCountry(params.getCountry());
         address.setCountry(country);
         State state = country.getStateByName(params.getState());
         address.setState(state);
@@ -155,8 +151,5 @@ public class EditContactMechanismServiceImpl implements EditContactMechanismServ
             state.addCity(city);
         }
         address.setCity(city);
-
-        HibernateUtil.getSession().flush();
-        HibernateUtil.commitTransaction();
     }
 }

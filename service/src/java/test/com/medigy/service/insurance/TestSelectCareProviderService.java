@@ -4,9 +4,7 @@
 package com.medigy.service.insurance;
 
 import com.medigy.persist.model.insurance.InsurancePolicy;
-import com.medigy.persist.util.HibernateUtil;
-import com.medigy.service.TestCase;
-import com.medigy.service.impl.insurance.SelectCareProviderServiceImpl;
+import com.medigy.service.AbstractSpringTestCase;
 import com.medigy.service.dto.insurance.CareProviderSelectionData;
 import com.medigy.service.dto.insurance.SelectCareProviderParameters;
 import org.hibernate.Criteria;
@@ -15,54 +13,54 @@ import org.hibernate.criterion.Restrictions;
 import java.io.Serializable;
 import java.util.Date;
 
-public class TestSelectCareProviderService extends TestCase
+public class TestSelectCareProviderService extends AbstractSpringTestCase
 {
-    public String getDataSetFile()
+    private SelectCareProviderService selectCareProviderService;
+
+    public void setSelectCareProviderService(final SelectCareProviderService selectCareProviderService)
     {
-        return "/com/medigy/service/insurance/TestSelectCareProviderService.xml";
+        this.selectCareProviderService = selectCareProviderService;
     }
 
     public void testSelectCareProvider()
     {
-        final SelectCareProviderService service = new SelectCareProviderServiceImpl();
-        CareProviderSelectionData data = service.selectCareProvider(new SelectCareProviderParameters()
+        CareProviderSelectionData data = selectCareProviderService.selectCareProvider(new SelectCareProviderParameters()
+            {
+                public Serializable getPersonId()
                 {
-                    public Serializable getPersonId()
-                    {
-                        return new Long(3);
-                    }
+                    return new Long(3);
+                }
 
-                    public String getInsurancePolicyNumber()
-                    {
-                        return "12345";
-                    }
+                public String getInsurancePolicyNumber()
+                {
+                    return "12345";
+                }
 
-                    public Serializable getCareProviderId()
-                    {
-                        return new Long(7);
-                    }
+                public Serializable getCareProviderId()
+                {
+                    return new Long(7);
+                }
 
-                    public Date getFromDate()
-                    {
-                        return new Date();
-                    }
+                public Date getFromDate()
+                {
+                    return new Date();
+                }
 
-                    public Date getThroughDate()
-                    {
-                        return null;
-                    }
-                });
+                public Date getThroughDate()
+                {
+                    return null;
+                }
+            });
         if (data.getErrorMessage() != null)
         {
             fail(data.getErrorMessage());
         }
 
-        Criteria criteria = HibernateUtil.getSession().createCriteria(InsurancePolicy.class);
+        Criteria criteria = getSession().createCriteria(InsurancePolicy.class);
         criteria.add(Restrictions.eq("policyNumber", "12345"));
         criteria.createCriteria("agreementRoles").createCriteria("party").add(Restrictions.eq("partyId", new Long(3)));
         final InsurancePolicy policy = (InsurancePolicy) criteria.uniqueResult();
-        //final Long careProviderId = policy.getInsuredPersonRole(new Long(3)).getCurrentCareProviderSelection().getHealthCarePractitioner().getPartyId();
-        //assertEquals("7", careProviderId);
 
     }
+
 }

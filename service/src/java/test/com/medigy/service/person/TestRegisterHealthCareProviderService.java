@@ -46,8 +46,7 @@ import com.medigy.persist.reference.custom.health.HealthCareLicenseType;
 import com.medigy.persist.reference.custom.person.EthnicityType;
 import com.medigy.persist.reference.type.GenderType;
 import com.medigy.persist.reference.type.LanguageType;
-import com.medigy.persist.util.HibernateUtil;
-import com.medigy.service.TestCase;
+import com.medigy.service.AbstractSpringTestCase;
 import com.medigy.service.dto.person.HealthCareLicenseParameters;
 import com.medigy.service.dto.person.PersonParameters;
 import com.medigy.service.dto.person.RegisterHealthCareProviderParameters;
@@ -56,24 +55,22 @@ import com.medigy.service.dto.person.RegisteredProvider;
 import java.util.Calendar;
 import java.util.Date;
 
-public class TestRegisterHealthCareProviderService extends TestCase
+public class TestRegisterHealthCareProviderService extends AbstractSpringTestCase
 {
-    protected void setUp() throws Exception
-    {
-        super.setUp();
+    private RegisterHealthCareProviderService registerHealthCareProviderService;
 
-        HibernateUtil.beginTransaction();
-        final Country usa = new Country("United States of America", "USA");
-        final State va = new State("Virginia", "VA");
-        va.setParentCountry(usa);
-        usa.addState(va);
-        HibernateUtil.getSession().save(usa);
-        HibernateUtil.commitTransaction();
+    public void setRegisterHealthCareProviderService(final RegisterHealthCareProviderService registerHealthCareProviderService)
+    {
+        this.registerHealthCareProviderService = registerHealthCareProviderService;
     }
 
     public void testRegisterHealthCareProviderService()
     {
-        final RegisterHealthCareProviderService service = (RegisterHealthCareProviderService) getRegistry().getService(RegisterHealthCareProviderService.class);
+        final Country usa = new Country("United States of America", "USA");
+        final State va = new State("Virginia", "VA");
+        va.setParentCountry(usa);
+        usa.addState(va);
+        getSession().save(usa);
 
         final Calendar calendar = Calendar.getInstance();
         calendar.set(3000, 1, 1);
@@ -81,8 +78,7 @@ public class TestRegisterHealthCareProviderService extends TestCase
         calendar.set(2000, 1, 1);
         final Date certificationDate = calendar.getTime() ;
 
-        HibernateUtil.beginTransaction();
-        final RegisteredProvider newProvider = service.register(new RegisterHealthCareProviderParameters() {
+        final RegisteredProvider newProvider = registerHealthCareProviderService.register(new RegisterHealthCareProviderParameters() {
             public PersonParameters getPerson()
             {
                 return new PersonParameters() {
@@ -213,24 +209,23 @@ public class TestRegisterHealthCareProviderService extends TestCase
                 return null;
             }
         });
-        assertThat(newProvider.getErrorMessage(), NULL);
-        HibernateUtil.commitTransaction();
+        assertNull(newProvider.getErrorMessage());
 
         final Person person = (Person) getSession().load(Person.class, newProvider.getRegisteredProviderId());
-        assertThat(person, NOT_NULL);
-        assertThat(person.getLastName(), eq("Bond"));
-        assertThat(person.getFirstName(), eq("James"));
-        assertThat(person.getCurrentGender().getCode(), eq(GenderType.Cache.MALE.getEntity().getCode()));
-        assertThat(person.getLicenses().size(), eq(1));
-        assertThat(person.getEthnicities().size(), eq(2));
-        assertThat(person.getLanguages().size(), eq(2));
+        assertNotNull(person);
+        assertEquals(person.getLastName(), ("Bond"));
+        assertEquals(person.getFirstName(), ("James"));
+        assertEquals(person.getCurrentGender().getCode(), (GenderType.Cache.MALE.getEntity().getCode()));
+        assertEquals(person.getLicenses().size(), (1));
+        assertEquals(person.getEthnicities().size(), (2));
+        assertEquals(person.getLanguages().size(), (2));
 
         final HealthCareLicense license = person.getLicense(HealthCareLicenseType.Cache.BOARD_CERTIFICATION.getEntity());
-        assertThat(license, NOT_NULL);
-        assertThat(license.getLicenseNumber(), eq("1234567"));
-        assertThat(license.getThroughDate(), eq(expirationDate));
-        assertThat(license.isExpired(), eq(false));
-        assertThat(license.getFromDate(), eq(certificationDate));
+        assertNotNull(license);
+        assertEquals(license.getLicenseNumber(), ("1234567"));
+        assertEquals(license.getThroughDate(), (expirationDate));
+        assertFalse(license.isExpired());
+        assertEquals(license.getFromDate(), (certificationDate));
 
 
     }

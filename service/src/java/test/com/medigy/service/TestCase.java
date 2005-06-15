@@ -38,33 +38,13 @@
  */
 package com.medigy.service;
 
-import org.apache.hivemind.Registry;
-import org.apache.hivemind.impl.RegistryBuilder;
-
 public class TestCase extends com.medigy.persist.TestCase
 {
+    /*
     private Registry hivemindRegistry;
 
     public void buildRegistry()
     {
-        /*
-        //String projectRoot = System.getProperty("PROJECT_ROOT", ".");
-        String path = "e:\\netspective\\medigy\\service\\src\\descriptor\\META-INF\\hivemodule.xml";
-
-        ClassResolver resolver = new DefaultClassResolver();
-        RegistryBuilder builder = new RegistryBuilder();
-
-
-
-        builder.addModuleDescriptorProvider(new XmlModuleDescriptorProvider(resolver));
-
-        // Register the examples.xml file, which (given its non-standard name)
-        // is not visible.
-        builder.addModuleDescriptorProvider(new XmlModuleDescriptorProvider(resolver,
-                new FileResource(path)));
-
-        hivemindRegistry = builder.constructRegistry(Locale.getDefault());
-        */
         hivemindRegistry = RegistryBuilder.constructDefaultRegistry();
     }
 
@@ -78,4 +58,5 @@ public class TestCase extends com.medigy.persist.TestCase
         super();
         buildRegistry();
     }
+    */
 }

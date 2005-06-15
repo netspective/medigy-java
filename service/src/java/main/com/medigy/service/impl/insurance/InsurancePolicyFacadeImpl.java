@@ -54,6 +54,7 @@ import com.medigy.service.util.AbstractFacade;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
+import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 
 import java.io.Serializable;
@@ -64,6 +65,11 @@ import java.util.List;
 public class InsurancePolicyFacadeImpl extends AbstractFacade implements InsurancePolicyFacade
 {
     private static Log log = LogFactory.getLog(InsurancePolicyFacadeImpl.class);
+
+    public InsurancePolicyFacadeImpl(final SessionFactory sessionFactory)
+    {
+        super(sessionFactory);
+    }
 
     public InsurancePolicy createInsurancePolicy(final Person insuredPerson,
                                                  final Person contractHolder,

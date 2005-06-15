@@ -38,17 +38,62 @@
  */
 package com.medigy.service.impl.insurance;
 
-import com.medigy.service.insurance.AddClaimService;
-import com.medigy.service.dto.insurance.AddClaimParameters;
-import com.medigy.service.dto.ServiceParameters;
+import com.medigy.persist.model.invoice.Invoice;
+import com.medigy.persist.model.org.Organization;
+import com.medigy.persist.reference.custom.claim.ClaimType;
+import com.medigy.persist.reference.custom.invoice.InvoiceType;
+import com.medigy.service.AbstractService;
 import com.medigy.service.ServiceVersion;
-import com.medigy.persist.model.claim.Claim;
+import com.medigy.service.dto.ServiceParameters;
+import com.medigy.service.dto.ServiceReturnValues;
+import com.medigy.service.dto.insurance.AddClaimParameters;
+import com.medigy.service.insurance.AddClaimService;
+import com.medigy.service.util.ReferenceEntityFacade;
+import org.hibernate.validator.ClassValidator;
+import org.hibernate.validator.InvalidValue;
+import org.hibernate.SessionFactory;
 
-public class AddClaimServiceImpl implements AddClaimService
+import java.util.Locale;
+import java.util.ResourceBundle;
+
+public class AddClaimServiceImpl extends AbstractService implements AddClaimService
 {
+    private static final ClassValidator addressValidator = new ClassValidator(AddClaimParameters.class,
+                ResourceBundle.getBundle("messages", Locale.ENGLISH));
+
+    private ReferenceEntityFacade referenceEntityFacade;
+
+    public AddClaimServiceImpl(final SessionFactory sessionFactory, final ReferenceEntityFacade referenceEntityFacade)
+    {
+        super(sessionFactory);
+        this.referenceEntityFacade = referenceEntityFacade;
+    }
+
+    public void setReferenceEntityFacade(final ReferenceEntityFacade referenceEntityFacade)
+    {
+        this.referenceEntityFacade = referenceEntityFacade;
+    }
+
     public NewClaimValues add(final AddClaimParameters paramaters)
     {
-        final Claim claim = new Claim();
+        String[] validationErrors =  isValid(paramaters);
+        if (validationErrors != null)
+            return  (NewClaimValues) createErrorResponse(paramaters, "");
+
+        final Organization billOrg = (Organization) getSession().load(Organization.class,  paramaters.getBillingOrganizationId());
+        final Organization serviceOrg = (Organization) getSession().load(Organization.class,  paramaters.getServiceOrganizationId());
+        final Organization payToOrg = (Organization) getSession().load(Organization.class,  paramaters.getPayToOrganizationId());
+        if (billOrg == null || serviceOrg == null || payToOrg == null)
+            return  (NewClaimValues) createErrorResponse(paramaters, "Billing/Service/Pay To Organization ID is invalid.");
+
+        final Invoice invoice = new Invoice();
+        invoice.setBillingOrganization(billOrg);
+        invoice.setServiceOrganization(serviceOrg);
+        invoice.setPayToOrganization(payToOrg);
+
+        final ClaimType claimType = referenceEntityFacade.getClaimType(paramaters.getClaimTypeCode());
+        invoice.setType(InvoiceType.Cache.HCFA_1500.getEntity());
+
         // TODO: Need to figure out the TRANSACTION and INVOICE table some more
 
         return null;
@@ -59,8 +104,20 @@ public class AddClaimServiceImpl implements AddClaimService
         return new ServiceVersion[0];
     }
 
-    public boolean isValid(ServiceParameters parameters)
+    public String[] isValid(ServiceParameters parameters)
     {
-        return false;
+
+        InvalidValue[] validationMessages = addressValidator.getInvalidValues((AddClaimParameters)parameters);
+        String[] errorMessages = new String[validationMessages.length];
+        for (int i=0; i < validationMessages.length; i++)
+        {
+            errorMessages[i] = validationMessages[i].getMessage();
+        }
+        return errorMessages;
+    }
+
+    public ServiceReturnValues createErrorResponse(final ServiceParameters params, final String errorMessage)
+    {
+        return null;
     }
 }

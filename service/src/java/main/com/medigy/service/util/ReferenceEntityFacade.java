@@ -48,6 +48,7 @@ import com.medigy.persist.reference.custom.person.EthnicityType;
 import com.medigy.persist.reference.custom.person.PersonRoleType;
 import com.medigy.persist.reference.custom.person.PatientType;
 import com.medigy.persist.reference.custom.invoice.BillRemittanceType;
+import com.medigy.persist.reference.custom.claim.ClaimType;
 import com.medigy.persist.reference.type.GenderType;
 import com.medigy.persist.reference.type.LanguageType;
 import com.medigy.persist.reference.type.MaritalStatusType;
@@ -79,4 +80,6 @@ public interface ReferenceEntityFacade extends Facade
     public FeeScheduleItemCostType getFeeScheduleItemCostType(final String costTypeCode);
 
     public PatientType getPatientType(final String patientTypeCode);
+
+    public ClaimType getClaimType(final String claimTypeCode);
 }

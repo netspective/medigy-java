@@ -38,41 +38,39 @@
  */
 package com.medigy.service.impl.contact;
 
+import com.medigy.persist.model.contact.City;
+import com.medigy.persist.model.contact.Country;
+import com.medigy.persist.model.contact.County;
+import com.medigy.persist.model.contact.PostalCode;
+import com.medigy.persist.model.contact.Province;
+import com.medigy.persist.model.contact.State;
 import com.medigy.persist.model.party.ContactMechanism;
 import com.medigy.persist.model.party.Party;
 import com.medigy.persist.model.party.PartyContactMechanism;
 import com.medigy.persist.model.party.PartyContactMechanismPurpose;
-import com.medigy.persist.model.party.PostalAddress;
 import com.medigy.persist.model.party.PhoneNumber;
-import com.medigy.persist.model.contact.Country;
-import com.medigy.persist.model.contact.State;
-import com.medigy.persist.model.contact.County;
-import com.medigy.persist.model.contact.City;
-import com.medigy.persist.model.contact.PostalCode;
-import com.medigy.persist.model.contact.Province;
+import com.medigy.persist.model.party.PostalAddress;
 import com.medigy.persist.reference.custom.party.ContactMechanismPurposeType;
-import com.medigy.persist.util.HibernateUtil;
+import com.medigy.service.contact.ContactMechanismFacade;
+import com.medigy.service.util.AbstractFacade;
 import com.medigy.service.util.ReferenceEntityFacade;
 import com.medigy.service.util.UnknownReferenceTypeException;
-import com.medigy.service.util.AbstractFacade;
-import com.medigy.service.contact.ContactMechanismFacade;
-import org.hibernate.criterion.Restrictions;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.criterion.Restrictions;
+import org.hibernate.SessionFactory;
+
+import java.io.Serializable;
 
 public class ContactMechanismFacadeImpl extends AbstractFacade implements ContactMechanismFacade
 {
-    private static final Log log = LogFactory.getLog(PostalAddress.class);
+    private static final Log log = LogFactory.getLog(ContactMechanismFacadeImpl.class);
 
     private ReferenceEntityFacade  referenceEntityFacade;
 
-    public ReferenceEntityFacade getReferenceEntityFacade()
+    public ContactMechanismFacadeImpl(final SessionFactory sessionFactory, final ReferenceEntityFacade  referenceEntityFacade)
     {
-        return referenceEntityFacade;
-    }
-
-    public void setReferenceEntityFacade(final ReferenceEntityFacade referenceEntityFacade)
-    {
+        super(sessionFactory);
         this.referenceEntityFacade = referenceEntityFacade;
     }
 
@@ -100,6 +98,7 @@ public class ContactMechanismFacadeImpl extends AbstractFacade implements Contac
         {
             // unknown built-in purpose type
             contactMechanismPurposeType = ContactMechanismPurposeType.Cache.OTHER.getEntity();
+            log.error(e);
         }
         if (contactMechanismPurposeType.equals(ContactMechanismPurposeType.Cache.OTHER.getEntity()))
             purpose.setDescription(purposeDescription);
@@ -135,7 +134,7 @@ public class ContactMechanismFacadeImpl extends AbstractFacade implements Contac
                     county = new County();
                     county.setCountyName(countyName);
                     state.addCounty(county);
-                    HibernateUtil.getSession().save(county);
+                    getSession().save(county);
                 }
                 address.setCounty(county);
             }
@@ -146,7 +145,7 @@ public class ContactMechanismFacadeImpl extends AbstractFacade implements Contac
                 city = new City();
                 city.setCityName(cityName);
                 state.addCity(city);
-                HibernateUtil.getSession().save(city);
+                getSession().save(city);
             }
             address.setCity(city);
 
@@ -156,7 +155,7 @@ public class ContactMechanismFacadeImpl extends AbstractFacade implements Contac
                 zip = new PostalCode();
                 zip.setCodeValue(postalCode);
                 state.addPostalCode(zip);
-                HibernateUtil.getSession().save(zip);
+                getSession().save(zip);
             }
             address.setPostalCode(zip);
         }
@@ -170,7 +169,7 @@ public class ContactMechanismFacadeImpl extends AbstractFacade implements Contac
                 city = new City();
                 city.setCityName(cityName);
                 province.addCity(city);
-                HibernateUtil.getSession().save(city);
+                getSession().save(city);
             }
             address.setCity(city);
         }
@@ -200,5 +199,10 @@ public class ContactMechanismFacadeImpl extends AbstractFacade implements Contac
     public State getState(final String stateName)
     {
         return (State) getSession().createCriteria(State.class).add(Restrictions.eq("stateName", stateName)).uniqueResult();
+    }
+
+    public ContactMechanism getContactMechanismById(final Serializable id)
+    {
+        return (ContactMechanism) getSession().load(ContactMechanism.class, id);
     }
 }

@@ -38,26 +38,33 @@
  */
 package com.medigy.service.party;
 
+import com.medigy.persist.model.contact.Country;
+import com.medigy.persist.model.contact.State;
 import com.medigy.persist.model.party.PartyContactMechanism;
 import com.medigy.persist.model.party.PhoneNumber;
 import com.medigy.persist.model.party.PostalAddress;
 import com.medigy.persist.model.person.Person;
-import com.medigy.persist.model.contact.Country;
-import com.medigy.persist.model.contact.State;
 import com.medigy.persist.reference.custom.party.ContactMechanismPurposeType;
 import com.medigy.persist.reference.type.GenderType;
-import com.medigy.persist.util.HibernateUtil;
-import com.medigy.service.TestCase;
+import com.medigy.service.AbstractSpringTestCase;
 import com.medigy.service.contact.ContactMechanismFacade;
 
-import java.util.List;
 import java.util.Calendar;
+import java.util.List;
 
-public class TestContactMechanismFacade extends TestCase
+public class TestContactMechanismFacade extends AbstractSpringTestCase
 {
+    private ContactMechanismFacade contactMechanismFacade;
+
+    public void setContactMechanismFacade(final ContactMechanismFacade contactMechanismFacade)
+    {
+        this.contactMechanismFacade = contactMechanismFacade;
+    }
+
     public void testAddPartyContactMechanism() throws Exception
     {
-        HibernateUtil.beginTransaction();
+        //ApplicationContext context = new ClassPathXmlApplicationContext("/com/medigy/service/contact/applicationContext.xml");
+        //contactMechanismFacade = (ContactMechanismFacade) context.getBean("contactMechanismFacade");
         Calendar cal = Calendar.getInstance();
         cal.set(1970, 1, 1);
 
@@ -66,31 +73,30 @@ public class TestContactMechanismFacade extends TestCase
         person.setFirstName("Josh");
         person.addGender(GenderType.Cache.MALE.getEntity());
         person.setBirthDate(cal.getTime());
-        HibernateUtil.getSession().save(person);
+        getSession().save(person);
 
         final PhoneNumber phone = new PhoneNumber();
         phone.setCountryCode("123");
         phone.setNumberValue("1234567");
         phone.setAreaCode("703");
         phone.setExtension(null);
-        HibernateUtil.getSession().save(phone);
+        getSession().save(phone);
 
-        ContactMechanismFacade facade = (ContactMechanismFacade) getRegistry().getService(ContactMechanismFacade.class);
-        facade.addPartyContactMechanism(phone, person, ContactMechanismPurposeType.Cache.HOME_PHONE.getEntity().getCode(), null);
-        facade.addPartyContactMechanism(phone, person, ContactMechanismPurposeType.Cache.OTHER.getEntity().getCode(), "The Bat Phone");
-        HibernateUtil.commitTransaction();
+        contactMechanismFacade.addPartyContactMechanism(phone, person, ContactMechanismPurposeType.Cache.HOME_PHONE.getEntity().getCode(), null);
+        contactMechanismFacade.addPartyContactMechanism(phone, person, ContactMechanismPurposeType.Cache.OTHER.getEntity().getCode(), "The Bat Phone");
 
-        List contactMechList = HibernateUtil.getSession().createCriteria(PartyContactMechanism.class).list();
-        assertThat(contactMechList.size(), eq(2));
+        List contactMechList = getSession().createCriteria(PartyContactMechanism.class).list();
+        assertEquals(contactMechList.size(), 2);
 
         PartyContactMechanism mech = (PartyContactMechanism) contactMechList.toArray()[0];
-        assertThat(mech.hasPurpose(ContactMechanismPurposeType.Cache.HOME_PHONE.getEntity()), eq(true));
+        assertTrue(mech.hasPurpose(ContactMechanismPurposeType.Cache.HOME_PHONE.getEntity()));
 
         mech =  (PartyContactMechanism) contactMechList.toArray()[1];
-        assertThat(mech.hasPurpose(ContactMechanismPurposeType.Cache.OTHER.getEntity()), eq(true));
-        assertThat(mech.getPurpose(ContactMechanismPurposeType.Cache.OTHER.getEntity()).getDescription(), eq("The Bat Phone"));
+        assertTrue(mech.hasPurpose(ContactMechanismPurposeType.Cache.OTHER.getEntity()));
+        assertEquals(mech.getPurpose(ContactMechanismPurposeType.Cache.OTHER.getEntity()).getDescription(), "The Bat Phone");
 
     }
+
 
     public void testAddPostalAddress()
     {
@@ -103,19 +109,18 @@ public class TestContactMechanismFacade extends TestCase
         virginia.setStateAbbreviation("VA");
         country.addState(virginia);
 
-        HibernateUtil.getSession().save(country);
-        HibernateUtil.closeSession();
+        getSession().save(country);
+        //ContactMechanismFacade contactMechanismFacade = (ContactMechanismFacade) getRegistry().getService(ContactMechanismFacade.class);
+        final PostalAddress postalAddress = contactMechanismFacade.addPostalAddress("123 Acme Road", null, "Fairfax", "VA", null, "Fairfax County", "22033", "USA");
 
-        ContactMechanismFacade facade = (ContactMechanismFacade) getRegistry().getService(ContactMechanismFacade.class);
-        final PostalAddress postalAddress = facade.addPostalAddress("123 Acme Road", null, "Fairfax", "VA", null, "Fairfax County", "22033", "USA");
-
-        assertThat(postalAddress, NOT_NULL);
-        assertThat(postalAddress.getAddressBoundaries().size(), eq(5));
-        assertThat(postalAddress.getState(), eq(virginia));
-        assertThat(postalAddress.getAddress1(), eq("123 Acme Road"));
-        assertThat(postalAddress.getCity().getCityName(), eq("Fairfax"));
-        assertThat(postalAddress.getCounty().getCountyName(), eq("Fairfax County"));
-        assertThat(postalAddress.getPostalCode().getCodeValue(), eq("22033"));
+        assertNotNull(postalAddress);
+        assertEquals(postalAddress.getAddressBoundaries().size(), 5);
+        assertEquals(postalAddress.getState(), virginia);
+        assertEquals(postalAddress.getAddress1(), "123 Acme Road");
+        assertEquals(postalAddress.getCity().getCityName(), "Fairfax");
+        assertEquals(postalAddress.getCounty().getCountyName(), "Fairfax County");
+        assertEquals(postalAddress.getPostalCode().getCodeValue(), "22033");
 
     }
+
 }

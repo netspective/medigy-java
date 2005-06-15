@@ -99,14 +99,14 @@ public class AddInsuranceCarrierServiceImpl implements AddInsuranceCarrierServic
         return new ServiceVersion[0];
     }
 
-    public boolean isValid(ServiceParameters parameters)
+    public String[] isValid(ServiceParameters parameters)
     {
         if (parameters instanceof AddInsuranceOrganization)
         {
             AddInsuranceOrganization orgParams = (AddInsuranceOrganization) parameters;
             assert (orgParams.getName() != null && orgParams.getName().length() > 0) : "Organization name cannot be empty";
         }
-        return true;
+        return null;
     }
 
     public NewOrganization createErrorResponse(final ServiceParameters params, final String errorMessage)

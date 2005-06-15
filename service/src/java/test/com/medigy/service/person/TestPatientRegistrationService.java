@@ -39,8 +39,8 @@
 package com.medigy.service.person;
 
 
-import com.medigy.persist.model.person.Person;
 import com.medigy.persist.model.contact.State;
+import com.medigy.persist.model.person.Person;
 import com.medigy.persist.reference.custom.insurance.InsurancePolicyType;
 import com.medigy.persist.reference.custom.party.ContactMechanismPurposeType;
 import com.medigy.persist.reference.custom.party.PartyRelationshipType;
@@ -48,8 +48,7 @@ import com.medigy.persist.reference.custom.person.EthnicityType;
 import com.medigy.persist.reference.type.GenderType;
 import com.medigy.persist.reference.type.LanguageType;
 import com.medigy.persist.reference.type.MaritalStatusType;
-import com.medigy.persist.util.HibernateUtil;
-import com.medigy.service.TestCase;
+import com.medigy.service.AbstractSpringTestCase;
 import com.medigy.service.ServiceVersion;
 import com.medigy.service.dto.insurance.InsuranceCoverageParameters;
 import com.medigy.service.dto.party.PhoneParameters;
@@ -63,9 +62,16 @@ import org.apache.commons.logging.LogFactory;
 import java.io.Serializable;
 import java.util.Date;
 
-public class TestPatientRegistrationService extends TestCase
+public class TestPatientRegistrationService extends AbstractSpringTestCase
 {
     private static final Log log = LogFactory.getLog(TestPatientRegistrationService.class);
+
+    private PatientRegistrationService patientRegistrationService;
+
+    public void setPatientRegistrationService(final PatientRegistrationService patientRegistrationService)
+    {
+        this.patientRegistrationService = patientRegistrationService;
+    }
 
     public void testPatientRegistrationService()
     {
@@ -438,12 +444,11 @@ public class TestPatientRegistrationService extends TestCase
                     fail(e.getMessage());
                 }
 
-        PatientRegistrationService service = (PatientRegistrationService)getRegistry().getService(PatientRegistrationService.class);
-        final RegisteredPatient registeredPatient = service.registerPatient(patientParameters);
+        final RegisteredPatient registeredPatient = patientRegistrationService.registerPatient(patientParameters);
         if (registeredPatient.getErrorMessage() != null)
             fail(registeredPatient.getErrorMessage());
 
-            final Person persistedPerson = (Person) HibernateUtil.getSession().load(Person.class, registeredPatient.getPatientId());
+        final Person persistedPerson = (Person) getSession().load(Person.class, registeredPatient.getPatientId());
         assertEquals(persistedPerson.getFirstName(), "Ryan");
         assertEquals(persistedPerson.getMiddleName(), "Bluegrass");
         assertEquals(persistedPerson.getLastName(), "Hackett");

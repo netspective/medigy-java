@@ -47,6 +47,8 @@ import com.medigy.persist.model.contact.State;
 import com.medigy.service.util.Facade;
 import com.medigy.service.util.UnknownReferenceTypeException;
 
+import java.io.Serializable;
+
 public interface ContactMechanismFacade extends Facade
 {
     /**
@@ -64,8 +66,8 @@ public interface ContactMechanismFacade extends Facade
 
 
     public PostalAddress addPostalAddress(final String street1, final String street2, final String cityName,
-                                 final String stateCode, final String provinceCode, final String countyName,
-                                 final String postalCode, final String countryCode);
+                                          final String stateCode, final String provinceCode, final String countyName,
+                                          final String postalCode, final String countryCode);
 
     /**
      * Creates a new phone number entry
@@ -86,4 +88,11 @@ public interface ContactMechanismFacade extends Facade
      */
     public Country getCountry(final String countryName);
     public State getState(final String stateName);
+
+    /**
+     * Gets a contact mechanism by its unique id
+     * @param id
+     * @return
+     */
+    public ContactMechanism getContactMechanismById(final Serializable id);
 }
