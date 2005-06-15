@@ -51,6 +51,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.HibernateException;
 import org.hibernate.cfg.AnnotationConfiguration;
+import org.hibernate.cfg.Configuration;
 import org.hibernate.mapping.PersistentClass;
 
 import java.util.HashMap;
@@ -76,6 +77,13 @@ public class HibernateConfiguration extends AnnotationConfiguration
     public Map<Class, Class> getCustomReferenceEntitiesAndCachesMap()
     {
         return customReferenceEntitiesAndCachesMap;
+    }
+
+    public Configuration configure(String string) throws HibernateException
+    {
+        final Configuration configuration = super.configure(string);
+        registerReferenceEntitiesAndCaches();
+        return configuration;
     }
 
     @Override

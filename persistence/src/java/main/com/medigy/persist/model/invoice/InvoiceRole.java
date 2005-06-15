@@ -98,7 +98,7 @@ public class InvoiceRole extends AbstractTopLevelEntity
     }
 
     @ManyToOne
-    @JoinColumn(name = "invoice_id")
+    @JoinColumn(name = "invoice_id", nullable = false)
     public Invoice getInvoice()
     {
         return invoice;

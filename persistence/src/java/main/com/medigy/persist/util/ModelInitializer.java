@@ -87,6 +87,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
+import org.hibernate.cfg.Configuration;
 import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.Restrictions;
 
@@ -103,9 +104,10 @@ public class ModelInitializer
     private final Log log = LogFactory.getLog(ModelInitializer.class);
     private final SeedDataPopulationType seedDataPopulationType;
     private final Session session;
-    private final HibernateConfiguration hibernateConfiguration;
+    private final Configuration hibernateConfiguration;
 
-    public ModelInitializer(final Session session, final SeedDataPopulationType seedDataPopulationType, final HibernateConfiguration hibernateConfiguration)
+
+    public ModelInitializer(final Session session, final SeedDataPopulationType seedDataPopulationType, final Configuration hibernateConfiguration)
     {
         this.session = session;
         this.seedDataPopulationType = seedDataPopulationType;
@@ -147,8 +149,7 @@ public class ModelInitializer
     }
 
     public Party readSystemGlobalPropertyEntity()
-    {                                    
-
+    {
         final Criteria criteria = session.createCriteria(Party.class);
         criteria.add(Restrictions.eq("partyName", Party.SYS_GLOBAL_PARTY_NAME));
         return (Party) criteria.uniqueResult();
@@ -164,22 +165,23 @@ public class ModelInitializer
         Party.Cache.SYS_GLOBAL_PARTY.setEntity(entity);
     }
 
-    public void initReferenceEntityCaches()
+    protected void initReferenceEntityCaches()
     {
-        for(final Map.Entry<Class, Class> entry : hibernateConfiguration.getReferenceEntitiesAndCachesMap().entrySet())
+        final Map<Class, Class> referenceEntitiesAndCachesMap = HibernateUtil.getReferenceEntitiesAndRespectiveEnums(hibernateConfiguration);
+        for(final Map.Entry<Class, Class> entry : referenceEntitiesAndCachesMap.entrySet())
             initReferenceEntityCache(entry.getKey(), (CachedReferenceEntity[]) entry.getValue().getEnumConstants());
     }
 
-    public void initCustomReferenceEntityCaches()
+    protected void initCustomReferenceEntityCaches()
     {
-        for(final Map.Entry<Class, Class> entry : hibernateConfiguration.getCustomReferenceEntitiesAndCachesMap().entrySet())
+        final Map<Class, Class> customReferenceEntitiesAndCachesMap = HibernateUtil.getCustomReferenceEntitiesAndRespectiveEnums(hibernateConfiguration);
+        for(final Map.Entry<Class, Class> entry : customReferenceEntitiesAndCachesMap.entrySet())
             initCustomReferenceEntityCache(entry.getKey(), (CachedCustomReferenceEntity[]) entry.getValue().getEnumConstants());
     }
 
     protected void initReferenceEntityCache(final Class aClass, final CachedReferenceEntity[] cache)
     {
         final List list = session.createCriteria(aClass).list();
-
         for(final Object i : list)
         {
             final ReferenceEntity entity = (ReferenceEntity) i;

@@ -51,7 +51,9 @@ public class InvoiceRoleType extends AbstractCustomReferenceEntity
 {
     public enum Cache implements CachedCustomReferenceEntity
     {
-        CREATE_PARTY("SUBMITTER", "Submitter Person"),
+        SERVICE_PARTY("SERVICER", "Organization where services where rendered"),
+        BILLING_PARTY("BILLER", "Organization where billing is tracked"),
+        RECEIVING_PARTY("RECEIVER", "Organization to send the payment to"),
         TARGET_PARTY("TARGET", "Target Party"),     // The person who will receive the invoice.  This is also the person who would probably be responsible for paying it
         ISSUE_PARTY("ISSUER", "Issuing Organization");
 

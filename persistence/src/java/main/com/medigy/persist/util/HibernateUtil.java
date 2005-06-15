@@ -43,6 +43,10 @@
  */
 package com.medigy.persist.util;
 
+import com.medigy.persist.reference.CachedReferenceEntity;
+import com.medigy.persist.reference.ReferenceEntity;
+import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
+import com.medigy.persist.reference.custom.CustomReferenceEntity;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.HibernateException;
@@ -54,11 +58,15 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.connection.ConnectionProvider;
 import org.hibernate.connection.ConnectionProviderFactory;
 import org.hibernate.exception.NestableRuntimeException;
+import org.hibernate.mapping.PersistentClass;
 import org.hibernate.stat.EntityStatistics;
 import org.hibernate.stat.Statistics;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 public class HibernateUtil
 {
@@ -85,7 +93,7 @@ public class HibernateUtil
             throw e;
         }
     }
-    
+
     public static Connection getNewConnection()
     {
         try
@@ -233,5 +241,87 @@ public class HibernateUtil
                 + entityStats.getUpdateCount()
                 + entityStats.getDeleteCount();
         log.info(entityClass.getName() + " changed " + changes + "times"  );
+    }
+
+
+    /**
+     * Creates a map of all classes implementing the {@link com.medigy.persist.reference.ReferenceEntity}
+     *  interface and the respective cached enums
+     *
+     * @param hibernateConfiguration    the hibernate configuration
+     * @return
+     */
+    public static Map<Class, Class> getReferenceEntitiesAndRespectiveEnums(final Configuration hibernateConfiguration)
+    {
+        Map<Class, Class> referenceEntitiesAndCachesMap = new HashMap<Class, Class>();
+        final Iterator classMappings = hibernateConfiguration.getClassMappings();
+        while (classMappings.hasNext())
+        {
+            Class aClass = ((PersistentClass) classMappings.next()).getMappedClass(); //(Class) classMappings.next();
+            if (ReferenceEntity.class.isAssignableFrom(aClass))
+            {
+                boolean foundCache = false;
+                for (final Class ic : aClass.getClasses())
+                {
+                    if (CachedReferenceEntity.class.isAssignableFrom(ic))
+                    {
+                        if (ic.isEnum())
+                        {
+                            referenceEntitiesAndCachesMap.put(aClass, ic);
+                            foundCache = true;
+                        }
+                        else
+                            throw new HibernateException(ic + " must be an enum since " + aClass + " is a " + ReferenceEntity.class.getName());
+
+                        break;
+                    }
+
+                }
+
+                if (!foundCache)
+                    log.warn(aClass + " is marked as a ReferenceEntity but does not contain a ReferenceEntityCache enum.");
+
+                // TODO: find out how to ensure the new mapping for reference type is immutable and read only
+                // final PersistentClass pClass = getClassMapping(aClass.getLabel());
+            }
+        }
+        return referenceEntitiesAndCachesMap;
+    }
+
+    /**
+     * Creates a map of all classes implementing the {@link com.medigy.persist.reference.custom.CustomReferenceEntity}
+     * interface and the respective cached enums
+     *
+     * @param hibernateConfiguration   the hibernate configuration
+     * @return
+     */
+    public static Map<Class, Class> getCustomReferenceEntitiesAndRespectiveEnums(final Configuration hibernateConfiguration)
+    {
+        final Map<Class, Class> customReferenceEntitiesAndCachesMap = new HashMap<Class, Class>();
+        final Iterator classMappings = hibernateConfiguration.getClassMappings();
+        while (classMappings.hasNext())
+        {
+            Class aClass = ((PersistentClass) classMappings.next()).getMappedClass(); //(Class) classMappings.next();
+            if (CustomReferenceEntity.class.isAssignableFrom(aClass))
+            {
+                for (final Class ic : aClass.getClasses())
+                {
+                    if (CachedCustomReferenceEntity.class.isAssignableFrom(ic))
+                    {
+                        if (ic.isEnum())
+                        {
+                            customReferenceEntitiesAndCachesMap.put(aClass, ic);
+                        }
+                        else
+                            throw new HibernateException(ic + " must be an enum since " + aClass + " is a " +
+                                    CachedCustomReferenceEntity.class.getName());
+
+                        break;
+                    }
+                }
+                // if no cache is found, its ok since these are custom
+            }
+        }
+        return customReferenceEntitiesAndCachesMap;
     }
 }

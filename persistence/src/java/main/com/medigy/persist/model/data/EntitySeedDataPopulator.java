@@ -48,7 +48,6 @@ import com.medigy.persist.reference.ReferenceEntity;
 import com.medigy.persist.reference.custom.CachedCustomHierarchyReferenceEntity;
 import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
 import com.medigy.persist.reference.custom.CustomReferenceEntity;
-import com.medigy.persist.util.HibernateConfiguration;
 import com.medigy.persist.util.HibernateUtil;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.commons.logging.Log;
@@ -56,6 +55,7 @@ import org.apache.commons.logging.LogFactory;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.cfg.Environment;
+import org.hibernate.cfg.Configuration;
 import org.hibernate.mapping.PersistentClass;
 
 import java.beans.BeanInfo;
@@ -81,10 +81,10 @@ public class EntitySeedDataPopulator
     public static final String EXTERNAL_DATA_PROPERTY_FILE = "data-mappings.properties";
 
     private Session session;
-    private HibernateConfiguration configuration;
+    private Configuration configuration;
     private Party globalParty;
 
-    public EntitySeedDataPopulator(final Session session, final HibernateConfiguration configuration)
+    public EntitySeedDataPopulator(final Session session, final Configuration configuration)
     {
         this.session = session;
         this.configuration = configuration;
@@ -225,19 +225,19 @@ public class EntitySeedDataPopulator
 
     public void populateSeedData() throws HibernateException
     {
-        com.medigy.persist.model.session.Session session = new ProcessSession();
-        session.setProcessName(EntitySeedDataPopulator.class.getName());
+        com.medigy.persist.model.session.Session processSession = new ProcessSession();
+        processSession.setProcessName(EntitySeedDataPopulator.class.getName());
 
-        HibernateUtil.beginTransaction();
-        HibernateUtil.getSession().save(session);
-        SessionManager.getInstance().pushActiveSession(session);
+        session.save(processSession);
+        SessionManager.getInstance().pushActiveSession(processSession);
 
         if (log.isInfoEnabled())
             log.info("Initializing with seed data");
         globalParty = new Party(Party.SYS_GLOBAL_PARTY_NAME);
-        HibernateUtil.getSession().save(globalParty);
+        session.save(globalParty);
 
-        for(final Map.Entry<Class, Class> entry : configuration.getReferenceEntitiesAndCachesMap().entrySet())
+        final Map<Class, Class> referenceEntitiesAndCachesMap = HibernateUtil.getReferenceEntitiesAndRespectiveEnums(configuration);
+        for(final Map.Entry<Class, Class> entry : referenceEntitiesAndCachesMap.entrySet())
         {
             final Class aClass = entry.getKey();
             CachedReferenceEntity[] cachedEntities = (CachedReferenceEntity[]) entry.getValue().getEnumConstants();
@@ -251,10 +251,11 @@ public class EntitySeedDataPopulator
             }
             if (log.isInfoEnabled())
                 log.info(aClass.getCanonicalName() + " cached enums addded.");
-            populateCachedReferenceEntities(HibernateUtil.getSession(), aClass, cachedEntities, new String[] {"code", "label"}, data);
+            populateCachedReferenceEntities(session, aClass, cachedEntities, new String[] {"code", "label"}, data);
         }
 
-        for(final Map.Entry<Class, Class> entry : configuration.getCustomReferenceEntitiesAndCachesMap().entrySet())
+        final Map<Class, Class> customReferenceEntitiesAndCachesMap = HibernateUtil.getCustomReferenceEntitiesAndRespectiveEnums(configuration);
+        for(final Map.Entry<Class, Class> entry :customReferenceEntitiesAndCachesMap.entrySet())
         {
             final Class aClass = entry.getKey();
             CachedCustomReferenceEntity[] cachedEntities = (CachedCustomReferenceEntity[]) entry.getValue().getEnumConstants();
@@ -274,11 +275,11 @@ public class EntitySeedDataPopulator
             }
             if (log.isInfoEnabled())
                 log.info(aClass.getCanonicalName() + " cached custom enums addded.");
-            populateCachedCustomReferenceEntities(HibernateUtil.getSession(), aClass, cachedEntities, new String[] {"code", "label", "party", "parentEntity"}, data);
+            populateCachedCustomReferenceEntities(session, aClass, cachedEntities, new String[] {"code", "label", "party", "parentEntity"}, data);
         }
         //loadExternalReferenceData();
         //populateEntityCacheData();
-        HibernateUtil.commitTransaction();
+        //HibernateUtil.commitTransaction();
         SessionManager.getInstance().popActiveSession();
     }
 

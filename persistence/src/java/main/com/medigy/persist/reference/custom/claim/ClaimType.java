@@ -176,6 +176,16 @@ public class ClaimType extends AbstractCustomReferenceEntity
         {
             return label;
         }
+
+        public static ClaimType getEntity(String code)
+        {
+            for (ClaimType.Cache geo : ClaimType.Cache.values())
+            {
+                if (geo.getCode().equals(code))
+                    return geo.getEntity();
+            }
+            return null;
+        }
     }
 
     @Id(generate = GeneratorType.AUTO)

@@ -42,6 +42,7 @@ import com.medigy.persist.model.common.AbstractTopLevelEntity;
 import com.medigy.persist.model.health.HealthCareVisit;
 import com.medigy.persist.model.party.Party;
 import com.medigy.persist.model.claim.Claim;
+import com.medigy.persist.model.org.Organization;
 import com.medigy.persist.reference.custom.invoice.InvoiceRoleType;
 import com.medigy.persist.reference.custom.invoice.InvoiceType;
 import com.medigy.persist.reference.custom.invoice.InvoiceStatusType;
@@ -74,6 +75,10 @@ public class Invoice  extends AbstractTopLevelEntity
     private String message;
     private String invoiceNumber;
     private InvoiceType type;
+    private Invoice parentInvoice;
+
+    private Float totalCost;            // trigger
+    private Float totalAdjustments;;    // trigger
 
     private BillingAccount billingAccount;
     private HealthCareVisit visit;
@@ -84,6 +89,7 @@ public class Invoice  extends AbstractTopLevelEntity
     private Set<InvoiceTerm> invoiceTerms = new HashSet<InvoiceTerm>();
 
     private Set<Claim> claims = new HashSet<Claim>();
+    private Set<Invoice> childInvoices = new HashSet<Invoice>();
 
     @Id(generate = GeneratorType.AUTO)
     @Column(name = PK_COLUMN_NAME)
@@ -95,6 +101,29 @@ public class Invoice  extends AbstractTopLevelEntity
     protected void setInvoiceId(final Long invoiceId)
     {
         this.invoiceId = invoiceId;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "parent_invoice_id", referencedColumnName = PK_COLUMN_NAME)
+    public Invoice getParentInvoice()
+    {
+        return parentInvoice;
+    }
+
+    public void setParentInvoice(final Invoice parentInvoice)
+    {
+        this.parentInvoice = parentInvoice;
+    }
+
+    @OneToMany(mappedBy = "parentInvoice", cascade = CascadeType.ALL)
+    public Set<Invoice> getChildInvoices()
+    {
+        return childInvoices;
+    }
+
+    public void setChildInvoices(final Set<Invoice> childInvoices)
+    {
+        this.childInvoices = childInvoices;
     }
 
     /**
@@ -115,6 +144,7 @@ public class Invoice  extends AbstractTopLevelEntity
      * Gets the invoice number specific to the organization that created it.
      * @return
      */
+    @Column(length = 32)
     public String getInvoiceNumber()
     {
         return invoiceNumber;
@@ -197,49 +227,63 @@ public class Invoice  extends AbstractTopLevelEntity
         addInvoiceRole(newRole);
     }
 
-    /**
-     * Gets the party that is issuing the invoice
-     * @return
-     */
     @Transient
-    public Party getIssuingParty()
+    public Party getPartyByInvoiceRole(final InvoiceRoleType type)
     {
         for (InvoiceRole role : invoiceRoles)
         {
-            if (role.getType().equals(InvoiceRoleType.Cache.ISSUE_PARTY))
+            if (role.getType().equals(type))
                 return role.getParty();
         }
         return null;
     }
 
     /**
-     * Gets the party the invoice is being issued for
+     * Gets the organization which is tracking the billing
      * @return
      */
     @Transient
-    public Party getTargetParty()
+    public Party getBillingOrganization()
     {
-        for (InvoiceRole role : invoiceRoles)
-        {
-            if (role.getType().equals(InvoiceRoleType.Cache.TARGET_PARTY))
-                return role.getParty();
-        }
-        return null;
+        return getPartyByInvoiceRole(InvoiceRoleType.Cache.BILLING_PARTY.getEntity());
+    }
+
+    @Transient
+    public void setBillingOrganization(final Organization org)
+    {
+        addInvoiceRole(org, InvoiceRoleType.Cache.BILLING_PARTY.getEntity());
     }
 
     /**
-     * Gets the person who is creating/submitting the invoice
+     * Gets the organization where the payment should be sent
      * @return
      */
     @Transient
-    public Party getCreateParty()
+    public Party getPayToOrganization()
     {
-        for (InvoiceRole role : invoiceRoles)
-        {
-            if (role.getType().equals(InvoiceRoleType.Cache.CREATE_PARTY))
-                return role.getParty();
-        }
-        return null;
+        return getPartyByInvoiceRole(InvoiceRoleType.Cache.RECEIVING_PARTY.getEntity());
+    }
+
+    @Transient
+    public void setPayToOrganization(final Organization org)
+    {
+        addInvoiceRole(org, InvoiceRoleType.Cache.RECEIVING_PARTY.getEntity());
+    }
+
+    /**
+     * Gets the organization who performed services
+     * @return
+     */
+    @Transient
+    public Party getServiceOrganization()
+    {
+        return getPartyByInvoiceRole(InvoiceRoleType.Cache.SERVICE_PARTY.getEntity());
+    }
+
+    @Transient
+    public void setServiceOrganization(final Organization org)
+    {
+        addInvoiceRole(org, InvoiceRoleType.Cache.SERVICE_PARTY.getEntity());
     }
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "invoice")
@@ -344,5 +388,25 @@ public class Invoice  extends AbstractTopLevelEntity
     public void setType(final InvoiceType type)
     {
         this.type = type;
+    }
+
+    public Float getTotalCost()
+    {
+        return totalCost;
+    }
+
+    public void setTotalCost(final Float totalCost)
+    {
+        this.totalCost = totalCost;
+    }
+
+    public Float getTotalAdjustments()
+    {
+        return totalAdjustments;
+    }
+
+    public void setTotalAdjustments(final Float totalAdjustments)
+    {
+        this.totalAdjustments = totalAdjustments;
     }
 }
