@@ -19,6 +19,7 @@
         <property name="password">
             <value>${ant.build.module.test.database.password}</value>
         </property>
+        <property name="defaultAutoCommit"><value>false</value></property> 
     </bean>
 
 <!--
