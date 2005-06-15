@@ -41,6 +41,7 @@
                 <prop key="hibernate.connection.url">jdbc:mysql://localhost:3306/medigy</prop>
                 <prop key="hibernate.connection.userName">medigy</prop>
                 <prop key="hibernate.connection.password">medigy</prop-->
+                <prop key="hibernate.connection.autocommit">false</prop>
                 <prop key="hibernate.hbm2ddl.auto">create-drop</prop>
                 <prop key="hibernate.show_sql">false</prop>
             </props>
