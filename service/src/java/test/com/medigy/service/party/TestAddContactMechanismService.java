@@ -56,12 +56,10 @@ import com.medigy.service.dto.party.NewPostalAddress;
 import com.medigy.service.dto.party.PostalAddressParameters;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.hibernate.Criteria;
-import org.hibernate.criterion.Restrictions;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 public class TestAddContactMechanismService extends AbstractSpringTestCase
 {
@@ -164,12 +162,12 @@ public class TestAddContactMechanismService extends AbstractSpringTestCase
             });
         assertNull(address.getErrorMessage());
 
-        // first check the relationship table between the actual contact mechanism and the party
+        /*
         Criteria criteria = getSession().createCriteria(PartyContactMechanism.class);
         criteria.createCriteria("party").add(Restrictions.eq("partyId", p.getPartyId()));
         List partyContactMechList = criteria.list();
 
-        assertEquals(partyContactMechList.size(), 1);
+        assertEquals(1, partyContactMechList.size());
         PartyContactMechanism partyContactMechanism = ((PartyContactMechanism)partyContactMechList.toArray()[0]);
         final Party party = partyContactMechanism.getParty();
         assertEquals(party.getPartyId(), p.getPartyId());
@@ -177,7 +175,7 @@ public class TestAddContactMechanismService extends AbstractSpringTestCase
         assertEquals(partyContactMechanism.getPurposes().size(), 1);
         final PartyContactMechanismPurpose purpose = (PartyContactMechanismPurpose) partyContactMechanism.getPurposes().toArray()[0];
         assertEquals(purpose.getType(), ContactMechanismPurposeType.Cache.HOME_ADDRESS.getEntity());
-
+        */
         // verify the contact mchanism data
         final PostalAddress ps = (PostalAddress) getSession().load(PostalAddress.class, address.getPostalAddressId());
         assertEquals(ps.getAddress1(), "123 Acme Road");
@@ -188,6 +186,16 @@ public class TestAddContactMechanismService extends AbstractSpringTestCase
         assertEquals(ps.getPostalCode().getCodeValue(), "22033");
         assertEquals(ps.getCounty().getCountyName(), "Fairfax County");
         assertEquals(ps.getCountry().getCountryAbbreviation(), "USA");
+
+        final Set<PartyContactMechanism> pcmList = ps.getPartyContactMechanisms();
+        assertEquals(1, pcmList.size());
+        final PartyContactMechanism partyContactMechanism = (PartyContactMechanism) pcmList.toArray()[0];
+        final Party party = partyContactMechanism.getParty();
+        assertEquals(party.getPartyId(), p.getPartyId());
+        assertEquals(partyContactMechanism.getContactMechanism().getType(), ContactMechanismType.Cache.POSTAL_ADDRESS.getEntity());
+        assertEquals(partyContactMechanism.getPurposes().size(), 1);
+        final PartyContactMechanismPurpose purpose = (PartyContactMechanismPurpose) partyContactMechanism.getPurposes().toArray()[0];
+        assertEquals(purpose.getType(), ContactMechanismPurposeType.Cache.HOME_ADDRESS.getEntity());
     }
 
 
