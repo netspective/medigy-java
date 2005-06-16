@@ -153,6 +153,7 @@ public class PartyContactMechanism extends AbstractDateDurationEntity
     @Transient
     public void addPurpose(final PartyContactMechanismPurpose purpose)
     {
+        purpose.setPartyContactMechanism(this);
         purposes.add(purpose);
     }
 

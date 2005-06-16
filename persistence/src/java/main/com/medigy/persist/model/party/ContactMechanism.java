@@ -53,6 +53,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -105,5 +106,12 @@ public class ContactMechanism extends AbstractTopLevelEntity
     public void setPartyContactMechanisms(final Set<PartyContactMechanism> partyContactMechanisms)
     {
         this.partyContactMechanisms = partyContactMechanisms;
+    }
+
+    @Transient
+    public void addPartyContactMechanism(final PartyContactMechanism mech)
+    {
+        mech.setContactMechanism(this);
+        this.partyContactMechanisms.add(mech);
     }
 }
