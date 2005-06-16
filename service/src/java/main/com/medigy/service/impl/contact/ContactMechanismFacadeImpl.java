@@ -106,7 +106,7 @@ public class ContactMechanismFacadeImpl extends AbstractFacade implements Contac
         purpose.setPartyContactMechanism(mech);
 
         mech.addPurpose(purpose);
-        mech.setContactMechanism(cm);
+        cm.addPartyContactMechanism(mech);
         getSession().save(mech);
     }
 
@@ -173,7 +173,6 @@ public class ContactMechanismFacadeImpl extends AbstractFacade implements Contac
             }
             address.setCity(city);
         }
-        getSession().flush();
         getSession().save(address);
 
         return address;
