@@ -69,11 +69,13 @@ public class TestInsurancePolicyFacade extends AbstractSpringTestCase
     {
         Organization blueCross = new Organization();
         blueCross.setOrganizationName("Blue Cross");
+        getSession().save(blueCross);
+
         InsuranceProduct insProduct = new InsuranceProduct();
         insProduct.setOrganization(blueCross);
         insProduct.setType(InsuranceProductType.Cache.PPO.getEntity());
         blueCross.addInsuranceProduct(insProduct);
-        getSession().save(blueCross);
+        getSession().save(insProduct);
 
         List<InsuranceProduct> productList = insurancePolicyFacade.listInsuranceProducts(blueCross);
         assertEquals(1, productList.size());
