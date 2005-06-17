@@ -52,10 +52,12 @@ public class LanguageType extends AbstractReferenceEntity
 
     public enum Cache implements CachedReferenceEntity
     {
-        ENGLISH("ENG", "English", ""),
-        SPANISH("ESP", "Spanish", ""),
-        FRENCH("F", "French", ""),
-        GERMAN("GER", "German", "");
+        // The codes should be ISO 639-1 compliant
+        ENGLISH("EN", "English", ""),
+        SPANISH("ES", "Spanish", ""),
+        FRENCH("FR", "French", ""),
+        GERMAN("DE", "German", ""),
+        CHINESE("ZH", "Chinese", "");
 
         private final String code;
         private final String label;
