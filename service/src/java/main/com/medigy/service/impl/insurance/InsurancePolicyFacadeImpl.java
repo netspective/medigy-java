@@ -45,7 +45,6 @@ import com.medigy.persist.model.insurance.InsurancePlan;
 import com.medigy.persist.model.insurance.InsurancePolicy;
 import com.medigy.persist.model.insurance.InsurancePolicyCoverageLevel;
 import com.medigy.persist.model.insurance.InsuranceProduct;
-import com.medigy.persist.model.org.Organization;
 import com.medigy.persist.model.person.Person;
 import com.medigy.persist.reference.custom.insurance.CoverageLevelType;
 import com.medigy.persist.reference.custom.insurance.InsurancePolicyType;
@@ -145,11 +144,11 @@ public class InsurancePolicyFacadeImpl extends AbstractFacade implements Insuran
         return policies;
     }
 
-    public List<InsuranceProduct> listInsuranceProducts(final Organization org)
+    public List<InsuranceProduct> listInsuranceProducts(final Long orgId)
     {
-        Criteria criteria = getSession().createCriteria(InsuranceProduct.class);
-        criteria.createCriteria("organization").add(Restrictions.eq("partyId", org.getPartyId()));
-        List list = criteria.list();
+        //  NOTE: using setSerializable(xxx) returns empty results
+        final List list =  getSession().createQuery("from InsuranceProduct as insProduct where " +
+                "insProduct.organization.partyId = ?").setLong(0, orgId).list();
         List<InsuranceProduct> products = new ArrayList<InsuranceProduct>(list.size());
         convert(InsuranceProduct.class, list, products);
         return products;

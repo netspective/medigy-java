@@ -77,7 +77,7 @@ public class TestInsurancePolicyFacade extends AbstractSpringTestCase
         blueCross.addInsuranceProduct(insProduct);
         getSession().save(insProduct);
 
-        List<InsuranceProduct> productList = insurancePolicyFacade.listInsuranceProducts(blueCross);
+        List<InsuranceProduct> productList = insurancePolicyFacade.listInsuranceProducts(blueCross.getPartyId());
         assertEquals(1, productList.size());
         final InsuranceProduct newProduct = productList.get(0);
         assertEquals(newProduct.getType().getInsuranceProductTypeId(),
