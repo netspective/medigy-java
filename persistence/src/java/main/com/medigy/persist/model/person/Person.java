@@ -47,6 +47,7 @@ import com.medigy.persist.model.health.HealthCareEpisode;
 import com.medigy.persist.model.health.HealthCareLicense;
 import com.medigy.persist.model.health.HealthCareVisit;
 import com.medigy.persist.model.insurance.InsurancePolicy;
+import com.medigy.persist.model.insurance.FeeSchedule;
 import com.medigy.persist.model.party.Party;
 import com.medigy.persist.model.party.PartyIdentifier;
 import com.medigy.persist.reference.custom.health.HealthCareLicenseType;
@@ -109,6 +110,8 @@ public class Person extends Party
 
     private Set<InsurancePolicy> insurancePolicies = new HashSet<InsurancePolicy>();
     private Set<InsurancePolicy> responsibleInsurancePolicies = new HashSet<InsurancePolicy>();
+
+    private Set<FeeSchedule> feeSchedules = new HashSet<FeeSchedule>();
 
     public Person()
     {
@@ -683,5 +686,16 @@ public class Person extends Party
                 return license;
         }
         return null;
+    }
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "person")
+    public Set<FeeSchedule> getFeeSchedules()
+    {
+        return feeSchedules;
+    }
+
+    public void setFeeSchedules(final Set<FeeSchedule> feeSchedules)
+    {
+        this.feeSchedules = feeSchedules;
     }
 }

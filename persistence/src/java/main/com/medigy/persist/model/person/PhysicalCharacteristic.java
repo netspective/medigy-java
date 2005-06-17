@@ -38,27 +38,30 @@
  */
 package com.medigy.persist.model.person;
 
+import com.medigy.persist.model.common.AbstractDateDurationEntity;
+import com.medigy.persist.reference.custom.person.PhysicalCharacteristicType;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-
-import com.medigy.persist.model.common.AbstractDateDurationEntity;
-import com.medigy.persist.model.party.PartyRole;
-import com.medigy.persist.reference.custom.person.PhysicalCharacteristicType;
+import javax.persistence.Table;
 
 @Entity
+@Table(name = "Person_Phy_Char")
 public class PhysicalCharacteristic extends AbstractDateDurationEntity
 {
+    public static final String PK_COLUMN_NAME = "phy_char_id";
+
     private Long physicalCharId;
     private Person person;
-    private PartyRole partyRole;
     private Long value;
     private PhysicalCharacteristicType type;
 
     @Id(generate = GeneratorType.AUTO)
+    @Column(name = PK_COLUMN_NAME)
     public Long getPhysicalCharId()
     {
         return physicalCharId;
@@ -70,7 +73,7 @@ public class PhysicalCharacteristic extends AbstractDateDurationEntity
     }
 
     @ManyToOne
-    @JoinColumn(name = "party_id", nullable = false)
+    @JoinColumn(name = Person.PK_COLUMN_NAME, nullable = false)
     public Person getPerson()
     {
         return person;
@@ -79,17 +82,6 @@ public class PhysicalCharacteristic extends AbstractDateDurationEntity
     public void setPerson(final Person person)
     {
         this.person = person;
-    }
-
-    @JoinColumn(name = "party_role_id")
-    public PartyRole getPartyRole()
-    {
-        return partyRole;
-    }
-
-    public void setPartyRole(final PartyRole partyRole)
-    {
-        this.partyRole = partyRole;
     }
 
     @Column(nullable = false)
@@ -104,7 +96,7 @@ public class PhysicalCharacteristic extends AbstractDateDurationEntity
     }
 
     @ManyToOne
-    @JoinColumn(name = "physical_char_type_id")
+    @JoinColumn(name = PhysicalCharacteristicType.PK_COLUMN_NAME)
     public PhysicalCharacteristicType getType()
     {
         return type;
