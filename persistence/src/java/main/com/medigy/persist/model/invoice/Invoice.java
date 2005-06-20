@@ -38,16 +38,18 @@
  */
 package com.medigy.persist.model.invoice;
 
+import com.medigy.persist.model.claim.Claim;
 import com.medigy.persist.model.common.AbstractTopLevelEntity;
 import com.medigy.persist.model.health.HealthCareVisit;
-import com.medigy.persist.model.party.Party;
-import com.medigy.persist.model.claim.Claim;
 import com.medigy.persist.model.org.Organization;
+import com.medigy.persist.model.party.Party;
+import com.medigy.persist.reference.custom.invoice.InvoiceAttributeType;
 import com.medigy.persist.reference.custom.invoice.InvoiceRoleType;
-import com.medigy.persist.reference.custom.invoice.InvoiceType;
 import com.medigy.persist.reference.custom.invoice.InvoiceStatusType;
+import com.medigy.persist.reference.custom.invoice.InvoiceType;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
@@ -56,7 +58,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
-import javax.persistence.Column;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
@@ -87,6 +88,7 @@ public class Invoice  extends AbstractTopLevelEntity
     private Set<InvoiceRole> invoiceRoles = new HashSet<InvoiceRole>();
     private Set<InvoiceStatus> invoiceStatuses = new HashSet<InvoiceStatus>();
     private Set<InvoiceTerm> invoiceTerms = new HashSet<InvoiceTerm>();
+    private Set<InvoiceAttribute> invoiceAttributes = new HashSet<InvoiceAttribute>();
 
     private Set<Claim> claims = new HashSet<Claim>();
     private Set<Invoice> childInvoices = new HashSet<Invoice>();
@@ -408,5 +410,56 @@ public class Invoice  extends AbstractTopLevelEntity
     public void setTotalAdjustments(final Float totalAdjustments)
     {
         this.totalAdjustments = totalAdjustments;
+    }
+
+    @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL)
+    public Set<InvoiceAttribute> getInvoiceAttributes()
+    {
+        return invoiceAttributes;
+    }
+
+    public void setInvoiceAttributes(final Set<InvoiceAttribute> invoiceAttributes)
+    {
+        this.invoiceAttributes = invoiceAttributes;
+    }
+
+    @Transient
+    public void addInvoiceAttribute(final InvoiceAttributeType type, final Long id)
+    {
+        final InvoiceAttribute attr = new InvoiceAttribute();
+        attr.setType(type);
+        attr.setValueLong(id);
+        attr.setInvoice(this);
+        this.invoiceAttributes.add(attr);
+    }
+
+    @Transient
+    public void addInvoiceAttribute(final InvoiceAttributeType type, final Date date)
+    {
+        final InvoiceAttribute attr = new InvoiceAttribute();
+        attr.setType(type);
+        attr.setValueDate(date);
+        attr.setInvoice(this);
+        this.invoiceAttributes.add(attr);
+    }
+
+    @Transient
+    public void addInvoiceAttribute(final InvoiceAttributeType type, final String value)
+    {
+        final InvoiceAttribute attr = new InvoiceAttribute();
+        attr.setType(type);
+        attr.setValue(value);
+        attr.setInvoice(this);
+        this.invoiceAttributes.add(attr);
+    }
+
+    @Transient
+    public void addInvoiceAttribute(final InvoiceAttributeType type, final boolean value)
+    {
+        final InvoiceAttribute attr = new InvoiceAttribute();
+        attr.setType(type);
+        attr.setValueBoolean(value);
+        attr.setInvoice(this);
+        this.invoiceAttributes.add(attr);
     }
 }

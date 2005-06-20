@@ -233,7 +233,7 @@ public class FeeScheduleItem extends AbstractTopLevelEntity
         this.unitCost = unitCost;
     }
 
-    @Column(columnDefinition = "NUMBER DEFAULT 1")
+    @Column
     public Long getDefaultUnits()
     {
         return defaultUnits;

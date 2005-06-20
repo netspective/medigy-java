@@ -42,6 +42,7 @@ package com.medigy.persist.model.party;
 import com.medigy.persist.model.common.AbstractTopLevelEntity;
 import com.medigy.persist.model.health.HealthCareVisit;
 import com.medigy.persist.model.org.Organization;
+import com.medigy.persist.model.insurance.FeeSchedule;
 import com.medigy.persist.reference.custom.party.FacilityType;
 
 import javax.persistence.CascadeType;
@@ -72,6 +73,7 @@ public class Facility extends AbstractTopLevelEntity
     private Set<PartyFacilityRole> facilityRole = new HashSet<PartyFacilityRole>();
 
     private Set<HealthCareVisit> visits = new HashSet<HealthCareVisit>();
+    private Set<FeeSchedule> feeSchedules = new HashSet<FeeSchedule>();
     /**
      * Facilities are not children of any table and they are related to Parties only through the
      * {@link PartyFacilityRole}. Parties can "own", "rent", or "lease" facilities.
@@ -189,5 +191,16 @@ public class Facility extends AbstractTopLevelEntity
     public void setOrganization(final Organization organization)
     {
         this.organization = organization;
+    }
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "facility")
+    public Set<FeeSchedule> getFeeSchedules()
+    {
+        return feeSchedules;
+    }
+
+    public void setFeeSchedules(final Set<FeeSchedule> feeSchedules)
+    {
+        this.feeSchedules = feeSchedules;
     }
 }

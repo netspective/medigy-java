@@ -325,7 +325,7 @@ public class EntitySeedDataPopulator
         }
         catch (Exception e)
         {
-            log.error(e);
+            log.error(ExceptionUtils.getStackTrace(e));
             throw new HibernateException(e);
         }
     }

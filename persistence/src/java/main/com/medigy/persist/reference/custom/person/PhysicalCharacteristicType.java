@@ -52,7 +52,7 @@ import javax.persistence.Column;
 @Table(name = "Physical_Char_Type")
 public class PhysicalCharacteristicType extends AbstractCustomReferenceEntity
 {
-    public static final String PK_COLUMN_NAME = "physical_char_type_id";
+    public static final String PK_COLUMN_NAME = "phy_char_type_id";
 
     public enum Cache implements CachedCustomReferenceEntity
     {

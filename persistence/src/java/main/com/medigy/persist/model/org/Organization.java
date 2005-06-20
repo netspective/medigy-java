@@ -172,7 +172,7 @@ public class Organization extends Party
     public void addInsuranceProduct(final InsuranceProduct product)
     {
         product.setOrganization(this);
-        getInsuranceProducts().add(product);
+        insuranceProducts.add(product);
     }
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "organization")

@@ -35,48 +35,103 @@
  * CAUSED AND REGARDLESS OF THE THEORY OF LIABILITY, ARISING OUT OF THE USE OF OR INABILITY TO USE THE SOFTWARE, EVEN
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
- * @author Aye Thu
  */
-package com.medigy.persist.model.party;
+package com.medigy.persist.model.invoice;
 
-import com.medigy.persist.reference.type.ContactMechanismType;
+import com.medigy.persist.model.common.AbstractTopLevelEntity;
+import com.medigy.persist.reference.custom.invoice.InvoiceAttributeType;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.Transient;
+import javax.persistence.Id;
+import javax.persistence.GeneratorType;
+import javax.persistence.ManyToOne;
+import javax.persistence.JoinColumn;
+import java.util.Date;
 
 @Entity
-@Inheritance(strategy=InheritanceType.JOINED)
-public class ElectronicAddress extends ContactMechanism
+public class InvoiceAttribute extends AbstractTopLevelEntity
 {
-    private String electronicAddress;
+    private Long invoiceAttributeId;
+    private Invoice invoice;
+    private InvoiceAttributeType type;
 
-    public ElectronicAddress()
+    private String value;
+    private Date valueDate;
+    private Long valueLong;
+    private Boolean valueBoolean;
+
+    @Id(generate = GeneratorType.AUTO)
+    public Long getInvoiceAttributeId()
     {
-        this.type = ContactMechanismType.Cache.EMAIL_ADDRESS.getEntity();
+        return invoiceAttributeId;
     }
 
-    @Transient
-    public Long getElectronicAddressId()
+    public void setInvoiceAttributeId(final Long invoiceAttributeId)
     {
-        return getContactMechanismId();
+        this.invoiceAttributeId = invoiceAttributeId;
     }
 
-    protected void setElectronicAddressId(final Long electronicAddressId)
+    @ManyToOne
+    @JoinColumn(name = Invoice.PK_COLUMN_NAME)
+    public Invoice getInvoice()
     {
-        setContactMechanismId(electronicAddressId);
+        return invoice;
     }
 
-    @Column(length = 256)
-    public String getElectronicAddress()
+    public void setInvoice(final Invoice invoice)
     {
-        return electronicAddress;
+        this.invoice = invoice;
     }
 
-    public void setElectronicAddress(final String electronicAddress)
+    @ManyToOne
+    @JoinColumn(name = InvoiceAttributeType.PK_COLUMN_NAME)
+    public InvoiceAttributeType getType()
     {
-        this.electronicAddress = electronicAddress;
+        return type;
+    }
+
+    public void setType(final InvoiceAttributeType type)
+    {
+        this.type = type;
+    }
+
+    public String getValue()
+    {
+        return value;
+    }
+
+    public void setValue(final String value)
+    {
+        this.value = value;
+    }
+
+    public Date getValueDate()
+    {
+        return valueDate;
+    }
+
+    public void setValueDate(final Date valueDate)
+    {
+        this.valueDate = valueDate;
+    }
+
+    public Long getValueLong()
+    {
+        return valueLong;
+    }
+
+    public void setValueLong(final Long valueLong)
+    {
+        this.valueLong = valueLong;
+    }
+
+    public Boolean getValueBoolean()
+    {
+        return valueBoolean;
+    }
+
+    public void setValueBoolean(final Boolean valueBoolean)
+    {
+        this.valueBoolean = valueBoolean;
     }
 }

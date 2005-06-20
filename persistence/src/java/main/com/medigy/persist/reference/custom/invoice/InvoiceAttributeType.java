@@ -35,48 +35,86 @@
  * CAUSED AND REGARDLESS OF THE THEORY OF LIABILITY, ARISING OUT OF THE USE OF OR INABILITY TO USE THE SOFTWARE, EVEN
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
- * @author Aye Thu
  */
-package com.medigy.persist.model.party;
+package com.medigy.persist.reference.custom.invoice;
 
-import com.medigy.persist.reference.type.ContactMechanismType;
+import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.Transient;
+import javax.persistence.GeneratorType;
+import javax.persistence.Id;
 
 @Entity
-@Inheritance(strategy=InheritanceType.JOINED)
-public class ElectronicAddress extends ContactMechanism
+public class InvoiceAttributeType extends AbstractCustomReferenceEntity
 {
-    private String electronicAddress;
+    public static final String PK_COLUMN_NAME = "inv_attr_type_id";
 
-    public ElectronicAddress()
+    /*
+    public enum Cache implements CachedCustomReferenceEntity
     {
-        this.type = ContactMechanismType.Cache.EMAIL_ADDRESS.getEntity();
+        BILLING_CONTACT("BILL_CONTACT", "Billing Contact"),
+        BILLING_PHONE_NUMBER("BILL_PHONE", "Billing Phone"),
+        SUBMISSION_ORDER("SUB_ORDER", "Submission Order"),
+        BATCH_DATE("BATCH_DATE", "Batch Date"),
+        BATCH_ID("BATCH_ID", "Invoice/Creation/Batch ID"),
+        PRIOR_AUTH_NUMBER("PRIOR_AUTH_NUM", "Prior Authorization Number"),
+        REFERRAL_PROVIDER_ID("REF_PROV_ID", "Ref Provider/Identification"),
+        REFERRAL_PROVIDER_LAST_NAME("REF_PROV_LNAME", "Ref Provider/Name/Last"),
+        REFERRAL_PROVIDER_FIRST_NAME("REF_PROV_FNAME", "Ref Provider/Name/First"),
+        REFERRAL_PROVIDER_MIDDLE_NAME("REF_PROV_MNAME", "Ref Provider/Name/Middle"),
+        INCIDENT_RELATED_TO("INC_REL_TO", "Condition/Related To"),     // INCIDENT Table
+        INCIDENT_STATE("INC_STATE", "Incident State"),
+        INCIDENT_EMPLOYMENT_RELATED("INC_EMP", "Incident Employment Related"),
+        DEDUCTIBLE_BALANCE("DEDUCT", "Patient/Deductible/Balance"),
+        ILLNESS_START_DATE("ILL_START", "Patient/Illness/Dates"),
+        ILLNESS_END_DATE("ILL_END", "Patient/Illness/Dates"),
+        DISABILITY_START_DATE("DIS_START", "Patient/Disability/Dates"),
+        DISABILITY_END_DATE("DIS_END", "Patient/Disability/Dates"),
+        HOSP_START_DATE("HOSP_START", "Patient/Hospitalization/Dates"),
+        HOSP_END_DATE("HOSP_END", "Patient/Hospitalization/Dates");
+
+        private final String label;
+        private final String code;
+        private InvoiceAttributeType entity;
+
+        Cache(final String code, final String label)
+        {
+            this.code = code;
+            this.label = label;
+        }
+
+        public String getCode()
+        {
+            return code;
+        }
+
+        public InvoiceAttributeType getEntity()
+        {
+            return entity;
+        }
+
+        public void setEntity(final CustomReferenceEntity entity)
+        {
+            this.entity = (InvoiceAttributeType) entity;
+        }
+
+        public String getLabel()
+        {
+            return label;
+        }
+    }
+    */
+
+    @Id(generate = GeneratorType.AUTO)
+    @Column(name = PK_COLUMN_NAME)
+    public Long getInvoiceAttributeTypeId()
+    {
+        return super.getSystemId();
     }
 
-    @Transient
-    public Long getElectronicAddressId()
+    protected void setInvoiceAttributeTypeId(final Long id)
     {
-        return getContactMechanismId();
-    }
-
-    protected void setElectronicAddressId(final Long electronicAddressId)
-    {
-        setContactMechanismId(electronicAddressId);
-    }
-
-    @Column(length = 256)
-    public String getElectronicAddress()
-    {
-        return electronicAddress;
-    }
-
-    public void setElectronicAddress(final String electronicAddress)
-    {
-        this.electronicAddress = electronicAddress;
+        super.setSystemId(id);
     }
 }

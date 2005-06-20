@@ -54,6 +54,7 @@ public class IncidentType extends AbstractCustomReferenceEntity
 
     public enum Cache implements CachedCustomReferenceEntity
     {
+        EMPLOYMENT("EMP", "Employment"),
         AUTOMOBILE_ACCIDENT("AUTO", "Automobile Accident"),
         OTHER("OTHER", "Other");
 

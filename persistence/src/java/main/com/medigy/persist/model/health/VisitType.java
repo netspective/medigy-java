@@ -200,7 +200,8 @@ public class VisitType extends AbstractTopLevelEntity
         this.dayLimit = dayLimit;
     }
 
-    @Column(nullable = false)
+    @ManyToOne
+    @JoinColumn(nullable = false, name = Organization.PK_COLUMN_NAME)
     @NotNull
     public Organization getOrganization()
     {
