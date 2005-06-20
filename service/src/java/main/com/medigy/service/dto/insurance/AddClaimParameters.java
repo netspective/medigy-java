@@ -46,6 +46,9 @@ import java.util.Date;
 
 public interface AddClaimParameters extends ServiceParameters
 {
+    public String getBatchId();
+    public Date getBatchDate();
+
     @NotNull
     public String getPatientId();
 
@@ -54,17 +57,19 @@ public interface AddClaimParameters extends ServiceParameters
 
     public String getClaimTypeCode();
 
+    public boolean isIncidentEmploymentRelated();
+
     /**
      * Gets the type of accident
      * @return
      */
-    public String getAccidentTypeCode();
+    public String getIncidentTypeCode();
 
     /**
      * Gets the state where the accident occurred
      * @return
      */
-    public String getAccidentStateCode();
+    public String getIncidentStateCode();
 
     /**
      * Gets the ID of the physician who performed the service
@@ -77,7 +82,9 @@ public interface AddClaimParameters extends ServiceParameters
      * @return
      */
     public Serializable getReferringPhysicianId();
-
+    public String getReferringPhysicianLastName();
+    public String getReferringPhysicianFirstName();
+    public String getReferringPhysicianMiddleName();
 
     /**
      * Gets the ID of the physician who is doing the billing

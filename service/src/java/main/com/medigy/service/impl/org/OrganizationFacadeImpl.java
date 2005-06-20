@@ -34,7 +34,6 @@ public class OrganizationFacadeImpl extends AbstractFacade implements Organizati
     {
         final Organization childOrg = new Organization();
         childOrg.setOrganizationName(groupName);
-        
         final PartyRole childRole = new PartyRole();
         childRole.setType(OrganizationRoleType.Cache.HOSPITAL.getEntity());
         childRole.setParty(childOrg);
@@ -55,14 +54,12 @@ public class OrganizationFacadeImpl extends AbstractFacade implements Organizati
         {
             parentRole = parentOrg.getPartyRole(OrganizationRoleType.Cache.EMPLOYER.getEntity());
         }
-        
         final PartyRelationship relationship = new PartyRelationship();
         relationship.setType(getGroupToEmployerRelationshipType());
         relationship.setPartyRoleFrom(childRole);
         relationship.setPartyRoleTo(parentRole);
         relationship.setPartyFrom(childOrg);
         relationship.setPartyTo(parentOrg);
-        
         getSession().save(relationship);
     }
 
@@ -74,5 +71,6 @@ public class OrganizationFacadeImpl extends AbstractFacade implements Organizati
         relationshipCriteria.createCriteria("partyTo").add(Expression.eq("partyId", parentOrg.getPartyId()));
         return criteria.list();
     }
-    
+
+
 }

@@ -70,14 +70,17 @@ public class TestPersonFacade extends AbstractSpringTestCase
         personA.setMiddleName("D");
         personA.setBirthDate(cal.getTime());
         personA.addGender(GenderType.Cache.MALE.getEntity());
-        getSession().save(personA);
+        //getSession().save(personA);
+        hibernateTemplate.save(personA);
+
 
         Person personB = new Person();
         personB.setLastName("Hackett");
         personB.setFirstName("Brian");
         personB.setBirthDate(cal.getTime());
         personB.addGender(GenderType.Cache.MALE.getEntity());
-        getSession().save(personB);
+        //getSession().save(personB);
+        hibernateTemplate.save(personB);
 
         Person[] personList = personFacade.listPersonByLastName("d%", false);
         assertNotNull(personList);

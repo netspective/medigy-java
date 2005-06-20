@@ -13,11 +13,12 @@ public interface OrganizationFacade extends Facade
      * @param org   Employer organization
      */
     public void addInsuranceGroup(final Organization org, final String groupName);
-    
+
     /**
      * Lists all logical insurance groups under an Employer organization.
      * @param parentOrg
      * @return
      */
     public List listInsuranceGroups(final Organization parentOrg);
+
 }

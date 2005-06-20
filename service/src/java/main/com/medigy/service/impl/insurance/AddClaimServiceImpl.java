@@ -42,6 +42,7 @@ import com.medigy.persist.model.invoice.Invoice;
 import com.medigy.persist.model.org.Organization;
 import com.medigy.persist.reference.custom.claim.ClaimType;
 import com.medigy.persist.reference.custom.invoice.InvoiceType;
+import com.medigy.persist.reference.custom.invoice.InvoiceAttributeType;
 import com.medigy.service.AbstractService;
 import com.medigy.service.ServiceVersion;
 import com.medigy.service.dto.ServiceParameters;
@@ -49,9 +50,9 @@ import com.medigy.service.dto.ServiceReturnValues;
 import com.medigy.service.dto.insurance.AddClaimParameters;
 import com.medigy.service.insurance.AddClaimService;
 import com.medigy.service.util.ReferenceEntityFacade;
+import org.hibernate.SessionFactory;
 import org.hibernate.validator.ClassValidator;
 import org.hibernate.validator.InvalidValue;
-import org.hibernate.SessionFactory;
 
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -94,8 +95,48 @@ public class AddClaimServiceImpl extends AbstractService implements AddClaimServ
         final ClaimType claimType = referenceEntityFacade.getClaimType(paramaters.getClaimTypeCode());
         invoice.setType(InvoiceType.Cache.HCFA_1500.getEntity());
 
-        // TODO: Need to figure out the TRANSACTION and INVOICE table some more
+        invoice.addInvoiceAttribute(InvoiceAttributeType.Cache.REFERRAL_PROVIDER_ID.getEntity(),
+                (Long) paramaters.getReferringPhysicianId());
+        invoice.addInvoiceAttribute(InvoiceAttributeType.Cache.REFERRAL_PROVIDER_FIRST_NAME.getEntity(),
+                paramaters.getReferringPhysicianFirstName());
+        invoice.addInvoiceAttribute(InvoiceAttributeType.Cache.REFERRAL_PROVIDER_LAST_NAME.getEntity(),
+                paramaters.getReferringPhysicianLastName());
 
+        invoice.addInvoiceAttribute(InvoiceAttributeType.Cache.DISABILITY_START_DATE.getEntity(),
+                paramaters.getDisabilityStartDate());
+        invoice.addInvoiceAttribute(InvoiceAttributeType.Cache.DISABILITY_END_DATE.getEntity(),
+                paramaters.getDisabilityEndDate());
+
+        invoice.addInvoiceAttribute(InvoiceAttributeType.Cache.HOSP_START_DATE.getEntity(),
+                paramaters.getHospitalAdmissionDate());
+        invoice.addInvoiceAttribute(InvoiceAttributeType.Cache.HOSP_END_DATE.getEntity(),
+                paramaters.getHospitalDischargeDate());
+
+        invoice.addInvoiceAttribute(InvoiceAttributeType.Cache.ILLNESS_START_DATE.getEntity(),
+                paramaters.getCurrentIllnessDate());
+
+        invoice.addInvoiceAttribute(InvoiceAttributeType.Cache.PRIOR_AUTH_NUMBER.getEntity(),
+                paramaters.getPriorAuthroizationId());
+        invoice.addInvoiceAttribute(InvoiceAttributeType.Cache.BATCH_ID.getEntity(),
+                paramaters.getBatchId());
+        invoice.addInvoiceAttribute(InvoiceAttributeType.Cache.BATCH_DATE.getEntity(),
+                paramaters.getBatchDate());
+
+        invoice.addInvoiceAttribute(InvoiceAttributeType.Cache.INCIDENT_RELATED_TO.getEntity(),
+                paramaters.getIncidentTypeCode());
+        invoice.addInvoiceAttribute(InvoiceAttributeType.Cache.INCIDENT_STATE.getEntity(),
+                paramaters.getIncidentStateCode());
+        invoice.addInvoiceAttribute(InvoiceAttributeType.Cache.INCIDENT_EMPLOYMENT_RELATED.getEntity(),
+                paramaters.isIncidentEmploymentRelated());
+
+        // Look up the BILLING organization contact information
+
+        invoice.addInvoiceAttribute(InvoiceAttributeType.Cache.BILLING_CONTACT.getEntity(),
+                paramaters.isIncidentEmploymentRelated());
+        invoice.addInvoiceAttribute(InvoiceAttributeType.Cache.BILLING_PHONE_NUMBER.getEntity(), new Long(0));
+
+        // TODO: Need to figure out the TRANSACTION and INVOICE table some more
+        
         return null;
     }
 

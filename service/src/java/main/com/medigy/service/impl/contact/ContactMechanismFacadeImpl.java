@@ -50,7 +50,9 @@ import com.medigy.persist.model.party.PartyContactMechanism;
 import com.medigy.persist.model.party.PartyContactMechanismPurpose;
 import com.medigy.persist.model.party.PhoneNumber;
 import com.medigy.persist.model.party.PostalAddress;
+import com.medigy.persist.model.party.ElectronicAddress;
 import com.medigy.persist.reference.custom.party.ContactMechanismPurposeType;
+import com.medigy.persist.reference.type.ContactMechanismType;
 import com.medigy.service.contact.ContactMechanismFacade;
 import com.medigy.service.util.AbstractFacade;
 import com.medigy.service.util.ReferenceEntityFacade;
@@ -59,8 +61,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.SessionFactory;
+import org.hibernate.Query;
 
 import java.io.Serializable;
+import java.util.List;
+import java.util.ArrayList;
 
 public class ContactMechanismFacadeImpl extends AbstractFacade implements ContactMechanismFacade
 {
@@ -204,4 +209,53 @@ public class ContactMechanismFacadeImpl extends AbstractFacade implements Contac
     {
         return (ContactMechanism) getSession().load(ContactMechanism.class, id);
     }
+
+    public List<PostalAddress> listPostalAddresses(final Long partyId)
+    {
+        final ContactMechanismType postalAddressType = ContactMechanismType.Cache.POSTAL_ADDRESS.getEntity();
+        final Query query = getSession().createQuery("select address from PostalAddress address, PartyContactMechanism pcm where " +
+                "address.id = pcm.contactMechanism.id and " +
+                "pcm.contactMechanism.type.code = ? and " +
+                "pcm.party.id = ?");
+        query.setString(0, postalAddressType.getCode());
+        query.setLong(1, partyId);
+        List list = query.list();
+
+        List<PostalAddress> addresses = new ArrayList<PostalAddress>(list.size());
+        this.convert(PostalAddress.class, list, addresses);
+        return addresses;
+    }
+
+    public List<PhoneNumber> listPhoneNumbers(final Long partyId)
+    {
+        final ContactMechanismType phoneType = ContactMechanismType.Cache.PHONE.getEntity();
+        final Query query = getSession().createQuery("select phone from PhoneNumber phone, PartyContactMechanism pcm where " +
+                "phone.id = pcm.contactMechanism.id and " +
+                "pcm.contactMechanism.type.code = ? and " +
+                "pcm.party.id = ?");
+        query.setString(0, phoneType.getCode());
+        query.setLong(1, partyId);
+        List list = query.list();
+
+        List<PhoneNumber> phoneList = new ArrayList<PhoneNumber>(list.size());
+        this.convert(PhoneNumber.class, list, phoneList);
+        return phoneList;
+    }
+
+    public List<ElectronicAddress> listEmails(final Long partyId)
+    {
+        final ContactMechanismType emailType = ContactMechanismType.Cache.EMAIL_ADDRESS.getEntity();
+        final Query query = getSession().createQuery("select address from ElectronicAddress address, PartyContactMechanism pcm where " +
+                "address.id = pcm.contactMechanism.id and " +
+                "pcm.contactMechanism.type.code = ? and " +
+                "pcm.party.id = ?");
+        query.setString(0, emailType.getCode());
+        query.setLong(1, partyId);
+        List list = query.list();
+
+        List<ElectronicAddress> emailList = new ArrayList<ElectronicAddress>(list.size());
+        this.convert(ElectronicAddress.class, list, emailList);
+        return emailList;
+    }
+
 }

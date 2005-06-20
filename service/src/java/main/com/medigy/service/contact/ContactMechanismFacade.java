@@ -42,12 +42,14 @@ import com.medigy.persist.model.party.ContactMechanism;
 import com.medigy.persist.model.party.Party;
 import com.medigy.persist.model.party.PostalAddress;
 import com.medigy.persist.model.party.PhoneNumber;
+import com.medigy.persist.model.party.ElectronicAddress;
 import com.medigy.persist.model.contact.Country;
 import com.medigy.persist.model.contact.State;
 import com.medigy.service.util.Facade;
 import com.medigy.service.util.UnknownReferenceTypeException;
 
 import java.io.Serializable;
+import java.util.List;
 
 public interface ContactMechanismFacade extends Facade
 {
@@ -95,4 +97,13 @@ public interface ContactMechanismFacade extends Facade
      * @return
      */
     public ContactMechanism getContactMechanismById(final Serializable id);
+
+    /**
+     * Gets all postal addresses registered for the party by its ID
+     * @param id    party ID
+     * @return
+     */
+    public List<PostalAddress> listPostalAddresses(final Long id);
+    public List<PhoneNumber> listPhoneNumbers(final Long id);
+    public List<ElectronicAddress> listEmails(final Long id);
 }

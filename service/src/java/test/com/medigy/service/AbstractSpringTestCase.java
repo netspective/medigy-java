@@ -41,15 +41,19 @@ package com.medigy.service;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.orm.hibernate3.SessionFactoryUtils;
-import org.springframework.test.AbstractTransactionalDataSourceSpringContextTests;
+import org.springframework.orm.hibernate3.HibernateTemplate;
+import org.springframework.test.AbstractTransactionalSpringContextTests;
 
-public abstract class AbstractSpringTestCase extends AbstractTransactionalDataSourceSpringContextTests
+public abstract class AbstractSpringTestCase extends AbstractTransactionalSpringContextTests
 {
+    protected HibernateTemplate hibernateTemplate;
+
     protected SessionFactory sessionFactory;
 
     public void setSessionFactory(final SessionFactory sessionFactory)
     {
         this.sessionFactory = sessionFactory;
+        this.hibernateTemplate = new HibernateTemplate(sessionFactory);
     }
 
     /**

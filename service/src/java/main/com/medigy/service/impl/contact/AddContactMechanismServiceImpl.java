@@ -177,8 +177,8 @@ public class AddContactMechanismServiceImpl extends AbstractService implements A
         // PartyContactMechanisms so don't use the PostalAddress, instead use ContactMechanism
         try
         {
-            ContactMechanism cm = contactMechanismFacade.getContactMechanismById(address.getContactMechanismId());
-            contactMechanismFacade.addPartyContactMechanism(cm, party, param.getPurposeType(), param.getPurposeDescription());
+            //ContactMechanism cm = contactMechanismFacade.getContactMechanismById(address.getContactMechanismId());
+            contactMechanismFacade.addPartyContactMechanism(address, party, param.getPurposeType(), param.getPurposeDescription());
         }
         catch (Exception e)
         {

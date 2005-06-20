@@ -80,8 +80,8 @@ public class TestPartyRelationshipFacade extends AbstractSpringTestCase
         personA.addPartyRole(PersonRoleType.Cache.CHILD.getEntity());
         personB.addPartyRole(PersonRoleType.Cache.PARENT.getEntity());
 
-        session.save(personA);
-        session.save(personB);
+        getSession().save(personA);
+        getSession().save(personB);
 
         assertNotNull(personA.getPartyRoles());
         assertNotNull(personB.getPartyRoles());
