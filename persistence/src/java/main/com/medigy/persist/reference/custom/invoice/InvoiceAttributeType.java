@@ -39,6 +39,8 @@
 package com.medigy.persist.reference.custom.invoice;
 
 import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
+import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
+import com.medigy.persist.reference.custom.CustomReferenceEntity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -50,7 +52,7 @@ public class InvoiceAttributeType extends AbstractCustomReferenceEntity
 {
     public static final String PK_COLUMN_NAME = "inv_attr_type_id";
 
-    /*
+
     public enum Cache implements CachedCustomReferenceEntity
     {
         BILLING_CONTACT("BILL_CONTACT", "Billing Contact"),
@@ -104,7 +106,7 @@ public class InvoiceAttributeType extends AbstractCustomReferenceEntity
             return label;
         }
     }
-    */
+
 
     @Id(generate = GeneratorType.AUTO)
     @Column(name = PK_COLUMN_NAME)
