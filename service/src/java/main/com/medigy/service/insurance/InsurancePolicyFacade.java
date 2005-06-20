@@ -45,6 +45,7 @@ import com.medigy.persist.model.insurance.InsuranceProduct;
 import com.medigy.persist.model.person.Person;
 import com.medigy.persist.reference.custom.insurance.CoverageLevelType;
 import com.medigy.persist.reference.custom.insurance.InsurancePolicyType;
+import com.medigy.persist.reference.custom.invoice.BillSequenceType;
 import com.medigy.service.util.Facade;
 
 import java.io.Serializable;
@@ -87,4 +88,12 @@ public interface InsurancePolicyFacade extends Facade
     public List<InsuranceProduct> listInsuranceProducts(final Long orgId);
 
     public InsurancePlan getInsurancePlanById(final Serializable insurancePlanId);
+
+    /**
+     * Gets the person's insurance policy by its billing sequence number
+     * @param personId
+     * @param type
+     * @return
+     */
+    public InsurancePolicy getInsurancePolicy(final Long personId, final BillSequenceType type);
 }

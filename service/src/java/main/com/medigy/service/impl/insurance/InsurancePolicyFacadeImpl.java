@@ -48,12 +48,14 @@ import com.medigy.persist.model.insurance.InsuranceProduct;
 import com.medigy.persist.model.person.Person;
 import com.medigy.persist.reference.custom.insurance.CoverageLevelType;
 import com.medigy.persist.reference.custom.insurance.InsurancePolicyType;
+import com.medigy.persist.reference.custom.invoice.BillSequenceType;
 import com.medigy.service.insurance.InsurancePolicyFacade;
 import com.medigy.service.util.AbstractFacade;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
+import org.hibernate.Query;
 import org.hibernate.criterion.Restrictions;
 
 import java.io.Serializable;
@@ -157,6 +159,17 @@ public class InsurancePolicyFacadeImpl extends AbstractFacade implements Insuran
     public InsurancePlan getInsurancePlanById(final Serializable insurancePlanId)
     {
         return (InsurancePlan) getSession().createCriteria(InsurancePlan.class).add(Restrictions.eq("insurancePlanId", insurancePlanId)).uniqueResult();
+    }
+
+    public InsurancePolicy getInsurancePolicy(final Long personId, final BillSequenceType sequenceType)
+    {
+        final Query query = getSession().createQuery("from InsurancePolicy policy where policy.insuredPerson.id = ? " +
+                "and policy.billSequenceType.code = ?");
+
+        query.setLong(0, personId);
+        query.setString(1, sequenceType.getCode());
+        final InsurancePolicy policy  =  (InsurancePolicy) query.uniqueResult();
+        return policy;
     }
 
 

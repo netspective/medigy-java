@@ -45,6 +45,7 @@ import com.medigy.persist.model.org.Organization;
 import com.medigy.persist.model.person.Person;
 import com.medigy.persist.reference.custom.insurance.InsurancePolicyType;
 import com.medigy.persist.reference.custom.insurance.InsuranceProductType;
+import com.medigy.persist.reference.custom.invoice.BillSequenceType;
 import com.medigy.persist.reference.type.GenderType;
 import com.medigy.service.AbstractSpringTestCase;
 import org.apache.commons.logging.Log;
@@ -63,6 +64,42 @@ public class TestInsurancePolicyFacade extends AbstractSpringTestCase
     public void setInsurancePolicyFacade(final InsurancePolicyFacade insurancePolicyFacade)
     {
         this.insurancePolicyFacade = insurancePolicyFacade;
+    }
+
+    public void testGetInsurancePolicy()
+    {
+        final Organization blueCross = new Organization();
+        blueCross.setOrganizationName("Blue Cross");
+
+        final InsurancePlan insPlan = new InsurancePlan();
+        insPlan.setName("Super Plan");
+        insPlan.setOrganization(blueCross);
+        blueCross.addInsurancePlan(insPlan);
+
+        getSession().save(blueCross);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(1980,1,1);
+        Person policyHolder = new Person();
+        policyHolder.setLastName("A");
+        policyHolder.setFirstName("Person");
+        policyHolder.setBirthDate(calendar.getTime());
+        policyHolder.addGender(GenderType.Cache.FEMALE.getEntity());
+        getSession().save(policyHolder);
+
+        final InsurancePolicy policy = new InsurancePolicy();
+        policy.setFromDate(new Date());
+        policy.setInsurancePlan(insPlan);
+        policy.setGroupNumber("XXX");
+        policy.setPolicyNumber("123");
+        policy.setType(InsurancePolicyType.Cache.INDIVIDUAL_INSURANCE_POLICY.getEntity());
+        policy.setInsuredPerson(policyHolder);
+        policy.setContractHolderPerson(policyHolder);
+        policy.setBillSequenceType(BillSequenceType.Cache.PRIMARY.getEntity());
+        getSession().save(policy);
+
+        final InsurancePolicy newPolicy = insurancePolicyFacade.getInsurancePolicy(policyHolder.getPartyId(), BillSequenceType.Cache.PRIMARY.getEntity());
+        assertEquals(policy.getInsurancePolicyId(), newPolicy.getInsurancePolicyId());
     }
 
     public void testListInsuranceProducts()
