@@ -96,4 +96,11 @@ public interface InsurancePolicyFacade extends Facade
      * @return
      */
     public InsurancePolicy getInsurancePolicy(final Long personId, final BillSequenceType type);
+
+    /**
+     * List all insurance policies of a person
+     * @param personId
+     * @return
+     */
+    public List<InsurancePolicy> listInsurancePolicies(final Long personId);
 }

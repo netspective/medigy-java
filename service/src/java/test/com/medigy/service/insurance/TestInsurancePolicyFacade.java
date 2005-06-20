@@ -66,6 +66,42 @@ public class TestInsurancePolicyFacade extends AbstractSpringTestCase
         this.insurancePolicyFacade = insurancePolicyFacade;
     }
 
+    public void testListInsurancePolicies()
+    {
+        final Organization blueCross = new Organization();
+        blueCross.setOrganizationName("Blue Cross");
+
+        final InsurancePlan insPlan = new InsurancePlan();
+        insPlan.setName("Super Plan");
+        insPlan.setOrganization(blueCross);
+        blueCross.addInsurancePlan(insPlan);
+
+        getSession().save(blueCross);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(1980,1,1);
+        Person policyHolder = new Person();
+        policyHolder.setLastName("A");
+        policyHolder.setFirstName("Person");
+        policyHolder.setBirthDate(calendar.getTime());
+        policyHolder.addGender(GenderType.Cache.FEMALE.getEntity());
+        getSession().save(policyHolder);
+
+        final InsurancePolicy policy = new InsurancePolicy();
+        policy.setFromDate(new Date());
+        policy.setInsurancePlan(insPlan);
+        policy.setGroupNumber("XXX");
+        policy.setPolicyNumber("123");
+        policy.setType(InsurancePolicyType.Cache.INDIVIDUAL_INSURANCE_POLICY.getEntity());
+        policy.setInsuredPerson(policyHolder);
+        policy.setContractHolderPerson(policyHolder);
+        policy.setBillSequenceType(BillSequenceType.Cache.PRIMARY.getEntity());
+        getSession().save(policy);
+
+        final List<InsurancePolicy> policies = insurancePolicyFacade.listInsurancePolicies(policyHolder.getPartyId());
+        assertEquals(1, policies.size());
+    }
+
     public void testGetInsurancePolicy()
     {
         final Organization blueCross = new Organization();

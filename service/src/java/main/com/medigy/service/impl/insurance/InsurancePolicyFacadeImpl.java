@@ -172,5 +172,15 @@ public class InsurancePolicyFacadeImpl extends AbstractFacade implements Insuran
         return policy;
     }
 
+    public List<InsurancePolicy> listInsurancePolicies(final Long personId)
+    {
+        final Query query = getSession().createQuery("from InsurancePolicy policy where policy.insuredPerson.id = ? ");
+        query.setLong(0, personId);
+        List list = query.list();
+        List<InsurancePolicy> policies = new ArrayList<InsurancePolicy>(list.size());
+        convert(InsurancePolicy.class, list, policies);
+        return policies;
+    }
+
 
 }
