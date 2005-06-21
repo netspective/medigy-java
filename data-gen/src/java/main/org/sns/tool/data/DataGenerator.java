@@ -41,7 +41,7 @@
 /*
  * Copyright (c) 2005 Your Corporation. All Rights Reserved.
  */
-package org.sns.data;
+package org.sns.tool.data;
 
 import java.io.IOException;
 import java.io.InputStream;
