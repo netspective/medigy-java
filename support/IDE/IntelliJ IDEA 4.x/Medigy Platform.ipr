@@ -222,6 +222,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/../../../graphviz/support/GraphViz.iml" filepath="$PROJECT_DIR$/../../../graphviz/support/GraphViz.iml" />
       <module fileurl="file://$PROJECT_DIR$/../../../common/support/common.iml" filepath="$PROJECT_DIR$/../../../common/support/common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../../../data-gen/support/data-gen.iml" filepath="$PROJECT_DIR$/../../../data-gen/support/data-gen.iml" />
       <module fileurl="file://$PROJECT_DIR$/../../../hibernate-doc/support/hibernate-doc.iml" filepath="$PROJECT_DIR$/../../../hibernate-doc/support/hibernate-doc.iml" />
       <module fileurl="file://$PROJECT_DIR$/../../../pbs/support/pbs.iml" filepath="$PROJECT_DIR$/../../../pbs/support/pbs.iml" />
       <module fileurl="file://$PROJECT_DIR$/../../../persistence/support/persistence.iml" filepath="$PROJECT_DIR$/../../../persistence/support/persistence.iml" />
@@ -331,6 +332,13 @@
         <root url="jar://$PROJECT_DIR$/../../../service/depend/lib/test/commons-dbcp-1.2.1.jar!/" />
         <root url="jar://$PROJECT_DIR$/../../../service/depend/lib/test/commons-pool-1.2.jar!/" />
         <root url="jar://$PROJECT_DIR$/../../../service/depend/lib/test/spring-mock-1.2.1.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="DataGen Dependencies (Main)">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/../../../data-gen/depend/lib/main/poi-2.5.1-final-20040804.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
