@@ -46,11 +46,13 @@ import java.util.Date;
 
 public interface AddClaimParameters extends ServiceParameters
 {
+    public Long getParentInvoiceId();
+
     public String getBatchId();
     public Date getBatchDate();
 
     @NotNull
-    public String getPatientId();
+    public Long getPatientId();
 
     @NotNull
     public String getVisitTypeCode();

@@ -49,6 +49,7 @@ import com.medigy.persist.reference.custom.person.EthnicityType;
 import com.medigy.persist.reference.custom.person.PatientType;
 import com.medigy.persist.reference.custom.person.PersonRoleType;
 import com.medigy.persist.reference.custom.claim.ClaimType;
+import com.medigy.persist.reference.custom.CustomReferenceEntity;
 import com.medigy.persist.reference.type.GenderType;
 import com.medigy.persist.reference.type.LanguageType;
 import com.medigy.persist.reference.type.MaritalStatusType;
@@ -59,12 +60,62 @@ import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.Restrictions;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.commons.lang.exception.ExceptionUtils;
+
+import java.util.List;
+import java.util.ArrayList;
 
 public class ReferenceEntityFacadeImpl extends AbstractFacade implements ReferenceEntityFacade
 {
+    private final Log log = LogFactory.getLog(ReferenceEntityFacadeImpl.class);
+
+
     public ReferenceEntityFacadeImpl(final SessionFactory sessionFactory)
     {
         super(sessionFactory);
+    }
+
+    /**
+     * Gets a list of all the custom reference entites of the requested class. This method assumes that
+     * the list being requested is for reference entities belonging to the SYS GLOBAL scope.
+     *
+     * @param customReferenceEntityClass
+     * @return
+     */
+    public List<CustomReferenceEntity> listCustomReferenceEntities(final Class customReferenceEntityClass)
+    {
+        if (!customReferenceEntityClass.isAssignableFrom(CustomReferenceEntity.class))
+            return null;
+        List<CustomReferenceEntity> newList = new ArrayList<CustomReferenceEntity>();
+        try
+        {
+            List list = getSession().createCriteria(customReferenceEntityClass).list();
+            convert(customReferenceEntityClass, list, newList);
+        }
+        catch (Exception e)
+        {
+            log.error(ExceptionUtils.getStackTrace(e));
+            final String error = e.getMessage();
+            newList.add(new CustomReferenceEntity() {
+                public Long getSystemId()
+                {
+                    return null;
+                }
+
+                public String getCode()
+                {
+                    return error;
+                }
+
+                public String getLabel()
+                {
+                    return error;
+                }
+            });
+        }
+        return newList;
     }
 
     public InsurancePolicyType getInsurancePolicyType(final String code)

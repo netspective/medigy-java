@@ -36,55 +36,13 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.service.util;
+package com.medigy.service.insurance;
 
-import com.medigy.persist.reference.custom.health.HealthCareLicenseType;
-import com.medigy.persist.reference.custom.insurance.InsurancePolicyType;
-import com.medigy.persist.reference.custom.insurance.InsuranceProductType;
-import com.medigy.persist.reference.custom.insurance.FeeScheduleItemCostType;
-import com.medigy.persist.reference.custom.party.ContactMechanismPurposeType;
-import com.medigy.persist.reference.custom.party.OrganizationRoleType;
-import com.medigy.persist.reference.custom.person.EthnicityType;
-import com.medigy.persist.reference.custom.person.PersonRoleType;
-import com.medigy.persist.reference.custom.person.PatientType;
-import com.medigy.persist.reference.custom.invoice.BillRemittanceType;
-import com.medigy.persist.reference.custom.claim.ClaimType;
-import com.medigy.persist.reference.custom.CustomReferenceEntity;
-import com.medigy.persist.reference.type.GenderType;
-import com.medigy.persist.reference.type.LanguageType;
-import com.medigy.persist.reference.type.MaritalStatusType;
+import com.medigy.service.util.Facade;
+import com.medigy.persist.model.invoice.Invoice;
 
-import java.util.List;
-
-public interface ReferenceEntityFacade extends Facade
+public interface InvoiceFacade extends Facade
 {
-    public List<CustomReferenceEntity> listCustomReferenceEntities(final Class customReferenceEntityClass);
-    
-    public InsurancePolicyType getInsurancePolicyType(final String code);
+    public Invoice getInvoiceById(final Long invoiceId);
 
-    public LanguageType getLanguageType(final String code);
-
-    public GenderType getGenderType(final String genderCode);
-
-    public EthnicityType getEthnicityType(final String ethnicityCode);
-
-    public MaritalStatusType getMaritalStatusType(String statusCode) throws UnknownReferenceTypeException;
-
-    public PersonRoleType getPersonRoleType(String roleCode);
-
-    public OrganizationRoleType getOrganizationRoleType(String roleCode);
-
-    public ContactMechanismPurposeType getContactMechanismPurposeType(String purposeCode)  throws UnknownReferenceTypeException;
-
-    public HealthCareLicenseType getLicenseType(final String licenseType);
-
-    public InsuranceProductType getInsuranceProductType(final String productTypeCode);
-
-    public BillRemittanceType getBillRemittanceType(final String remittanceTypeCode);
-
-    public FeeScheduleItemCostType getFeeScheduleItemCostType(final String costTypeCode);
-
-    public PatientType getPatientType(final String patientTypeCode);
-
-    public ClaimType getClaimType(final String claimTypeCode);
 }
