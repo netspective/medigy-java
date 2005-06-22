@@ -57,6 +57,9 @@ public class TestInvoice  extends TestCase
         final Invoice invoice = new Invoice();
         invoice.setDescription("New invoice");
 
+        invoice.addInvoiceAttribute("Attribute 1", (long) 123);
+        invoice.addInvoiceAttribute("Attribute 2", "hello world");
+
         final InvoiceTermType termType = new InvoiceTermType();
         termType.setCode("PAYMENT");
         termType.setLabel("Payment - net days");

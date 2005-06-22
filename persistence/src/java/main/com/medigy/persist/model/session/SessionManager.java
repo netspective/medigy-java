@@ -72,7 +72,7 @@ public class SessionManager
         {
             return threadSession.get().peek();
         }
-        catch (EmptyStackException e)
+        catch (Exception e)
         {
             return null;
         }

@@ -47,7 +47,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
 
-@Entity
 public class InvoiceAttributeType extends AbstractCustomReferenceEntity
 {
     public static final String PK_COLUMN_NAME = "inv_attr_type_id";
@@ -55,6 +54,9 @@ public class InvoiceAttributeType extends AbstractCustomReferenceEntity
 
     public enum Cache implements CachedCustomReferenceEntity
     {
+        ACTIVE_FEE_SCHEDULE("ACT_FEE_SCH", "Active Fee Schedule"),
+        DEFAULT_FEE_SCHEUDLE("DEF_FEE_SCH", "Default Fee Schedule"),
+        CLAIM_FILING("CLAIM_FILE", "Claim Filing/Indicator"),
         BILLING_CONTACT("BILL_CONTACT", "Billing Contact"),
         BILLING_PHONE_NUMBER("BILL_PHONE", "Billing Phone"),
         SUBMISSION_ORDER("SUB_ORDER", "Submission Order"),
@@ -108,8 +110,6 @@ public class InvoiceAttributeType extends AbstractCustomReferenceEntity
     }
 
 
-    @Id(generate = GeneratorType.AUTO)
-    @Column(name = PK_COLUMN_NAME)
     public Long getInvoiceAttributeTypeId()
     {
         return super.getSystemId();

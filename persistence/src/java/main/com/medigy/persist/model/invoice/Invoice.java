@@ -40,6 +40,11 @@ package com.medigy.persist.model.invoice;
 
 import com.medigy.persist.model.claim.Claim;
 import com.medigy.persist.model.common.AbstractTopLevelEntity;
+import com.medigy.persist.model.common.attribute.EntityAttribute;
+import com.medigy.persist.model.common.attribute.LongAttribute;
+import com.medigy.persist.model.common.attribute.DateAttribute;
+import com.medigy.persist.model.common.attribute.StringAttribute;
+import com.medigy.persist.model.common.attribute.BooleanAttribute;
 import com.medigy.persist.model.health.HealthCareVisit;
 import com.medigy.persist.model.org.Organization;
 import com.medigy.persist.model.party.Party;
@@ -47,6 +52,7 @@ import com.medigy.persist.reference.custom.invoice.InvoiceAttributeType;
 import com.medigy.persist.reference.custom.invoice.InvoiceRoleType;
 import com.medigy.persist.reference.custom.invoice.InvoiceStatusType;
 import com.medigy.persist.reference.custom.invoice.InvoiceType;
+import com.medigy.persist.reference.custom.attribute.EntityAttributeType;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -88,7 +94,7 @@ public class Invoice  extends AbstractTopLevelEntity
     private Set<InvoiceRole> invoiceRoles = new HashSet<InvoiceRole>();
     private Set<InvoiceStatus> invoiceStatuses = new HashSet<InvoiceStatus>();
     private Set<InvoiceTerm> invoiceTerms = new HashSet<InvoiceTerm>();
-    private Set<InvoiceAttribute> invoiceAttributes = new HashSet<InvoiceAttribute>();
+    private Set<EntityAttribute> attributes = new HashSet<EntityAttribute>();
 
     private Set<Claim> claims = new HashSet<Claim>();
     private Set<Invoice> childInvoices = new HashSet<Invoice>();
@@ -413,53 +419,57 @@ public class Invoice  extends AbstractTopLevelEntity
     }
 
     @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL)
-    public Set<InvoiceAttribute> getInvoiceAttributes()
+    public Set<EntityAttribute> getAttributes()
     {
-        return invoiceAttributes;
+        return attributes;
     }
 
-    public void setInvoiceAttributes(final Set<InvoiceAttribute> invoiceAttributes)
+    public void setAttributes(final Set<EntityAttribute> attributes)
     {
-        this.invoiceAttributes = invoiceAttributes;
+        this.attributes = attributes;
     }
 
     @Transient
-    public void addInvoiceAttribute(final InvoiceAttributeType type, final Long id)
+    public void addInvoiceAttribute(final String label, final Long id)
     {
-        final InvoiceAttribute attr = new InvoiceAttribute();
-        attr.setType(type);
-        attr.setValueLong(id);
+        final LongAttribute attr = new LongAttribute();
+        attr.setType(EntityAttributeType.Cache.INVOICE.getEntity());
+        attr.setValue(id);
         attr.setInvoice(this);
-        this.invoiceAttributes.add(attr);
+        attr.setLabel(label);
+        this.attributes.add(attr);
     }
 
     @Transient
-    public void addInvoiceAttribute(final InvoiceAttributeType type, final Date date)
+    public void addInvoiceAttribute(final String label, final Date date)
     {
-        final InvoiceAttribute attr = new InvoiceAttribute();
-        attr.setType(type);
-        attr.setValueDate(date);
+        final DateAttribute attr = new DateAttribute();
+        attr.setType(EntityAttributeType.Cache.INVOICE.getEntity());
+        attr.setValue(date);
         attr.setInvoice(this);
-        this.invoiceAttributes.add(attr);
+        attr.setLabel(label);
+        this.attributes.add(attr);
     }
 
     @Transient
-    public void addInvoiceAttribute(final InvoiceAttributeType type, final String value)
+    public void addInvoiceAttribute(final String label, final String value)
     {
-        final InvoiceAttribute attr = new InvoiceAttribute();
-        attr.setType(type);
+        final StringAttribute attr = new StringAttribute();
+        attr.setType(EntityAttributeType.Cache.INVOICE.getEntity());
         attr.setValue(value);
         attr.setInvoice(this);
-        this.invoiceAttributes.add(attr);
+        attr.setLabel(label);
+        this.attributes.add(attr);
     }
 
     @Transient
-    public void addInvoiceAttribute(final InvoiceAttributeType type, final boolean value)
+    public void addInvoiceAttribute(final String label, final boolean value)
     {
-        final InvoiceAttribute attr = new InvoiceAttribute();
-        attr.setType(type);
-        attr.setValueBoolean(value);
+        final BooleanAttribute attr = new BooleanAttribute();
+        attr.setType(EntityAttributeType.Cache.INVOICE.getEntity());
+        attr.setValue(value);
         attr.setInvoice(this);
-        this.invoiceAttributes.add(attr);
+        attr.setLabel(label);
+        this.attributes.add(attr);
     }
 }

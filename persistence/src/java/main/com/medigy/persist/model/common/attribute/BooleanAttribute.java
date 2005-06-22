@@ -39,8 +39,11 @@
 package com.medigy.persist.model.common.attribute;
 
 import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 
 @Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 public class BooleanAttribute extends EntityAttribute
 {
     private Boolean value;

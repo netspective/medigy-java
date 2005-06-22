@@ -39,18 +39,30 @@
 package com.medigy.persist.model.common.attribute;
 
 import com.medigy.persist.model.common.AbstractTopLevelEntity;
+import com.medigy.persist.model.invoice.Invoice;
+import com.medigy.persist.model.person.Person;
+import com.medigy.persist.reference.custom.attribute.EntityAttributeType;
 
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.Id;
 import javax.persistence.GeneratorType;
 import javax.persistence.Entity;
+import javax.persistence.Column;
+import javax.persistence.ManyToOne;
+import javax.persistence.JoinColumn;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 public class EntityAttribute extends AbstractTopLevelEntity
 {
     private Long attributeId;
+    private String label;
+    private EntityAttributeType type;
+
+    private Invoice invoice;
+    private Person person;
+
 
     @Id(generate = GeneratorType.AUTO)
     public Long getAttributeId()
@@ -61,5 +73,52 @@ public class EntityAttribute extends AbstractTopLevelEntity
     public void setAttributeId(final Long attributeId)
     {
         this.attributeId = attributeId;
+    }
+
+    @Column(length = 128)
+    public String getLabel()
+    {
+        return label;
+    }
+
+    public void setLabel(final String label)
+    {
+        this.label = label;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = EntityAttributeType.PK_COLUMN_NAME)
+    public EntityAttributeType getType()
+    {
+        return type;
+    }
+
+    public void setType(final EntityAttributeType type)
+    {
+        this.type = type;
+    }
+
+    @ManyToOne()
+    @JoinColumn(referencedColumnName = Invoice.PK_COLUMN_NAME, name = "parent_entity_id", insertable = false, updatable = false)
+    public Invoice getInvoice()
+    {
+        return invoice;
+    }
+
+    public void setInvoice(final Invoice invoice)
+    {
+        this.invoice = invoice;
+    }
+
+    @ManyToOne
+    @JoinColumn(referencedColumnName = Person.PK_COLUMN_NAME, name = "parent_entity_id", insertable = false, updatable = false)
+    public Person getPerson()
+    {
+        return person;
+    }
+
+    public void setPerson(final Person person)
+    {
+        this.person = person;
     }
 }

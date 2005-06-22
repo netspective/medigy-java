@@ -25,7 +25,7 @@
         <mapping class="com.medigy.persist.reference.type.party.PartyFacilityRoleType"/>
         <mapping class="com.medigy.persist.reference.type.party.PartyType"/>
 
-        <!--mapping package="com.medigy.persist.reference.custom"/-->
+        <mapping class="com.medigy.persist.reference.custom.attribute.EntityAttributeType"/>
 		<mapping class="com.medigy.persist.reference.custom.GeographicBoundaryType"/>
         <!--mapping package="com.medigy.persist.reference.custom.claim"/-->
         <mapping class="com.medigy.persist.reference.custom.claim.ClaimRoleType"/>
@@ -71,7 +71,6 @@
         <mapping class="com.medigy.persist.reference.custom.invoice.BillRemittanceType"/>
         <mapping class="com.medigy.persist.reference.custom.invoice.BillSequenceType"/>
         <mapping class="com.medigy.persist.reference.custom.invoice.InvoiceType"/>
-        <mapping class="com.medigy.persist.reference.custom.invoice.InvoiceAttributeType"/>
 
         <!--mapping package="com.medigy.persist.reference.custom.party"/-->
         <mapping class="com.medigy.persist.reference.custom.party.PartyRoleType"/>
@@ -196,7 +195,6 @@
         <mapping class="com.medigy.persist.model.invoice.BillingAccount"/>
         <mapping class="com.medigy.persist.model.invoice.BillingAccountRole"/>
         <mapping class="com.medigy.persist.model.invoice.Invoice"/>
-        <mapping class="com.medigy.persist.model.invoice.InvoiceAttribute"/>
         <mapping class="com.medigy.persist.model.invoice.InvoiceItem"/>
         <mapping class="com.medigy.persist.model.invoice.InvoiceRole"/>
         <mapping class="com.medigy.persist.model.invoice.InvoiceStatus"/>

@@ -36,102 +36,68 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.persist.model.invoice;
+package com.medigy.persist.reference.custom.attribute;
 
-import com.medigy.persist.model.common.AbstractTopLevelEntity;
-import com.medigy.persist.reference.custom.invoice.InvoiceAttributeType;
+import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
+import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
+import com.medigy.persist.reference.custom.CustomReferenceEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.GeneratorType;
-import javax.persistence.ManyToOne;
-import javax.persistence.JoinColumn;
-import java.util.Date;
+import javax.persistence.Column;
 
 @Entity
-public class InvoiceAttribute extends AbstractTopLevelEntity
+public class EntityAttributeType extends AbstractCustomReferenceEntity
 {
-    private Long invoiceAttributeId;
-    private Invoice invoice;
-    private InvoiceAttributeType type;
+    public static final String PK_COLUMN_NAME = "entity_attr_type_id";
 
-    private String value;
-    private Date valueDate;
-    private Long valueLong;
-    private Boolean valueBoolean;
+    public enum Cache implements CachedCustomReferenceEntity
+    {
+        INVOICE("INVOICE", "Invoice"),
+        PAERSON("PERSON", "Person"),
+        ORG("ORG", "Organizaton");
+
+        private final String label;
+        private final String code;
+        private EntityAttributeType entity;
+
+        Cache(final String code, final String label)
+        {
+            this.code = code;
+            this.label = label;
+        }
+
+        public String getCode()
+        {
+            return code;
+        }
+
+        public EntityAttributeType getEntity()
+        {
+            return entity;
+        }
+
+        public void setEntity(final CustomReferenceEntity entity)
+        {
+            this.entity = (EntityAttributeType) entity;
+        }
+
+        public String getLabel()
+        {
+            return label;
+        }
+    }
 
     @Id(generate = GeneratorType.AUTO)
-    public Long getInvoiceAttributeId()
+    @Column(name = PK_COLUMN_NAME)
+    public Long getInvoiceAttributeTypeId()
     {
-        return invoiceAttributeId;
+        return super.getSystemId();
     }
 
-    public void setInvoiceAttributeId(final Long invoiceAttributeId)
+    protected void setInvoiceAttributeTypeId(final Long id)
     {
-        this.invoiceAttributeId = invoiceAttributeId;
-    }
-
-    @ManyToOne
-    @JoinColumn(name = Invoice.PK_COLUMN_NAME)
-    public Invoice getInvoice()
-    {
-        return invoice;
-    }
-
-    public void setInvoice(final Invoice invoice)
-    {
-        this.invoice = invoice;
-    }
-
-    @ManyToOne
-    @JoinColumn(name = InvoiceAttributeType.PK_COLUMN_NAME)
-    public InvoiceAttributeType getType()
-    {
-        return type;
-    }
-
-    public void setType(final InvoiceAttributeType type)
-    {
-        this.type = type;
-    }
-
-    public String getValue()
-    {
-        return value;
-    }
-
-    public void setValue(final String value)
-    {
-        this.value = value;
-    }
-
-    public Date getValueDate()
-    {
-        return valueDate;
-    }
-
-    public void setValueDate(final Date valueDate)
-    {
-        this.valueDate = valueDate;
-    }
-
-    public Long getValueLong()
-    {
-        return valueLong;
-    }
-
-    public void setValueLong(final Long valueLong)
-    {
-        this.valueLong = valueLong;
-    }
-
-    public Boolean getValueBoolean()
-    {
-        return valueBoolean;
-    }
-
-    public void setValueBoolean(final Boolean valueBoolean)
-    {
-        this.valueBoolean = valueBoolean;
+        super.setSystemId(id);
     }
 }

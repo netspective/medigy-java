@@ -40,34 +40,47 @@ package com.medigy.service.impl.insurance;
 
 import com.medigy.persist.model.invoice.Invoice;
 import com.medigy.persist.model.org.Organization;
+import com.medigy.persist.model.insurance.InsurancePolicy;
 import com.medigy.persist.reference.custom.claim.ClaimType;
 import com.medigy.persist.reference.custom.invoice.InvoiceType;
 import com.medigy.persist.reference.custom.invoice.InvoiceAttributeType;
+import com.medigy.persist.reference.custom.invoice.BillSequenceType;
 import com.medigy.service.AbstractService;
 import com.medigy.service.ServiceVersion;
 import com.medigy.service.dto.ServiceParameters;
 import com.medigy.service.dto.ServiceReturnValues;
 import com.medigy.service.dto.insurance.AddClaimParameters;
 import com.medigy.service.insurance.AddClaimService;
+import com.medigy.service.insurance.InsurancePolicyFacade;
+import com.medigy.service.insurance.InvoiceFacade;
 import com.medigy.service.util.ReferenceEntityFacade;
 import org.hibernate.SessionFactory;
 import org.hibernate.validator.ClassValidator;
 import org.hibernate.validator.InvalidValue;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.util.Locale;
 import java.util.ResourceBundle;
 
 public class AddClaimServiceImpl extends AbstractService implements AddClaimService
 {
+    private static final Log log = LogFactory.getLog(AddClaimServiceImpl.class);
     private static final ClassValidator addressValidator = new ClassValidator(AddClaimParameters.class,
                 ResourceBundle.getBundle("messages", Locale.ENGLISH));
 
     private ReferenceEntityFacade referenceEntityFacade;
+    private InsurancePolicyFacade insurancePolicyFacade;
+    private InvoiceFacade invoiceFacade;
 
-    public AddClaimServiceImpl(final SessionFactory sessionFactory, final ReferenceEntityFacade referenceEntityFacade)
+    public AddClaimServiceImpl(final SessionFactory sessionFactory, final ReferenceEntityFacade referenceEntityFacade,
+                               final InsurancePolicyFacade insurancePolicyFacade,
+                               final InvoiceFacade invoiceFacade)
     {
         super(sessionFactory);
         this.referenceEntityFacade = referenceEntityFacade;
+        this.insurancePolicyFacade = insurancePolicyFacade;
+        this.invoiceFacade = invoiceFacade;
     }
 
     public void setReferenceEntityFacade(final ReferenceEntityFacade referenceEntityFacade)
@@ -95,49 +108,67 @@ public class AddClaimServiceImpl extends AbstractService implements AddClaimServ
         final ClaimType claimType = referenceEntityFacade.getClaimType(paramaters.getClaimTypeCode());
         invoice.setType(InvoiceType.Cache.HCFA_1500.getEntity());
 
-        invoice.addInvoiceAttribute(InvoiceAttributeType.Cache.REFERRAL_PROVIDER_ID.getEntity(),
+        invoice.addInvoiceAttribute(InvoiceAttributeType.Cache.REFERRAL_PROVIDER_ID.getEntity().getCode(),
                 (Long) paramaters.getReferringPhysicianId());
-        invoice.addInvoiceAttribute(InvoiceAttributeType.Cache.REFERRAL_PROVIDER_FIRST_NAME.getEntity(),
+        invoice.addInvoiceAttribute(InvoiceAttributeType.Cache.REFERRAL_PROVIDER_FIRST_NAME.getEntity().getCode(),
                 paramaters.getReferringPhysicianFirstName());
-        invoice.addInvoiceAttribute(InvoiceAttributeType.Cache.REFERRAL_PROVIDER_LAST_NAME.getEntity(),
+        invoice.addInvoiceAttribute(InvoiceAttributeType.Cache.REFERRAL_PROVIDER_LAST_NAME.getEntity().getCode(),
                 paramaters.getReferringPhysicianLastName());
 
-        invoice.addInvoiceAttribute(InvoiceAttributeType.Cache.DISABILITY_START_DATE.getEntity(),
+        invoice.addInvoiceAttribute(InvoiceAttributeType.Cache.DISABILITY_START_DATE.getEntity().getCode(),
                 paramaters.getDisabilityStartDate());
-        invoice.addInvoiceAttribute(InvoiceAttributeType.Cache.DISABILITY_END_DATE.getEntity(),
+        invoice.addInvoiceAttribute(InvoiceAttributeType.Cache.DISABILITY_END_DATE.getEntity().getCode(),
                 paramaters.getDisabilityEndDate());
 
-        invoice.addInvoiceAttribute(InvoiceAttributeType.Cache.HOSP_START_DATE.getEntity(),
+        invoice.addInvoiceAttribute(InvoiceAttributeType.Cache.HOSP_START_DATE.getEntity().getCode(),
                 paramaters.getHospitalAdmissionDate());
-        invoice.addInvoiceAttribute(InvoiceAttributeType.Cache.HOSP_END_DATE.getEntity(),
+        invoice.addInvoiceAttribute(InvoiceAttributeType.Cache.HOSP_END_DATE.getEntity().getCode(),
                 paramaters.getHospitalDischargeDate());
 
-        invoice.addInvoiceAttribute(InvoiceAttributeType.Cache.ILLNESS_START_DATE.getEntity(),
+        invoice.addInvoiceAttribute(InvoiceAttributeType.Cache.ILLNESS_START_DATE.getEntity().getCode(),
                 paramaters.getCurrentIllnessDate());
 
-        invoice.addInvoiceAttribute(InvoiceAttributeType.Cache.PRIOR_AUTH_NUMBER.getEntity(),
+        invoice.addInvoiceAttribute(InvoiceAttributeType.Cache.PRIOR_AUTH_NUMBER.getEntity().getCode(),
                 paramaters.getPriorAuthroizationId());
-        invoice.addInvoiceAttribute(InvoiceAttributeType.Cache.BATCH_ID.getEntity(),
+        invoice.addInvoiceAttribute(InvoiceAttributeType.Cache.BATCH_ID.getEntity().getCode(),
                 paramaters.getBatchId());
-        invoice.addInvoiceAttribute(InvoiceAttributeType.Cache.BATCH_DATE.getEntity(),
+        invoice.addInvoiceAttribute(InvoiceAttributeType.Cache.BATCH_DATE.getEntity().getCode(),
                 paramaters.getBatchDate());
 
-        invoice.addInvoiceAttribute(InvoiceAttributeType.Cache.INCIDENT_RELATED_TO.getEntity(),
+        invoice.addInvoiceAttribute(InvoiceAttributeType.Cache.INCIDENT_RELATED_TO.getEntity().getCode(),
                 paramaters.getIncidentTypeCode());
-        invoice.addInvoiceAttribute(InvoiceAttributeType.Cache.INCIDENT_STATE.getEntity(),
+        invoice.addInvoiceAttribute(InvoiceAttributeType.Cache.INCIDENT_STATE.getEntity().getCode(),
                 paramaters.getIncidentStateCode());
-        invoice.addInvoiceAttribute(InvoiceAttributeType.Cache.INCIDENT_EMPLOYMENT_RELATED.getEntity(),
+        invoice.addInvoiceAttribute(InvoiceAttributeType.Cache.INCIDENT_EMPLOYMENT_RELATED.getEntity().getCode(),
                 paramaters.isIncidentEmploymentRelated());
 
         // Look up the BILLING organization contact information
 
-        invoice.addInvoiceAttribute(InvoiceAttributeType.Cache.BILLING_CONTACT.getEntity(),
+        invoice.addInvoiceAttribute(InvoiceAttributeType.Cache.BILLING_CONTACT.getEntity().getCode(),
                 paramaters.isIncidentEmploymentRelated());
-        invoice.addInvoiceAttribute(InvoiceAttributeType.Cache.BILLING_PHONE_NUMBER.getEntity(), new Long(0));
+        invoice.addInvoiceAttribute(InvoiceAttributeType.Cache.BILLING_PHONE_NUMBER.getEntity().getCode(), (long) 0);
 
-        // TODO: Need to figure out the TRANSACTION and INVOICE table some more
-        
+        final InsurancePolicy secondaryPolicy = insurancePolicyFacade.getInsurancePolicy(paramaters.getPatientId(), BillSequenceType.Cache.SECONDARY.getEntity());
+        // TODO: Find out what the ref table should be
+        String claimFiling = secondaryPolicy != null ? "M" : "P";
+        invoice.addInvoiceAttribute(InvoiceAttributeType.Cache.CLAIM_FILING.getEntity().getCode(), claimFiling);
+
+        if (paramaters.getParentInvoiceId() != null)
+        {
+            Invoice parentInvoice = invoiceFacade.getInvoiceById(paramaters.getParentInvoiceId());
+            if (parentInvoice != null)
+                invoice.setParentInvoice(parentInvoice);
+            else
+            {
+                log.error("Unknown parent Invoice id");
+                return (NewClaimValues) createErrorResponse(paramaters, "Unknown parent Invoice id");
+            }
+        }
         return null;
+    }
+
+    protected void billCopay(final AddClaimParameters paramaters, final Invoice invoice)
+    {
     }
 
     public ServiceVersion[] getSupportedServiceVersions()

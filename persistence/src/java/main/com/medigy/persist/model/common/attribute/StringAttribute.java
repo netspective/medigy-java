@@ -40,8 +40,11 @@ package com.medigy.persist.model.common.attribute;
 
 import javax.persistence.Entity;
 import javax.persistence.Column;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 
 @Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 public class StringAttribute extends EntityAttribute
 {
     private String value;

@@ -44,7 +44,7 @@ import javax.persistence.InheritanceType;
 import javax.persistence.Column;
 
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED, discriminatorValue = "Long")
+@Inheritance(strategy = InheritanceType.JOINED)
 public class LongAttribute extends EntityAttribute
 {
     private Long value;

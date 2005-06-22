@@ -47,4 +47,5 @@ public interface CustomReferenceEntity
 {
     public Long getSystemId();
     public String getCode();
+    public String getLabel();
 }
