@@ -104,6 +104,7 @@
         <!--mapping package="com.medigy.persist.model.party"/-->
         <!--mapping class="com.medigy.persist.model.party.Case"/
  -->
+        <mapping class="com.medigy.persist.model.invoice.attribute.InvoiceAttribute"/>
         <mapping class="com.medigy.persist.model.invoice.attribute.InvoiceStringAttribute"/>
         <mapping class="com.medigy.persist.model.invoice.attribute.InvoiceLongAttribute"/>
         <mapping class="com.medigy.persist.model.invoice.attribute.InvoiceBooleanAttribute"/>
