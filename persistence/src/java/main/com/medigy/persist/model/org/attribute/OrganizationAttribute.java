@@ -36,25 +36,42 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.persist.model.common.attribute;
+package com.medigy.persist.model.org.attribute;
+
+import com.medigy.persist.model.common.attribute.EntityAttribute;
+import com.medigy.persist.model.org.Organization;
 
 import javax.persistence.Entity;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
+import javax.persistence.ManyToOne;
+import javax.persistence.JoinColumn;
+import javax.persistence.Id;
+import javax.persistence.GeneratorType;
 
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED)
-public class BooleanAttribute extends EntityAttribute
+public class OrganizationAttribute extends EntityAttribute
 {
-    private Boolean value;
+    private Organization organization;
 
-    public Boolean getValue()
+    @Id(generate = GeneratorType.AUTO)
+    public Long getOrganizationAttributeId()
     {
-        return value;
+        return getAttributeId();
     }
 
-    public void setValue(final Boolean value)
+    protected void setOrganizationAttributeId(final Long id)
     {
-        this.value = value;
+        setAttributeId(id);
+    }
+
+    @ManyToOne
+    @JoinColumn(name = Organization.PK_COLUMN_NAME)
+    public Organization getOrganization()
+    {
+        return organization;
+    }
+
+    public void setOrganization(final Organization organization)
+    {
+        this.organization = organization;
     }
 }

@@ -36,26 +36,28 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.persist.model.common.attribute;
+package com.medigy.persist.model.invoice.attribute;
+
+import com.medigy.persist.model.common.attribute.EntityAttribute;
 
 import javax.persistence.Entity;
-import javax.persistence.Column;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.Column;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-public class StringAttribute extends EntityAttribute
+public class InvoiceLongAttribute extends InvoiceAttribute
 {
-    private String value;
+    private Long value;
 
-    @Column(length = 128, nullable = false)
-    public String getValue()
+    @Column(nullable = false)
+    public Long getValue()
     {
         return value;
     }
 
-    public void setValue(final String value)
+    public void setValue(final Long value)
     {
         this.value = value;
     }

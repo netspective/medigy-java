@@ -40,19 +40,17 @@ package com.medigy.persist.model.invoice;
 
 import com.medigy.persist.model.claim.Claim;
 import com.medigy.persist.model.common.AbstractTopLevelEntity;
-import com.medigy.persist.model.common.attribute.EntityAttribute;
-import com.medigy.persist.model.common.attribute.LongAttribute;
-import com.medigy.persist.model.common.attribute.DateAttribute;
-import com.medigy.persist.model.common.attribute.StringAttribute;
-import com.medigy.persist.model.common.attribute.BooleanAttribute;
+import com.medigy.persist.model.invoice.attribute.InvoiceLongAttribute;
+import com.medigy.persist.model.invoice.attribute.InvoiceDateAttribute;
+import com.medigy.persist.model.invoice.attribute.InvoiceBooleanAttribute;
+import com.medigy.persist.model.invoice.attribute.InvoiceAttribute;
+import com.medigy.persist.model.invoice.attribute.InvoiceStringAttribute;
 import com.medigy.persist.model.health.HealthCareVisit;
 import com.medigy.persist.model.org.Organization;
 import com.medigy.persist.model.party.Party;
-import com.medigy.persist.reference.custom.invoice.InvoiceAttributeType;
 import com.medigy.persist.reference.custom.invoice.InvoiceRoleType;
 import com.medigy.persist.reference.custom.invoice.InvoiceStatusType;
 import com.medigy.persist.reference.custom.invoice.InvoiceType;
-import com.medigy.persist.reference.custom.attribute.EntityAttributeType;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -94,7 +92,7 @@ public class Invoice  extends AbstractTopLevelEntity
     private Set<InvoiceRole> invoiceRoles = new HashSet<InvoiceRole>();
     private Set<InvoiceStatus> invoiceStatuses = new HashSet<InvoiceStatus>();
     private Set<InvoiceTerm> invoiceTerms = new HashSet<InvoiceTerm>();
-    private Set<EntityAttribute> attributes = new HashSet<EntityAttribute>();
+    private Set<InvoiceAttribute> attributes = new HashSet<InvoiceAttribute>();
 
     private Set<Claim> claims = new HashSet<Claim>();
     private Set<Invoice> childInvoices = new HashSet<Invoice>();
@@ -419,12 +417,12 @@ public class Invoice  extends AbstractTopLevelEntity
     }
 
     @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL)
-    public Set<EntityAttribute> getAttributes()
+    public Set<InvoiceAttribute> getAttributes()
     {
         return attributes;
     }
 
-    public void setAttributes(final Set<EntityAttribute> attributes)
+    public void setAttributes(final Set<InvoiceAttribute> attributes)
     {
         this.attributes = attributes;
     }
@@ -432,8 +430,7 @@ public class Invoice  extends AbstractTopLevelEntity
     @Transient
     public void addInvoiceAttribute(final String label, final Long id)
     {
-        final LongAttribute attr = new LongAttribute();
-        attr.setType(EntityAttributeType.Cache.INVOICE.getEntity());
+        final InvoiceLongAttribute attr = new InvoiceLongAttribute();
         attr.setValue(id);
         attr.setInvoice(this);
         attr.setLabel(label);
@@ -443,8 +440,7 @@ public class Invoice  extends AbstractTopLevelEntity
     @Transient
     public void addInvoiceAttribute(final String label, final Date date)
     {
-        final DateAttribute attr = new DateAttribute();
-        attr.setType(EntityAttributeType.Cache.INVOICE.getEntity());
+        final InvoiceDateAttribute attr = new InvoiceDateAttribute();
         attr.setValue(date);
         attr.setInvoice(this);
         attr.setLabel(label);
@@ -454,8 +450,7 @@ public class Invoice  extends AbstractTopLevelEntity
     @Transient
     public void addInvoiceAttribute(final String label, final String value)
     {
-        final StringAttribute attr = new StringAttribute();
-        attr.setType(EntityAttributeType.Cache.INVOICE.getEntity());
+        final InvoiceStringAttribute attr = new InvoiceStringAttribute();
         attr.setValue(value);
         attr.setInvoice(this);
         attr.setLabel(label);
@@ -465,8 +460,7 @@ public class Invoice  extends AbstractTopLevelEntity
     @Transient
     public void addInvoiceAttribute(final String label, final boolean value)
     {
-        final BooleanAttribute attr = new BooleanAttribute();
-        attr.setType(EntityAttributeType.Cache.INVOICE.getEntity());
+        final InvoiceBooleanAttribute attr = new InvoiceBooleanAttribute();
         attr.setValue(value);
         attr.setInvoice(this);
         attr.setLabel(label);

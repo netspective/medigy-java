@@ -36,9 +36,11 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.persist.model.common.attribute;
+package com.medigy.persist.model.org.attribute;
 
 import com.medigy.persist.model.common.EffectiveDates;
+import com.medigy.persist.model.common.attribute.EntityAttribute;
+import com.medigy.persist.model.invoice.attribute.InvoiceAttribute;
 
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
@@ -47,7 +49,7 @@ import java.util.Date;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-public class DurationAttribute extends EntityAttribute
+public class OrganizationDurationAttribute extends OrganizationAttribute
 {
     private EffectiveDates effectiveDates = new EffectiveDates();
 

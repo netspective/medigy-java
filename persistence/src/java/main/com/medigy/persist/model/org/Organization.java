@@ -50,6 +50,11 @@ import com.medigy.persist.model.party.Party;
 import com.medigy.persist.model.party.Facility;
 import com.medigy.persist.model.health.HealthCareOffering;
 import com.medigy.persist.model.health.VisitType;
+import com.medigy.persist.model.org.attribute.OrganizationAttribute;
+import com.medigy.persist.model.org.attribute.OrganizationStringAttribute;
+import com.medigy.persist.model.org.attribute.OrganizationDateAttribute;
+import com.medigy.persist.model.org.attribute.OrganizationBooleanAttribute;
+import com.medigy.persist.model.org.attribute.OrganizationLongAttribute;
 import com.medigy.persist.reference.custom.insurance.InsuranceProductType;
 import com.medigy.persist.reference.custom.org.OrganizationClassificationType;
 import com.medigy.persist.reference.custom.party.FacilityType;
@@ -66,6 +71,7 @@ import javax.persistence.Column;
 import javax.persistence.FetchType;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.Date;
 
 /**
  * Specialized party for organizations.
@@ -82,6 +88,8 @@ public class Organization extends Party
 
     private Set<HealthCareOffering> healthCareOfferings = new HashSet<HealthCareOffering>();
     private Set<VisitType> visitTypes = new HashSet<VisitType>();
+
+    private Set<OrganizationAttribute> attributes = new HashSet<OrganizationAttribute>();
 
     private String tradeName;
 
@@ -255,5 +263,56 @@ public class Organization extends Party
     public void setVisitTypes(final Set<VisitType> visitTypes)
     {
         this.visitTypes = visitTypes;
+    }
+
+    @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL)
+    public Set<OrganizationAttribute> getAttributes()
+    {
+        return attributes;
+    }
+
+    public void setAttributes(final Set<OrganizationAttribute> attributes)
+    {
+        this.attributes = attributes;
+    }
+
+    @Transient
+    public void addOrganizationAttribute(final String label, final Long id)
+    {
+        final OrganizationLongAttribute attr = new OrganizationLongAttribute();
+        attr.setValue(id);
+        attr.setOrganization(this);
+        attr.setLabel(label);
+        this.attributes.add(attr);
+    }
+
+    @Transient
+    public void addOrganizationAttribute(final String label, final Date date)
+    {
+        final OrganizationDateAttribute attr = new OrganizationDateAttribute();
+        attr.setValue(date);
+        attr.setOrganization(this);
+        attr.setLabel(label);
+        this.attributes.add(attr);
+    }
+
+    @Transient
+    public void addOrganizationAttribute(final String label, final String value)
+    {
+        final OrganizationStringAttribute attr = new OrganizationStringAttribute();
+        attr.setValue(value);
+        attr.setOrganization(this);
+        attr.setLabel(label);
+        this.attributes.add(attr);
+    }
+
+    @Transient
+    public void addOrganizationAttribute(final String label, final boolean value)
+    {
+        final OrganizationBooleanAttribute attr = new OrganizationBooleanAttribute();
+        attr.setValue(value);
+        attr.setOrganization(this);
+        attr.setLabel(label);
+        this.attributes.add(attr);
     }
 }

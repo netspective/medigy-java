@@ -35,84 +35,47 @@
  * CAUSED AND REGARDLESS OF THE THEORY OF LIABILITY, ARISING OUT OF THE USE OF OR INABILITY TO USE THE SOFTWARE, EVEN
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
- * @author Shahid N. Shah
  */
+package com.medigy.persist.model.invoice.attribute;
 
-/*
- * Copyright (c) 2005 Your Corporation. All Rights Reserved.
- */
-package com.medigy.persist.model.session;
+import com.medigy.persist.model.common.attribute.EntityAttribute;
+import com.medigy.persist.model.invoice.Invoice;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.commons.lang.exception.ExceptionUtils;
+import javax.persistence.Id;
+import javax.persistence.GeneratorType;
+import javax.persistence.Column;
+import javax.persistence.ManyToOne;
+import javax.persistence.JoinColumn;
+import javax.persistence.Entity;
 
-import java.util.EmptyStackException;
-import java.util.Stack;
-
-public class SessionManager
+@Entity
+public class InvoiceAttribute extends EntityAttribute
 {
-    private static final Log log = LogFactory.getLog(SessionManager.class);
+    public static final String PK_COLUMN_NAME = "inv_attr_id";
 
-    private static final SessionManager INSTANCE = new SessionManager();
+    private Invoice invoice;
 
-    public static final SessionManager getInstance()
+    @Id(generate = GeneratorType.AUTO)
+    @Column(name = PK_COLUMN_NAME)
+    public Long getInvoiceAttributeId()
     {
-        return INSTANCE;
+        return getAttributeId();
     }
 
-    private final ThreadLocal<Stack<Session>> threadSession = new ThreadLocal<Stack<Session>>();
-
-    public SessionManager()
+    protected void setInvoiceAttributeId(final Long id)
     {
-        threadSession.set(new Stack<Session>());
+        setAttributeId(id);
     }
 
-    /**
-     * Gets (peeks) the session from the stack
-     * @return
-     */
-    public Session getActiveSession()
+    @ManyToOne
+    @JoinColumn(name = Invoice.PK_COLUMN_NAME)
+    public Invoice getInvoice()
     {
-        try
-        {
-            return threadSession.get().peek();
-        }
-        catch (Exception e)
-        {
-            log.error(ExceptionUtils.getStackTrace(e));
-            return null;
-        }
+        return invoice;
     }
 
-    /**
-     * Pushes the new session onto the stack
-     * @param session
-     */
-    public void pushActiveSession(final Session session)
+    public void setInvoice(final Invoice invoice)
     {
-        try
-        {
-            threadSession.get().push(session);
-        }
-        catch (Exception e)
-        {
-            log.error(ExceptionUtils.getStackTrace(e));
-        }
-    }
-
-    /**
-     * Pops the active session from the stack
-     */
-    public void popActiveSession()
-    {
-        try
-        {
-            threadSession.get().pop();
-        }
-        catch (Exception e)
-        {
-            log.error(ExceptionUtils.getStackTrace(e));
-        }
+        this.invoice = invoice;
     }
 }

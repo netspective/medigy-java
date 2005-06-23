@@ -35,84 +35,41 @@
  * CAUSED AND REGARDLESS OF THE THEORY OF LIABILITY, ARISING OUT OF THE USE OF OR INABILITY TO USE THE SOFTWARE, EVEN
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
- * @author Shahid N. Shah
  */
+package com.medigy.persist.model.invoice.attribute;
 
-/*
- * Copyright (c) 2005 Your Corporation. All Rights Reserved.
- */
-package com.medigy.persist.model.session;
+import com.medigy.persist.model.common.EffectiveDates;
+import com.medigy.persist.model.common.attribute.EntityAttribute;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.commons.lang.exception.ExceptionUtils;
+import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import java.util.Date;
 
-import java.util.EmptyStackException;
-import java.util.Stack;
-
-public class SessionManager
+@Entity
+@Inheritance(strategy = InheritanceType.JOINED)
+public class InvoiceDurationAttribute extends InvoiceAttribute
 {
-    private static final Log log = LogFactory.getLog(SessionManager.class);
+    private EffectiveDates effectiveDates = new EffectiveDates();
 
-    private static final SessionManager INSTANCE = new SessionManager();
-
-    public static final SessionManager getInstance()
+    public Date getFromDate()
     {
-        return INSTANCE;
+        return effectiveDates.getFromDate();
     }
 
-    private final ThreadLocal<Stack<Session>> threadSession = new ThreadLocal<Stack<Session>>();
-
-    public SessionManager()
+    public void setFromDate(final Date fromDate)
     {
-        threadSession.set(new Stack<Session>());
+        effectiveDates.setFromDate(fromDate);
     }
 
-    /**
-     * Gets (peeks) the session from the stack
-     * @return
-     */
-    public Session getActiveSession()
+    public Date getThroughDate()
     {
-        try
-        {
-            return threadSession.get().peek();
-        }
-        catch (Exception e)
-        {
-            log.error(ExceptionUtils.getStackTrace(e));
-            return null;
-        }
+        return effectiveDates.getThroughDate();
     }
 
-    /**
-     * Pushes the new session onto the stack
-     * @param session
-     */
-    public void pushActiveSession(final Session session)
+    public void setThroughDate(final Date throughDate)
     {
-        try
-        {
-            threadSession.get().push(session);
-        }
-        catch (Exception e)
-        {
-            log.error(ExceptionUtils.getStackTrace(e));
-        }
+        effectiveDates.setThroughDate(throughDate);
     }
 
-    /**
-     * Pops the active session from the stack
-     */
-    public void popActiveSession()
-    {
-        try
-        {
-            threadSession.get().pop();
-        }
-        catch (Exception e)
-        {
-            log.error(ExceptionUtils.getStackTrace(e));
-        }
-    }
 }

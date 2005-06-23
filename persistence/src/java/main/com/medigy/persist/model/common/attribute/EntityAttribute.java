@@ -51,20 +51,14 @@ import javax.persistence.Entity;
 import javax.persistence.Column;
 import javax.persistence.ManyToOne;
 import javax.persistence.JoinColumn;
+import javax.persistence.Transient;
 
-@Entity
-@Inheritance(strategy = InheritanceType.JOINED)
-public class EntityAttribute extends AbstractTopLevelEntity
+public abstract class EntityAttribute extends AbstractTopLevelEntity
 {
     private Long attributeId;
     private String label;
-    private EntityAttributeType type;
 
-    private Invoice invoice;
-    private Person person;
-
-
-    @Id(generate = GeneratorType.AUTO)
+    @Transient
     public Long getAttributeId()
     {
         return attributeId;
@@ -84,41 +78,5 @@ public class EntityAttribute extends AbstractTopLevelEntity
     public void setLabel(final String label)
     {
         this.label = label;
-    }
-
-    @ManyToOne
-    @JoinColumn(name = EntityAttributeType.PK_COLUMN_NAME)
-    public EntityAttributeType getType()
-    {
-        return type;
-    }
-
-    public void setType(final EntityAttributeType type)
-    {
-        this.type = type;
-    }
-
-    @ManyToOne()
-    @JoinColumn(referencedColumnName = Invoice.PK_COLUMN_NAME, name = "parent_entity_id", insertable = false, updatable = false)
-    public Invoice getInvoice()
-    {
-        return invoice;
-    }
-
-    public void setInvoice(final Invoice invoice)
-    {
-        this.invoice = invoice;
-    }
-
-    @ManyToOne
-    @JoinColumn(referencedColumnName = Person.PK_COLUMN_NAME, name = "parent_entity_id", insertable = false, updatable = false)
-    public Person getPerson()
-    {
-        return person;
-    }
-
-    public void setPerson(final Person person)
-    {
-        this.person = person;
     }
 }
