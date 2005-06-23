@@ -204,6 +204,7 @@
 
         <!--mapping package="com.medigy.persist.model.org"/-->
         <mapping class="com.medigy.persist.model.org.Organization"/>
+        <mapping class="com.medigy.persist.model.org.attribute.OrganizationAttribute"/>
         <mapping class="com.medigy.persist.model.org.attribute.OrganizationStringAttribute"/>
         <mapping class="com.medigy.persist.model.org.attribute.OrganizationLongAttribute"/>
         <mapping class="com.medigy.persist.model.org.attribute.OrganizationBooleanAttribute"/>
