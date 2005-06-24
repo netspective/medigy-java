@@ -46,13 +46,18 @@ import javax.persistence.ManyToOne;
 import javax.persistence.JoinColumn;
 import javax.persistence.Id;
 import javax.persistence.GeneratorType;
+import javax.persistence.Table;
+import javax.persistence.Column;
 
 @Entity
+@Table(name = "Org_Attribute")
 public class OrganizationAttribute extends EntityAttribute
 {
+    public static final String PK_COLUMN_NAME = "org_attr_id";
     private Organization organization;
 
     @Id(generate = GeneratorType.AUTO)
+    @Column(name = PK_COLUMN_NAME)
     public Long getOrganizationAttributeId()
     {
         return getAttributeId();
@@ -64,7 +69,7 @@ public class OrganizationAttribute extends EntityAttribute
     }
 
     @ManyToOne
-    @JoinColumn(name = Organization.PK_COLUMN_NAME)
+    @JoinColumn(name = Organization.PK_COLUMN_NAME, nullable = false)
     public Organization getOrganization()
     {
         return organization;

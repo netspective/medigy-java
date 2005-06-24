@@ -68,7 +68,7 @@ public class InvoiceAttribute extends EntityAttribute
     }
 
     @ManyToOne
-    @JoinColumn(name = Invoice.PK_COLUMN_NAME)
+    @JoinColumn(name = Invoice.PK_COLUMN_NAME, nullable = false)
     public Invoice getInvoice()
     {
         return invoice;
