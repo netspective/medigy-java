@@ -48,9 +48,12 @@ import javax.persistence.Id;
 import javax.persistence.GeneratorType;
 import javax.persistence.Table;
 import javax.persistence.Column;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 
 @Entity
 @Table(name = "Org_Attribute")
+@Inheritance(strategy = InheritanceType.JOINED)
 public class OrganizationAttribute extends EntityAttribute
 {
     public static final String PK_COLUMN_NAME = "org_attr_id";

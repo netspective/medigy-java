@@ -47,8 +47,11 @@ import javax.persistence.Column;
 import javax.persistence.ManyToOne;
 import javax.persistence.JoinColumn;
 import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 
 @Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 public class InvoiceAttribute extends EntityAttribute
 {
     public static final String PK_COLUMN_NAME = "inv_attr_id";
