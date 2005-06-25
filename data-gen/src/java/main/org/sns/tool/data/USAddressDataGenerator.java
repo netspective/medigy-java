@@ -47,7 +47,6 @@ import java.util.Random;
 import java.util.List;
 
 import org.sns.tool.data.DataGeneratorSources.City;
-import org.sns.tool.data.DataGeneratorSources.NameAndCount;
 
 public class USAddressDataGenerator
 {
@@ -102,5 +101,13 @@ public class USAddressDataGenerator
 
         // just return a potentially duplicate random city
         return cities.get(random.nextInt(cities.size()));
+    }
+
+    public String getRandomPhoneNumber(final City city)
+    {
+        // TODO: try to generate proper exchanges and prefixs; right now we're just creating truly random ones
+        return RandomUtils.generateRandomNumberBetween(100, 999) + "-" +
+               RandomUtils.generateRandomNumberBetween(100, 999) + "-" +
+               RandomUtils.generateRandomNumberBetween(1000, 9999);
     }
 }

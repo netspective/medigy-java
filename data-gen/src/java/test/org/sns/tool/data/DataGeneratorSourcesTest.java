@@ -68,8 +68,9 @@ public class DataGeneratorSourcesTest extends TestCase
             final String ssn = personDataGenerator.getRandomSocialSecurityNumber();
             final String address1 = usAddressDataGenerator.getRandomStreetAddress(1000, 9999);
             final City city = usAddressDataGenerator.getRandomCity();
+            final String phone = usAddressDataGenerator.getRandomPhoneNumber(city);
 
-            System.out.println(gender + " " + firstName + " " + lastName + " " + ssn + " " + address1 + " " + city.getCity() + ", " + city.getState() + " " + city.getFormattedZipCode());
+            System.out.println(gender + " " + firstName + " " + lastName + " " + ssn + " " + address1 + " " + city.getCity() + ", " + city.getState() + " " + city.getFormattedZipCode() + " " + phone);
         }
     }
 }
