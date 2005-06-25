@@ -43,32 +43,66 @@
  */
 package org.sns.tool.data;
 
-import java.io.IOException;
+import java.util.Random;
+import java.util.List;
 
-import org.sns.tool.data.PersonDataGenerator.Gender;
-import org.sns.tool.data.DataGeneratorSources.City;
+import org.sns.tool.data.DataGeneratorSources.NameAndCount;
 
-import junit.framework.TestCase;
-
-public class DataGeneratorSourcesTest extends TestCase
+public class PersonDataGenerator
 {
-    public void testDataGenerator() throws IOException
+    public enum Gender
     {
-        final DataGeneratorSources dataGeneratorSources = new DataGeneratorSources();
-        assertNotNull(dataGeneratorSources.toString());
+        MALE, FEMALE
+    }
 
-        final PersonDataGenerator personDataGenerator = new PersonDataGenerator(dataGeneratorSources);
-        final USAddressDataGenerator usAddressDataGenerator = new USAddressDataGenerator(dataGeneratorSources);
+    private final DataGeneratorSources sources;
+    private final Random random = new Random();
+    private final List<String> usedMaleFirstNames = new LimitedArrayList<String>(100);
+    private final List<String> usedFemaleFirstNames = new LimitedArrayList<String>(100);
+    private final List<String> usedSurNames = new LimitedArrayList<String>(100);
 
-        for(int i = 0; i < 100; i++)
+    public PersonDataGenerator(final DataGeneratorSources sources)
+    {
+        this.sources = sources;
+    }
+
+    public Gender getRandomGender()
+    {
+        return random.nextBoolean() ? Gender.MALE : Gender.FEMALE;
+    }
+
+    public String getRandomFirstName(final Gender gender)
+    {
+        final List<NameAndCount> names = gender == Gender.MALE ? sources.getMaleNamesAndCounts() : sources.getFemaleNamesAndCounts();
+        final List<String> usedNames = gender == Gender.MALE ? usedMaleFirstNames : usedFemaleFirstNames;
+        for(int i = 0; i < 15; i++)
         {
-            final Gender gender = personDataGenerator.getRandomGender();
-            final String firstName = personDataGenerator.getRandomFirstName(gender);
-            final String lastName = personDataGenerator.getRandomSurname();
-            final String address1 = usAddressDataGenerator.getRandomStreetAddress(1000, 9999);
-            final City city = usAddressDataGenerator.getRandomCity();
-
-            System.out.println(gender + " " + firstName + " " + lastName + " " + address1 + " " + city.getCity() + ", " + city.getState() + " " + city.getFormattedZipCode());
+            final String name = names.get(random.nextInt(names.size())).getName();
+            if(! usedNames.contains(name))
+            {
+                usedNames.add(name);
+                return name;
+            }
         }
+
+        // just return a potentially duplicate random name
+        return names.get(random.nextInt(names.size())).getName();
+    }
+
+    public String getRandomSurname()
+    {
+        final List<NameAndCount> names = sources.getSurnamesAndCounts();
+        for(int i = 0; i < 15; i++)
+        {
+            final String name = names.get(random.nextInt(names.size())).getName();
+            if(! usedSurNames.contains(name))
+            {
+                usedSurNames.add(name);
+                return name;
+            }
+        }
+
+        // just return a potentially duplicate random name
+        return names.get(random.nextInt(names.size())).getName();
     }
 }

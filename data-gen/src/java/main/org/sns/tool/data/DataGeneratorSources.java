@@ -188,6 +188,7 @@ public class DataGeneratorSources
 
     protected void readCitiesAndPopulations(final HSSFSheet sheet)
     {
+        String currentState = "UNKNOWN";
         int rowNum = 1;
         while(true)
         {
@@ -200,7 +201,20 @@ public class DataGeneratorSources
             if(name == null || name.trim().length() == 0)
                 break;
 
-            largestCities.add(new City(name, row.getCell ((short) 1).getStringCellValue(), (int) row.getCell((short) 2).getNumericCellValue()));
+            final HSSFCell zipCodeCell = row.getCell ((short) 1);
+            if(zipCodeCell == null || zipCodeCell.getCellType() == HSSFCell.CELL_TYPE_STRING)
+            {
+                // states are on a line by themselves so save the current state and move on
+                currentState = name;
+                rowNum++;
+                continue;
+            }
+
+            final int zipCode = (int) zipCodeCell.getNumericCellValue();
+            final int population = (int) row.getCell((short) 2).getNumericCellValue();
+            final City city = new City(name, currentState, zipCode, population);
+
+            largestCities.add(city);
             rowNum++;
         }
     }
@@ -247,12 +261,14 @@ public class DataGeneratorSources
     {
         private final String city;
         private final String state;
+        private final int zipCode;
         private final int population;
 
-        public City(String city, String state, int population)
+        public City(final String city, final String state, final int zipCode, final int population)
         {
             this.city = city;
             this.state = state;
+            this.zipCode = zipCode;
             this.population = population;
         }
 
@@ -266,9 +282,35 @@ public class DataGeneratorSources
             return state;
         }
 
+        public int getZipCode()
+        {
+            return zipCode;
+        }
+
+        public String getFormattedZipCode()
+        {
+            final String zc = Integer.toString(zipCode);
+            if(zc.length() < 5)
+            {
+                final int shortBy = 5 - zc.length();
+                final StringBuffer sb = new StringBuffer();
+                while(zc.length() < shortBy)
+                    sb.append('0');
+                sb.append(zc);
+                return sb.toString();
+            }
+
+            return zc;
+        }
+
         public int getPopulation()
         {
             return population;
+        }
+
+        public String toString()
+        {
+            return getCity() + ", " + getZipCode() + " " + getFormattedZipCode();
         }
     }
 }

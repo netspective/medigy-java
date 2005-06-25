@@ -43,32 +43,64 @@
  */
 package org.sns.tool.data;
 
-import java.io.IOException;
+import java.util.Random;
+import java.util.List;
 
-import org.sns.tool.data.PersonDataGenerator.Gender;
 import org.sns.tool.data.DataGeneratorSources.City;
+import org.sns.tool.data.DataGeneratorSources.NameAndCount;
 
-import junit.framework.TestCase;
-
-public class DataGeneratorSourcesTest extends TestCase
+public class USAddressDataGenerator
 {
-    public void testDataGenerator() throws IOException
+    private final DataGeneratorSources sources;
+    private final Random random = new Random();
+    private final List<String> usedStreetNames = new LimitedArrayList<String>(100);
+    private final List<City> usedCities = new LimitedArrayList<City>(100);
+
+    public USAddressDataGenerator(final DataGeneratorSources sources)
     {
-        final DataGeneratorSources dataGeneratorSources = new DataGeneratorSources();
-        assertNotNull(dataGeneratorSources.toString());
+        this.sources = sources;
+    }
 
-        final PersonDataGenerator personDataGenerator = new PersonDataGenerator(dataGeneratorSources);
-        final USAddressDataGenerator usAddressDataGenerator = new USAddressDataGenerator(dataGeneratorSources);
-
-        for(int i = 0; i < 100; i++)
+    public String getRandomStreetAddress(int lowBuildingNumber, int highBuildingNumber)
+    {
+        final List<String> streetNames = sources.getPopularStreetNames();
+        String streetName = null;
+        for(int i = 0; i < 15; i++)
         {
-            final Gender gender = personDataGenerator.getRandomGender();
-            final String firstName = personDataGenerator.getRandomFirstName(gender);
-            final String lastName = personDataGenerator.getRandomSurname();
-            final String address1 = usAddressDataGenerator.getRandomStreetAddress(1000, 9999);
-            final City city = usAddressDataGenerator.getRandomCity();
-
-            System.out.println(gender + " " + firstName + " " + lastName + " " + address1 + " " + city.getCity() + ", " + city.getState() + " " + city.getFormattedZipCode());
+            final String name = streetNames.get(random.nextInt(streetNames.size()));
+            if(! usedStreetNames.contains(name))
+            {
+                usedStreetNames.add(name);
+                streetName = name;
+                break;
+            }
         }
+
+        // if we couldn't find a unique street name after 15 tries just go ahead and use a potentially duplicate one
+        if(streetName == null)
+            streetName = streetNames.get(random.nextInt(streetNames.size()));
+
+        final int randomBldngNumber = lowBuildingNumber + random.nextInt(highBuildingNumber - lowBuildingNumber);
+        final List<String> suffixes = sources.getCommonStreetSuffixes();
+        final String suffix = suffixes.get(random.nextInt(suffixes.size()));
+
+        return randomBldngNumber + " " + streetName + " " + suffix;
+    }
+
+    public City getRandomCity()
+    {
+        final List<City> cities = sources.getLargestCities();
+        for(int i = 0; i < 15; i++)
+        {
+            final City city = cities.get(random.nextInt(cities.size()));
+            if(! usedCities.contains(city))
+            {
+                usedCities.add(city);
+                return city;
+            }
+        }
+
+        // just return a potentially duplicate random city
+        return cities.get(random.nextInt(cities.size()));
     }
 }

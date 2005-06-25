@@ -43,32 +43,28 @@
  */
 package org.sns.tool.data;
 
-import java.io.IOException;
+import java.util.ArrayList;
 
-import org.sns.tool.data.PersonDataGenerator.Gender;
-import org.sns.tool.data.DataGeneratorSources.City;
-
-import junit.framework.TestCase;
-
-public class DataGeneratorSourcesTest extends TestCase
+/**
+ * An array list that does not grow beyond a given size. When the array grows to the maximum size it simply removes
+ * the oldest entry before adding the next one.
+ */
+public class LimitedArrayList<E> extends ArrayList<E>
 {
-    public void testDataGenerator() throws IOException
+    private final int maxEntries;
+
+    public LimitedArrayList(int maxEntries)
     {
-        final DataGeneratorSources dataGeneratorSources = new DataGeneratorSources();
-        assertNotNull(dataGeneratorSources.toString());
+        super(maxEntries+1);
+        this.maxEntries = maxEntries;
+    }
 
-        final PersonDataGenerator personDataGenerator = new PersonDataGenerator(dataGeneratorSources);
-        final USAddressDataGenerator usAddressDataGenerator = new USAddressDataGenerator(dataGeneratorSources);
+    public boolean add(final E e)
+    {
+        // remove the oldest entry to make room for the new one
+        if(size() >= maxEntries)
+            remove(0);
 
-        for(int i = 0; i < 100; i++)
-        {
-            final Gender gender = personDataGenerator.getRandomGender();
-            final String firstName = personDataGenerator.getRandomFirstName(gender);
-            final String lastName = personDataGenerator.getRandomSurname();
-            final String address1 = usAddressDataGenerator.getRandomStreetAddress(1000, 9999);
-            final City city = usAddressDataGenerator.getRandomCity();
-
-            System.out.println(gender + " " + firstName + " " + lastName + " " + address1 + " " + city.getCity() + ", " + city.getState() + " " + city.getFormattedZipCode());
-        }
+        return super.add(e);
     }
 }
