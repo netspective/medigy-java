@@ -60,8 +60,6 @@ import org.apache.poi.hssf.usermodel.HSSFCell;
  */
 public class DataGeneratorSources
 {
-    private static final String DEFAULT_WORKBOOK_NAME = "data-generator-datasets.xls";
-
     private final int totalNationalPopulation;
     private final double malePopulationPercentage;
     private final double femalePopulationPercentage;
@@ -96,7 +94,8 @@ public class DataGeneratorSources
 
     public DataGeneratorSources() throws IOException
     {
-        this(DataGeneratorSources.class.getResourceAsStream(DEFAULT_WORKBOOK_NAME));
+        // the default Excel file is the same name as this class except ending in ".xls"
+        this(DataGeneratorSources.class.getResourceAsStream(DataGeneratorSources.class.getName().substring(DataGeneratorSources.class.getName().lastIndexOf('.')+1) + ".xls"));
     }
 
     public List<NameAndCount> getFemaleNamesAndCounts()
