@@ -58,7 +58,7 @@ import org.apache.poi.hssf.usermodel.HSSFCell;
  * TODO: review http://www.datamasker.com/dmdatasets.htm that provides a good list of datasets that can be used in
  * demo/test data generation process. Also take a look at http://generatorblog.blogspot.com/.
  */
-public class DataGenerator
+public class DataGeneratorSources
 {
     private static final String DEFAULT_WORKBOOK_NAME = "data-generator-datasets.xls";
 
@@ -73,7 +73,7 @@ public class DataGenerator
     private final List<String> commonStreetSuffixes = new ArrayList<String>();
     private final List<String> uspsStreetSuffixes = new ArrayList<String>();
 
-    public DataGenerator(final InputStream workbookStream) throws IOException
+    public DataGeneratorSources(final InputStream workbookStream) throws IOException
     {
         final POIFSFileSystem fileSystem = new POIFSFileSystem(workbookStream);
         final HSSFWorkbook workbook = new HSSFWorkbook(fileSystem);
@@ -94,9 +94,9 @@ public class DataGenerator
         workbookStream.close();
     }
 
-    public DataGenerator() throws IOException
+    public DataGeneratorSources() throws IOException
     {
-        this(DataGenerator.class.getResourceAsStream(DEFAULT_WORKBOOK_NAME));
+        this(DataGeneratorSources.class.getResourceAsStream(DEFAULT_WORKBOOK_NAME));
     }
 
     public List<NameAndCount> getFemaleNamesAndCounts()

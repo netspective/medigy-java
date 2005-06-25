@@ -48,11 +48,11 @@ import java.io.FileInputStream;
 
 import junit.framework.TestCase;
 
-public class DataGeneratorTest extends TestCase
+public class DataGeneratorSourcesTest extends TestCase
 {
     public void testDataGenerator() throws IOException
     {
-        final DataGenerator dataGenerator = new DataGenerator();
-        System.out.println(dataGenerator.toString());
+        final DataGeneratorSources dataGeneratorSources = new DataGeneratorSources();
+        assertNotNull(dataGeneratorSources.toString());
     }
 }
