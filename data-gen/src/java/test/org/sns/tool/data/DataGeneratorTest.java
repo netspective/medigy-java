@@ -52,7 +52,7 @@ public class DataGeneratorTest extends TestCase
 {
     public void testDataGenerator() throws IOException
     {
-        final DataGenerator dataGenerator = new DataGenerator(new FileInputStream("C:\\Projects\\Medigy\\data-gen\\src\\java\\main\\org\\sns\\tool\\data\\data-generator-datasets.xls"));
+        final DataGenerator dataGenerator = new DataGenerator();
         System.out.println(dataGenerator.toString());
     }
 }

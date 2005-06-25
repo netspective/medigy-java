@@ -69,6 +69,7 @@
       <entry name="?*.png" />
       <entry name="?*.jpeg" />
       <entry name="?*.jpg" />
+      <entry name="?*.xls" />
     </wildcardResourcePatterns>
   </component>
   <component name="DataSourceManagerImpl" />
