@@ -49,6 +49,7 @@ import java.util.Collection;
 import com.medigy.presentation.model.ChoicesFactory;
 import wicket.IFeedback;
 import wicket.model.PropertyModel;
+import wicket.model.IModel;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.form.*;
@@ -57,8 +58,8 @@ import wicket.util.value.ValueMap;
 
 public class BaseForm extends Form
 {
-    public static final String FIELD_LABEL_SUFFIX = "-label";
-    public static final String FIELD_CONTROL_SUFFIX = "-control";
+    public static final String FIELD_LABEL_SUFFIX = "_label";
+    public static final String FIELD_CONTROL_SUFFIX = "_control";
     protected static final Collection TEST_CHOICES = new ArrayList();
 
     static
@@ -96,76 +97,81 @@ public class BaseForm extends Form
         super(componentName, feedback);
     }
 
+    public BaseForm(String componentName, IModel model, IFeedback feedback)
+    {
+        super(componentName, model, feedback);
+    }
+
     protected void addLabeledTextField(final String fieldName, int fieldFlags)
     {
         add(new FieldLabel(fieldName));
-        add(new TextField(fieldName, new PropertyModel(properties, fieldName), fieldFlags));
+        add(new TextField(fieldName, fieldFlags));
     }
 
     protected void addLabeledTextField(final String fieldName)
     {
         add(new FieldLabel(fieldName));
-        add(new TextField(fieldName, new PropertyModel(properties, fieldName)));
+        add(new TextField(fieldName));
     }
 
     protected void addLabeledDateField(final String fieldName)
     {
         add(new FieldLabel(fieldName));
-        add(new TextField(fieldName, new PropertyModel(properties, fieldName)));
+        add(new TextField(fieldName));
     }
 
     protected void addLabeledPhoneField(final String fieldName)
     {
         add(new FieldLabel(fieldName));
-        add(new PhoneField(fieldName, new PropertyModel(properties, fieldName)));
+        add(new PhoneField(fieldName));
     }
 
     protected void addLabeledBooleanField(final String fieldName)
     {
         add(new FieldLabel(fieldName));
-        add(new BooleanField(fieldName, new PropertyModel(properties, fieldName)));
+        add(new BooleanField(fieldName));
     }
 
     protected void addLabeledCurrencyField(final String fieldName)
     {
         add(new FieldLabel(fieldName));
-        add(new CurrencyField(fieldName, new PropertyModel(properties, fieldName)));
+        add(new CurrencyField(fieldName));
     }
 
     protected void addLabeledSelectField(final String fieldName)
     {
         add(new FieldLabel(fieldName));
-        add(new DropDownChoice(fieldName + FIELD_CONTROL_SUFFIX, TEST_CHOICES));
+        add(new DropDownChoice(fieldName, TEST_CHOICES));
     }
 
     protected void addLabeledSelectField(final String fieldName, final Class referenceEntity)
     {
         add(new FieldLabel(fieldName));
-        add(new DropDownChoice(fieldName + FIELD_CONTROL_SUFFIX, ChoicesFactory.getInstance().getReferenceEntityChoices(referenceEntity)));
+        add(new DropDownChoice(fieldName, ChoicesFactory.getInstance().getReferenceEntityChoices(referenceEntity)));
     }
 
     protected void addLabeledMultiListField(final String fieldName, final Class multiListChoices)
     {
         add(new FieldLabel(fieldName));
-        add(new ListMultipleChoice(fieldName + FIELD_CONTROL_SUFFIX, ChoicesFactory.getInstance().getReferenceEntityChoices(multiListChoices)));
+        add(new ListMultipleChoice(fieldName, ChoicesFactory.getInstance().getReferenceEntityChoices(multiListChoices)));
     }
 
     protected void addLabeledMultiCheckField(final String fieldName, final Class multiCheckChoices)
     {
         add(new FieldLabel(fieldName));
-        add(new ListMultipleChoice(fieldName + FIELD_CONTROL_SUFFIX, ChoicesFactory.getInstance().getReferenceEntityChoices(multiCheckChoices)));
+        add(new ListMultipleChoice(fieldName, ChoicesFactory.getInstance().getReferenceEntityChoices(multiCheckChoices)));
     }
 
     protected void addLabeledRadioChoiceField(final String fieldName)
     {
         add(new FieldLabel(fieldName));
-        add(new RadioChoice(fieldName + FIELD_CONTROL_SUFFIX, TEST_CHOICES));
+        add(new RadioChoice(fieldName, TEST_CHOICES));
     }
 
     protected void addLabeledCheckBox(final String fieldName)
     {
         add(new FieldLabel(fieldName));
-        add(new CheckBox(fieldName, new PropertyModel(properties, fieldName)));
+        add(new CheckBox(fieldName));
     }
 
     protected void onFormComponentTag(final ComponentTag componentTag, final String fieldControlId, final long fieldFlags)

@@ -45,12 +45,14 @@ package com.medigy.presentation.form.person.patient;
 
 import com.medigy.persist.reference.type.GenderType;
 import com.medigy.persist.reference.type.MaritalStatusType;
-import com.medigy.wicket.form.BaseForm;
-import com.medigy.wicket.form.FieldFlags;
-import com.medigy.wicket.form.FieldGroupLabel;
-import com.medigy.wicket.form.TextField;
+import com.medigy.wicket.form.*;
 import com.medigy.wicket.panel.DefaultFormPanel;
 import wicket.IFeedback;
+import wicket.RequestCycle;
+import wicket.PageParameters;
+import wicket.markup.html.form.RequiredTextField;
+import com.medigy.presentation.model.FormInputModel;
+import wicket.model.CompoundPropertyModel;
 
 public class PatientRegistrationFormPanel extends DefaultFormPanel
 {
@@ -61,39 +63,42 @@ public class PatientRegistrationFormPanel extends DefaultFormPanel
         super(componentName);
     }
 
-    protected Form createForm(final String componentName, final IFeedback feedback)
+    protected InputForm createForm(final String componentName, final IFeedback feedback)
     {
-        return new Form(componentName, feedback);
+        return new InputForm(componentName, feedback);
     }
 
-    protected class Form extends BaseForm
+    protected class InputForm extends BaseForm
     {
 
-        public Form(final String componentName, final IFeedback feedback)
+        public InputForm(final String componentName, final IFeedback feedback)
         {
-            super(componentName, feedback);
+            super(componentName, new CompoundPropertyModel(new FormInputModel()), feedback);
+
             add(new FieldGroupLabel("patientId"));
 
             addLabeledTextField("personId", FieldFlags.REQUIRED);
             addLabeledTextField("account");
             addLabeledTextField("chartNumber");
 
+
             addLabeledTextField("lastName", FieldFlags.REQUIRED);
             addLabeledTextField("firstName", FieldFlags.REQUIRED);
             addLabeledTextField("middleName");
-            addLabeledSelectField("suffix");
+            //addLabeledSelectField("suffix");
 
             addLabeledTextField("socialSecurityNumber", FieldFlags.REQUIRED);
             addLabeledTextField("dateOfBirth", FieldFlags.REQUIRED);
 
-            addLabeledSelectField("gender", GenderType.class);
-            addLabeledSelectField("maritalStatus", MaritalStatusType.class);
-            addLabeledSelectField("bloodType");
 
-            addLabeledRadioChoiceField("ethnicity");  //TODO: convert to checkbox
-
+//            addLabeledSelectField("gender", GenderType.class);
+//            addLabeledSelectField("maritalStatus", MaritalStatusType.class);
+//            addLabeledSelectField("bloodType");
+//
+//            addLabeledRadioChoiceField("ethnicity");  //TODO: convert to checkbox
+//
             addLabeledTextField("responsibleParty");
-            addLabeledSelectField("relationshipToResponsible");
+//            addLabeledSelectField("relationshipToResponsible");
             addLabeledTextField("relationshipToResponsibleOtherRelationship");
 
             addLabeledTextField("driversLicenseNumber");
@@ -101,10 +106,13 @@ public class PatientRegistrationFormPanel extends DefaultFormPanel
 
             addLabeledTextField("miscNotes");
 
-            add(new FieldGroupLabel("contactMethods"));
-
             addLabeledTextField("homePhone");
             addLabeledTextField("workPhone");
+
+            add(new FieldGroupLabel("contactMethods"));
+
+            addLabeledTextField("homePhone2");
+            addLabeledTextField("workPhone2");
             addLabeledTextField("cellPhone");
             addLabeledTextField("pager");
             addLabeledTextField("alternate");
@@ -120,18 +128,18 @@ public class PatientRegistrationFormPanel extends DefaultFormPanel
             add(new FieldGroupLabel("employment"));
 
             addLabeledTextField("employerId");
-            addLabeledSelectField("employmentStatus");
+//            addLabeledSelectField("employmentStatus");
             addLabeledTextField("occupation");
             addLabeledTextField("employerPhoneNumber");
 
             add(new FieldGroupLabel("insurance"));
 
-            addLabeledSelectField("insuranceSequence");
+//            addLabeledSelectField("insuranceSequence");
             addLabeledTextField("insuranceProduct");
             addLabeledTextField("insurancePlan");
 
             add(new FieldGroupLabel("generalPlanInformation"));
-            addLabeledSelectField("patientRelationshipToInsured");
+//            addLabeledSelectField("patientRelationshipToInsured");
             addLabeledTextField("patientRelationshipToInsuredPtherRelationship");
             addLabeledTextField("insuredPersonId");
             addLabeledTextField("employer");
@@ -151,39 +159,16 @@ public class PatientRegistrationFormPanel extends DefaultFormPanel
             addLabeledTextField("officeVisitCoPay");
         }
 
-        /**
-		 * @see wicket.markup.html.form.Form#onSubmit()
-		 */
+
+
+
 		public final void onSubmit()
 		{
-            System.out.println("\n*****************  form submitted  ******************\n");
-//			if (signIn(getUsername(), getPassword()))
-//			{
-//				// If login has been called because the user was not yet
-//				// logged in, than continue to the original destination,
-//				// otherwise to the Home page
-//				if (getPage().continueToOriginalDestination())
-//				{
-//					// HTTP redirect response has been committed. No more data
-//					// shall be written to the response.
-//					setResponsePage(null);
-//				}
-//				else
-//				{
-//					setResponsePage(getApplicationSettings().getDefaultPageFactory()
-//							.newPage(getApplicationPages().getHomePage(),
-//									(PageParameters) null));
-//				}
-//			}
-//			else
-//			{
-//				// Try the component based localizer first. If not found try the
-//				// application localizer. Else use the default
-//				final String errmsg = getLocalizer().getString("loginError", this,
-//						"Unable to sign you in");
-//
-//				error(errmsg);
-//			}
+			final RequestCycle cycle = getRequestCycle();
+			PageParameters parameters = new PageParameters();
+			final FormInputModel book = (FormInputModel)getModelObject();
+            info("Saved model " + getModelObject());
 		}
+
     }
 }

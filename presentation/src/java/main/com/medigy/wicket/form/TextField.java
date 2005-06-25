@@ -55,10 +55,10 @@ public class TextField extends wicket.markup.html.form.TextField implements Java
 
     public TextField(final String fieldName, long fieldFlags)
     {
-        super(fieldName + BaseForm.FIELD_CONTROL_SUFFIX);
+        super(fieldName /*+ BaseForm.FIELD_CONTROL_SUFFIX*/);   // TODO - remove the comments around FIELD_CONTROL_SUFFIX after fixing suffix issue
         this.fieldName = fieldName;
         this.fieldFlags = fieldFlags;
-        this.fieldControlId = fieldName + BaseForm.FIELD_CONTROL_SUFFIX;
+        this.fieldControlId = fieldName /*+ BaseForm.FIELD_CONTROL_SUFFIX */;  // TODO - remove the comments around FIELD_CONTROL_SUFFIX after fixing suffix issue
 
         if((this.fieldFlags & FieldFlags.REQUIRED) != 0)
             add(RequiredValidator.getInstance());
@@ -66,10 +66,10 @@ public class TextField extends wicket.markup.html.form.TextField implements Java
 
     public TextField(final String fieldName, IModel model, long fieldFlags)
     {
-        super(fieldName + BaseForm.FIELD_CONTROL_SUFFIX, model);
+        super(fieldName /*+ BaseForm.FIELD_CONTROL_SUFFIX*/, model);         // TODO - remove the comments around FIELD_CONTROL_SUFFIX after fixing suffix issue
         this.fieldName = fieldName;
         this.fieldFlags = fieldFlags;
-        this.fieldControlId = fieldName + BaseForm.FIELD_CONTROL_SUFFIX;
+        this.fieldControlId = fieldName /*+ BaseForm.FIELD_CONTROL_SUFFIX */;   // TODO - remove the comments around FIELD_CONTROL_SUFFIX after fixing suffix issue
 
         if((this.fieldFlags & FieldFlags.REQUIRED) != 0)
             add(RequiredValidator.getInstance());
