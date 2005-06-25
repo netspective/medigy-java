@@ -56,7 +56,7 @@ import org.apache.poi.hssf.usermodel.HSSFCell;
 
 /**
  * TODO: review http://www.datamasker.com/dmdatasets.htm that provides a good list of datasets that can be used in
- * demo/test data generation process
+ * demo/test data generation process. Also take a look at http://generatorblog.blogspot.com/.
  */
 public class DataGenerator
 {
@@ -69,6 +69,9 @@ public class DataGenerator
     private final List<NameAndCount> femaleNamesAndCounts = new ArrayList<NameAndCount>();
     private final List<NameAndCount> surnamesAndCounts = new ArrayList<NameAndCount>();
     private final List<City> largestCities = new ArrayList<City>();
+    private final List<String> popularStreetNames = new ArrayList<String>();
+    private final List<String> commonStreetSuffixes = new ArrayList<String>();
+    private final List<String> uspsStreetSuffixes = new ArrayList<String>();
 
     public DataGenerator(final InputStream workbookStream) throws IOException
     {
@@ -79,11 +82,16 @@ public class DataGenerator
         readNamesAndCounts(workbook.getSheet("Common Female Names"), femaleNamesAndCounts);
         readNamesAndCounts(workbook.getSheet("Common Surnames"), surnamesAndCounts);
         readCitiesAndPopulations(workbook.getSheet("Largest US Cities"));
+        readSingleColumn(workbook.getSheet("Popular Street Names"), popularStreetNames);
+        readSingleColumn(workbook.getSheet("Common Street Suffixes"), commonStreetSuffixes);
+        readSingleColumn(workbook.getSheet("USPS Street Suffixes"), uspsStreetSuffixes);
 
         final HSSFSheet censusData = workbook.getSheet("Census Data");
         totalNationalPopulation = (int) censusData.getRow(1).getCell((short) 1).getNumericCellValue();
         malePopulationPercentage = censusData.getRow(4).getCell((short) 2).getNumericCellValue() / 100.0;
         femalePopulationPercentage = censusData.getRow(5).getCell((short) 2).getNumericCellValue() / 100.0;
+
+        workbookStream.close();
     }
 
     public DataGenerator() throws IOException
@@ -111,6 +119,21 @@ public class DataGenerator
         return largestCities;
     }
 
+    public List<String> getPopularStreetNames()
+    {
+        return popularStreetNames;
+    }
+
+    public List<String> getCommonStreetSuffixes()
+    {
+        return commonStreetSuffixes;
+    }
+
+    public List<String> getUspsStreetSuffixes()
+    {
+        return uspsStreetSuffixes;
+    }
+
     public double getMalePopulationPercentage()
     {
         return malePopulationPercentage;
@@ -132,6 +155,9 @@ public class DataGenerator
         while(true)
         {
             final HSSFRow row = sheet.getRow(rowNum);
+            if(row == null)
+                break;
+
             final HSSFCell nameCell = row.getCell((short) 0);
             final String name = nameCell.getStringCellValue();
             if(name == null || name.trim().length() == 0)
@@ -142,12 +168,34 @@ public class DataGenerator
         }
     }
 
+    protected void readSingleColumn(final HSSFSheet sheet, final List<String> list)
+    {
+        int rowNum = 1;
+        while(true)
+        {
+            final HSSFRow row = sheet.getRow(rowNum);
+            if(row == null)
+                break;
+
+            final HSSFCell nameCell = row.getCell((short) 0);
+            final String data = nameCell.getStringCellValue();
+            if(data == null || data.trim().length() == 0)
+                break;
+
+            list.add(data);
+            rowNum++;
+        }
+    }
+
     protected void readCitiesAndPopulations(final HSSFSheet sheet)
     {
         int rowNum = 1;
         while(true)
         {
             final HSSFRow row = sheet.getRow(rowNum);
+            if(row == null)
+                break;
+
             final HSSFCell nameCell = row.getCell((short) 0);
             final String name = nameCell.getStringCellValue();
             if(name == null || name.trim().length() == 0)
@@ -168,6 +216,9 @@ public class DataGenerator
         sb.append("  Common Male Names: " + getMaleNamesAndCounts().size()+ "\n");
         sb.append("Common Female Names: " + getFemaleNamesAndCounts().size()+ "\n");
         sb.append("     Largest Cities: " + getLargestCities().size()+ "\n");
+        sb.append("    Popular Streets: " + getPopularStreetNames().size()+ "\n");
+        sb.append("   Streets Suffixes: " + getCommonStreetSuffixes().size()+ "\n");
+        sb.append("      USPS Suffixes: " + getUspsStreetSuffixes().size()+ "\n");
         return sb.toString();
     }
 
