@@ -80,7 +80,7 @@ public class USAddressDataGenerator
         if(streetName == null)
             streetName = streetNames.get(random.nextInt(streetNames.size()));
 
-        final int randomBldngNumber = lowBuildingNumber + random.nextInt(highBuildingNumber - lowBuildingNumber);
+        final int randomBldngNumber = RandomUtils.generateRandomNumberBetween(lowBuildingNumber, highBuildingNumber);
         final List<String> suffixes = sources.getCommonStreetSuffixes();
         final String suffix = suffixes.get(random.nextInt(suffixes.size()));
 

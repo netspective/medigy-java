@@ -43,33 +43,12 @@
  */
 package org.sns.tool.data;
 
-import java.io.IOException;
+import java.util.Random;
 
-import org.sns.tool.data.PersonDataGenerator.Gender;
-import org.sns.tool.data.DataGeneratorSources.City;
-
-import junit.framework.TestCase;
-
-public class DataGeneratorSourcesTest extends TestCase
+public class RandomUtils
 {
-    public void testDataGenerator() throws IOException
+    public static int generateRandomNumberBetween(final int low, final int high)
     {
-        final DataGeneratorSources dataGeneratorSources = new DataGeneratorSources();
-        assertNotNull(dataGeneratorSources.toString());
-
-        final PersonDataGenerator personDataGenerator = new PersonDataGenerator(dataGeneratorSources);
-        final USAddressDataGenerator usAddressDataGenerator = new USAddressDataGenerator(dataGeneratorSources);
-
-        for(int i = 0; i < 100; i++)
-        {
-            final Gender gender = personDataGenerator.getRandomGender();
-            final String firstName = personDataGenerator.getRandomFirstName(gender);
-            final String lastName = personDataGenerator.getRandomSurname();
-            final String ssn = personDataGenerator.getRandomSocialSecurityNumber();
-            final String address1 = usAddressDataGenerator.getRandomStreetAddress(1000, 9999);
-            final City city = usAddressDataGenerator.getRandomCity();
-
-            System.out.println(gender + " " + firstName + " " + lastName + " " + ssn + " " + address1 + " " + city.getCity() + ", " + city.getState() + " " + city.getFormattedZipCode());
-        }
+        return low + new Random().nextInt(high - low);
     }
 }

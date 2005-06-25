@@ -105,4 +105,11 @@ public class PersonDataGenerator
         // just return a potentially duplicate random name
         return names.get(random.nextInt(names.size())).getName();
     }
+
+    public String getRandomSocialSecurityNumber()
+    {
+        return RandomUtils.generateRandomNumberBetween(100, 999) + "-" +
+               RandomUtils.generateRandomNumberBetween(10, 99) + "-" +
+                RandomUtils.generateRandomNumberBetween(1000, 9999);
+    }
 }
