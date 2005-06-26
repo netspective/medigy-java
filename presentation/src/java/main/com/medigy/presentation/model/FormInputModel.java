@@ -64,6 +64,7 @@ public final class FormInputModel implements Serializable
 	private String insuranceSequence;
 	private String patientRelationshipToInsured;
 	private String bloodType;
+	private String ethnicity;
 
 
 
@@ -612,6 +613,16 @@ public final class FormInputModel implements Serializable
         this.bloodType = bloodType;
     }
 
+    public String getEthnicity()
+    {
+        return ethnicity;
+    }
+
+    public void setEthnicity(String ethnicity)
+    {
+        this.ethnicity = ethnicity;
+    }
+
     public String toString()
 	{
 		StringBuffer b = new StringBuffer();
@@ -668,7 +679,8 @@ public final class FormInputModel implements Serializable
 		 .append(", employmentStatus = ").append(employmentStatus)
 		 .append(", insuranceSequence = ").append(insuranceSequence)
 		 .append(", patientRelationshipToInsured = ").append(patientRelationshipToInsured)
-		 .append(", bloodType = ").append(bloodType);
+		 .append(", bloodType = ").append(bloodType)
+		 .append(", ethnicity = ").append(ethnicity);
 
 		b.append("]");
 		return b.toString();

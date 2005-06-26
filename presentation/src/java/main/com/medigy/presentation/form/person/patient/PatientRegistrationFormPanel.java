@@ -50,12 +50,9 @@ import com.medigy.wicket.panel.DefaultFormPanel;
 import wicket.IFeedback;
 import wicket.RequestCycle;
 import wicket.PageParameters;
-import wicket.markup.html.form.RequiredTextField;
 import com.medigy.presentation.model.FormInputModel;
+import com.medigy.app.pbs.page.FormTestPage1;
 import wicket.model.CompoundPropertyModel;
-
-import java.util.List;
-import java.util.ArrayList;
 
 public class PatientRegistrationFormPanel extends DefaultFormPanel
 {
@@ -79,7 +76,6 @@ public class PatientRegistrationFormPanel extends DefaultFormPanel
             super(componentName, new CompoundPropertyModel(new FormInputModel()), feedback);
 
             add(new FieldGroupLabel("patientId"));
-
             addLabeledTextField("personId", FieldFlags.REQUIRED);
             addLabeledTextField("account");
             addLabeledTextField("chartNumber");
@@ -92,18 +88,13 @@ public class PatientRegistrationFormPanel extends DefaultFormPanel
             addLabeledSelectField("gender", GenderType.class);
             addLabeledSelectField("maritalStatus", MaritalStatusType.class);
             addLabeledSelectField("bloodType", BaseForm.BLOOD_TYPE_CHOICES);
-
-//            addLabeledRadioChoiceField("ethnicity");  //TODO: convert to checkbox
-//
+            addLabeledRadioChoiceField("ethnicity", BaseForm.ETHNICITY_CHOICES);
             addLabeledTextField("responsibleParty");
             addLabeledSelectField("relationshipToResponsible", BaseForm.RELATIONSHIP_TO_RESPONSIBLE_CHOICES);
             addLabeledTextField("relationshipToResponsibleOtherRelationship");
-
             addLabeledTextField("driversLicenseNumber");
             addLabeledTextField("driversLicenseState");
-
             addLabeledTextField("miscNotes");
-
             addLabeledTextField("homePhone");
             addLabeledTextField("workPhone");
 
@@ -114,13 +105,11 @@ public class PatientRegistrationFormPanel extends DefaultFormPanel
             addLabeledTextField("cellPhone");
             addLabeledTextField("pager");
             addLabeledTextField("alternate");
-
             addLabeledTextField("homeAddress");
             addLabeledTextField("homeAddress2");
             addLabeledTextField("city");
             addLabeledTextField("state");
             addLabeledTextField("zip");
-
             addLabeledTextField("email");
 
             add(new FieldGroupLabel("employment"));
@@ -137,6 +126,7 @@ public class PatientRegistrationFormPanel extends DefaultFormPanel
             addLabeledTextField("insurancePlan");
 
             add(new FieldGroupLabel("generalPlanInformation"));
+
             addLabeledSelectField("patientRelationshipToInsured", BaseForm.PATIENT_RELATIONSHIP_TO_INSURED_CHOICES);
             addLabeledTextField("patientRelationshipToInsuredPtherRelationship");
             addLabeledTextField("insuredPersonId");
@@ -146,6 +136,7 @@ public class PatientRegistrationFormPanel extends DefaultFormPanel
             addLabeledTextField("memberNumber");
 
             add(new FieldGroupLabel("coverageInformation"));
+
             addLabeledTextField("coverageBeginDate");
             addLabeledTextField("coverageEndDate");
             addLabeledTextField("individualDeductible");
@@ -157,15 +148,15 @@ public class PatientRegistrationFormPanel extends DefaultFormPanel
             addLabeledTextField("officeVisitCoPay");
         }
 
-
-
-
 		public final void onSubmit()
 		{
 			final RequestCycle cycle = getRequestCycle();
 			PageParameters parameters = new PageParameters();
-			final FormInputModel book = (FormInputModel)getModelObject();
+			final FormInputModel patientRegistrationModel = (FormInputModel)getModelObject();
             info("Saved model " + getModelObject());
+//            parameters.put("id", new Long(patientRegistrationModel.getPersonId()));
+//			cycle.setResponsePage(getPageFactory().newPage(FormTestPage1.class, parameters));
+//			cycle.setRedirect(true);
 		}
 
     }

@@ -67,6 +67,7 @@ public class BaseForm extends Form
     protected static final Collection EMPLOYMENT_STATUS_CHOICES = new ArrayList();
     protected static final Collection INSURANCE_SEQUENCE_CHOICES = new ArrayList();
     protected static final Collection PATIENT_RELATIONSHIP_TO_INSURED_CHOICES = new ArrayList();
+    protected static final Collection ETHNICITY_CHOICES = new ArrayList();
 
     static
     {
@@ -112,7 +113,13 @@ public class BaseForm extends Form
         PATIENT_RELATIONSHIP_TO_INSURED_CHOICES.add("Spouse");
         PATIENT_RELATIONSHIP_TO_INSURED_CHOICES.add("Paternal");
         PATIENT_RELATIONSHIP_TO_INSURED_CHOICES.add("Maternal");
-        
+
+        ETHNICITY_CHOICES.add("Native-American");
+        ETHNICITY_CHOICES.add("Caucasian");
+        ETHNICITY_CHOICES.add("African-American");
+        ETHNICITY_CHOICES.add("Asian-American");
+        ETHNICITY_CHOICES.add("Hispanic");
+
     }
 
     // TODO - This is used for test purposes only. Replace with more formal model.
@@ -200,10 +207,10 @@ public class BaseForm extends Form
         add(new ListMultipleChoice(fieldName, ChoicesFactory.getInstance().getReferenceEntityChoices(multiCheckChoices)));
     }
 
-    protected void addLabeledRadioChoiceField(final String fieldName)
+    protected void addLabeledRadioChoiceField(final String fieldName, Collection choices)
     {
         add(new FieldLabel(fieldName));
-        add(new RadioChoice(fieldName, TEST_CHOICES));
+        add(new RadioChoice(fieldName, choices));
     }
 
     protected void addLabeledCheckBox(final String fieldName)
