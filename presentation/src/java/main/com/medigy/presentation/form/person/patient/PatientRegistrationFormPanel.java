@@ -54,6 +54,9 @@ import wicket.markup.html.form.RequiredTextField;
 import com.medigy.presentation.model.FormInputModel;
 import wicket.model.CompoundPropertyModel;
 
+import java.util.List;
+import java.util.ArrayList;
+
 public class PatientRegistrationFormPanel extends DefaultFormPanel
 {
     private TextField personId;
@@ -80,25 +83,20 @@ public class PatientRegistrationFormPanel extends DefaultFormPanel
             addLabeledTextField("personId", FieldFlags.REQUIRED);
             addLabeledTextField("account");
             addLabeledTextField("chartNumber");
-
-
             addLabeledTextField("lastName", FieldFlags.REQUIRED);
             addLabeledTextField("firstName", FieldFlags.REQUIRED);
             addLabeledTextField("middleName");
-            //addLabeledSelectField("suffix");
-
+            addLabeledSelectField("suffix", BaseForm.SUFFIX_CHOICES);
             addLabeledTextField("socialSecurityNumber", FieldFlags.REQUIRED);
             addLabeledTextField("dateOfBirth", FieldFlags.REQUIRED);
+            addLabeledSelectField("gender", GenderType.class);
+            addLabeledSelectField("maritalStatus", MaritalStatusType.class);
+            addLabeledSelectField("bloodType", BaseForm.BLOOD_TYPE_CHOICES);
 
-
-//            addLabeledSelectField("gender", GenderType.class);
-//            addLabeledSelectField("maritalStatus", MaritalStatusType.class);
-//            addLabeledSelectField("bloodType");
-//
 //            addLabeledRadioChoiceField("ethnicity");  //TODO: convert to checkbox
 //
             addLabeledTextField("responsibleParty");
-//            addLabeledSelectField("relationshipToResponsible");
+            addLabeledSelectField("relationshipToResponsible", BaseForm.RELATIONSHIP_TO_RESPONSIBLE_CHOICES);
             addLabeledTextField("relationshipToResponsibleOtherRelationship");
 
             addLabeledTextField("driversLicenseNumber");
@@ -128,18 +126,18 @@ public class PatientRegistrationFormPanel extends DefaultFormPanel
             add(new FieldGroupLabel("employment"));
 
             addLabeledTextField("employerId");
-//            addLabeledSelectField("employmentStatus");
+            addLabeledSelectField("employmentStatus", BaseForm.EMPLOYMENT_STATUS_CHOICES);
             addLabeledTextField("occupation");
             addLabeledTextField("employerPhoneNumber");
 
             add(new FieldGroupLabel("insurance"));
 
-//            addLabeledSelectField("insuranceSequence");
+            addLabeledSelectField("insuranceSequence", BaseForm.INSURANCE_SEQUENCE_CHOICES);
             addLabeledTextField("insuranceProduct");
             addLabeledTextField("insurancePlan");
 
             add(new FieldGroupLabel("generalPlanInformation"));
-//            addLabeledSelectField("patientRelationshipToInsured");
+            addLabeledSelectField("patientRelationshipToInsured", BaseForm.PATIENT_RELATIONSHIP_TO_INSURED_CHOICES);
             addLabeledTextField("patientRelationshipToInsuredPtherRelationship");
             addLabeledTextField("insuredPersonId");
             addLabeledTextField("employer");

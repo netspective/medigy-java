@@ -1,12 +1,6 @@
 package com.medigy.presentation.model;
 
 import java.io.Serializable;
-import java.util.Date;
-import java.util.Set;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.net.URL;
-import java.net.MalformedURLException;
 
 
 /**
@@ -15,13 +9,15 @@ import java.net.MalformedURLException;
  */
 public final class FormInputModel implements Serializable
 {
-	private String personId = "";
-	private String account = "";
-	private String chartNumber = "";
-	private String lastName = "";
-	private String firstName = "";
-	private String middleName = "";
-	private String socialSecurityNumber = "";
+
+    private String suffix;
+	private String personId;
+	private String account;
+	private String chartNumber;
+	private String lastName;
+	private String firstName;
+	private String middleName;
+	private String socialSecurityNumber;
 	private String dateOfBirth;
 	private String responsibleParty;
 	private String relationshipToResponsibleOtherRelationship;
@@ -61,18 +57,18 @@ public final class FormInputModel implements Serializable
 	private String percentagePay;
 	private String threshold;
 	private String officeVisitCoPay;
-    private URL urlProperty;
+	private String gender;
+	private String maritalStatus;
+	private String relationshipToResponsible;
+	private String employmentStatus;
+	private String insuranceSequence;
+	private String patientRelationshipToInsured;
+	private String bloodType;
+
+
 
 	public FormInputModel()
 	{
-		try
-		{
-			urlProperty = new URL("http://wicket.sourceforge.net");
-		}
-		catch (MalformedURLException e)
-		{
-			e.printStackTrace();
-		}
 	}
 
 
@@ -136,16 +132,15 @@ public final class FormInputModel implements Serializable
 		this.middleName = middleName;
 	}
 
-	public URL getUrlProperty()
-	{
-		return urlProperty;
-	}
+    public String getSuffix()
+    {
+        return suffix;
+    }
 
-	public void setUrlProperty(URL urlProperty)
-	{
-		this.urlProperty = urlProperty;
-	}
-
+    public void setSuffix(String suffix)
+    {
+        this.suffix = suffix;
+    }
 
 	public String getSocialSecurityNumber()
 	{
@@ -547,6 +542,76 @@ public final class FormInputModel implements Serializable
         this.officeVisitCoPay = officeVisitCoPay;
     }
 
+    public String getGender()
+    {
+        return gender;
+    }
+
+    public void setGender(String gender)
+    {
+        this.gender = gender;
+    }
+
+    public String getMaritalStatus()
+    {
+        return maritalStatus;
+    }
+
+    public void setMaritalStatus(String maritalStatus)
+    {
+        this.maritalStatus = maritalStatus;
+    }
+
+    public String getRelationshipToResponsible()
+    {
+        return relationshipToResponsible;
+    }
+
+    public void setRelationshipToResponsible(String relationshipToResponsible)
+    {
+        this.relationshipToResponsible = relationshipToResponsible;
+    }
+
+    public String getEmploymentStatus()
+    {
+        return employmentStatus;
+    }
+
+    public void setEmploymentStatus(String employmentStatus)
+    {
+        this.employmentStatus = employmentStatus;
+    }
+
+    public String getInsuranceSequence()
+    {
+        return insuranceSequence;
+    }
+
+    public void setInsuranceSequence(String insuranceSequence)
+    {
+        this.insuranceSequence = insuranceSequence;
+    }
+
+    public String getPatientRelationshipToInsured()
+    {
+        return patientRelationshipToInsured;
+    }
+
+    public void setPatientRelationshipToInsured(String patientRelationshipToInsured)
+    {
+        this.patientRelationshipToInsured = patientRelationshipToInsured;
+    }
+
+    public String getBloodType()
+    {
+        return bloodType;
+    }
+
+    public void setBloodType(String bloodType)
+    {
+        this.bloodType = bloodType;
+    }
+
     public String toString()
 	{
 		StringBuffer b = new StringBuffer();
@@ -595,7 +660,15 @@ public final class FormInputModel implements Serializable
 		 .append(", familyDeductibleRemaining = ").append(familyDeductibleRemaining)
 		 .append(", percentagePay = ").append(percentagePay)
 		 .append(", threshold = ").append(threshold)
-		 .append(", officeVisitCoPay = ").append(officeVisitCoPay);
+		 .append(", officeVisitCoPay = ").append(officeVisitCoPay)
+		 .append(", suffix = ").append(suffix)
+		 .append(", gender = ").append(gender)
+		 .append(", maritalStatus = ").append(maritalStatus)
+		 .append(", relationshipToResponsible = ").append(relationshipToResponsible)
+		 .append(", employmentStatus = ").append(employmentStatus)
+		 .append(", insuranceSequence = ").append(insuranceSequence)
+		 .append(", patientRelationshipToInsured = ").append(patientRelationshipToInsured)
+		 .append(", bloodType = ").append(bloodType);
 
 		b.append("]");
 		return b.toString();

@@ -40,13 +40,13 @@
                                     <label wicket:id="lastName_label">Last Name</label> /
                                     <label wicket:id="firstName_label">First Name</label> /
                                     <label wicket:id="middleName_label">Middle Name</label> /
-                                    <label>Suffix</label>
+                                    <label wicket:id="suffix_label">Suffix</label>
                                 </td>
                                 <td class="control">
                                     <input type="text" wicket:id="lastName" value="Hackett"/>
                                     <input type="text" wicket:id="firstName" value="Ryan"/>
                                     <input type="text" wicket:id="middleName" value="A."/>
-                                    <select>
+                                    <select wicket:id="suffix">
                                         <option selected="selected" value="0">Mr.</option>
                                         <option value="1">Ms.</option>
                                         <option value="2">Mrs.</option>
@@ -66,15 +66,15 @@
                             </tr>
                             <tr class="field">
                                 <td class="label">
-                                    <label>Gender</label> /
-                                    <label>Marital Status</label>
+                                    <label wicket:id="gender_label">Gender</label> /
+                                    <label wicket:id="maritalStatus_label">Marital Status</label>
                                 </td>
                                 <td class="control">
-                                    <select>
+                                    <select wicket:id="gender">
                                         <option>Male</option>
                                         <option>Female</option>
                                     </select>
-                                    <select>
+                                    <select wicket:id="maritalStatus">
                                         <option>Married</option>
                                         <option>Unmarried</option>
                                     </select>
@@ -82,10 +82,10 @@
                             </tr>
                             <tr class="field">
                                 <td class="label">
-                                    <label>Blood Type</label>
+                                    <label wicket:id="bloodType_label">Blood Type</label>
                                 </td>
                                 <td class="control">
-                                    <select>
+                                    <select wicket:id="bloodType">
                                         <option>A</option>
                                         <option>B</option>
                                         <option>AB</option>
@@ -117,11 +117,11 @@
                             </tr>
                             <tr class="field">
                                 <td class="label">
-                                    <label>Relationship To Responsible Party</label> /
+                                    <label wicket:id="relationshipToResponsible_label">Relationship To Responsible Party</label> /
                                     <label wicket:id="relationshipToResponsibleOtherRelationship_label">Other Relationship Name</label>
                                 </td>
                                 <td class="control">
-                                    <select>
+                                    <select wicket:id="relationshipToResponsible">
                                         <option>Self</option>
                                         <option>Spouse</option>
                                     </select>
@@ -243,10 +243,10 @@
                                         </tr>
                                         <tr class="field">
                                             <td class="label">
-                                                <label>Employment Status</label>
+                                                <label wicket:id="employmentStatus_label">Employment Status</label>
                                             </td>
                                             <td class="control">
-                                                <select>
+                                                <select wicket:id="employmentStatus">
                                                     <option>Employed (Full-Time)</option>
                                                     <option>Employed (Part-Time)</option>
                                                 </select>
@@ -278,10 +278,10 @@
                                   <table class="vertical-fields">
                                       <tr class="field">
                                           <td class="label">
-                                              <label>Insurance Sequence</label>
+                                              <label wicket:id="insuranceSequence_label">Insurance Sequence</label>
                                           </td>
                                           <td class="control">
-                                              <select>
+                                              <select wicket:id="insuranceSequence">
                                                   <option>Primary</option>
                                                   <option>Secondary</option>
                                                   <option>Tertiary</option>
@@ -314,10 +314,10 @@
                         <table class="vertical-fields">
                             <tr class="field">
                                 <td class="label">
-                                    <label>Patient's Relationship to Insured</label>
+                                    <label wicket:id="patientRelationshipToInsured_label">Patient's Relationship to Insured</label>
                                 </td>
                                 <td class="control">
-                                    <select>
+                                    <select wicket:id="patientRelationshipToInsured">
                                         <option>Self</option>
                                         <option>Spouse</option>
                                         <option>Paternal</option>

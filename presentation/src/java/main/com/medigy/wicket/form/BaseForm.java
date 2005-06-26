@@ -61,6 +61,12 @@ public class BaseForm extends Form
     public static final String FIELD_LABEL_SUFFIX = "_label";
     public static final String FIELD_CONTROL_SUFFIX = "_control";
     protected static final Collection TEST_CHOICES = new ArrayList();
+    protected static final Collection SUFFIX_CHOICES = new ArrayList();
+    protected static final Collection BLOOD_TYPE_CHOICES = new ArrayList();
+    protected static final Collection RELATIONSHIP_TO_RESPONSIBLE_CHOICES = new ArrayList();
+    protected static final Collection EMPLOYMENT_STATUS_CHOICES = new ArrayList();
+    protected static final Collection INSURANCE_SEQUENCE_CHOICES = new ArrayList();
+    protected static final Collection PATIENT_RELATIONSHIP_TO_INSURED_CHOICES = new ArrayList();
 
     static
     {
@@ -81,6 +87,32 @@ public class BaseForm extends Form
                 return "Test";
             }
         });
+
+        SUFFIX_CHOICES.add("Mr.");
+        SUFFIX_CHOICES.add("Ms.");
+        SUFFIX_CHOICES.add("Mrs.");
+        SUFFIX_CHOICES.add("Dr.");
+
+        BLOOD_TYPE_CHOICES.add("A");
+        BLOOD_TYPE_CHOICES.add("B");
+        BLOOD_TYPE_CHOICES.add("AB");
+        BLOOD_TYPE_CHOICES.add("O");
+
+        RELATIONSHIP_TO_RESPONSIBLE_CHOICES.add("Self");
+        RELATIONSHIP_TO_RESPONSIBLE_CHOICES.add("Spouse");
+
+        EMPLOYMENT_STATUS_CHOICES.add("Employed (Full-Time)");
+        EMPLOYMENT_STATUS_CHOICES.add("Employed (Part-Time)");
+
+        INSURANCE_SEQUENCE_CHOICES.add("Primary");
+        INSURANCE_SEQUENCE_CHOICES.add("Secondary");
+        INSURANCE_SEQUENCE_CHOICES.add("Tertiary");
+
+        PATIENT_RELATIONSHIP_TO_INSURED_CHOICES.add("Self");
+        PATIENT_RELATIONSHIP_TO_INSURED_CHOICES.add("Spouse");
+        PATIENT_RELATIONSHIP_TO_INSURED_CHOICES.add("Paternal");
+        PATIENT_RELATIONSHIP_TO_INSURED_CHOICES.add("Maternal");
+        
     }
 
     // TODO - This is used for test purposes only. Replace with more formal model.
@@ -136,6 +168,12 @@ public class BaseForm extends Form
     {
         add(new FieldLabel(fieldName));
         add(new CurrencyField(fieldName));
+    }
+
+    protected void addLabeledSelectField(final String fieldName, Collection choices)
+    {
+        add(new FieldLabel(fieldName));
+        add(new DropDownChoice(fieldName, choices));
     }
 
     protected void addLabeledSelectField(final String fieldName)
