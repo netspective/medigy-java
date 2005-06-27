@@ -58,11 +58,15 @@ import wicket.util.time.Duration;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ApplicationContext;
 import org.springframework.beans.BeansException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.util.Map;
 
 public abstract class DefaultApplication extends SpringApplication implements ApplicationContextAware
 {
+    private static final Log log = LogFactory.getLog(DefaultApplication.class);
+
     public static final String DEFAULT_DEVL_ENV_PROJECT_HOME = "c:\\Projects\\Medigy";
     private static final String DEFAULT_THEME = "default";
     private boolean devlEnvironment;
@@ -89,7 +93,10 @@ public abstract class DefaultApplication extends SpringApplication implements Ap
     {
         final Map beanMap =  getApplicationContext().getBeansOfType(serviceClass);
         if (beanMap.size() == 0)
+        {            
+            log.warn("Failed to find any beans of type: " + serviceClass);
             return null;
+        }
 
         return beanMap.values().iterator().next();
     }
