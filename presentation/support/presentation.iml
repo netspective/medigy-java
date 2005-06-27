@@ -18,6 +18,7 @@
     <orderEntry type="module" module-name="persistence" />
     <orderEntry type="library" name="Persistence Dependencies (Main)" level="project" />
     <orderEntry type="module" module-name="service" />
+    <orderEntry type="library" name="Service Dependencies (Main)" level="project" />
     <orderEntryProperties />
   </component>
 </module>
