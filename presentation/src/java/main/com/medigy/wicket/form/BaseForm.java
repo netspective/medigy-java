@@ -224,6 +224,12 @@ public class BaseForm extends Form
         add(new RadioChoice(fieldName, choices));
     }
 
+    protected void addLabeledRadioChoiceField(final String fieldName, final Class choicesClass)
+    {
+        add(new FieldLabel(fieldName));
+        add(new RadioChoice(fieldName, getChoicesFactory().getReferenceEntityChoices(choicesClass)));
+    }
+
     protected void addLabeledCheckBox(final String fieldName)
     {
         add(new FieldLabel(fieldName));

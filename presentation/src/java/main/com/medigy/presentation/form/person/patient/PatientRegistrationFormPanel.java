@@ -45,6 +45,7 @@ package com.medigy.presentation.form.person.patient;
 
 import com.medigy.persist.reference.type.GenderType;
 import com.medigy.persist.reference.type.MaritalStatusType;
+import com.medigy.persist.reference.custom.person.EthnicityType;
 import com.medigy.wicket.form.*;
 import com.medigy.wicket.panel.DefaultFormPanel;
 import com.medigy.wicket.DefaultApplication;
@@ -70,7 +71,8 @@ public class PatientRegistrationFormPanel extends DefaultFormPanel
         final PatientRegistrationService service = (PatientRegistrationService) ((DefaultApplication) getApplication()).getService(PatientRegistrationService.class);
         final RegisterPatientParameters params = service.getNewPatientParameters();
         InputForm form = new InputForm(componentName, feedback);
-        form.setModel(new CompoundPropertyModel(params));
+        // TODO: Jeremy will do his magic here to relate the service params with the Form model object
+        //form.setModel(new CompoundPropertyModel(params));
         return form;
     }
 
@@ -94,7 +96,7 @@ public class PatientRegistrationFormPanel extends DefaultFormPanel
             addLabeledSelectField("gender", GenderType.class);
             addLabeledSelectField("maritalStatus", MaritalStatusType.class);
             addLabeledSelectField("bloodType", BaseForm.BLOOD_TYPE_CHOICES);
-            addLabeledRadioChoiceField("ethnicity", BaseForm.ETHNICITY_CHOICES);
+            addLabeledRadioChoiceField("ethnicity", EthnicityType.class);
             addLabeledTextField("responsibleParty");
             addLabeledSelectField("relationshipToResponsible", BaseForm.RELATIONSHIP_TO_RESPONSIBLE_CHOICES);
             addLabeledTextField("relationshipToResponsibleOtherRelationship");
