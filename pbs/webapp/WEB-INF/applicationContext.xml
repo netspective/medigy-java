@@ -49,11 +49,4 @@
         <property name="sessionFactory"> <ref bean="hibernateSessionFactory"/> </property>
     </bean>
 
-    <import resource="serviceContext.xml"/>
-
-    <bean id="choicesFactory" class="com.medigy.presentation.model.ChoicesFactory"
-            factory-method="getInstance">
-        <property name="referenceEntityFacade"><ref bean="referenceEntityFacade"/></property>
-    </bean>
-    
 </beans>
