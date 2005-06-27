@@ -312,6 +312,7 @@
         <root url="jar://$PROJECT_DIR$/../../../presentation/depend/lib/main/dom4j-1.4.jar!/" />
         <root url="jar://$PROJECT_DIR$/../../../presentation/depend/lib/main/ognl-2.6.7.jar!/" />
         <root url="jar://$PROJECT_DIR$/../../../presentation/depend/lib/main/wicket-1.0.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../../../presentation/depend/lib/main/wicket-contrib-spring-1.0.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
