@@ -45,10 +45,12 @@ import com.medigy.persist.model.invoice.attribute.InvoiceAttribute;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.Table;
 import java.util.Date;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
+@Table(name = "Org_Duration_Attribute")
 public class OrganizationDurationAttribute extends OrganizationAttribute
 {
     private EffectiveDates effectiveDates = new EffectiveDates();

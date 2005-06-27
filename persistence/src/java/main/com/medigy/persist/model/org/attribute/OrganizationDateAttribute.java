@@ -45,10 +45,12 @@ import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.Column;
+import javax.persistence.Table;
 import java.util.Date;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
+@Table(name = "Org_Date_Attribute")
 public class OrganizationDateAttribute extends OrganizationAttribute
 {
     private Date value;

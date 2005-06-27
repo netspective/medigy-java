@@ -44,9 +44,11 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.Table;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
+@Table(name = "Org_String_Attribute")
 public class OrganizationStringAttribute extends OrganizationAttribute
 {
     private String value;

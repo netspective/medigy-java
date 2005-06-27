@@ -45,9 +45,11 @@ import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.Column;
+import javax.persistence.Table;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
+@Table(name = "Org_Long_Attribute")
 public class OrganizationLongAttribute extends OrganizationAttribute
 {
     private Long value;

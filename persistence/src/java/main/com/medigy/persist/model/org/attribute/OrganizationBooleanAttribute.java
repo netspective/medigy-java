@@ -44,9 +44,11 @@ import com.medigy.persist.model.invoice.attribute.InvoiceAttribute;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.Table;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
+@Table(name = "Org_Boolean_Attribute")
 public class OrganizationBooleanAttribute extends OrganizationAttribute
 {
     private Boolean value;
