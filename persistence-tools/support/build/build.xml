@@ -10,9 +10,12 @@
             <fileset dir="${common.home}/depend/lib/build" includes="*.jar"/>
             <fileset dir="${common.home}/depend/lib/main" includes="*.jar"/>
 
+            <fileset dir="${data-gen.home}/depend/lib/main" includes="*.jar"/>
+
             <fileset dir="${persistence.home}/depend/lib/build" includes="*.jar"/>
             <fileset dir="${persistence.home}/depend/lib/main" includes="*.jar"/>
 
+            <path location="${data-gen.artifacts.home}/classes/main"/>
             <path location="${graphviz.artifacts.home}/classes/main"/>
             <path location="${hibernate-doc.artifacts.home}/classes/main"/>
             <path location="${persistence.artifacts.home}/classes/main"/>
@@ -25,10 +28,14 @@
             <fileset dir="${common.home}/depend/lib/main" includes="*.jar"/>
             <fileset dir="${common.home}/depend/lib/test" includes="*.jar"/>
 
+            <fileset dir="${data-gen.home}/depend/lib/main" includes="*.jar"/>
+
             <fileset dir="${persistence.home}/depend/lib/build" includes="*.jar"/>
             <fileset dir="${persistence.home}/depend/lib/main" includes="*.jar"/>
             <fileset dir="${persistence.home}/depend/lib/test" includes="*.jar"/>
 
+            <path location="${data-gen.artifacts.home}/classes/main"/>
+            <path location="${data-gen.artifacts.home}/classes/test"/>
             <path location="${graphviz.artifacts.home}/classes/main"/>
             <path location="${hibernate-doc.artifacts.home}/classes/main"/>
             <path location="${persistence.artifacts.home}/classes/main"/>
@@ -49,6 +56,35 @@
             hibernateConfigClass="com.medigy.persist.util.HibernateConfiguration"
             hibernateConfigFile="/com/medigy/persist/hibernate.cfg.xml"
             />
+    </target>
+
+    <target name="db.populate-demo-data" depends="db.generate-ddl">
+        <property name="demo.db.name" value="medigy_demo_01"/>
+        <property name="demo.db.driver" value="com.mysql.jdbc.Driver"/>
+        <property name="demo.db.url" value="jdbc:mysql://192.168.0.100:3306/${demo.db.name}"/>
+        <property name="demo.db.userid" value="medigy_demo"/>
+        <property name="demo.db.password" value="medigy_demo"/>
+
+        <sql driver="${demo.db.driver}" url="${demo.db.url}" userid="${demo.db.userid}" password="${demo.db.password}"
+            classpathref="module.dependencies.test.classpath">
+            drop database if exists ${demo.db.name};
+            create database ${demo.db.name};
+        </sql>
+
+        <sql src="${persistence.artifacts.ddl.home}/create_MySQLInnoDBDialect.sql"
+            driver="${demo.db.driver}" url="${demo.db.url}" userid="${demo.db.userid}" password="${demo.db.password}"
+            classpathref="module.dependencies.test.classpath" />
+
+        <taskdef name="populate-demo-data" classname="com.medigy.tool.persist.populate.DataPopulatorTask"
+                                classpathref="module.dependencies.test.classpath">
+            <classpath location="${module.artifacts.classes.main.home}"/>
+        </taskdef>
+
+        <populate-demo-data
+            hibernateConfigClass="com.medigy.persist.util.HibernateConfiguration"
+            hibernateConfigFile="/com/medigy/persist/hibernate.cfg.xml"
+            driver="${demo.db.driver}" url="${demo.db.url}" userid="${demo.db.userid}" password="${demo.db.password}"
+            showSql="no"/>
     </target>
 
     <target name="doc.generate-dbdd-source" depends="compile.main,init.define-modules,init.define-module.dependencies.main.classpath,graphviz.init">

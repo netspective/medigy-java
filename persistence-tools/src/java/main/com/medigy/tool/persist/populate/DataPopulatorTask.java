@@ -44,30 +44,30 @@
 package com.medigy.tool.persist.populate;
 
 import java.text.MessageFormat;
-import java.util.Set;
 import java.util.HashSet;
+import java.util.Set;
 
-import org.apache.tools.ant.Task;
 import org.apache.tools.ant.BuildException;
-import org.hibernate.cfg.Environment;
-import org.hibernate.cfg.Configuration;
-import org.hibernate.SessionFactory;
+import org.apache.tools.ant.Task;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.cfg.Environment;
 import org.sns.tool.data.DataGeneratorSources;
-import org.sns.tool.data.PersonDataGenerator;
-import org.sns.tool.data.USAddressDataGenerator;
-import org.sns.tool.data.RandomUtils;
 import org.sns.tool.data.DataGeneratorSources.City;
+import org.sns.tool.data.PersonDataGenerator;
 import org.sns.tool.data.PersonDataGenerator.Gender;
+import org.sns.tool.data.RandomUtils;
+import org.sns.tool.data.USAddressDataGenerator;
 
+import com.medigy.persist.model.org.Organization;
+import com.medigy.persist.model.person.Ethnicity;
+import com.medigy.persist.model.person.Person;
+import com.medigy.persist.reference.custom.person.EthnicityType.Cache;
+import com.medigy.persist.reference.type.GenderType;
 import com.medigy.persist.util.ModelInitializer;
 import com.medigy.persist.util.ModelInitializer.SeedDataPopulationType;
-import com.medigy.persist.model.org.Organization;
-import com.medigy.persist.model.person.Person;
-import com.medigy.persist.model.person.Ethnicity;
-import com.medigy.persist.reference.type.GenderType;
-import com.medigy.persist.reference.custom.person.EthnicityType.Cache;
 
 public class DataPopulatorTask extends Task
 {
@@ -189,6 +189,8 @@ public class DataPopulatorTask extends Task
 
         final Gender gender = personDataGenerator.getRandomGender();
         final String address1 = usAddressDataGenerator.getRandomStreetAddress(1000, 9999);
+        // TODO: add a "address2" line generator for things like "Suite 400" or "Apartment 76"
+
         final City city = usAddressDataGenerator.getRandomCity();
         final String phone = usAddressDataGenerator.getRandomPhoneNumber(city);
 

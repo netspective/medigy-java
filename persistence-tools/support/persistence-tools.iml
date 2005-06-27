@@ -18,6 +18,7 @@
     <orderEntry type="module" module-name="hibernate-doc" />
     <orderEntry type="module" module-name="GraphViz" />
     <orderEntry type="library" name="Ant 1.6.2" level="application" />
+    <orderEntry type="module" module-name="data-gen" />
     <orderEntryProperties />
   </component>
 </module>

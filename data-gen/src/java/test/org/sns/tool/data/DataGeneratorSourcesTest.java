@@ -44,6 +44,7 @@
 package org.sns.tool.data;
 
 import java.io.IOException;
+import java.util.Date;
 
 import org.sns.tool.data.PersonDataGenerator.Gender;
 import org.sns.tool.data.DataGeneratorSources.City;
@@ -66,11 +67,21 @@ public class DataGeneratorSourcesTest extends TestCase
             final String firstName = personDataGenerator.getRandomFirstName(gender);
             final String lastName = personDataGenerator.getRandomSurname();
             final String ssn = personDataGenerator.getRandomSocialSecurityNumber();
+            final Date dob = RandomUtils.generateRandomDateBetweenYearsAgo(18, 40);
             final String address1 = usAddressDataGenerator.getRandomStreetAddress(1000, 9999);
             final City city = usAddressDataGenerator.getRandomCity();
             final String phone = usAddressDataGenerator.getRandomPhoneNumber(city);
 
-            System.out.println(gender + " " + firstName + " " + lastName + " " + ssn + " " + address1 + " " + city.getCity() + ", " + city.getState() + " " + city.getFormattedZipCode() + " " + phone);
+            assertNotNull(gender);
+            assertNotNull(firstName);
+            assertNotNull(lastName);
+            assertNotNull(ssn);
+            assertNotNull(dob);
+            assertNotNull(address1);
+            assertNotNull(city);
+            assertNotNull(phone);
+
+            //System.out.println(gender + " " + firstName + " " + lastName + " " + ssn + " " + dob + " " + address1 + " " + city.getCity() + ", " + city.getState() + " " + city.getFormattedZipCode() + " " + phone);
         }
     }
 }

@@ -44,11 +44,29 @@
 package org.sns.tool.data;
 
 import java.util.Random;
+import java.util.Date;
+import java.util.Calendar;
 
 public class RandomUtils
 {
     public static int generateRandomNumberBetween(final int low, final int high)
     {
         return low + new Random().nextInt(high - low);
+    }
+
+    public static Date generateRandomDateBetweenYearsAgo(int lowYearsAgo, int highYearsAgo)
+    {
+        // change the year to be a random number between lowAge and highAge
+        final Calendar cal1 = Calendar.getInstance();
+        cal1.setTime(new Date());
+        cal1.set(Calendar.YEAR, cal1.get(Calendar.YEAR) - RandomUtils.generateRandomNumberBetween(lowYearsAgo, highYearsAgo));
+
+        // now calculate a random day of the year and set the actual year to the random one above
+        final Calendar cal2 = Calendar.getInstance();
+        cal2.set(Calendar.DAY_OF_YEAR, RandomUtils.generateRandomNumberBetween(1, 366));
+        cal2.set(Calendar.YEAR, cal1.get(Calendar.YEAR));
+
+        // now we have a random day of the year between lowAge and highAge years ago
+        return cal2.getTime();
     }
 }

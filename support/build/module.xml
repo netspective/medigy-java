@@ -76,6 +76,7 @@
 
     <target name="init.define-modules" depends="init.define-properties">
         <property name="common.home" value="${repository.home}/common"/>
+        <property name="data-gen.home" value="${repository.home}/data-gen"/>
         <property name="graphviz.home" value="${repository.home}/graphviz"/>
         <property name="hibernate-doc.home" value="${repository.home}/hibernate-doc"/>
         <property name="persistence.home" value="${repository.home}/persistence"/>
@@ -86,6 +87,7 @@
 
     <target name="init.define-modules-artifacts-home" depends="init.define-modules">
         <property name="common.artifacts.home" value="${common.home}/support/build/artifacts"/>
+        <property name="data-gen.artifacts.home" value="${data-gen.home}/support/build/artifacts"/>
         <property name="graphviz.artifacts.home" value="${graphviz.home}/support/build/artifacts"/>
         <property name="hibernate-doc.artifacts.home" value="${hibernate-doc.home}/support/build/artifacts"/>
         <property name="persistence.artifacts.home" value="${persistence.home}/support/build/artifacts"/>
