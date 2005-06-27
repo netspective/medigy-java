@@ -48,21 +48,55 @@ import com.medigy.wicket.session.AuthenticatedSession;
 import wicket.ApplicationSettings;
 import wicket.ISessionFactory;
 import wicket.Session;
+import wicket.Component;
+import wicket.contrib.spring.SpringApplication;
 import wicket.protocol.http.WebApplication;
 import wicket.util.file.File;
 import wicket.util.file.Folder;
 import wicket.util.file.Path;
 import wicket.util.time.Duration;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.ApplicationContext;
+import org.springframework.beans.BeansException;
 
-public abstract class DefaultApplication extends WebApplication
+import java.util.Map;
+
+public abstract class DefaultApplication extends SpringApplication implements ApplicationContextAware
 {
     public static final String DEFAULT_DEVL_ENV_PROJECT_HOME = "c:\\Projects\\Medigy";
     private static final String DEFAULT_THEME = "default";
-    private final boolean devlEnvironment;
-    private final File devlEnvHome;
+    private boolean devlEnvironment;
+    private File devlEnvHome;
+
+    private ApplicationContext applicationContext;
 
     public DefaultApplication()
     {
+        super();
+    }
+
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException
+    {
+        this.applicationContext= applicationContext;
+    }
+
+    public ApplicationContext getApplicationContext()
+    {
+        return applicationContext;
+    }
+
+    public Object getService(final Class serviceClass)
+    {
+        final Map beanMap =  getApplicationContext().getBeansOfType(serviceClass);
+        if (beanMap.size() == 0)
+            return null;
+
+        return beanMap.values().iterator().next();
+    }
+
+    public void afterPropertiesSet()
+    {
+        super.afterPropertiesSet();
         final ApplicationSettings settings = getSettings();
         settings.setStripComments(true);
         settings.setStripWicketTags(true);

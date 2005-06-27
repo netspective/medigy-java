@@ -35,104 +35,90 @@
  * CAUSED AND REGARDLESS OF THE THEORY OF LIABILITY, ARISING OUT OF THE USE OF OR INABILITY TO USE THE SOFTWARE, EVEN
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
- * @author Shahid N. Shah
  */
+package com.medigy.presentation.model;
 
-/*
- * Copyright (c) 2005 Your Corporation. All Rights Reserved.
- */
-package com.medigy.app.pbs;
+import wicket.markup.html.form.model.IChoiceList;
+import wicket.markup.html.form.model.IChoice;
+import com.medigy.service.util.ReferenceEntityFacade;
+import com.medigy.persist.reference.custom.CustomReferenceEntity;
+import com.medigy.persist.reference.CachedReferenceEntity;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import com.medigy.app.pbs.page.FormTestPage1;
-import com.medigy.app.pbs.page.HomePage;
-import com.medigy.app.pbs.page.TestPage1;
-import com.medigy.app.pbs.page.TestPage2;
-import com.medigy.app.pbs.page.TestPage3;
-import com.medigy.wicket.menu.Menu;
-import com.medigy.wicket.menu.MenuItem;
-import com.medigy.wicket.DefaultApplication;
-import wicket.contrib.spring.SpringApplication;
 
-public class PhysicianBillingSystemApplication extends DefaultApplication 
+public class CustomReferenceEntityChoices implements IChoiceList
 {
-    private Menu mainMenu = new MainMenu();
+    private class Choice implements IChoice
+	{
+        private final CustomReferenceEntity object;
 
-    public PhysicianBillingSystemApplication()
-    {
-        getPages().setHomePage(HomePage.class);
+        Choice(final CustomReferenceEntity refEntity)
+        {
+            this.object = refEntity;
+        }
+
+        public String getDisplayValue()
+        {
+            return object.getLabel();
+        }
+
+        public String getId()
+        {
+            return object.getCode();
+        }
+
+        public Object getObject()
+        {
+            return object;
+        }
     }
 
-    public void setMainMenu(final Menu mainMenu)
+    private Choice[] choiceList;
+
+    public CustomReferenceEntityChoices(final List<CustomReferenceEntity> list)
     {
-        this.mainMenu = mainMenu;
+        this.choiceList = new Choice[list.size()];
+        for (int i = 0; i < choiceList.length; i++)
+        {
+            choiceList[i] = new Choice(list.get(i));
+        }
     }
 
-    public Menu getMainMenu()
+    public void attach()
     {
-        return mainMenu;
+
     }
 
-    protected class MainMenu implements Menu
+    public IChoice choiceForId(String id)
     {
-        private List<MenuItem> menuItems = new ArrayList<MenuItem>();
+        for(Choice c : choiceList)
+            if(c.getId().equals(id))
+                return c;
 
-        public MainMenu()
-        {
-            menuItems.add(new MainMenuItem("Home", HomePage.class));
-            menuItems.add(new MainMenuItem("TestPage1", TestPage1.class));
-            menuItems.add(new MainMenuItem("TestPage2", TestPage2.class));
-            menuItems.add(new MainMenuItem("TestPage3", TestPage3.class));
-            menuItems.add(new MainMenuItem("FormTestPage1", FormTestPage1.class));
-        }
+        return null;
+    }
 
-        public String getLabel()
-        {
-            return "Main Menu";
-        }
+    public IChoice choiceForObject(Object object)
+    {
+        for(Choice c : choiceList)
+            if(c.getObject() == object)
+                return c;
+        return null;
+    }
 
-        public Class getPage()
-        {
-            return null;
-        }
+    public IChoice get(int i)
+    {
+        return choiceList[i];
+    }
 
-        public boolean isDisabled()
-        {
-            return false;
-        }
+    public int size()
+    {
+        return choiceList.length;
+    }
 
-        public List<MenuItem> getMenuItems()
-        {
-            return menuItems;
-        }
+    public void detach()
+    {
 
-        protected class MainMenuItem implements MenuItem
-        {
-            private String label;
-            private Class pageClass;
-
-            public MainMenuItem(final String label, final Class pageClass)
-            {
-                this.label = label;
-                this.pageClass = pageClass;
-            }
-
-            public String getLabel()
-            {
-                return label;
-            }
-
-            public Class getPage()
-            {
-                return pageClass;
-            }
-
-            public boolean isDisabled()
-            {
-                return false;
-            }
-        }
     }
 }

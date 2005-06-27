@@ -4,8 +4,11 @@
 package com.medigy.service.dto.person;
 
 import org.hibernate.validator.NotNull;
+import org.hibernate.validator.Past;
 
 import java.util.Date;
+
+import com.medigy.persist.model.person.Gender;
 
 public interface PersonParameters
 {
@@ -40,6 +43,7 @@ public interface PersonParameters
      * @return
      */
     @NotNull
+    @Past
     public Date getBirthDate();
 
     /**
@@ -48,6 +52,7 @@ public interface PersonParameters
      * @see com.medigy.persist.reference.type.GenderType#getCode()
      */
     @NotNull
+    @com.medigy.service.validator.ReferenceEntity(className = "com.medigy.persist.model.person.Gender")
     public String getGenderCode();
 
     /**

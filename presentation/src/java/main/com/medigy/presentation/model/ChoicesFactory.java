@@ -43,9 +43,15 @@
  */
 package com.medigy.presentation.model;
 
+import com.medigy.service.util.ReferenceEntityFacade;
+import com.medigy.persist.reference.custom.CustomReferenceEntity;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
+
+import wicket.markup.html.form.model.IChoiceList;
 
 public class ChoicesFactory
 {
@@ -57,13 +63,25 @@ public class ChoicesFactory
     }
 
     private Map<Class, ReferenceEntityChoices> referenceEntityChoices = Collections.synchronizedMap(new HashMap<Class, ReferenceEntityChoices>());
+    private ReferenceEntityFacade referenceEntityFacade;
 
     public ChoicesFactory()
     {
     }
 
-    public ReferenceEntityChoices getReferenceEntityChoices(final Class entity)
+    public void setReferenceEntityFacade(final ReferenceEntityFacade referenceEntityFacade)
     {
+        this.referenceEntityFacade = referenceEntityFacade;
+    }
+
+    public IChoiceList getReferenceEntityChoices(final Class entity)
+    {
+        if (CustomReferenceEntity.class.isAssignableFrom(entity))
+        {
+            List<CustomReferenceEntity> entityList =  referenceEntityFacade.listCustomReferenceEntities(entity);
+            return new CustomReferenceEntityChoices(entityList);
+        }
+
         ReferenceEntityChoices result = referenceEntityChoices.get(entity);
         if(result == null)
         {
@@ -73,6 +91,7 @@ public class ChoicesFactory
 
         return result;
     }
+
 
     public Map<Class, ReferenceEntityChoices> getReferenceEntityChoices()
     {

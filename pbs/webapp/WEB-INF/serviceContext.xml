@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+    <!-- FACADE (Service helper) beans -->
+
+    <bean id="referenceEntityFacade" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+        <property name="transactionManager"> <ref bean="hibernateTransactionManager"/> </property>
+        <!--property name="proxyInterfaces"> <value>com.medigy.service.contact.ContactMechanismFacade</value></property-->
+        <property name="target">
+            <bean class="com.medigy.service.impl.util.ReferenceEntityFacadeImpl">
+                <constructor-arg index="0"> <ref bean="hibernateSessionFactory"/> </constructor-arg>
+			</bean>
+		</property>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="*">PROPAGATION_REQUIRED</prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="partyRelationshipFacade" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+        <property name="transactionManager"> <ref bean="hibernateTransactionManager"/> </property>
+        <!--property name="proxyInterfaces"> <value>com.medigy.service.contact.ContactMechanismFacade</value></property-->
+        <property name="target">
+                <bean class="com.medigy.service.impl.party.PartyRelationshipFacadeImpl">
+                    <constructor-arg index="0"> <ref bean="hibernateSessionFactory"/> </constructor-arg>
+			</bean>
+		</property>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="add*">PROPAGATION_REQUIRED</prop>
+                <prop key="list*">PROPAGATION_REQUIRED</prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="geographicBoundaryFacade" class="com.medigy.service.impl.contact.GeographicBoundaryFacadeImpl">
+        <constructor-arg index="0"> <ref bean="hibernateSessionFactory"/> </constructor-arg>
+    </bean>
+
+    <bean id="healthCareReferralFacade" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+        <property name="transactionManager"> <ref bean="hibernateTransactionManager"/> </property>
+        <!--property name="proxyInterfaces"> <value>com.medigy.service.contact.ContactMechanismFacade</value></property-->
+        <property name="target">
+            <bean class="com.medigy.service.impl.health.HealthCareReferralFacadeImpl">
+                <constructor-arg index="0"> <ref bean="hibernateSessionFactory"/> </constructor-arg>
+            </bean>
+		</property>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="list*">PROPAGATION_REQUIRED</prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="insurancePolicyFacade" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+        <property name="transactionManager"> <ref bean="hibernateTransactionManager"/> </property>
+        <!--property name="proxyInterfaces"> <value>com.medigy.service.contact.ContactMechanismFacade</value></property-->
+        <property name="target">
+                <bean class="com.medigy.service.impl.insurance.InsurancePolicyFacadeImpl">
+                    <constructor-arg index="0"> <ref bean="hibernateSessionFactory"/> </constructor-arg>
+            </bean>
+		</property>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="add*">PROPAGATION_REQUIRED</prop>
+                <prop key="create*">PROPAGATION_REQUIRED</prop>
+                <prop key="list*">PROPAGATION_REQUIRED</prop>
+                <prop key="get*">PROPAGATION_REQUIRED</prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="organizationFacade" class="com.medigy.service.impl.org.OrganizationFacadeImpl">
+        <constructor-arg index="0"> <ref bean="hibernateSessionFactory"/> </constructor-arg>
+    </bean>
+
+    <bean id="personFacade" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+        <property name="transactionManager"> <ref bean="hibernateTransactionManager"/> </property>
+        <!--property name="proxyInterfaces"> <value>com.medigy.service.contact.ContactMechanismFacade</value></property-->
+        <property name="target">
+                <bean class="com.medigy.service.impl.person.PersonFacadeImpl">
+                    <constructor-arg index="0"> <ref bean="hibernateSessionFactory"/> </constructor-arg>
+                    <constructor-arg index="1"> <ref bean="referenceEntityFacade"/> </constructor-arg>
+            </bean>
+		</property>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="add*">PROPAGATION_REQUIRED</prop>
+                <prop key="create*">PROPAGATION_REQUIRED</prop>
+                <prop key="list*">PROPAGATION_REQUIRED</prop>
+            </props>
+        </property>
+    </bean>
+
+    <!--bean id="contactMechanismFacadeTarget" class="com.medigy.service.impl.contact.ContactMechanismFacadeImpl">
+        <property name="sessionFactory"> <ref bean="hibernateSessionFactory"/> </property>
+        <property name="referenceEntityFacade"><ref bean="referenceEntityFacade"/></property>
+    </bean-->
+
+    <bean id="contactMechanismFacade" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+        <property name="transactionManager"> <ref bean="hibernateTransactionManager"/> </property>
+        <!--property name="proxyInterfaces"> <value>com.medigy.service.contact.ContactMechanismFacade</value></property-->
+        <property name="target">
+                <bean class="com.medigy.service.impl.contact.ContactMechanismFacadeImpl">
+                    <constructor-arg index="0"> <ref bean="hibernateSessionFactory"/> </constructor-arg>
+                    <constructor-arg index="1"> <ref bean="referenceEntityFacade"/> </constructor-arg>
+			</bean>
+		</property>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="addPartyContactMechanism*">PROPAGATION_REQUIRED</prop>
+                <prop key="addPostalAddress">PROPAGATION_REQUIRED</prop>
+            </props>
+        </property>
+    </bean>
+
+
+    <!-- SERVICE beans -->
+    <bean id="addContactMechanismService"  class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+        <property name="transactionManager"> <ref bean="hibernateTransactionManager"/> </property>
+        <property name="target">
+                <bean class="com.medigy.service.impl.contact.AddContactMechanismServiceImpl">
+				    <constructor-arg index="0"> <ref bean="hibernateSessionFactory"/> </constructor-arg>
+                    <constructor-arg index="1"> <ref bean="contactMechanismFacade"/> </constructor-arg>
+                    <!--property name="referenceEntityFacade"><ref bean="referenceEntityFacade"/></property-->
+			</bean>
+		</property>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="add*">PROPAGATION_REQUIRED</prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="editContactMechanismService"  class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+        <property name="transactionManager"> <ref bean="hibernateTransactionManager"/> </property>
+        <property name="target">
+                <bean class="com.medigy.service.impl.contact.EditContactMechanismServiceImpl">
+				    <constructor-arg index="0"> <ref bean="hibernateSessionFactory"/> </constructor-arg>
+                    <constructor-arg index="1"> <ref bean="contactMechanismFacade"/> </constructor-arg>
+                    <!--property name="referenceEntityFacade"><ref bean="referenceEntityFacade"/></property-->
+			</bean>
+		</property>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="add*">PROPAGATION_REQUIRED</prop>
+            </props>
+        </property>
+    </bean>
+
+
+
+    <bean id="addInsuranceCoverageService"  class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+        <property name="transactionManager"> <ref bean="hibernateTransactionManager"/> </property>
+        <property name="target">
+                <bean class="com.medigy.service.impl.insurance.AddInsuranceCoverageServiceImpl">
+				    <constructor-arg index="0"> <ref bean="hibernateSessionFactory"/> </constructor-arg>
+                    <constructor-arg index="1"> <ref bean="referenceEntityFacade"/> </constructor-arg>
+                    <constructor-arg index="2"> <ref bean="insurancePolicyFacade"/> </constructor-arg>
+                    <!--property name="referenceEntityFacade"><ref bean="referenceEntityFacade"/></property-->
+			</bean>
+		</property>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="add*">PROPAGATION_REQUIRED</prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="patientRegistrationService"  class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+        <property name="transactionManager"> <ref bean="hibernateTransactionManager"/> </property>
+        <property name="target">
+                <bean class="com.medigy.service.impl.person.PatientRegistrationServiceImpl">
+				    <constructor-arg type="org.hibernate.SessionFactory"> <ref bean="hibernateSessionFactory"/> </constructor-arg>
+                    <constructor-arg type="com.medigy.service.util.ReferenceEntityFacade"> <ref bean="referenceEntityFacade"/> </constructor-arg>
+                    <constructor-arg type="com.medigy.service.contact.ContactMechanismFacade"> <ref bean="contactMechanismFacade"/> </constructor-arg>
+                    <constructor-arg type="com.medigy.service.person.PersonFacade"> <ref bean="personFacade"/> </constructor-arg>
+                    <constructor-arg type="com.medigy.service.insurance.InsurancePolicyFacade"> <ref bean="insurancePolicyFacade"/> </constructor-arg>
+            </bean>
+		</property>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="add*">PROPAGATION_REQUIRED</prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="registerHealthCareProviderService"  class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+        <property name="transactionManager"> <ref bean="hibernateTransactionManager"/> </property>
+        <property name="target">
+                <bean class="com.medigy.service.impl.person.RegisterHealthCareProviderServiceImpl">
+				    <constructor-arg type="org.hibernate.SessionFactory"> <ref bean="hibernateSessionFactory"/> </constructor-arg>
+                    <constructor-arg type="com.medigy.service.util.ReferenceEntityFacade"> <ref bean="referenceEntityFacade"/> </constructor-arg>
+                    <constructor-arg type="com.medigy.service.person.PersonFacade"> <ref bean="personFacade"/> </constructor-arg>
+            </bean>
+		</property>
+        <property name="transactionAttributes">
+            <props> 
+                <prop key="register*">PROPAGATION_REQUIRED</prop> 
+            </props> 
+        </property>
+    </bean>
+</beans>

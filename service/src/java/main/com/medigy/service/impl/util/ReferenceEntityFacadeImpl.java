@@ -86,7 +86,7 @@ public class ReferenceEntityFacadeImpl extends AbstractFacade implements Referen
      */
     public List<CustomReferenceEntity> listCustomReferenceEntities(final Class customReferenceEntityClass)
     {
-        if (!customReferenceEntityClass.isAssignableFrom(CustomReferenceEntity.class))
+        if (!CustomReferenceEntity.class.isAssignableFrom(customReferenceEntityClass))
             return null;
         List<CustomReferenceEntity> newList = new ArrayList<CustomReferenceEntity>();
         try
@@ -116,6 +116,21 @@ public class ReferenceEntityFacadeImpl extends AbstractFacade implements Referen
             });
         }
         return newList;
+    }
+
+    public CustomReferenceEntity getCustomReferenceEntity(final Class customReferenceEntityClass, final String code)
+    {
+        if (!customReferenceEntityClass.isAssignableFrom(CustomReferenceEntity.class))
+            return null;
+        try
+        {
+            return (CustomReferenceEntity) getSession().createCriteria(customReferenceEntityClass).add(Restrictions.eq("code", code)).uniqueResult();
+        }
+        catch (Exception e)
+        {
+            log.error(ExceptionUtils.getStackTrace(e));
+            return null;
+        }
     }
 
     public InsurancePolicyType getInsurancePolicyType(final String code)

@@ -46,4 +46,5 @@ public interface PatientRegistrationService extends Service
 {
     public RegisteredPatient registerPatient(RegisterPatientParameters person);
 
+    public RegisterPatientParameters getNewPatientParameters();
 }

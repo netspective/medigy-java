@@ -48,6 +48,7 @@ import com.medigy.service.dto.org.AddOrganization;
 import com.medigy.service.dto.org.NewOrganization;
 import com.medigy.service.dto.party.AddPostalAddressParameters;
 import com.medigy.service.dto.party.NewPostalAddress;
+import com.medigy.service.dto.party.PostalAddressParameters;
 import com.medigy.service.org.AddInsuranceCarrierService;
 
 import java.io.Serializable;
@@ -71,10 +72,27 @@ public class AddInsuranceCarrierServiceImpl implements AddInsuranceCarrierServic
         final Organization newOrg = new Organization();
         newOrg.setOrganizationName(orgParams.getName());
         HibernateUtil.getSession().save(newOrg);
+        final Long newOrgId = newOrg.getOrgId();
 
-        final AddPostalAddressParameters mailingAddress = orgParams.getMailingAddress();
+        final PostalAddressParameters mailingAddress = orgParams.getMailingAddress();
         // TODO: Need to somehow pass the party ID
-        final NewPostalAddress newPostalAddress = getAddContactMechanismService().addPostalAddress(mailingAddress);
+        final NewPostalAddress newPostalAddress =
+                getAddContactMechanismService().addPostalAddress(new AddPostalAddressParameters() {
+                    public Serializable getPartyId()
+                    {
+                        return newOrgId;
+                    }
+
+                    public PostalAddressParameters getPostalAddressParameters()
+                    {
+                        return mailingAddress;
+                    }
+
+                    public ServiceVersion getServiceVersion()
+                    {
+                        return null;
+                    }
+                });
 
         return new NewOrganization() {
             public Serializable getNewOrganizationId()

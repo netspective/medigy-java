@@ -47,11 +47,13 @@ import com.medigy.persist.reference.type.GenderType;
 import com.medigy.persist.reference.type.MaritalStatusType;
 import com.medigy.wicket.form.*;
 import com.medigy.wicket.panel.DefaultFormPanel;
+import com.medigy.wicket.DefaultApplication;
 import wicket.IFeedback;
 import wicket.RequestCycle;
 import wicket.PageParameters;
 import com.medigy.presentation.model.FormInputModel;
-import com.medigy.app.pbs.page.FormTestPage1;
+import com.medigy.service.person.PatientRegistrationService;
+import com.medigy.service.dto.person.RegisterPatientParameters;
 import wicket.model.CompoundPropertyModel;
 
 public class PatientRegistrationFormPanel extends DefaultFormPanel
@@ -65,7 +67,11 @@ public class PatientRegistrationFormPanel extends DefaultFormPanel
 
     protected InputForm createForm(final String componentName, final IFeedback feedback)
     {
-        return new InputForm(componentName, feedback);
+        final PatientRegistrationService service = (PatientRegistrationService) ((DefaultApplication) getApplication()).getService(PatientRegistrationService.class);
+        final RegisterPatientParameters params = service.getNewPatientParameters();
+        InputForm form = new InputForm(componentName, feedback);
+        form.setModel(new CompoundPropertyModel(params));
+        return form;
     }
 
     protected class InputForm extends BaseForm

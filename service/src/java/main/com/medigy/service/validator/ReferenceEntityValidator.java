@@ -35,104 +35,51 @@
  * CAUSED AND REGARDLESS OF THE THEORY OF LIABILITY, ARISING OUT OF THE USE OF OR INABILITY TO USE THE SOFTWARE, EVEN
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
- * @author Shahid N. Shah
  */
+package com.medigy.service.validator;
 
-/*
- * Copyright (c) 2005 Your Corporation. All Rights Reserved.
- */
-package com.medigy.app.pbs;
+import org.hibernate.validator.Validator;
+import org.hibernate.validator.PropertyConstraint;
+import org.hibernate.mapping.Property;
+import com.medigy.service.util.ReferenceEntityFacade;
+import com.medigy.persist.reference.custom.CustomReferenceEntity;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.medigy.app.pbs.page.FormTestPage1;
-import com.medigy.app.pbs.page.HomePage;
-import com.medigy.app.pbs.page.TestPage1;
-import com.medigy.app.pbs.page.TestPage2;
-import com.medigy.app.pbs.page.TestPage3;
-import com.medigy.wicket.menu.Menu;
-import com.medigy.wicket.menu.MenuItem;
-import com.medigy.wicket.DefaultApplication;
-import wicket.contrib.spring.SpringApplication;
-
-public class PhysicianBillingSystemApplication extends DefaultApplication 
+public class ReferenceEntityValidator implements Validator<ReferenceEntity>, PropertyConstraint
 {
-    private Menu mainMenu = new MainMenu();
+    private String referenceClassName;
+    private Class referenceEntityClass;
+    private ReferenceEntityFacade  referenceEntityFacade;
 
-    public PhysicianBillingSystemApplication()
+    public boolean isValid(final Object value)
     {
-        getPages().setHomePage(HomePage.class);
+        if (value == null)
+            return true;
+        if (value instanceof String)
+        {
+            final String code = (String) value;
+            final CustomReferenceEntity entity = referenceEntityFacade.getCustomReferenceEntity(referenceEntityClass, code);
+            if (entity != null)
+                return true;
+        }
+
+        return false;
     }
 
-    public void setMainMenu(final Menu mainMenu)
+    public void initialize(final ReferenceEntity referenceEntity)
     {
-        this.mainMenu = mainMenu;
+        this.referenceClassName = referenceEntity.className();
+        try
+        {
+            referenceEntityClass = Class.forName(referenceClassName);
+        }
+        catch (ClassNotFoundException e)
+        {
+            e.printStackTrace();
+        }
     }
 
-    public Menu getMainMenu()
+    public void apply(Property property)
     {
-        return mainMenu;
-    }
 
-    protected class MainMenu implements Menu
-    {
-        private List<MenuItem> menuItems = new ArrayList<MenuItem>();
-
-        public MainMenu()
-        {
-            menuItems.add(new MainMenuItem("Home", HomePage.class));
-            menuItems.add(new MainMenuItem("TestPage1", TestPage1.class));
-            menuItems.add(new MainMenuItem("TestPage2", TestPage2.class));
-            menuItems.add(new MainMenuItem("TestPage3", TestPage3.class));
-            menuItems.add(new MainMenuItem("FormTestPage1", FormTestPage1.class));
-        }
-
-        public String getLabel()
-        {
-            return "Main Menu";
-        }
-
-        public Class getPage()
-        {
-            return null;
-        }
-
-        public boolean isDisabled()
-        {
-            return false;
-        }
-
-        public List<MenuItem> getMenuItems()
-        {
-            return menuItems;
-        }
-
-        protected class MainMenuItem implements MenuItem
-        {
-            private String label;
-            private Class pageClass;
-
-            public MainMenuItem(final String label, final Class pageClass)
-            {
-                this.label = label;
-                this.pageClass = pageClass;
-            }
-
-            public String getLabel()
-            {
-                return label;
-            }
-
-            public Class getPage()
-            {
-                return pageClass;
-            }
-
-            public boolean isDisabled()
-            {
-                return false;
-            }
-        }
     }
 }

@@ -47,6 +47,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import com.medigy.presentation.model.ChoicesFactory;
+import com.medigy.wicket.DefaultApplication;
 import wicket.IFeedback;
 import wicket.model.PropertyModel;
 import wicket.model.IModel;
@@ -125,6 +126,7 @@ public class BaseForm extends Form
     // TODO - This is used for test purposes only. Replace with more formal model.
     // TODO - Check to see if we need add* methods for all Wicket model types.
     private final ValueMap properties = new ValueMap();
+    private ChoicesFactory choicesFactory;
 
     public BaseForm(final String componentName)
     {
@@ -139,6 +141,15 @@ public class BaseForm extends Form
     public BaseForm(String componentName, IModel model, IFeedback feedback)
     {
         super(componentName, model, feedback);
+    }
+
+    private ChoicesFactory getChoicesFactory()
+    {
+        if (choicesFactory == null)
+        {
+            choicesFactory = (ChoicesFactory) ((DefaultApplication) getApplication()).getService(ChoicesFactory.class);
+        }
+        return choicesFactory;
     }
 
     protected void addLabeledTextField(final String fieldName, int fieldFlags)
@@ -192,19 +203,19 @@ public class BaseForm extends Form
     protected void addLabeledSelectField(final String fieldName, final Class referenceEntity)
     {
         add(new FieldLabel(fieldName));
-        add(new DropDownChoice(fieldName, ChoicesFactory.getInstance().getReferenceEntityChoices(referenceEntity)));
+        add(new DropDownChoice(fieldName, getChoicesFactory().getReferenceEntityChoices(referenceEntity)));
     }
 
     protected void addLabeledMultiListField(final String fieldName, final Class multiListChoices)
     {
         add(new FieldLabel(fieldName));
-        add(new ListMultipleChoice(fieldName, ChoicesFactory.getInstance().getReferenceEntityChoices(multiListChoices)));
+        add(new ListMultipleChoice(fieldName, getChoicesFactory().getReferenceEntityChoices(multiListChoices)));
     }
 
     protected void addLabeledMultiCheckField(final String fieldName, final Class multiCheckChoices)
     {
         add(new FieldLabel(fieldName));
-        add(new ListMultipleChoice(fieldName, ChoicesFactory.getInstance().getReferenceEntityChoices(multiCheckChoices)));
+        add(new ListMultipleChoice(fieldName, getChoicesFactory().getReferenceEntityChoices(multiCheckChoices)));
     }
 
     protected void addLabeledRadioChoiceField(final String fieldName, Collection choices)

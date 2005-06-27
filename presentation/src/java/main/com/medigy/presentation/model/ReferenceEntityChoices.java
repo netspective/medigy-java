@@ -59,7 +59,7 @@ public class ReferenceEntityChoices implements IChoiceList
 	private Class entity;
     private Choice[] choices;
 
-	/**
+    /**
 	 * Implementation of IChoice for simple objects.
 	 */
 	private class Choice implements IChoice

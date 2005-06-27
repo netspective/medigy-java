@@ -27,7 +27,13 @@
             <tree-loader path="$resin-home/lib"/>
 
             <library-loader path="${Var['medigy.project.home']}/presentation/depend/lib/main"/>
+            <library-loader path="${Var['medigy.project.home']}/persistence/depend/lib/main"/>
+            <library-loader path="${Var['medigy.project.home']}/persistence/depend/lib/test"/>
+            <library-loader path="${Var['medigy.project.home']}/service/depend/lib/test"/>
+            <library-loader path="${Var['medigy.project.home']}/service/depend/lib/main"/>
             <simple-loader  path="${Var['medigy.project.home']}/presentation/support/build/artifacts/classes/main"/>
+            <simple-loader  path="${Var['medigy.project.home']}/persistence/support/build/artifacts/classes/main"/>
+            <simple-loader  path="${Var['medigy.project.home']}/service/support/build/artifacts/classes/main"/>
 
             <!-- the compiler should be set to put classes in this directory for exploded use -->
             <simple-loader  path="${Var['medigy.project.home']}/pbs/support/build/artifacts/classes/main"/>

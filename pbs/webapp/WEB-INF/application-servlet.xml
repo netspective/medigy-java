@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<!--
+  - DispatcherServlet application context for the Application web tier.
+	-->
+<beans>
+    <bean id="urlMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+        <property name="mappings">
+            <props>
+                <prop key="/**">wicketController</prop>
+            </props>
+        </property>
+	</bean>
+
+	<bean id="wicketController" class="wicket.contrib.spring.SpringApplicationController">
+		<property name="application" ref="wicketApplication"/>
+	</bean>
+ 
+
+    <bean id="wicketApplication" class="com.medigy.app.pbs.PhysicianBillingSystemApplication">
+        <property name="mainMenu">
+            <ref bean="mainMenu"/>
+        </property>
+    </bean>
+
+</beans>

@@ -44,6 +44,7 @@ import com.medigy.persist.model.party.ContactMechanism;
 import com.medigy.persist.model.party.PhoneNumber;
 import com.medigy.persist.model.party.PostalAddress;
 import com.medigy.persist.model.person.Person;
+import com.medigy.persist.model.contact.Country;
 import com.medigy.persist.reference.custom.insurance.CoverageLevelType;
 import com.medigy.persist.reference.custom.insurance.InsurancePolicyType;
 import com.medigy.persist.reference.type.GenderType;
@@ -67,6 +68,7 @@ import com.medigy.service.util.UnknownReferenceTypeException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.SessionFactory;
+import org.hibernate.validator.NotNull;
 
 import java.io.Serializable;
 
@@ -264,12 +266,123 @@ public class PatientRegistrationServiceImpl extends AbstractService implements P
         }
     }
 
+    public RegisterPatientParameters getNewPatientParameters()
+    {
+        return new RegisterPatientParameters() {
+            public PersonParameters getPerson()
+            {
+                return null;
+            }
+
+            public String getResponsiblePartyId()
+            {
+                return null;
+            }
+
+            public String getResponsiblePartyRole()
+            {
+                return null;
+            }
+
+            public PhoneParameters getHomePhone()
+            {
+                return null;
+            }
+
+            public PhoneParameters getWorkPhone()
+            {
+                return null;
+            }
+
+            public PhoneParameters getMobilePhone()
+            {
+                return null;
+            }
+
+            public PostalAddressParameters getPostalAddress()
+            {
+                return new PostalAddressParameters() {
+                    @NotNull
+                    public String getStreet1()
+                    {
+                        return null;
+                    }
+
+                    public String getStreet2()
+                    {
+                        return null;
+                    }
+
+                    @NotNull
+                    public String getCity()
+                    {
+                        return null;
+                    }
+
+                    @NotNull
+                    public String getState()
+                    {
+                        return null;
+                    }
+
+                    public String getProvince()
+                    {
+                        return null;
+                    }
+
+                    @NotNull
+                    public String getPostalCode()
+                    {
+                        return null;
+                    }
+
+                    public String getCounty()
+                    {
+                        return null;
+                    }
+
+                    @NotNull
+                    public String getCountry()
+                    {
+                        // TODO: Need to create some defalt countries
+                        return "USA";
+                    }
+
+                    public String getPurposeType()
+                    {
+                        return null;
+                    }
+
+                    public String getPurposeDescription()
+                    {
+                        return null;
+                    }
+                };
+            }
+
+            public String getPrimaryCareProviderId()
+            {
+                return null;
+            }
+
+            public InsuranceCoverageParameters[] getInsuranceCoverages()
+            {
+                return new InsuranceCoverageParameters[0];
+            }
+
+            public ServiceVersion getServiceVersion()
+            {
+                return null;
+            }
+        };
+    }
+
     private PhoneNumber registerHomePhone(final Person person, final RegisterPatientParameters params)
     {
         final PhoneParameters homePhone = params.getHomePhone();
         final PhoneNumber phone = contactMechanismFacade.addPhone(homePhone.getCountryCode(), homePhone.getAreaCode(), homePhone.getNumber(),
             homePhone.getExtension());
-        
+
         return phone;
     }
 

@@ -39,18 +39,23 @@
 package com.medigy.service.dto.org;
 
 import com.medigy.service.dto.party.AddPostalAddressParameters;
+import com.medigy.service.dto.party.PostalAddressParameters;
 import com.medigy.service.dto.ServiceParameters;
 
 import java.io.Serializable;
 
+import org.hibernate.validator.NotNull;
+
 public interface AddOrganization extends ServiceParameters
 {
+    @NotNull
     public String getName();
 
     public String getParentOrganizationName();
     public Serializable getParentOrganizationId();
 
-    public AddPostalAddressParameters getMailingAddress();
+    @NotNull
+    public PostalAddressParameters getMailingAddress();
 
     public String getEmail();
     public String getPhone();

@@ -59,6 +59,8 @@ import java.util.List;
 public interface ReferenceEntityFacade extends Facade
 {
     public List<CustomReferenceEntity> listCustomReferenceEntities(final Class customReferenceEntityClass);
+
+    public CustomReferenceEntity getCustomReferenceEntity(final Class customReferenceEntityClass, final String code);
     
     public InsurancePolicyType getInsurancePolicyType(final String code);
 

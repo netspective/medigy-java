@@ -35,104 +35,19 @@
  * CAUSED AND REGARDLESS OF THE THEORY OF LIABILITY, ARISING OUT OF THE USE OF OR INABILITY TO USE THE SOFTWARE, EVEN
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
- * @author Shahid N. Shah
  */
+package com.medigy.service.validator;
 
-/*
- * Copyright (c) 2005 Your Corporation. All Rights Reserved.
- */
-package com.medigy.app.pbs;
+import org.hibernate.validator.ValidatorClass;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.lang.annotation.Target;
+import java.lang.annotation.Retention;
 
-import com.medigy.app.pbs.page.FormTestPage1;
-import com.medigy.app.pbs.page.HomePage;
-import com.medigy.app.pbs.page.TestPage1;
-import com.medigy.app.pbs.page.TestPage2;
-import com.medigy.app.pbs.page.TestPage3;
-import com.medigy.wicket.menu.Menu;
-import com.medigy.wicket.menu.MenuItem;
-import com.medigy.wicket.DefaultApplication;
-import wicket.contrib.spring.SpringApplication;
-
-public class PhysicianBillingSystemApplication extends DefaultApplication 
+@ValidatorClass(ReferenceEntityValidator.class)
+@Target(java.lang.annotation.ElementType.METHOD)
+@Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+public @interface ReferenceEntity
 {
-    private Menu mainMenu = new MainMenu();
-
-    public PhysicianBillingSystemApplication()
-    {
-        getPages().setHomePage(HomePage.class);
-    }
-
-    public void setMainMenu(final Menu mainMenu)
-    {
-        this.mainMenu = mainMenu;
-    }
-
-    public Menu getMainMenu()
-    {
-        return mainMenu;
-    }
-
-    protected class MainMenu implements Menu
-    {
-        private List<MenuItem> menuItems = new ArrayList<MenuItem>();
-
-        public MainMenu()
-        {
-            menuItems.add(new MainMenuItem("Home", HomePage.class));
-            menuItems.add(new MainMenuItem("TestPage1", TestPage1.class));
-            menuItems.add(new MainMenuItem("TestPage2", TestPage2.class));
-            menuItems.add(new MainMenuItem("TestPage3", TestPage3.class));
-            menuItems.add(new MainMenuItem("FormTestPage1", FormTestPage1.class));
-        }
-
-        public String getLabel()
-        {
-            return "Main Menu";
-        }
-
-        public Class getPage()
-        {
-            return null;
-        }
-
-        public boolean isDisabled()
-        {
-            return false;
-        }
-
-        public List<MenuItem> getMenuItems()
-        {
-            return menuItems;
-        }
-
-        protected class MainMenuItem implements MenuItem
-        {
-            private String label;
-            private Class pageClass;
-
-            public MainMenuItem(final String label, final Class pageClass)
-            {
-                this.label = label;
-                this.pageClass = pageClass;
-            }
-
-            public String getLabel()
-            {
-                return label;
-            }
-
-            public Class getPage()
-            {
-                return pageClass;
-            }
-
-            public boolean isDisabled()
-            {
-                return false;
-            }
-        }
-    }
+    String className() default "";
+    String message() default "must belong to the reference entity type: {className}";
 }

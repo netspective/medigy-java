@@ -35,104 +35,103 @@
  * CAUSED AND REGARDLESS OF THE THEORY OF LIABILITY, ARISING OUT OF THE USE OF OR INABILITY TO USE THE SOFTWARE, EVEN
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
- * @author Shahid N. Shah
  */
+package com.medigy.app.pbs.menu;
 
-/*
- * Copyright (c) 2005 Your Corporation. All Rights Reserved.
- */
-package com.medigy.app.pbs;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import com.medigy.app.pbs.page.FormTestPage1;
-import com.medigy.app.pbs.page.HomePage;
-import com.medigy.app.pbs.page.TestPage1;
-import com.medigy.app.pbs.page.TestPage2;
-import com.medigy.app.pbs.page.TestPage3;
 import com.medigy.wicket.menu.Menu;
 import com.medigy.wicket.menu.MenuItem;
-import com.medigy.wicket.DefaultApplication;
-import wicket.contrib.spring.SpringApplication;
 
-public class PhysicianBillingSystemApplication extends DefaultApplication 
+import java.util.List;
+import java.util.ArrayList;
+
+import org.springframework.beans.factory.InitializingBean;
+
+public class BasicMenu implements Menu, InitializingBean
 {
-    private Menu mainMenu = new MainMenu();
+    private String label;
+    private boolean isDisabled;
+    private List<MenuItem> menuItems = new ArrayList<MenuItem>();
 
-    public PhysicianBillingSystemApplication()
+    private List<String> menuItemLabels = new ArrayList<String>();
+    private List<String> menuItemClasses = new ArrayList<String>();
+
+    public BasicMenu(final String label, final boolean disabled)
     {
-        getPages().setHomePage(HomePage.class);
+        this.label = label;
+        this.isDisabled = disabled;
     }
 
-    public void setMainMenu(final Menu mainMenu)
+    public void setMenuItemLabels(final List<String> menuItemLabels)
     {
-        this.mainMenu = mainMenu;
+        this.menuItemLabels = menuItemLabels;
     }
 
-    public Menu getMainMenu()
+    public void setMenuItemClasses(final List<String> menuItemClasses)
     {
-        return mainMenu;
+        this.menuItemClasses = menuItemClasses;
     }
 
-    protected class MainMenu implements Menu
+    public void setMenuItems(final List<MenuItem> items)
     {
-        private List<MenuItem> menuItems = new ArrayList<MenuItem>();
+        this.menuItems = items;
+    }
 
-        public MainMenu()
+    public List<MenuItem> getMenuItems()
+    {
+        return menuItems;
+    }
+
+    public String getLabel()
+    {
+        return label;
+    }
+
+    public Class getPage()
+    {
+        return null;
+    }
+
+    public boolean isDisabled()
+    {
+        return isDisabled;
+    }
+
+    public void afterPropertiesSet() throws Exception
+    {
+        if (menuItemLabels.size() != menuItemClasses.size())
+            throw new RuntimeException("Menu item name count does not match item class count");
+
+        for (int i=0; i < menuItemLabels.size(); i++)
         {
-            menuItems.add(new MainMenuItem("Home", HomePage.class));
-            menuItems.add(new MainMenuItem("TestPage1", TestPage1.class));
-            menuItems.add(new MainMenuItem("TestPage2", TestPage2.class));
-            menuItems.add(new MainMenuItem("TestPage3", TestPage3.class));
-            menuItems.add(new MainMenuItem("FormTestPage1", FormTestPage1.class));
+            this.menuItems.add(new BasicMenuItem(menuItemLabels.get(i), Class.forName(menuItemClasses.get(i))));
+        }
+    }
+
+    protected class BasicMenuItem implements MenuItem
+    {
+        private String label;
+        private Class pageClass;
+
+        public BasicMenuItem(final String label, final Class pageClass)
+        {
+            this.label = label;
+            this.pageClass = pageClass;
         }
 
         public String getLabel()
         {
-            return "Main Menu";
+            return label;
         }
 
         public Class getPage()
         {
-            return null;
+            return pageClass;
         }
 
         public boolean isDisabled()
         {
             return false;
         }
-
-        public List<MenuItem> getMenuItems()
-        {
-            return menuItems;
-        }
-
-        protected class MainMenuItem implements MenuItem
-        {
-            private String label;
-            private Class pageClass;
-
-            public MainMenuItem(final String label, final Class pageClass)
-            {
-                this.label = label;
-                this.pageClass = pageClass;
-            }
-
-            public String getLabel()
-            {
-                return label;
-            }
-
-            public Class getPage()
-            {
-                return pageClass;
-            }
-
-            public boolean isDisabled()
-            {
-                return false;
-            }
-        }
     }
+
 }
