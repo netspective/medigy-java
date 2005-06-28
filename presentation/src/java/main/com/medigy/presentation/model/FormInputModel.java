@@ -1,7 +1,8 @@
 package com.medigy.presentation.model;
 
-import java.io.Serializable;
+import org.hibernate.validator.NotNull;
 
+import java.io.Serializable;
 
 /**
  * Simple model object for FormInput example. Has a number of simple properties
@@ -9,7 +10,6 @@ import java.io.Serializable;
  */
 public final class FormInputModel implements Serializable
 {
-
     private String suffix;
 	private String personId;
 	private String account;
@@ -103,16 +103,19 @@ public final class FormInputModel implements Serializable
 		this.chartNumber = chartNumber;
 	}
 
+    @NotNull                  // TODO - test annotations. will use service parameter 
 	public String getLastName()
 	{
 		return lastName;
 	}
 
+    @NotNull
 	public void setLastName(String lastName)
 	{
 		this.lastName = lastName;
 	}
 
+    @NotNull
 	public String getFirstName()
 	{
 		return firstName;

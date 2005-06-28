@@ -47,18 +47,39 @@ import wicket.markup.ComponentTag;
 import wicket.markup.html.form.validation.RequiredValidator;
 import wicket.model.IModel;
 
+import java.lang.annotation.Annotation;
+import java.util.Set;
+
+import org.hibernate.validator.NotNull;
+
 public class TextField extends wicket.markup.html.form.TextField implements JavaScriptProvider
 {
     private String fieldName;
     private String fieldControlId;
     private long fieldFlags;
 
-    public TextField(final String fieldName, long fieldFlags)
+    public TextField(final String fieldName, Set<Annotation> annotations)
     {
         super(fieldName /*+ BaseForm.FIELD_CONTROL_SUFFIX*/);   // TODO - remove the comments around FIELD_CONTROL_SUFFIX after fixing suffix issue
         this.fieldName = fieldName;
+        this.fieldControlId = fieldName /*+ BaseForm.FIELD_CONTROL_SUFFIX */;  
+
+        if(annotations != null)
+        {
+            for(Annotation annotation : annotations)
+            {
+                if(NotNull.class.isAssignableFrom(annotation.annotationType()))
+                    add(RequiredValidator.getInstance());
+            }
+        }
+    }
+
+    public TextField(final String fieldName, long fieldFlags)
+    {
+        super(fieldName /*+ BaseForm.FIELD_CONTROL_SUFFIX*/);
+        this.fieldName = fieldName;
         this.fieldFlags = fieldFlags;
-        this.fieldControlId = fieldName /*+ BaseForm.FIELD_CONTROL_SUFFIX */;  // TODO - remove the comments around FIELD_CONTROL_SUFFIX after fixing suffix issue
+        this.fieldControlId = fieldName /*+ BaseForm.FIELD_CONTROL_SUFFIX */;
 
         if((this.fieldFlags & FieldFlags.REQUIRED) != 0)
             add(RequiredValidator.getInstance());
@@ -66,13 +87,29 @@ public class TextField extends wicket.markup.html.form.TextField implements Java
 
     public TextField(final String fieldName, IModel model, long fieldFlags)
     {
-        super(fieldName /*+ BaseForm.FIELD_CONTROL_SUFFIX*/, model);         // TODO - remove the comments around FIELD_CONTROL_SUFFIX after fixing suffix issue
+        super(fieldName /*+ BaseForm.FIELD_CONTROL_SUFFIX*/, model);
         this.fieldName = fieldName;
         this.fieldFlags = fieldFlags;
-        this.fieldControlId = fieldName /*+ BaseForm.FIELD_CONTROL_SUFFIX */;   // TODO - remove the comments around FIELD_CONTROL_SUFFIX after fixing suffix issue
+        this.fieldControlId = fieldName /*+ BaseForm.FIELD_CONTROL_SUFFIX */;
 
         if((this.fieldFlags & FieldFlags.REQUIRED) != 0)
             add(RequiredValidator.getInstance());
+    }
+
+    public TextField(final String fieldName, IModel model, Set<Annotation> annotations)
+    {
+        super(fieldName /*+ BaseForm.FIELD_CONTROL_SUFFIX*/, model);
+        this.fieldName = fieldName;
+        this.fieldControlId = fieldName /*+ BaseForm.FIELD_CONTROL_SUFFIX */;
+
+        if(annotations != null)
+        {
+            for(Annotation annotation : annotations)
+            {
+                if(NotNull.class.isAssignableFrom(annotation.annotationType()))
+                    add(RequiredValidator.getInstance());
+            }
+        }
     }
 
     public TextField(final String componentName)

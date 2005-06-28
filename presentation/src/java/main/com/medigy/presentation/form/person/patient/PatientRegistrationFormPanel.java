@@ -45,13 +45,13 @@ package com.medigy.presentation.form.person.patient;
 
 import com.medigy.persist.reference.type.GenderType;
 import com.medigy.persist.reference.type.MaritalStatusType;
+import com.medigy.persist.reference.type.BloodType;
+import com.medigy.persist.reference.type.PersonPrefixType;
 import com.medigy.persist.reference.custom.person.EthnicityType;
 import com.medigy.wicket.form.*;
 import com.medigy.wicket.panel.DefaultFormPanel;
 import com.medigy.wicket.DefaultApplication;
 import wicket.IFeedback;
-import wicket.RequestCycle;
-import wicket.PageParameters;
 import com.medigy.presentation.model.FormInputModel;
 import com.medigy.service.person.PatientRegistrationService;
 import com.medigy.service.dto.person.RegisterPatientParameters;
@@ -70,32 +70,34 @@ public class PatientRegistrationFormPanel extends DefaultFormPanel
     {
         final PatientRegistrationService service = (PatientRegistrationService) ((DefaultApplication) getApplication()).getService(PatientRegistrationService.class);
         final RegisterPatientParameters params = service.getNewPatientParameters();
-        InputForm form = new InputForm(componentName, feedback);
-        // TODO: Jeremy will do his magic here to relate the service params with the Form model object
+        InputForm form = new InputForm(componentName, feedback, new FormInputModel(), params);
+        // TODO: relate the service params with the Form model object
         //form.setModel(new CompoundPropertyModel(params));
         return form;
     }
 
     protected class InputForm extends BaseForm
     {
-
-        public InputForm(final String componentName, final IFeedback feedback)
+        public InputForm(final String componentName, final IFeedback feedback, FormInputModel model, RegisterPatientParameters params)
         {
-            super(componentName, new CompoundPropertyModel(new FormInputModel()), feedback);
+            super(componentName, new CompoundPropertyModel(model), feedback);
+
+            // TODO - use BeanUtils to copy over data?
 
             add(new FieldGroupLabel("patientId"));
-            addLabeledTextField("personId", FieldFlags.REQUIRED);
+            addLabeledTextField("personId", getConstraints(model.getClass(), "personId"));
             addLabeledTextField("account");
             addLabeledTextField("chartNumber");
-            addLabeledTextField("lastName", FieldFlags.REQUIRED);
-            addLabeledTextField("firstName", FieldFlags.REQUIRED);
+            addLabeledTextField("lastName", getConstraints(model.getClass(), "lastName"));
+            addLabeledTextField("firstName", getConstraints(model.getClass(), "firstName"));
             addLabeledTextField("middleName");
-            addLabeledSelectField("suffix", BaseForm.SUFFIX_CHOICES);
-            addLabeledTextField("socialSecurityNumber", FieldFlags.REQUIRED);
-            addLabeledTextField("dateOfBirth", FieldFlags.REQUIRED);
+
+            addLabeledSelectField("suffix", PersonPrefixType.class);
+            addLabeledTextField("socialSecurityNumber", getConstraints(model.getClass(), "socialSecurityNumber"));
+            addLabeledDateField("dateOfBirth", getConstraints(model.getClass(), "dateOfBirth"));
             addLabeledSelectField("gender", GenderType.class);
             addLabeledSelectField("maritalStatus", MaritalStatusType.class);
-            addLabeledSelectField("bloodType", BaseForm.BLOOD_TYPE_CHOICES);
+            addLabeledSelectField("bloodType", BloodType.class);
             addLabeledRadioChoiceField("ethnicity", EthnicityType.class);
             addLabeledTextField("responsibleParty");
             addLabeledSelectField("relationshipToResponsible", BaseForm.RELATIONSHIP_TO_RESPONSIBLE_CHOICES);
@@ -156,15 +158,11 @@ public class PatientRegistrationFormPanel extends DefaultFormPanel
             addLabeledTextField("officeVisitCoPay");
         }
 
+
+
 		public final void onSubmit()
 		{
-			final RequestCycle cycle = getRequestCycle();
-			PageParameters parameters = new PageParameters();
-			final FormInputModel patientRegistrationModel = (FormInputModel)getModelObject();
             info("Saved model " + getModelObject());
-//            parameters.put("id", new Long(patientRegistrationModel.getPersonId()));
-//			cycle.setResponsePage(getPageFactory().newPage(FormTestPage1.class, parameters));
-//			cycle.setRedirect(true);
 		}
 
     }

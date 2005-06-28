@@ -45,30 +45,36 @@ package com.medigy.wicket.form;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Set;
+import java.util.HashSet;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+import java.beans.*;
 
 import com.medigy.presentation.model.ChoicesFactory;
 import com.medigy.wicket.DefaultApplication;
 import wicket.IFeedback;
-import wicket.model.PropertyModel;
 import wicket.model.IModel;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.form.*;
 import wicket.markup.html.form.model.IChoice;
 import wicket.util.value.ValueMap;
+import org.hibernate.validator.ValidatorClass;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 public class BaseForm extends Form
 {
+    private static final Log log = LogFactory.getLog(BaseForm.class);
+
     public static final String FIELD_LABEL_SUFFIX = "_label";
     public static final String FIELD_CONTROL_SUFFIX = "_control";
     protected static final Collection TEST_CHOICES = new ArrayList();
-    protected static final Collection SUFFIX_CHOICES = new ArrayList();
-    protected static final Collection BLOOD_TYPE_CHOICES = new ArrayList();
     protected static final Collection RELATIONSHIP_TO_RESPONSIBLE_CHOICES = new ArrayList();
     protected static final Collection EMPLOYMENT_STATUS_CHOICES = new ArrayList();
     protected static final Collection INSURANCE_SEQUENCE_CHOICES = new ArrayList();
     protected static final Collection PATIENT_RELATIONSHIP_TO_INSURED_CHOICES = new ArrayList();
-    protected static final Collection ETHNICITY_CHOICES = new ArrayList();
 
     static
     {
@@ -90,16 +96,6 @@ public class BaseForm extends Form
             }
         });
 
-        SUFFIX_CHOICES.add("Mr.");
-        SUFFIX_CHOICES.add("Ms.");
-        SUFFIX_CHOICES.add("Mrs.");
-        SUFFIX_CHOICES.add("Dr.");
-
-        BLOOD_TYPE_CHOICES.add("A");
-        BLOOD_TYPE_CHOICES.add("B");
-        BLOOD_TYPE_CHOICES.add("AB");
-        BLOOD_TYPE_CHOICES.add("O");
-
         RELATIONSHIP_TO_RESPONSIBLE_CHOICES.add("Self");
         RELATIONSHIP_TO_RESPONSIBLE_CHOICES.add("Spouse");
 
@@ -115,17 +111,8 @@ public class BaseForm extends Form
         PATIENT_RELATIONSHIP_TO_INSURED_CHOICES.add("Paternal");
         PATIENT_RELATIONSHIP_TO_INSURED_CHOICES.add("Maternal");
 
-        ETHNICITY_CHOICES.add("Native-American");
-        ETHNICITY_CHOICES.add("Caucasian");
-        ETHNICITY_CHOICES.add("African-American");
-        ETHNICITY_CHOICES.add("Asian-American");
-        ETHNICITY_CHOICES.add("Hispanic");
-
     }
 
-    // TODO - This is used for test purposes only. Replace with more formal model.
-    // TODO - Check to see if we need add* methods for all Wicket model types.
-    private final ValueMap properties = new ValueMap();
     private ChoicesFactory choicesFactory;
 
     public BaseForm(final String componentName)
@@ -152,10 +139,10 @@ public class BaseForm extends Form
         return choicesFactory;
     }
 
-    protected void addLabeledTextField(final String fieldName, int fieldFlags)
+    protected void addLabeledTextField(final String fieldName, Set<Annotation> annotations)
     {
         add(new FieldLabel(fieldName));
-        add(new TextField(fieldName, fieldFlags));
+        add(new TextField(fieldName, annotations));
     }
 
     protected void addLabeledTextField(final String fieldName)
@@ -164,10 +151,10 @@ public class BaseForm extends Form
         add(new TextField(fieldName));
     }
 
-    protected void addLabeledDateField(final String fieldName)
+    protected void addLabeledDateField(final String fieldName, Set<Annotation> annotations)
     {
         add(new FieldLabel(fieldName));
-        add(new TextField(fieldName));
+        add(new TextField(fieldName, annotations));
     }
 
     protected void addLabeledPhoneField(final String fieldName)
@@ -278,4 +265,49 @@ public class BaseForm extends Form
         super.onComponentTagBody(markupStream, componentTag);
         getResponse().write(script.toString());
     }
+
+    public Set<Annotation> getConstraints(Class<?> theClass, String propertyName)
+    {
+        try
+        {
+            PropertyDescriptor[] descs = Introspector.getBeanInfo(theClass).getPropertyDescriptors();
+            for(PropertyDescriptor desc : descs)
+            {
+                if(propertyName.equals(desc.getName()))
+                {
+                    Method read = desc.getReadMethod();
+
+                    if(read != null)
+                        return getConstraints(read.getAnnotations());
+                }
+            }
+        }
+        catch(IntrospectionException e)
+        {
+            log.error("IntrospectionException");
+        }
+        return null;
+    }
+
+    private Set<Annotation> getConstraints(Annotation[] annotations)
+    {
+        Set<Annotation> constraints = new HashSet<Annotation>();
+        for (Annotation a : annotations)
+        {
+            if (isConstraint(a))
+                constraints.add(a);
+        }
+        return constraints;
+    }
+
+    public boolean isConstraint(Annotation annotation)
+    {
+        if (annotation == null)
+        {
+            log.error("Annotation null in isConstraint");
+            throw new IllegalArgumentException("Not a legal value for annotation");
+        }
+        return annotation.annotationType().isAnnotationPresent(ValidatorClass.class);
+    }
+
 }
