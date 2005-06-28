@@ -4,7 +4,7 @@
 <beans>
     <!-- FACADE (Service helper) beans -->
 
-    <bean id="referenceEntityFacade" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+    <bean id="referenceEntityFacade" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean" lazy-init="true">
         <property name="transactionManager"> <ref bean="hibernateTransactionManager"/> </property>
         <!--property name="proxyInterfaces"> <value>com.medigy.service.contact.ContactMechanismFacade</value></property-->
         <property name="target">
@@ -19,7 +19,7 @@
         </property>
     </bean>
 
-    <bean id="partyRelationshipFacade" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+    <bean id="partyRelationshipFacade" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean" lazy-init="true">
         <property name="transactionManager"> <ref bean="hibernateTransactionManager"/> </property>
         <!--property name="proxyInterfaces"> <value>com.medigy.service.contact.ContactMechanismFacade</value></property-->
         <property name="target">
@@ -35,7 +35,7 @@
         </property>
     </bean>
 
-    <bean id="geographicBoundaryFacade" class="com.medigy.service.impl.contact.GeographicBoundaryFacadeImpl">
+    <bean id="geographicBoundaryFacade" class="com.medigy.service.impl.contact.GeographicBoundaryFacadeImpl" lazy-init="true">
         <constructor-arg index="0"> <ref bean="hibernateSessionFactory"/> </constructor-arg>
     </bean>
 
@@ -54,7 +54,7 @@
         </property>
     </bean>
 
-    <bean id="insurancePolicyFacade" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+    <bean id="insurancePolicyFacade" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean" lazy-init="true">
         <property name="transactionManager"> <ref bean="hibernateTransactionManager"/> </property>
         <!--property name="proxyInterfaces"> <value>com.medigy.service.contact.ContactMechanismFacade</value></property-->
         <property name="target">
@@ -72,11 +72,11 @@
         </property>
     </bean>
 
-    <bean id="organizationFacade" class="com.medigy.service.impl.org.OrganizationFacadeImpl">
+    <bean id="organizationFacade" class="com.medigy.service.impl.org.OrganizationFacadeImpl" lazy-init="true">
         <constructor-arg index="0"> <ref bean="hibernateSessionFactory"/> </constructor-arg>
     </bean>
 
-    <bean id="personFacade" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+    <bean id="personFacade" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean" lazy-init="true">
         <property name="transactionManager"> <ref bean="hibernateTransactionManager"/> </property>
         <!--property name="proxyInterfaces"> <value>com.medigy.service.contact.ContactMechanismFacade</value></property-->
         <property name="target">
@@ -99,7 +99,7 @@
         <property name="referenceEntityFacade"><ref bean="referenceEntityFacade"/></property>
     </bean-->
 
-    <bean id="contactMechanismFacade" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+    <bean id="contactMechanismFacade" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean" lazy-init="true">
         <property name="transactionManager"> <ref bean="hibernateTransactionManager"/> </property>
         <!--property name="proxyInterfaces"> <value>com.medigy.service.contact.ContactMechanismFacade</value></property-->
         <property name="target">
@@ -118,7 +118,7 @@
 
 
     <!-- SERVICE beans -->
-    <bean id="addContactMechanismService"  class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+    <bean id="addContactMechanismService"  class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean" lazy-init="true">
         <property name="transactionManager"> <ref bean="hibernateTransactionManager"/> </property>
         <property name="target">
                 <bean class="com.medigy.service.impl.contact.AddContactMechanismServiceImpl">
@@ -134,7 +134,7 @@
         </property>
     </bean>
 
-    <bean id="editContactMechanismService"  class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+    <bean id="editContactMechanismService"  class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean" lazy-init="true">
         <property name="transactionManager"> <ref bean="hibernateTransactionManager"/> </property>
         <property name="target">
                 <bean class="com.medigy.service.impl.contact.EditContactMechanismServiceImpl">
@@ -152,7 +152,7 @@
 
 
 
-    <bean id="addInsuranceCoverageService"  class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+    <bean id="addInsuranceCoverageService"  class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean" lazy-init="true">
         <property name="transactionManager"> <ref bean="hibernateTransactionManager"/> </property>
         <property name="target">
                 <bean class="com.medigy.service.impl.insurance.AddInsuranceCoverageServiceImpl">
@@ -169,7 +169,7 @@
         </property>
     </bean>
 
-    <bean id="patientRegistrationService"  class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+    <bean id="patientRegistrationService"  class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean" lazy-init="true">
         <property name="transactionManager"> <ref bean="hibernateTransactionManager"/> </property>
         <property name="target">
                 <bean class="com.medigy.service.impl.person.PatientRegistrationServiceImpl">
@@ -187,7 +187,7 @@
         </property>
     </bean>
 
-    <bean id="registerHealthCareProviderService"  class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+    <bean id="registerHealthCareProviderService"  class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean" lazy-init="true">
         <property name="transactionManager"> <ref bean="hibernateTransactionManager"/> </property>
         <property name="target">
                 <bean class="com.medigy.service.impl.person.RegisterHealthCareProviderServiceImpl">
