@@ -46,7 +46,7 @@ package com.medigy.presentation.form.person.patient;
 import com.medigy.persist.reference.type.GenderType;
 import com.medigy.persist.reference.type.MaritalStatusType;
 import com.medigy.persist.reference.type.BloodType;
-import com.medigy.persist.reference.type.PersonPrefixType;
+import com.medigy.persist.reference.type.PersonNamePrefixType;
 import com.medigy.persist.reference.custom.person.EthnicityType;
 import com.medigy.wicket.form.*;
 import com.medigy.wicket.panel.DefaultFormPanel;
@@ -92,7 +92,7 @@ public class PatientRegistrationFormPanel extends DefaultFormPanel
             addLabeledTextField("firstName", getConstraints(model.getClass(), "firstName"));
             addLabeledTextField("middleName");
 
-            addLabeledSelectField("suffix", PersonPrefixType.class);
+            addLabeledSelectField("suffix", PersonNamePrefixType.class);
             addLabeledTextField("socialSecurityNumber", getConstraints(model.getClass(), "socialSecurityNumber"));
             addLabeledDateField("dateOfBirth", getConstraints(model.getClass(), "dateOfBirth"));
             addLabeledSelectField("gender", GenderType.class);
