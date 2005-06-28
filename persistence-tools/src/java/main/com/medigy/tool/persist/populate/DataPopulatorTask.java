@@ -197,6 +197,8 @@ public class DataPopulatorTask extends Task
         final Person patient = new Person();
         if(gender == Gender.MALE)
             patient.addGender(GenderType.Cache.MALE.getEntity());
+        else
+            patient.addGender(GenderType.Cache.FEMALE.getEntity());
         patient.setFirstName(personDataGenerator.getRandomFirstName(gender));
         patient.setLastName(personDataGenerator.getRandomSurname());
         // TODO: add middle name generation for sample of population
