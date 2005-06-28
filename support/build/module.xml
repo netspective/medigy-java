@@ -248,9 +248,24 @@
 
     <target name="jar" depends="jar.no-ivy,jar.publish-ivy"/>
 
+    <!-- ========================== mySQL related targets ================================== -->
+    <target name="mysql.check">
+        <condition property="mysql.database.used">
+            <equals arg1="${module.test.database.driverClass}" arg2="com.mysql.jdbc.Driver"/>
+        </condition>
+    </target>
+
+    <target name="mysql.drop-create" depends="mysql.check" if="mysql.database.used">
+        <sql driver="${module.test.database.driverClass}" url="${module.test.database.url}" userid="${module.test.database.user}"
+             password="${module.test.database.password}"
+             classpathref="module.dependencies.test.classpath">
+                drop database ${module.test.database.schema};
+                create database ${module.test.database.schema};
+        </sql>
+    </target>
     <!-- ==================== Test targets  ======================= -->
 
-    <target name="test.uninstrumented" depends="compile.main" unless="module.test.coverage.enabled">
+    <target name="test.uninstrumented" depends="compile.main,mysql.drop-create" unless="module.test.coverage.enabled">
         <mkdir dir="${module.artifacts.test.junit.home}"/>
         <junit filtertrace="yes" fork="true" maxmemory="256m" >
             <classpath>
@@ -277,7 +292,7 @@
         </junitreport>
     </target>
 
-    <target name="test.instrumented" depends="compile.test,instrument" if="module.test.coverage.enabled">
+    <target name="test.instrumented" depends="compile.test,instrument,mysql.drop-create" if="module.test.coverage.enabled">
         <mkdir dir="${module.artifacts.test.junit.home}"/>
         <junit filtertrace="yes" fork="true" maxmemory="256m">
             <classpath>
@@ -323,7 +338,21 @@
         <fail message="The property module.test.TestSuite was not set"/>
     </target>
 
-    <target name="test" depends="test.verify-module.test.TestSuite,compile.test,test.uninstrumented,test.instrumented"/>
+    <target name="test.prepare.ci" depends="init.define-properties" if="build.environment.ci">
+        <!-- don't do anything by default, designed to be overriden -->
+    </target>
+    
+    <target name="test.prepare.non-ci" depends="init.define-properties" unless="build.environment.ci">
+        <!-- don't do anything by default, designed to be overriden -->
+    </target>
+
+    <target name="test.verify-module.test.TestSuite" depends="init.define-properties" unless="module.test.TestSuite">
+        <fail message="The property module.test.TestSuite was not set"/>
+    </target>
+
+    <target name="test" depends="test.prepare.non-ci,test.prepare.ci,test.verify-module.test.TestSuite,compile.test,test.uninstrumented,test.instrumented"/>
+
+    <!--target name="test" depends="test.verify-module.test.TestSuite,compile.test,test.uninstrumented,test.instrumented"/-->
 
     <!-- ==================== Documentation targets  ======================= -->
 
