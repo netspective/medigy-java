@@ -71,20 +71,20 @@
         <classpath id='WEB-INF/classes' source='WEB-INF/classes' compile='false'/>
         <classpath id='WEB-INF/lib' library-dir='true'/>
 
-        <!-- the compiler should be set to put classes in this directory for exploded use -->
         <classpath id="C:/Projects/Medigy/common/depend/lib/main" library-dir='true'/>
+
         <classpath id="C:/Projects/Medigy/presentation/depend/lib/main" library-dir='true'/>
-
-        <classpath id="C:/Projects/Medigy/presentation/support/build/artifacts/classes/main"/>
-        <classpath id="C:/Projects/Medigy/pbs/support/build/artifacts/classes/main"/>
-
-        <classpath id="C:/Projects/Medigy/persistence/support/build/artifacts/classes/main"/>
         <classpath id="C:/Projects/Medigy/persistence/depend/lib/main" library-dir='true'/>
         <classpath id="C:/Projects/Medigy/persistence/depend/lib/test" library-dir='true'/>
-
-        <classpath id="C:/Projects/Medigy/service/support/build/artifacts/classes/main"/>
-        <classpath id="C:/Projects/Medigy/service/depend/lib/main" library-dir='true'/>
         <classpath id="C:/Projects/Medigy/service/depend/lib/test" library-dir='true'/>
+        <classpath id="C:/Projects/Medigy/service/depend/lib/main" library-dir='true'/>
+
+        <classpath id="C:/Projects/Medigy/presentation/support/build/artifacts/classes/main"/>
+        <classpath id="C:/Projects/Medigy/persistence/support/build/artifacts/classes/main"/>
+        <classpath id="C:/Projects/Medigy/service/support/build/artifacts/classes/main"/>
+
+        <!-- the compiler should be set to put classes in this directory for exploded use -->
+        <classpath id="C:/Projects/Medigy/pbs/support/build/artifacts/classes/main"/>
     </web-app>
 
       <web-app id='/medigy' app-dir='C:/Projects/Medigy/presentation'/>
