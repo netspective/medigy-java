@@ -33,6 +33,7 @@
         <delete dir="${consolidated.artifacts.home}"/>
         <delete dir="${repository.home}/support/build/ivy-cache"/>
 
+        <ant dir="${repository.home}/data-gen/support/build" target="clean" inheritall="false" inheritrefs="false" />
         <ant dir="${repository.home}/graphviz/support/build" target="clean" inheritall="false" inheritrefs="false" />
         <ant dir="${repository.home}/hibernate-doc/support/build" target="clean" inheritall="false" inheritrefs="false" />
         <ant dir="${repository.home}/persistence/support/build" target="clean" inheritall="false" inheritrefs="false" />
@@ -42,6 +43,9 @@
     </target>
 
     <target name="jar" depends="init.define-properties">
+        <ant dir="${repository.home}/data-gen/support/build" target="jar" inheritall="false" inheritrefs="false">
+            <property name="module.artifacts.home" value="${consolidated.artifacts.home}/data-gen"/>
+        </ant>
         <ant dir="${repository.home}/graphviz/support/build" target="jar" inheritall="false" inheritrefs="false">
             <property name="module.artifacts.home" value="${consolidated.artifacts.home}/graphviz"/>
         </ant>
