@@ -73,16 +73,16 @@ public class SessionManager
      */
     public Session getActiveSession()
     {
-        if(threadSession.get().isEmpty())
-            return null;
-
         try
         {
+            // TODO: threadSession.get() is currently NULL. Need to figure out where to start tracking sessions in the web application
+            if(threadSession.get().isEmpty())
+                return null;
             return threadSession.get().peek();
         }
         catch (Exception e)
         {
-            log.error(ExceptionUtils.getStackTrace(e));
+            log.error(e);
             return null;
         }
     }
@@ -99,7 +99,7 @@ public class SessionManager
         }
         catch (Exception e)
         {
-            log.error(ExceptionUtils.getStackTrace(e));
+            log.error(e);
         }
     }
 
@@ -114,7 +114,7 @@ public class SessionManager
         }
         catch (Exception e)
         {
-            log.error(ExceptionUtils.getStackTrace(e));
+            log.error(e);
         }
     }
 }
