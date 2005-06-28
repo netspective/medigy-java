@@ -45,6 +45,7 @@ package com.medigy.wicket.form;
 
 import wicket.markup.ComponentTag;
 import wicket.markup.html.form.validation.RequiredValidator;
+import wicket.markup.html.form.FormComponent;
 import wicket.model.IModel;
 
 import java.lang.annotation.Annotation;
@@ -52,8 +53,20 @@ import java.util.Set;
 
 import org.hibernate.validator.NotNull;
 
+import com.medigy.wicket.form.FormFieldFactory.FieldInfo;
+
 public class TextField extends wicket.markup.html.form.TextField implements JavaScriptProvider
 {
+    public static class TextFieldCreator implements FormFieldFactory.FieldCreator
+    {
+        public FormComponent createField(final FieldInfo fieldInfo)
+        {
+            final TextField result = new TextField(fieldInfo.getName());
+            fieldInfo.initializeField(fieldInfo, result);
+            return result;
+        }
+    }
+
     private String fieldName;
     private String fieldControlId;
     private long fieldFlags;

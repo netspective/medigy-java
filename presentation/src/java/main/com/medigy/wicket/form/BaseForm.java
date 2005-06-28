@@ -139,6 +139,12 @@ public class BaseForm extends Form
         return choicesFactory;
     }
 
+    protected void addLabeledField(final String fieldName, final Class cls)
+    {
+        add(new FieldLabel(fieldName));
+        add(FormFieldFactory.getInstance().createField(fieldName, cls));
+    }
+
     protected void addLabeledTextField(final String fieldName, Set<Annotation> annotations)
     {
         add(new FieldLabel(fieldName));
