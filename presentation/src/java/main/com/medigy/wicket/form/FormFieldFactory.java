@@ -43,16 +43,16 @@
  */
 package com.medigy.wicket.form;
 
-import java.lang.reflect.Method;
-import java.lang.annotation.Annotation;
-import java.util.Map;
-import java.util.Collections;
-import java.util.TreeMap;
-import java.util.Set;
-import java.util.HashSet;
-import java.beans.PropertyDescriptor;
-import java.beans.Introspector;
 import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 
 import org.hibernate.validator.ValidatorClass;
 
@@ -101,10 +101,7 @@ public class FormFieldFactory
     public FormComponent createField(final String propertyName, final Class ... classes)
     {
         // TODO: classes beyond the first are not managed yet
-        final FieldInfo fieldInfo = getFieldInfo(classes[0], propertyName);
-        final FieldCreator creator = getFieldCreator(fieldInfo.getDataType());
-        final FormComponent result = creator.createField(fieldInfo);
-        return result;
+        return getFieldInfo(classes[0], propertyName).createField();
     }
 
     public interface FieldCreator
@@ -120,6 +117,7 @@ public class FormFieldFactory
         private final Method method;
         private final boolean methodIsAccessor;
         private final Set<Annotation> constraints = new HashSet<Annotation>();
+        private final FieldCreator creator;
 
         public FieldInfo(final Class container, final String propertyName)
         {
@@ -160,12 +158,21 @@ public class FormFieldFactory
             this.method = method;
             this.methodIsAccessor = isAccessor;
             this.dataType = type;
+            this.creator = getFieldCreator(getDataType());
+
+            if(creator == null)
+                throw new RuntimeException("Unable to find a field creator for data type " + this.dataType);
 
             for (final Annotation a : method.getAnnotations())
             {
                 if(a.annotationType().isAnnotationPresent(ValidatorClass.class))
                     constraints.add(a);
             }
+        }
+
+        public FormComponent createField()
+        {
+            return creator.createField(this);
         }
 
         public void initializeField(final FieldInfo fieldInfo, final FormComponent formComponent)
