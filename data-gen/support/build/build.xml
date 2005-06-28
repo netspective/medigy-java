@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<project name="graphviz" default="all">
+<project name="data-gen" default="all">
 
     <import file="../../../support/build/module.xml"/>
 
@@ -14,7 +14,7 @@
         <path id="module.dependencies.main.classpath">
             <fileset dir="${repository.home}/common/depend/lib/build" includes="*.jar"/>
             <fileset dir="${repository.home}/common/depend/lib/main" includes="*.jar"/>
-            <fileset dir="${module.home}/common/depend/lib/main" includes="*.jar"/>
+            <fileset dir="${module.home}/depend/lib/main" includes="*.jar"/>
         </path>
     </target>
 
@@ -24,7 +24,7 @@
             <fileset dir="${repository.home}/common/depend/lib/main" includes="*.jar"/>
             <fileset dir="${repository.home}/common/depend/lib/test" includes="*.jar"/>
             
-            <fileset dir="${module.home}/common/depend/lib/main" includes="*.jar"/>
+            <fileset dir="${module.home}/depend/lib/main" includes="*.jar"/>
         </path>
     </target>
 
