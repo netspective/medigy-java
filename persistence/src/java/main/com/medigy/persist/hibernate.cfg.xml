@@ -213,6 +213,7 @@
 
         <!--mapping package="com.medigy.persist.model.person"/-->
         <mapping class="com.medigy.persist.model.person.Person"/>
+        <mapping class="com.medigy.persist.model.person.User"/>
         <mapping class="com.medigy.persist.model.person.Ethnicity"/>
         <mapping class="com.medigy.persist.model.person.Gender"/>
         <mapping class="com.medigy.persist.model.health.Incident"/>

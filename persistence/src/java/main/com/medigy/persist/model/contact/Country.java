@@ -54,6 +54,43 @@ import java.util.Set;
 @Inheritance(strategy = InheritanceType.JOINED )
 public class Country extends GeographicBoundary
 {
+    public enum Cache
+    {
+        USA("USA", "United States of America");
+
+        private String countryName;
+        private String countryAbbreviation;
+        private Country entity;
+
+        Cache(final String abbrev, final String name)
+        {
+            this.countryName = name;
+            this.countryAbbreviation = abbrev;
+        }
+
+        public String getCountryName()
+        {
+            return this.countryName;
+        }
+
+        public String getCountryAbbreviation()
+        {
+            return this.countryAbbreviation;
+        }
+
+        public Country getEntity()
+        {
+            if (entity == null)
+                throw new RuntimeException(getClass() + " "+ name() + " has not been initialized");
+            return entity;
+        }
+
+        public void setEntity(final Country entity)
+        {
+            this.entity = entity;
+        }
+    }
+
     private String countryName;
     private String countryAbbreviation;
 
@@ -113,7 +150,7 @@ public class Country extends GeographicBoundary
     /**
      * Checks to see if the state already belongs to the country
      * @param testState
-     * @return
+     * @return  True if the State belongs to this country
      */
     @Transient
     public boolean hasState(final State testState)
@@ -130,7 +167,7 @@ public class Country extends GeographicBoundary
     /**
      * Gets a child state belonging to the country by the state's name
      * @param stateName
-     * @return
+     * @return state belonging to the country
      */
     @Transient
     public State getStateByName(final String stateName)
@@ -147,7 +184,7 @@ public class Country extends GeographicBoundary
     /**
      * Gets a child province belonging to the country by its name
      * @param provinceName
-     * @return
+     * @return province belonging to the country
      */
     @Transient
     public Province getProvinceByName(final String provinceName)

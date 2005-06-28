@@ -55,6 +55,7 @@ import com.medigy.persist.model.org.attribute.OrganizationStringAttribute;
 import com.medigy.persist.model.org.attribute.OrganizationDateAttribute;
 import com.medigy.persist.model.org.attribute.OrganizationBooleanAttribute;
 import com.medigy.persist.model.org.attribute.OrganizationLongAttribute;
+import com.medigy.persist.model.person.User;
 import com.medigy.persist.reference.custom.insurance.InsuranceProductType;
 import com.medigy.persist.reference.custom.org.OrganizationClassificationType;
 import com.medigy.persist.reference.custom.party.FacilityType;
@@ -90,6 +91,7 @@ public class Organization extends Party
     private Set<VisitType> visitTypes = new HashSet<VisitType>();
 
     private Set<OrganizationAttribute> attributes = new HashSet<OrganizationAttribute>();
+    private Set<User> users = new HashSet<User>();
 
     private String tradeName;
 
@@ -314,5 +316,16 @@ public class Organization extends Party
         attr.setOrganization(this);
         attr.setLabel(label);
         this.attributes.add(attr);
+    }
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "organization")
+    public Set<User> getUsers()
+    {
+        return users;
+    }
+
+    public void setUsers(final Set<User> users)
+    {
+        this.users = users;
     }
 }

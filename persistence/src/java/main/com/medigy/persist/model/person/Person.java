@@ -112,6 +112,7 @@ public class Person extends Party
     private Set<InsurancePolicy> responsibleInsurancePolicies = new HashSet<InsurancePolicy>();
 
     private Set<FeeSchedule> feeSchedules = new HashSet<FeeSchedule>();
+    private Set<User> users = new HashSet<User>();
 
     public Person()
     {
@@ -697,5 +698,16 @@ public class Person extends Party
     public void setFeeSchedules(final Set<FeeSchedule> feeSchedules)
     {
         this.feeSchedules = feeSchedules;
+    }
+
+    @OneToMany(mappedBy = "person", cascade = CascadeType.ALL)
+    public Set<User> getUsers()
+    {
+        return users;
+    }
+
+    public void setUsers(final Set<User> users)
+    {
+        this.users = users;
     }
 }
