@@ -338,21 +338,7 @@
         <fail message="The property module.test.TestSuite was not set"/>
     </target>
 
-    <target name="test.prepare.ci" depends="init.define-properties" if="build.environment.ci">
-        <!-- don't do anything by default, designed to be overriden -->
-    </target>
-    
-    <target name="test.prepare.non-ci" depends="init.define-properties" unless="build.environment.ci">
-        <!-- don't do anything by default, designed to be overriden -->
-    </target>
-
-    <target name="test.verify-module.test.TestSuite" depends="init.define-properties" unless="module.test.TestSuite">
-        <fail message="The property module.test.TestSuite was not set"/>
-    </target>
-
-    <target name="test" depends="test.prepare.non-ci,test.prepare.ci,test.verify-module.test.TestSuite,compile.test,test.uninstrumented,test.instrumented"/>
-
-    <!--target name="test" depends="test.verify-module.test.TestSuite,compile.test,test.uninstrumented,test.instrumented"/-->
+    <target name="test" depends="test.verify-module.test.TestSuite,compile.test,test.uninstrumented,test.instrumented"/>
 
     <!-- ==================== Documentation targets  ======================= -->
 
