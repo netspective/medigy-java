@@ -43,12 +43,11 @@
  */
 package com.medigy.persist.model.session;
 
+import java.util.Stack;
+
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.commons.lang.exception.ExceptionUtils;
-
-import java.util.EmptyStackException;
-import java.util.Stack;
 
 public class SessionManager
 {
@@ -74,6 +73,9 @@ public class SessionManager
      */
     public Session getActiveSession()
     {
+        if(threadSession.get().isEmpty())
+            return null;
+
         try
         {
             return threadSession.get().peek();
