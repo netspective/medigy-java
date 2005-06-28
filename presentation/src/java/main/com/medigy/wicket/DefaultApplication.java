@@ -77,6 +77,7 @@ public abstract class DefaultApplication extends SpringApplication implements Ap
     public DefaultApplication()
     {
         super();
+        afterPropertiesSet();    // TODO: very with Aye that this is needed. Should the Spring container call this automatically? 
     }
 
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException
