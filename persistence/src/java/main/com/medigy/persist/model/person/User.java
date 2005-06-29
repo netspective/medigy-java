@@ -80,7 +80,7 @@ public class User extends AbstractTopLevelEntity
     }
 
     @ManyToOne
-    @JoinColumn(name = Person.PK_COLUMN_NAME, nullable = false)
+    @JoinColumn(name = "person_id", referencedColumnName = Person.PK_COLUMN_NAME, nullable = false)
     public Person getPerson()
     {
         return person;
@@ -92,7 +92,7 @@ public class User extends AbstractTopLevelEntity
     }
 
     @ManyToOne
-    @JoinColumn(name = Organization.PK_COLUMN_NAME, nullable = false)
+    @JoinColumn(name = "org_id", referencedColumnName = Organization.PK_COLUMN_NAME, nullable = false)
     public Organization getOrganization()
     {
         return organization;
