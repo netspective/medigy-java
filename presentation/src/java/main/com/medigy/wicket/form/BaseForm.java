@@ -55,6 +55,7 @@ import com.medigy.presentation.model.ChoicesFactory;
 import com.medigy.wicket.DefaultApplication;
 import wicket.IFeedback;
 import wicket.model.IModel;
+import wicket.model.BoundCompoundPropertyModel;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.form.*;
@@ -143,6 +144,13 @@ public class BaseForm extends Form
     {
         add(new FieldLabel(fieldName));
         add(FormFieldFactory.getInstance().createField(fieldName, cls));
+    }
+
+    protected void addLabeledField(final String fieldName, BoundCompoundPropertyModel model, final Class cls)
+    {
+        add(new FieldLabel(fieldName));
+
+        add(model.bind(FormFieldFactory.getInstance().createField(fieldName, cls), fieldName));
     }
 
     protected void addLabeledTextField(final String fieldName)

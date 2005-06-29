@@ -8,7 +8,7 @@ import java.io.Serializable;
  * Simple model object for FormInput example. Has a number of simple properties
  * that can be retrieved and set.
  */
-public final class FormInputModel implements Serializable
+public final class TestServiceParameterModel implements Serializable
 {
     private String suffix;
 	private String personId;
@@ -68,7 +68,7 @@ public final class FormInputModel implements Serializable
 
 
 
-	public FormInputModel()
+	public TestServiceParameterModel()
 	{
 	}
 

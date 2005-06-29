@@ -44,14 +44,8 @@
 package com.medigy.wicket.form;
 
 import wicket.markup.ComponentTag;
-import wicket.markup.html.form.validation.RequiredValidator;
 import wicket.markup.html.form.FormComponent;
 import wicket.model.IModel;
-
-import java.lang.annotation.Annotation;
-import java.util.Set;
-
-import org.hibernate.validator.NotNull;
 
 import com.medigy.wicket.form.FormFieldFactory.FieldInfo;
 
@@ -61,7 +55,7 @@ public class TextField extends wicket.markup.html.form.TextField implements Java
     {
         public FormComponent createField(final FieldInfo fieldInfo)
         {
-            final TextField result = new TextField(fieldInfo.getName());
+            final TextField result = new TextField(fieldInfo.getName() + BaseForm.FIELD_CONTROL_SUFFIX);
             fieldInfo.initializeField(fieldInfo, result);
             return result;
         }
@@ -71,37 +65,20 @@ public class TextField extends wicket.markup.html.form.TextField implements Java
     private String fieldControlId;
     private long fieldFlags;
 
-    // TODO: remove constructors
-    public TextField(final String fieldName, long fieldFlags)
+    public TextField(final String fieldName)
     {
-        super(fieldName /*+ BaseForm.FIELD_CONTROL_SUFFIX*/);
+        super(fieldName);
         this.fieldName = fieldName;
         this.fieldFlags = fieldFlags;
-        this.fieldControlId = fieldName /*+ BaseForm.FIELD_CONTROL_SUFFIX */;
-
-        if((this.fieldFlags & FieldFlags.REQUIRED) != 0)
-            add(RequiredValidator.getInstance());
+        this.fieldControlId = fieldName;
     }
 
-    public TextField(final String fieldName, IModel model, long fieldFlags)
+    public TextField(final String fieldName, IModel model)
     {
-        super(fieldName /*+ BaseForm.FIELD_CONTROL_SUFFIX*/, model);
+        super(fieldName, model);
         this.fieldName = fieldName;
         this.fieldFlags = fieldFlags;
-        this.fieldControlId = fieldName /*+ BaseForm.FIELD_CONTROL_SUFFIX */;
-
-        if((this.fieldFlags & FieldFlags.REQUIRED) != 0)
-            add(RequiredValidator.getInstance());
-    }
-    
-    protected TextField(final String componentName)
-    {
-        this(componentName, FieldFlags.DEFAULT_FLAGS);
-    }
-
-    public TextField(final String componentName, IModel model)
-    {
-        this(componentName, model, FieldFlags.DEFAULT_FLAGS);
+        this.fieldControlId = fieldName;
     }
 
     protected void onComponentTag(final ComponentTag componentTag)

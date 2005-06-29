@@ -52,10 +52,10 @@ import com.medigy.wicket.form.*;
 import com.medigy.wicket.panel.DefaultFormPanel;
 import com.medigy.wicket.DefaultApplication;
 import wicket.IFeedback;
-import com.medigy.presentation.model.FormInputModel;
+import com.medigy.presentation.model.TestServiceParameterModel;
 import com.medigy.service.person.PatientRegistrationService;
 import com.medigy.service.dto.person.RegisterPatientParameters;
-import wicket.model.CompoundPropertyModel;
+import wicket.model.BoundCompoundPropertyModel;
 
 public class PatientRegistrationFormPanel extends DefaultFormPanel
 {
@@ -70,95 +70,95 @@ public class PatientRegistrationFormPanel extends DefaultFormPanel
     {
         final PatientRegistrationService service = (PatientRegistrationService) ((DefaultApplication) getApplication()).getService(PatientRegistrationService.class);
         final RegisterPatientParameters params = service.getNewPatientParameters();
-        InputForm form = new InputForm(componentName, feedback, new FormInputModel(), params);
-        // TODO: relate the service params with the Form model object
-        //form.setModel(new CompoundPropertyModel(params));
+        BoundCompoundPropertyModel model = new BoundCompoundPropertyModel(new TestServiceParameterModel());
+        InputForm form = new InputForm(componentName, feedback, model, params);
         return form;
     }
 
     protected class InputForm extends BaseForm
     {
-        public InputForm(final String componentName, final IFeedback feedback, FormInputModel model, RegisterPatientParameters params)
-        {
-            super(componentName, new CompoundPropertyModel(model), feedback);
 
-            // TODO - use BeanUtils to copy over data?
+        public InputForm(final String componentName, final IFeedback feedback, BoundCompoundPropertyModel model, RegisterPatientParameters params)
+        {
+            super(componentName, model, feedback);
 
             add(new FieldGroupLabel("patientId"));
 
-            addLabeledField("personId", model.getClass());
-            addLabeledField("account", model.getClass());
-            addLabeledField("chartNumber", model.getClass());
-            addLabeledField("lastName", model.getClass());
-            addLabeledField("firstName", model.getClass());
-            addLabeledField("middleName", model.getClass());
+            TestServiceParameterModel serviceBean = (TestServiceParameterModel)model.getObject(null);
+
+            addLabeledField("personId", model, serviceBean.getClass());
+            addLabeledField("account", model, serviceBean.getClass());
+            addLabeledField("chartNumber", model, serviceBean.getClass());
+            addLabeledField("lastName", model, serviceBean.getClass());
+            addLabeledField("firstName", model, serviceBean.getClass());
+            addLabeledField("middleName", model, serviceBean.getClass());
 
             addLabeledSelectField("suffix", PersonNamePrefixType.class);
 
-            addLabeledField("socialSecurityNumber", getReturnType(model.getClass(), "socialSecurityNumber"));
-            addLabeledField("dateOfBirth", getReturnType(model.getClass(), "dateOfBirth"));
+            addLabeledField("socialSecurityNumber", model, serviceBean.getClass());
+            addLabeledField("dateOfBirth", model, serviceBean.getClass());
 
             addLabeledSelectField("gender", GenderType.class);
             addLabeledSelectField("maritalStatus", MaritalStatusType.class);
             addLabeledSelectField("bloodType", BloodType.class);
             addLabeledRadioChoiceField("ethnicity", EthnicityType.class);
-            addLabeledTextField("responsibleParty");
+            addLabeledField("responsibleParty", model, serviceBean.getClass());
             addLabeledSelectField("relationshipToResponsible", BaseForm.RELATIONSHIP_TO_RESPONSIBLE_CHOICES);
-            addLabeledTextField("relationshipToResponsibleOtherRelationship");
-            addLabeledTextField("driversLicenseNumber");
-            addLabeledTextField("driversLicenseState");
-            addLabeledTextField("miscNotes");
-            addLabeledTextField("homePhone");
-            addLabeledTextField("workPhone");
+            addLabeledField("relationshipToResponsibleOtherRelationship", model, serviceBean.getClass());
+            addLabeledField("driversLicenseNumber", model, serviceBean.getClass());
+            addLabeledField("driversLicenseState", model, serviceBean.getClass());
+            addLabeledField("miscNotes", model, serviceBean.getClass());
+            addLabeledField("homePhone", model, serviceBean.getClass());
+            addLabeledField("workPhone", model, serviceBean.getClass());
 
             add(new FieldGroupLabel("contactMethods"));
 
-            addLabeledTextField("homePhone2");
-            addLabeledTextField("workPhone2");
-            addLabeledTextField("cellPhone");
-            addLabeledTextField("pager");
-            addLabeledTextField("alternate");
-            addLabeledTextField("homeAddress");
-            addLabeledTextField("homeAddress2");
-            addLabeledTextField("city");
-            addLabeledTextField("state");
-            addLabeledTextField("zip");
-            addLabeledTextField("email");
+            addLabeledField("homePhone2", model, serviceBean.getClass());
+            addLabeledField("workPhone2", model, serviceBean.getClass());
+            addLabeledField("cellPhone", model, serviceBean.getClass());
+            addLabeledField("pager", model, serviceBean.getClass());
+            addLabeledField("alternate", model, serviceBean.getClass());
+            addLabeledField("homeAddress", model, serviceBean.getClass());
+            addLabeledField("homeAddress2", model, serviceBean.getClass());
+            addLabeledField("city", model, serviceBean.getClass());
+            addLabeledField("state", model, serviceBean.getClass());
+            addLabeledField("zip", model, serviceBean.getClass());
+            addLabeledField("email", model, serviceBean.getClass());
 
             add(new FieldGroupLabel("employment"));
 
-            addLabeledTextField("employerId");
+            addLabeledField("employerId", model, serviceBean.getClass());
             addLabeledSelectField("employmentStatus", BaseForm.EMPLOYMENT_STATUS_CHOICES);
-            addLabeledTextField("occupation");
-            addLabeledTextField("employerPhoneNumber");
+            addLabeledField("occupation", model, serviceBean.getClass());
+            addLabeledField("employerPhoneNumber", model, serviceBean.getClass());
 
             add(new FieldGroupLabel("insurance"));
 
             addLabeledSelectField("insuranceSequence", BaseForm.INSURANCE_SEQUENCE_CHOICES);
-            addLabeledTextField("insuranceProduct");
-            addLabeledTextField("insurancePlan");
+            addLabeledField("insuranceProduct", model, serviceBean.getClass());
+            addLabeledField("insurancePlan", model, serviceBean.getClass());
 
             add(new FieldGroupLabel("generalPlanInformation"));
 
             addLabeledSelectField("patientRelationshipToInsured", BaseForm.PATIENT_RELATIONSHIP_TO_INSURED_CHOICES);
-            addLabeledTextField("patientRelationshipToInsuredPtherRelationship");
-            addLabeledTextField("insuredPersonId");
-            addLabeledTextField("employer");
-            addLabeledTextField("groupName");
-            addLabeledTextField("groupNumber");
-            addLabeledTextField("memberNumber");
+            addLabeledField("patientRelationshipToInsuredPtherRelationship", model, serviceBean.getClass());
+            addLabeledField("insuredPersonId", model, serviceBean.getClass());
+            addLabeledField("employer", model, serviceBean.getClass());
+            addLabeledField("groupName", model, serviceBean.getClass());
+            addLabeledField("groupNumber", model, serviceBean.getClass());
+            addLabeledField("memberNumber", model, serviceBean.getClass());
 
             add(new FieldGroupLabel("coverageInformation"));
 
-            addLabeledTextField("coverageBeginDate");
-            addLabeledTextField("coverageEndDate");
-            addLabeledTextField("individualDeductible");
-            addLabeledTextField("familyDeductible");
-            addLabeledTextField("individualDeductibleRemaining");
-            addLabeledTextField("familyDeductibleRemaining");
-            addLabeledTextField("percentagePay");
-            addLabeledTextField("threshold");
-            addLabeledTextField("officeVisitCoPay");
+            addLabeledField("coverageBeginDate", model, serviceBean.getClass());
+            addLabeledField("coverageEndDate", model, serviceBean.getClass());
+            addLabeledField("individualDeductible", model, serviceBean.getClass());
+            addLabeledField("familyDeductible", model, serviceBean.getClass());
+            addLabeledField("individualDeductibleRemaining", model, serviceBean.getClass());
+            addLabeledField("familyDeductibleRemaining", model, serviceBean.getClass());
+            addLabeledField("percentagePay", model, serviceBean.getClass());
+            addLabeledField("threshold", model, serviceBean.getClass());
+            addLabeledField("officeVisitCoPay", model, serviceBean.getClass());
         }
 
 
