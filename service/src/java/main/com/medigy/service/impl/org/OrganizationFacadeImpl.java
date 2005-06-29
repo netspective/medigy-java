@@ -10,8 +10,11 @@ import com.medigy.service.util.AbstractFacade;
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Expression;
+import org.hibernate.criterion.Restrictions;
 
 import java.util.List;
+import java.util.Set;
+import java.util.ArrayList;
 
 public class OrganizationFacadeImpl extends AbstractFacade implements OrganizationFacade
 {
@@ -72,5 +75,30 @@ public class OrganizationFacadeImpl extends AbstractFacade implements Organizati
         return criteria.list();
     }
 
+    public Organization getOrganizationById(final Long orgId)
+    {
+        final Organization org = (Organization) getSession().load(Organization.class, orgId);
+        return org;
+    }
+
+    public List<Organization> listOrganizationsByName(final String orgName, final boolean exactMatch)
+    {
+        Criteria criteria = getSession().createCriteria(Organization.class);
+        if (!exactMatch)
+            criteria.add(Expression.like("partyName", orgName).ignoreCase());
+        else
+            criteria.add(Expression.eq("partyName", orgName).ignoreCase());
+        List list = criteria.list();
+        List<Organization> orgList = new ArrayList<Organization>();
+        convert(Organization.class, list, orgList);
+        return orgList;
+    }
+
+    public List<Organization> listOrganizationsByParentId(final Long parentOrgId)
+    {
+        Criteria criteria = getSession().createCriteria(Organization.class);
+        // TODO: Need to see if it would be better just to a parentOrganization to the Organization class
+        return null;
+    }
 
 }

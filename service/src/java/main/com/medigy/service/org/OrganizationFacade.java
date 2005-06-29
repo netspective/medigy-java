@@ -4,6 +4,7 @@ import com.medigy.persist.model.org.Organization;
 import com.medigy.service.util.Facade;
 
 import java.util.List;
+import java.util.Set;
 
 public interface OrganizationFacade extends Facade
 {
@@ -17,8 +18,14 @@ public interface OrganizationFacade extends Facade
     /**
      * Lists all logical insurance groups under an Employer organization.
      * @param parentOrg
-     * @return
+     * @return  list of insurance groups
      */
     public List listInsuranceGroups(final Organization parentOrg);
+
+    public Organization getOrganizationById(final Long orgId);
+
+    public List<Organization> listOrganizationsByName(final String orgName, final boolean exactMatch);
+
+    public List<Organization> listOrganizationsByParentId(final Long parentOrgId);
 
 }
