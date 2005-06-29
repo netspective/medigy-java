@@ -48,15 +48,13 @@ import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
+import java.util.*;
 
 import org.hibernate.validator.ValidatorClass;
+import org.hibernate.validator.NotNull;
 
 import wicket.markup.html.form.FormComponent;
+import wicket.markup.html.form.validation.RequiredValidator;
 
 public class FormFieldFactory
 {
@@ -67,7 +65,7 @@ public class FormFieldFactory
         return INSTANCE;
     }
 
-    private Map<Class, FieldCreator> fieldCreatorMap = Collections.synchronizedMap(new TreeMap<Class, FieldCreator>());
+    private Map<Class, FieldCreator> fieldCreatorMap = Collections.synchronizedMap(new HashMap<Class, FieldCreator>());  // TODO: for some reason TreeMap was throwing a CCE when issueing a get(). Was there a specific need for TreeMap here?
     private Map<String, FieldInfo> fieldInfoMap = Collections.synchronizedMap(new TreeMap<String, FieldInfo>());
 
     protected FormFieldFactory()
@@ -180,6 +178,13 @@ public class FormFieldFactory
             // at this point we have the originating class, the creator, and the newly created field so we can do
             // basic annotations processing first (all common annotations) and then let the field handle what it
             // needs to do
+            Set<Annotation> annotations = fieldInfo.getConstraints();
+            for(final Annotation annotation : annotations)
+            {
+                // TODO: Add checks for other annotation types
+                if(NotNull.class.isAssignableFrom(annotation.annotationType()))
+                    formComponent.add(RequiredValidator.getInstance());
+            }
         }
 
         public boolean isAnnotationPresent(final Class<?> annotation)
@@ -210,6 +215,16 @@ public class FormFieldFactory
         public Class getDataType()
         {
             return dataType;
+        }
+
+        public Set<Annotation> getConstraints()
+        {
+            return constraints;
+        }
+
+        public FieldCreator getCreator()
+        {
+            return creator;
         }
     }
 

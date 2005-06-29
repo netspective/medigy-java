@@ -85,16 +85,19 @@ public class PatientRegistrationFormPanel extends DefaultFormPanel
             // TODO - use BeanUtils to copy over data?
 
             add(new FieldGroupLabel("patientId"));
-            addLabeledTextField("personId", getConstraints(model.getClass(), "personId"));
-            addLabeledTextField("account");
-            addLabeledTextField("chartNumber");
-            addLabeledTextField("lastName", getConstraints(model.getClass(), "lastName"));
-            addLabeledTextField("firstName", getConstraints(model.getClass(), "firstName"));
-            addLabeledTextField("middleName");
+
+            addLabeledField("personId", model.getClass());
+            addLabeledField("account", model.getClass());
+            addLabeledField("chartNumber", model.getClass());
+            addLabeledField("lastName", model.getClass());
+            addLabeledField("firstName", model.getClass());
+            addLabeledField("middleName", model.getClass());
 
             addLabeledSelectField("suffix", PersonNamePrefixType.class);
-            addLabeledTextField("socialSecurityNumber", getConstraints(model.getClass(), "socialSecurityNumber"));
-            addLabeledDateField("dateOfBirth", getConstraints(model.getClass(), "dateOfBirth"));
+
+            addLabeledField("socialSecurityNumber", getReturnType(model.getClass(), "socialSecurityNumber"));
+            addLabeledField("dateOfBirth", getReturnType(model.getClass(), "dateOfBirth"));
+
             addLabeledSelectField("gender", GenderType.class);
             addLabeledSelectField("maritalStatus", MaritalStatusType.class);
             addLabeledSelectField("bloodType", BloodType.class);

@@ -71,22 +71,7 @@ public class TextField extends wicket.markup.html.form.TextField implements Java
     private String fieldControlId;
     private long fieldFlags;
 
-    public TextField(final String fieldName, Set<Annotation> annotations)
-    {
-        super(fieldName /*+ BaseForm.FIELD_CONTROL_SUFFIX*/);   // TODO - remove the comments around FIELD_CONTROL_SUFFIX after fixing suffix issue
-        this.fieldName = fieldName;
-        this.fieldControlId = fieldName /*+ BaseForm.FIELD_CONTROL_SUFFIX */;  
-
-        if(annotations != null)
-        {
-            for(Annotation annotation : annotations)
-            {
-                if(NotNull.class.isAssignableFrom(annotation.annotationType()))
-                    add(RequiredValidator.getInstance());
-            }
-        }
-    }
-
+    // TODO: remove constructors
     public TextField(final String fieldName, long fieldFlags)
     {
         super(fieldName /*+ BaseForm.FIELD_CONTROL_SUFFIX*/);
@@ -108,24 +93,8 @@ public class TextField extends wicket.markup.html.form.TextField implements Java
         if((this.fieldFlags & FieldFlags.REQUIRED) != 0)
             add(RequiredValidator.getInstance());
     }
-
-    public TextField(final String fieldName, IModel model, Set<Annotation> annotations)
-    {
-        super(fieldName /*+ BaseForm.FIELD_CONTROL_SUFFIX*/, model);
-        this.fieldName = fieldName;
-        this.fieldControlId = fieldName /*+ BaseForm.FIELD_CONTROL_SUFFIX */;
-
-        if(annotations != null)
-        {
-            for(Annotation annotation : annotations)
-            {
-                if(NotNull.class.isAssignableFrom(annotation.annotationType()))
-                    add(RequiredValidator.getInstance());
-            }
-        }
-    }
-
-    public TextField(final String componentName)
+    
+    protected TextField(final String componentName)
     {
         this(componentName, FieldFlags.DEFAULT_FLAGS);
     }

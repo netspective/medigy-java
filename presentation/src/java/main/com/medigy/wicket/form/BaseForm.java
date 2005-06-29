@@ -145,22 +145,10 @@ public class BaseForm extends Form
         add(FormFieldFactory.getInstance().createField(fieldName, cls));
     }
 
-    protected void addLabeledTextField(final String fieldName, Set<Annotation> annotations)
-    {
-        add(new FieldLabel(fieldName));
-        add(new TextField(fieldName, annotations));
-    }
-
     protected void addLabeledTextField(final String fieldName)
     {
         add(new FieldLabel(fieldName));
         add(new TextField(fieldName));
-    }
-
-    protected void addLabeledDateField(final String fieldName, Set<Annotation> annotations)
-    {
-        add(new FieldLabel(fieldName));
-        add(new TextField(fieldName, annotations));
     }
 
     protected void addLabeledPhoneField(final String fieldName)
@@ -272,7 +260,7 @@ public class BaseForm extends Form
         getResponse().write(script.toString());
     }
 
-    public Set<Annotation> getConstraints(Class<?> theClass, String propertyName)
+    public Class<?> getReturnType(Class<?> theClass, String propertyName)
     {
         try
         {
@@ -280,12 +268,7 @@ public class BaseForm extends Form
             for(PropertyDescriptor desc : descs)
             {
                 if(propertyName.equals(desc.getName()))
-                {
-                    Method read = desc.getReadMethod();
-
-                    if(read != null)
-                        return getConstraints(read.getAnnotations());
-                }
+                    return desc.getReadMethod().getReturnType();
             }
         }
         catch(IntrospectionException e)
