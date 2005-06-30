@@ -43,9 +43,12 @@
  */
 package com.medigy.persist.reference.custom;
 
+import com.medigy.persist.model.party.Party;
+
 public interface CustomReferenceEntity
 {
     public Long getSystemId();
     public String getCode();
     public String getLabel();
+    public Party getParty();
 }
