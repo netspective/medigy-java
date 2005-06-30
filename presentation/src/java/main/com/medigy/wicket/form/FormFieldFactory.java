@@ -128,6 +128,7 @@ public class FormFieldFactory
             }
 
             // TODO: wait until aye is done
+            // TODO: find a way to get ChoicesFactory from default application (if default application is available as thread local or something)
             //return new DropDownChoice(reflectedFormFieldDefn.getName(), ChoicesFactory.getInstance().getReferenceEntityChoices(reAnn.getEntityClass()));
             return null;
         }

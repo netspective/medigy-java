@@ -137,6 +137,7 @@ public class BaseForm extends Form
         super(componentName, model, feedback);
     }
 
+    // TODO: move this into DefaultApplication
     private ChoicesFactory getChoicesFactory()
     {
         if (choicesFactory == null)

@@ -1,17 +1,21 @@
+/*
+ * Copyright (c) 2005 Your Corporation. All Rights Reserved.
+ */
 package com.medigy.wicket.form;
 
-import wicket.markup.html.form.FormComponent;
-import wicket.markup.html.form.validation.RequiredValidator;
-
-import java.lang.reflect.Method;
-import java.lang.annotation.Annotation;
-import java.util.Set;
-import java.util.HashSet;
-import java.beans.PropertyDescriptor;
-import java.beans.Introspector;
 import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.hibernate.validator.NotNull;
+
+import com.medigy.service.validator.ReferenceEntity;
+import wicket.markup.html.form.FormComponent;
+import wicket.markup.html.form.validation.RequiredValidator;
 
 public class ReflectedFormFieldDefn
 {
@@ -23,9 +27,9 @@ public class ReflectedFormFieldDefn
     private final Set<Annotation> constraints = new HashSet<Annotation>();
     private final FormFieldFactory.FieldCreator creator;
 
-    public ReflectedFormFieldDefn(final Class container, final String propertyName)
+    public ReflectedFormFieldDefn(final String propertyName, final Class ... containers)
     {
-        this.container = container;
+        this.container = containers[0];
         this.name = propertyName;
 
         Method method = null;
@@ -62,13 +66,47 @@ public class ReflectedFormFieldDefn
         this.method = method;
         this.methodIsAccessor = isAccessor;
         this.dataType = type;
-        this.creator = getFieldCreator(getDataType());
+        if(isAnnotationPresent(ReferenceEntity.class))
+            this.creator = FormFieldFactory.getInstance().getReferenceEntityFieldCreator();
+        else
+            this.creator = getFieldCreator(getDataType());
 
         if(creator == null)
             throw new RuntimeException("Unable to find a field creator for data type " + this.dataType);
 
-        for (final Annotation a : method.getAnnotations())
-            constraints.add(a);
+        for(int i = 0; i < containers.length; i++)
+        {
+            Annotation[] annotations = null;
+            if(i == 0)
+                annotations = method.getAnnotations();
+            else
+            {
+                final Class otherContainer = containers[i];
+                final PropertyDescriptor[] descs;
+                try
+                {
+                    descs = Introspector.getBeanInfo(otherContainer).getPropertyDescriptors();
+                }
+                catch (IntrospectionException e)
+                {
+                    throw new RuntimeException(e);
+                }
+                for(final PropertyDescriptor desc : descs)
+                {
+                    if(propertyName.equalsIgnoreCase(desc.getName()))
+                    {
+                        Method otherMethod = desc.getReadMethod();
+                        if(otherMethod == null)
+                            otherMethod = desc.getWriteMethod();
+                        annotations = otherMethod.getAnnotations();
+                        break;
+                    }
+                }
+            }
+
+            for (final Annotation a : annotations)
+                constraints.add(a);
+        }
     }
 
     public FormComponent createField()
@@ -94,6 +132,15 @@ public class ReflectedFormFieldDefn
     public boolean isAnnotationPresent(final Class<?> annotation)
     {
         return constraints.contains(annotation);
+    }
+
+    public Annotation getAnnotation(final Class<?> annotation)
+    {
+        for(final Annotation a : constraints)
+            if(a.getClass() == annotation)
+                return a;
+
+        return null;
     }
 
     public Class getContainer()
