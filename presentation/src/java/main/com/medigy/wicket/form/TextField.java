@@ -64,6 +64,22 @@ public class TextField extends wicket.markup.html.form.TextField implements Java
     private String fieldControlId;
     private ReflectedFormFieldDefn reflectedFormFieldDefn;
 
+
+    // TODO: Remove after refactoring Org, Provider, Staff, and Insurance forms
+    public TextField(final String componentName)
+    {
+        this(componentName, FieldFlags.DEFAULT_FLAGS);
+    }
+
+    // TODO: Remove after refactoring Org, Provider, Staff, and Insurance forms
+    public TextField(final String fieldName, long fieldFlags)
+    {
+        super(fieldName);
+        this.fieldName = fieldName;
+        this.fieldControlId = fieldName;
+    }
+
+
     public TextField(final ReflectedFormFieldDefn reflectedFormFieldDefn)
     {
         super(reflectedFormFieldDefn.getName() + BaseForm.FIELD_CONTROL_SUFFIX);

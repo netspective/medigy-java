@@ -139,6 +139,12 @@ public class BaseForm extends Form
         return choicesFactory;
     }
 
+    protected void addLabeledTextField(final String fieldName)
+    {
+        add(new FieldLabel(fieldName));
+        add(new TextField(fieldName));
+    }
+
     protected void addLabeledField(final String fieldName, final Class cls)
     {
         add(new FieldLabel(fieldName));
