@@ -43,12 +43,34 @@
  */
 package com.medigy.wicket.form;
 
+import org.hibernate.validator.NotNull;
+
 import com.medigy.wicket.form.FormFieldFactory.FieldInfo;
 
-public interface JavaScriptProvider
+public class JavaScriptUtils
 {
-    public FieldInfo getFieldInfo();
-    public String getJavaScript(final String dialogVarName, final String formObjectName);
-    public int getJavaScriptFieldFlags();
-    public boolean isJavaScriptFieldHidden();
+    private static final JavaScriptUtils INSTANCE = new JavaScriptUtils();
+
+    public static JavaScriptUtils getInstance()
+    {
+        return INSTANCE;
+    }
+
+    protected JavaScriptUtils()
+    {
+    }
+
+    public int getFieldFlags(final JavaScriptProvider provider)
+    {
+        final FieldInfo fieldInfo = provider.getFieldInfo();
+        int flags = 0;
+
+        if(fieldInfo.isAnnotationPresent(NotNull.class))
+            flags |= FieldFlags.REQUIRED;
+
+        if(provider.isJavaScriptFieldHidden())
+            flags |= FieldFlags.INPUT_HIDDEN;
+
+        return flags;
+    }
 }
