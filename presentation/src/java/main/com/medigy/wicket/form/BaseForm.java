@@ -43,26 +43,33 @@
  */
 package com.medigy.wicket.form;
 
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
+import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Set;
 import java.util.HashSet;
-import java.lang.annotation.Annotation;
-import java.beans.*;
+import java.util.Set;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.hibernate.validator.ValidatorClass;
 
 import com.medigy.presentation.model.ChoicesFactory;
 import com.medigy.wicket.DefaultApplication;
 import wicket.IFeedback;
-import wicket.model.IModel;
-import wicket.model.BoundCompoundPropertyModel;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
-import wicket.markup.html.form.*;
+import wicket.markup.html.form.DropDownChoice;
+import wicket.markup.html.form.Form;
+import wicket.markup.html.form.FormComponent;
+import wicket.markup.html.form.ListMultipleChoice;
+import wicket.markup.html.form.RadioChoice;
 import wicket.markup.html.form.model.IChoice;
+import wicket.model.BoundCompoundPropertyModel;
+import wicket.model.IModel;
 import wicket.util.value.ValueMap;
-import org.hibernate.validator.ValidatorClass;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 public class BaseForm extends Form
 {
@@ -148,7 +155,7 @@ public class BaseForm extends Form
     protected void addLabeledField(final String fieldName, final Class cls)
     {
         add(new FieldLabel(fieldName));
-        add(((BoundCompoundPropertyModel)this.getModel()).bind(FormFieldFactory.getInstance().createField(fieldName, cls), fieldName));
+        add(((BoundCompoundPropertyModel)this.getModel()).bind(FormFieldFactory.getInstance().createField(fieldName, cls, getModel().getClass()), fieldName));
     }
 
     protected void addLabeledSelectField(final String fieldName, Collection choices)

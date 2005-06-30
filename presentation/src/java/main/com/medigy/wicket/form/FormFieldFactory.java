@@ -48,6 +48,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
+import com.medigy.service.validator.ReferenceEntity;
 import wicket.markup.html.form.FormComponent;
 
 public class FormFieldFactory
@@ -61,10 +62,16 @@ public class FormFieldFactory
 
     private Map<Class, FieldCreator> fieldCreatorMap = Collections.synchronizedMap(new HashMap<Class, FieldCreator>());
     private Map<String, ReflectedFormFieldDefn> reflectedFormFieldDefnsMap = Collections.synchronizedMap(new TreeMap<String, ReflectedFormFieldDefn>());
+    private ReferenceEntityFieldCreator referenceEntityFieldCreator = new ReferenceEntityFieldCreator();
 
     protected FormFieldFactory()
     {
         addFieldCreator(String.class, new TextField.TextFieldCreator());
+    }
+
+    public ReferenceEntityFieldCreator getReferenceEntityFieldCreator()
+    {
+        return referenceEntityFieldCreator;
     }
 
     public void addFieldCreator(final Class dataType, final FieldCreator creator)
@@ -77,13 +84,13 @@ public class FormFieldFactory
         return fieldCreatorMap.get(dataType);
     }
 
-    public ReflectedFormFieldDefn getReflectedFormFieldDefn(final Class<?> cls, final String propertyName)
+    public ReflectedFormFieldDefn getReflectedFormFieldDefn(final String propertyName, final Class ... cls)
     {
-        final String key = cls.getName() + "." + propertyName;
+        final String key = cls[0].getName() + "." + propertyName;
         ReflectedFormFieldDefn result = reflectedFormFieldDefnsMap.get(key);
         if(result == null)
         {
-            result = new ReflectedFormFieldDefn(cls, propertyName);
+            result = new ReflectedFormFieldDefn(propertyName, cls);
             reflectedFormFieldDefnsMap.put(key, result);
         }
 
@@ -93,11 +100,36 @@ public class FormFieldFactory
     public FormComponent createField(final String propertyName, final Class ... classes)
     {
         // TODO: classes beyond the first are not managed yet
-        return getReflectedFormFieldDefn(classes[0], propertyName).createField();
+        return getReflectedFormFieldDefn(propertyName, classes).createField();
     }
 
     public interface FieldCreator
     {
         public FormComponent createField(final ReflectedFormFieldDefn reflectedFormFieldDefn);
+    }
+
+    public class ReferenceEntityFieldCreator implements FieldCreator
+    {
+        public FormComponent createField(final ReflectedFormFieldDefn reflectedFormFieldDefn)
+        {
+            final ReferenceEntity reAnn = (ReferenceEntity) reflectedFormFieldDefn.getAnnotation(ReferenceEntity.class);
+            if(reAnn == null)
+                throw new RuntimeException("Unable to find a reference entity annotation on " + reflectedFormFieldDefn);
+
+            final SelectFieldStyle sfsAnn = (SelectFieldStyle) reflectedFormFieldDefn.getAnnotation(SelectFieldStyle.class);
+            final SelectFieldStyle.Style style = sfsAnn != null ? sfsAnn.style() : SelectFieldStyle.Style.COMBO;
+
+            switch(style)
+            {
+                case COMBO:
+                    //return new DropDownChoice(reflectedFormFieldDefn.getName(), ChoicesFactory.getInstance().getReferenceEntityChoices(reAnn.getEntityClass()));
+
+                // TODO: add other cases for other styles
+            }
+
+            // TODO: wait until aye is done
+            //return new DropDownChoice(reflectedFormFieldDefn.getName(), ChoicesFactory.getInstance().getReferenceEntityChoices(reAnn.getEntityClass()));
+            return null;
+        }
     }
 }

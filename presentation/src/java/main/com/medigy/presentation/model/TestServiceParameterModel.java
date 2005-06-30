@@ -1,8 +1,13 @@
+/*
+ * Copyright (c) 2005 Your Corporation. All Rights Reserved.
+ */
 package com.medigy.presentation.model;
+
+import java.io.Serializable;
 
 import org.hibernate.validator.NotNull;
 
-import java.io.Serializable;
+import com.medigy.wicket.form.SelectFieldStyle;
 
 /**
  * Simple model object for FormInput example. Has a number of simple properties
@@ -546,6 +551,7 @@ public final class TestServiceParameterModel implements Serializable
         this.officeVisitCoPay = officeVisitCoPay;
     }
 
+    @SelectFieldStyle(style = SelectFieldStyle.Style.COMBO)
     public String getGender()
     {
         return gender;
