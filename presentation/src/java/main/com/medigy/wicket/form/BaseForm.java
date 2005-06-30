@@ -229,10 +229,10 @@ public class BaseForm extends Form
         {
             public void formComponent(final FormComponent formComponent)
             {
-                if(formComponent instanceof JavaScriptProvider)
+                if(formComponent instanceof FormFieldJavaScriptProvider)
                 {
-                    JavaScriptProvider jsProvider = (JavaScriptProvider) formComponent;
-                    script.append(jsProvider.getJavaScript("dialog", "document.forms[0]"));
+                    FormFieldJavaScriptProvider jsProviderFormField = (FormFieldJavaScriptProvider) formComponent;
+                    script.append(jsProviderFormField.getJavaScript("dialog", "document.forms[0]"));
                 }
             }
         });

@@ -60,15 +60,15 @@ public class JavaScriptUtils
     {
     }
 
-    public int getFieldFlags(final JavaScriptProvider provider)
+    public int getFieldFlags(final FormFieldJavaScriptProvider providerFormField)
     {
-        final ReflectedFormFieldDefn reflectedFormFieldDefn = provider.getFieldInfo();
+        final ReflectedFormFieldDefn reflectedFormFieldDefn = providerFormField.getReflectedFormFieldDefn();
         int flags = 0;
 
         if(reflectedFormFieldDefn.isAnnotationPresent(NotNull.class))
             flags |= FieldFlags.REQUIRED;
 
-        if(provider.isJavaScriptFieldHidden())
+        if(providerFormField.isJavaScriptFieldHidden())
             flags |= FieldFlags.INPUT_HIDDEN;
 
         return flags;

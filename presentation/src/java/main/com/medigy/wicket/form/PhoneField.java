@@ -48,7 +48,7 @@ import wicket.markup.html.form.FormComponent;
 
 import java.util.regex.Pattern;
 
-public class PhoneField extends wicket.markup.html.form.TextField implements JavaScriptProvider
+public class PhoneField extends wicket.markup.html.form.TextField implements FormFieldJavaScriptProvider
 {
     private static final Pattern DASH_VALIDATE_PATTERN = Pattern.compile("^([\\d][\\d][\\d])[\\.-]?([\\d][\\d][\\d])[\\.-]?([\\d]{4})([ ][x][\\d]{1,5})?$");
     private static final Pattern BRACKET_VALIDATE_PATTERN = Pattern.compile("^([\\d][\\d][\\d])[\\.-]?([\\d][\\d][\\d])[\\.-]?([\\d]{4})([ ][x][\\d]{1,5})?$");
@@ -61,10 +61,10 @@ public class PhoneField extends wicket.markup.html.form.TextField implements Jav
 
     public static class PhoneFieldCreator implements FormFieldFactory.FieldCreator
     {
-        public FormComponent createField(final ReflectedFormFieldDefn reflectedFieldDefn)
+        public FormComponent createField(final ReflectedFormFieldDefn reflectedFormFieldDefn)
         {
-            final PhoneField result = new PhoneField(reflectedFieldDefn);
-            reflectedFieldDefn.initializeField(reflectedFieldDefn, result);
+            final PhoneField result = new PhoneField(reflectedFormFieldDefn);
+            reflectedFormFieldDefn.initializeField(reflectedFormFieldDefn, result);
             return result;
         }
     }
@@ -72,14 +72,14 @@ public class PhoneField extends wicket.markup.html.form.TextField implements Jav
     private String fieldName;
     private String fieldControlId;
     //private Style style;
-    private ReflectedFormFieldDefn reflectedFieldDefn;
+    private ReflectedFormFieldDefn reflectedFormFieldDefn;
 
-    public PhoneField(final ReflectedFormFieldDefn reflectedFieldDefn)
+    public PhoneField(final ReflectedFormFieldDefn reflectedFormFieldDefn)
     {
-        super(reflectedFieldDefn.getName() + BaseForm.FIELD_CONTROL_SUFFIX);
-        this.reflectedFieldDefn = reflectedFieldDefn;
-        this.fieldName = reflectedFieldDefn.getName() + BaseForm.FIELD_CONTROL_SUFFIX;
-        this.fieldControlId = reflectedFieldDefn.getName() + BaseForm.FIELD_CONTROL_SUFFIX;
+        super(reflectedFormFieldDefn.getName() + BaseForm.FIELD_CONTROL_SUFFIX);
+        this.reflectedFormFieldDefn = reflectedFormFieldDefn;
+        this.fieldName = reflectedFormFieldDefn.getName() + BaseForm.FIELD_CONTROL_SUFFIX;
+        this.fieldControlId = reflectedFormFieldDefn.getName() + BaseForm.FIELD_CONTROL_SUFFIX;
 
         //setStyle(Style.DASH);
     }
@@ -100,9 +100,9 @@ public class PhoneField extends wicket.markup.html.form.TextField implements Jav
         return this.fieldControlId;
     }
 
-    public ReflectedFormFieldDefn getFieldInfo()
+    public ReflectedFormFieldDefn getReflectedFormFieldDefn()
     {
-        return reflectedFieldDefn;
+        return reflectedFormFieldDefn;
     }
 
     public String getJavaScript(final String dialogVarName, final String formObjectName)

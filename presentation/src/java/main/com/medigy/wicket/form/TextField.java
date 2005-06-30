@@ -48,7 +48,7 @@ import wicket.markup.html.form.FormComponent;
 
 import com.medigy.wicket.form.ReflectedFormFieldDefn;
 
-public class TextField extends wicket.markup.html.form.TextField implements JavaScriptProvider
+public class TextField extends wicket.markup.html.form.TextField implements FormFieldJavaScriptProvider
 {
     public static class TextFieldCreator implements FormFieldFactory.FieldCreator
     {
@@ -104,7 +104,7 @@ public class TextField extends wicket.markup.html.form.TextField implements Java
         return this.fieldControlId;
     }
 
-    public ReflectedFormFieldDefn getFieldInfo()
+    public ReflectedFormFieldDefn getReflectedFormFieldDefn()
     {
         return reflectedFormFieldDefn;
     }

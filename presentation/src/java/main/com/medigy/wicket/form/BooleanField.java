@@ -45,29 +45,29 @@ package com.medigy.wicket.form;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.form.FormComponent;
 
-public class BooleanField extends wicket.markup.html.form.TextField implements JavaScriptProvider
+public class BooleanField extends wicket.markup.html.form.TextField implements FormFieldJavaScriptProvider
 {
 
     public static class BooleanFieldCreator implements FormFieldFactory.FieldCreator
     {
-        public FormComponent createField(final ReflectedFormFieldDefn reflectedFieldDefn)
+        public FormComponent createField(final ReflectedFormFieldDefn reflectedFormFieldDefn)
         {
-            final BooleanField result = new BooleanField(reflectedFieldDefn);
-            reflectedFieldDefn.initializeField(reflectedFieldDefn, result);
+            final BooleanField result = new BooleanField(reflectedFormFieldDefn);
+            reflectedFormFieldDefn.initializeField(reflectedFormFieldDefn, result);
             return result;
         }
     }
 
     private String fieldName;
     private String fieldControlId;
-    private ReflectedFormFieldDefn reflectedFieldDefn;
+    private ReflectedFormFieldDefn reflectedFormFieldDefn;
 
-    public BooleanField(final ReflectedFormFieldDefn reflectedFieldDefn)
+    public BooleanField(final ReflectedFormFieldDefn reflectedFormFieldDefn)
     {
-        super(reflectedFieldDefn.getName() + BaseForm.FIELD_CONTROL_SUFFIX);
-        this.reflectedFieldDefn = reflectedFieldDefn;
-        this.fieldName = reflectedFieldDefn.getName() + BaseForm.FIELD_CONTROL_SUFFIX;
-        this.fieldControlId = reflectedFieldDefn.getName() + BaseForm.FIELD_CONTROL_SUFFIX;
+        super(reflectedFormFieldDefn.getName() + BaseForm.FIELD_CONTROL_SUFFIX);
+        this.reflectedFormFieldDefn = reflectedFormFieldDefn;
+        this.fieldName = reflectedFormFieldDefn.getName() + BaseForm.FIELD_CONTROL_SUFFIX;
+        this.fieldControlId = reflectedFormFieldDefn.getName() + BaseForm.FIELD_CONTROL_SUFFIX;
     }
 
     protected void onComponentTag(final ComponentTag componentTag)
@@ -86,9 +86,9 @@ public class BooleanField extends wicket.markup.html.form.TextField implements J
         return this.fieldControlId;
     }
 
-    public ReflectedFormFieldDefn getFieldInfo()
+    public ReflectedFormFieldDefn getReflectedFormFieldDefn()
     {
-        return reflectedFieldDefn;
+        return reflectedFormFieldDefn;
     }
 
     public String getJavaScript(final String dialogVarName, final String formObjectName)

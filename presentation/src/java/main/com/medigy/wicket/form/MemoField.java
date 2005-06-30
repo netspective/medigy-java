@@ -44,28 +44,28 @@ package com.medigy.wicket.form;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.form.FormComponent;
 
-public class MemoField extends wicket.markup.html.form.TextArea implements JavaScriptProvider
+public class MemoField extends wicket.markup.html.form.TextArea implements FormFieldJavaScriptProvider
 {
     public static class MemoFieldCreator implements FormFieldFactory.FieldCreator
     {
-        public FormComponent createField(final ReflectedFormFieldDefn reflectedFieldDefn)
+        public FormComponent createField(final ReflectedFormFieldDefn reflectedFormFieldDefn)
         {
-            final MemoField result = new MemoField(reflectedFieldDefn);
-            reflectedFieldDefn.initializeField(reflectedFieldDefn, result);
+            final MemoField result = new MemoField(reflectedFormFieldDefn);
+            reflectedFormFieldDefn.initializeField(reflectedFormFieldDefn, result);
             return result;
         }
     }
 
     private String fieldName;
     private String fieldControlId;
-    private ReflectedFormFieldDefn reflectedFieldDefn;
+    private ReflectedFormFieldDefn reflectedFormFieldDefn;
 
-    public MemoField(final ReflectedFormFieldDefn reflectedFieldDefn)
+    public MemoField(final ReflectedFormFieldDefn reflectedFormFieldDefn)
     {
-        super(reflectedFieldDefn.getName() + BaseForm.FIELD_CONTROL_SUFFIX);
-        this.reflectedFieldDefn = reflectedFieldDefn;
-        this.fieldName = reflectedFieldDefn.getName() + BaseForm.FIELD_CONTROL_SUFFIX;
-        this.fieldControlId = reflectedFieldDefn.getName() + BaseForm.FIELD_CONTROL_SUFFIX;
+        super(reflectedFormFieldDefn.getName() + BaseForm.FIELD_CONTROL_SUFFIX);
+        this.reflectedFormFieldDefn = reflectedFormFieldDefn;
+        this.fieldName = reflectedFormFieldDefn.getName() + BaseForm.FIELD_CONTROL_SUFFIX;
+        this.fieldControlId = reflectedFormFieldDefn.getName() + BaseForm.FIELD_CONTROL_SUFFIX;
     }
 
     protected void onComponentTag(final ComponentTag componentTag)
@@ -84,9 +84,9 @@ public class MemoField extends wicket.markup.html.form.TextArea implements JavaS
         return this.fieldControlId;
     }
 
-    public ReflectedFormFieldDefn getFieldInfo()
+    public ReflectedFormFieldDefn getReflectedFormFieldDefn()
     {
-        return reflectedFieldDefn;
+        return reflectedFormFieldDefn;
     }
 
     public String getJavaScript(final String dialogVarName, final String formObjectName)

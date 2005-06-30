@@ -45,28 +45,28 @@ package com.medigy.wicket.form;
 
 import wicket.markup.html.form.FormComponent;
 
-public class MultiListField extends wicket.markup.html.form.ListMultipleChoice implements JavaScriptProvider
+public class MultiListField extends wicket.markup.html.form.ListMultipleChoice implements FormFieldJavaScriptProvider
 {
     public static class MultiListFieldCreator implements FormFieldFactory.FieldCreator
     {
-        public FormComponent createField(final ReflectedFormFieldDefn reflectedFieldDefn)
+        public FormComponent createField(final ReflectedFormFieldDefn reflectedFormFieldDefn)
         {
-            final MultiListField result = new MultiListField(reflectedFieldDefn);
-            reflectedFieldDefn.initializeField(reflectedFieldDefn, result);
+            final MultiListField result = new MultiListField(reflectedFormFieldDefn);
+            reflectedFormFieldDefn.initializeField(reflectedFormFieldDefn, result);
             return result;
         }
     }
 
     private String fieldName;
     private String fieldControlId;
-    private ReflectedFormFieldDefn reflectedFieldDefn;
+    private ReflectedFormFieldDefn reflectedFormFieldDefn;
 
-    public MultiListField(final ReflectedFormFieldDefn reflectedFieldDefn)
+    public MultiListField(final ReflectedFormFieldDefn reflectedFormFieldDefn)
     {
-        super(reflectedFieldDefn.getName() + BaseForm.FIELD_CONTROL_SUFFIX);
-        this.reflectedFieldDefn = reflectedFieldDefn;
-        this.fieldName = reflectedFieldDefn.getName() + BaseForm.FIELD_CONTROL_SUFFIX;
-        this.fieldControlId = reflectedFieldDefn.getName() + BaseForm.FIELD_CONTROL_SUFFIX;
+        super(reflectedFormFieldDefn.getName() + BaseForm.FIELD_CONTROL_SUFFIX);
+        this.reflectedFormFieldDefn = reflectedFormFieldDefn;
+        this.fieldName = reflectedFormFieldDefn.getName() + BaseForm.FIELD_CONTROL_SUFFIX;
+        this.fieldControlId = reflectedFormFieldDefn.getName() + BaseForm.FIELD_CONTROL_SUFFIX;
     }
 
     // TODO - Cannot override onComponentTag - final in super.  check how to register
@@ -86,9 +86,9 @@ public class MultiListField extends wicket.markup.html.form.ListMultipleChoice i
         return this.fieldControlId;
     }
 
-    public ReflectedFormFieldDefn getFieldInfo()
+    public ReflectedFormFieldDefn getReflectedFormFieldDefn()
     {
-        return reflectedFieldDefn;
+        return reflectedFormFieldDefn;
     }
 
     public String getJavaScript(final String dialogVarName, final String formObjectName)
