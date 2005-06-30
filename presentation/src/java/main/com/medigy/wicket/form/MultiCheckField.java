@@ -49,24 +49,24 @@ public class MultiCheckField extends wicket.markup.html.form.ListMultipleChoice 
 {
     public static class MultiCheckFieldCreator implements FormFieldFactory.FieldCreator
     {
-        public FormComponent createField(final FormFieldFactory.FieldInfo fieldInfo)
+        public FormComponent createField(final ReflectedFormFieldDefn reflectedFieldDefn)
         {
-            final MultiCheckField result = new MultiCheckField(fieldInfo);
-            fieldInfo.initializeField(fieldInfo, result);
+            final MultiCheckField result = new MultiCheckField(reflectedFieldDefn);
+            reflectedFieldDefn.initializeField(reflectedFieldDefn, result);
             return result;
         }
     }
 
     private String fieldName;
     private String fieldControlId;
-    private FormFieldFactory.FieldInfo fieldInfo;
+    private ReflectedFormFieldDefn reflectedFieldDefn;
 
-    public MultiCheckField(final FormFieldFactory.FieldInfo fieldInfo)
+    public MultiCheckField(final ReflectedFormFieldDefn reflectedFieldDefn)
     {
-        super(fieldInfo.getName() + BaseForm.FIELD_CONTROL_SUFFIX);
-        this.fieldInfo = fieldInfo;
-        this.fieldName = fieldInfo.getName() + BaseForm.FIELD_CONTROL_SUFFIX;
-        this.fieldControlId = fieldInfo.getName() + BaseForm.FIELD_CONTROL_SUFFIX;
+        super(reflectedFieldDefn.getName() + BaseForm.FIELD_CONTROL_SUFFIX);
+        this.reflectedFieldDefn = reflectedFieldDefn;
+        this.fieldName = reflectedFieldDefn.getName() + BaseForm.FIELD_CONTROL_SUFFIX;
+        this.fieldControlId = reflectedFieldDefn.getName() + BaseForm.FIELD_CONTROL_SUFFIX;
     }
 
     // TODO - Cannot override onComponentTag - final in super. Check how to register
@@ -86,9 +86,9 @@ public class MultiCheckField extends wicket.markup.html.form.ListMultipleChoice 
         return this.fieldControlId;
     }
 
-    public FormFieldFactory.FieldInfo getFieldInfo()
+    public ReflectedFormFieldDefn getFieldInfo()
     {
-        return fieldInfo;
+        return reflectedFieldDefn;
     }
 
     public String getJavaScript(final String dialogVarName, final String formObjectName)

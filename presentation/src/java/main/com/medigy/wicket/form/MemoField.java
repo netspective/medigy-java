@@ -48,24 +48,24 @@ public class MemoField extends wicket.markup.html.form.TextArea implements JavaS
 {
     public static class MemoFieldCreator implements FormFieldFactory.FieldCreator
     {
-        public FormComponent createField(final FormFieldFactory.FieldInfo fieldInfo)
+        public FormComponent createField(final ReflectedFormFieldDefn reflectedFieldDefn)
         {
-            final MemoField result = new MemoField(fieldInfo);
-            fieldInfo.initializeField(fieldInfo, result);
+            final MemoField result = new MemoField(reflectedFieldDefn);
+            reflectedFieldDefn.initializeField(reflectedFieldDefn, result);
             return result;
         }
     }
 
     private String fieldName;
     private String fieldControlId;
-    private FormFieldFactory.FieldInfo fieldInfo;
+    private ReflectedFormFieldDefn reflectedFieldDefn;
 
-    public MemoField(final FormFieldFactory.FieldInfo fieldInfo)
+    public MemoField(final ReflectedFormFieldDefn reflectedFieldDefn)
     {
-        super(fieldInfo.getName() + BaseForm.FIELD_CONTROL_SUFFIX);
-        this.fieldInfo = fieldInfo;
-        this.fieldName = fieldInfo.getName() + BaseForm.FIELD_CONTROL_SUFFIX;
-        this.fieldControlId = fieldInfo.getName() + BaseForm.FIELD_CONTROL_SUFFIX;
+        super(reflectedFieldDefn.getName() + BaseForm.FIELD_CONTROL_SUFFIX);
+        this.reflectedFieldDefn = reflectedFieldDefn;
+        this.fieldName = reflectedFieldDefn.getName() + BaseForm.FIELD_CONTROL_SUFFIX;
+        this.fieldControlId = reflectedFieldDefn.getName() + BaseForm.FIELD_CONTROL_SUFFIX;
     }
 
     protected void onComponentTag(final ComponentTag componentTag)
@@ -84,9 +84,9 @@ public class MemoField extends wicket.markup.html.form.TextArea implements JavaS
         return this.fieldControlId;
     }
 
-    public FormFieldFactory.FieldInfo getFieldInfo()
+    public ReflectedFormFieldDefn getFieldInfo()
     {
-        return fieldInfo;
+        return reflectedFieldDefn;
     }
 
     public String getJavaScript(final String dialogVarName, final String formObjectName)

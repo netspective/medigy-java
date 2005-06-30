@@ -45,7 +45,7 @@ package com.medigy.wicket.form;
 
 import org.hibernate.validator.NotNull;
 
-import com.medigy.wicket.form.FormFieldFactory.FieldInfo;
+import com.medigy.wicket.form.ReflectedFormFieldDefn;
 
 public class JavaScriptUtils
 {
@@ -62,10 +62,10 @@ public class JavaScriptUtils
 
     public int getFieldFlags(final JavaScriptProvider provider)
     {
-        final FieldInfo fieldInfo = provider.getFieldInfo();
+        final ReflectedFormFieldDefn reflectedFormFieldDefn = provider.getFieldInfo();
         int flags = 0;
 
-        if(fieldInfo.isAnnotationPresent(NotNull.class))
+        if(reflectedFormFieldDefn.isAnnotationPresent(NotNull.class))
             flags |= FieldFlags.REQUIRED;
 
         if(provider.isJavaScriptFieldHidden())

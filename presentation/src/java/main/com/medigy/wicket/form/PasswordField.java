@@ -47,24 +47,24 @@ public class PasswordField extends wicket.markup.html.form.PasswordTextField imp
 {
     public static class PasswordFieldCreator implements FormFieldFactory.FieldCreator
     {
-        public FormComponent createField(final FormFieldFactory.FieldInfo fieldInfo)
+        public FormComponent createField(final ReflectedFormFieldDefn reflectedFieldDefn)
         {
-            final PasswordField result = new PasswordField(fieldInfo);
-            fieldInfo.initializeField(fieldInfo, result);
+            final PasswordField result = new PasswordField(reflectedFieldDefn);
+            reflectedFieldDefn.initializeField(reflectedFieldDefn, result);
             return result;
         }
     }
 
     private String fieldName;
     private String fieldControlId;
-    private FormFieldFactory.FieldInfo fieldInfo;
+    private ReflectedFormFieldDefn reflectedFieldDefn;
 
-    public PasswordField(final FormFieldFactory.FieldInfo fieldInfo)
+    public PasswordField(final ReflectedFormFieldDefn reflectedFieldDefn)
     {
-        super(fieldInfo.getName() + BaseForm.FIELD_CONTROL_SUFFIX);
-        this.fieldInfo = fieldInfo;
-        this.fieldName = fieldInfo.getName() + BaseForm.FIELD_CONTROL_SUFFIX;
-        this.fieldControlId = fieldInfo.getName() + BaseForm.FIELD_CONTROL_SUFFIX;
+        super(reflectedFieldDefn.getName() + BaseForm.FIELD_CONTROL_SUFFIX);
+        this.reflectedFieldDefn = reflectedFieldDefn;
+        this.fieldName = reflectedFieldDefn.getName() + BaseForm.FIELD_CONTROL_SUFFIX;
+        this.fieldControlId = reflectedFieldDefn.getName() + BaseForm.FIELD_CONTROL_SUFFIX;
     }
 
 //    protected void onComponentTag(final ComponentTag componentTag)
@@ -83,9 +83,9 @@ public class PasswordField extends wicket.markup.html.form.PasswordTextField imp
         return this.fieldControlId;
     }
 
-    public FormFieldFactory.FieldInfo getFieldInfo()
+    public ReflectedFormFieldDefn getFieldInfo()
     {
-        return fieldInfo;
+        return reflectedFieldDefn;
     }
 
     public String getJavaScript(final String dialogVarName, final String formObjectName)

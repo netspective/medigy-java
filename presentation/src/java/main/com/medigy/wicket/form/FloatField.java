@@ -50,24 +50,24 @@ public class FloatField extends wicket.markup.html.form.TextField implements Jav
 {
     public static class FloatFieldCreator implements FormFieldFactory.FieldCreator
     {
-        public FormComponent createField(final FormFieldFactory.FieldInfo fieldInfo)
+        public FormComponent createField(final ReflectedFormFieldDefn reflectedFieldDefn)
         {
-            final FloatField result = new FloatField(fieldInfo);
-            fieldInfo.initializeField(fieldInfo, result);
+            final FloatField result = new FloatField(reflectedFieldDefn);
+            reflectedFieldDefn.initializeField(reflectedFieldDefn, result);
             return result;
         }
     }
 
     private String fieldName;
     private String fieldControlId;
-    private FormFieldFactory.FieldInfo fieldInfo;
+    private ReflectedFormFieldDefn reflectedFieldDefn;
 
-    public FloatField(final FormFieldFactory.FieldInfo fieldInfo)
+    public FloatField(final ReflectedFormFieldDefn reflectedFieldDefn)
     {
-        super(fieldInfo.getName() + BaseForm.FIELD_CONTROL_SUFFIX);
-        this.fieldInfo = fieldInfo;
-        this.fieldName = fieldInfo.getName() + BaseForm.FIELD_CONTROL_SUFFIX;
-        this.fieldControlId = fieldInfo.getName() + BaseForm.FIELD_CONTROL_SUFFIX;
+        super(reflectedFieldDefn.getName() + BaseForm.FIELD_CONTROL_SUFFIX);
+        this.reflectedFieldDefn = reflectedFieldDefn;
+        this.fieldName = reflectedFieldDefn.getName() + BaseForm.FIELD_CONTROL_SUFFIX;
+        this.fieldControlId = reflectedFieldDefn.getName() + BaseForm.FIELD_CONTROL_SUFFIX;
     }
 
     protected void onComponentTag(final ComponentTag componentTag)
@@ -86,9 +86,9 @@ public class FloatField extends wicket.markup.html.form.TextField implements Jav
         return this.fieldControlId;
     }
 
-    public FormFieldFactory.FieldInfo getFieldInfo()
+    public ReflectedFormFieldDefn getFieldInfo()
     {
-        return fieldInfo;
+        return reflectedFieldDefn;
     }
 
     public String getJavaScript(final String dialogVarName, final String formObjectName)

@@ -43,17 +43,9 @@
  */
 package com.medigy.wicket.form;
 
-import java.beans.IntrospectionException;
-import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
 import java.util.*;
 
-import org.hibernate.validator.NotNull;
-
 import wicket.markup.html.form.FormComponent;
-import wicket.markup.html.form.validation.RequiredValidator;
 
 public class FormFieldFactory
 {
@@ -65,7 +57,7 @@ public class FormFieldFactory
     }
 
     private Map<Class, FieldCreator> fieldCreatorMap = Collections.synchronizedMap(new HashMap<Class, FieldCreator>());  // TODO: for some reason TreeMap was throwing a CCE when issueing a get(). Was there a specific need for TreeMap here?
-    private Map<String, FieldInfo> fieldInfoMap = Collections.synchronizedMap(new TreeMap<String, FieldInfo>());
+    private Map<String, ReflectedFormFieldDefn> fieldInfoMap = Collections.synchronizedMap(new TreeMap<String, ReflectedFormFieldDefn>());
 
     protected FormFieldFactory()
     {
@@ -82,13 +74,13 @@ public class FormFieldFactory
         return fieldCreatorMap.get(dataType);
     }
 
-    public FieldInfo getFieldInfo(final Class<?> cls, final String propertyName)
+    public ReflectedFormFieldDefn getFieldInfo(final Class<?> cls, final String propertyName)
     {
         final String key = cls.getName() + "." + propertyName;
-        FieldInfo result = fieldInfoMap.get(key);
+        ReflectedFormFieldDefn result = fieldInfoMap.get(key);
         if(result == null)
         {
-            result = new FieldInfo(cls, propertyName);
+            result = new ReflectedFormFieldDefn(cls, propertyName);
             fieldInfoMap.put(key, result);
         }
 
@@ -103,121 +95,6 @@ public class FormFieldFactory
 
     public interface FieldCreator
     {
-        public FormComponent createField(final FieldInfo fieldInfo);
+        public FormComponent createField(final ReflectedFormFieldDefn reflectedFormFieldDefn);
     }
-
-    public class FieldInfo
-    {
-        private final Class container;
-        private final String name;
-        private final Class dataType;
-        private final Method method;
-        private final boolean methodIsAccessor;
-        private final Set<Annotation> constraints = new HashSet<Annotation>();
-        private final FieldCreator creator;
-
-        public FieldInfo(final Class container, final String propertyName)
-        {
-            this.container = container;
-            this.name = propertyName;
-
-            Method method = null;
-            boolean isAccessor = false;
-            Class type = null;
-            try
-            {
-                final PropertyDescriptor[] descs = Introspector.getBeanInfo(container).getPropertyDescriptors();
-                for(final PropertyDescriptor desc : descs)
-                {
-                    if(propertyName.equalsIgnoreCase(desc.getName()))
-                    {
-                        method = desc.getReadMethod();
-                        if(method == null)
-                        {
-                            method = desc.getWriteMethod();
-                            type = method.getParameterTypes()[0];
-                            isAccessor = false;
-                        }
-                        else
-                        {
-                            type = method.getReturnType();
-                            isAccessor = true;
-                        }
-                        break;
-                    }
-                }
-            }
-            catch(IntrospectionException e)
-            {
-                method = null;
-            }
-
-            this.method = method;
-            this.methodIsAccessor = isAccessor;
-            this.dataType = type;
-            this.creator = getFieldCreator(getDataType());
-
-            if(creator == null)
-                throw new RuntimeException("Unable to find a field creator for data type " + this.dataType);
-
-            for (final Annotation a : method.getAnnotations())
-                constraints.add(a);
-        }
-
-        public FormComponent createField()
-        {
-            return creator.createField(this);
-        }
-
-        public void initializeField(final FieldInfo fieldInfo, final FormComponent formComponent)
-        {
-            // at this point we have the originating class, the creator, and the newly created field so we can do
-            // basic annotations processing first (all common annotations) and then let the field handle what it
-            // needs to do
-            if(this.isAnnotationPresent(NotNull.class));
-                formComponent.add(RequiredValidator.getInstance());
-
-        }
-
-        public boolean isAnnotationPresent(final Class<?> annotation)
-        {
-            return constraints.contains(annotation);
-        }
-
-        public Class getContainer()
-        {
-            return container;
-        }
-
-        public Method getMethod()
-        {
-            return method;
-        }
-
-        public boolean isMethodIsAccessor()
-        {
-            return methodIsAccessor;
-        }
-
-        public String getName()
-        {
-            return name;
-        }
-
-        public Class getDataType()
-        {
-            return dataType;
-        }
-
-        public Set<Annotation> getConstraints()
-        {
-            return constraints;
-        }
-
-        public FieldCreator getCreator()
-        {
-            return creator;
-        }
-    }
-
 }

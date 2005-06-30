@@ -43,11 +43,11 @@
  */
 package com.medigy.wicket.form;
 
-import com.medigy.wicket.form.FormFieldFactory.FieldInfo;
+import com.medigy.wicket.form.ReflectedFormFieldDefn;
 
 public interface JavaScriptProvider
 {
-    public FieldInfo getFieldInfo();
+    public ReflectedFormFieldDefn getFieldInfo();
     public String getJavaScript(final String dialogVarName, final String formObjectName);
     public int getJavaScriptFieldFlags();
     public boolean isJavaScriptFieldHidden();

@@ -46,30 +46,30 @@ package com.medigy.wicket.form;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.form.FormComponent;
 
-import com.medigy.wicket.form.FormFieldFactory.FieldInfo;
+import com.medigy.wicket.form.ReflectedFormFieldDefn;
 
 public class TextField extends wicket.markup.html.form.TextField implements JavaScriptProvider
 {
     public static class TextFieldCreator implements FormFieldFactory.FieldCreator
     {
-        public FormComponent createField(final FieldInfo fieldInfo)
+        public FormComponent createField(final ReflectedFormFieldDefn reflectedFormFieldDefn)
         {
-            final TextField result = new TextField(fieldInfo);
-            fieldInfo.initializeField(fieldInfo, result);
+            final TextField result = new TextField(reflectedFormFieldDefn);
+            reflectedFormFieldDefn.initializeField(reflectedFormFieldDefn, result);
             return result;
         }
     }
 
     private String fieldName;
     private String fieldControlId;
-    private FieldInfo fieldInfo;
+    private ReflectedFormFieldDefn reflectedFormFieldDefn;
 
-    public TextField(final FieldInfo fieldInfo)
+    public TextField(final ReflectedFormFieldDefn reflectedFormFieldDefn)
     {
-        super(fieldInfo.getName() + BaseForm.FIELD_CONTROL_SUFFIX);
-        this.fieldInfo = fieldInfo;
-        this.fieldName = fieldInfo.getName() + BaseForm.FIELD_CONTROL_SUFFIX;
-        this.fieldControlId = fieldInfo.getName() + BaseForm.FIELD_CONTROL_SUFFIX;
+        super(reflectedFormFieldDefn.getName() + BaseForm.FIELD_CONTROL_SUFFIX);
+        this.reflectedFormFieldDefn = reflectedFormFieldDefn;
+        this.fieldName = reflectedFormFieldDefn.getName() + BaseForm.FIELD_CONTROL_SUFFIX;
+        this.fieldControlId = reflectedFormFieldDefn.getName() + BaseForm.FIELD_CONTROL_SUFFIX;
     }
 
     protected void onComponentTag(final ComponentTag componentTag)
@@ -88,9 +88,9 @@ public class TextField extends wicket.markup.html.form.TextField implements Java
         return this.fieldControlId;
     }
 
-    public FieldInfo getFieldInfo()
+    public ReflectedFormFieldDefn getFieldInfo()
     {
-        return fieldInfo;
+        return reflectedFormFieldDefn;
     }
 
     public String getJavaScript(final String dialogVarName, final String formObjectName)
