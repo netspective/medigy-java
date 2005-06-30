@@ -48,6 +48,7 @@ import java.lang.annotation.Retention;
 @Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
 public @interface ReferenceEntity
 {
-    String className() default "";
-    String message() default "must belong to the reference entity type: {className}";
+    Class referenceEntityClass();
+    //int entityId() ;  // only useful for custom reference entities
+    String message() default "must belong to the reference entity type: {entityClass}";
 }

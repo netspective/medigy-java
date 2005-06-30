@@ -53,11 +53,14 @@ import com.medigy.persist.reference.custom.CustomReferenceEntity;
 import com.medigy.persist.reference.type.GenderType;
 import com.medigy.persist.reference.type.LanguageType;
 import com.medigy.persist.reference.type.MaritalStatusType;
+import com.medigy.persist.reference.ReferenceEntity;
+import com.medigy.persist.model.party.Party;
 import com.medigy.service.util.AbstractFacade;
 import com.medigy.service.util.ReferenceEntityFacade;
 import com.medigy.service.util.UnknownReferenceTypeException;
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
+import org.hibernate.Query;
 import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.Restrictions;
 import org.apache.commons.logging.Log;
@@ -82,7 +85,7 @@ public class ReferenceEntityFacadeImpl extends AbstractFacade implements Referen
      * the list being requested is for reference entities belonging to the SYS GLOBAL scope.
      *
      * @param customReferenceEntityClass
-     * @return
+     * @return list of custom reference entities
      */
     public List<CustomReferenceEntity> listCustomReferenceEntities(final Class customReferenceEntityClass)
     {
@@ -113,6 +116,11 @@ public class ReferenceEntityFacadeImpl extends AbstractFacade implements Referen
                 {
                     return error;
                 }
+
+                public Party getParty()
+                {
+                    return null;
+                }
             });
         }
         return newList;
@@ -120,11 +128,34 @@ public class ReferenceEntityFacadeImpl extends AbstractFacade implements Referen
 
     public CustomReferenceEntity getCustomReferenceEntity(final Class customReferenceEntityClass, final String code)
     {
-        if (!customReferenceEntityClass.isAssignableFrom(CustomReferenceEntity.class))
+        return getCustomReferenceEntity(customReferenceEntityClass, code, null);
+    }
+
+    public CustomReferenceEntity getCustomReferenceEntity(final Class customReferenceEntityClass, final String code,
+                                                          final Long partyId)
+    {
+        if (!CustomReferenceEntity.class.isAssignableFrom(customReferenceEntityClass))
             return null;
         try
         {
-            return (CustomReferenceEntity) getSession().createCriteria(customReferenceEntityClass).add(Restrictions.eq("code", code)).uniqueResult();
+            Query query = null;
+            if (partyId == null)
+            {
+                query = getSession().createQuery("from " + customReferenceEntityClass.getName() + "  where " +
+                    "code = ? and party.id = ?");
+                query.setString(0, code);
+                query.setLong(1, Party.Cache.SYS_GLOBAL_PARTY.getEntity().getPartyId());
+                return (CustomReferenceEntity) query.uniqueResult();
+            }
+            else
+            {
+                query = getSession().createQuery("from " + customReferenceEntityClass.getName() + "  where " +
+                    "code = ? and (party.id = ? or party.id = ?)");
+                query.setString(0, code);
+                query.setLong(1, partyId);
+                query.setLong(2, Party.Cache.SYS_GLOBAL_PARTY.getEntity().getPartyId());
+                return (CustomReferenceEntity) query.uniqueResult();
+            }
         }
         catch (Exception e)
         {
@@ -132,6 +163,23 @@ public class ReferenceEntityFacadeImpl extends AbstractFacade implements Referen
             return null;
         }
     }
+
+    public ReferenceEntity getReferenceEntity(final Class referenceEntityClass, final String code)
+    {
+        if (!ReferenceEntity.class.isAssignableFrom(referenceEntityClass))
+            return null;
+        try
+        {
+            return (ReferenceEntity) getSession().createCriteria(referenceEntityClass).add(Restrictions.eq("code", code)).uniqueResult();
+        }
+        catch (Exception e)
+        {
+            log.error(ExceptionUtils.getStackTrace(e));
+            return null;
+        }
+    }
+
+
 
     public InsurancePolicyType getInsurancePolicyType(final String code)
     {

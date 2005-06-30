@@ -52,7 +52,7 @@ public interface PersonParameters
      * @see com.medigy.persist.reference.type.GenderType#getCode()
      */
     @NotNull
-    @com.medigy.service.validator.ReferenceEntity(className = "com.medigy.persist.model.person.Gender")
+    @com.medigy.service.validator.ReferenceEntity(referenceEntityClass = com.medigy.persist.model.person.Gender.class)
     public String getGenderCode();
 
     /**

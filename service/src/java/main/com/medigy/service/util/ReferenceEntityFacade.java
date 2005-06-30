@@ -53,6 +53,7 @@ import com.medigy.persist.reference.custom.CustomReferenceEntity;
 import com.medigy.persist.reference.type.GenderType;
 import com.medigy.persist.reference.type.LanguageType;
 import com.medigy.persist.reference.type.MaritalStatusType;
+import com.medigy.persist.reference.ReferenceEntity;
 
 import java.util.List;
 
@@ -61,7 +62,12 @@ public interface ReferenceEntityFacade extends Facade
     public List<CustomReferenceEntity> listCustomReferenceEntities(final Class customReferenceEntityClass);
 
     public CustomReferenceEntity getCustomReferenceEntity(final Class customReferenceEntityClass, final String code);
-    
+
+    public CustomReferenceEntity getCustomReferenceEntity(final Class customReferenceEntityClass, final String code,
+                                                          final Long partyId);
+
+    public ReferenceEntity getReferenceEntity(final Class referenceEntityClass, final String code);
+
     public InsurancePolicyType getInsurancePolicyType(final String code);
 
     public LanguageType getLanguageType(final String code);
