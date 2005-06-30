@@ -43,28 +43,30 @@
  */
 package com.medigy.wicket.form;
 
-import wicket.markup.html.form.validation.RequiredValidator;
+import wicket.markup.html.form.FormComponent;
 
 public class MultiCheckField extends wicket.markup.html.form.ListMultipleChoice implements JavaScriptProvider
 {
-    private String fieldName;
-    private String fieldControlId;
-    private long fieldFlags;
-
-    public MultiCheckField(final String fieldName, long fieldFlags)
+    public static class MultiCheckFieldCreator implements FormFieldFactory.FieldCreator
     {
-        super(fieldName + BaseForm.FIELD_CONTROL_SUFFIX);
-        this.fieldName = fieldName;
-        this.fieldFlags = fieldFlags;
-        this.fieldControlId = fieldName + BaseForm.FIELD_CONTROL_SUFFIX;
-
-        if((this.fieldFlags & FieldFlags.REQUIRED) != 0)
-            add(RequiredValidator.getInstance());
+        public FormComponent createField(final FormFieldFactory.FieldInfo fieldInfo)
+        {
+            final MultiCheckField result = new MultiCheckField(fieldInfo);
+            fieldInfo.initializeField(fieldInfo, result);
+            return result;
+        }
     }
 
-    public MultiCheckField(final String componentName)
+    private String fieldName;
+    private String fieldControlId;
+    private FormFieldFactory.FieldInfo fieldInfo;
+
+    public MultiCheckField(final FormFieldFactory.FieldInfo fieldInfo)
     {
-        this(componentName, FieldFlags.DEFAULT_FLAGS);
+        super(fieldInfo.getName() + BaseForm.FIELD_CONTROL_SUFFIX);
+        this.fieldInfo = fieldInfo;
+        this.fieldName = fieldInfo.getName() + BaseForm.FIELD_CONTROL_SUFFIX;
+        this.fieldControlId = fieldInfo.getName() + BaseForm.FIELD_CONTROL_SUFFIX;
     }
 
     // TODO - Cannot override onComponentTag - final in super. Check how to register
@@ -74,13 +76,33 @@ public class MultiCheckField extends wicket.markup.html.form.ListMultipleChoice 
 //        super.onComponentTag(componentTag);
 //    }
 
+    public String getFieldName()
+    {
+        return this.fieldName;
+    }
+
     protected String getFieldId()
     {
         return this.fieldControlId;
     }
 
+    public FormFieldFactory.FieldInfo getFieldInfo()
+    {
+        return fieldInfo;
+    }
+
     public String getJavaScript(final String dialogVarName, final String formObjectName)
     {
-        return "var field = dialog.createField("+ formObjectName +"[\""+ getFieldId() +"\"], FIELD_TYPES[\""+ getClass().getName() +"\"], "+ fieldFlags +", null);\n";
+        return "var field = dialog.createField("+ formObjectName +"[\""+ getFieldId() +"\"], FIELD_TYPES[\""+ getClass().getName() +"\"], "+ getJavaScriptFieldFlags() +", null);\n";
+    }
+
+    public int getJavaScriptFieldFlags()
+    {
+        return JavaScriptUtils.getInstance().getFieldFlags(this);
+    }
+
+    public boolean isJavaScriptFieldHidden()
+    {
+        return isVisible();
     }
 }

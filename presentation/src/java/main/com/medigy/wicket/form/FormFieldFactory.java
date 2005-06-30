@@ -50,7 +50,6 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.*;
 
-import org.hibernate.validator.ValidatorClass;
 import org.hibernate.validator.NotNull;
 
 import wicket.markup.html.form.FormComponent;
@@ -162,10 +161,7 @@ public class FormFieldFactory
                 throw new RuntimeException("Unable to find a field creator for data type " + this.dataType);
 
             for (final Annotation a : method.getAnnotations())
-            {
-                if(a.annotationType().isAnnotationPresent(ValidatorClass.class))
-                    constraints.add(a);
-            }
+                constraints.add(a);
         }
 
         public FormComponent createField()
@@ -178,13 +174,9 @@ public class FormFieldFactory
             // at this point we have the originating class, the creator, and the newly created field so we can do
             // basic annotations processing first (all common annotations) and then let the field handle what it
             // needs to do
-            Set<Annotation> annotations = fieldInfo.getConstraints();
-            for(final Annotation annotation : annotations)
-            {
-                // TODO: Add checks for other annotation types
-                if(NotNull.class.isAssignableFrom(annotation.annotationType()))
-                    formComponent.add(RequiredValidator.getInstance());
-            }
+            if(this.isAnnotationPresent(NotNull.class));
+                formComponent.add(RequiredValidator.getInstance());
+
         }
 
         public boolean isAnnotationPresent(final Class<?> annotation)

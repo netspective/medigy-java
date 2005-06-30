@@ -48,7 +48,6 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.HashSet;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
 import java.beans.*;
 
 import com.medigy.presentation.model.ChoicesFactory;
@@ -116,12 +115,12 @@ public class BaseForm extends Form
 
     private ChoicesFactory choicesFactory;
 
-    public BaseForm(final String componentName)
+    protected BaseForm(final String componentName)
     {
         super(componentName);
     }
 
-    public BaseForm(final String componentName, final IFeedback feedback)
+    protected BaseForm(final String componentName, final IFeedback feedback)
     {
         super(componentName, feedback);
     }
@@ -143,38 +142,7 @@ public class BaseForm extends Form
     protected void addLabeledField(final String fieldName, final Class cls)
     {
         add(new FieldLabel(fieldName));
-        add(FormFieldFactory.getInstance().createField(fieldName, cls));
-    }
-
-    protected void addLabeledField(final String fieldName, BoundCompoundPropertyModel model, final Class cls)
-    {
-        add(new FieldLabel(fieldName));
-
-        add(model.bind(FormFieldFactory.getInstance().createField(fieldName, cls), fieldName));
-    }
-
-    protected void addLabeledTextField(final String fieldName)
-    {
-        add(new FieldLabel(fieldName));
-        add(new TextField(fieldName));
-    }
-
-    protected void addLabeledPhoneField(final String fieldName)
-    {
-        add(new FieldLabel(fieldName));
-        add(new PhoneField(fieldName));
-    }
-
-    protected void addLabeledBooleanField(final String fieldName)
-    {
-        add(new FieldLabel(fieldName));
-        add(new BooleanField(fieldName));
-    }
-
-    protected void addLabeledCurrencyField(final String fieldName)
-    {
-        add(new FieldLabel(fieldName));
-        add(new CurrencyField(fieldName));
+        add(((BoundCompoundPropertyModel)this.getModel()).bind(FormFieldFactory.getInstance().createField(fieldName, cls), fieldName));
     }
 
     protected void addLabeledSelectField(final String fieldName, Collection choices)
@@ -289,7 +257,7 @@ public class BaseForm extends Form
     private Set<Annotation> getConstraints(Annotation[] annotations)
     {
         Set<Annotation> constraints = new HashSet<Annotation>();
-        for (Annotation a : annotations)
+        for(Annotation a : annotations)
         {
             if (isConstraint(a))
                 constraints.add(a);
@@ -299,7 +267,7 @@ public class BaseForm extends Form
 
     public boolean isConstraint(Annotation annotation)
     {
-        if (annotation == null)
+        if(annotation == null)
         {
             log.error("Annotation null in isConstraint");
             throw new IllegalArgumentException("Not a legal value for annotation");

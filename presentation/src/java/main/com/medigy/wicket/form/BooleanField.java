@@ -43,56 +43,42 @@
 package com.medigy.wicket.form;
 
 import wicket.markup.ComponentTag;
-import wicket.markup.html.form.validation.RequiredValidator;
-import wicket.markup.html.form.validation.TypeValidator;
-import wicket.model.IModel;
+import wicket.markup.html.form.FormComponent;
 
 public class BooleanField extends wicket.markup.html.form.TextField implements JavaScriptProvider
 {
+
+    public static class BooleanFieldCreator implements FormFieldFactory.FieldCreator
+    {
+        public FormComponent createField(final FormFieldFactory.FieldInfo fieldInfo)
+        {
+            final BooleanField result = new BooleanField(fieldInfo);
+            fieldInfo.initializeField(fieldInfo, result);
+            return result;
+        }
+    }
+
     private String fieldName;
     private String fieldControlId;
-    private long fieldFlags;
+    private FormFieldFactory.FieldInfo fieldInfo;
 
-    public BooleanField(final String fieldName, long fieldFlags)
+    public BooleanField(final FormFieldFactory.FieldInfo fieldInfo)
     {
-        super(fieldName + BaseForm.FIELD_CONTROL_SUFFIX);
-        this.fieldName = fieldName;
-        this.fieldFlags = fieldFlags;
-        this.fieldControlId = fieldName + BaseForm.FIELD_CONTROL_SUFFIX;
-
-        if((this.fieldFlags & FieldFlags.REQUIRED) != 0)
-            add(RequiredValidator.getInstance());
-
-        add(new TypeValidator(Boolean.class));
-    }
-
-    public BooleanField(final String fieldName, IModel model, long fieldFlags)
-    {
-        super(fieldName + BaseForm.FIELD_CONTROL_SUFFIX, model);
-        this.fieldName = fieldName;
-        this.fieldFlags = fieldFlags;
-        this.fieldControlId = fieldName + BaseForm.FIELD_CONTROL_SUFFIX;
-
-        if((this.fieldFlags & FieldFlags.REQUIRED) != 0)
-            add(RequiredValidator.getInstance());
-
-        add(new TypeValidator(Boolean.class));
-    }
-
-    public BooleanField(final String componentName)
-    {
-        this(componentName, FieldFlags.DEFAULT_FLAGS);
-    }
-
-     public BooleanField(final String componentName, IModel model)
-    {
-        this(componentName, model, FieldFlags.DEFAULT_FLAGS);
+        super(fieldInfo.getName() + BaseForm.FIELD_CONTROL_SUFFIX);
+        this.fieldInfo = fieldInfo;
+        this.fieldName = fieldInfo.getName() + BaseForm.FIELD_CONTROL_SUFFIX;
+        this.fieldControlId = fieldInfo.getName() + BaseForm.FIELD_CONTROL_SUFFIX;
     }
 
     protected void onComponentTag(final ComponentTag componentTag)
     {
-        ((BaseForm) getForm()).onFormComponentTag(componentTag, getFieldId(), fieldFlags);
+        ((BaseForm) getForm()).onFormComponentTag(componentTag, getFieldId(), getJavaScriptFieldFlags());
         super.onComponentTag(componentTag);
+    }
+
+    public String getFieldName()
+    {
+        return this.fieldName;
     }
 
     protected String getFieldId()
@@ -100,8 +86,24 @@ public class BooleanField extends wicket.markup.html.form.TextField implements J
         return this.fieldControlId;
     }
 
+    public FormFieldFactory.FieldInfo getFieldInfo()
+    {
+        return fieldInfo;
+    }
+
     public String getJavaScript(final String dialogVarName, final String formObjectName)
     {
-        return "var field = dialog.createField("+ formObjectName +"[\""+ getFieldId() +"\"], FIELD_TYPES[\""+ getClass().getName() +"\"], "+ fieldFlags +", null);\n";
+        return "var field = dialog.createField("+ formObjectName +"[\""+ getFieldId() +"\"], FIELD_TYPES[\""+ getClass().getName() +"\"], "+ getJavaScriptFieldFlags() +", null);\n";
     }
+
+    public int getJavaScriptFieldFlags()
+    {
+        return JavaScriptUtils.getInstance().getFieldFlags(this);
+    }
+
+    public boolean isJavaScriptFieldHidden()
+    {
+        return isVisible();
+    }
+
 }

@@ -45,7 +45,6 @@ package com.medigy.wicket.form;
 
 import wicket.markup.ComponentTag;
 import wicket.markup.html.form.FormComponent;
-import wicket.model.IModel;
 
 import com.medigy.wicket.form.FormFieldFactory.FieldInfo;
 
@@ -55,7 +54,7 @@ public class TextField extends wicket.markup.html.form.TextField implements Java
     {
         public FormComponent createField(final FieldInfo fieldInfo)
         {
-            final TextField result = new TextField(fieldInfo.getName() + BaseForm.FIELD_CONTROL_SUFFIX);
+            final TextField result = new TextField(fieldInfo);
             fieldInfo.initializeField(fieldInfo, result);
             return result;
         }
@@ -63,28 +62,25 @@ public class TextField extends wicket.markup.html.form.TextField implements Java
 
     private String fieldName;
     private String fieldControlId;
-    private long fieldFlags;
+    private FieldInfo fieldInfo;
 
-    public TextField(final String fieldName)
+    public TextField(final FieldInfo fieldInfo)
     {
-        super(fieldName);
-        this.fieldName = fieldName;
-        this.fieldFlags = fieldFlags;
-        this.fieldControlId = fieldName;
-    }
-
-    public TextField(final String fieldName, IModel model)
-    {
-        super(fieldName, model);
-        this.fieldName = fieldName;
-        this.fieldFlags = fieldFlags;
-        this.fieldControlId = fieldName;
+        super(fieldInfo.getName() + BaseForm.FIELD_CONTROL_SUFFIX);
+        this.fieldInfo = fieldInfo;
+        this.fieldName = fieldInfo.getName() + BaseForm.FIELD_CONTROL_SUFFIX;
+        this.fieldControlId = fieldInfo.getName() + BaseForm.FIELD_CONTROL_SUFFIX;
     }
 
     protected void onComponentTag(final ComponentTag componentTag)
     {
-        ((BaseForm) getForm()).onFormComponentTag(componentTag, getFieldId(), fieldFlags);
+        ((BaseForm) getForm()).onFormComponentTag(componentTag, getFieldId(), getJavaScriptFieldFlags());
         super.onComponentTag(componentTag);
+    }
+
+    public String getFieldName()
+    {
+        return this.fieldName;
     }
 
     protected String getFieldId()
@@ -92,8 +88,23 @@ public class TextField extends wicket.markup.html.form.TextField implements Java
         return this.fieldControlId;
     }
 
+    public FieldInfo getFieldInfo()
+    {
+        return fieldInfo;
+    }
+
     public String getJavaScript(final String dialogVarName, final String formObjectName)
     {
-        return "var field = dialog.createField("+ formObjectName +"[\""+ getFieldId() +"\"], FIELD_TYPES[\""+ getClass().getName() +"\"], "+ fieldFlags +", null);\n";
+        return "var field = dialog.createField("+ formObjectName +"[\""+ getFieldId() +"\"], FIELD_TYPES[\""+ getClass().getName() +"\"], "+ getJavaScriptFieldFlags() +", null);\n";
+    }
+
+    public int getJavaScriptFieldFlags()
+    {
+        return JavaScriptUtils.getInstance().getFieldFlags(this);
+    }
+
+    public boolean isJavaScriptFieldHidden()
+    {
+        return isVisible();
     }
 }

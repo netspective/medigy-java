@@ -42,34 +42,41 @@
 package com.medigy.wicket.form;
 
 import wicket.markup.ComponentTag;
-import wicket.markup.html.form.validation.RequiredValidator;
+import wicket.markup.html.form.FormComponent;
 
 public class MemoField extends wicket.markup.html.form.TextArea implements JavaScriptProvider
 {
-    private String fieldName;
-    private String fieldControlId;
-    private long fieldFlags;
-
-    public MemoField(final String fieldName, long fieldFlags)
+    public static class MemoFieldCreator implements FormFieldFactory.FieldCreator
     {
-        super(fieldName + BaseForm.FIELD_CONTROL_SUFFIX);
-        this.fieldName = fieldName;
-        this.fieldFlags = fieldFlags;
-        this.fieldControlId = fieldName + BaseForm.FIELD_CONTROL_SUFFIX;
-
-        if((this.fieldFlags & FieldFlags.REQUIRED) != 0)
-            add(RequiredValidator.getInstance());
+        public FormComponent createField(final FormFieldFactory.FieldInfo fieldInfo)
+        {
+            final MemoField result = new MemoField(fieldInfo);
+            fieldInfo.initializeField(fieldInfo, result);
+            return result;
+        }
     }
 
-    public MemoField(final String componentName)
+    private String fieldName;
+    private String fieldControlId;
+    private FormFieldFactory.FieldInfo fieldInfo;
+
+    public MemoField(final FormFieldFactory.FieldInfo fieldInfo)
     {
-        this(componentName, FieldFlags.DEFAULT_FLAGS);
+        super(fieldInfo.getName() + BaseForm.FIELD_CONTROL_SUFFIX);
+        this.fieldInfo = fieldInfo;
+        this.fieldName = fieldInfo.getName() + BaseForm.FIELD_CONTROL_SUFFIX;
+        this.fieldControlId = fieldInfo.getName() + BaseForm.FIELD_CONTROL_SUFFIX;
     }
 
     protected void onComponentTag(final ComponentTag componentTag)
     {
-        ((BaseForm) getForm()).onFormComponentTag(componentTag, getFieldId(), fieldFlags);
+        ((BaseForm) getForm()).onFormComponentTag(componentTag, getFieldId(), getJavaScriptFieldFlags());
         super.onComponentTag(componentTag);
+    }
+
+    public String getFieldName()
+    {
+        return this.fieldName;
     }
 
     protected String getFieldId()
@@ -77,8 +84,23 @@ public class MemoField extends wicket.markup.html.form.TextArea implements JavaS
         return this.fieldControlId;
     }
 
+    public FormFieldFactory.FieldInfo getFieldInfo()
+    {
+        return fieldInfo;
+    }
+
     public String getJavaScript(final String dialogVarName, final String formObjectName)
     {
-        return "var field = dialog.createField("+ formObjectName +"[\""+ getFieldId() +"\"], FIELD_TYPES[\""+ getClass().getName() +"\"], "+ fieldFlags +", null);\n";
+        return "var field = dialog.createField("+ formObjectName +"[\""+ getFieldId() +"\"], FIELD_TYPES[\""+ getClass().getName() +"\"], "+ getJavaScriptFieldFlags() +", null);\n";
+    }
+
+    public int getJavaScriptFieldFlags()
+    {
+        return JavaScriptUtils.getInstance().getFieldFlags(this);
+    }
+
+    public boolean isJavaScriptFieldHidden()
+    {
+        return isVisible();
     }
 }

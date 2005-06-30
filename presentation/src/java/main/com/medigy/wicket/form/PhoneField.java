@@ -43,9 +43,8 @@
 package com.medigy.wicket.form;
 
 import wicket.markup.ComponentTag;
-import wicket.markup.html.form.validation.RequiredValidator;
 import wicket.markup.html.form.validation.PatternValidator;
-import wicket.model.IModel;
+import wicket.markup.html.form.FormComponent;
 
 import java.util.regex.Pattern;
 
@@ -60,51 +59,40 @@ public class PhoneField extends wicket.markup.html.form.TextField implements Jav
         BRACKET ;
     }
 
+    public static class PhoneFieldCreator implements FormFieldFactory.FieldCreator
+    {
+        public FormComponent createField(final FormFieldFactory.FieldInfo fieldInfo)
+        {
+            final PhoneField result = new PhoneField(fieldInfo);
+            fieldInfo.initializeField(fieldInfo, result);
+            return result;
+        }
+    }
+
     private String fieldName;
     private String fieldControlId;
-    private long fieldFlags;
     private Style style;
+    private FormFieldFactory.FieldInfo fieldInfo;
 
-    public PhoneField(final String fieldName, long fieldFlags)
+    public PhoneField(final FormFieldFactory.FieldInfo fieldInfo)
     {
-        super(fieldName + BaseForm.FIELD_CONTROL_SUFFIX);
-        this.fieldName = fieldName;
-        this.fieldFlags = fieldFlags;
-        this.fieldControlId = fieldName + BaseForm.FIELD_CONTROL_SUFFIX;
-
-        if((this.fieldFlags & FieldFlags.REQUIRED) != 0)
-            add(RequiredValidator.getInstance());
+        super(fieldInfo.getName() + BaseForm.FIELD_CONTROL_SUFFIX);
+        this.fieldInfo = fieldInfo;
+        this.fieldName = fieldInfo.getName() + BaseForm.FIELD_CONTROL_SUFFIX;
+        this.fieldControlId = fieldInfo.getName() + BaseForm.FIELD_CONTROL_SUFFIX;
 
         setStyle(Style.DASH);
-    }
-
-    public PhoneField(final String fieldName, IModel model, long fieldFlags)
-    {
-        super(fieldName + BaseForm.FIELD_CONTROL_SUFFIX, model);
-        this.fieldName = fieldName;
-        this.fieldFlags = fieldFlags;
-        this.fieldControlId = fieldName + BaseForm.FIELD_CONTROL_SUFFIX;
-
-        if((this.fieldFlags & FieldFlags.REQUIRED) != 0)
-            add(RequiredValidator.getInstance());
-
-        setStyle(Style.DASH);
-    }
-
-    public PhoneField(final String componentName)
-    {
-        this(componentName, FieldFlags.DEFAULT_FLAGS);
-    }
-
-    public PhoneField(final String componentName, IModel model)
-    {
-        this(componentName, model, FieldFlags.DEFAULT_FLAGS);
     }
 
     protected void onComponentTag(final ComponentTag componentTag)
     {
-        ((BaseForm) getForm()).onFormComponentTag(componentTag, getFieldId(), fieldFlags);
+        ((BaseForm) getForm()).onFormComponentTag(componentTag, getFieldId(), getJavaScriptFieldFlags());
         super.onComponentTag(componentTag);
+    }
+
+    public String getFieldName()
+    {
+        return this.fieldName;
     }
 
     protected String getFieldId()
@@ -112,9 +100,24 @@ public class PhoneField extends wicket.markup.html.form.TextField implements Jav
         return this.fieldControlId;
     }
 
+    public FormFieldFactory.FieldInfo getFieldInfo()
+    {
+        return fieldInfo;
+    }
+
     public String getJavaScript(final String dialogVarName, final String formObjectName)
     {
-        return "var field = dialog.createField("+ formObjectName +"[\""+ getFieldId() +"\"], FIELD_TYPES[\""+ getClass().getName() +"\"], "+ fieldFlags +", null);\n";
+        return "var field = dialog.createField("+ formObjectName +"[\""+ getFieldId() +"\"], FIELD_TYPES[\""+ getClass().getName() +"\"], "+ getJavaScriptFieldFlags() +", null);\n";
+    }
+
+    public int getJavaScriptFieldFlags()
+    {
+        return JavaScriptUtils.getInstance().getFieldFlags(this);
+    }
+
+    public boolean isJavaScriptFieldHidden()
+    {
+        return isVisible();
     }
 
     public void setStyle(PhoneField.Style style)
