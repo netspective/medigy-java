@@ -57,7 +57,7 @@ public class FormFieldFactory
     }
 
     private Map<Class, FieldCreator> fieldCreatorMap = Collections.synchronizedMap(new HashMap<Class, FieldCreator>());  // TODO: for some reason TreeMap was throwing a CCE when issueing a get(). Was there a specific need for TreeMap here?
-    private Map<String, ReflectedFormFieldDefn> fieldInfoMap = Collections.synchronizedMap(new TreeMap<String, ReflectedFormFieldDefn>());
+    private Map<String, ReflectedFormFieldDefn> reflectedFormFieldDefnsMap = Collections.synchronizedMap(new TreeMap<String, ReflectedFormFieldDefn>());
 
     protected FormFieldFactory()
     {
@@ -74,14 +74,14 @@ public class FormFieldFactory
         return fieldCreatorMap.get(dataType);
     }
 
-    public ReflectedFormFieldDefn getFieldInfo(final Class<?> cls, final String propertyName)
+    public ReflectedFormFieldDefn getReflectedFormFieldDefn(final Class<?> cls, final String propertyName)
     {
         final String key = cls.getName() + "." + propertyName;
-        ReflectedFormFieldDefn result = fieldInfoMap.get(key);
+        ReflectedFormFieldDefn result = reflectedFormFieldDefnsMap.get(key);
         if(result == null)
         {
             result = new ReflectedFormFieldDefn(cls, propertyName);
-            fieldInfoMap.put(key, result);
+            reflectedFormFieldDefnsMap.put(key, result);
         }
 
         return result;
@@ -90,7 +90,7 @@ public class FormFieldFactory
     public FormComponent createField(final String propertyName, final Class ... classes)
     {
         // TODO: classes beyond the first are not managed yet
-        return getFieldInfo(classes[0], propertyName).createField();
+        return getReflectedFormFieldDefn(classes[0], propertyName).createField();
     }
 
     public interface FieldCreator
