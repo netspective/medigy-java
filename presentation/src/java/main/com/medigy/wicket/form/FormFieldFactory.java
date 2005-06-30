@@ -43,7 +43,10 @@
  */
 package com.medigy.wicket.form;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
 import wicket.markup.html.form.FormComponent;
 
@@ -56,7 +59,7 @@ public class FormFieldFactory
         return INSTANCE;
     }
 
-    private Map<Class, FieldCreator> fieldCreatorMap = Collections.synchronizedMap(new HashMap<Class, FieldCreator>());  // TODO: for some reason TreeMap was throwing a CCE when issueing a get(). Was there a specific need for TreeMap here?
+    private Map<Class, FieldCreator> fieldCreatorMap = Collections.synchronizedMap(new HashMap<Class, FieldCreator>());
     private Map<String, ReflectedFormFieldDefn> reflectedFormFieldDefnsMap = Collections.synchronizedMap(new TreeMap<String, ReflectedFormFieldDefn>());
 
     protected FormFieldFactory()
