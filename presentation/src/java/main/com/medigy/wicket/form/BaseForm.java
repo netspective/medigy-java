@@ -43,20 +43,6 @@
  */
 package com.medigy.wicket.form;
 
-import com.medigy.presentation.model.ChoicesFactory;
-import com.medigy.wicket.DefaultApplication;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.hibernate.validator.ValidatorClass;
-import wicket.IFeedback;
-import wicket.markup.ComponentTag;
-import wicket.markup.MarkupStream;
-import wicket.markup.html.form.*;
-import wicket.markup.html.form.model.IChoice;
-import wicket.model.BoundCompoundPropertyModel;
-import wicket.model.IModel;
-import wicket.util.value.ValueMap;
-
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
@@ -66,7 +52,28 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-public class BaseForm extends Form
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.hibernate.validator.ValidatorClass;
+
+import com.medigy.presentation.model.ChoicesFactory;
+import com.medigy.wicket.DefaultApplication;
+import wicket.IComponentResolver;
+import wicket.IFeedback;
+import wicket.MarkupContainer;
+import wicket.markup.ComponentTag;
+import wicket.markup.MarkupStream;
+import wicket.markup.html.form.DropDownChoice;
+import wicket.markup.html.form.Form;
+import wicket.markup.html.form.FormComponent;
+import wicket.markup.html.form.ListMultipleChoice;
+import wicket.markup.html.form.RadioChoice;
+import wicket.markup.html.form.model.IChoice;
+import wicket.model.BoundCompoundPropertyModel;
+import wicket.model.IModel;
+import wicket.util.value.ValueMap;
+
+public class BaseForm extends Form implements IComponentResolver
 {
     private static final Log log = LogFactory.getLog(BaseForm.class);
 
@@ -137,6 +144,17 @@ public class BaseForm extends Form
             choicesFactory = (ChoicesFactory) ((DefaultApplication) getApplication()).getService(ChoicesFactory.class);
         }
         return choicesFactory;
+    }
+
+    public boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
+                           final ComponentTag tag)
+    {
+        if (tag.getName().equalsIgnoreCase("input"))
+        {
+            System.out.println("See input " + tag.getAttributes());
+        }
+
+        return false;
     }
 
     protected void addLabeledTextField(final String fieldName)
