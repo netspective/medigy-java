@@ -71,6 +71,8 @@ public class ReflectedFormFieldDefn
         this.validEntity = isAnnotationPresent(ValidEntity.class) ? ((ValidEntity) getAnnotation(ValidEntity.class)).entity() : null;
         this.creator = getFieldCreator(validEntity == null ? dataType : validEntity);
 
+        // go through each of the provided classes (the first one is considered the "primary" container
+        // and collect all the annotations into a single set
         for(int i = 0; i < containers.length; i++)
         {
             Annotation[] annotations = null;
@@ -101,8 +103,11 @@ public class ReflectedFormFieldDefn
                 }
             }
 
-            for (final Annotation a : annotations)
-                constraints.add(a);
+            if(annotations != null)
+            {
+                for (final Annotation a : annotations)
+                    constraints.add(a);                
+            }
         }
     }
 
