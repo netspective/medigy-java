@@ -13,7 +13,7 @@ import java.util.Set;
 
 import org.hibernate.validator.NotNull;
 
-import com.medigy.service.validator.ReferenceEntity;
+import com.medigy.service.validator.ValidEntity;
 import wicket.markup.html.form.FormComponent;
 import wicket.markup.html.form.validation.RequiredValidator;
 
@@ -66,7 +66,7 @@ public class ReflectedFormFieldDefn
         this.method = method;
         this.methodIsAccessor = isAccessor;
         this.dataType = type;
-        if(isAnnotationPresent(ReferenceEntity.class))
+        if(isAnnotationPresent(ValidEntity.class))
             this.creator = FormFieldFactory.getInstance().getReferenceEntityFieldCreator();
         else
             this.creator = getFieldCreator(getDataType());

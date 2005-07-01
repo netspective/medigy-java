@@ -48,7 +48,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
-import com.medigy.service.validator.ReferenceEntity;
+import com.medigy.service.validator.ValidEntity;
 import wicket.markup.html.form.FormComponent;
 
 public class FormFieldFactory
@@ -112,7 +112,7 @@ public class FormFieldFactory
     {
         public FormComponent createField(final ReflectedFormFieldDefn reflectedFormFieldDefn)
         {
-            final ReferenceEntity reAnn = (ReferenceEntity) reflectedFormFieldDefn.getAnnotation(ReferenceEntity.class);
+            final ValidEntity reAnn = (ValidEntity) reflectedFormFieldDefn.getAnnotation(ValidEntity.class);
             if(reAnn == null)
                 throw new RuntimeException("Unable to find a reference entity annotation on " + reflectedFormFieldDefn);
 

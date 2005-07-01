@@ -38,17 +38,63 @@
  */
 package com.medigy.service.validator;
 
-import org.hibernate.validator.ValidatorClass;
+import org.hibernate.mapping.Property;
+import org.hibernate.validator.PropertyConstraint;
+import org.hibernate.validator.Validator;
 
-import java.lang.annotation.Target;
-import java.lang.annotation.Retention;
+import com.medigy.persist.reference.custom.CustomReferenceEntity;
+import com.medigy.service.util.ReferenceEntityFacade;
 
-@ValidatorClass(ReferenceEntityValidator.class)
-@Target(java.lang.annotation.ElementType.METHOD)
-@Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
-public @interface ReferenceEntity
+/**
+ * Validator for making sure that the entity being checked belongs to a reference entity type.
+ * This validator uses the {@link ReferenceEntityFacade} so it must have the reference to it.
+ * You can't use {@link org.hibernate.validator.ClassValidator} with this validator as mentioned in the documentaton
+ * since this validator doesn't have an empty constructor.
+ */
+public class EntityValidator implements Validator<ValidEntity>, PropertyConstraint
 {
-    Class referenceEntityClass();
-    //int entityId() ;  // only useful for custom reference entities
-    String message() default "must belong to the reference entity type: {entityClass}";
+    private Class referenceEntityClass;
+    private ReferenceEntityFacade  referenceEntityFacade;
+
+    public EntityValidator(final ReferenceEntityFacade referenceEntityFacade)
+    {
+        this.referenceEntityFacade = referenceEntityFacade;
+    }
+
+    public boolean isValid(final Object value)
+    {
+        if (value == null)
+            return true;
+        if (value instanceof String)
+        {
+            final String code = (String) value;
+            if (ValidEntity.class.isAssignableFrom(referenceEntityClass))
+            {
+                final com.medigy.persist.reference.ReferenceEntity entity =
+                    referenceEntityFacade.getReferenceEntity(referenceEntityClass, code);
+                if (entity != null)
+                    return true;
+            }
+            else if (CustomReferenceEntity.class.isAssignableFrom(referenceEntityClass))
+            {
+                final CustomReferenceEntity entity =
+                    referenceEntityFacade.getCustomReferenceEntity(referenceEntityClass, code);
+                // TODO: handle custom reference entity using party ID
+                if (entity != null)
+                    return true;
+            }
+
+        }
+        return false;
+    }
+
+    public void initialize(final ValidEntity validEntity)
+    {
+        this.referenceEntityClass = validEntity.entity();
+    }
+
+    public void apply(Property property)
+    {
+
+    }
 }
