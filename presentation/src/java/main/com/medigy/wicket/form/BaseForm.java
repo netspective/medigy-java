@@ -133,8 +133,18 @@ public class BaseForm extends Form implements IComponentResolver
     protected BaseForm(final String componentName)
     {
         super(componentName);
+    }
 
-        tagResolvers.put("group", new TagResolver()
+    protected BaseForm(final String componentName, final IFeedback feedback)
+    {
+        super(componentName, feedback);
+    }
+
+    public BaseForm(String componentName, IModel model, IFeedback feedback)
+    {
+        super(componentName, model, feedback);
+
+        tagResolvers.put("legend", new TagResolver()
         {
             public boolean addComponent(final ComponentTag tag)
             {
@@ -169,16 +179,6 @@ public class BaseForm extends Form implements IComponentResolver
         tagResolvers.put("input", controlResolver);
         tagResolvers.put("select", controlResolver);
         tagResolvers.put("span", controlResolver);
-    }
-
-    protected BaseForm(final String componentName, final IFeedback feedback)
-    {
-        super(componentName, feedback);
-    }
-
-    public BaseForm(String componentName, IModel model, IFeedback feedback)
-    {
-        super(componentName, model, feedback);
     }
 
     // TODO: move this into DefaultApplication
