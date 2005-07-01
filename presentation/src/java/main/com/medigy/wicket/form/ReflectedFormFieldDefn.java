@@ -138,7 +138,7 @@ public class ReflectedFormFieldDefn
 
     public boolean isAnnotationPresent(final Class<?> annotation)
     {
-        return constraints.get(annotation) != null ? true : false;
+        return constraints.containsKey(annotation);
     }
 
     public Annotation getAnnotation(final Class<?> annotation)
