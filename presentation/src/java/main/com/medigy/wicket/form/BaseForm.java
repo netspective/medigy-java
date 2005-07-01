@@ -49,7 +49,9 @@ import java.beans.PropertyDescriptor;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
@@ -84,6 +86,7 @@ public class BaseForm extends Form implements IComponentResolver
     protected static final Collection EMPLOYMENT_STATUS_CHOICES = new ArrayList();
     protected static final Collection INSURANCE_SEQUENCE_CHOICES = new ArrayList();
     protected static final Collection PATIENT_RELATIONSHIP_TO_INSURED_CHOICES = new ArrayList();
+    public static final String ATTRNAME_WICKET_ID = "wicket:id";
 
     static
     {
@@ -119,11 +122,53 @@ public class BaseForm extends Form implements IComponentResolver
 
     }
 
+    protected interface TagResolver
+    {
+        public boolean addComponent(final ComponentTag tag);
+    }
+
     private ChoicesFactory choicesFactory;
+    private Map<String, TagResolver> tagResolvers = new HashMap<String, TagResolver>();
 
     protected BaseForm(final String componentName)
     {
         super(componentName);
+
+        tagResolvers.put("group", new TagResolver()
+        {
+            public boolean addComponent(final ComponentTag tag)
+            {
+                add(new FieldGroupLabel(tag.getAttributes().getString(ATTRNAME_WICKET_ID)));
+                return true;
+            }
+        });
+
+        tagResolvers.put("label", new TagResolver()
+        {
+            public boolean addComponent(final ComponentTag tag)
+            {
+                final String labelId = tag.getAttributes().getString(ATTRNAME_WICKET_ID);
+                final String fieldName = labelId.endsWith(FIELD_LABEL_SUFFIX) ? labelId.substring(0, FIELD_LABEL_SUFFIX.length()) : labelId;
+                add(new FieldLabel(fieldName));
+                return true;
+            }
+        });
+
+        final TagResolver controlResolver = new TagResolver()
+        {
+            public boolean addComponent(final ComponentTag tag)
+            {
+                final String controlid = tag.getAttributes().getString(ATTRNAME_WICKET_ID);
+                final String fieldName = controlid.endsWith(FIELD_CONTROL_SUFFIX) ? controlid.substring(0, FIELD_CONTROL_SUFFIX.length()) : controlid;
+                final Class serviceBeanClass = getModel().getObject(null).getClass();
+                add(((BoundCompoundPropertyModel) getModel()).bind(FormFieldFactory.getInstance().createField(fieldName, serviceBeanClass, getModel().getClass()), fieldName));
+                return true;
+            }
+        };
+
+        tagResolvers.put("input", controlResolver);
+        tagResolvers.put("select", controlResolver);
+        tagResolvers.put("span", controlResolver);
     }
 
     protected BaseForm(final String componentName, final IFeedback feedback)
@@ -149,11 +194,12 @@ public class BaseForm extends Form implements IComponentResolver
     public boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
                            final ComponentTag tag)
     {
-        if (tag.getName().equalsIgnoreCase("input"))
+        if(tag.getAttributes().containsKey(ATTRNAME_WICKET_ID))
         {
-            System.out.println("See input " + tag.getAttributes());
+            final TagResolver resolver = tagResolvers.get(tag.getName());
+            if(resolver != null)
+                return resolver.addComponent(tag);
         }
-
         return false;
     }
 
