@@ -46,8 +46,6 @@ package com.medigy.wicket.form;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.form.FormComponent;
 
-import com.medigy.wicket.form.ReflectedFormFieldDefn;
-
 public class TextField extends wicket.markup.html.form.TextField implements FormFieldJavaScriptProvider
 {
     public static class TextFieldCreator implements FormFieldFactory.FieldCreator
@@ -64,7 +62,6 @@ public class TextField extends wicket.markup.html.form.TextField implements Form
     private String fieldControlId;
     private ReflectedFormFieldDefn reflectedFormFieldDefn;
 
-
     // TODO: Remove after refactoring Org, Provider, Staff, and Insurance forms
     public TextField(final String componentName)
     {
@@ -78,7 +75,6 @@ public class TextField extends wicket.markup.html.form.TextField implements Form
         this.fieldName = fieldName;
         this.fieldControlId = fieldName;
     }
-
 
     public TextField(final ReflectedFormFieldDefn reflectedFormFieldDefn)
     {

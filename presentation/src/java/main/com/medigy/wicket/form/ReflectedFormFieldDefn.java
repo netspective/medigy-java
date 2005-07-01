@@ -3,20 +3,20 @@
  */
 package com.medigy.wicket.form;
 
+import com.medigy.service.validator.ValidEntity;
+import com.medigy.wicket.form.FormFieldFactory.FieldCreator;
+import org.hibernate.validator.NotNull;
+import wicket.markup.html.form.FormComponent;
+import wicket.markup.html.form.validation.RequiredValidator;
+
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.util.HashSet;
-import java.util.Set;
-
-import org.hibernate.validator.NotNull;
-
-import com.medigy.service.validator.ValidEntity;
-import com.medigy.wicket.form.FormFieldFactory.FieldCreator;
-import wicket.markup.html.form.FormComponent;
-import wicket.markup.html.form.validation.RequiredValidator;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ReflectedFormFieldDefn
 {
@@ -26,7 +26,7 @@ public class ReflectedFormFieldDefn
     private final Class validEntity;
     private final Method method;
     private final boolean methodIsAccessor;
-    private final Set<Annotation> constraints = new HashSet<Annotation>();
+    private final Map<Class, Annotation> constraints = Collections.synchronizedMap(new HashMap<Class, Annotation>());
     private final FormFieldFactory.FieldCreator creator;
 
     public ReflectedFormFieldDefn(final String propertyName, final Class ... containers)
@@ -68,8 +68,6 @@ public class ReflectedFormFieldDefn
         this.method = method;
         this.methodIsAccessor = isAccessor;
         this.dataType = type;
-        this.validEntity = isAnnotationPresent(ValidEntity.class) ? ((ValidEntity) getAnnotation(ValidEntity.class)).entity() : null;
-        this.creator = getFieldCreator(validEntity == null ? dataType : validEntity);
 
         // go through each of the provided classes (the first one is considered the "primary" container
         // and collect all the annotations into a single set
@@ -106,9 +104,12 @@ public class ReflectedFormFieldDefn
             if(annotations != null)
             {
                 for (final Annotation a : annotations)
-                    constraints.add(a);                
+                    constraints.put(a.annotationType(), a);
             }
         }
+
+        this.validEntity = isAnnotationPresent(ValidEntity.class) ? ((ValidEntity) getAnnotation(ValidEntity.class)).entity() : null;
+        this.creator = getFieldCreator(validEntity == null ? dataType : ValidEntity.class);
     }
 
     public FormComponent createField()
@@ -121,8 +122,8 @@ public class ReflectedFormFieldDefn
         // at this point we have the originating class, the creator, and the newly created field so we can do
         // basic annotations processing first (all common annotations) and then let the field handle what it
         // needs to do
-        if(this.isAnnotationPresent(NotNull.class));
-        formComponent.add(RequiredValidator.getInstance());
+        if(this.isAnnotationPresent(NotNull.class))
+            formComponent.add(RequiredValidator.getInstance());
 
     }
 
@@ -137,16 +138,12 @@ public class ReflectedFormFieldDefn
 
     public boolean isAnnotationPresent(final Class<?> annotation)
     {
-        return constraints.contains(annotation);
+        return constraints.get(annotation) != null ? true : false;
     }
 
     public Annotation getAnnotation(final Class<?> annotation)
     {
-        for(final Annotation a : constraints)
-            if(a.getClass() == annotation)
-                return a;
-
-        return null;
+        return constraints.get(annotation);
     }
 
     public Class getContainer()
@@ -174,7 +171,7 @@ public class ReflectedFormFieldDefn
         return dataType;
     }
 
-    public Set<Annotation> getConstraints()
+    public Map<Class, Annotation> getConstraints()
     {
         return constraints;
     }

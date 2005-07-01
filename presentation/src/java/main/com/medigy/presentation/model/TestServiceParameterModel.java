@@ -3,11 +3,15 @@
  */
 package com.medigy.presentation.model;
 
-import java.io.Serializable;
-
+import com.medigy.persist.reference.type.BloodType;
+import com.medigy.persist.reference.type.GenderType;
+import com.medigy.persist.reference.type.MaritalStatusType;
+import com.medigy.persist.reference.type.PersonNamePrefixType;
+import com.medigy.service.validator.ValidEntity;
+import com.medigy.wicket.form.SelectFieldStyle;
 import org.hibernate.validator.NotNull;
 
-import com.medigy.wicket.form.SelectFieldStyle;
+import java.io.Serializable;
 
 /**
  * Simple model object for FormInput example. Has a number of simple properties
@@ -108,7 +112,7 @@ public final class TestServiceParameterModel implements Serializable
 		this.chartNumber = chartNumber;
 	}
 
-    @NotNull                  // TODO - test annotations. will use service parameter 
+    @NotNull
 	public String getLastName()
 	{
 		return lastName;
@@ -141,6 +145,8 @@ public final class TestServiceParameterModel implements Serializable
 		this.middleName = middleName;
 	}
 
+    @ValidEntity(entity = PersonNamePrefixType.class)
+    @SelectFieldStyle(style = SelectFieldStyle.Style.COMBO)
     public String getSuffix()
     {
         return suffix;
@@ -551,6 +557,7 @@ public final class TestServiceParameterModel implements Serializable
         this.officeVisitCoPay = officeVisitCoPay;
     }
 
+    @ValidEntity(entity = GenderType.class)
     @SelectFieldStyle(style = SelectFieldStyle.Style.COMBO)
     public String getGender()
     {
@@ -562,6 +569,8 @@ public final class TestServiceParameterModel implements Serializable
         this.gender = gender;
     }
 
+    @ValidEntity(entity = MaritalStatusType.class)
+    @SelectFieldStyle(style = SelectFieldStyle.Style.COMBO)
     public String getMaritalStatus()
     {
         return maritalStatus;
@@ -612,6 +621,8 @@ public final class TestServiceParameterModel implements Serializable
         this.patientRelationshipToInsured = patientRelationshipToInsured;
     }
 
+    @ValidEntity(entity = BloodType.class)
+    @SelectFieldStyle(style = SelectFieldStyle.Style.COMBO)
     public String getBloodType()
     {
         return bloodType;

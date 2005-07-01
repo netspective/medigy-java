@@ -44,9 +44,8 @@
 package com.medigy.wicket.form;
 
 import wicket.markup.ComponentTag;
-import wicket.markup.html.form.validation.RequiredValidator;
-import wicket.markup.html.form.validation.PatternValidator;
 import wicket.markup.html.form.FormComponent;
+import wicket.markup.html.form.validation.PatternValidator;
 
 import java.util.regex.Pattern;
 

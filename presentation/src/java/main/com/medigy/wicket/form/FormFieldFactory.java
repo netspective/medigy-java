@@ -43,17 +43,16 @@
  */
 package com.medigy.wicket.form;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
-
-import com.medigy.persist.reference.ReferenceEntity;
 import com.medigy.presentation.model.ChoicesFactory;
 import com.medigy.service.validator.ValidEntity;
 import wicket.markup.html.form.DropDownChoice;
 import wicket.markup.html.form.FormComponent;
 import wicket.markup.html.form.model.IChoiceList;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class FormFieldFactory
 {
@@ -69,7 +68,7 @@ public class FormFieldFactory
 
     protected FormFieldFactory()
     {
-        addFieldCreator(ReferenceEntity.class, new ReferenceEntityFieldCreator());
+        addFieldCreator(ValidEntity.class, new ReferenceEntityFieldCreator());
         addFieldCreator(String.class, new TextField.TextFieldCreator());
     }
 

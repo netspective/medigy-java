@@ -45,8 +45,6 @@ package com.medigy.wicket.form;
 
 import org.hibernate.validator.NotNull;
 
-import com.medigy.wicket.form.ReflectedFormFieldDefn;
-
 public class JavaScriptUtils
 {
     private static final JavaScriptUtils INSTANCE = new JavaScriptUtils();

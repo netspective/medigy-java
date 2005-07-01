@@ -43,9 +43,9 @@
  */
 package com.medigy.wicket.page;
 
-import java.lang.reflect.InvocationTargetException;
-
 import wicket.Component;
+
+import java.lang.reflect.InvocationTargetException;
 
 public class DefaultFormPage extends AuthenticatedWebPage
 {

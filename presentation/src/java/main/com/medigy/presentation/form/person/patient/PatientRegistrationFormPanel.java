@@ -44,10 +44,6 @@
 package com.medigy.presentation.form.person.patient;
 
 import com.medigy.persist.reference.custom.person.EthnicityType;
-import com.medigy.persist.reference.type.BloodType;
-import com.medigy.persist.reference.type.GenderType;
-import com.medigy.persist.reference.type.MaritalStatusType;
-import com.medigy.persist.reference.type.PersonNamePrefixType;
 import com.medigy.presentation.model.TestServiceParameterModel;
 import com.medigy.service.dto.person.RegisterPatientParameters;
 import com.medigy.service.person.PatientRegistrationService;
@@ -68,18 +64,18 @@ public class PatientRegistrationFormPanel extends DefaultFormPanel
         super(componentName);
     }
 
-    protected InputForm createForm(final String componentName, final IFeedback feedback)
+    protected PatientRegistrationForm createForm(final String componentName, final IFeedback feedback)
     {
         final PatientRegistrationService service = (PatientRegistrationService) ((DefaultApplication) getApplication()).getService(PatientRegistrationService.class);
         final RegisterPatientParameters params = service.getNewPatientParameters();
         BoundCompoundPropertyModel model = new BoundCompoundPropertyModel(new TestServiceParameterModel());
-        InputForm form = new InputForm(componentName, feedback, model, params);
+        PatientRegistrationForm form = new PatientRegistrationForm(componentName, feedback, model, params);
         return form;
     }
 
-    protected class InputForm extends BaseForm
+    protected class PatientRegistrationForm extends BaseForm
     {
-        public InputForm(final String componentName, final IFeedback feedback, BoundCompoundPropertyModel model, RegisterPatientParameters params)
+        public PatientRegistrationForm(final String componentName, final IFeedback feedback, BoundCompoundPropertyModel model, RegisterPatientParameters params)
         {
             super(componentName, model, feedback);
 
@@ -94,17 +90,17 @@ public class PatientRegistrationFormPanel extends DefaultFormPanel
             addLabeledField("firstName", serviceBean.getClass());
             addLabeledField("middleName", serviceBean.getClass());
 
-            addLabeledSelectField("suffix", PersonNamePrefixType.class);
+            addLabeledField("suffix", serviceBean.getClass());
 
             addLabeledField("socialSecurityNumber", serviceBean.getClass());
             addLabeledField("dateOfBirth", serviceBean.getClass());
 
-            addLabeledSelectField("gender", GenderType.class);
-            addLabeledSelectField("maritalStatus", MaritalStatusType.class);
-            addLabeledSelectField("bloodType", BloodType.class);
+            addLabeledField("gender", serviceBean.getClass());
+            addLabeledField("maritalStatus", serviceBean.getClass());
+            addLabeledField("bloodType", serviceBean.getClass());
             addLabeledRadioChoiceField("ethnicity", EthnicityType.class);
             addLabeledField("responsibleParty", serviceBean.getClass());
-            addLabeledSelectField("relationshipToResponsible", BaseForm.RELATIONSHIP_TO_RESPONSIBLE_CHOICES);
+            addLabeledSelectField("relationshipToResponsible", BaseForm.PATIENT_RELATIONSHIP_TO_INSURED_CHOICES);
             addLabeledField("relationshipToResponsibleOtherRelationship", serviceBean.getClass());
             addLabeledField("driversLicenseNumber", serviceBean.getClass());
             addLabeledField("driversLicenseState", serviceBean.getClass());
@@ -168,4 +164,6 @@ public class PatientRegistrationFormPanel extends DefaultFormPanel
 		}
 
     }
+
+
 }

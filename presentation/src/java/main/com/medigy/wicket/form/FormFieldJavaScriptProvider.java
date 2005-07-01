@@ -43,7 +43,7 @@
  */
 package com.medigy.wicket.form;
 
-import com.medigy.wicket.form.ReflectedFormFieldDefn;
+
 
 public interface FormFieldJavaScriptProvider
 {
