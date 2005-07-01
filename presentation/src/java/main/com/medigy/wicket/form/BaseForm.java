@@ -127,7 +127,7 @@ public class BaseForm extends Form implements IComponentResolver
         public boolean addComponent(final MarkupContainer container, final MarkupStream markupStream, final ComponentTag tag);
     }
 
-    private ChoicesFactory choicesFactory = ChoicesFactory.getInstance(); // TODO: this should be a service lookup so make this null later
+    private ChoicesFactory choicesFactory = null;
     private Map<String, TagResolver> tagResolvers = new HashMap<String, TagResolver>();
 
     protected BaseForm(final String componentName)
@@ -290,23 +290,18 @@ public class BaseForm extends Form implements IComponentResolver
 
     protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag componentTag)
     {
+        super.onComponentTagBody(markupStream, componentTag);
+
         final StringBuffer script = new StringBuffer("\n<script>\nvar dialog = new Dialog(document.forms[0], true, false, true);\n");
         visitFormComponents(new FormComponent.IVisitor()
         {
             public void formComponent(final FormComponent formComponent)
             {
                 if(formComponent instanceof FormFieldJavaScriptProvider)
-                {
-                    FormFieldJavaScriptProvider jsProviderFormField = (FormFieldJavaScriptProvider) formComponent;
-                    script.append(jsProviderFormField.getJavaScript("dialog", "document.forms[0]"));
-                }
-                else
-                    System.out.println(formComponent + " is not a " + FormFieldJavaScriptProvider.class);
+                    script.append(((FormFieldJavaScriptProvider) formComponent).getJavaScript("dialog", "document.forms[0]"));
             }
         });
         script.append("dialog.finalizeContents();\n</script>");
-
-        super.onComponentTagBody(markupStream, componentTag);
         getResponse().write(script.toString());
     }
 
