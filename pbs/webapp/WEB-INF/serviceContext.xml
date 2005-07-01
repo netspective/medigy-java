@@ -3,6 +3,7 @@
 
 <beans>
     <!-- FACADE (Service helper) beans -->
+    <bean id="facadeManager" class="com.medigy.service.util.FacadeManager" factory-method="getInstance" />    
 
     <bean id="referenceEntityFacade" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean" lazy-init="true">
         <property name="transactionManager"> <ref bean="hibernateTransactionManager"/> </property>
