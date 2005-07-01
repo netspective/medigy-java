@@ -43,20 +43,13 @@
  */
 package com.medigy.wicket.form;
 
-import java.beans.IntrospectionException;
-import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
-import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.hibernate.validator.ValidatorClass;
 
 import com.medigy.presentation.model.ChoicesFactory;
 import com.medigy.wicket.DefaultApplication;
@@ -305,44 +298,4 @@ public class BaseForm extends Form implements IComponentResolver
         script.append("dialog.finalizeContents();\n</script>");
         getResponse().write(script.toString());
     }
-
-    public Class<?> getReturnType(Class<?> theClass, String propertyName)
-    {
-        try
-        {
-            PropertyDescriptor[] descs = Introspector.getBeanInfo(theClass).getPropertyDescriptors();
-            for(PropertyDescriptor desc : descs)
-            {
-                if(propertyName.equals(desc.getName()))
-                    return desc.getReadMethod().getReturnType();
-            }
-        }
-        catch(IntrospectionException e)
-        {
-            log.error("IntrospectionException");
-        }
-        return null;
-    }
-
-    private Set<Annotation> getConstraints(Annotation[] annotations)
-    {
-        Set<Annotation> constraints = new HashSet<Annotation>();
-        for(Annotation a : annotations)
-        {
-            if (isConstraint(a))
-                constraints.add(a);
-        }
-        return constraints;
-    }
-
-    public boolean isConstraint(Annotation annotation)
-    {
-        if(annotation == null)
-        {
-            log.error("Annotation null in isConstraint");
-            throw new IllegalArgumentException("Not a legal value for annotation");
-        }
-        return annotation.annotationType().isAnnotationPresent(ValidatorClass.class);
-    }
-
 }
