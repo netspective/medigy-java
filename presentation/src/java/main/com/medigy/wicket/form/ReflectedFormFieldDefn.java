@@ -14,6 +14,7 @@ import java.util.Set;
 import org.hibernate.validator.NotNull;
 
 import com.medigy.service.validator.ValidEntity;
+import com.medigy.wicket.form.FormFieldFactory.FieldCreator;
 import wicket.markup.html.form.FormComponent;
 import wicket.markup.html.form.validation.RequiredValidator;
 
@@ -22,6 +23,7 @@ public class ReflectedFormFieldDefn
     private final Class container;
     private final String name;
     private final Class dataType;
+    private final Class validEntity;
     private final Method method;
     private final boolean methodIsAccessor;
     private final Set<Annotation> constraints = new HashSet<Annotation>();
@@ -66,13 +68,8 @@ public class ReflectedFormFieldDefn
         this.method = method;
         this.methodIsAccessor = isAccessor;
         this.dataType = type;
-        if(isAnnotationPresent(ValidEntity.class))
-            this.creator = FormFieldFactory.getInstance().getReferenceEntityFieldCreator();
-        else
-            this.creator = getFieldCreator(getDataType());
-
-        if(creator == null)
-            throw new RuntimeException("Unable to find a field creator for data type " + this.dataType);
+        this.validEntity = isAnnotationPresent(ValidEntity.class) ? ((ValidEntity) getAnnotation(ValidEntity.class)).entity() : null;
+        this.creator = getFieldCreator(validEntity == null ? dataType : validEntity);
 
         for(int i = 0; i < containers.length; i++)
         {
@@ -124,9 +121,13 @@ public class ReflectedFormFieldDefn
 
     }
 
-    public FormFieldFactory.FieldCreator getFieldCreator(final Class dataType)
+    public FormFieldFactory.FieldCreator getFieldCreator(final Class dataTypeOrValidEntity)
     {
-        return FormFieldFactory.getInstance().getFieldCreator(dataType);
+        final FieldCreator result = FormFieldFactory.getInstance().getFieldCreator(dataTypeOrValidEntity);
+        if(result == null)
+            throw new RuntimeException("Unable to find a field creator for " + dataTypeOrValidEntity);
+        else
+            return result;
     }
 
     public boolean isAnnotationPresent(final Class<?> annotation)

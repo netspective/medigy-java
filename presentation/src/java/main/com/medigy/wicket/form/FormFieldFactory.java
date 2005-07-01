@@ -48,6 +48,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
+import com.medigy.persist.reference.ReferenceEntity;
 import com.medigy.presentation.model.ChoicesFactory;
 import com.medigy.service.validator.ValidEntity;
 import wicket.markup.html.form.DropDownChoice;
@@ -65,16 +66,11 @@ public class FormFieldFactory
 
     private Map<Class, FieldCreator> fieldCreatorMap = Collections.synchronizedMap(new HashMap<Class, FieldCreator>());
     private Map<String, ReflectedFormFieldDefn> reflectedFormFieldDefnsMap = Collections.synchronizedMap(new TreeMap<String, ReflectedFormFieldDefn>());
-    private ReferenceEntityFieldCreator referenceEntityFieldCreator = new ReferenceEntityFieldCreator();
 
     protected FormFieldFactory()
     {
+        addFieldCreator(ReferenceEntity.class, new ReferenceEntityFieldCreator());
         addFieldCreator(String.class, new TextField.TextFieldCreator());
-    }
-
-    public ReferenceEntityFieldCreator getReferenceEntityFieldCreator()
-    {
-        return referenceEntityFieldCreator;
     }
 
     public void addFieldCreator(final Class dataType, final FieldCreator creator)
@@ -133,4 +129,5 @@ public class FormFieldFactory
             }
         }
     }
+
 }
