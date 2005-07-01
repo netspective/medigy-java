@@ -48,8 +48,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
+import com.medigy.presentation.model.ChoicesFactory;
 import com.medigy.service.validator.ValidEntity;
+import wicket.markup.html.form.DropDownChoice;
 import wicket.markup.html.form.FormComponent;
+import wicket.markup.html.form.model.IChoiceList;
 
 public class FormFieldFactory
 {
@@ -118,19 +121,16 @@ public class FormFieldFactory
 
             final SelectFieldStyle sfsAnn = (SelectFieldStyle) reflectedFormFieldDefn.getAnnotation(SelectFieldStyle.class);
             final SelectFieldStyle.Style style = sfsAnn != null ? sfsAnn.style() : SelectFieldStyle.Style.COMBO;
+            final IChoiceList referenceEntityChoices = ChoicesFactory.getInstance().getReferenceEntityChoices(reAnn.entity());
 
             switch(style)
             {
                 case COMBO:
-                    //return new DropDownChoice(reflectedFormFieldDefn.getName(), ChoicesFactory.getInstance().getReferenceEntityChoices(reAnn.getEntityClass()));
+                    return new DropDownChoice(reflectedFormFieldDefn.getName(), referenceEntityChoices);
 
-                // TODO: add other cases for other styles
+                default:
+                    throw new RuntimeException("No other styles supported yet...make this error message better.");
             }
-
-            // TODO: wait until aye is done
-            // TODO: find a way to get ChoicesFactory from default application (if default application is available as thread local or something)
-            //return new DropDownChoice(reflectedFormFieldDefn.getName(), ChoicesFactory.getInstance().getReferenceEntityChoices(reAnn.getEntityClass()));
-            return null;
         }
     }
 }
