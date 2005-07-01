@@ -42,10 +42,10 @@
  */
 package com.medigy.wicket.form;
 
+import java.util.regex.Pattern;
+
 import wicket.markup.ComponentTag;
 import wicket.markup.html.form.FormComponent;
-
-import java.util.regex.Pattern;
 
 public class PhoneField extends wicket.markup.html.form.TextField implements FormFieldJavaScriptProvider
 {
@@ -60,43 +60,29 @@ public class PhoneField extends wicket.markup.html.form.TextField implements For
 
     public static class PhoneFieldCreator implements FormFieldFactory.FieldCreator
     {
-        public FormComponent createField(final ReflectedFormFieldDefn reflectedFormFieldDefn)
+        public FormComponent createField(final String controlId, final ReflectedFormFieldDefn reflectedFormFieldDefn)
         {
-            final PhoneField result = new PhoneField(reflectedFormFieldDefn);
+            final PhoneField result = new PhoneField(controlId, reflectedFormFieldDefn);
             reflectedFormFieldDefn.initializeField(reflectedFormFieldDefn, result);
             return result;
         }
     }
 
-    private String fieldName;
-    private String fieldControlId;
     //private Style style;
     private ReflectedFormFieldDefn reflectedFormFieldDefn;
 
-    public PhoneField(final ReflectedFormFieldDefn reflectedFormFieldDefn)
+    public PhoneField(final String controlId, final ReflectedFormFieldDefn reflectedFormFieldDefn)
     {
-        super(reflectedFormFieldDefn.getName() + BaseForm.FIELD_CONTROL_SUFFIX);
+        super(controlId);
         this.reflectedFormFieldDefn = reflectedFormFieldDefn;
-        this.fieldName = reflectedFormFieldDefn.getName() + BaseForm.FIELD_CONTROL_SUFFIX;
-        this.fieldControlId = reflectedFormFieldDefn.getName() + BaseForm.FIELD_CONTROL_SUFFIX;
 
         //setStyle(Style.DASH);
     }
 
     protected void onComponentTag(final ComponentTag componentTag)
     {
-        ((BaseForm) getForm()).onFormComponentTag(componentTag, getFieldId(), getJavaScriptFieldFlags());
+        ((BaseForm) getForm()).onFormComponentTag(componentTag, getId(), getJavaScriptFieldFlags());
         super.onComponentTag(componentTag);
-    }
-
-    public String getFieldName()
-    {
-        return this.fieldName;
-    }
-
-    protected String getFieldId()
-    {
-        return this.fieldControlId;
     }
 
     public ReflectedFormFieldDefn getReflectedFormFieldDefn()
@@ -106,7 +92,7 @@ public class PhoneField extends wicket.markup.html.form.TextField implements For
 
     public String getJavaScript(final String dialogVarName, final String formObjectName)
     {
-        return "var field = dialog.createField("+ formObjectName +"[\""+ getFieldId() +"\"], FIELD_TYPES[\""+ getClass().getName() +"\"], "+ getJavaScriptFieldFlags() +", null);\n";
+        return "var field = dialog.createField("+ formObjectName +"[\""+ getId() +"\"], FIELD_TYPES[\""+ getClass().getName() +"\"], "+ getJavaScriptFieldFlags() +", null);\n";
     }
 
     public int getJavaScriptFieldFlags()

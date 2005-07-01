@@ -43,13 +43,11 @@
  */
 package com.medigy.presentation.form.person.patient;
 
-import com.medigy.persist.reference.custom.person.EthnicityType;
 import com.medigy.presentation.model.TestServiceParameterModel;
 import com.medigy.service.dto.person.RegisterPatientParameters;
 import com.medigy.service.person.PatientRegistrationService;
 import com.medigy.wicket.DefaultApplication;
 import com.medigy.wicket.form.BaseForm;
-import com.medigy.wicket.form.FieldGroupLabel;
 import com.medigy.wicket.form.TextField;
 import com.medigy.wicket.panel.DefaultFormPanel;
 import wicket.IFeedback;
@@ -79,9 +77,9 @@ public class PatientRegistrationFormPanel extends DefaultFormPanel
         {
             super(componentName, model, feedback);
 
-            add(new FieldGroupLabel("patientId"));
-
             TestServiceParameterModel serviceBean = (TestServiceParameterModel)model.getObject(null);
+/*
+            add(new FieldGroupLabel("patientId"));
 
             addLabeledField("personId", serviceBean.getClass());
             addLabeledField("account", serviceBean.getClass());
@@ -156,6 +154,8 @@ public class PatientRegistrationFormPanel extends DefaultFormPanel
             addLabeledField("percentagePay", serviceBean.getClass());
             addLabeledField("threshold", serviceBean.getClass());
             addLabeledField("officeVisitCoPay", serviceBean.getClass());
+*/
+
         }
 
 		public final void onSubmit()

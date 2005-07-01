@@ -49,24 +49,20 @@ public class MultiCheckField extends wicket.markup.html.form.ListMultipleChoice 
 {
     public static class MultiCheckFieldCreator implements FormFieldFactory.FieldCreator
     {
-        public FormComponent createField(final ReflectedFormFieldDefn reflectedFormFieldDefn)
+        public FormComponent createField(final String controlId, final ReflectedFormFieldDefn reflectedFormFieldDefn)
         {
-            final MultiCheckField result = new MultiCheckField(reflectedFormFieldDefn);
+            final MultiCheckField result = new MultiCheckField(controlId, reflectedFormFieldDefn);
             reflectedFormFieldDefn.initializeField(reflectedFormFieldDefn, result);
             return result;
         }
     }
 
-    private String fieldName;
-    private String fieldControlId;
     private ReflectedFormFieldDefn reflectedFormFieldDefn;
 
-    public MultiCheckField(final ReflectedFormFieldDefn reflectedFormFieldDefn)
+    public MultiCheckField(final String controlId, final ReflectedFormFieldDefn reflectedFormFieldDefn)
     {
-        super(reflectedFormFieldDefn.getName() + BaseForm.FIELD_CONTROL_SUFFIX);
+        super(controlId);
         this.reflectedFormFieldDefn = reflectedFormFieldDefn;
-        this.fieldName = reflectedFormFieldDefn.getName() + BaseForm.FIELD_CONTROL_SUFFIX;
-        this.fieldControlId = reflectedFormFieldDefn.getName() + BaseForm.FIELD_CONTROL_SUFFIX;
     }
 
     // TODO - Cannot override onComponentTag - final in super. Check how to register
@@ -76,16 +72,6 @@ public class MultiCheckField extends wicket.markup.html.form.ListMultipleChoice 
 //        super.onComponentTag(componentTag);
 //    }
 
-    public String getFieldName()
-    {
-        return this.fieldName;
-    }
-
-    protected String getFieldId()
-    {
-        return this.fieldControlId;
-    }
-
     public ReflectedFormFieldDefn getReflectedFormFieldDefn()
     {
         return reflectedFormFieldDefn;
@@ -93,7 +79,7 @@ public class MultiCheckField extends wicket.markup.html.form.ListMultipleChoice 
 
     public String getJavaScript(final String dialogVarName, final String formObjectName)
     {
-        return "var field = dialog.createField("+ formObjectName +"[\""+ getFieldId() +"\"], FIELD_TYPES[\""+ getClass().getName() +"\"], "+ getJavaScriptFieldFlags() +", null);\n";
+        return "var field = dialog.createField("+ formObjectName +"[\""+ getId() +"\"], FIELD_TYPES[\""+ getClass().getName() +"\"], "+ getJavaScriptFieldFlags() +", null);\n";
     }
 
     public int getJavaScriptFieldFlags()

@@ -53,7 +53,7 @@ public class CheckBox extends wicket.markup.html.form.CheckBox
 
     public CheckBox(final String fieldName, long fieldFlags)
     {
-        super(fieldName + BaseForm.FIELD_CONTROL_SUFFIX);
+        super(fieldName);
         this.fieldName = fieldName;
         this.fieldFlags = fieldFlags;
 
@@ -63,7 +63,7 @@ public class CheckBox extends wicket.markup.html.form.CheckBox
 
     public CheckBox(final String fieldName, IModel model, long fieldFlags)
     {
-        super(fieldName + BaseForm.FIELD_CONTROL_SUFFIX, model);
+        super(fieldName, model);
         this.fieldName = fieldName;
         this.fieldFlags = fieldFlags;
 

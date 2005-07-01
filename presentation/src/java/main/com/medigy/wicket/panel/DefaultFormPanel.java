@@ -14,7 +14,7 @@ public abstract class DefaultFormPanel extends DefaultPanel
 	{
         super(componentName);
 
-        final StandardPanelBorder border = new StandardPanelBorder("panel-border");
+        final StandardPanelBorder border = new StandardPanelBorder("panel_border");
         add(border);
 
         // Create feedback panel and add to page

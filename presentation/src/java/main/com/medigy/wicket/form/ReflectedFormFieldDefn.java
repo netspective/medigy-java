@@ -3,12 +3,6 @@
  */
 package com.medigy.wicket.form;
 
-import com.medigy.service.validator.ValidEntity;
-import com.medigy.wicket.form.FormFieldFactory.FieldCreator;
-import org.hibernate.validator.NotNull;
-import wicket.markup.html.form.FormComponent;
-import wicket.markup.html.form.validation.RequiredValidator;
-
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
@@ -17,6 +11,13 @@ import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.hibernate.validator.NotNull;
+
+import com.medigy.service.validator.ValidEntity;
+import com.medigy.wicket.form.FormFieldFactory.FieldCreator;
+import wicket.markup.html.form.FormComponent;
+import wicket.markup.html.form.validation.RequiredValidator;
 
 public class ReflectedFormFieldDefn
 {
@@ -65,6 +66,9 @@ public class ReflectedFormFieldDefn
             method = null;
         }
 
+        if(method == null)
+            throw new RuntimeException("No accessor or mutator found for property '" + propertyName + "' in " + container);
+
         this.method = method;
         this.methodIsAccessor = isAccessor;
         this.dataType = type;
@@ -112,9 +116,9 @@ public class ReflectedFormFieldDefn
         this.creator = getFieldCreator(validEntity == null ? dataType : ValidEntity.class);
     }
 
-    public FormComponent createField()
+    public FormComponent createField(final String componentId)
     {
-        return creator.createField(this);
+        return creator.createField(componentId, this);
     }
 
     public void initializeField(final ReflectedFormFieldDefn reflectedFormFieldDefn, final FormComponent formComponent)

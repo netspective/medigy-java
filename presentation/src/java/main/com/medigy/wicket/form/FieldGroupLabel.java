@@ -49,11 +49,9 @@ import wicket.markup.html.WebMarkupContainer;
 
 public class FieldGroupLabel extends WebMarkupContainer
 {
-    public static final String GROUP_LABEL_SUFFIX = "-group-label";
-
     public FieldGroupLabel(final String groupName)
     {
-        super(groupName + GROUP_LABEL_SUFFIX);
+        super(groupName);
     }
 
     protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag componentTag)

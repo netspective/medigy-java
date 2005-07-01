@@ -1,6 +1,6 @@
 /*
- * $Id: SignInPanel.java,v 1.2 2005-05-29 22:41:39 shahid.shah Exp $
- * $Revision: 1.2 $ $Date: 2005-05-29 22:41:39 $
+ * $Id: SignInPanel.java,v 1.3 2005-07-01 20:01:07 shahid.shah Exp $
+ * $Revision: 1.3 $ $Date: 2005-07-01 20:01:07 $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -153,7 +153,7 @@ public abstract class SignInPanel extends DefaultPanel
 
 		this.includeRememberMe = includeRememberMe;
 
-        final StandardPanelBorder border = new StandardPanelBorder("panel-border");
+        final StandardPanelBorder border = new StandardPanelBorder("panel_border");
         add(border);
 
 		// Create feedback panel and add to page

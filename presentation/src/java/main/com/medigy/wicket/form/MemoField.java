@@ -48,40 +48,26 @@ public class MemoField extends wicket.markup.html.form.TextArea implements FormF
 {
     public static class MemoFieldCreator implements FormFieldFactory.FieldCreator
     {
-        public FormComponent createField(final ReflectedFormFieldDefn reflectedFormFieldDefn)
+        public FormComponent createField(final String controlId, final ReflectedFormFieldDefn reflectedFormFieldDefn)
         {
-            final MemoField result = new MemoField(reflectedFormFieldDefn);
+            final MemoField result = new MemoField(controlId, reflectedFormFieldDefn);
             reflectedFormFieldDefn.initializeField(reflectedFormFieldDefn, result);
             return result;
         }
     }
 
-    private String fieldName;
-    private String fieldControlId;
     private ReflectedFormFieldDefn reflectedFormFieldDefn;
 
-    public MemoField(final ReflectedFormFieldDefn reflectedFormFieldDefn)
+    public MemoField(final String controlId, final ReflectedFormFieldDefn reflectedFormFieldDefn)
     {
-        super(reflectedFormFieldDefn.getName() + BaseForm.FIELD_CONTROL_SUFFIX);
+        super(controlId);
         this.reflectedFormFieldDefn = reflectedFormFieldDefn;
-        this.fieldName = reflectedFormFieldDefn.getName() + BaseForm.FIELD_CONTROL_SUFFIX;
-        this.fieldControlId = reflectedFormFieldDefn.getName() + BaseForm.FIELD_CONTROL_SUFFIX;
     }
 
     protected void onComponentTag(final ComponentTag componentTag)
     {
-        ((BaseForm) getForm()).onFormComponentTag(componentTag, getFieldId(), getJavaScriptFieldFlags());
+        ((BaseForm) getForm()).onFormComponentTag(componentTag, getId(), getJavaScriptFieldFlags());
         super.onComponentTag(componentTag);
-    }
-
-    public String getFieldName()
-    {
-        return this.fieldName;
-    }
-
-    protected String getFieldId()
-    {
-        return this.fieldControlId;
     }
 
     public ReflectedFormFieldDefn getReflectedFormFieldDefn()
@@ -91,7 +77,7 @@ public class MemoField extends wicket.markup.html.form.TextArea implements FormF
 
     public String getJavaScript(final String dialogVarName, final String formObjectName)
     {
-        return "var field = dialog.createField("+ formObjectName +"[\""+ getFieldId() +"\"], FIELD_TYPES[\""+ getClass().getName() +"\"], "+ getJavaScriptFieldFlags() +", null);\n";
+        return "var field = dialog.createField("+ formObjectName +"[\""+ getId() +"\"], FIELD_TYPES[\""+ getClass().getName() +"\"], "+ getJavaScriptFieldFlags() +", null);\n";
     }
 
     public int getJavaScriptFieldFlags()

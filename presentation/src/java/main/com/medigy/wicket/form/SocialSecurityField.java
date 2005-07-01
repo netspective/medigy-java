@@ -43,11 +43,11 @@
  */
 package com.medigy.wicket.form;
 
+import java.util.regex.Pattern;
+
 import wicket.markup.ComponentTag;
 import wicket.markup.html.form.FormComponent;
 import wicket.markup.html.form.validation.PatternValidator;
-
-import java.util.regex.Pattern;
 
 public class SocialSecurityField extends wicket.markup.html.form.TextField implements FormFieldJavaScriptProvider
 {
@@ -55,42 +55,28 @@ public class SocialSecurityField extends wicket.markup.html.form.TextField imple
 
     public static class SocialSecurityFieldCreator implements FormFieldFactory.FieldCreator
     {
-        public FormComponent createField(final ReflectedFormFieldDefn reflectedFormFieldDefn)
+        public FormComponent createField(final String controlId, final ReflectedFormFieldDefn reflectedFormFieldDefn)
         {
-            final SocialSecurityField result = new SocialSecurityField(reflectedFormFieldDefn);
+            final SocialSecurityField result = new SocialSecurityField(controlId, reflectedFormFieldDefn);
             reflectedFormFieldDefn.initializeField(reflectedFormFieldDefn, result);
             return result;
         }
     }
 
-    private String fieldName;
-    private String fieldControlId;
     private ReflectedFormFieldDefn reflectedFormFieldDefn;
 
-    public SocialSecurityField(final ReflectedFormFieldDefn reflectedFormFieldDefn)
+    public SocialSecurityField(final String controlId, final ReflectedFormFieldDefn reflectedFormFieldDefn)
     {
-        super(reflectedFormFieldDefn.getName() + BaseForm.FIELD_CONTROL_SUFFIX);
+        super(controlId);
         this.reflectedFormFieldDefn = reflectedFormFieldDefn;
-        this.fieldName = reflectedFormFieldDefn.getName() + BaseForm.FIELD_CONTROL_SUFFIX;
-        this.fieldControlId = reflectedFormFieldDefn.getName() + BaseForm.FIELD_CONTROL_SUFFIX;
 
         add(new PatternValidator(SOCIAL_SECURITY_PATTERN));
     }
 
     protected void onComponentTag(final ComponentTag componentTag)
     {
-        ((BaseForm) getForm()).onFormComponentTag(componentTag, getFieldId(), getJavaScriptFieldFlags());
+        ((BaseForm) getForm()).onFormComponentTag(componentTag, getId(), getJavaScriptFieldFlags());
         super.onComponentTag(componentTag);
-    }
-
-    public String getFieldName()
-    {
-        return this.fieldName;
-    }
-
-    protected String getFieldId()
-    {
-        return this.fieldControlId;
     }
 
     public ReflectedFormFieldDefn getReflectedFormFieldDefn()
@@ -100,7 +86,7 @@ public class SocialSecurityField extends wicket.markup.html.form.TextField imple
 
     public String getJavaScript(final String dialogVarName, final String formObjectName)
     {
-        return "var field = dialog.createField("+ formObjectName +"[\""+ getFieldId() +"\"], FIELD_TYPES[\""+ getClass().getName() +"\"], "+ getJavaScriptFieldFlags() +", null);\n";
+        return "var field = dialog.createField("+ formObjectName +"[\""+ getId() +"\"], FIELD_TYPES[\""+ getClass().getName() +"\"], "+ getJavaScriptFieldFlags() +", null);\n";
     }
 
     public int getJavaScriptFieldFlags()

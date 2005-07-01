@@ -43,16 +43,16 @@
  */
 package com.medigy.wicket.form;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
+
 import com.medigy.presentation.model.ChoicesFactory;
 import com.medigy.service.validator.ValidEntity;
 import wicket.markup.html.form.DropDownChoice;
 import wicket.markup.html.form.FormComponent;
 import wicket.markup.html.form.model.IChoiceList;
-
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
 
 public class FormFieldFactory
 {
@@ -95,20 +95,20 @@ public class FormFieldFactory
         return result;
     }
 
-    public FormComponent createField(final String propertyName, final Class ... classes)
+    public FormComponent createField(final String componentId, final String propertyName, final Class ... classes)
     {
         // TODO: classes beyond the first are not managed yet
-        return getReflectedFormFieldDefn(propertyName, classes).createField();
+        return getReflectedFormFieldDefn(propertyName, classes).createField(componentId);
     }
 
     public interface FieldCreator
     {
-        public FormComponent createField(final ReflectedFormFieldDefn reflectedFormFieldDefn);
+        public FormComponent createField(final String controlId, final ReflectedFormFieldDefn reflectedFormFieldDefn);
     }
 
     public class ReferenceEntityFieldCreator implements FieldCreator
     {
-        public FormComponent createField(final ReflectedFormFieldDefn reflectedFormFieldDefn)
+        public FormComponent createField(final String controlId, final ReflectedFormFieldDefn reflectedFormFieldDefn)
         {
             final ValidEntity reAnn = (ValidEntity) reflectedFormFieldDefn.getAnnotation(ValidEntity.class);
             if(reAnn == null)
@@ -121,7 +121,7 @@ public class FormFieldFactory
             switch(style)
             {
                 case COMBO:
-                    return new DropDownChoice(reflectedFormFieldDefn.getName(), referenceEntityChoices);
+                    return new DropDownChoice(controlId, referenceEntityChoices);
 
                 default:
                     throw new RuntimeException("No other styles supported yet...make this error message better.");

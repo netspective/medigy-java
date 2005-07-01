@@ -5,7 +5,7 @@
     </head>
     <body>
         <wicket:panel>
-            <div wicket:id="panel-border">
+            <div wicket:id="panel_border">
                 <div wicket:id="feedback" class="form-feedback"/>
                 <form wicket:id="form">
                 <div class="form-body">
@@ -98,7 +98,7 @@
                                     <label wicket:id="ethnicity_label">Ethnicity</label>
                                 </td>
                                 <td class="control">
-                                    <span wicket:id="ethnicity">
+                                    <span _wicket:id="ethnicity">  <!-- TODO: change _wicket here -->
                                         <input type="radio">Native-American
                                         <input type="radio">Caucasian
                                         <input type="radio">African-American
@@ -121,7 +121,7 @@
                                     <label wicket:id="relationshipToResponsibleOtherRelationship_label">Other Relationship Name</label>
                                 </td>
                                 <td class="control">
-                                    <select wicket:id="relationshipToResponsible">
+                                    <select _wicket:id="relationshipToResponsible"> <!-- TODO: change _wicket here -->
                                         <option>Self</option>
                                         <option>Spouse</option>
                                     </select>
@@ -246,7 +246,7 @@
                                                 <label wicket:id="employmentStatus_label">Employment Status</label>
                                             </td>
                                             <td class="control">
-                                                <select wicket:id="employmentStatus">
+                                                <select _wicket:id="employmentStatus"> <!-- TODO: change _wicket -->
                                                     <option>Employed (Full-Time)</option>
                                                     <option>Employed (Part-Time)</option>
                                                 </select>
@@ -281,7 +281,7 @@
                                               <label wicket:id="insuranceSequence_label">Insurance Sequence</label>
                                           </td>
                                           <td class="control">
-                                              <select wicket:id="insuranceSequence">
+                                              <select _wicket:id="insuranceSequence"> <!-- TODO: change _wicket -->
                                                   <option>Primary</option>
                                                   <option>Secondary</option>
                                                   <option>Tertiary</option>
@@ -317,7 +317,7 @@
                                     <label wicket:id="patientRelationshipToInsured_label">Patient's Relationship to Insured</label>
                                 </td>
                                 <td class="control">
-                                    <select wicket:id="patientRelationshipToInsured">
+                                    <select _wicket:id="patientRelationshipToInsured">   <!-- TODO: _wicket -->
                                         <option>Self</option>
                                         <option>Spouse</option>
                                         <option>Paternal</option>

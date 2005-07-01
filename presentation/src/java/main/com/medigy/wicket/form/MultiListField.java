@@ -49,24 +49,20 @@ public class MultiListField extends wicket.markup.html.form.ListMultipleChoice i
 {
     public static class MultiListFieldCreator implements FormFieldFactory.FieldCreator
     {
-        public FormComponent createField(final ReflectedFormFieldDefn reflectedFormFieldDefn)
+        public FormComponent createField(final String controlId, final ReflectedFormFieldDefn reflectedFormFieldDefn)
         {
-            final MultiListField result = new MultiListField(reflectedFormFieldDefn);
+            final MultiListField result = new MultiListField(controlId, reflectedFormFieldDefn);
             reflectedFormFieldDefn.initializeField(reflectedFormFieldDefn, result);
             return result;
         }
     }
 
-    private String fieldName;
-    private String fieldControlId;
     private ReflectedFormFieldDefn reflectedFormFieldDefn;
 
-    public MultiListField(final ReflectedFormFieldDefn reflectedFormFieldDefn)
+    public MultiListField(final String controlId, final ReflectedFormFieldDefn reflectedFormFieldDefn)
     {
-        super(reflectedFormFieldDefn.getName() + BaseForm.FIELD_CONTROL_SUFFIX);
+        super(controlId);
         this.reflectedFormFieldDefn = reflectedFormFieldDefn;
-        this.fieldName = reflectedFormFieldDefn.getName() + BaseForm.FIELD_CONTROL_SUFFIX;
-        this.fieldControlId = reflectedFormFieldDefn.getName() + BaseForm.FIELD_CONTROL_SUFFIX;
     }
 
     // TODO - Cannot override onComponentTag - final in super.  check how to register
@@ -76,16 +72,6 @@ public class MultiListField extends wicket.markup.html.form.ListMultipleChoice i
 //        super.onComponentTag(componentTag);
 //    }
 
-    public String getFieldName()
-    {
-        return this.fieldName;
-    }
-
-    protected String getFieldId()
-    {
-        return this.fieldControlId;
-    }
-
     public ReflectedFormFieldDefn getReflectedFormFieldDefn()
     {
         return reflectedFormFieldDefn;
@@ -93,7 +79,7 @@ public class MultiListField extends wicket.markup.html.form.ListMultipleChoice i
 
     public String getJavaScript(final String dialogVarName, final String formObjectName)
     {
-        return "var field = dialog.createField("+ formObjectName +"[\""+ getFieldId() +"\"], FIELD_TYPES[\""+ getClass().getName() +"\"], "+ getJavaScriptFieldFlags() +", null);\n";
+        return "var field = dialog.createField("+ formObjectName +"[\""+ getId() +"\"], FIELD_TYPES[\""+ getClass().getName() +"\"], "+ getJavaScriptFieldFlags() +", null);\n";
     }
 
     public int getJavaScriptFieldFlags()

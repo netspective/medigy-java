@@ -79,8 +79,8 @@ public class BaseForm extends Form implements IComponentResolver
 {
     private static final Log log = LogFactory.getLog(BaseForm.class);
 
-    public static final String FIELD_LABEL_SUFFIX = "_label";
-    public static final String FIELD_CONTROL_SUFFIX = "_control";
+    private static final String FIELD_LABEL_SUFFIX = "_label";
+    private static final String FIELD_CONTROL_SUFFIX = "_control";
     protected static final Collection TEST_CHOICES = new ArrayList();
     protected static final Collection RELATIONSHIP_TO_RESPONSIBLE_CHOICES = new ArrayList();
     protected static final Collection EMPLOYMENT_STATUS_CHOICES = new ArrayList();
@@ -124,10 +124,10 @@ public class BaseForm extends Form implements IComponentResolver
 
     protected interface TagResolver
     {
-        public boolean addComponent(final ComponentTag tag);
+        public boolean addComponent(final MarkupContainer container, final MarkupStream markupStream, final ComponentTag tag);
     }
 
-    private ChoicesFactory choicesFactory;
+    private ChoicesFactory choicesFactory = ChoicesFactory.getInstance(); // TODO: this should be a service lookup so make this null later
     private Map<String, TagResolver> tagResolvers = new HashMap<String, TagResolver>();
 
     protected BaseForm(final String componentName)
@@ -144,34 +144,36 @@ public class BaseForm extends Form implements IComponentResolver
     {
         super(componentName, model, feedback);
 
+        assert(model instanceof BoundCompoundPropertyModel); // we only handle this kind of model right now
+        assert(getModel().getObject(null) != null);  // make sure a service bean is attached
+
         tagResolvers.put("legend", new TagResolver()
         {
-            public boolean addComponent(final ComponentTag tag)
+            public boolean addComponent(final MarkupContainer container, final MarkupStream markupStream, final ComponentTag tag)
             {
-                add(new FieldGroupLabel(tag.getAttributes().getString(ATTRNAME_WICKET_ID)));
+                container.autoAdd(new FieldGroupLabel(tag.getAttributes().getString(ATTRNAME_WICKET_ID)));
                 return true;
             }
         });
 
         tagResolvers.put("label", new TagResolver()
         {
-            public boolean addComponent(final ComponentTag tag)
+            public boolean addComponent(final MarkupContainer container, final MarkupStream markupStream, final ComponentTag tag)
             {
                 final String labelId = tag.getAttributes().getString(ATTRNAME_WICKET_ID);
-                final String fieldName = labelId.endsWith(FIELD_LABEL_SUFFIX) ? labelId.substring(0, FIELD_LABEL_SUFFIX.length()) : labelId;
-                add(new FieldLabel(fieldName));
+                container.autoAdd(new FieldLabel(labelId, (labelId.endsWith(FIELD_LABEL_SUFFIX) ? labelId.substring(0, labelId.length() - FIELD_LABEL_SUFFIX.length()) : labelId)  + FIELD_CONTROL_SUFFIX));
                 return true;
             }
         });
 
         final TagResolver controlResolver = new TagResolver()
         {
-            public boolean addComponent(final ComponentTag tag)
+            public boolean addComponent(final MarkupContainer container, final MarkupStream markupStream, final ComponentTag tag)
             {
-                final String controlid = tag.getAttributes().getString(ATTRNAME_WICKET_ID);
-                final String fieldName = controlid.endsWith(FIELD_CONTROL_SUFFIX) ? controlid.substring(0, FIELD_CONTROL_SUFFIX.length()) : controlid;
+                final String controlId = tag.getAttributes().getString(ATTRNAME_WICKET_ID);
                 final Class serviceBeanClass = getModel().getObject(null).getClass();
-                add(((BoundCompoundPropertyModel) getModel()).bind(FormFieldFactory.getInstance().createField(fieldName, serviceBeanClass, getModel().getClass()), fieldName));
+                final String propertyName = controlId.endsWith(FIELD_CONTROL_SUFFIX) ? controlId.substring(0, controlId.length() - FIELD_CONTROL_SUFFIX.length()) : controlId;
+                container.autoAdd(((BoundCompoundPropertyModel) getModel()).bind(FormFieldFactory.getInstance().createField(controlId, propertyName, serviceBeanClass, getModel().getClass()), propertyName));
                 return true;
             }
         };
@@ -198,68 +200,68 @@ public class BaseForm extends Form implements IComponentResolver
         {
             final TagResolver resolver = tagResolvers.get(tag.getName());
             if(resolver != null)
-                return resolver.addComponent(tag);
+                return resolver.addComponent(container, markupStream, tag);
         }
         return false;
     }
 
     protected void addLabeledTextField(final String fieldName)
     {
-        add(new FieldLabel(fieldName));
+        //add(new FieldLabel(fieldName));
         add(new TextField(fieldName));
     }
 
     protected void addLabeledField(final String fieldName, final Class cls)
     {
-        add(new FieldLabel(fieldName));
-        add(((BoundCompoundPropertyModel)this.getModel()).bind(FormFieldFactory.getInstance().createField(fieldName, cls, getModel().getClass()), fieldName));
+        //add(new FieldLabel(fieldName));
+        add(((BoundCompoundPropertyModel)this.getModel()).bind(FormFieldFactory.getInstance().createField(fieldName + FIELD_CONTROL_SUFFIX, fieldName, cls, getModel().getClass()), fieldName));
     }
 
     protected void addLabeledSelectField(final String fieldName, Collection choices)
     {
-        add(new FieldLabel(fieldName));
+        //add(new FieldLabel(fieldName));
         add(new DropDownChoice(fieldName, choices));
     }
 
     protected void addLabeledSelectField(final String fieldName)
     {
-        add(new FieldLabel(fieldName));
+        //add(new FieldLabel(fieldName));
         add(new DropDownChoice(fieldName, TEST_CHOICES));
     }
 
     protected void addLabeledSelectField(final String fieldName, final Class referenceEntity)
     {
-        add(new FieldLabel(fieldName));
+        //add(new FieldLabel(fieldName));
         add(new DropDownChoice(fieldName, getChoicesFactory().getReferenceEntityChoices(referenceEntity)));
     }
 
     protected void addLabeledMultiListField(final String fieldName, final Class multiListChoices)
     {
-        add(new FieldLabel(fieldName));
+        //add(new FieldLabel(fieldName));
         add(new ListMultipleChoice(fieldName, getChoicesFactory().getReferenceEntityChoices(multiListChoices)));
     }
 
     protected void addLabeledMultiCheckField(final String fieldName, final Class multiCheckChoices)
     {
-        add(new FieldLabel(fieldName));
+        //add(new FieldLabel(fieldName));
         add(new ListMultipleChoice(fieldName, getChoicesFactory().getReferenceEntityChoices(multiCheckChoices)));
     }
 
     protected void addLabeledRadioChoiceField(final String fieldName, Collection choices)
     {
-        add(new FieldLabel(fieldName));
+        //add(new FieldLabel(fieldName));
         add(new RadioChoice(fieldName, choices));
     }
 
     protected void addLabeledRadioChoiceField(final String fieldName, final Class choicesClass)
     {
-        add(new FieldLabel(fieldName));
+        //add(new FieldLabel(fieldName));
         add(new RadioChoice(fieldName, getChoicesFactory().getReferenceEntityChoices(choicesClass)));
     }
 
     protected void addLabeledCheckBox(final String fieldName)
     {
-        add(new FieldLabel(fieldName));
+        //add(new FieldLabel(fieldName));
         add(new CheckBox(fieldName));
     }
 
@@ -268,7 +270,7 @@ public class BaseForm extends Form implements IComponentResolver
         final ValueMap attributes = componentTag.getAttributes();
         final String idAttr = attributes.getString("id");
         if(idAttr == null)
-            attributes.put("id", fieldControlId);  // label will point to this ID using for="{fieldName}-control"
+            attributes.put("id", fieldControlId);  // label will point to this ID using for="{fieldName}_control"
 
         componentTag.put("onfocus", "return controlOnFocus(this, event)");
         componentTag.put("onchange", "controlOnChange(this, event)");
@@ -298,6 +300,8 @@ public class BaseForm extends Form implements IComponentResolver
                     FormFieldJavaScriptProvider jsProviderFormField = (FormFieldJavaScriptProvider) formComponent;
                     script.append(jsProviderFormField.getJavaScript("dialog", "document.forms[0]"));
                 }
+                else
+                    System.out.println(formComponent + " is not a " + FormFieldJavaScriptProvider.class);
             }
         });
         script.append("dialog.finalizeContents();\n</script>");
