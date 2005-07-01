@@ -71,6 +71,7 @@ import wicket.markup.html.form.FormComponent;
 import wicket.markup.html.form.ListMultipleChoice;
 import wicket.markup.html.form.RadioChoice;
 import wicket.markup.html.form.model.IChoice;
+import wicket.markup.html.form.validation.RequiredValidator;
 import wicket.model.BoundCompoundPropertyModel;
 import wicket.model.IModel;
 import wicket.util.value.ValueMap;
@@ -265,12 +266,12 @@ public class BaseForm extends Form implements IComponentResolver
         add(new CheckBox(fieldName));
     }
 
-    protected void onFormComponentTag(final ComponentTag componentTag, final String fieldControlId, final long fieldFlags)
+    protected void onFormComponentTag(final FormComponent formComponent, final ComponentTag componentTag)
     {
         final ValueMap attributes = componentTag.getAttributes();
         final String idAttr = attributes.getString("id");
         if(idAttr == null)
-            attributes.put("id", fieldControlId);  // label will point to this ID using for="{fieldName}_control"
+            attributes.put("id", formComponent.getId());  // label will point to this ID using for="{fieldName}_control"
 
         componentTag.put("onfocus", "return controlOnFocus(this, event)");
         componentTag.put("onchange", "controlOnChange(this, event)");
@@ -278,7 +279,7 @@ public class BaseForm extends Form implements IComponentResolver
         componentTag.put("onkeypress", "return controlOnKeypress(this, event)");
         componentTag.put("onclick", "controlOnClick(this, event)");
 
-        if((fieldFlags & FieldFlags.REQUIRED) != 0)
+        if(formComponent.getValidators().contains(RequiredValidator.getInstance()))
             componentTag.put("class", "required");
     }
 

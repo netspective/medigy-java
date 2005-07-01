@@ -66,7 +66,7 @@ public class MemoField extends wicket.markup.html.form.TextArea implements FormF
 
     protected void onComponentTag(final ComponentTag componentTag)
     {
-        ((BaseForm) getForm()).onFormComponentTag(componentTag, getId(), getJavaScriptFieldFlags());
+        ((BaseForm) getForm()).onFormComponentTag(this, componentTag);
         super.onComponentTag(componentTag);
     }
 

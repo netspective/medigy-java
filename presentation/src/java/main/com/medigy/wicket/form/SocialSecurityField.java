@@ -75,7 +75,7 @@ public class SocialSecurityField extends wicket.markup.html.form.TextField imple
 
     protected void onComponentTag(final ComponentTag componentTag)
     {
-        ((BaseForm) getForm()).onFormComponentTag(componentTag, getId(), getJavaScriptFieldFlags());
+        ((BaseForm) getForm()).onFormComponentTag(this, componentTag);
         super.onComponentTag(componentTag);
     }
 

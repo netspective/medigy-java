@@ -68,7 +68,7 @@ public class BooleanField extends wicket.markup.html.form.TextField implements F
 
     protected void onComponentTag(final ComponentTag componentTag)
     {
-        ((BaseForm) getForm()).onFormComponentTag(componentTag, getId(), getJavaScriptFieldFlags());
+        ((BaseForm) getForm()).onFormComponentTag(this, componentTag);
         super.onComponentTag(componentTag);
     }
 

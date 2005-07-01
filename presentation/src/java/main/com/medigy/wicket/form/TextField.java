@@ -80,7 +80,7 @@ public class TextField extends wicket.markup.html.form.TextField implements Form
 
     protected void onComponentTag(final ComponentTag componentTag)
     {
-        ((BaseForm) getForm()).onFormComponentTag(componentTag, getId(), getJavaScriptFieldFlags());
+        ((BaseForm) getForm()).onFormComponentTag(this, componentTag);
         super.onComponentTag(componentTag);
     }
 

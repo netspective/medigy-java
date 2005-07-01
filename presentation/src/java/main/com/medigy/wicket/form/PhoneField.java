@@ -81,7 +81,7 @@ public class PhoneField extends wicket.markup.html.form.TextField implements For
 
     protected void onComponentTag(final ComponentTag componentTag)
     {
-        ((BaseForm) getForm()).onFormComponentTag(componentTag, getId(), getJavaScriptFieldFlags());
+        ((BaseForm) getForm()).onFormComponentTag(this, componentTag);
         super.onComponentTag(componentTag);
     }
 
