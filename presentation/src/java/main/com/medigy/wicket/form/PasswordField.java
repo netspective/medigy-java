@@ -43,7 +43,7 @@ package com.medigy.wicket.form;
 
 import wicket.markup.html.form.FormComponent;
 
-public class PasswordField extends wicket.markup.html.form.PasswordTextField implements FormFieldJavaScriptProvider
+public class PasswordField extends wicket.markup.html.form.PasswordTextField implements FormJavaScriptGenerator.Contributor
 {
     public static class PasswordFieldCreator implements FormFieldFactory.FieldCreator
     {
@@ -72,20 +72,5 @@ public class PasswordField extends wicket.markup.html.form.PasswordTextField imp
     public ReflectedFormFieldDefn getReflectedFormFieldDefn()
     {
         return reflectedFormFieldDefn;
-    }
-
-    public String getJavaScript(final String dialogVarName, final String formObjectName)
-    {
-        return "var field = dialog.createField("+ formObjectName +"[\""+ getId() +"\"], FIELD_TYPES[\""+ getClass().getName() +"\"], "+ getJavaScriptFieldFlags() +", null);\n";
-    }
-
-    public int getJavaScriptFieldFlags()
-    {
-        return JavaScriptUtils.getInstance().getFieldFlags(this);
-    }
-
-    public boolean isJavaScriptFieldHidden()
-    {
-        return isVisible();
     }
 }

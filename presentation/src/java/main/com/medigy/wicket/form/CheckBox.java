@@ -43,41 +43,17 @@
  */
 package com.medigy.wicket.form;
 
-import wicket.markup.html.form.validation.RequiredValidator;
 import wicket.model.IModel;
 
 public class CheckBox extends wicket.markup.html.form.CheckBox
 {
-    private String fieldName;
-    private long fieldFlags;
-
-    public CheckBox(final String fieldName, long fieldFlags)
+    public CheckBox(final String id)
     {
-        super(fieldName);
-        this.fieldName = fieldName;
-        this.fieldFlags = fieldFlags;
-
-        if((this.fieldFlags & FieldFlags.REQUIRED) != 0)
-            add(RequiredValidator.getInstance());
+        super(id);
     }
 
-    public CheckBox(final String fieldName, IModel model, long fieldFlags)
+    public CheckBox(final String id, final IModel model)
     {
-        super(fieldName, model);
-        this.fieldName = fieldName;
-        this.fieldFlags = fieldFlags;
-
-        if((this.fieldFlags & FieldFlags.REQUIRED) != 0)
-            add(RequiredValidator.getInstance());
-    }
-
-    public CheckBox(final String componentName)
-    {
-        this(componentName, FieldFlags.DEFAULT_FLAGS);
-    }
-
-    public CheckBox(final String componentName, IModel model)
-    {
-        this(componentName, model, FieldFlags.DEFAULT_FLAGS);
+        super(id, model);
     }
 }

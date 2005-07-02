@@ -43,10 +43,16 @@
  */
 package com.medigy.wicket.form;
 
-import com.medigy.presentation.model.ChoicesFactory;
-import com.medigy.wicket.DefaultApplication;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import com.medigy.presentation.model.ChoicesFactory;
+import com.medigy.wicket.DefaultApplication;
 import wicket.IComponentResolver;
 import wicket.IFeedback;
 import wicket.MarkupContainer;
@@ -60,17 +66,12 @@ import wicket.model.BoundCompoundPropertyModel;
 import wicket.model.IModel;
 import wicket.util.value.ValueMap;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-
 public class BaseForm extends Form implements IComponentResolver
 {
     private static final Log log = LogFactory.getLog(BaseForm.class);
 
-    private static final String FIELD_LABEL_SUFFIX = "_label";
-    private static final String FIELD_CONTROL_SUFFIX = "_control";
+    protected static final String FIELD_LABEL_SUFFIX = "_label";
+    protected static final String FIELD_CONTROL_SUFFIX = "_control";
     protected static final Collection TEST_CHOICES = new ArrayList();
     protected static final Collection RELATIONSHIP_TO_RESPONSIBLE_CHOICES = new ArrayList();
     protected static final Collection EMPLOYMENT_STATUS_CHOICES = new ArrayList();
@@ -207,16 +208,12 @@ public class BaseForm extends Form implements IComponentResolver
     {
         super.onComponentTagBody(markupStream, componentTag);
 
-        final StringBuffer script = new StringBuffer("\n<script>\nvar dialog = new Dialog(document.forms[0], true, false, true);\n");
-        visitFormComponents(new FormComponent.IVisitor()
-        {
-            public void formComponent(final FormComponent formComponent)
-            {
-                if(formComponent instanceof FormFieldJavaScriptProvider)
-                    script.append(((FormFieldJavaScriptProvider) formComponent).getJavaScript("dialog", "document.forms[0]"));
-            }
-        });
-        script.append("dialog.finalizeContents();\n</script>");
-        getResponse().write(script.toString());
+        final FormJavaScriptGenerator generator = new FormJavaScriptGenerator(this);
+        generator.appendDialogRegistrationStart();
+        visitFormComponents(generator.getFormComponentVisitor());
+        generator.appendDialogRegistrationEnd();
+
+        getResponse().write(generator.getTypeDefnScript().toString());
+        getResponse().write(generator.getRegistrationScript().toString());
     }
 }

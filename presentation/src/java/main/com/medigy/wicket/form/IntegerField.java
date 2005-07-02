@@ -45,7 +45,7 @@ package com.medigy.wicket.form;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.form.FormComponent;
 
-public class IntegerField extends wicket.markup.html.form.TextField implements FormFieldJavaScriptProvider
+public class IntegerField extends wicket.markup.html.form.TextField implements FormJavaScriptGenerator.Contributor
 {
     public static class IntegerFieldCreator implements FormFieldFactory.FieldCreator
     {
@@ -74,20 +74,5 @@ public class IntegerField extends wicket.markup.html.form.TextField implements F
     public ReflectedFormFieldDefn getReflectedFormFieldDefn()
     {
         return reflectedFormFieldDefn;
-    }
-
-    public String getJavaScript(final String dialogVarName, final String formObjectName)
-    {
-        return "var field = dialog.createField("+ formObjectName +"[\""+ getId() +"\"], FIELD_TYPES[\""+ getClass().getName() +"\"], "+ getJavaScriptFieldFlags() +", null);\n";
-    }
-
-    public int getJavaScriptFieldFlags()
-    {
-        return JavaScriptUtils.getInstance().getFieldFlags(this);
-    }
-
-    public boolean isJavaScriptFieldHidden()
-    {
-        return isVisible();
     }
 }

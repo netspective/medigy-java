@@ -202,13 +202,12 @@ function addFieldType(name, onFinalizeDefn, onValidate, onChange, onFocus, onBlu
 // Dialog class
 //****************************************************************************
 
-function Dialog(form, allowClientValidation, clearTextOnValidateError, showDataChangedMessageOnLeave)
+function Dialog(form, allowClientValidation, showDataChangedMessageOnLeave)
 {
 	this.form = form;
 	this.fields = new Array();                 // straight list (simple array)
 	this.fieldsByControlName = new Array();    // hash -- value is field
 	this.allowClientValidation = allowClientValidation;
-	this.clearTextOnValidateError = clearTextOnValidateError;
 	this.showDataChangedMessageOnLeave = showDataChangedMessageOnLeave;
 
 	// the remaining are object-based methods
@@ -223,9 +222,9 @@ function Dialog(form, allowClientValidation, clearTextOnValidateError, showDataC
 	return this;
 }
 
-function Dialog_createField(control, type, flags)
+function Dialog_createField(control, type)
 {
-    var field = new DialogField(control, type, flags);
+    var field = new DialogField(control, type);
 
 	field.fieldIndex = this.fields.length;
 	field.dialog = this;
@@ -295,26 +294,6 @@ function Dialog_isValid()
 // DialogField class
 //****************************************************************************
 
-// These constants MUST be kept identical to what is in com.medigy.presentation.form.FieldFlags
-
-var FLDFLAG_REQUIRED                           = 1;
-var FLDFLAG_PRIMARYKEY                         = FLDFLAG_REQUIRED * 2;
-var FLDFLAG_PRIMARYKEY_GENERATED               = FLDFLAG_PRIMARYKEY * 2;
-var FLDFLAG_UNAVAILABLE                        = FLDFLAG_PRIMARYKEY_GENERATED * 2;
-var FLDFLAG_READONLY                           = FLDFLAG_UNAVAILABLE * 2;
-var FLDFLAG_INITIAL_FOCUS                      = FLDFLAG_READONLY * 2;
-var FLDFLAG_PERSIST                            = FLDFLAG_INITIAL_FOCUS * 2;
-var FLDFLAG_CREATE_ADJACENT_AREA               = FLDFLAG_PERSIST * 2;
-var FLDFLAG_INPUT_HIDDEN                       = FLDFLAG_CREATE_ADJACENT_AREA * 2;
-var FLDFLAG_BROWSER_READONLY                   = FLDFLAG_INPUT_HIDDEN * 2;
-var FLDFLAG_DOUBLEENTRY                        = FLDFLAG_BROWSER_READONLY * 2;
-var FLDFLAG_SCANNABLE                          = FLDFLAG_DOUBLEENTRY * 2;
-var FLDFLAG_AUTOBLUR                           = FLDFLAG_SCANNABLE * 2;
-var FLDFLAG_SUBMIT_ONBLUR                      = FLDFLAG_AUTOBLUR * 2;
-var FLDFLAG_CREATE_ADJACENT_AREA_HIDDEN        = FLDFLAG_SUBMIT_ONBLUR * 2;
-var FLDFLAG_CLEAR_TEXT_ON_VALIDATE_ERROR       = FLDFLAG_CREATE_ADJACENT_AREA_HIDDEN * 2;
-var FLDFLAG_ALWAYS_SHOW_HINT                   = FLDFLAG_CLEAR_TEXT_ON_VALIDATE_ERROR * 2;
-
 // These constants MUST be kept identical to what is in com.netspective.sparx.form.field.SelectField
 var SELECTSTYLE_RADIO      = 0;
 var SELECTSTYLE_COMBO      = 1;
@@ -329,7 +308,7 @@ var DATE_DTTYPE_TIMEONLY = 1;
 var DATE_DTTYPE_BOTH     = 2;
 var DATE_DTTYPE_MONTH_YEAR_ONLY = 3;
 
-function DialogField(control, type, flags, hintElement, adjacentAreaElement)
+function DialogField(control, type)
 {
     this.dialog = null;    // this will be set when the field is added using Dialog_registerField
 	this.fieldIndex = -1;  // this will be set when the field is added using Dialog_registerField
@@ -337,19 +316,23 @@ function DialogField(control, type, flags, hintElement, adjacentAreaElement)
 	this.control = control;
     this.control.field = this; // if we have access to the control, we will have access to the field
 	this.type = type;
-	this.flags = flags;
+
+	this.required = false;
+	this.hasInitialFocus = false;
+	this.clearTextOnValidateError = false;
+	this.alwaysShowHint = false;
 
 	this.customHandlers = new FieldType("Custom", null, null, null, null, null, null, null);
 	this.dependentConditions = new Array();
 	this.style = null;
 	this.requiresPreSubmit = false;
-	this.currentlyVisible = true;
+	this.visible = true;
 	this.encryption = null;
 
 	this.getLabelElement = DialogField_getLabelElement;
 	this.labelElement = this.getLabelElement();
-	this.hintElement = hintElement;
-	this.adjacentAreaElement = adjacentAreaElement;
+	this.hintElement = null;
+	this.adjacentAreaElement = null;
 
 	this.originalControlClassName = this.control.className;
 	this.originalLabelClassName = this.labelElement == null ? null : this.labelElement.className;
@@ -370,7 +353,6 @@ function DialogField(control, type, flags, hintElement, adjacentAreaElement)
 	this.setRequired = DialogField_setRequired;
 	this.setValue = DialogField_setValue;
 	this.setReadOnly = DialogField_setReadOnly;
-	this.isClearTextOnValidateError = DialogField_isClearTextOnValidateError;
 	this.submitOnblur = DialogField_submitOnblur;
 	this.focusNext = DialogField_focusNext;
 	this.getFieldContainerElement = DialogField_getFieldContainerElement;
@@ -382,15 +364,17 @@ function DialogField(control, type, flags, hintElement, adjacentAreaElement)
 	this.populateAdjacentArea = DialogField_populateAdjacentArea;
 }
 
-function DialogField_createAdjancentArea()
+function DialogField_createAdjancentArea(id, className, invisible)
 {
-    // it's possible that we were provided with an adjacent area element so don't do anything if it's already available
+    // it's possible that we already created an adjacent area element so don't do anything if it's already available
 	if(this.adjacentAreaElement != null)
 	    return;
 
     this.adjacentAreaElement = document.createElement("span");
-    this.adjacentAreaElement.className = "control-adjacent";
-    if((this.flags & FLDFLAG_CREATE_ADJACENT_AREA_HIDDEN) != 0) this.adjacentAreaElement.visibility = 'hide';
+    if(id != null) this.adjacentAreaElement.setAttribute("id", id);
+
+    this.adjacentAreaElement.className = className == null ? "control-adjacent" : className;
+    if(invisible != null && invisible == true) this.adjacentAreaElement.visibility = 'hide';
 
     // seems the DOM doesn't have an "insertAfter" method so we simulate one (adjacent area is right next to the control)
     var parent = this.control.parentNode;
@@ -450,7 +434,7 @@ function DialogField_getLabelElement()
 
 function DialogField_isRequired()
 {
-	return (this.flags & FLDFLAG_REQUIRED) != 0 && this.isVisible();
+	return (this.required) != 0 && this.isVisible();
 }
 
 function getElementStyle(elemID, IEStyleProp, CSSStyleProp)
@@ -496,14 +480,14 @@ function DialogField_setRequired(required)
 {
     if (required)
     {
-        this.flags = this.flags | FLDFLAG_REQUIRED;
+        this.required = true;
         this.originalLabelClassName = "required";
         this.originalControlClassName = "required";
         this.resetClassName();
     }
     else
     {
-        this.flags = this.flags & ~FLDFLAG_REQUIRED;
+        this.required = false;
         this.resetClassName(true);
     }
 }
@@ -512,7 +496,6 @@ function DialogField_setReadOnly(readOnly)
 {
     if (readOnly)
     {
-        this.flags = this.flags | FLDFLAG_BROWSER_READONLY;
         this.control.readOnly = true;
         this.originalLabelClassName = "read-only";
         this.originalControlClassName = "read-only";
@@ -520,26 +503,19 @@ function DialogField_setReadOnly(readOnly)
     }
     else
     {
-        this.flags = this.flags & ~FLDFLAG_BROWSER_READONLY;
         this.control.readOnly = false;
         this.resetClassName(true);
     }
 }
 
-
 function DialogField_isReadOnly()
 {
-	return ((this.flags & FLDFLAG_READONLY) != 0) || ((this.flags & FLDFLAG_BROWSER_READONLY) != 0);
-}
-
-function DialogField_isClearTextOnValidateError()
-{
-	return ((this.flags & FLDFLAG_CLEAR_TEXT_ON_VALIDATE_ERROR) != 0);
+	return this.control.readOnly;
 }
 
 function DialogField_isHideHintUntilFocus()
 {
-	return ((this.flags & FLDFLAG_ALWAYS_SHOW_HINT) == 0);
+	return ! this.alwaysShowHint;
 }
 
 function DialogField_finalizeContents()
@@ -547,16 +523,16 @@ function DialogField_finalizeContents()
 	if(this.type != null)
 	{
 		if(this.type.finalizeDefn != null)
-			this.type.finalizeDefn(dialog, this);
+			this.type.finalizeDefn(this);
 	}
 
 	if(this.style != null && this.style == SELECTSTYLE_MULTIDUAL)
 		this.requiresPreSubmit = true;
 
 	if(this.dependentConditions.length > 0)
-		this.evaluateConditionals(dialog);
+		this.evaluateConditionals();
 
-	if((this.flags & FLDFLAG_INITIAL_FOCUS) != 0)
+	if(this.hasInitialFocus)
 	{
         if(browser.ie5 || browser.ie6)
         {
@@ -569,26 +545,23 @@ function DialogField_finalizeContents()
                 this.control.focus();
         }
 	}
-
-    // setup the initial appearance for special fields
-    this.setRequired((this.flags & FLDFLAG_REQUIRED) != 0);
 }
 
-function DialogField_evaluateConditionals(dialog)
+function DialogField_evaluateConditionals()
 {
 	if(this.isReadOnly())
 		return;
 
 	var conditionalFields = this.dependentConditions;
 	for(var i = 0; i < conditionalFields.length; i++)
-		conditionalFields[i].evaluate(dialog, this.control);
+		conditionalFields[i].evaluate(this.control);
 }
 
 function DialogField_alertMessage(message)
 {
-    alert(this.getLabel() + ":   " + message);
+    alert(this.getLabel() + ": " + message);
 
-	if (this.isClearTextOnValidateError())
+	if (this.clearTextOnValidateError)
 	    this.control.value = "";
 
 	this.control.focus();
@@ -671,23 +644,13 @@ function DialogField_getFieldContainerElement()
 
 function DialogField_isVisible()
 {
-    return this.currentlyVisible == true;
+    return this.visible;
 }
 
-function DialogField_setVisible(dialog, visible)
+function DialogField_setVisible(visible)
 {
-    this.currentlyVisible = visible;
-    this.evaluateConditionals(dialog);
-
-    // now find the children and hide them too
-	var dialogFields = dialog.fields;
-	var regExp = new RegExp("^" + field.qualifiedName + '\\.');
-
-	for(var i=0; i<dialogFields.length; i++)
-	{
-		if(regExp.test(dialogFields[i].qualifiedName))
-			dialogFields[i].setVisible(visible);
-	}
+    this.visible = visible;
+    this.evaluateConditionals();
 }
 
 function DialogField_submitOnblur()
@@ -759,50 +722,36 @@ function DialogFieldConditionalFlag(source, partner, expression, flag, applyFlag
 	this.evaluate = DialogFieldConditionalFlag_evaluate;
 }
 
-function DialogFieldConditionalFlag_evaluate(dialog, control)
+function DialogFieldConditionalFlag_evaluate(control)
 {
     if(control == null)
     {
-        alert("control is null in DialogFieldConditionalFlag.evaluate(dialog, control)");
+        alert("control is null in DialogFieldConditionalFlag.evaluate(control)");
         return;
     }
-    var condSource = dialog.fieldsByControlName[this.source];
+
+    var condSource = control.field.dialog.fieldsByControlName[this.source];
     if(eval(this.expression) == true)
 	{
 	    // set the flag on the dialog
-	    if ((this.flag & FLDFLAG_REQUIRED) != 0)
+	    if (this.required)
 	    {
 	        if (this.applyFlag == true)
     		    condSource.setRequired(true);
     		else
     		    condSource.setRequired(false);
         }
-        if ((this.flag & FLDFLAG_BROWSER_READONLY) != 0)
-        {
-            if (this.applyFlag == true)
-                condSource.setReadOnly(true);
-            else
-                condSource.setReadOnly(false);
-        }
-
 	}
 	else
 	{
 	    // the evaluation condition was false
-	    if ((this.flag & FLDFLAG_REQUIRED) != 0)
+	    if (this.required)
 	    {
     		condSource.setRequired(false);
     		if (this.applyFlag == true)
     		    condSource.setRequired(false);
     		else
     		    condSource.setRequired(true);
-        }
-        if ((this.flag & FLDFLAG_BROWSER_READONLY) != 0)
-        {
-            if (this.applyFlag == true)
-                condSource.setReadOnly(false);
-            else
-                condSource.setReadOnly(true);
         }
 	}
 }
@@ -817,7 +766,7 @@ function DialogFieldConditionalClear(source, partner, expression)
 	this.evaluate = DialogFieldConditionalClear_evaluate;
 }
 
-function DialogFieldConditionalClear_evaluate(dialog, control)
+function DialogFieldConditionalClear_evaluate(control)
 {
 	if(control == null)
 	{
@@ -825,7 +774,7 @@ function DialogFieldConditionalClear_evaluate(dialog, control)
 		return;
 	}
 
-	var condSource = dialog.fieldsByControlName[this.source];
+	var condSource = control.field.dialog.fieldsByControlName[this.source];
 	if(eval(this.expression) == true)
 	{
         condSource.setValue('');
@@ -846,7 +795,7 @@ function DialogFieldConditionalDisplay(source, partner, expression)
 	this.evaluate = DialogFieldConditionalDisplay_evaluate;
 }
 
-function DialogFieldConditionalDisplay_evaluate(dialog, control)
+function DialogFieldConditionalDisplay_evaluate(control)
 {
 	// first find the field area that we need to hide/show
 	// -- if an ID with the entire field row is found (a primary field)
@@ -860,8 +809,8 @@ function DialogFieldConditionalDisplay_evaluate(dialog, control)
 		return;
 	}
 
-	var condSource = dialog.fieldsByControlName[this.source];
-	var fieldAreaElem = condSource.getFieldContainerElement(dialog);
+	var condSource = control.field.dialog.fieldsByControlName[this.source];
+	var fieldAreaElem = condSource.getFieldContainerElement();
 	if(fieldAreaElem == null || (typeof fieldAreaElem == "undefined"))
 	{
 		fieldAreaElem = condSource.getControl();
@@ -879,7 +828,7 @@ function DialogFieldConditionalDisplay_evaluate(dialog, control)
 	// the conditional "partner" (not the source)
 	if(eval(this.expression) == true)
 	{
-		condSource.setVisible(dialog, true);
+		condSource.setVisible(true);
 		//fieldAreaElem.className = 'section_field_area_conditional_expanded';
 		if (fieldAreaElem.style)
 			fieldAreaElem.style.display = '';
@@ -888,7 +837,7 @@ function DialogFieldConditionalDisplay_evaluate(dialog, control)
 	}
 	else
 	{
-		condSource.setVisible(dialog, false);
+		condSource.setVisible(false);
 		//fieldAreaElem.className = 'section_field_area_conditional';
 		if (fieldAreaElem.style)
 			fieldAreaElem.style.display = 'none';
@@ -1229,7 +1178,7 @@ function TextField_isValid(field, control)
 			if (valid == false)
 			{
 				field.alertMessage(control, "value '" + control.value + "' is not valid. ");
-				if (this.isClearTextOnValidateError())
+				if (this.clearTextOnValidateError)
 				{
 				    control.value = "";
 				}
@@ -1244,7 +1193,7 @@ function TextField_isValid(field, control)
 			if (test == false)
 			{
 				field.alertMessage(control, field.text_format_err_msg);
-				if (this.isClearTextOnValidateError())
+				if (this.clearTextOnValidateError)
 				{
 				    control.value = "";
 				}
@@ -1393,7 +1342,7 @@ function DateField_popupCalendar()
 	showCalendar(this.getControl(), 0);
 }
 
-function DateField_finalizeDefn(dialog, field)
+function DateField_finalizeDefn(field)
 {
 	field.popupCalendar = DateField_popupCalendar;
 	field.dateFmtIsKnownFormat = false;
@@ -1518,7 +1467,7 @@ function SelectField_isValid(field, control)
 			if (valid < 0)
 			{
 				field.alertMessage(control, "Entered field value '" + control.value + "' is not valid. ");
-				if (this.isClearTextOnValidateError())
+				if (this.clearTextOnValidateError)
 				{
 				    control.value = "";
 				}
@@ -1526,12 +1475,7 @@ function SelectField_isValid(field, control)
 			}
 			else
 			{
-				if(this.createAdjancentArea != null)
-				{
-					// alert("Adjacent set to " + field.choicesValue[valid]);
-					this.createAdjancentArea.childNodes.length = 0;
-					this.createAdjancentArea.appendChild(document.createTextNode(field.choicesValue[valid]));
-				}
+			    this.populateAdjacentArea(field.choicesValue[valid]);
 				return true;
 			}
 		}
@@ -1968,7 +1912,7 @@ function scanField_changeDisplayValue(field, control)
 
 	if(field.scanPartnerField != "")
 	{
-		var partnerField = dialog.fieldsByControlName[field.scanPartnerField];
+		var partnerField = field.dialog.fieldsByControlName[field.scanPartnerField];
 		var partnerControl = partnerField.getControl();
 		partnerControl.value = (field.isScanned) ? 'yes' : 'no';
 	}

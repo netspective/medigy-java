@@ -49,7 +49,7 @@ import wicket.markup.ComponentTag;
 import wicket.markup.html.form.FormComponent;
 import wicket.markup.html.form.validation.PatternValidator;
 
-public class SocialSecurityField extends wicket.markup.html.form.TextField implements FormFieldJavaScriptProvider
+public class SocialSecurityField extends wicket.markup.html.form.TextField implements FormJavaScriptGenerator.Contributor
 {
     private static final Pattern SOCIAL_SECURITY_PATTERN = Pattern.compile("^([\\d]{3})[-]?([\\d]{2})[-]?([\\d]{4})$");
 
@@ -82,20 +82,5 @@ public class SocialSecurityField extends wicket.markup.html.form.TextField imple
     public ReflectedFormFieldDefn getReflectedFormFieldDefn()
     {
         return reflectedFormFieldDefn;
-    }
-
-    public String getJavaScript(final String dialogVarName, final String formObjectName)
-    {
-        return "var field = dialog.createField("+ formObjectName +"[\""+ getId() +"\"], FIELD_TYPES[\""+ getClass().getName() +"\"], "+ getJavaScriptFieldFlags() +", null);\n";
-    }
-
-    public int getJavaScriptFieldFlags()
-    {
-        return JavaScriptUtils.getInstance().getFieldFlags(this);
-    }
-
-    public boolean isJavaScriptFieldHidden()
-    {
-        return isVisible();
     }
 }

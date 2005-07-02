@@ -46,7 +46,7 @@ package com.medigy.wicket.form;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.form.FormComponent;
 
-public class DateField extends DatePicker implements FormFieldJavaScriptProvider
+public class DateField extends DatePicker implements FormJavaScriptGenerator.Contributor
 {
     public static class DateFieldCreator implements FormFieldFactory.FieldCreator
     {
@@ -57,8 +57,6 @@ public class DateField extends DatePicker implements FormFieldJavaScriptProvider
         }
     }
     
-    private String fieldName;
-    private String fieldControlId;
     private ReflectedFormFieldDefn reflectedFormFieldDefn;
 
     public DateField(final String controlId, final ReflectedFormFieldDefn reflectedFormFieldDefn)
@@ -73,33 +71,8 @@ public class DateField extends DatePicker implements FormFieldJavaScriptProvider
         super.onComponentTag(componentTag);
     }
 
-    public String getFieldName()
-    {
-        return this.fieldName;
-    }
-
-    protected String getFieldId()
-    {
-        return this.fieldControlId;
-    }
-
     public ReflectedFormFieldDefn getReflectedFormFieldDefn()
     {
         return reflectedFormFieldDefn;
-    }
-
-    public String getJavaScript(final String dialogVarName, final String formObjectName)
-    {
-        return "var field = dialog.createField("+ formObjectName +"[\""+ getFieldId() +"\"], FIELD_TYPES[\""+ getClass().getName() +"\"], "+ getJavaScriptFieldFlags() +", null);\n";
-    }
-
-    public int getJavaScriptFieldFlags()
-    {
-        return JavaScriptUtils.getInstance().getFieldFlags(this);
-    }
-
-    public boolean isJavaScriptFieldHidden()
-    {
-        return isVisible();
     }
 }

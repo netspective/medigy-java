@@ -46,7 +46,7 @@ package com.medigy.wicket.form;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.form.FormComponent;
 
-public class TextField extends wicket.markup.html.form.TextField implements FormFieldJavaScriptProvider
+public class TextField extends wicket.markup.html.form.TextField implements FormJavaScriptGenerator.Contributor
 {
     public static class TextFieldCreator implements FormFieldFactory.FieldCreator
     {
@@ -63,7 +63,7 @@ public class TextField extends wicket.markup.html.form.TextField implements Form
     // TODO: Remove after refactoring Org, Provider, Staff, and Insurance forms
     public TextField(final String componentName)
     {
-        this(componentName, FieldFlags.DEFAULT_FLAGS);
+        this(componentName, 0);
     }
 
     // TODO: Remove after refactoring Org, Provider, Staff, and Insurance forms
@@ -87,20 +87,5 @@ public class TextField extends wicket.markup.html.form.TextField implements Form
     public ReflectedFormFieldDefn getReflectedFormFieldDefn()
     {
         return reflectedFormFieldDefn;
-    }
-
-    public String getJavaScript(final String dialogVarName, final String formObjectName)
-    {
-        return "var field = dialog.createField("+ formObjectName +"[\""+ getId() +"\"], FIELD_TYPES[\""+ getClass().getName() +"\"], "+ getJavaScriptFieldFlags() +", null);\n";
-    }
-
-    public int getJavaScriptFieldFlags()
-    {
-        return JavaScriptUtils.getInstance().getFieldFlags(this);
-    }
-
-    public boolean isJavaScriptFieldHidden()
-    {
-        return isVisible();
     }
 }

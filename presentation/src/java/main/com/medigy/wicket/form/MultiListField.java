@@ -45,7 +45,7 @@ package com.medigy.wicket.form;
 
 import wicket.markup.html.form.FormComponent;
 
-public class MultiListField extends wicket.markup.html.form.ListMultipleChoice implements FormFieldJavaScriptProvider
+public class MultiListField extends wicket.markup.html.form.ListMultipleChoice implements FormJavaScriptGenerator.Contributor
 {
     public static class MultiListFieldCreator implements FormFieldFactory.FieldCreator
     {
@@ -75,20 +75,5 @@ public class MultiListField extends wicket.markup.html.form.ListMultipleChoice i
     public ReflectedFormFieldDefn getReflectedFormFieldDefn()
     {
         return reflectedFormFieldDefn;
-    }
-
-    public String getJavaScript(final String dialogVarName, final String formObjectName)
-    {
-        return "var field = dialog.createField("+ formObjectName +"[\""+ getId() +"\"], FIELD_TYPES[\""+ getClass().getName() +"\"], "+ getJavaScriptFieldFlags() +", null);\n";
-    }
-
-    public int getJavaScriptFieldFlags()
-    {
-        return JavaScriptUtils.getInstance().getFieldFlags(this);
-    }
-
-    public boolean isJavaScriptFieldHidden()
-    {
-        return isVisible();
     }
 }
