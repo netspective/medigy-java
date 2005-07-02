@@ -265,7 +265,8 @@ div.form-body label.focused { color: black; border: solid 1px silver; background
 div.form-body label.required { font-weight: bold; }
 div.form-body label.required-focused { font-weight: bold; color: black; border: solid 1px silver; background-color: LightGoldenRodYellow; }
 
-div.form-body table.container { padding-top: 20px; }
+div.form-body fieldset.top-level { margin-top: 10px; }
+div.form-body table.container { margin-top: 10px; }
 div.form-body table.container td.container-separator { width: 20px; }
 
 div.form-body div.director { padding-top: 10px; text-align: center; }
