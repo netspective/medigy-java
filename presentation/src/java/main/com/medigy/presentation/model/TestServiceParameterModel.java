@@ -3,10 +3,10 @@
  */
 package com.medigy.presentation.model;
 
-import com.medigy.persist.reference.type.BloodType;
-import com.medigy.persist.reference.type.GenderType;
-import com.medigy.persist.reference.type.MaritalStatusType;
-import com.medigy.persist.reference.type.PersonNamePrefixType;
+import com.medigy.persist.reference.custom.insurance.InsuranceSequenceType;
+import com.medigy.persist.reference.custom.person.EthnicityType;
+import com.medigy.persist.reference.custom.person.PatientResponsiblePartyRoleType;
+import com.medigy.persist.reference.type.*;
 import com.medigy.service.validator.ValidEntity;
 import com.medigy.wicket.form.SelectFieldStyle;
 import org.hibernate.validator.NotNull;
@@ -19,19 +19,27 @@ import java.io.Serializable;
  */
 public final class TestServiceParameterModel implements Serializable
 {
+	private String firstName;
+    private String lastName;
+	private String middleName;
     private String suffix;
+    private String dateOfBirth;
+    private String gender;     // TODO: drop-down - change to xxxCode
+    private String maritalStatus;   // TODO: drop-down - change to xxxCode
+	private String socialSecurityNumber;
+    private String driversLicenseNumber;
+	private String driversLicenseState;   // TODO: drop-down - change to xxxCode
+    private String employer;                // TODO: change to employerName
+    private String employerId;
+    private String occupation;
+    private String ethnicity;     // TODO: multiple choice - change to xxxCodes
+    private String languageCodes; // TODO: this one is not on the form - add?
+
 	private String personId;
 	private String account;
 	private String chartNumber;
-	private String lastName;
-	private String firstName;
-	private String middleName;
-	private String socialSecurityNumber;
-	private String dateOfBirth;
 	private String responsibleParty;
 	private String relationshipToResponsibleOtherRelationship;
-	private String driversLicenseNumber;
-	private String driversLicenseState;
 	private String miscNotes;
 	private String homePhone;
 	private String workPhone;
@@ -46,14 +54,11 @@ public final class TestServiceParameterModel implements Serializable
 	private String state;
 	private String zip;
 	private String email;
-	private String employerId;
-	private String occupation;
 	private String employerPhoneNumber;
 	private String insuranceProduct;
 	private String insurancePlan;
 	private String patientRelationshipToInsuredPtherRelationship;
 	private String insuredPersonId;
-	private String employer;
 	private String groupName;
 	private String groupNumber;
 	private String memberNumber;
@@ -66,14 +71,11 @@ public final class TestServiceParameterModel implements Serializable
 	private String percentagePay;
 	private String threshold;
 	private String officeVisitCoPay;
-	private String gender;
-	private String maritalStatus;
 	private String relationshipToResponsible;
 	private String employmentStatus;
 	private String insuranceSequence;
 	private String patientRelationshipToInsured;
 	private String bloodType;
-	private String ethnicity;
 
 
 
@@ -581,6 +583,8 @@ public final class TestServiceParameterModel implements Serializable
         this.maritalStatus = maritalStatus;
     }
 
+    @ValidEntity(entity = PatientResponsiblePartyRoleType.class)
+    @SelectFieldStyle(style = SelectFieldStyle.Style.COMBO)
     public String getRelationshipToResponsible()
     {
         return relationshipToResponsible;
@@ -591,6 +595,8 @@ public final class TestServiceParameterModel implements Serializable
         this.relationshipToResponsible = relationshipToResponsible;
     }
 
+    @ValidEntity(entity = EmploymentStatusType.class)
+    @SelectFieldStyle(style = SelectFieldStyle.Style.COMBO)
     public String getEmploymentStatus()
     {
         return employmentStatus;
@@ -601,6 +607,8 @@ public final class TestServiceParameterModel implements Serializable
         this.employmentStatus = employmentStatus;
     }
 
+    @ValidEntity(entity = InsuranceSequenceType.class)
+    @SelectFieldStyle(style = SelectFieldStyle.Style.COMBO)
     public String getInsuranceSequence()
     {
         return insuranceSequence;
@@ -611,6 +619,8 @@ public final class TestServiceParameterModel implements Serializable
         this.insuranceSequence = insuranceSequence;
     }
 
+    @ValidEntity(entity = PatientResponsiblePartyRoleType.class)
+    @SelectFieldStyle(style = SelectFieldStyle.Style.COMBO)
     public String getPatientRelationshipToInsured()
     {
         return patientRelationshipToInsured;
@@ -633,6 +643,8 @@ public final class TestServiceParameterModel implements Serializable
         this.bloodType = bloodType;
     }
 
+    @ValidEntity(entity = EthnicityType.class)
+    @SelectFieldStyle(style = SelectFieldStyle.Style.RADIO)
     public String getEthnicity()
     {
         return ethnicity;

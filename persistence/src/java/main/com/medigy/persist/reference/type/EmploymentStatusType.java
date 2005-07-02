@@ -41,73 +41,69 @@
 /*
  * Copyright (c) 2005 Your Corporation. All Rights Reserved.
  */
-package com.medigy.presentation.model;
+package com.medigy.persist.reference.type;
 
+import com.medigy.persist.reference.AbstractReferenceEntity;
+import com.medigy.persist.reference.CachedReferenceEntity;
 import com.medigy.persist.reference.ReferenceEntity;
-import com.medigy.persist.reference.custom.CustomReferenceEntity;
-import com.medigy.service.util.ReferenceEntityFacade;
-import wicket.markup.html.form.model.IChoiceList;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
-public class ChoicesFactory
+@Entity
+@Table(name = "Employment_Status_Type")
+public class EmploymentStatusType extends AbstractReferenceEntity
 {
-    protected static final ChoicesFactory INSTANCE = new ChoicesFactory();
-
-    public static final ChoicesFactory getInstance()
+    public enum Cache implements CachedReferenceEntity
     {
-        return INSTANCE;
-    }
+        EMPLOYED_FULL_TIME("FT", "Employed (Full-Time)", ""),
+        EMPLOYED_PART_TIME("PT", "Employed (Part-Time)", "");
 
-    private Map<Class, ReferenceEntityChoices> referenceEntityChoices = Collections.synchronizedMap(new HashMap<Class, ReferenceEntityChoices>());
-    private Map<Class, CustomReferenceEntityChoices> customReferenceEntityChoices = Collections.synchronizedMap(new HashMap<Class, CustomReferenceEntityChoices>());
-    private ReferenceEntityFacade referenceEntityFacade;
+        private final String code;
+        private final String label;
+        private final String description;
+        private EmploymentStatusType entity;
 
-    public ChoicesFactory()
-    {
-    }
-
-    public void setReferenceEntityFacade(final ReferenceEntityFacade referenceEntityFacade)
-    {
-        this.referenceEntityFacade = referenceEntityFacade;
-    }
-
-    public IChoiceList getEntityChoices(final Class entity)
-    {
-        IChoiceList result = null;
-        if(CustomReferenceEntity.class.isAssignableFrom(entity))
+        private Cache(final String code, final String label, final String description)
         {
-            // TODO: Remove the following statement and if block once we have CustomRefernceEntity objects doing lookups from the database
-            result = customReferenceEntityChoices.get(entity);
-            if(result == null)
-            {
-                result = new CustomReferenceEntityChoices(entity);
-                customReferenceEntityChoices.put(entity, ((CustomReferenceEntityChoices)result));
-            }
-
-
-            // TODO: uncomment after CustomReference lookups work from database.
-//            List<CustomReferenceEntity> entityList =  referenceEntityFacade.listCustomReferenceEntities(entity);
-//            return new CustomReferenceEntityChoices(entityList);
-        }
-        else if(ReferenceEntity.class.isAssignableFrom(entity))
-        {
-            result = referenceEntityChoices.get(entity);
-            if(result == null)
-            {
-                result = new ReferenceEntityChoices(entity);
-                referenceEntityChoices.put(entity, ((ReferenceEntityChoices)result));
-            }
+            this.code = code;
+            this.label = label;
+            this.description = description;
         }
 
-        return result;
-    }
+        public final String getCode()
+        {
+            return code;
+        }
 
+        public final String getLabel()
+        {
+            return label;
+        }
 
-    public Map<Class, ReferenceEntityChoices> getReferenceEntityChoices()
-    {
-        return referenceEntityChoices;
+        public String getDescription()
+        {
+            return description;
+        }
+
+        public final EmploymentStatusType getEntity()
+        {
+            return entity;
+        }
+
+        public final void setEntity(final ReferenceEntity entity)
+        {
+            this.entity = (EmploymentStatusType) entity;
+        }
+
+        public static EmploymentStatusType getEntity(String code)
+        {
+            for (EmploymentStatusType.Cache employmentStatus : EmploymentStatusType.Cache.values())
+            {
+                if (employmentStatus.getCode().equals(code))
+                    return employmentStatus.getEntity();
+            }
+            return null;
+        }
     }
 }

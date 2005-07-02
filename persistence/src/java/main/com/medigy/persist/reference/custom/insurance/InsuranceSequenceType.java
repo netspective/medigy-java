@@ -35,79 +35,75 @@
  * CAUSED AND REGARDLESS OF THE THEORY OF LIABILITY, ARISING OUT OF THE USE OF OR INABILITY TO USE THE SOFTWARE, EVEN
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
- * @author Shahid N. Shah
  */
+package com.medigy.persist.reference.custom.insurance;
 
-/*
- * Copyright (c) 2005 Your Corporation. All Rights Reserved.
- */
-package com.medigy.presentation.model;
-
-import com.medigy.persist.reference.ReferenceEntity;
+import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
+import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
 import com.medigy.persist.reference.custom.CustomReferenceEntity;
-import com.medigy.service.util.ReferenceEntityFacade;
-import wicket.markup.html.form.model.IChoiceList;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import javax.persistence.*;
 
-public class ChoicesFactory
+@Entity
+@Table(name = "Ins_Sequence_Type")
+public class InsuranceSequenceType extends AbstractCustomReferenceEntity
 {
-    protected static final ChoicesFactory INSTANCE = new ChoicesFactory();
-
-    public static final ChoicesFactory getInstance()
+    public enum Cache implements CachedCustomReferenceEntity
     {
-        return INSTANCE;
-    }
+        PRIMARY_SEQUENCE("PRIMARY", "Primary"),
+        SECONDARY_SEQUENCE("SECONDARY", "Secondary"),
+        TERTIARY_SEQUENCE("TERTIARY", "Tertiary");
 
-    private Map<Class, ReferenceEntityChoices> referenceEntityChoices = Collections.synchronizedMap(new HashMap<Class, ReferenceEntityChoices>());
-    private Map<Class, CustomReferenceEntityChoices> customReferenceEntityChoices = Collections.synchronizedMap(new HashMap<Class, CustomReferenceEntityChoices>());
-    private ReferenceEntityFacade referenceEntityFacade;
+        private final String label;
+        private final String code;
+        private InsuranceSequenceType entity;
 
-    public ChoicesFactory()
-    {
-    }
-
-    public void setReferenceEntityFacade(final ReferenceEntityFacade referenceEntityFacade)
-    {
-        this.referenceEntityFacade = referenceEntityFacade;
-    }
-
-    public IChoiceList getEntityChoices(final Class entity)
-    {
-        IChoiceList result = null;
-        if(CustomReferenceEntity.class.isAssignableFrom(entity))
+        Cache(final String code, final String label)
         {
-            // TODO: Remove the following statement and if block once we have CustomRefernceEntity objects doing lookups from the database
-            result = customReferenceEntityChoices.get(entity);
-            if(result == null)
-            {
-                result = new CustomReferenceEntityChoices(entity);
-                customReferenceEntityChoices.put(entity, ((CustomReferenceEntityChoices)result));
-            }
-
-
-            // TODO: uncomment after CustomReference lookups work from database.
-//            List<CustomReferenceEntity> entityList =  referenceEntityFacade.listCustomReferenceEntities(entity);
-//            return new CustomReferenceEntityChoices(entityList);
-        }
-        else if(ReferenceEntity.class.isAssignableFrom(entity))
-        {
-            result = referenceEntityChoices.get(entity);
-            if(result == null)
-            {
-                result = new ReferenceEntityChoices(entity);
-                referenceEntityChoices.put(entity, ((ReferenceEntityChoices)result));
-            }
+            this.code = code;
+            this.label = label;
         }
 
-        return result;
+        public String getCode()
+        {
+            return code;
+        }
+
+        public InsuranceSequenceType getEntity()
+        {
+            return entity;
+        }
+
+        public void setEntity(final CustomReferenceEntity entity)
+        {
+            this.entity = (InsuranceSequenceType) entity;
+        }
+
+        public String getLabel()
+        {
+            return label;
+        }
+
+        public static InsuranceSequenceType getEntity(final String code)
+        {
+            for (InsuranceSequenceType.Cache sequence : InsuranceSequenceType.Cache.values())
+            {
+                if (sequence.getCode().equals(code))
+                    return sequence.getEntity();
+            }
+            return null;
+        }
     }
 
-
-    public Map<Class, ReferenceEntityChoices> getReferenceEntityChoices()
+    @Id(generate = GeneratorType.AUTO)
+    @Column(name = "ins_sequence_type_id")
+    public Long getInsuranceSequenceTypeId()
     {
-        return referenceEntityChoices;
+        return super.getSystemId();
+    }
+
+    public void setInsuranceSequenceTypeId(final Long id)
+    {
+        super.setSystemId(id);
     }
 }

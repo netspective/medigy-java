@@ -38,22 +38,21 @@
  */
 package com.medigy.presentation.model;
 
-import wicket.markup.html.form.model.IChoiceList;
+import com.medigy.persist.reference.ReferenceEntity;
+import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
 import wicket.markup.html.form.model.IChoice;
-import com.medigy.service.util.ReferenceEntityFacade;
-import com.medigy.persist.reference.custom.CustomReferenceEntity;
-import com.medigy.persist.reference.CachedReferenceEntity;
-
-import java.util.List;
+import wicket.markup.html.form.model.IChoiceList;
 
 
 public class CustomReferenceEntityChoices implements IChoiceList
 {
     private class Choice implements IChoice
 	{
-        private final CustomReferenceEntity object;
+        // TODO: change parameter type back to CustomReferenceEntity type after CustomReference lookups work from database.
+        private final CachedCustomReferenceEntity object;
 
-        Choice(final CustomReferenceEntity refEntity)
+        // TODO: change parameter type back to CustomReferenceEntity type after CustomReference lookups work from database.
+        Choice(final CachedCustomReferenceEntity refEntity)
         {
             this.object = refEntity;
         }
@@ -76,14 +75,46 @@ public class CustomReferenceEntityChoices implements IChoiceList
 
     private Choice[] choiceList;
 
-    public CustomReferenceEntityChoices(final List<CustomReferenceEntity> list)
-    {
-        this.choiceList = new Choice[list.size()];
-        for (int i = 0; i < choiceList.length; i++)
+    // TODO: uncomment after CustomReference lookups work from database.
+//    public CustomReferenceEntityChoices(final List<CustomReferenceEntity> list)
+//    {
+//        this.choiceList = new Choice[list.size()];
+//        for (int i = 0; i < choiceList.length; i++)
+//        {
+//            choiceList[i] = new Choice(list.get(i));
+//        }
+//    }
+
+    // TODO: Remove this constructor once we have CustomRefernceEntity objects doing lookups from the database
+	public CustomReferenceEntityChoices(final Class entity)
+	{
+        boolean foundCache = false;
+        for (final Class ic : entity.getClasses())
         {
-            choiceList[i] = new Choice(list.get(i));
+            if (CachedCustomReferenceEntity.class.isAssignableFrom(ic))
+            {
+                if (ic.isEnum())
+                {
+                    int i = 0;
+                    choiceList = new CustomReferenceEntityChoices.Choice[ic.getEnumConstants().length];
+                    for(final CachedCustomReferenceEntity c : (CachedCustomReferenceEntity[]) ic.getEnumConstants())
+                    {
+                        choiceList[i] = new CustomReferenceEntityChoices.Choice(c);
+                        i++;
+                    }
+                    foundCache = true;
+                }
+                else
+                    throw new RuntimeException(ic + " must be an enum since " + entity + " is a " + ReferenceEntity.class.getName());
+
+                break;
+            }
+
         }
-    }
+
+        if (!foundCache)
+            throw new RuntimeException(entity + " is marked as a ReferenceEntity but does not contain a ReferenceEntityCache enum.");
+	}
 
     public void attach()
     {

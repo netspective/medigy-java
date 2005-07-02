@@ -100,10 +100,10 @@ public class MaritalStatusType extends AbstractReferenceEntity
 
         public static MaritalStatusType getEntity(String code)
         {
-            for (MaritalStatusType.Cache ethnicity : MaritalStatusType.Cache.values())
+            for (MaritalStatusType.Cache maritalStatus : MaritalStatusType.Cache.values())
             {
-                if (ethnicity.getCode().equals(code))
-                    return ethnicity.getEntity();
+                if (maritalStatus.getCode().equals(code))
+                    return maritalStatus.getEntity();
             }
             return null;
         }

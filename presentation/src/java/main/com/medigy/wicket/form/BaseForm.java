@@ -43,31 +43,26 @@
  */
 package com.medigy.wicket.form;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import com.medigy.presentation.model.ChoicesFactory;
 import com.medigy.wicket.DefaultApplication;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import wicket.IComponentResolver;
 import wicket.IFeedback;
 import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
-import wicket.markup.html.form.DropDownChoice;
-import wicket.markup.html.form.Form;
-import wicket.markup.html.form.FormComponent;
-import wicket.markup.html.form.ListMultipleChoice;
-import wicket.markup.html.form.RadioChoice;
+import wicket.markup.html.form.*;
 import wicket.markup.html.form.model.IChoice;
 import wicket.markup.html.form.validation.RequiredValidator;
 import wicket.model.BoundCompoundPropertyModel;
 import wicket.model.IModel;
 import wicket.util.value.ValueMap;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 public class BaseForm extends Form implements IComponentResolver
 {
@@ -226,19 +221,19 @@ public class BaseForm extends Form implements IComponentResolver
     protected void addLabeledSelectField(final String fieldName, final Class referenceEntity)
     {
         //add(new FieldLabel(fieldName));
-        add(new DropDownChoice(fieldName, getChoicesFactory().getReferenceEntityChoices(referenceEntity)));
+        add(new DropDownChoice(fieldName, getChoicesFactory().getEntityChoices(referenceEntity)));
     }
 
     protected void addLabeledMultiListField(final String fieldName, final Class multiListChoices)
     {
         //add(new FieldLabel(fieldName));
-        add(new ListMultipleChoice(fieldName, getChoicesFactory().getReferenceEntityChoices(multiListChoices)));
+        add(new ListMultipleChoice(fieldName, getChoicesFactory().getEntityChoices(multiListChoices)));
     }
 
     protected void addLabeledMultiCheckField(final String fieldName, final Class multiCheckChoices)
     {
         //add(new FieldLabel(fieldName));
-        add(new ListMultipleChoice(fieldName, getChoicesFactory().getReferenceEntityChoices(multiCheckChoices)));
+        add(new ListMultipleChoice(fieldName, getChoicesFactory().getEntityChoices(multiCheckChoices)));
     }
 
     protected void addLabeledRadioChoiceField(final String fieldName, Collection choices)
@@ -250,7 +245,7 @@ public class BaseForm extends Form implements IComponentResolver
     protected void addLabeledRadioChoiceField(final String fieldName, final Class choicesClass)
     {
         //add(new FieldLabel(fieldName));
-        add(new RadioChoice(fieldName, getChoicesFactory().getReferenceEntityChoices(choicesClass)));
+        add(new RadioChoice(fieldName, getChoicesFactory().getEntityChoices(choicesClass)));
     }
 
     protected void addLabeledCheckBox(final String fieldName)

@@ -43,16 +43,17 @@
  */
 package com.medigy.wicket.form;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
-
 import com.medigy.presentation.model.ChoicesFactory;
 import com.medigy.service.validator.ValidEntity;
 import wicket.markup.html.form.DropDownChoice;
 import wicket.markup.html.form.FormComponent;
+import wicket.markup.html.form.RadioChoice;
 import wicket.markup.html.form.model.IChoiceList;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class FormFieldFactory
 {
@@ -116,12 +117,14 @@ public class FormFieldFactory
 
             final SelectFieldStyle sfsAnn = (SelectFieldStyle) reflectedFormFieldDefn.getAnnotation(SelectFieldStyle.class);
             final SelectFieldStyle.Style style = sfsAnn != null ? sfsAnn.style() : SelectFieldStyle.Style.COMBO;
-            final IChoiceList referenceEntityChoices = ChoicesFactory.getInstance().getReferenceEntityChoices(reAnn.entity());
+            final IChoiceList referenceEntityChoices = ChoicesFactory.getInstance().getEntityChoices(reAnn.entity());
 
             switch(style)
             {
                 case COMBO:
                     return new DropDownChoice(controlId, referenceEntityChoices);
+                case RADIO:
+                    return new RadioChoice(controlId, referenceEntityChoices);
 
                 default:
                     throw new RuntimeException("No other styles supported yet...make this error message better.");
