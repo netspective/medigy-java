@@ -43,10 +43,9 @@
  */
 package com.medigy.wicket.form;
 
-import org.hibernate.validator.NotNull;
-
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.FormComponent;
+import wicket.markup.html.form.validation.RequiredValidator;
 
 public class FormJavaScriptGenerator
 {
@@ -217,9 +216,7 @@ public class FormJavaScriptGenerator
         defJS.append(fieldTypeName);
         defJS.append("\"]);\n");
 
-        final ReflectedFormFieldDefn reflectedFormFieldDefn = ((Contributor) component).getReflectedFormFieldDefn();
-
-        if(reflectedFormFieldDefn.isAnnotationPresent(NotNull.class))
+        if(component.getValidators().contains(RequiredValidator.getInstance()))
         {
             defJS.append(fieldVarName);
             defJS.append(".required = true;\n");
