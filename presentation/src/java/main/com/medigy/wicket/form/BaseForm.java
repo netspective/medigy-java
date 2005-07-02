@@ -52,8 +52,9 @@ import wicket.IFeedback;
 import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
-import wicket.markup.html.form.*;
-import wicket.markup.html.form.model.IChoice;
+import wicket.markup.html.form.DropDownChoice;
+import wicket.markup.html.form.Form;
+import wicket.markup.html.form.FormComponent;
 import wicket.markup.html.form.validation.RequiredValidator;
 import wicket.model.BoundCompoundPropertyModel;
 import wicket.model.IModel;
@@ -77,39 +78,6 @@ public class BaseForm extends Form implements IComponentResolver
     protected static final Collection PATIENT_RELATIONSHIP_TO_INSURED_CHOICES = new ArrayList();
     public static final String ATTRNAME_WICKET_ID = "wicket:id";
 
-    static
-    {
-        TEST_CHOICES.add(new IChoice()
-        {
-            public String getDisplayValue()
-            {
-                return "Test";
-            }
-
-            public String getId()
-            {
-                return "Id";
-            }
-
-            public Object getObject()
-            {
-                return "Test";
-            }
-        });
-
-        RELATIONSHIP_TO_RESPONSIBLE_CHOICES.add("Self");
-        RELATIONSHIP_TO_RESPONSIBLE_CHOICES.add("Spouse");
-
-        INSURANCE_SEQUENCE_CHOICES.add("Primary");
-        INSURANCE_SEQUENCE_CHOICES.add("Secondary");
-        INSURANCE_SEQUENCE_CHOICES.add("Tertiary");
-
-        PATIENT_RELATIONSHIP_TO_INSURED_CHOICES.add("Self");
-        PATIENT_RELATIONSHIP_TO_INSURED_CHOICES.add("Spouse");
-        PATIENT_RELATIONSHIP_TO_INSURED_CHOICES.add("Paternal");
-        PATIENT_RELATIONSHIP_TO_INSURED_CHOICES.add("Maternal");
-
-    }
 
     protected interface TagResolver
     {
@@ -200,52 +168,10 @@ public class BaseForm extends Form implements IComponentResolver
         add(new TextField(fieldName));
     }
 
-    protected void addLabeledField(final String fieldName, final Class cls)
-    {
-        //add(new FieldLabel(fieldName));
-        add(((BoundCompoundPropertyModel)this.getModel()).bind(FormFieldFactory.getInstance().createField(fieldName + FIELD_CONTROL_SUFFIX, fieldName, cls, getModel().getClass()), fieldName));
-    }
-
-    protected void addLabeledSelectField(final String fieldName, Collection choices)
-    {
-        //add(new FieldLabel(fieldName));
-        add(new DropDownChoice(fieldName, choices));
-    }
-
     protected void addLabeledSelectField(final String fieldName)
     {
         //add(new FieldLabel(fieldName));
         add(new DropDownChoice(fieldName, TEST_CHOICES));
-    }
-
-    protected void addLabeledSelectField(final String fieldName, final Class referenceEntity)
-    {
-        //add(new FieldLabel(fieldName));
-        add(new DropDownChoice(fieldName, getChoicesFactory().getEntityChoices(referenceEntity)));
-    }
-
-    protected void addLabeledMultiListField(final String fieldName, final Class multiListChoices)
-    {
-        //add(new FieldLabel(fieldName));
-        add(new ListMultipleChoice(fieldName, getChoicesFactory().getEntityChoices(multiListChoices)));
-    }
-
-    protected void addLabeledMultiCheckField(final String fieldName, final Class multiCheckChoices)
-    {
-        //add(new FieldLabel(fieldName));
-        add(new ListMultipleChoice(fieldName, getChoicesFactory().getEntityChoices(multiCheckChoices)));
-    }
-
-    protected void addLabeledRadioChoiceField(final String fieldName, Collection choices)
-    {
-        //add(new FieldLabel(fieldName));
-        add(new RadioChoice(fieldName, choices));
-    }
-
-    protected void addLabeledRadioChoiceField(final String fieldName, final Class choicesClass)
-    {
-        //add(new FieldLabel(fieldName));
-        add(new RadioChoice(fieldName, getChoicesFactory().getEntityChoices(choicesClass)));
     }
 
     protected void addLabeledCheckBox(final String fieldName)

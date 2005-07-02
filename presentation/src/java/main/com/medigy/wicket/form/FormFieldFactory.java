@@ -50,10 +50,7 @@ import wicket.markup.html.form.FormComponent;
 import wicket.markup.html.form.RadioChoice;
 import wicket.markup.html.form.model.IChoiceList;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 public class FormFieldFactory
 {
@@ -71,6 +68,7 @@ public class FormFieldFactory
     {
         addFieldCreator(ValidEntity.class, new ReferenceEntityFieldCreator());
         addFieldCreator(String.class, new TextField.TextFieldCreator());
+        addFieldCreator(Date.class, new DateField.DateFieldCreator());
     }
 
     public void addFieldCreator(final Class dataType, final FieldCreator creator)
