@@ -12,6 +12,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.hibernate.validator.NotNull;
 
 import com.medigy.service.validator.ValidEntity;
@@ -21,6 +23,8 @@ import wicket.markup.html.form.validation.RequiredValidator;
 
 public class ReflectedFormFieldDefn
 {
+    private final Log log = LogFactory.getLog(ReflectedFormFieldDefn.class);
+
     private final Class container;
     private final String name;
     private final Class dataType;
@@ -114,10 +118,26 @@ public class ReflectedFormFieldDefn
 
         this.validEntity = isAnnotationPresent(ValidEntity.class) ? ((ValidEntity) getAnnotation(ValidEntity.class)).entity() : null;
         this.creator = getFieldCreator(validEntity == null ? dataType : ValidEntity.class);
+
+        if(log.isInfoEnabled())
+        {
+            final StringBuilder containersText = new StringBuilder();
+            for(int i = 0; i < containers.length; i++)
+            {
+                if(containersText.length() > 0)
+                    containersText.append(", ");
+                containersText.append(containers[i]);
+            }
+
+            log.info("Reflected form field '"+ name +"' of "+ container +" as " + dataType + " (ValidEntity " + validEntity + "). Containers: " + containersText);
+        }
     }
 
     public FormComponent createField(final String componentId)
     {
+        if(log.isInfoEnabled())
+            log.info("Auto-creating form field for component '" + componentId + "' using" + creator);
+
         return creator.createField(componentId, this);
     }
 
