@@ -46,14 +46,14 @@ package com.medigy.wicket.form;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.form.FormComponent;
 
-public class DateField extends DatePicker implements FormJavaScriptGenerator.Contributor
+public class DateField extends TextField implements FormJavaScriptGenerator.Contributor
 {
     public static class DateFieldCreator implements FormFieldFactory.FieldCreator
     {
         public FormComponent createField(final String controlId, final ReflectedFormFieldDefn reflectedFormFieldDefn)
         {
             final DateField result = new DateField(controlId, reflectedFormFieldDefn);
-            return result.getDatePickerTextField();
+            return result;
         }
     }
     
@@ -67,7 +67,7 @@ public class DateField extends DatePicker implements FormJavaScriptGenerator.Con
 
     protected void onComponentTag(final ComponentTag componentTag)
     {
-        //((BaseForm)getForm()).onFormComponentTag(this, componentTag);
+        ((BaseForm)getForm()).onFormComponentTag(this, componentTag);
         super.onComponentTag(componentTag);
     }
 
