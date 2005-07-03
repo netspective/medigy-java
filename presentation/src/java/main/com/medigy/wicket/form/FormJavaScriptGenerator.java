@@ -195,6 +195,16 @@ public class FormJavaScriptGenerator
         return registrationScript;
     }
 
+    public void setAllowClientValidation(boolean allowClientValidation)
+    {
+        this.allowClientValidation = allowClientValidation;
+    }
+
+    public void setShowDataChangedMessageOnLeave(boolean showDataChangedMessageOnLeave)
+    {
+        this.showDataChangedMessageOnLeave = showDataChangedMessageOnLeave;
+    }
+
     public String getDefaultFieldRegistrationScript(final FormComponent component)
     {
         final String fieldTypeName = component instanceof FieldTypeNameContributor ?
