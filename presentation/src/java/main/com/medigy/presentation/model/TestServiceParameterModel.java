@@ -9,6 +9,9 @@ import com.medigy.persist.reference.custom.person.PatientResponsiblePartyRoleTyp
 import com.medigy.persist.reference.type.*;
 import com.medigy.service.validator.ValidEntity;
 import com.medigy.wicket.form.SelectFieldStyle;
+import com.medigy.wicket.form.FormFieldType;
+import com.medigy.wicket.form.PhoneField;
+import com.medigy.wicket.form.SocialSecurityField;
 import org.hibernate.validator.NotNull;
 
 import java.io.Serializable;
@@ -24,15 +27,15 @@ public final class TestServiceParameterModel implements Serializable
 	private String middleName;
     private String suffix;
     private String dateOfBirth;
-    private String gender;     // TODO: drop-down - change to xxxCode
-    private String maritalStatus;   // TODO: drop-down - change to xxxCode
+    private String gender;     // TODO: change to xxxCode
+    private String maritalStatus;   // TODO: change to xxxCode
 	private String socialSecurityNumber;
     private String driversLicenseNumber;
-	private String driversLicenseState;   // TODO: drop-down - change to xxxCode
+	private String driversLicenseState;   // TODO: change to xxxCode
     private String employer;                // TODO: change to employerName
     private String employerId;
     private String occupation;
-    private String ethnicity;     // TODO: multiple choice - change to xxxCodes
+    private String ethnicity;     // TODO: multiple choice - change to xxxCodes array
     private String languageCodes; // TODO: this one is not on the form - add?
 
 	private String personId;
@@ -159,6 +162,7 @@ public final class TestServiceParameterModel implements Serializable
         this.suffix = suffix;
     }
 
+    @FormFieldType(type = SocialSecurityField.class)
 	public String getSocialSecurityNumber()
 	{
 		return socialSecurityNumber;
@@ -229,6 +233,7 @@ public final class TestServiceParameterModel implements Serializable
 		this.miscNotes = miscNotes;
 	}
 
+    @FormFieldType(type = PhoneField.class)
     public String getHomePhone()
 	{
 		return homePhone;
@@ -239,6 +244,7 @@ public final class TestServiceParameterModel implements Serializable
 		this.homePhone = homePhone;
 	}
 
+    @FormFieldType(type = PhoneField.class)
     public String getWorkPhone()
 	{
 		return workPhone;
@@ -249,6 +255,7 @@ public final class TestServiceParameterModel implements Serializable
 		this.workPhone = workPhone;
 	}
 
+    @FormFieldType(type = PhoneField.class)
     public String getHomePhone2()
 	{
 		return homePhone2;
@@ -259,6 +266,7 @@ public final class TestServiceParameterModel implements Serializable
 		this.homePhone2 = homePhone2;
 	}
 
+    @FormFieldType(type = PhoneField.class)
     public String getWorkPhone2()
     {
         return workPhone2;
@@ -269,6 +277,7 @@ public final class TestServiceParameterModel implements Serializable
         this.workPhone2 = workPhone2;
     }
 
+    @FormFieldType(type = PhoneField.class)
     public String getCellPhone()
     {
         return cellPhone;
@@ -279,6 +288,7 @@ public final class TestServiceParameterModel implements Serializable
         this.cellPhone = cellPhone;
     }
 
+    @FormFieldType(type = PhoneField.class)
     public String getPager()
     {
         return pager;

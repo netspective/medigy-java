@@ -28,6 +28,7 @@ public class ReflectedFormFieldDefn
     private final Class container;
     private final String name;
     private final Class dataType;
+    private final Class customType;
     private final Class validEntity;
     private final Method method;
     private final boolean methodIsAccessor;
@@ -117,7 +118,8 @@ public class ReflectedFormFieldDefn
         }
 
         this.validEntity = isAnnotationPresent(ValidEntity.class) ? ((ValidEntity) getAnnotation(ValidEntity.class)).entity() : null;
-        this.creator = getFieldCreator(validEntity == null ? dataType : ValidEntity.class);
+        this.customType = isAnnotationPresent(FormFieldType.class) ? ((FormFieldType) getAnnotation(FormFieldType.class)).type() : null;
+        this.creator = getFieldCreator(customType == null ? (validEntity == null ? dataType : ValidEntity.class) : customType);
 
         if(log.isInfoEnabled())
         {

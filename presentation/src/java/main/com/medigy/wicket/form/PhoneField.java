@@ -46,6 +46,7 @@ import java.util.regex.Pattern;
 
 import wicket.markup.ComponentTag;
 import wicket.markup.html.form.FormComponent;
+import wicket.markup.html.form.validation.PatternValidator;
 
 public class PhoneField extends wicket.markup.html.form.TextField implements FormJavaScriptGenerator.Contributor
 {
@@ -76,6 +77,7 @@ public class PhoneField extends wicket.markup.html.form.TextField implements For
         super(controlId);
         this.reflectedFormFieldDefn = reflectedFormFieldDefn;
 
+        add(new PatternValidator(DASH_VALIDATE_PATTERN));
         //setStyle(Style.DASH);
     }
 

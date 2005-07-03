@@ -209,6 +209,9 @@ public class BaseForm extends Form implements IComponentResolver
         super.onComponentTagBody(markupStream, componentTag);
 
         final FormJavaScriptGenerator generator = new FormJavaScriptGenerator(this);
+
+        generator.setAllowClientValidation(true);  // Client side validation will not run if false - test server/client validation
+
         generator.appendDialogRegistrationStart();
         visitFormComponents(generator.getFormComponentVisitor());
         generator.appendDialogRegistrationEnd();

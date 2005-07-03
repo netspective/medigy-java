@@ -69,6 +69,8 @@ public class FormFieldFactory
         addFieldCreator(ValidEntity.class, new ReferenceEntityFieldCreator());
         addFieldCreator(String.class, new TextField.TextFieldCreator());
         addFieldCreator(Date.class, new DateField.DateFieldCreator());
+        addFieldCreator(SocialSecurityField.class, new SocialSecurityField.SocialSecurityFieldCreator());
+        addFieldCreator(PhoneField.class, new PhoneField.PhoneFieldCreator());
     }
 
     public void addFieldCreator(final Class dataType, final FieldCreator creator)
