@@ -45,14 +45,14 @@ package org.sns.tool.data;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
-import org.apache.poi.poifs.filesystem.POIFSFileSystem;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 
 /**
  * TODO: review http://www.datamasker.com/dmdatasets.htm that provides a good list of datasets that can be used in
@@ -73,8 +73,13 @@ public class DataGeneratorSources
 
     public DataGeneratorSources(final InputStream workbookStream) throws IOException
     {
+        assert workbookStream != null;
+
         final POIFSFileSystem fileSystem = new POIFSFileSystem(workbookStream);
         final HSSFWorkbook workbook = new HSSFWorkbook(fileSystem);
+
+        assert fileSystem != null;
+        assert workbook != null;
 
         readNamesAndCounts(workbook.getSheet("Common Male Names"), maleNamesAndCounts);
         readNamesAndCounts(workbook.getSheet("Common Female Names"), femaleNamesAndCounts);

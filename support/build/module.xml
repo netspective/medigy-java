@@ -112,6 +112,9 @@
         <fileset id="module.resources.main" dir="${module.src.main.home}">
             <include name="**/*.xml"/>
             <include name="**/*.properties"/>
+            <include name="**/*.xsl"/>
+            <include name="**/*.xls"/> <!-- Microsoft Excel sources -->
+            <include name="**/*.doc"/> <!-- Microsoft Word sources -->
         </fileset>
     </target>
 
@@ -119,6 +122,9 @@
         <fileset id="module.resources.test" dir="${module.src.test.home}">
             <include name="**/*.xml"/>
             <include name="**/*.properties"/>
+            <include name="**/*.xsl"/>
+            <include name="**/*.xls"/> <!-- Microsoft Excel sources -->
+            <include name="**/*.doc"/> <!-- Microsoft Word sources -->
         </fileset>
     </target>
 
