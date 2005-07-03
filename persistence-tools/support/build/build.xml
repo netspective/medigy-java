@@ -58,21 +58,24 @@
             />
     </target>
 
-    <target name="db.populate-demo-data" depends="db.generate-ddl">
-        <property name="demo.db.name" value="medigy_demo_01"/>
-        <property name="demo.db.driver" value="com.mysql.jdbc.Driver"/>
-        <property name="demo.db.url" value="jdbc:mysql://192.168.0.100:3306/${demo.db.name}"/>
-        <property name="demo.db.userid" value="medigy_demo"/>
-        <property name="demo.db.password" value="medigy_demo"/>
+    <target name="db.create-demo-instance" depends="db.generate-ddl">
+        <property name="db.create-demo-instance.database.name" value="medigy_demo_01"/>
+        <property name="db.create-demo-instance.database.dialectClass" value="org.hibernate.dialect.MySQLInnoDBDialect"/>
+        <property name="db.create-demo-instance.database.driverClass" value="com.mysql.jdbc.Driver"/>
+        <property name="db.create-demo-instance.database.url" value="jdbc:mysql://192.168.0.100:3306/${db.create-demo-instance.database.name}"/>
+        <property name="db.create-demo-instance.database.userid" value="medigy_demo"/>
+        <property name="db.create-demo-instance.database.password" value="medigy_demo"/>
 
-        <sql driver="${demo.db.driver}" url="${demo.db.url}" userid="${demo.db.userid}" password="${demo.db.password}"
-            classpathref="module.dependencies.test.classpath">
-            drop database if exists ${demo.db.name};
-            create database ${demo.db.name};
+        <sql driver="${db.create-demo-instance.database.driverClass}" url="${db.create-demo-instance.database.url}"
+             userid="${db.create-demo-instance.database.userid}" password="${db.create-demo-instance.database.password}"
+             classpathref="module.dependencies.test.classpath">
+            drop database if exists ${db.create-demo-instance.database.name};
+            create database ${db.create-demo-instance.database.name};
         </sql>
 
         <sql src="${persistence.artifacts.ddl.home}/create_MySQLInnoDBDialect.sql"
-            driver="${demo.db.driver}" url="${demo.db.url}" userid="${demo.db.userid}" password="${demo.db.password}"
+            driver="${db.create-demo-instance.database.driverClass}" url="${db.create-demo-instance.database.url}"
+            userid="${db.create-demo-instance.database.userid}" password="${db.create-demo-instance.database.password}"
             classpathref="module.dependencies.test.classpath" />
 
         <taskdef name="populate-demo-data" classname="com.medigy.tool.persist.populate.DataPopulatorTask"
@@ -83,7 +86,10 @@
         <populate-demo-data
             hibernateConfigClass="com.medigy.persist.util.HibernateConfiguration"
             hibernateConfigFile="/com/medigy/persist/hibernate.cfg.xml"
-            driver="${demo.db.driver}" url="${demo.db.url}" userid="${demo.db.userid}" password="${demo.db.password}"
+            dialect="${db.create-demo-instance.database.dialectClass}"
+            driver="${db.create-demo-instance.database.driverClass}"
+            url="${db.create-demo-instance.database.url}"
+            userid="${db.create-demo-instance.database.userid}" password="${db.create-demo-instance.database.password}"
             showSql="no"/>
     </target>
 

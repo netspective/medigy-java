@@ -232,6 +232,17 @@
         </ant>
     </target>
 
+    <target name="db.create-demo-instance" depends="init.define-properties">
+        <ant dir="${repository.home}/persistence-tools/support/build" target="db.create-demo-instance" inheritall="false" inheritrefs="false">
+            <property name="data-gen.artifacts.home" value="${consolidated.artifacts.home}/data-gen"/>
+            <property name="graphviz.artifacts.home" value="${consolidated.artifacts.home}/graphviz"/>
+            <property name="hibernate-doc.artifacts.home" value="${consolidated.artifacts.home}/hibernate-doc"/>
+            <property name="persistence.artifacts.home" value="${consolidated.artifacts.home}/persistence"/>
+            <property name="persistence.artifacts.doc.home" value="${consolidated.artifacts.doc.home}"/>
+            <property name="module.artifacts.home" value="${consolidated.artifacts.home}/persistence-tools"/>
+        </ant>
+    </target>
+
     <target name="publish" depends="init.define-properties" if="build.publish.latest.home">
         <delete dir="${build.publish.latest.home}"/>
         <mkdir dir="${build.publish.latest.home}"/>
