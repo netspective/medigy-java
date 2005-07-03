@@ -169,13 +169,11 @@ public class DataPopulatorTask extends Task
             final Organization org = new Organization();
             org.setOrganizationName(MessageFormat.format(orgNameTemplate, number));
             session.save(org);
-            log("Created org " + number);
 
             for(int i = 1; i <= generatePatientsPerOrgCount; i++)
-            {
                 populatePatient(session, org, i);
-                log("Created " + generatePatientsPerOrgCount + " patients in org " + number);
-            }
+
+            log("Created " + generatePatientsPerOrgCount + " patients in org " + number);
 
             tx.commit();
         }
