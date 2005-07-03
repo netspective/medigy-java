@@ -8,13 +8,11 @@ import com.medigy.persist.reference.custom.person.EthnicityType;
 import com.medigy.persist.reference.custom.person.PatientResponsiblePartyRoleType;
 import com.medigy.persist.reference.type.*;
 import com.medigy.service.validator.ValidEntity;
-import com.medigy.wicket.form.SelectFieldStyle;
-import com.medigy.wicket.form.FormFieldType;
-import com.medigy.wicket.form.PhoneField;
-import com.medigy.wicket.form.SocialSecurityField;
+import com.medigy.wicket.form.*;
 import org.hibernate.validator.NotNull;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Simple model object for FormInput example. Has a number of simple properties
@@ -81,11 +79,9 @@ public final class TestServiceParameterModel implements Serializable
 	private String bloodType;
 
 
-
 	public TestServiceParameterModel()
 	{
 	}
-
 
 	public String getPersonId()
 	{
@@ -349,6 +345,7 @@ public final class TestServiceParameterModel implements Serializable
         this.state = state;
     }
 
+    @FormFieldType(type = ZipCodeField.class)
     public String getZip()
     {
         return zip;

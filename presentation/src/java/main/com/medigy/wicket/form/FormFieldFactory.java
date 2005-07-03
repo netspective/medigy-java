@@ -71,6 +71,7 @@ public class FormFieldFactory
         addFieldCreator(Date.class, new DateField.DateFieldCreator());
         addFieldCreator(SocialSecurityField.class, new SocialSecurityField.SocialSecurityFieldCreator());
         addFieldCreator(PhoneField.class, new PhoneField.PhoneFieldCreator());
+        addFieldCreator(ZipCodeField.class, new ZipCodeField.ZipCodeFieldCreator());
     }
 
     public void addFieldCreator(final Class dataType, final FieldCreator creator)

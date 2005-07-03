@@ -41,43 +41,44 @@
 /*
  * Copyright (c) 2005 Your Corporation. All Rights Reserved.
  */
-package com.medigy.presentation.form.person.patient;
+package com.medigy.wicket.form;
 
-import com.medigy.presentation.model.TestServiceParameterModel;
-import com.medigy.service.dto.person.RegisterPatientParameters;
-import com.medigy.service.person.PatientRegistrationService;
-import com.medigy.wicket.DefaultApplication;
-import com.medigy.wicket.form.BaseForm;
-import com.medigy.wicket.form.TextField;
-import com.medigy.wicket.panel.DefaultFormPanel;
-import wicket.IFeedback;
-import wicket.model.BoundCompoundPropertyModel;
+import wicket.markup.ComponentTag;
+import wicket.markup.html.form.FormComponent;
+import wicket.markup.html.form.validation.PatternValidator;
 
-public class PatientRegistrationFormPanel extends DefaultFormPanel
+public class ZipCodeField extends wicket.markup.html.form.TextField implements FormJavaScriptGenerator.Contributor
 {
-    private TextField personId;
+    public static final String VALIDATE_PATTERN = "^([\\d]{5})([-][\\d]{4})?$";
 
-    public PatientRegistrationFormPanel(final String componentName)
+    public static class ZipCodeFieldCreator implements FormFieldFactory.FieldCreator
     {
-        super(componentName);
-    }
-
-    protected PatientRegistrationForm createForm(final String componentName, final IFeedback feedback)
-    {
-        final PatientRegistrationService service = (PatientRegistrationService) ((DefaultApplication) getApplication()).getService(PatientRegistrationService.class);
-        return new PatientRegistrationForm(componentName, feedback, new BoundCompoundPropertyModel(new TestServiceParameterModel()), service.getNewPatientParameters());
-    }
-
-    protected class PatientRegistrationForm extends BaseForm
-    {
-        public PatientRegistrationForm(final String componentName, final IFeedback feedback, BoundCompoundPropertyModel model, RegisterPatientParameters params)
+        public FormComponent createField(final String controlId, final ReflectedFormFieldDefn reflectedFormFieldDefn)
         {
-            super(componentName, model, feedback);
+            final ZipCodeField result = new ZipCodeField(controlId, reflectedFormFieldDefn);
+            reflectedFormFieldDefn.initializeField(reflectedFormFieldDefn, result);
+            return result;
         }
+    }
 
-		public final void onSubmit()
-		{
-            info("Saved model " + getModelObject());
-		}
+    private ReflectedFormFieldDefn reflectedFormFieldDefn;
+
+    public ZipCodeField(final String controlId, final ReflectedFormFieldDefn reflectedFormFieldDefn)
+    {
+        super(controlId);
+        this.reflectedFormFieldDefn = reflectedFormFieldDefn;
+
+        add(new PatternValidator(VALIDATE_PATTERN));
+    }
+
+    protected void onComponentTag(final ComponentTag componentTag)
+    {
+        ((BaseForm) getForm()).onFormComponentTag(this, componentTag);
+        super.onComponentTag(componentTag);
+    }
+
+    public ReflectedFormFieldDefn getReflectedFormFieldDefn()
+    {
+        return reflectedFormFieldDefn;
     }
 }
