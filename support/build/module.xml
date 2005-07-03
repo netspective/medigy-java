@@ -109,22 +109,14 @@
     </target>
 
     <target name="init.define-main.resources" depends="init.define-properties">
-        <fileset id="module.resources.main" dir="${module.src.main.home}">
-            <include name="**/*.xml"/>
-            <include name="**/*.properties"/>
-            <include name="**/*.xsl"/>
-            <include name="**/*.xls"/> <!-- Microsoft Excel sources -->
-            <include name="**/*.doc"/> <!-- Microsoft Word sources -->
+        <fileset id="module.resources.main" dir="${module.src.main.home}" includes="**/*">
+            <exclude name="**/*.java"/>
         </fileset>
     </target>
 
     <target name="init.define-test.resources" depends="init.define-properties">
-        <fileset id="module.resources.test" dir="${module.src.test.home}">
-            <include name="**/*.xml"/>
-            <include name="**/*.properties"/>
-            <include name="**/*.xsl"/>
-            <include name="**/*.xls"/> <!-- Microsoft Excel sources -->
-            <include name="**/*.doc"/> <!-- Microsoft Word sources -->
+        <fileset id="module.resources.test" dir="${module.src.test.home}" includes="**/*">
+            <exclude name="**/*.java"/>
         </fileset>
     </target>
 
