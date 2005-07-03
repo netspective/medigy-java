@@ -5,9 +5,6 @@
     <import file="../../../support/build/module.xml"/>
 
     <target name="init.define-properties" depends="module.init.define-properties">
-        <property name="presentation.home" value="${repository.home}/presentation"/>
-        <property name="presentation.src.main.home" value="${repository.home}/presentation/src/java/main"/>
-
         <property name="module.webapp.home" value="${module.home}/webapp"/>
         <property name="module.WEB-INF.home" value="${module.webapp.home}/WEB-INF"/>
         <property name="module.WEB-INF.lib.home" value="${module.WEB-INF.home}/lib"/>
@@ -17,10 +14,47 @@
         <property name="module.artifacts.WEB-INF.lib.home" value="${module.artifacts.WEB-INF.home}/lib"/>
     </target>
 
-    <target name="module.init.prepare-exploded-dependencies" depends="init.define-properties">
-        <copy todir="${module.WEB-INF.lib.home}">
+    <target name="init.define-module.dependencies.main.classpath" depends="init.define-modules-artifacts-home">
+        <path id="module.dependencies.main.classpath">
+            <fileset dir="${common.home}/depend/lib/build" includes="*.jar"/>
+            <fileset dir="${common.home}/depend/lib/main" includes="*.jar"/>
+
+            <fileset dir="${presentation.home}/depend/lib/build" includes="*.jar"/>
             <fileset dir="${presentation.home}/depend/lib/main" includes="*.jar"/>
-        </copy>
+
+            <fileset dir="${persistence.home}/depend/lib/build" includes="*.jar"/>
+            <fileset dir="${persistence.home}/depend/lib/main" includes="*.jar"/>
+
+            <fileset dir="${service.home}/depend/lib/build" includes="*.jar"/>
+            <fileset dir="${service.home}/depend/lib/main" includes="*.jar"/>
+
+            <path location="${persistence.artifacts.home}/classes/main"/>
+            <path location="${service.artifacts.home}/classes/main"/>
+        </path>
+    </target>
+
+    <target name="init.define-module.dependencies.test.classpath" depends="init.define-modules-artifacts-home">
+        <path id="module.dependencies.test.classpath">
+            <fileset dir="${common.home}/depend/lib/build" includes="*.jar"/>
+            <fileset dir="${common.home}/depend/lib/main" includes="*.jar"/>
+            <fileset dir="${common.home}/depend/lib/test" includes="*.jar"/>
+
+            <fileset dir="${presentation.home}/depend/lib/build" includes="*.jar"/>
+            <fileset dir="${presentation.home}/depend/lib/main" includes="*.jar"/>
+
+            <fileset dir="${persistence.home}/depend/lib/build" includes="*.jar"/>
+            <fileset dir="${persistence.home}/depend/lib/main" includes="*.jar"/>
+            <fileset dir="${persistence.home}/depend/lib/test" includes="*.jar"/>
+
+            <fileset dir="${service.home}/depend/lib/build" includes="*.jar"/>
+            <fileset dir="${service.home}/depend/lib/main" includes="*.jar"/>
+            <fileset dir="${service.home}/depend/lib/test" includes="*.jar"/>
+
+            <path location="${persistence.artifacts.home}/classes/main"/>
+            <path location="${persistence.artifacts.home}/classes/test"/>
+            <path location="${service.artifacts.home}/classes/main"/>
+            <path location="${service.artifacts.home}/classes/test"/>
+        </path>
     </target>
 
     <target name="war.init.prepare-stage" depends="init.define-properties">
@@ -35,15 +69,33 @@
         </copy>
     </target>
 
-    <target name="war.init.common.presentation-lib" depends="init.define-properties">
+    <target name="init.prepare-app-lib" depends="init.define-properties,init.define-modules">
+        <ant dir="${persistence.home}/support/build" target="jar" inheritall="false" inheritrefs="false"/>
+        <ant dir="${service.home}/support/build" target="jar" inheritall="false" inheritrefs="false"/>
         <ant dir="${presentation.home}/support/build" target="jar" inheritall="false" inheritrefs="false"/>
-    </target>
 
-    <target name="war.init.prepare-lib" depends="war.init.prepare-stage,war.init.common.presentation-lib,jar">
         <copy todir="${module.artifacts.webapp.home}/WEB-INF/lib">
             <fileset dir="${presentation.home}/depend/lib/main" includes="*.jar"/>
-        </copy>
+            <fileset dir="${persistence.home}/depend/lib/main" includes="*.jar"/>
+            <fileset dir="${service.home}/depend/lib/main" includes="*.jar"/>
 
+            <!-- TODO: need to decide which db we'll use in production but for now we'll use the test database -->
+            <fileset dir="${persistence.home}/depend/lib/test">
+                <include name="mysql-connector-java-3.1.8-bin.jar"/>
+            </fileset>
+
+            <!-- TODO: need to decide how we're going to do pooling in production but for now we'll use the test method -->
+            <fileset dir="${service.home}/depend/lib/test">
+                <include name="commons-dbcp-1.2.1.jar"/>
+                <include name="commons-pool-1.2.jar"/>
+            </fileset>
+
+            <fileset dir="${persistence.home}/support/build/artifacts" includes="*.jar"/>
+            <fileset dir="${service.home}/support/build/artifacts" includes="*.jar"/>
+        </copy>
+    </target>
+
+    <target name="war.init.configure-lib" depends="war.init.prepare-stage,init.prepare-app-lib,jar">
         <!-- unjar all the items in the JAR files we need so that we can do some global replacements -->
         <property name="app.jar.stage.home" value="${module.artifacts.home}/work/regexp"/>
         <unjar dest="${app.jar.stage.home}">
@@ -69,7 +121,7 @@
         </copy>
     </target>
  
-    <target name="war.init.create-war" depends="war.init.prepare-lib">
+    <target name="war.init.create-war" depends="war.init.configure-lib">
         <property name="app.war.name" value="${module.name}.war"/>
         <property name="app.war.dest" value="${module.artifacts.home}/${app.war.name}"/>
         <delete file="${app.war.dest}"/>
@@ -80,6 +132,6 @@
         <property name="app.war.webxml" value="${module.home}/support/conf/web.xml"/>
     </target>
 
-    <target name="war.create-resin-3.0-war" depends="war.init.resin-3.0-war,war.init.prepare-lib,war.init.create-war"/>
+    <target name="war.create-resin-3.0-war" depends="war.init.resin-3.0-war,war.init.configure-lib,war.init.create-war"/>
 
 </project>

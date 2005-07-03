@@ -82,6 +82,7 @@
         <property name="persistence.home" value="${repository.home}/persistence"/>
         <property name="persistence-tools.home" value="${repository.home}/persistence-tools"/>
         <property name="service.home" value="${repository.home}/service"/>
+        <property name="presentation.home" value="${repository.home}/presentation"/>
         <property name="support.home" value="${repository.home}/support"/>
     </target>
 
@@ -93,6 +94,7 @@
         <property name="persistence.artifacts.home" value="${persistence.home}/support/build/artifacts"/>
         <property name="persistence-tools.artifacts.home" value="${persistence-tools.home}/support/build/artifacts"/>
         <property name="service.artifacts.home" value="${service.home}/support/build/artifacts"/>
+        <property name="presentation.artifacts.home" value="${presentation.home}/support/build/artifacts"/>
     </target>
 
     <!-- ==================== Sourcepaths  ======================= -->
@@ -185,7 +187,7 @@
     <target name="compile.main" depends="init.define-srcpaths,init.define-module.dependencies.classpaths">
         <delete dir="${module.artifacts.classes.main.home}"/>
         <mkdir dir="${module.artifacts.classes.main.home}"/>
-        <copy todir="${module.artifacts.classes.main.home}" >
+        <copy todir="${module.artifacts.classes.main.home}" includeEmptyDirs="no">
             <fileset refid="module.resources.main"/>
         </copy>
         <javac destdir="${module.artifacts.classes.main.home}"
@@ -198,7 +200,7 @@
     <target name="compile.test" depends="compile.main">
         <delete dir="${module.artifacts.classes.test.home}"/>
         <mkdir dir="${module.artifacts.classes.test.home}"/>
-        <copy todir="${module.artifacts.classes.test.home}">
+        <copy todir="${module.artifacts.classes.test.home}" includeEmptyDirs="no">
             <fileset refid="module.resources.test"/>
         </copy>
         <javac destdir="${module.artifacts.classes.test.home}"
