@@ -52,7 +52,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.medigy.presentation.model.ChoicesFactory;
-import com.medigy.wicket.DefaultApplication;
 import wicket.IComponentResolver;
 import wicket.IFeedback;
 import wicket.MarkupContainer;
@@ -139,16 +138,6 @@ public class BaseForm extends Form implements IComponentResolver
     public void setEnableClientSideValidation(boolean enableClientSideValidation)
     {
         this.enableClientSideValidation = enableClientSideValidation;
-    }
-
-    // TODO: move this into DefaultApplication
-    private ChoicesFactory getChoicesFactory()
-    {
-        if (choicesFactory == null)
-        {
-            choicesFactory = (ChoicesFactory) ((DefaultApplication) getApplication()).getService(ChoicesFactory.class);
-        }
-        return choicesFactory;
     }
 
     public boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
