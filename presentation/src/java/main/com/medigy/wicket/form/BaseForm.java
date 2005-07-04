@@ -58,7 +58,6 @@ import wicket.IFeedback;
 import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
-import wicket.markup.html.form.DropDownChoice;
 import wicket.markup.html.form.Form;
 import wicket.model.BoundCompoundPropertyModel;
 import wicket.model.IModel;
@@ -68,10 +67,6 @@ public class BaseForm extends Form implements IComponentResolver
     private static final Log log = LogFactory.getLog(BaseForm.class);
 
     protected static final Collection TEST_CHOICES = new ArrayList();
-    protected static final Collection RELATIONSHIP_TO_RESPONSIBLE_CHOICES = new ArrayList();
-    protected static final Collection EMPLOYMENT_STATUS_CHOICES = new ArrayList();
-    protected static final Collection INSURANCE_SEQUENCE_CHOICES = new ArrayList();
-    protected static final Collection PATIENT_RELATIONSHIP_TO_INSURED_CHOICES = new ArrayList();
     public static final String ATTRNAME_WICKET_ID = "wicket:id";
 
 
@@ -80,6 +75,7 @@ public class BaseForm extends Form implements IComponentResolver
         public boolean addComponent(final MarkupContainer container, final MarkupStream markupStream, final ComponentTag tag);
     }
 
+    private boolean enableClientSideValidation = true;
     private ChoicesFactory choicesFactory = null;
     private Map<String, TagResolver> tagResolvers = new HashMap<String, TagResolver>();
 
@@ -135,6 +131,16 @@ public class BaseForm extends Form implements IComponentResolver
         tagResolvers.put("span", controlResolver);
     }
 
+    public boolean isEnableClientSideValidation()
+    {
+        return enableClientSideValidation;
+    }
+
+    public void setEnableClientSideValidation(boolean enableClientSideValidation)
+    {
+        this.enableClientSideValidation = enableClientSideValidation;
+    }
+
     // TODO: move this into DefaultApplication
     private ChoicesFactory getChoicesFactory()
     {
@@ -157,42 +163,27 @@ public class BaseForm extends Form implements IComponentResolver
         return false;
     }
 
-    protected void addLabeledTextField(final String fieldName)
-    {
-        //add(new FieldLabel(fieldName));
-        add(new TextField(fieldName));
-    }
-
-    protected void addLabeledSelectField(final String fieldName)
-    {
-        //add(new FieldLabel(fieldName));
-        add(new DropDownChoice(fieldName, TEST_CHOICES));
-    }
-
-    protected void addLabeledCheckBox(final String fieldName)
-    {
-        //add(new FieldLabel(fieldName));
-        add(new CheckBox(fieldName));
-    }
-
     protected void onComponentTag(ComponentTag componentTag)
     {
         super.onComponentTag(componentTag);
-        componentTag.put("onsubmit", "return(document.forms[0].dialog.isValid())");
+        if(isEnableClientSideValidation())
+            componentTag.put("onsubmit", "return(document.forms[0].dialog.isValid())");
     }
 
     protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag componentTag)
     {
         super.onComponentTagBody(markupStream, componentTag);
 
-        final FormJavaScriptGenerator generator = new FormJavaScriptGenerator(this);
-        generator.setAllowClientValidation(true);
+        if(isEnableClientSideValidation())
+        {
+            final FormJavaScriptGenerator generator = new FormJavaScriptGenerator(this);
 
-        generator.appendDialogRegistrationStart();
-        visitFormComponents(generator.getFormComponentVisitor());
-        generator.appendDialogRegistrationEnd();
+            generator.appendDialogRegistrationStart();
+            visitFormComponents(generator.getFormComponentVisitor());
+            generator.appendDialogRegistrationEnd();
 
-        getResponse().write(generator.getTypeDefnScript().toString());
-        getResponse().write(generator.getRegistrationScript().toString());
+            getResponse().write(generator.getTypeDefnScript().toString());
+            getResponse().write(generator.getRegistrationScript().toString());
+        }
     }
 }
