@@ -12,10 +12,10 @@
 	                    <table class="vertical-fields">
 	                        <tr class="field">
 	                            <td class="label">
-	                                <label wicket:id="nurseId-label">Nurse ID</label>
+	                                <label wicket:id="nurseId_label">Nurse ID</label>
 	                            </td>
 	                            <td class="control">
-	                                <input type="text" wicket:id="nurseId-control" value=""/>
+	                                <input type="text" wicket:id="nurseId" value=""/>
 	                            </td>
 	                        </tr>
 	                        <tr>
@@ -26,16 +26,16 @@
 	                                <table class="vertical-form">
 	                                    <tr class="field">
 	                                        <td class="control">
-	                                            <input type="checkbox" wicket:id="lvnLpnCheckbox-control"/>
-	                                            <label wicket:id="lvnLpn-label">LVN/LPN</label>
+	                                            <input type="checkbox" wicket:id="lvnLpnCheckbox"/>
+	                                            <label wicket:id="lvnLpn_label">LVN/LPN</label>
 	                                        </td>
 	                                        <td class="control">
-	                                            <input type="checkbox" wicket:id="rnCheckbox-control"/>
-	                                            <label wicket:id="rn-label">RN</label>
+	                                            <input type="checkbox" wicket:id="rnCheckbox"/>
+	                                            <label wicket:id="rn_label">RN</label>
 	                                        </td>
 	                                        <td class="control">
-	                                            <input type="checkbox" wicket:id="otherCheckbox-control"/>
-	                                            <label wicket:id="other-label">Other</label>
+	                                            <input type="checkbox" wicket:id="otherCheckbox"/>
+	                                            <label wicket:id="other_label">Other</label>
 	                                        </td>
 	                                    </tr>
 	                                </table>
@@ -43,12 +43,12 @@
 	                        </tr>
 	                        <tr class="field">
 	                            <td class="label">
-	                                <label wicket:id="jobTitle-label">Job Title</label> /
-	                                <label wicket:id="code-label">Code</label>
+	                                <label wicket:id="jobTitle_label">Job Title</label> /
+	                                <label wicket:id="code_label">Code</label>
 	                            </td>
 	                            <td class="control">
-	                                <input type="text" wicket:id="jobTitle-control" value=""/>
-	                                <input type="text" wicket:id="code-control" value=""/>
+	                                <input type="text" wicket:id="jobTitle" value=""/>
+	                                <input type="text" wicket:id="code" value=""/>
 	                            </td>
 	                        </tr>
 	                    </table>
@@ -58,16 +58,16 @@
 	                    <table class="vertical-fields">
 	                        <tr class="field">
 	                            <td class="label">
-	                                <label wicket:id="lastName-label">Last Name</label> /
-	                                <label wicket:id="firstName-label">First Name</label> /
-	                                <label wicket:id="middleName-label">Middle Name</label> /
-	                                <label wicket:id="suffix-label">Suffix</label>
+	                                <label wicket:id="lastName_label">Last Name</label> /
+	                                <label wicket:id="firstName_label">First Name</label> /
+	                                <label wicket:id="middleName_label">Middle Name</label> /
+	                                <label wicket:id="suffix_label">Suffix</label>
 	                            </td>
 	                            <td class="control">
-	                                <input type="text" wicket:id="lastName-control" value="Hackett"/>
-	                                <input type="text" wicket:id="firstName-control" value="Ryan"/>
-	                                <input type="text" wicket:id="middleName-control" value="A."/>
-	                                <select wicket:id="suffix-control">
+	                                <input type="text" wicket:id="lastName" value="Hackett"/>
+	                                <input type="text" wicket:id="firstName" value="Ryan"/>
+	                                <input type="text" wicket:id="middleName" value="A."/>
+	                                <select wicket:id="suffix">
 	                                    <option selected="selected" value="0">Mr.</option>
 	                                    <option value="1">Ms.</option>
 	                                    <option value="2">Mrs.</option>
@@ -77,25 +77,25 @@
 	                        </tr>
 	                        <tr class="field">
 	                            <td class="label">
-	                                <label wicket:id="socialSecurityNumber-label">Social Security</label> /
-	                                <label wicket:id="dateOfBirth-label">Date of Birth</label>
+	                                <label wicket:id="socialSecurityNumber_label">Social Security</label> /
+	                                <label wicket:id="dateOfBirth_label">Date of Birth</label>
 	                            </td>
 	                            <td class="control">
-	                                <input type="text" wicket:id="socialSecurityNumber-control" value="999-99-9999"/>
-	                                <input type="text" wicket:id="dateOfBirth-control" value="09/13/1968"/>
+	                                <input type="text" wicket:id="socialSecurityNumber" value="999-99-9999"/>
+	                                <input type="text" wicket:id="dateOfBirth" value="09/13/1968"/>
 	                            </td>
 	                        </tr>
 	                        <tr class="field">
 	                            <td class="label">
-	                                <label wicket:id="gender-label">Gender</label> /
-	                                <label wicket:id="maritalStatus-label">Marital Status</label>
+	                                <label wicket:id="gender_label">Gender</label> /
+	                                <label wicket:id="maritalStatus_label">Marital Status</label>
 	                            </td>
 	                            <td class="control">
-	                                <select wicket:id="gender-control">
+	                                <select wicket:id="gender">
 	                                    <option>Male</option>
 	                                    <option>Female</option>
 	                                </select>
-	                                <select wicket:id="maritalStatus-control">
+	                                <select wicket:id="maritalStatus">
 	                                    <option>Married</option>
 	                                    <option>Unmarried</option>
 	                                </select>
@@ -106,7 +106,7 @@
 							        <label wicket:id="blood-type">Blood Type</label>
 								</td>
 								<td class="control">
-								    <select wicket:id="bloodType-control">
+								    <select wicket:id="bloodType">
 								        <option>A</option>
 								        <option>B</option>
 								        <option>AB</option>
@@ -122,66 +122,66 @@
                         <table class="vertical-fields">
                             <tr class="field">
                                 <td class="label">
-                                    <label wicket:id="homePhone-label">Home Phone</label> /
-                                    <label wicket:id="workPhone-label">Work Phone</label>
+                                    <label wicket:id="homePhone_label">Home Phone</label> /
+                                    <label wicket:id="workPhone_label">Work Phone</label>
                                 </td>
                                 <td class="control">
-                                    <input type="text" wicket:id="homePhone-control" value=""/>
-                                    <input type="text" wicket:id="workPhone-control" value=""/>
+                                    <input type="text" wicket:id="homePhone" value=""/>
+                                    <input type="text" wicket:id="workPhone" value=""/>
                                 </td>
                             </tr>
                             <tr class="field">
                                 <td class="label">
-                                    <label wicket:id="cellPhone-label">Cell Phone</label> /
-                                    <label wicket:id="pager-label">Pager</label>
+                                    <label wicket:id="cellPhone_label">Cell Phone</label> /
+                                    <label wicket:id="pager_label">Pager</label>
                                 </td>
                                 <td class="control">
-                                    <input type="text" wicket:id="cellPhone-control" value="703-345-7752"/>
-                                    <input type="text" wicket:id="pager-control" value=""/>
+                                    <input type="text" wicket:id="cellPhone" value="703-345-7752"/>
+                                    <input type="text" wicket:id="pager" value=""/>
                                 </td>
                             </tr>
                             <tr class="field">
                                 <td class="label">
-                                    <label wicket:id="alternate-label">Alternate</label>
+                                    <label wicket:id="alternate_label">Alternate</label>
                                 </td>
                                 <td class="control">
-                                    <input type="text" wicket:id="alternate-control" value=""/>
+                                    <input type="text" wicket:id="alternate" value=""/>
                                 </td>
                             </tr>
                             <tr class="field">
                                 <td class="label">
-                                    <label wicket:id="homeAddress-label">Home Address</label>
+                                    <label wicket:id="homeAddress_label">Home Address</label>
                                 </td>
                                 <td class="control">
-                                    <input type="text" wicket:id="homeAddress-control" value=""/>
+                                    <input type="text" wicket:id="homeAddress" value=""/>
                                 </td>
                             </tr>
                             <tr class="field">
                                 <td class="label">
-                                    <label wicket:id="homeAddress2-label"></label>
+                                    <label wicket:id="homeAddress2_label"></label>
                                 </td>
                                 <td class="control">
-                                    <input type="text" wicket:id="homeAddress2-control" value=""/>
+                                    <input type="text" wicket:id="homeAddress2" value=""/>
                                 </td>
                             </tr>
                             <tr class="field">
                                 <td class="label">
-                                    <label wicket:id="city-label">City</label> /
-                                    <label wicket:id="state-label">State</label> /
-                                    <label wicket:id="zip-label">Zip</label>
+                                    <label wicket:id="city_label">City</label> /
+                                    <label wicket:id="state_label">State</label> /
+                                    <label wicket:id="zip_label">Zip</label>
                                 </td>
                                 <td class="control">
-                                    <input type="text" wicket:id="city-control" value=""/>
-                                    <input type="text" wicket:id="state-control" value=""/>
-                                    <input type="text" wicket:id="zip-control" value=""/>
+                                    <input type="text" wicket:id="city" value=""/>
+                                    <input type="text" wicket:id="state" value=""/>
+                                    <input type="text" wicket:id="zip" value=""/>
                                 </td>
                             </tr>
                             <tr class="field">
                                 <td class="label">
-                                    <label wicket:id="email-label">Email</label>
+                                    <label wicket:id="email_label">Email</label>
                                 </td>
                                 <td class="control">
-                                    <input type="text" wicket:id="email-control" value=""/>
+                                    <input type="text" wicket:id="email" value=""/>
                                 </td>
                             </tr>
                         </table>
@@ -191,79 +191,79 @@
                         <table class="vertical-fields">
 						    <tr class="field">
 						        <td class="label">
-                                    <label wicket:id="nursingLicense-label">Nursing License</label> /
-                                    <label wicket:id="expDate-label">Exp Date</label> /
-                                    <label wicket:id="licenseRequired-label">License Required</label>
+                                    <label wicket:id="nursingLicense_label">Nursing License</label> /
+                                    <label wicket:id="expDate_label">Exp Date</label> /
+                                    <label wicket:id="licenseRequired_label">License Required</label>
                                 </td>
                                 <td class="control">
-                                    <input type="text" wicket:id="license-control" value=""/>
-                                    <input type="text" wicket:id="expDate-control" value=""/>
-	                                <input type="checkbox" wicket:id="licenseRequiredCheckbox-control"/>
-	                                <label wicket:id="licenseRequired2-label">License Required</label>
+                                    <input type="text" wicket:id="license" value=""/>
+                                    <input type="text" wicket:id="expDate" value=""/>
+	                                <input type="checkbox" wicket:id="licenseRequiredCheckbox"/>
+	                                <label wicket:id="licenseRequired2_label">License Required</label>
 	                            </td>
                             </tr>
                             <tr>
 							    <td class="label">
-                                    <label wicket:id="license-label">License Certification</label> /
-                                    <label wicket:id="number-label">Number</label> /
-                                    <label wicket:id="expDate-label">Exp Date</label>
+                                    <label wicket:id="license_label">License Certification</label> /
+                                    <label wicket:id="number_label">Number</label> /
+                                    <label wicket:id="expDate_label">Exp Date</label>
                                 </td>
                                 <td class="control">
-                                    <select wicket:id="licenseCertification-control">
+                                    <select wicket:id="licenseCertification">
 							            <option>DEA</option>
 							            <option>DPS</option>
 							            <option>BCBS</option>
                  			            <option>EPSDT</option>
                                         <option>EPSDT WERTOS VB</option>
 				                    </select>
-                                    <input type="text" wicket:id="number-control" value=""/>
-                                    <input type="text" wicket:id="licenseExpDate-control" value=""/>
+                                    <input type="text" wicket:id="number" value=""/>
+                                    <input type="text" wicket:id="licenseExpDate" value=""/>
                                 </td>
                             </tr>
                             <tr>
 							    <td class="label">
-                                    <label wicket:id="license-label">License Certification</label> /
-                                    <label wicket:id="number-label">Number</label> /
-                                    <label wicket:id="expDate-label">Exp Date</label>
+                                    <label wicket:id="license_label">License Certification</label> /
+                                    <label wicket:id="number_label">Number</label> /
+                                    <label wicket:id="expDate_label">Exp Date</label>
                                 </td>
                                 <td class="control">
-                                    <select wicket:id="licenseCertification2-control">
+                                    <select wicket:id="licenseCertification2">
 							            <option>DEA</option>
 							            <option>DPS</option>
 							            <option>BCBS</option>
                  			            <option>EPSDT</option>
                                         <option>EPSDT WERTOS VB</option>
 				                    </select>
-                                    <input type="text" wicket:id="number2-control" value=""/>
-                                    <input type="text" wicket:id="licenseExpDate2-control" value=""/>
+                                    <input type="text" wicket:id="number2" value=""/>
+                                    <input type="text" wicket:id="licenseExpDate2" value=""/>
                                 </td>
                             </tr>
                             <tr>
 							    <td class="label">
-                                    <label wicket:id="license-label">License Certification</label> /
-                                    <label wicket:id="number-label">Number</label> /
-                                    <label wicket:id="expDate-label">Exp Date</label>
+                                    <label wicket:id="license_label">License Certification</label> /
+                                    <label wicket:id="number_label">Number</label> /
+                                    <label wicket:id="expDate_label">Exp Date</label>
                                 </td>
                                 <td class="control">
-                                    <select wicket:id="licenseCertification3-control">
+                                    <select wicket:id="licenseCertification3">
 							            <option>DEA</option>
 							            <option>DPS</option>
 							            <option>BCBS</option>
                  			            <option>EPSDT</option>
                                         <option>EPSDT WERTOS VB</option>
 				                    </select>
-                                    <input type="text" wicket:id="number3-control" value=""/>
-                                    <input type="text" wicket:id="licenseExpDate3-control" value=""/>
+                                    <input type="text" wicket:id="number3" value=""/>
+                                    <input type="text" wicket:id="licenseExpDate3" value=""/>
                                 </td>
                             </tr>
                             <tr>
 							    <td class="label">
-                                    <label wicket:id="employeeId-label">Employee ID</label> /
-                                    <label wicket:id="employeeExpDate-label">Exp Date</label>
+                                    <label wicket:id="employeeId_label">Employee ID</label> /
+                                    <label wicket:id="employeeExpDate_label">Exp Date</label>
                                 </td>
                                 <td class="control">
-                                    <input type="text" wicket:id="employeeId-control" value=""/>
-                                    <input type="text" wicket:id="employeeExpDate-control" value=""/>
+                                    <input type="text" wicket:id="employeeId" value=""/>
+                                    <input type="text" wicket:id="employeeExpDate" value=""/>
                                 </td>
                             </tr>
                             <tr>
@@ -274,24 +274,24 @@
 								    <table class="vertical-form">
 	                                    <tr class="field">
 								            <td class="control">
-	                                            <input type="checkbox" wicket:id="physician1Checkbox-control"/>
-	                                            <label wicket:id="physician1-label">Barry Dickens</label>
+	                                            <input type="checkbox" wicket:id="physician1Checkbox"/>
+	                                            <label wicket:id="physician1_label">Barry Dickens</label>
 	                                        </td>
 	                                        <td class="control">
-	                                            <input type="checkbox" wicket:id="physician2Checkbox-control"/>
-	                                            <label wicket:id="physician2-label">Alice Hamil</label>
+	                                            <input type="checkbox" wicket:id="physician2Checkbox"/>
+	                                            <label wicket:id="physician2_label">Alice Hamil</label>
 	                                        </td>
 	                                        <td class="control">
-	                                            <input type="checkbox" wicket:id="physician3Checkbox-control"/>
-	                                            <label wicket:id="physician3-label">Robert K Hyde</label>
+	                                            <input type="checkbox" wicket:id="physician3Checkbox"/>
+	                                            <label wicket:id="physician3_label">Robert K Hyde</label>
 	                                        </td>
 	                                        <td class="control">
-	                                            <input type="checkbox" wicket:id="physician4Checkbox-control"/>
-	                                            <label wicket:id="physician4-label">Gerald Morris</label>
+	                                            <input type="checkbox" wicket:id="physician4Checkbox"/>
+	                                            <label wicket:id="physician4_label">Gerald Morris</label>
 	                                        </td>
 	                                        <td class="control">
-	                                            <input type="checkbox" wicket:id="physician5Checkbox-control"/>
-	                                            <label wicket:id="physician5-label">Michael Nelson</label>
+	                                            <input type="checkbox" wicket:id="physician5Checkbox"/>
+	                                            <label wicket:id="physician5_label">Michael Nelson</label>
 	                                        </td>
 	                                    </tr>
 	                                 </table>
@@ -302,16 +302,16 @@
                     <div class="director">
                         <tr class="field">
                                 <td class="label">
-                                    <label wicket:id="nextAction-label">Next Action</label>
+                                    <label wicket:id="nextAction_label">Next Action</label>
                                 </td>
                                 <td class="control">
-                                    <select wicket:id="nextAction-control">
+                                    <select wicket:id="nextAction">
                                         <option>View Nurse Summary</option>
                                     </select>
                                 </td>
                             </tr>
-                        <input class="button" wicket:id="form-submit-control" type="submit" value="OK"/>
-                        <input class="button" wicket:id="form-reset-control" type="reset" value="Reset"/>
+                        <input class="button" wicket:id="form-submit" type="submit" value="OK"/>
+                        <input class="button" wicket:id="form-reset" type="reset" value="Reset"/>
                     </div>
                 </div>
             </form>
