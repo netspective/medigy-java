@@ -44,7 +44,6 @@
 package com.medigy.presentation.form.person.insurance;
 
 import com.medigy.wicket.form.BaseForm;
-import com.medigy.wicket.form.FieldGroupLabel;
 import com.medigy.wicket.panel.DefaultFormPanel;
 import wicket.IFeedback;
 
@@ -65,41 +64,6 @@ public class PersonalInsuranceFormPanel extends DefaultFormPanel
         public Form(final String componentName, final IFeedback feedback)
         {
             super(componentName, feedback);
-            add(new FieldGroupLabel("patientId"));
-
-            addLabeledTextField("patientId");
-            addLabeledTextField("insuranceProduct");
-            addLabeledTextField("insurancePlan");
-
-            addLabeledSelectField("insuranceSequece");
-
-            add(new FieldGroupLabel("generalPlanInformation"));
-            addLabeledSelectField("patientRelationshipToInsured");
-
-            addLabeledTextField("otherRelationship");
-            addLabeledTextField("insuredPersonId");
-            addLabeledTextField("employer");
-
-            addLabeledTextField("groupName");
-            addLabeledTextField("number");
-
-            addLabeledTextField("memberNumber");
-
-            add(new FieldGroupLabel("coverageInformation"));
-
-            addLabeledTextField("coverageBeginDate");
-            addLabeledTextField("endDate");
-
-            addLabeledTextField("individualDeductible");
-            addLabeledTextField("familyDeductible");
-
-            addLabeledTextField("individualDeductibleRemaining");
-            addLabeledTextField("familyDeductibleRemaining");
-
-            addLabeledTextField("percentagePay");
-            addLabeledTextField("threshold");
-
-            addLabeledTextField("officeVisitCoPay");
         }
     }
 }

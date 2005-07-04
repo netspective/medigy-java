@@ -44,7 +44,6 @@
 package com.medigy.presentation.form.person.patient;
 
 import com.medigy.wicket.form.BaseForm;
-import com.medigy.wicket.form.FieldGroupLabel;
 import com.medigy.wicket.panel.DefaultFormPanel;
 import wicket.IFeedback;
 
@@ -65,34 +64,6 @@ public class PatientResponsiblePartyFormPanel extends DefaultFormPanel
         public Form(final String componentName, final IFeedback feedback)
         {
             super(componentName, feedback);
-            add(new FieldGroupLabel("responsiblePartyId"));
-
-            addLabeledTextField("personId");
-
-            addLabeledTextField("lastName");
-            addLabeledTextField("firstName");
-            addLabeledTextField("middleName");
-            addLabeledSelectField("suffix");
-
-            addLabeledTextField("socialSecurityNumber");
-            addLabeledTextField("dateOfBirth");
-
-            addLabeledSelectField("gender");
-            addLabeledSelectField("maritalStatus");
-
-            addLabeledTextField("driversLicenseNumber");
-            addLabeledTextField("driversLicenseState");
-
-            addLabeledTextField("homeAddress");
-            addLabeledTextField("homeAddress2");
-            addLabeledTextField("city");
-            addLabeledTextField("state");
-            addLabeledTextField("zip");
-
-            addLabeledTextField("email");
-
-            addLabeledTextField("homePhone");
-            addLabeledTextField("workPhone");
         }
     }
 }

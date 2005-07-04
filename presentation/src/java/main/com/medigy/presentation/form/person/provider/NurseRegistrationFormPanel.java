@@ -44,7 +44,6 @@
 package com.medigy.presentation.form.person.provider;
 
 import com.medigy.wicket.form.BaseForm;
-import com.medigy.wicket.form.FieldGroupLabel;
 import com.medigy.wicket.panel.DefaultFormPanel;
 import wicket.IFeedback;
 
@@ -65,69 +64,6 @@ public class NurseRegistrationFormPanel extends DefaultFormPanel
         public Form(final String componentName, final IFeedback feedback)
         {
             super(componentName, feedback);
-            add(new FieldGroupLabel("nursetId"));
-
-            addLabeledCheckBox("lvnLpnCheckbox");
-            addLabeledCheckBox("rnCheckbox");
-            addLabeledCheckBox("otherCheckbox");
-
-            addLabeledTextField("jobTitle");
-            addLabeledTextField("code");
-
-            addLabeledTextField("lastName");
-            addLabeledTextField("firstName");
-            addLabeledTextField("middleName");
-            addLabeledSelectField("suffix");
-
-            addLabeledTextField("socialSecurityNumber");
-            addLabeledTextField("dateOfBirth");
-
-            addLabeledSelectField("gender");
-            addLabeledSelectField("maritalStatus");
-            addLabeledSelectField("bloodType");
-
-            add(new FieldGroupLabel("contactMethods"));
-
-            addLabeledTextField("homePhone");
-            addLabeledTextField("workPhone");
-            addLabeledTextField("cellPhone");
-            addLabeledTextField("pager");
-            addLabeledTextField("alternate");
-
-            addLabeledTextField("homeAddress");
-            addLabeledTextField("homeAddress2");
-            addLabeledTextField("city");
-            addLabeledTextField("state");
-            addLabeledTextField("zip");
-
-            addLabeledTextField("email");
-
-            add(new FieldGroupLabel("certification"));
-
-            addLabeledTextField("license");
-            addLabeledTextField("expDate");
-            addLabeledCheckBox("licenseRequiredCheckbox");
-
-            addLabeledSelectField("licenseCertification");
-            addLabeledTextField("number");
-            addLabeledTextField("licenseExpDate");
-
-            addLabeledSelectField("licenseCertification2");
-            addLabeledTextField("number2");
-            addLabeledTextField("licenseExpDate2");
-
-            addLabeledSelectField("licenseCertification3");
-            addLabeledTextField("number3");
-            addLabeledTextField("licenseExpDate3");
-
-            addLabeledTextField("employeeId");
-            addLabeledTextField("employeeExpDate");
-
-            addLabeledCheckBox("physician1Checkbox");
-            addLabeledCheckBox("physician2Checkbox");
-            addLabeledCheckBox("physician3Checkbox");
-            addLabeledCheckBox("physician4Checkbox");
-            addLabeledCheckBox("physician5Checkbox");
         }
     }
 }

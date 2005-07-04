@@ -44,7 +44,6 @@
 package com.medigy.presentation.form.person.provider;
 
 import com.medigy.wicket.form.BaseForm;
-import com.medigy.wicket.form.FieldGroupLabel;
 import com.medigy.wicket.panel.DefaultFormPanel;
 import wicket.IFeedback;
 
@@ -65,125 +64,6 @@ public class PhysicianRegistrationFormPanel extends DefaultFormPanel
         public Form(final String componentName, final IFeedback feedback)
         {
             super(componentName, feedback);
-            add(new FieldGroupLabel("providerId"));
-
-            addLabeledTextField("lastName");
-            addLabeledTextField("firstName");
-            addLabeledTextField("middleName");
-            addLabeledSelectField("suffix");
-
-            addLabeledTextField("socialSecurityNumber");
-            addLabeledTextField("dateOfBirth");
-
-            addLabeledSelectField("gender");
-            addLabeledSelectField("maritalStatus");
-            addLabeledSelectField("bloodType");
-
-            add(new FieldGroupLabel("contactMethods"));
-
-            addLabeledTextField("homePhone");
-            addLabeledTextField("workPhone");
-            addLabeledTextField("cellPhone");
-            addLabeledTextField("pager");
-            addLabeledTextField("alternate");
-
-            addLabeledTextField("homeAddress");
-            addLabeledTextField("homeAddress2");
-            addLabeledTextField("city");
-            addLabeledTextField("state");
-            addLabeledTextField("zip");
-
-            addLabeledTextField("email");
-
-            add(new FieldGroupLabel("licenseIdNumbers"));
-
-            addLabeledTextField("license");
-            addLabeledSelectField("number");
-            addLabeledTextField("expDate");
-            addLabeledTextField("facilityId");
-
-            addLabeledTextField("license2");
-            addLabeledSelectField("number2");
-            addLabeledTextField("expDate2");
-            addLabeledTextField("facilityId2");
-
-            addLabeledTextField("license3");
-            addLabeledSelectField("number3");
-            addLabeledTextField("expDate3");
-            addLabeledTextField("facilityId3");
-
-            addLabeledTextField("license4");
-            addLabeledSelectField("number4");
-            addLabeledTextField("expDate4");
-            addLabeledTextField("facilityId4");
-
-            addLabeledTextField("license5");
-            addLabeledSelectField("number5");
-            addLabeledTextField("expDate5");
-            addLabeledTextField("facilityId5");
-
-            addLabeledTextField("license6");
-            addLabeledSelectField("number6");
-            addLabeledTextField("expDate6");
-            addLabeledTextField("facilityId6");
-
-            add(new FieldGroupLabel("providerNumbers"));
-
-            addLabeledTextField("providerLicense");
-            addLabeledSelectField("providerNumber");
-            addLabeledTextField("providerExpDate");
-            addLabeledTextField("providerFacilityId");
-
-            addLabeledTextField("providerLicense2");
-            addLabeledSelectField("providerNumber2");
-            addLabeledTextField("providerExpDate2");
-            addLabeledTextField("providerFacilityId2");
-
-            addLabeledTextField("providerLicense3");
-            addLabeledSelectField("providerNumber3");
-            addLabeledTextField("providerExpDate3");
-            addLabeledTextField("providerFacilityId3");
-
-            addLabeledTextField("providerLicense4");
-            addLabeledSelectField("providerNumber4");
-            addLabeledTextField("providerExpDate4");
-            addLabeledTextField("providerFacilityId4");
-
-            addLabeledTextField("providerLicense5");
-            addLabeledSelectField("providerNumber5");
-            addLabeledTextField("providerExpDate5");
-            addLabeledTextField("providerFacilityId5");
-
-            addLabeledTextField("providerLicens6e");
-            addLabeledSelectField("providerNumber6");
-            addLabeledTextField("providerExpDate6");
-            addLabeledTextField("providerFacilityId6");
-
-            add(new FieldGroupLabel("certifications"));
-
-            addLabeledSelectField("specialty1");
-            addLabeledSelectField("sequence1");
-
-            addLabeledSelectField("specialty2");
-            addLabeledSelectField("sequence2");
-
-            addLabeledSelectField("specialty3");
-            addLabeledSelectField("sequence3");
-
-            addLabeledTextField("affiliation");
-            addLabeledTextField("affiliationExpDate");
-
-            addLabeledTextField("state1");
-            addLabeledTextField("license1");
-            addLabeledTextField("expDate1");
-
-            addLabeledTextField("state2");
-            addLabeledTextField("license2");
-            addLabeledTextField("expDate2");
-
-            addLabeledTextField("state3");
-            addLabeledTextField("license3");
-            addLabeledTextField("expDate3");
         }
     }
 }

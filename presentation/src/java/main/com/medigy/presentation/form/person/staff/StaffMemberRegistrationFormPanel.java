@@ -44,7 +44,6 @@
 package com.medigy.presentation.form.person.staff;
 
 import com.medigy.wicket.form.BaseForm;
-import com.medigy.wicket.form.FieldGroupLabel;
 import com.medigy.wicket.panel.DefaultFormPanel;
 import wicket.IFeedback;
 
@@ -65,52 +64,6 @@ public class StaffMemberRegistrationFormPanel extends DefaultFormPanel
         public Form(final String componentName, final IFeedback feedback)
         {
             super(componentName, feedback);
-            add(new FieldGroupLabel("staffId"));
-
-            addLabeledTextField("staffId");
-
-            addLabeledTextField("jobTitle");
-            addLabeledTextField("code");
-
-            addLabeledTextField("lastName");
-            addLabeledTextField("firstName");
-            addLabeledTextField("middleName");
-            addLabeledSelectField("suffix");
-
-            addLabeledTextField("socialSecurityNumber");
-            addLabeledTextField("dateOfBirth");
-
-            addLabeledSelectField("gender");
-            addLabeledSelectField("maritalStatus");
-            addLabeledSelectField("bloodType");
-
-            add(new FieldGroupLabel("contactMethods"));
-
-            addLabeledTextField("homePhone");
-            addLabeledTextField("workPhone");
-            addLabeledTextField("cellPhone");
-            addLabeledTextField("pager");
-            addLabeledTextField("alternate");
-
-            addLabeledTextField("homeAddress");
-            addLabeledTextField("homeAddress2");
-            addLabeledTextField("city");
-            addLabeledTextField("state");
-            addLabeledTextField("zip");
-
-            addLabeledTextField("email");
-
-            addLabeledTextField("employeeId");
-            addLabeledTextField("employeExpDate");
-
-            addLabeledTextField("certification");
-            addLabeledTextField("number");
-            addLabeledTextField("licenseExpDate");
-
-            addLabeledTextField("certification2");
-            addLabeledTextField("number2");
-            addLabeledTextField("licenseExpDate2");
-
         }
     }
 }
