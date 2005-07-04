@@ -67,14 +67,19 @@ public class BaseForm extends Form implements IComponentResolver
     protected static final Collection TEST_CHOICES = new ArrayList();
     public static final String ATTRNAME_WICKET_ID = "wicket:id";
 
-
-    protected interface TagResolver
-    {
-        public boolean addComponent(final MarkupContainer container, final MarkupStream markupStream, final ComponentTag tag);
-    }
-
+    /**
+     * Ascertain whether or not client side validation scripts and event handlers should be attached.
+     * If this variable is set to false, no client side validation scripts will be generated.
+     */
     private boolean enableClientSideValidation = true;
-    private Map<String, TagResolver> tagResolvers = new HashMap<String, TagResolver>();
+
+    /**
+     * The map which tracks a tag name (the key) like "input", "legend", or "select" and an associated TagResolver
+     * implementation that will automatically create components based on that tag. The purpose of the auto resolvers is
+     * to allow something like <input wicket:id="myFormField"> to be specified in HTML and a wicket form field to be
+     * automatically created instead of having to be manually added within the form.
+     */
+    private Map<String, IComponentResolver> autoResolvers = new HashMap<String, IComponentResolver>();
 
     protected BaseForm(final String componentName)
     {
@@ -93,18 +98,18 @@ public class BaseForm extends Form implements IComponentResolver
         assert(model instanceof BoundCompoundPropertyModel); // we only handle this kind of model right now
         assert(getModel().getObject(null) != null);  // make sure a service bean is attached
 
-        tagResolvers.put("legend", new TagResolver()
+        autoResolvers.put("legend", new IComponentResolver()
         {
-            public boolean addComponent(final MarkupContainer container, final MarkupStream markupStream, final ComponentTag tag)
+            public boolean resolve(final MarkupContainer container, final MarkupStream markupStream, final ComponentTag tag)
             {
                 container.autoAdd(new FieldGroupLabel(tag.getAttributes().getString(ATTRNAME_WICKET_ID)));
                 return true;
             }
         });
 
-        tagResolvers.put("label", new TagResolver()
+        autoResolvers.put("label", new IComponentResolver()
         {
-            public boolean addComponent(final MarkupContainer container, final MarkupStream markupStream, final ComponentTag tag)
+            public boolean resolve(final MarkupContainer container, final MarkupStream markupStream, final ComponentTag tag)
             {
                 final String labelId = tag.getAttributes().getString(ATTRNAME_WICKET_ID);
                 container.autoAdd(new FieldLabel(labelId));
@@ -112,9 +117,9 @@ public class BaseForm extends Form implements IComponentResolver
             }
         });
 
-        final TagResolver controlResolver = new TagResolver()
+        final IComponentResolver controlResolver = new IComponentResolver()
         {
-            public boolean addComponent(final MarkupContainer container, final MarkupStream markupStream, final ComponentTag tag)
+            public boolean resolve(final MarkupContainer container, final MarkupStream markupStream, final ComponentTag tag)
             {
                 final String controlId = tag.getAttributes().getString(ATTRNAME_WICKET_ID);
                 final Class serviceBeanClass = getModel().getObject(null).getClass();
@@ -123,9 +128,9 @@ public class BaseForm extends Form implements IComponentResolver
             }
         };
 
-        tagResolvers.put("input", controlResolver);
-        tagResolvers.put("select", controlResolver);
-        tagResolvers.put("span", controlResolver);
+        autoResolvers.put("input", controlResolver);
+        autoResolvers.put("select", controlResolver);
+        autoResolvers.put("span", controlResolver);
     }
 
     public boolean isEnableClientSideValidation()
@@ -143,9 +148,9 @@ public class BaseForm extends Form implements IComponentResolver
     {
         if(tag.getAttributes().containsKey(ATTRNAME_WICKET_ID))
         {
-            final TagResolver resolver = tagResolvers.get(tag.getName());
+            final IComponentResolver resolver = autoResolvers.get(tag.getName());
             if(resolver != null)
-                return resolver.addComponent(container, markupStream, tag);
+                return resolver.resolve(container, markupStream, tag);
         }
         return false;
     }
