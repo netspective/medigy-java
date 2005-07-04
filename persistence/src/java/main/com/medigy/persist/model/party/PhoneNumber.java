@@ -53,6 +53,8 @@ public class PhoneNumber extends ContactMechanism
 {
 
     private String countryCode;
+    private String cityCode;
+
     private String areaCode;
     private String numberValue;
     private String extension;
@@ -82,6 +84,17 @@ public class PhoneNumber extends ContactMechanism
     public void setCountryCode(final String countryCode)
     {
         this.countryCode = countryCode;
+    }
+
+    @Column(length = 3)
+    public String getCityCode()
+    {
+        return cityCode;
+    }
+
+    public void setCityCode(final String cityCode)
+    {
+        this.cityCode = cityCode;
     }
 
     @Column(length = 5)
