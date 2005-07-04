@@ -119,7 +119,7 @@ public class BaseForm extends Form implements IComponentResolver
             public boolean addComponent(final MarkupContainer container, final MarkupStream markupStream, final ComponentTag tag)
             {
                 final String labelId = tag.getAttributes().getString(ATTRNAME_WICKET_ID);
-                container.autoAdd(new FieldLabel(labelId, (labelId.endsWith(FIELD_LABEL_SUFFIX) ? labelId.substring(0, labelId.length() - FIELD_LABEL_SUFFIX.length()) : labelId)  + FIELD_CONTROL_SUFFIX));
+                container.autoAdd(new FieldLabel(labelId, (labelId.endsWith(FIELD_LABEL_SUFFIX) ? labelId.substring(0, labelId.length() - FIELD_LABEL_SUFFIX.length()) : labelId)));
                 return true;
             }
         });
@@ -130,7 +130,7 @@ public class BaseForm extends Form implements IComponentResolver
             {
                 final String controlId = tag.getAttributes().getString(ATTRNAME_WICKET_ID);
                 final Class serviceBeanClass = getModel().getObject(null).getClass();
-                final String propertyName = controlId.endsWith(FIELD_CONTROL_SUFFIX) ? controlId.substring(0, controlId.length() - FIELD_CONTROL_SUFFIX.length()) : controlId;
+                final String propertyName = controlId;
                 container.autoAdd(((BoundCompoundPropertyModel) getModel()).bind(FormFieldFactory.getInstance().createField(controlId, propertyName, serviceBeanClass, getModel().getClass()), propertyName));
                 return true;
             }

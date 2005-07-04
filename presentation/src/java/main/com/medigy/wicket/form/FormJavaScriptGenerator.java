@@ -213,7 +213,7 @@ public class FormJavaScriptGenerator
 
         final StringBuilder defJS = new StringBuilder();
         final String controlId = component.getId();
-        final String fieldVarName = controlId.endsWith(BaseForm.FIELD_CONTROL_SUFFIX) ? controlId.substring(0, controlId.length() - BaseForm.FIELD_CONTROL_SUFFIX.length()) : controlId;
+        final String fieldVarName = controlId;
 
         defJS.append("var ");
         defJS.append(fieldVarName);
