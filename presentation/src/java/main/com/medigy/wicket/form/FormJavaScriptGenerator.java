@@ -245,7 +245,7 @@ public class FormJavaScriptGenerator
 
     public void appendDialogRegistrationStart()
     {
-        registrationScript.append("\n<script>\n");
+        registrationScript.append("\n<script>\nvar ");
         registrationScript.append(jsDialogVarName);
         registrationScript.append(" = new Dialog(");
         registrationScript.append(jsFormObjectVarName);
