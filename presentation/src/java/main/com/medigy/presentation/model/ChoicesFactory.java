@@ -43,19 +43,19 @@
  */
 package com.medigy.presentation.model;
 
-import com.medigy.persist.reference.ReferenceEntity;
-import com.medigy.persist.reference.custom.CustomReferenceEntity;
-import com.medigy.service.util.ReferenceEntityFacade;
-import com.medigy.service.util.FacadeManager;
-import wicket.markup.html.form.model.IChoiceList;
-
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import com.medigy.persist.reference.ReferenceEntity;
+import com.medigy.persist.reference.custom.CustomReferenceEntity;
+import com.medigy.service.util.FacadeManager;
+import com.medigy.service.util.ReferenceEntityFacade;
+import wicket.markup.html.form.model.IChoiceList;
 
 public class ChoicesFactory
 {
@@ -75,6 +75,7 @@ public class ChoicesFactory
     {
     }
 
+    // TODO: determine whether lazy loading is thread-safe
     protected ReferenceEntityFacade getReferenceEntityFacade()
     {
         if (referenceEntityFacade == null)
