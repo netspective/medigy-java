@@ -226,7 +226,7 @@ public class FormJavaScriptGenerator
         if(component.getValidators().contains(RequiredValidator.getInstance()))
         {
             defJS.append(fieldVarName);
-            defJS.append(".required = true;\n");
+            defJS.append(".setRequired(true);\n");
         }
 
         if(component instanceof FieldRegistrationContributor)

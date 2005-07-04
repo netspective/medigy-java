@@ -584,6 +584,7 @@ function DialogField_setRequired(required)
     if (required)
     {
         this.required = true;
+        this.control.className = this.dialog.requiredControlCSSSelectorName;
         this.originalLabelClassName = this.dialog.requiredControlCSSSelectorName;
         this.originalControlClassName = this.dialog.requiredControlCSSSelectorName;
         this.resetClassName();
@@ -655,9 +656,6 @@ function DialogField_finalizeContents()
 	if(this.control.onblur == null) this.control.onblur = controlOnBlur;
 	if(this.control.onkeypress == null) this.control.onkeypress = controlOnKeypress;
 	if(this.control.onclick == null) this.control.onclick = controlOnClick;
-
-	if(this.required && this.control.className == '')
-	    this.control.className = this.dialog.requiredControlCSSSelectorName;
 }
 
 function DialogField_evaluateConditionals()
