@@ -51,7 +51,6 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.medigy.presentation.model.ChoicesFactory;
 import wicket.IComponentResolver;
 import wicket.IFeedback;
 import wicket.MarkupContainer;
@@ -75,7 +74,6 @@ public class BaseForm extends Form implements IComponentResolver
     }
 
     private boolean enableClientSideValidation = true;
-    private ChoicesFactory choicesFactory = null;
     private Map<String, TagResolver> tagResolvers = new HashMap<String, TagResolver>();
 
     protected BaseForm(final String componentName)
