@@ -46,14 +46,20 @@ package com.medigy.presentation.model;
 import com.medigy.persist.reference.ReferenceEntity;
 import com.medigy.persist.reference.custom.CustomReferenceEntity;
 import com.medigy.service.util.ReferenceEntityFacade;
+import com.medigy.service.util.FacadeManager;
 import wicket.markup.html.form.model.IChoiceList;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 public class ChoicesFactory
 {
+    private static final Log log = LogFactory.getLog(ChoicesFactory.class);
     protected static final ChoicesFactory INSTANCE = new ChoicesFactory();
 
     public static final ChoicesFactory getInstance()
@@ -63,15 +69,21 @@ public class ChoicesFactory
 
     private Map<Class, ReferenceEntityChoices> referenceEntityChoices = Collections.synchronizedMap(new HashMap<Class, ReferenceEntityChoices>());
     private Map<Class, CustomReferenceEntityChoices> customReferenceEntityChoices = Collections.synchronizedMap(new HashMap<Class, CustomReferenceEntityChoices>());
-    private ReferenceEntityFacade referenceEntityFacade;
+    private ReferenceEntityFacade referenceEntityFacade; // Do not reference this directly
 
     public ChoicesFactory()
     {
     }
 
-    public void setReferenceEntityFacade(final ReferenceEntityFacade referenceEntityFacade)
+    protected ReferenceEntityFacade getReferenceEntityFacade()
     {
-        this.referenceEntityFacade = referenceEntityFacade;
+        if (referenceEntityFacade == null)
+        {
+            referenceEntityFacade = (ReferenceEntityFacade) FacadeManager.getInstance().getFacade(ReferenceEntityFacade.class);
+            if (referenceEntityFacade == null)
+                log.error("Failed to lookup " + ReferenceEntityFacade.class.getName() + " implementation");
+        }
+        return referenceEntityFacade;
     }
 
     public IChoiceList getEntityChoices(final Class entity)
@@ -79,18 +91,9 @@ public class ChoicesFactory
         IChoiceList result = null;
         if(CustomReferenceEntity.class.isAssignableFrom(entity))
         {
-            // TODO: Remove the following statement and if block once we have CustomRefernceEntity objects doing lookups from the database
-            result = customReferenceEntityChoices.get(entity);
-            if(result == null)
-            {
-                result = new CustomReferenceEntityChoices(entity);
-                customReferenceEntityChoices.put(entity, ((CustomReferenceEntityChoices)result));
-            }
 
-
-            // TODO: uncomment after CustomReference lookups work from database.
-//            List<CustomReferenceEntity> entityList =  referenceEntityFacade.listCustomReferenceEntities(entity);
-//            return new CustomReferenceEntityChoices(entityList);
+            List<CustomReferenceEntity> entityList =  getReferenceEntityFacade().listCustomReferenceEntities(entity);
+            return new CustomReferenceEntityChoices(entityList);
         }
         else if(ReferenceEntity.class.isAssignableFrom(entity))
         {
