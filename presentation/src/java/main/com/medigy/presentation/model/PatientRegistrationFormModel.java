@@ -356,6 +356,7 @@ public final class PatientRegistrationFormModel implements Serializable
         this.zip = zip;
     }
 
+    @FormFieldType(type = EmailField.class)
     public String getEmail()
     {
         return email;
@@ -662,6 +663,18 @@ public final class PatientRegistrationFormModel implements Serializable
         this.ethnicity = ethnicity;
     }
 
+    @ValidEntity(entity = LanguageType.class)
+    @SelectFieldStyle(style = SelectFieldStyle.Style.RADIO)
+    public String getLanguageCodes()
+    {
+        return languageCodes;
+    }
+
+    public void setLanguageCodes(String languageCodes)
+    {
+        this.languageCodes = languageCodes;
+    }
+
     public String toString()
 	{
 		StringBuffer b = new StringBuffer();
@@ -719,7 +732,8 @@ public final class PatientRegistrationFormModel implements Serializable
 		 .append(", insuranceSequence = ").append(insuranceSequence)
 		 .append(", patientRelationshipToInsured = ").append(patientRelationshipToInsured)
 		 .append(", bloodType = ").append(bloodType)
-		 .append(", ethnicity = ").append(ethnicity);
+		 .append(", ethnicity = ").append(ethnicity)
+		 .append(", languageCodes = ").append(languageCodes);
 
 		b.append("]");
 		return b.toString();

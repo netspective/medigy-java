@@ -72,6 +72,7 @@ public class FormFieldFactory
         addFieldCreator(SocialSecurityField.class, new SocialSecurityField.SocialSecurityFieldCreator());
         addFieldCreator(PhoneField.class, new PhoneField.PhoneFieldCreator());
         addFieldCreator(ZipCodeField.class, new ZipCodeField.ZipCodeFieldCreator());
+        addFieldCreator(EmailField.class, new EmailField.EmailFieldCreator());
     }
 
     public void addFieldCreator(final Class dataType, final FieldCreator creator)

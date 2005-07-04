@@ -107,6 +107,24 @@
                                     </span>
                                  </td>
                             </tr>
+                            <tr>
+                                <td class="label">
+                                    <label wicket:id="languageCodes_label">Language</label>
+                                </td>
+                                <td class="control">
+                                    <span wicket:id="languageCodes">
+                                        <input type="radio">Mandarin Chinese
+                                        <input type="radio">Hindi
+                                        <input type="radio">Bengali
+                                        <input type="radio">English
+                                        <input type="radio">Spanish
+                                        <input type="radio">Russian
+                                        <input type="radio">Korean
+                                        <input type="radio">Japanese
+                                        <input type="radio">French
+                                    </span>
+                                 </td>
+                            </tr>
                             <tr class="field">
                                 <td class="label">
                                     <label wicket:id="responsibleParty_label">Responsible Party</label>
@@ -309,8 +327,14 @@
 					        </td>
                         </tr>
                     </table>
-                    <fieldset class="top-level">
-                        <legend wicket:id="generalPlanInformation-group-label">General Plan Information</legend>
+
+
+
+                    <table class="container" cellspacing="0" cellpadding="0" width="100%">
+                        <tr valign="top">
+                            <td>
+                                <fieldset class="group">
+                                    <legend wicket:id="generalPlanInformation-group-label">General Plan Information</legend>
                         <table class="vertical-fields">
                             <tr class="field">
                                 <td class="label">
@@ -368,9 +392,12 @@
                                 </td>
                             </tr>
                         </table>
-                    </fieldset>
-                    <fieldset class="top-level">
-                        <legend wicket:id="coverageInformation-group-label">Coverage Information</legend>
+                               </fieldset>
+	                      </td>
+                          <td class="container-separator">&nbsp;</td>
+                          <td>
+                              <fieldset class="group">
+                                  <legend wicket:id="coverageInformation-group-label">Coverage Information</legend>
                         <table class="vertical-fields">
                             <tr class="field">
                                 <td class="label">
@@ -421,7 +448,11 @@
                                 </td>
                             </tr>
                         </table>
-                    </fieldset>
+                                </fieldset>
+					        </td>
+                        </tr>
+                    </table>
+                    
                     <div class="director">
                         <input class="button" type="submit" value="OK"/>
                         <input class="button" type="reset" value="Reset"/>
