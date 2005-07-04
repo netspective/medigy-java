@@ -7,6 +7,7 @@ import com.medigy.persist.reference.custom.insurance.InsuranceSequenceType;
 import com.medigy.persist.reference.custom.person.EthnicityType;
 import com.medigy.persist.reference.custom.person.PatientResponsiblePartyRoleType;
 import com.medigy.persist.reference.type.*;
+import com.medigy.service.dto.person.RegisterPatientParameters;
 import com.medigy.service.validator.ValidEntity;
 import com.medigy.wicket.form.*;
 import org.hibernate.validator.NotNull;
@@ -78,9 +79,14 @@ public final class PatientRegistrationFormModel implements Serializable
 	private String patientRelationshipToInsured;
 	private String bloodType;
 
+    private RegisterPatientParameters params;
 
-	public PatientRegistrationFormModel()
+
+	public PatientRegistrationFormModel(RegisterPatientParameters params)
 	{
+        this.params = params;
+
+        // initialize bean from param data
 	}
 
 	public String getPersonId()
