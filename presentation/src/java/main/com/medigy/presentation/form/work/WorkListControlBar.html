@@ -1,0 +1,55 @@
+<html xmlns:wicket="http://wicket.sourceforge.net/">
+    <head>
+        <title>Worklist Controlbar</title>
+        <link rel="stylesheet" type="text/css" href="../../../../../../../../../resources/theme/default/css/theme.css"/>
+    </head>
+    <body>
+        <wicket:panel>
+            <div wicket:id="panel_border">
+            <div wicket:id="feedback" class="form-feedback"/>
+                <form wicket:id="form">
+                <div class="form-body">
+                    <table class="vertical-fields">
+                        <tr class="field">
+                            <td class="control">
+                                <select wicket:id="chooseDay" >
+                                    <option>Choose Day</option>
+                                    <option>Today</option>
+                                    <option>Previous Day</option>
+                                    <option>Previous Week</option>
+                                    <option>Previous Month</option>
+                                    <option>Previous Year</option>
+                                    <option>Next Day</option>
+                                    <option>Next Week</option>
+                                    <option>Next Month</option>
+                                    <option>Next Year</option>
+                                    <option>Tomorrow</option>
+                                    <option>Day After Tomorrow</option>
+                                    <option>1 Week from Today</option>
+                                </select>
+                                <input type="button" name="left" value="<"  onclick=""/>
+                                <input type="text" wicket:id="selectedDate" />
+                                <input type="button" name="right" value=">" onclick=""/>
+                            </td>
+
+                            <td class="label">
+                                <label wicket:id="time">Time:</label>
+                            <td class="control">
+                                <select >
+                                    <option value=0>Minutes before/after</option>
+                                    <option value=1>Range from/to</option>
+                                </select>
+                                <input type="text" size=8/>
+                                <input type="text" size=8/>
+                            </td>
+                            <td class="control">
+                                <input type="submit" value="Go"/>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                </form>
+            </div>
+        </wicket:panel>
+    </body>
+</html>
