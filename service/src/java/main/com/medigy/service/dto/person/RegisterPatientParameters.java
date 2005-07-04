@@ -42,17 +42,118 @@ import com.medigy.service.dto.ServiceParameters;
 import com.medigy.service.dto.insurance.InsuranceCoverageParameters;
 import com.medigy.service.dto.party.PhoneParameters;
 import com.medigy.service.dto.party.PostalAddressParameters;
+import com.medigy.service.validator.ValidEntity;
+import org.hibernate.validator.NotNull;
+import org.hibernate.validator.Past;
+
+import java.util.Date;
+import java.io.Serializable;
 
 /**
  * Interface for DTO containing data specific to the Add Patient service
  */
 public interface RegisterPatientParameters extends ServiceParameters
 {
-    public PersonParameters getPerson();
+    /**
+     * Gets the patient's first name.
+     * @return first name
+     */
+    @NotNull
+    public String getFirstName();
+
+    /**
+     * Gets the patient's last name. .
+     * @return last name
+     */
+    @NotNull
+    public String getLastName();
+
+    /**
+     * Gets the patient's middle name.
+     * @return   middle name
+     */
+    public String getMiddleName();
+
+    /**
+     * Gets the patient's suffix name.
+     * @return  suffix
+     */
+    public String getSuffix();
+
+    /**
+     * Get's the patient's birth date. .
+     * @return the patient's birth date
+     */
+    @NotNull
+    @Past
+    public Date getBirthDate();
+
+    /**
+     * Gets the patients gender. .
+     * @return
+     * @see com.medigy.persist.reference.type.GenderType#getCode()
+     */
+    @NotNull
+    @ValidEntity(entity = com.medigy.persist.model.person.Gender.class)
+    public String getGenderCode();
+
+    /**
+     * Gets the patient's marital status..
+     * @return
+     * @see com.medigy.persist.reference.type.MaritalStatusType#getCode()
+     */
+    public String getMaritalStatusCode();
+
+    /**
+     * Get's the patient's social security number
+     * @return ssn
+     */
+    public String getSsn();
+
+    /**
+     * Gets the patient's driver license number
+     * @return  driver's license
+     */
+    public String getDriversLicenseNumber();
+
+    public String getDriversLicenseStateCode();
+
+    /**
+     * Get's the patient's employer name
+     * @return employer
+     */
+    public String getEmployerName();
+
+    /**
+     * Get's the patient's employer unique ID
+     * @return employer ID
+     */
+    public String getEmployerId();
+
+    /**
+     * Get's the patient's employment title
+     * @return occupation
+     */
+    public String getOccupation();
+
+    /**
+     * Get's the patient's ethnicity list. The first one is considered the primary one.
+     * @return
+     * @see com.medigy.persist.reference.custom.person.EthnicityType#getCode()
+     */
+    public String[] getEthnicityCodes();
+
+    /**
+     * Gets the patient's spoken languages. The first one is considered the primary language.
+     * @return
+     * @see com.medigy.persist.reference.type.LanguageType#getCode()
+     */
+    public String[] getLanguageCodes();
+
 
     /**
      * Get's the responsible party's unique ID.
-     * @return
+     * @return  the responsible party's ID
      */
     public String getResponsiblePartyId();
 
@@ -63,18 +164,89 @@ public interface RegisterPatientParameters extends ServiceParameters
      */
     public String getResponsiblePartyRole();
 
-    public PhoneParameters getHomePhone();
-    public PhoneParameters getWorkPhone();
-    public PhoneParameters getMobilePhone();
+    public String getHomePhoneCountryCode();
+    public String getHomePhoneCityCode();
+    public String getHomePhoneAreaCode();
+    public String getHomePhoneNumber();
 
+    public String getWorkPhoneCountryCode();
+    public String getWorkPhoneCityCode();
+    public String getWorkPhoneAreaCode();
+    public String getWorkPhoneNumber();
+    public String getWorkPhoneExtension();
 
-    public PostalAddressParameters getPostalAddress();
+    public String getMobilePhoneCountryCode();
+    public String getMobilePhoneCityCode();
+    public String getMobilePhoneAreaCode();
+    public String getMobilePhoneNumber();
+
+    @NotNull
+    public String getStreet1();
+
+    public String getStreet2();
+
+    @NotNull
+    public String getCity();
+
+    @NotNull
+    public String getState();
+
+    public String getProvince();
+
+    @NotNull
+    public String getPostalCode();
+
+    public String getCounty();
+
+    @NotNull
+    public String getCountry();
+
+    public String getPostalAddressPurposeType();
+
+    public String getPostalAddressPurposeDescription();
+
 
     /**
      * Get's the patient's primary care provider ID
-     * @return
+     * @return  the primary care provider ID
      */
     public String getPrimaryCareProviderId();
 
-    public InsuranceCoverageParameters[] getInsuranceCoverages();
+
+    public Serializable getPrimaryInsuranceCarrierId();
+
+
+    public Serializable getPrimaryInsuranceProductId();
+
+    @NotNull
+    public Serializable getPrimaryInsurancePlanId();
+
+    @NotNull
+    public String getPrimaryInsurancePolicyNumber();
+
+    public String getPrimaryInsurancePolicyTypeCode();
+
+    @NotNull
+    public String getPrimaryInsuranceGroupNumber();
+
+    @NotNull
+    public Serializable getPrimaryInsuranceContractHolderId();
+
+    @NotNull
+    public String getPrimaryInsuranceContractHolderRole();
+
+    public Date getPrimaryInsuranceCoverageStartDate();
+
+    public Date getPrimaryInsuranceCoverageEndDate();
+
+    public Float getPrimaryInsuranceIndividualDeductibleAmount();
+
+    public Float getPrimaryInsuranceFamilyDeductibleAmount();
+
+    public Float getPrimaryInsuranceOfficeVisitCoPay();
+
+    public Float getPrimaryInsurancePercentagePay();
+
+    public Float getPrimaryInsuranceMaxThresholdAmount();
+
 }

@@ -44,6 +44,7 @@ import com.medigy.persist.model.party.ContactMechanism;
 import com.medigy.persist.model.party.PhoneNumber;
 import com.medigy.persist.model.party.PostalAddress;
 import com.medigy.persist.model.person.Person;
+import com.medigy.persist.model.person.Gender;
 import com.medigy.persist.model.contact.Country;
 import com.medigy.persist.reference.custom.insurance.CoverageLevelType;
 import com.medigy.persist.reference.custom.insurance.InsurancePolicyType;
@@ -52,6 +53,7 @@ import com.medigy.persist.reference.type.MaritalStatusType;
 import com.medigy.persist.util.HibernateUtil;
 import com.medigy.service.ServiceVersion;
 import com.medigy.service.AbstractService;
+import com.medigy.service.validator.ValidEntity;
 import com.medigy.service.contact.ContactMechanismFacade;
 import com.medigy.service.dto.ServiceParameters;
 import com.medigy.service.dto.insurance.InsuranceCoverageParameters;
@@ -69,8 +71,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.SessionFactory;
 import org.hibernate.validator.NotNull;
+import org.hibernate.validator.Past;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Service class for registering a new patient
@@ -138,7 +142,85 @@ public class PatientRegistrationServiceImpl extends AbstractService implements P
 
     protected void registerInsuranceInformation(final Person person, final RegisterPatientParameters params) throws Exception
     {
-        final InsuranceCoverageParameters[] insurancePolicies = params.getInsuranceCoverages();
+        final InsuranceCoverageParameters[] insurancePolicies = new InsuranceCoverageParameters[] {
+            new InsuranceCoverageParameters() {
+                public Serializable getInsuranceCarrierId()
+                {
+                    return params.getPrimaryInsuranceCarrierId();
+                }
+
+                public Serializable getInsuranceProductId()
+                {
+                    return params.getPrimaryInsuranceProductId();
+                }
+
+                public Serializable getInsurancePlanId()
+                {
+                    return params.getPrimaryInsurancePlanId();
+                }
+
+                public String getInsurancePolicyNumber()
+                {
+                    return params.getPrimaryInsurancePolicyNumber();
+                }
+
+                public String getInsurancePolicyTypeCode()
+                {
+                    return params.getPrimaryInsurancePolicyTypeCode();
+                }
+
+                public String getInsuranceGroupNumber()
+                {
+                    return params.getPrimaryInsuranceGroupNumber();
+                }
+
+                public Serializable getInsuranceContractHolderId()
+                {
+                    return params.getPrimaryInsuranceContractHolderId();
+                }
+
+                public String getInsuranceContractHolderRole()
+                {
+                    return params.getPrimaryInsuranceContractHolderRole();
+                }
+
+                public Date getCoverageStartDate()
+                {
+                    return params.getPrimaryInsuranceCoverageStartDate();
+                }
+
+                public Date getCoverageEndDate()
+                {
+                    return params.getPrimaryInsuranceCoverageEndDate();
+                }
+
+                public Float getIndividualDeductibleAmount()
+                {
+                    return params.getPrimaryInsuranceIndividualDeductibleAmount();
+                }
+
+                public Float getFamilyDeductibleAmount()
+                {
+                    return params.getPrimaryInsuranceFamilyDeductibleAmount();
+                }
+
+                public Float getOfficeVisitCoPay()
+                {
+                    return params.getPrimaryInsuranceOfficeVisitCoPay();
+                }
+
+                public Float getPercentagePay()
+                {
+                    return params.getPrimaryInsurancePercentagePay();
+                }
+
+                public Float getMaxThresholdAmount()
+                {
+                    return params.getPrimaryInsuranceMaxThresholdAmount();
+                }
+            }
+        };
+
         for (InsuranceCoverageParameters param: insurancePolicies)
         {
             final Person contractHolder = personFacade.getPersonById(param.getInsuranceContractHolderId());
@@ -186,7 +268,58 @@ public class PatientRegistrationServiceImpl extends AbstractService implements P
 
     protected void registerPostalAddress(final Person patient, final RegisterPatientParameters patientParameters) throws UnknownReferenceTypeException
     {
-        final PostalAddressParameters param = patientParameters.getPostalAddress();
+        final PostalAddressParameters param = new PostalAddressParameters()
+            {
+                public String getStreet1()
+                {
+                    return patientParameters.getStreet1();
+                }
+
+                public String getStreet2()
+                {
+                    return  patientParameters.getStreet2();
+                }
+
+                public String getCity()
+                {
+                    return  patientParameters.getCity();
+                }
+
+                public String getState()
+                {
+                    return patientParameters.getState();
+                }
+
+                public String getProvince()
+                {
+                    return patientParameters.getProvince();
+                }
+
+                public String getPostalCode()
+                {
+                    return patientParameters.getPostalCode();
+                }
+
+                public String getCounty()
+                {
+                    return patientParameters.getCounty();
+                }
+
+                public String getCountry()
+                {
+                    return patientParameters.getCountry();
+                }
+
+                public String getPurposeType()
+                {
+                    return patientParameters.getPostalAddressPurposeType();
+                }
+
+                public String getPurposeDescription()
+                {
+                    return patientParameters.getPostalAddressPurposeDescription();
+                }
+            };
         final PostalAddress address = contactMechanismFacade.addPostalAddress(param.getStreet1(), param.getStreet2(),
             param.getCity(), param.getState(), param.getProvince(), param.getCounty(),  param.getPostalCode(), param.getCountry());
 
@@ -202,31 +335,32 @@ public class PatientRegistrationServiceImpl extends AbstractService implements P
         Person person = Person.createNewPatient();
         try
         {
-            final PersonParameters patientParameters = params.getPerson();
+            person.setLastName(params.getLastName());
+            person.setFirstName(params.getFirstName());
+            person.setMiddleName(params.getMiddleName());
+            person.setBirthDate(params.getBirthDate());
 
-            person.setLastName(patientParameters.getLastName());
-            person.setFirstName(patientParameters.getFirstName());
-            person.setMiddleName(patientParameters.getMiddleName());
-            person.setBirthDate(patientParameters.getBirthDate());
-
-            final GenderType genderType = referenceEntityFacade.getGenderType(patientParameters.getGenderCode());
-            final MaritalStatusType maritalStatusType = referenceEntityFacade.getMaritalStatusType(patientParameters.getMaritalStatusCode());
+            final GenderType genderType = referenceEntityFacade.getGenderType(params.getGenderCode());
+            final MaritalStatusType maritalStatusType = referenceEntityFacade.getMaritalStatusType(params.getMaritalStatusCode());
             person.addMaritalStatus(maritalStatusType);
             person.addGender(genderType);
 
             // add the languages
-            for (String language : patientParameters.getLanguageCodes())
+            for (String language : params.getLanguageCodes())
                 person.addLanguage(referenceEntityFacade.getLanguageType(language));
 
             // add the ethnicities
-            for (String ethnicity : patientParameters.getEthnicityCodes())
+            for (String ethnicity : params.getEthnicityCodes())
                 person.addEthnicity(referenceEntityFacade.getEthnicityType(ethnicity));
 
-            if (patientParameters.getSsn() != null)
-                person.setSsn(patientParameters.getSsn());
-            if (patientParameters.getDriversLicenseNumber() != null)
-                person.setDriversLicenseNumber(patientParameters.getDriversLicenseNumber());
-                
+            if (params.getSsn() != null)
+                person.setSsn(params.getSsn());
+            if (params.getDriversLicenseNumber() != null)
+            {
+
+                person.setDriversLicenseNumber(params.getDriversLicenseNumber());
+            }
+
             getSession().save(person);
             registerPostalAddress(person, params);
             registerInsuranceInformation(person, params);
@@ -269,9 +403,79 @@ public class PatientRegistrationServiceImpl extends AbstractService implements P
     public RegisterPatientParameters getNewPatientParameters()
     {
         return new RegisterPatientParameters() {
-            public PersonParameters getPerson()
+            public String getFirstName()
             {
                 return null;
+            }
+
+            public String getLastName()
+            {
+                return null;
+            }
+
+            public String getMiddleName()
+            {
+                return null;
+            }
+
+            public String getSuffix()
+            {
+                return null;
+            }
+
+            public Date getBirthDate()
+            {
+                return null;
+            }
+
+            public String getGenderCode()
+            {
+                return null;
+            }
+
+            public String getMaritalStatusCode()
+            {
+                return null;
+            }
+
+            public String getSsn()
+            {
+                return null;
+            }
+
+            public String getDriversLicenseNumber()
+            {
+                return null;
+            }
+
+            public String getDriversLicenseStateCode()
+            {
+                return null;
+            }
+
+            public String getEmployerName()
+            {
+                return null;
+            }
+
+            public String getEmployerId()
+            {
+                return null;
+            }
+
+            public String getOccupation()
+            {
+                return null;
+            }
+
+            public String[] getEthnicityCodes()
+            {
+                return new String[0];
+            }
+
+            public String[] getLanguageCodes()
+            {
+                return new String[0];
             }
 
             public String getResponsiblePartyId()
@@ -284,80 +488,135 @@ public class PatientRegistrationServiceImpl extends AbstractService implements P
                 return null;
             }
 
-            public PhoneParameters getHomePhone()
+            public String getHomePhoneCountryCode()
             {
                 return null;
             }
 
-            public PhoneParameters getWorkPhone()
+            public String getHomePhoneCityCode()
             {
                 return null;
             }
 
-            public PhoneParameters getMobilePhone()
+            public String getHomePhoneAreaCode()
             {
                 return null;
             }
 
-            public PostalAddressParameters getPostalAddress()
+            public String getHomePhoneNumber()
             {
-                return new PostalAddressParameters() {
-                    @NotNull
-                    public String getStreet1()
-                    {
-                        return null;
-                    }
+                return null;
+            }
 
-                    public String getStreet2()
-                    {
-                        return null;
-                    }
+            public String getHomePhoneExtension()
+            {
+                return null;
+            }
 
-                    @NotNull
-                    public String getCity()
-                    {
-                        return null;
-                    }
+            public String getWorkPhoneCountryCode()
+            {
+                return null;
+            }
 
-                    @NotNull
-                    public String getState()
-                    {
-                        return null;
-                    }
+            public String getWorkPhoneCityCode()
+            {
+                return null;
+            }
 
-                    public String getProvince()
-                    {
-                        return null;
-                    }
+            public String getWorkPhoneAreaCode()
+            {
+                return null;
+            }
 
-                    @NotNull
-                    public String getPostalCode()
-                    {
-                        return null;
-                    }
+            public String getWorkPhoneNumber()
+            {
+                return null;
+            }
 
-                    public String getCounty()
-                    {
-                        return null;
-                    }
+            public String getWorkPhoneExtension()
+            {
+                return null;
+            }
 
-                    @NotNull
-                    public String getCountry()
-                    {
-                        // TODO: Need to create some defalt countries
-                        return "USA";
-                    }
+            public String getMobilePhoneCountryCode()
+            {
+                return null;
+            }
 
-                    public String getPurposeType()
-                    {
-                        return null;
-                    }
+            public String getMobilePhoneCityCode()
+            {
+                return null;
+            }
 
-                    public String getPurposeDescription()
-                    {
-                        return null;
-                    }
-                };
+            public String getMobilePhoneAreaCode()
+            {
+                return null;
+            }
+
+            public String getMobilePhoneNumber()
+            {
+                return null;
+            }
+
+            public String getMobilePhoneExtension()
+            {
+                return null;
+            }
+
+            @NotNull
+            public String getStreet1()
+            {
+                return null;
+            }
+
+            public String getStreet2()
+            {
+                return null;
+            }
+
+            @NotNull
+            public String getCity()
+            {
+                return null;
+            }
+
+            @NotNull
+            public String getState()
+            {
+                return null;
+            }
+
+            public String getProvince()
+            {
+                return null;
+            }
+
+            @NotNull
+            public String getPostalCode()
+            {
+                return null;
+            }
+
+            public String getCounty()
+            {
+                return null;
+            }
+
+            @NotNull
+            public String getCountry()
+            {
+                // TODO: Need to create some defalt countries
+                return "USA";
+            }
+
+            public String getPostalAddressPurposeType()
+            {
+                return null;
+            }
+
+            public String getPostalAddressPurposeDescription()
+            {
+                return null;
             }
 
             public String getPrimaryCareProviderId()
@@ -365,9 +624,84 @@ public class PatientRegistrationServiceImpl extends AbstractService implements P
                 return null;
             }
 
-            public InsuranceCoverageParameters[] getInsuranceCoverages()
+            public Serializable getPrimaryInsuranceCarrierId()
             {
-                return new InsuranceCoverageParameters[0];
+                return null;
+            }
+
+            public Serializable getPrimaryInsuranceProductId()
+            {
+                return null;
+            }
+
+            @NotNull
+            public Serializable getPrimaryInsurancePlanId()
+            {
+                return null;
+            }
+
+            @NotNull
+            public String getPrimaryInsurancePolicyNumber()
+            {
+                return null;
+            }
+
+            public String getPrimaryInsurancePolicyTypeCode()
+            {
+                return null;
+            }
+
+            @NotNull
+            public String getPrimaryInsuranceGroupNumber()
+            {
+                return null;
+            }
+
+            @NotNull
+            public Serializable getPrimaryInsuranceContractHolderId()
+            {
+                return null;
+            }
+
+            @NotNull
+            public String getPrimaryInsuranceContractHolderRole()
+            {
+                return null;
+            }
+
+            public Date getPrimaryInsuranceCoverageStartDate()
+            {
+                return null;
+            }
+
+            public Date getPrimaryInsuranceCoverageEndDate()
+            {
+                return null;
+            }
+
+            public Float getPrimaryInsuranceIndividualDeductibleAmount()
+            {
+                return null;
+            }
+
+            public Float getPrimaryInsuranceFamilyDeductibleAmount()
+            {
+                return null;
+            }
+
+            public Float getPrimaryInsuranceOfficeVisitCoPay()
+            {
+                return null;
+            }
+
+            public Float getPrimaryInsurancePercentagePay()
+            {
+                return null;
+            }
+
+            public Float getPrimaryInsuranceMaxThresholdAmount()
+            {
+                return null;
             }
 
             public ServiceVersion getServiceVersion()
@@ -379,9 +713,9 @@ public class PatientRegistrationServiceImpl extends AbstractService implements P
 
     private PhoneNumber registerHomePhone(final Person person, final RegisterPatientParameters params)
     {
-        final PhoneParameters homePhone = params.getHomePhone();
-        final PhoneNumber phone = contactMechanismFacade.addPhone(homePhone.getCountryCode(), homePhone.getAreaCode(), homePhone.getNumber(),
-            homePhone.getExtension());
+        final PhoneNumber phone = contactMechanismFacade.addPhone(params.getHomePhoneCountryCode(),
+                params.getHomePhoneAreaCode(), params.getHomePhoneNumber(),
+                null);
 
         return phone;
     }
@@ -390,12 +724,12 @@ public class PatientRegistrationServiceImpl extends AbstractService implements P
     public String[] isValid(ServiceParameters params)
     {
         RegisterPatientParameters patientParameters = (RegisterPatientParameters) params;
-        assert  patientParameters.getPerson().getGenderCode() != null :
+        assert  patientParameters.getGenderCode() != null :
             "Gender cannot be empty.";
-        final String[] languageCodes = patientParameters.getPerson().getLanguageCodes();
+        final String[] languageCodes = patientParameters.getLanguageCodes();
         assert languageCodes != null && languageCodes.length > 0 :
             "There must be at least one language.";
-        final String[] ethnicities = patientParameters.getPerson().getEthnicityCodes();
+        final String[] ethnicities = patientParameters.getEthnicityCodes();
         assert ethnicities != null && ethnicities.length > 0 :
             "There must be at least one ethnicity.";
 
@@ -419,7 +753,7 @@ public class PatientRegistrationServiceImpl extends AbstractService implements P
                 /**
                  * Locale specific error message
                  *
-                 * @return
+                 * @return  error message
                  */
                 public String getErrorMessage()
                 {

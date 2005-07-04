@@ -52,6 +52,8 @@
         <property name="sessionFactory"> <ref bean="hibernateSessionFactory"/> </property>
     </bean>
 
+    <bean id="facadeManager" class="com.medigy.service.util.FacadeManager" factory-method="getInstance" />
+
     <bean id="facadeHibernateInterceptor" class="org.springframework.orm.hibernate3.HibernateInterceptor">
         <property name="sessionFactory"> <ref bean="hibernateSessionFactory"/> </property>
     </bean>

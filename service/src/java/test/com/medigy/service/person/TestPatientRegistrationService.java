@@ -79,86 +79,81 @@ public class TestPatientRegistrationService extends AbstractSpringTestCase
                 try
                 {
                     patientParameters = new RegisterPatientParameters() {
-
-                        public PersonParameters getPerson()
+                        public String getFirstName()
                         {
-                            return new PersonParameters() {
-                                public String getFirstName()
-                                {
-                                    return "Ryan";
-                                }
-
-                                public String getLastName()
-                                {
-                                    return "Hackett";
-                                }
-
-                                public String getMiddleName()
-                                {
-                                    return "Bluegrass";
-                                }
-
-                                public String getSuffix()
-                                {
-                                    return null;
-                                }
-
-                                public Date getBirthDate()
-                                {
-                                    return new Date();
-                                }
-
-                                public String getGenderCode()
-                                {
-                                    return GenderType.Cache.MALE.getCode();
-                                }
-
-                                public String getMaritalStatusCode()
-                                {
-                                    return MaritalStatusType.Cache.SINGLE.getCode();
-                                }
-
-                                public String getEmployerName()
-                                {
-                                    return "Netspective";
-                                }
-
-                                public String getEmployerId()
-                                {
-                                    return "1";
-                                }
-
-                                public String getOccupation()
-                                {
-                                    return "Consultant";
-                                }
-
-                                public String getSsn()
-                                {
-                                    return "111111111";
-                                }
-
-                                public String[] getEthnicityCodes()
-                                {
-                                    return new String[] { EthnicityType.Cache.AFRICAN_AMERICAN.getCode(), EthnicityType.Cache.ASIAN_PACIFIC_ISLANDER.getCode() };
-                                }
-
-                                public String[] getLanguageCodes()
-                                {
-                                    return new String[] { LanguageType.Cache.ENGLISH.getCode(), LanguageType.Cache.SPANISH.getCode() };
-                                }
-
-                                public String getDriversLicenseNumber()
-                                {
-                                    return "999999999";
-                                }
-
-                                public String getDriversLicenseStateCode()
-                                {
-                                    return State.Cache.VIRGINIA.getEntity().getStateAbbreviation();
-                                }
-                            };
+                            return "Ryan";
                         }
+
+                        public String getLastName()
+                        {
+                            return "Hackett";
+                        }
+
+                        public String getMiddleName()
+                        {
+                            return "Bluegrass";
+                        }
+
+                        public String getSuffix()
+                        {
+                            return null;
+                        }
+
+                        public Date getBirthDate()
+                        {
+                            return new Date();
+                        }
+
+                        public String getGenderCode()
+                        {
+                            return GenderType.Cache.MALE.getCode();
+                        }
+
+                        public String getMaritalStatusCode()
+                        {
+                            return MaritalStatusType.Cache.SINGLE.getCode();
+                        }
+
+                        public String getEmployerName()
+                        {
+                            return "Netspective";
+                        }
+
+                        public String getEmployerId()
+                        {
+                            return "1";
+                        }
+
+                        public String getOccupation()
+                        {
+                            return "Consultant";
+                        }
+
+                        public String getSsn()
+                        {
+                            return "111111111";
+                        }
+
+                        public String[] getEthnicityCodes()
+                        {
+                            return new String[] { EthnicityType.Cache.AFRICAN_AMERICAN.getCode(), EthnicityType.Cache.ASIAN_PACIFIC_ISLANDER.getCode() };
+                        }
+
+                        public String[] getLanguageCodes()
+                        {
+                            return new String[] { LanguageType.Cache.ENGLISH.getCode(), LanguageType.Cache.SPANISH.getCode() };
+                        }
+
+                        public String getDriversLicenseNumber()
+                        {
+                            return "999999999";
+                        }
+
+                        public String getDriversLicenseStateCode()
+                        {
+                            return State.Cache.VIRGINIA.getEntity().getStateAbbreviation();
+                        }
+
 
                         public String getResponsiblePartyId()
                         {
@@ -170,267 +165,231 @@ public class TestPatientRegistrationService extends AbstractSpringTestCase
                             return PartyRelationshipType.Cache.PATIENT_RESPONSIBLE_PARTY.getCode();
                         }
 
-                        public PhoneParameters getHomePhone()
+                        public String getHomePhoneCountryCode()
                         {
-                            return new PhoneParameters() {
-                                public String getCountryCode()
-                                {
-                                    return "95";
-                                }
-
-                                public String getCityCode()
-                                {
-                                    return "1";
-                                }
-
-                                public String getAreaCode()
-                                {
-                                    return "703";
-                                }
-
-                                public String getNumber()
-                                {
-                                    return "1234567";
-                                }
-
-                                public String getExtension()
-                                {
-                                    return null;
-                                }
-
-                                public String getPurposeCode()
-                                {
-                                    return ContactMechanismPurposeType.Cache.HOME_PHONE.getEntity().getCode();
-                                }
-
-                                public String getPurposeDescription()
-                                {
-                                    return null;
-                                }
-                            };
+                            return "95";
                         }
 
-                        public PhoneParameters getWorkPhone()
+                        public String getHomePhoneCityCode()
                         {
-                            return new PhoneParameters() {
-                                public String getCountryCode()
-                                {
-                                    return null;
-                                }
-
-                                public String getCityCode()
-                                {
-                                    return null;
-                                }
-
-                                public String getAreaCode()
-                                {
-                                    return "703";
-                                }
-
-                                public String getNumber()
-                                {
-                                    return "0000000";
-                                }
-
-                                public String getExtension()
-                                {
-                                    return "123";
-                                }
-
-                                public String getPurposeCode()
-                                {
-                                    return ContactMechanismPurposeType.Cache.WORK_PHONE.getEntity().getCode();
-                                }
-
-                                public String getPurposeDescription()
-                                {
-                                    return null;
-                                }
-                            };
+                            return "1";
                         }
 
-                        public PhoneParameters getMobilePhone()
+                        public String getHomePhoneAreaCode()
                         {
-                            return new PhoneParameters() {
-                                public String getCountryCode()
-                                {
-                                    return null;
-                                }
-
-                                public String getCityCode()
-                                {
-                                    return null;
-                                }
-
-                                public String getAreaCode()
-                                {
-                                    return "703";
-                                }
-
-                                public String getNumber()
-                                {
-                                    return "1111111";
-                                }
-
-                                public String getExtension()
-                                {
-                                    return null;
-                                }
-
-                                public String getPurposeCode()
-                                {
-                                    return ContactMechanismPurposeType.Cache.OTHER.getCode();
-                                }
-
-                                public String getPurposeDescription()
-                                {
-                                    return "Mobile Phone";
-                                }
-                            };
+                            return "703";
                         }
 
-                        public PostalAddressParameters getPostalAddress()
+                        public String getHomePhoneNumber()
                         {
-                            return new PostalAddressParameters() {
-                                public String getStreet1()
-                                {
-                                    return "123 Penny Lane";
-                                }
-
-                                public String getPurposeType()
-                                {
-                                    return ContactMechanismPurposeType.Cache.HOME_ADDRESS.getEntity().getCode();
-                                }
-
-                                public String getPurposeDescription()
-                                {
-                                    return null;
-                                }
-
-                                public String getStreet2()
-                                {
-                                    return null;
-                                }
-
-                                public String getCity()
-                                {
-                                    return "Manchester";
-                                }
-
-                                public String getCounty()
-                                {
-                                    return null;
-                                }
-
-                                public String getProvince()
-                                {
-                                    return null;
-                                }
-
-                                public String getState()
-                                {
-                                    return "KY";
-                                }
-
-                                public String getPostalCode()
-                                {
-                                    return "12345";
-                                }
-
-                                public String getCountry()
-                                {
-                                    return "USA";
-                                }
-
-                            };
+                            return "1234567";
                         }
+
+                        public String getHomePhonePurposeCode()
+                        {
+                            return ContactMechanismPurposeType.Cache.HOME_PHONE.getEntity().getCode();
+                        }
+
+                        public String getHomePhonePurposeDescription()
+                        {
+                            return null;
+                        }
+
+                        public String getWorkPhoneCountryCode()
+                        {
+                            return null;
+                        }
+
+                        public String getWorkPhoneCityCode()
+                        {
+                            return null;
+                        }
+
+                        public String getWorkPhoneAreaCode()
+                        {
+                            return "703";
+                        }
+
+                        public String getWorkPhoneNumber()
+                        {
+                            return "0000000";
+                        }
+
+                        public String getWorkPhoneExtension()
+                        {
+                            return "123";
+                        }
+
+                        public String getWorkPhonePurposeCode()
+                        {
+                            return ContactMechanismPurposeType.Cache.WORK_PHONE.getEntity().getCode();
+                        }
+
+                        public String getWorkPhonePurposeDescription()
+                        {
+                            return null;
+                        }
+
+
+                        public String getMobilePhoneCountryCode()
+                        {
+                            return null;
+                        }
+
+                        public String getMobilePhoneCityCode()
+                        {
+                            return null;
+                        }
+
+                        public String getMobilePhoneAreaCode()
+                        {
+                            return "703";
+                        }
+
+                        public String getMobilePhoneNumber()
+                        {
+                            return "1111111";
+                        }
+
+                        public String getMobilePhonePurposeCode()
+                        {
+                            return ContactMechanismPurposeType.Cache.OTHER.getCode();
+                        }
+
+                        public String getMobilePhonePurposeDescription()
+                        {
+                            return "Mobile Phone";
+                        }
+
+                        public String getStreet1()
+                        {
+                            return "123 Penny Lane";
+                        }
+
+                        public String getPostalAddressPurposeType()
+                        {
+                            return ContactMechanismPurposeType.Cache.HOME_ADDRESS.getEntity().getCode();
+                        }
+
+                        public String getPostalAddressPurposeDescription()
+                        {
+                            return null;
+                        }
+
+                        public String getStreet2()
+                        {
+                            return null;
+                        }
+
+                        public String getCity()
+                        {
+                            return "Manchester";
+                        }
+
+                        public String getCounty()
+                        {
+                            return null;
+                        }
+
+                        public String getProvince()
+                        {
+                            return null;
+                        }
+
+                        public String getState()
+                        {
+                            return "KY";
+                        }
+
+                        public String getPostalCode()
+                        {
+                            return "12345";
+                        }
+
+                        public String getCountry()
+                        {
+                            return "USA";
+                        }
+
 
                         public String getPrimaryCareProviderId()
                         {
                             return null;
                         }
 
-                        public InsuranceCoverageParameters[] getInsuranceCoverages()
+                        public Serializable getPrimaryInsuranceCarrierId()
                         {
-                            return new InsuranceCoverageParameters[] {
-                                new InsuranceCoverageParameters() {
-                                    public Serializable getInsuranceCarrierId()
-                                    {
-                                        return new Long(2);
-                                    }
+                            return new Long(2);
+                        }
 
-                                    public Serializable getInsuranceProductId()
-                                    {
-                                        return new Long(1);
-                                    }
+                        public Serializable getPrimaryInsuranceProductId()
+                        {
+                            return new Long(1);
+                        }
 
-                                    public Serializable getInsurancePlanId()
-                                    {
-                                        return new Long(1);
-                                    }
+                        public Serializable getPrimaryInsurancePlanId()
+                        {
+                            return new Long(1);
+                        }
 
-                                    public String getInsurancePolicyNumber()
-                                    {
-                                        return "12345";
-                                    }
+                        public String getPrimaryInsurancePolicyNumber()
+                        {
+                            return "12345";
+                        }
 
-                                    public String getInsurancePolicyTypeCode()
-                                    {
-                                        return InsurancePolicyType.Cache.GROUP_INSURANCE_POLICY.getEntity().getCode();
-                                    }
+                        public String getPrimaryInsurancePolicyTypeCode()
+                        {
+                            return InsurancePolicyType.Cache.GROUP_INSURANCE_POLICY.getEntity().getCode();
+                        }
 
-                                    public String getInsuranceGroupNumber()
-                                    {
-                                        return "XXX";
-                                    }
+                        public String getPrimaryInsuranceGroupNumber()
+                        {
+                            return "XXX";
+                        }
 
-                                    public Serializable getInsuranceContractHolderId()
-                                    {
-                                        return null;
-                                    }
+                        public Serializable getPrimaryInsuranceContractHolderId()
+                        {
+                            return null;
+                        }
 
-                                    public String getInsuranceContractHolderRole()
-                                    {
-                                        return null;
-                                    }
+                        public String getPrimaryInsuranceContractHolderRole()
+                        {
+                            return null;
+                        }
 
-                                    public Date getCoverageStartDate()
-                                    {
-                                        return new Date();
-                                    }
+                        public Date getPrimaryInsuranceCoverageStartDate()
+                        {
+                            return new Date();
+                        }
 
-                                    public Date getCoverageEndDate()
-                                    {
-                                        return null;
-                                    }
+                        public Date getPrimaryInsuranceCoverageEndDate()
+                        {
+                            return null;
+                        }
 
-                                    public Float getIndividualDeductibleAmount()
-                                    {
-                                        return null;
-                                    }
+                        public Float getPrimaryInsuranceIndividualDeductibleAmount()
+                        {
+                            return null;
+                        }
 
-                                    public Float getFamilyDeductibleAmount()
-                                    {
-                                        return null;
-                                    }
+                        public Float getPrimaryInsuranceFamilyDeductibleAmount()
+                        {
+                            return null;
+                        }
 
-                                    public Float getOfficeVisitCoPay()
-                                    {
-                                        return null;
-                                    }
+                        public Float getPrimaryInsuranceOfficeVisitCoPay()
+                        {
+                            return null;
+                        }
 
-                                    public Float getPercentagePay()
-                                    {
-                                        return null;
-                                    }
+                        public Float getPrimaryInsurancePercentagePay()
+                        {
+                            return null;
+                        }
 
-                                    public Float getMaxThresholdAmount()
-                                    {
-                                        return null;
-                                    }
-                                }
-                            };
+                        public Float getPrimaryInsuranceMaxThresholdAmount()
+                        {
+                            return null;
                         }
 
                         public ServiceVersion getServiceVersion()
