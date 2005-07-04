@@ -18,13 +18,13 @@ import java.util.Date;
  * Simple model object for FormInput example. Has a number of simple properties
  * that can be retrieved and set.
  */
-public final class TestServiceParameterModel implements Serializable
+public final class PatientRegistrationFormModel implements Serializable
 {
 	private String firstName;
     private String lastName;
 	private String middleName;
     private String suffix;
-    private String dateOfBirth;
+    private Date dateOfBirth;
     private String gender;     // TODO: change to xxxCode
     private String maritalStatus;   // TODO: change to xxxCode
 	private String socialSecurityNumber;
@@ -79,7 +79,7 @@ public final class TestServiceParameterModel implements Serializable
 	private String bloodType;
 
 
-	public TestServiceParameterModel()
+	public PatientRegistrationFormModel()
 	{
 	}
 
@@ -169,12 +169,12 @@ public final class TestServiceParameterModel implements Serializable
 		this.socialSecurityNumber = socialSecurityNumber;
 	}
 
-	public String getDateOfBirth()
+	public Date getDateOfBirth()
 	{
 		return dateOfBirth;
 	}
 
-	public void setDateOfBirth(String dateOfBirth)
+	public void setDateOfBirth(Date dateOfBirth)
 	{
 		this.dateOfBirth = dateOfBirth;
 	}

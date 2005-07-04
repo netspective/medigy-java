@@ -44,6 +44,9 @@
 package com.medigy.wicket.form;
 
 import wicket.markup.html.form.FormComponent;
+import wicket.markup.html.form.validation.TypeValidator;
+
+import java.util.Date;
 
 public class DateField extends TextField implements FormJavaScriptGenerator.Contributor
 {
@@ -62,6 +65,8 @@ public class DateField extends TextField implements FormJavaScriptGenerator.Cont
     {
         super(controlId);
         this.reflectedFormFieldDefn = reflectedFormFieldDefn;
+
+        add(new TypeValidator(Date.class));
     }
 
     public ReflectedFormFieldDefn getReflectedFormFieldDefn()

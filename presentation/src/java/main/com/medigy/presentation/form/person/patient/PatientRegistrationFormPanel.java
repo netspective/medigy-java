@@ -43,7 +43,7 @@
  */
 package com.medigy.presentation.form.person.patient;
 
-import com.medigy.presentation.model.TestServiceParameterModel;
+import com.medigy.presentation.model.PatientRegistrationFormModel;
 import com.medigy.service.dto.person.RegisterPatientParameters;
 import com.medigy.service.person.PatientRegistrationService;
 import com.medigy.wicket.DefaultApplication;
@@ -65,7 +65,7 @@ public class PatientRegistrationFormPanel extends DefaultFormPanel
     protected PatientRegistrationForm createForm(final String componentName, final IFeedback feedback)
     {
         final PatientRegistrationService service = (PatientRegistrationService) ((DefaultApplication) getApplication()).getService(PatientRegistrationService.class);
-        return new PatientRegistrationForm(componentName, feedback, new BoundCompoundPropertyModel(new TestServiceParameterModel()), service.getNewPatientParameters());
+        return new PatientRegistrationForm(componentName, feedback, new BoundCompoundPropertyModel(new PatientRegistrationFormModel()), service.getNewPatientParameters());
     }
 
     protected class PatientRegistrationForm extends BaseForm
