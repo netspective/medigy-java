@@ -183,11 +183,27 @@ public class ContactMechanismFacadeImpl extends AbstractFacade implements Contac
         return address;
     }
 
-    public PhoneNumber addPhone(final String countryCode,  final String areaCode, final String number,
+    public PhoneNumber addPhone(final String countryCode, final String cityCode, final String areaCode, final String number,
                                 final String extension)
     {
         final PhoneNumber phone = new PhoneNumber();
         phone.setCountryCode(countryCode);
+        phone.setCityCode(cityCode);
+        phone.setNumberValue(number);
+        phone.setAreaCode(areaCode);
+        phone.setExtension(extension);
+        getSession().save(phone);
+        return phone;
+    }
+
+    public PhoneNumber addPhone(final String countryCode,  final String cityCode, final String number)
+    {
+        // TODO: Parse the number
+        final PhoneNumber phone = new PhoneNumber();
+        phone.setCountryCode(countryCode);
+        phone.setCityCode(cityCode);
+
+        String areaCode = null, extension = null;
         phone.setNumberValue(number);
         phone.setAreaCode(areaCode);
         phone.setExtension(extension);

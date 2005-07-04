@@ -62,7 +62,8 @@ public class AddInsurancePlanServiceImpl implements AddInsurancePlanService
         final PhoneParameters phoneParams = parameters.getPhone();
         if (phoneParams != null)
         {
-            final PhoneNumber phone = contactMechanismFacade.addPhone(phoneParams.getCountryCode(), phoneParams.getAreaCode(), phoneParams.getNumber(),
+            final PhoneNumber phone = contactMechanismFacade.addPhone(phoneParams.getCountryCode(), phoneParams.getCityCode(),
+                    phoneParams.getAreaCode(), phoneParams.getNumber(),
                 phoneParams.getExtension());
             InsurancePlanContactMechanism ipcm = new InsurancePlanContactMechanism();
             ipcm.setContactMechanism(phone);
@@ -72,7 +73,8 @@ public class AddInsurancePlanServiceImpl implements AddInsurancePlanService
         final PhoneParameters faxParams = parameters.getFax();
         if (phoneParams != null)
         {
-            final PhoneNumber fax = contactMechanismFacade.addPhone(faxParams.getCountryCode(), faxParams.getAreaCode(), faxParams.getNumber(),
+            final PhoneNumber fax = contactMechanismFacade.addPhone(faxParams.getCountryCode(), faxParams.getCityCode(), 
+                    faxParams.getAreaCode(), faxParams.getNumber(),
                 faxParams.getExtension());
             InsurancePlanContactMechanism ipcm = new InsurancePlanContactMechanism();
             ipcm.setContactMechanism(fax);

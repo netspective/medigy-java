@@ -120,7 +120,8 @@ public class AddInsuranceProductServiceImpl implements AddInsuranceProductServic
         final PhoneParameters phoneParams = parameters.getPhone();
         if (phoneParams != null)
         {
-            final PhoneNumber phone = contactMechanismFacade.addPhone(phoneParams.getCountryCode(), phoneParams.getAreaCode(), phoneParams.getNumber(),
+            final PhoneNumber phone = contactMechanismFacade.addPhone(phoneParams.getCountryCode(), phoneParams.getCityCode(),
+                    phoneParams.getAreaCode(), phoneParams.getNumber(),
                 phoneParams.getExtension());
             InsuranceProductContactMechanism ipcm = new InsuranceProductContactMechanism();
             ipcm.setContactMechanism(phone);
@@ -130,8 +131,9 @@ public class AddInsuranceProductServiceImpl implements AddInsuranceProductServic
         final PhoneParameters faxParams = parameters.getFax();
         if (phoneParams != null)
         {
-            final PhoneNumber fax = contactMechanismFacade.addPhone(faxParams.getCountryCode(), faxParams.getAreaCode(), faxParams.getNumber(),
-                faxParams.getExtension());
+            final PhoneNumber fax = contactMechanismFacade.addPhone(faxParams.getCountryCode(),faxParams.getCityCode(), 
+                    faxParams.getAreaCode(), faxParams.getNumber(),
+                    faxParams.getExtension());
             InsuranceProductContactMechanism ipcm = new InsuranceProductContactMechanism();
             ipcm.setContactMechanism(fax);
             ipcm.addPurpose(ContactMechanismPurposeType.Cache.FAX_NUMBER.getEntity());

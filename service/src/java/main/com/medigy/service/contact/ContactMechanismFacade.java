@@ -79,8 +79,10 @@ public interface ContactMechanismFacade extends Facade
      * @param extension
      * @return
      */
-    public PhoneNumber addPhone(final String countryCode, final String areaCode, final String number,
+    public PhoneNumber addPhone(final String countryCode, final String cityCode, final String areaCode, final String number,
                                 final String extension);
+
+    public PhoneNumber addPhone(final String countryCode, final String cityCode, final String number);
 
     /**
      * Gets a country geographic boundary based on the name.

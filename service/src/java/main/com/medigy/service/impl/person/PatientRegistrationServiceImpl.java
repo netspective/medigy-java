@@ -488,77 +488,17 @@ public class PatientRegistrationServiceImpl extends AbstractService implements P
                 return null;
             }
 
-            public String getHomePhoneCountryCode()
+            public String getHomePhone()
             {
                 return null;
             }
 
-            public String getHomePhoneCityCode()
+            public String getWorkPhone()
             {
                 return null;
             }
 
-            public String getHomePhoneAreaCode()
-            {
-                return null;
-            }
-
-            public String getHomePhoneNumber()
-            {
-                return null;
-            }
-
-            public String getHomePhoneExtension()
-            {
-                return null;
-            }
-
-            public String getWorkPhoneCountryCode()
-            {
-                return null;
-            }
-
-            public String getWorkPhoneCityCode()
-            {
-                return null;
-            }
-
-            public String getWorkPhoneAreaCode()
-            {
-                return null;
-            }
-
-            public String getWorkPhoneNumber()
-            {
-                return null;
-            }
-
-            public String getWorkPhoneExtension()
-            {
-                return null;
-            }
-
-            public String getMobilePhoneCountryCode()
-            {
-                return null;
-            }
-
-            public String getMobilePhoneCityCode()
-            {
-                return null;
-            }
-
-            public String getMobilePhoneAreaCode()
-            {
-                return null;
-            }
-
-            public String getMobilePhoneNumber()
-            {
-                return null;
-            }
-
-            public String getMobilePhoneExtension()
+            public String getMobilePhone()
             {
                 return null;
             }
@@ -713,11 +653,7 @@ public class PatientRegistrationServiceImpl extends AbstractService implements P
 
     private PhoneNumber registerHomePhone(final Person person, final RegisterPatientParameters params)
     {
-        final PhoneNumber phone = contactMechanismFacade.addPhone(params.getHomePhoneCountryCode(),
-                params.getHomePhoneAreaCode(), params.getHomePhoneNumber(),
-                null);
-
-        return phone;
+        return contactMechanismFacade.addPhone(null, null, params.getHomePhone());
     }
 
     // TODO: Put a validator and return a list of errors/warnings

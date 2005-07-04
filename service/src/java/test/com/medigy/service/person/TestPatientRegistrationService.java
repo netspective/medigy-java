@@ -165,100 +165,19 @@ public class TestPatientRegistrationService extends AbstractSpringTestCase
                             return PartyRelationshipType.Cache.PATIENT_RESPONSIBLE_PARTY.getCode();
                         }
 
-                        public String getHomePhoneCountryCode()
+                        public String getHomePhone()
                         {
-                            return "95";
+                            return "7031234567";
                         }
 
-                        public String getHomePhoneCityCode()
+                        public String getWorkPhone()
                         {
-                            return "1";
+                            return "7030000000 x123";
                         }
 
-                        public String getHomePhoneAreaCode()
+                        public String getMobilePhone()
                         {
-                            return "703";
-                        }
-
-                        public String getHomePhoneNumber()
-                        {
-                            return "1234567";
-                        }
-
-                        public String getHomePhonePurposeCode()
-                        {
-                            return ContactMechanismPurposeType.Cache.HOME_PHONE.getEntity().getCode();
-                        }
-
-                        public String getHomePhonePurposeDescription()
-                        {
-                            return null;
-                        }
-
-                        public String getWorkPhoneCountryCode()
-                        {
-                            return null;
-                        }
-
-                        public String getWorkPhoneCityCode()
-                        {
-                            return null;
-                        }
-
-                        public String getWorkPhoneAreaCode()
-                        {
-                            return "703";
-                        }
-
-                        public String getWorkPhoneNumber()
-                        {
-                            return "0000000";
-                        }
-
-                        public String getWorkPhoneExtension()
-                        {
-                            return "123";
-                        }
-
-                        public String getWorkPhonePurposeCode()
-                        {
-                            return ContactMechanismPurposeType.Cache.WORK_PHONE.getEntity().getCode();
-                        }
-
-                        public String getWorkPhonePurposeDescription()
-                        {
-                            return null;
-                        }
-
-
-                        public String getMobilePhoneCountryCode()
-                        {
-                            return null;
-                        }
-
-                        public String getMobilePhoneCityCode()
-                        {
-                            return null;
-                        }
-
-                        public String getMobilePhoneAreaCode()
-                        {
-                            return "703";
-                        }
-
-                        public String getMobilePhoneNumber()
-                        {
-                            return "1111111";
-                        }
-
-                        public String getMobilePhonePurposeCode()
-                        {
-                            return ContactMechanismPurposeType.Cache.OTHER.getCode();
-                        }
-
-                        public String getMobilePhonePurposeDescription()
-                        {
-                            return "Mobile Phone";
+                            return "7031111111";
                         }
 
                         public String getStreet1()

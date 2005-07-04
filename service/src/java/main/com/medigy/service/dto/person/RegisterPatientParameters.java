@@ -164,21 +164,9 @@ public interface RegisterPatientParameters extends ServiceParameters
      */
     public String getResponsiblePartyRole();
 
-    public String getHomePhoneCountryCode();
-    public String getHomePhoneCityCode();
-    public String getHomePhoneAreaCode();
-    public String getHomePhoneNumber();
-
-    public String getWorkPhoneCountryCode();
-    public String getWorkPhoneCityCode();
-    public String getWorkPhoneAreaCode();
-    public String getWorkPhoneNumber();
-    public String getWorkPhoneExtension();
-
-    public String getMobilePhoneCountryCode();
-    public String getMobilePhoneCityCode();
-    public String getMobilePhoneAreaCode();
-    public String getMobilePhoneNumber();
+    public String getHomePhone();
+    public String getWorkPhone();
+    public String getMobilePhone();
 
     @NotNull
     public String getStreet1();
