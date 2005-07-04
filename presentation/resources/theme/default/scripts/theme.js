@@ -199,18 +199,44 @@ function addFieldType(name, onFinalizeDefn, onValidate, onChange, onFocus, onBlu
 }
 
 //****************************************************************************
+// String class
+//****************************************************************************
+
+if (!String.prototype.startsWith) {
+  String.prototype.startsWith = function(prefix)
+  {
+    return (this.indexOf(prefix) === 0);
+  };
+}
+
+if (!String.prototype.endsWith)
+{
+  String.prototype.endsWith = function(suffix)
+  {
+    var startPos = this.length - suffix.length;
+    if (startPos < 0) {
+      return false;
+    }
+    return (this.lastIndexOf(suffix, startPos) == startPos);
+  };
+}
+
+//****************************************************************************
 // Dialog class
 //****************************************************************************
 
-function Dialog(form, allowClientValidation, showDataChangedMessageOnLeave)
+function Dialog(form, allowClientValidation, showDataChangedMessageOnLeave, requiredControlCSSSelectorName, labelElementMatchingSuffix)
 {
 	this.form = form;
 	this.fields = new Array();                 // straight list (simple array)
 	this.fieldsByControlName = new Array();    // hash -- value is field
 	this.allowClientValidation = allowClientValidation;
 	this.showDataChangedMessageOnLeave = showDataChangedMessageOnLeave;
+	this.requiredControlCSSSelectorName = requiredControlCSSSelectorName == null ? "required" : requiredControlCSSSelectorName;
+	this.labelElementMatchingSuffix = labelElementMatchingSuffix == null ? "_label" : labelElementMatchingSuffix;
 
 	// the remaining are object-based methods
+	this.associateFieldLabels = Dialog_associateFieldLabels;
 	this.createField = Dialog_createField;
 	this.finalizeContents = Dialog_finalizeContents;
 	this.isValid = Dialog_isValid;
@@ -219,18 +245,80 @@ function Dialog(form, allowClientValidation, showDataChangedMessageOnLeave)
 
     form.dialog = this; // associate the extra dialog information with the form that it's attached to
 
+    // find or generate appropriate 'for' attributes for labels
+    this.associateFieldLabels();
 	return this;
+}
+
+function Dialog_associateFieldLabels()
+{
+    var objLabels = document.getElementsByTagName("LABEL");
+    for (var i = 0; i < objLabels.length; i++)
+    {
+        var label = objLabels[i];
+
+        // if a label does not have a 'for' then check to see if it has a common suffix which can associate it
+        // with a control
+        if(label.htmlFor == '' || label.htmlFor == null)
+        {
+            if(label.id.endsWith(this.labelElementMatchingSuffix))
+                label.htmlFor = label.id.substring(0, label.id.length - this.labelElementMatchingSuffix.length)
+        }
+
+        // now make sure it's associated with a valid element in the form
+        var found = false;
+        for(var j = 0; j < this.form.elements.length; j++)
+        {
+            var element = this.form.elements[j];
+
+            // if a form element does not have an ID, go ahead and give it one with the same name as the form field
+            // (keep in mind this may not work for all controls but it should be a good default
+            if(element.id == '' || element.id == null)
+                element.id = element.name;
+
+            if(this.form.elements[j].id == label.htmlFor)
+            {
+                found = true;
+                break;
+            }
+        }
+
+        if(! found)
+            alert("Label '" + label.childNodes[0].nodeValue + "' with id '"+ label.id +"' does not have an associated form control with id " + label.htmlFor);
+    }
 }
 
 function Dialog_createField(control, type)
 {
-    var field = new DialogField(control, type);
+    if(control == null)
+    {
+        alert("Dialog.createField() control parameter may not be null");
+        return;
+    }
 
-	field.fieldIndex = this.fields.length;
-	field.dialog = this;
+    // if the control is not a form object and is instead a name of a field, look it up now
+    if(typeof control == 'string')
+    {
+        for(var i = 0; i < this.form.elements.length; i++)
+        {
+            if(this.form.elements[i].name == control)
+            {
+                control = this.form.elements[i];
+                break;
+            }
+        }
+    }
 
+    // if the control is not a form object it means we couldn't find the proper name so we can't add the field
+    if(typeof control == 'string')
+    {
+        alert("Dialog.createField() control '"+ control +"' was not found in form '"+ this.form.name +"'");
+        return;
+    }
+
+    var field = new DialogField(this, this.fields.length, control, type);
 	this.fields[field.fieldIndex] = field;
-	this.fieldsByControlName[field.control.name] = field;
+    this.fieldsByControlName[field.control.name] = field;
 
 	return field;
 }
@@ -308,10 +396,18 @@ var DATE_DTTYPE_TIMEONLY = 1;
 var DATE_DTTYPE_BOTH     = 2;
 var DATE_DTTYPE_MONTH_YEAR_ONLY = 3;
 
-function DialogField(control, type)
+function DialogField(dialog, fieldIndex, control, type)
 {
-    this.dialog = null;    // this will be set when the field is added using Dialog_registerField
-	this.fieldIndex = -1;  // this will be set when the field is added using Dialog_registerField
+    // the labels and other elements required IDs so give the element one if it doesn't already have one
+    if(control.id == '' || control.id == null)
+    {
+        control.id = control.name;
+        if(control.id == '' || control.id == null)
+            alert("No ID was provided for control " + control.name + " but attempting to assign one failed.");
+    }
+
+    this.dialog = dialog;
+	this.fieldIndex = fieldIndex;
 
 	this.control = control;
     this.control.field = this; // if we have access to the control, we will have access to the field
@@ -417,15 +513,22 @@ function DialogField_setValue(value)
 
 function DialogField_getLabel()
 {
-    return this.labelElement == null ? (this.control.name + " does not have a label.") : this.labelElement.childNodes[0].nodeValue;
+    return this.labelElement == null ? this.control.name : this.labelElement.childNodes[0].nodeValue;
 }
 
 function DialogField_getLabelElement()
 {
+    if(this.control.id == '' || this.control.id == null)
+    {
+        alert("Unable to find label for control '"+ this.control.name +"' since it has no ID.");
+        return null;
+    }
+
     var objLabels = document.getElementsByTagName("LABEL");
     for (var i = 0; i < objLabels.length; i++)
     {
-        if (objLabels[i].htmlFor == this.control.id)
+        var label = objLabels[i];
+        if (label.htmlFor == this.control.id)
             return objLabels[i];
     }
 
@@ -481,8 +584,8 @@ function DialogField_setRequired(required)
     if (required)
     {
         this.required = true;
-        this.originalLabelClassName = "required";
-        this.originalControlClassName = "required";
+        this.originalLabelClassName = this.dialog.requiredControlCSSSelectorName;
+        this.originalControlClassName = this.dialog.requiredControlCSSSelectorName;
         this.resetClassName();
     }
     else
@@ -545,6 +648,16 @@ function DialogField_finalizeContents()
                 this.control.focus();
         }
 	}
+
+    // setup the default callback and event handlers if they haven't been overidden
+	if(this.control.onfocus == null) this.control.onfocus = controlOnFocus;
+	if(this.control.onchange == null) this.control.onchange = controlOnChange;
+	if(this.control.onblur == null) this.control.onblur = controlOnBlur;
+	if(this.control.onkeypress == null) this.control.onkeypress = controlOnKeypress;
+	if(this.control.onclick == null) this.control.onclick = controlOnClick;
+
+	if(this.required && this.control.className == '')
+	    this.control.className = this.dialog.requiredControlCSSSelectorName;
 }
 
 function DialogField_evaluateConditionals()
@@ -877,9 +990,22 @@ function handleCancelBubble(control)
 	}
 }
 
-function controlOnClick(control, event)
+function getActiveEventControl(e)
 {
-	field = control.field;
+	var targ;
+	if (!e) var e = window.event;
+	if (e.target) targ = e.target;
+	else if (e.srcElement) targ = e.srcElement;
+	if (targ.nodeType == 3) // defeat Safari bug
+		targ = targ.parentNode;
+    return targ;
+}
+
+function controlOnClick(event)
+{
+	var control = getActiveEventControl(event);
+	var field = control.field;
+
 	if(typeof field == "undefined" || field == null || field.type == null) return;
 
 	if (field.customHandlers.click != null)
@@ -903,9 +1029,11 @@ function controlOnClick(control, event)
 	}
 }
 
-function controlOnKeypress(control, event)
+function controlOnKeypress(event)
 {
-	field = control.field;
+	var control = getActiveEventControl(event);
+	var field = control.field;
+
 	if(typeof field == "undefined" || field == null || field.type == null) return;
 
 	if (field.customHandlers.keyPress != null)
@@ -930,9 +1058,11 @@ function controlOnKeypress(control, event)
 	}
 }
 
-function controlOnFocus(control, event)
+function controlOnFocus(event)
 {
-	field = control.field;
+	var control = getActiveEventControl(event);
+	var field = control.field;
+
 	if(typeof field == "undefined" || field == null || field.type == null) return;
 
     field.appendToClassName("focused");
@@ -970,10 +1100,13 @@ function controlOnFocus(control, event)
 
 }
 
-function controlOnChange(control, event)
+function controlOnChange(event)
 {
+	var control = getActiveEventControl(event);
+	var field = control.field;
+
 	anyControlChangedEventCalled = true;
-	field = control.field;
+
 	if(typeof field == "undefined" || field == null) return;
 
 	if (field.scannable == 'yes')
@@ -1017,9 +1150,11 @@ function controlOnChange(control, event)
 	}
 }
 
-function controlOnBlur(control, event)
+function controlOnBlur(event)
 {
-	field = control.field;
+	var control = getActiveEventControl(event);
+	var field = control.field;
+
 	if(typeof field == "undefined" || field == null || field.type == null) return;
 
     field.resetClassName();

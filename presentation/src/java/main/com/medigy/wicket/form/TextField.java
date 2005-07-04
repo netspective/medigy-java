@@ -43,7 +43,6 @@
  */
 package com.medigy.wicket.form;
 
-import wicket.markup.ComponentTag;
 import wicket.markup.html.form.FormComponent;
 
 public class TextField extends wicket.markup.html.form.TextField implements FormJavaScriptGenerator.Contributor
@@ -76,12 +75,6 @@ public class TextField extends wicket.markup.html.form.TextField implements Form
     {
         super(controlId);
         this.reflectedFormFieldDefn = reflectedFormFieldDefn;
-    }
-
-    protected void onComponentTag(final ComponentTag componentTag)
-    {
-        ((BaseForm) getForm()).onFormComponentTag(this, componentTag);
-        super.onComponentTag(componentTag);
     }
 
     public ReflectedFormFieldDefn getReflectedFormFieldDefn()

@@ -50,20 +50,17 @@ import wicket.util.value.ValueMap;
 
 public class FieldLabel extends WebMarkupContainer
 {
-    private final String controlId;
-
-    public FieldLabel(final String id, final String controlId)
+    public FieldLabel(final String id)
     {
         super(id);
-        this.controlId = controlId;
     }
 
     protected void onComponentTag(final ComponentTag componentTag)
     {
         final ValueMap attributes = componentTag.getAttributes();
-        final String forAttr = attributes.getString("for");
+        final String forAttr = attributes.getString("id");
         if(forAttr == null)
-            attributes.put("for", controlId);
+            attributes.put("id", getPath());
 
         super.onComponentTag(componentTag);
     }

@@ -43,7 +43,6 @@
  */
 package com.medigy.wicket.form;
 
-import wicket.markup.ComponentTag;
 import wicket.markup.html.form.FormComponent;
 import wicket.markup.html.form.validation.PatternValidator;
 
@@ -69,12 +68,6 @@ public class ZipCodeField extends wicket.markup.html.form.TextField implements F
         this.reflectedFormFieldDefn = reflectedFormFieldDefn;
 
         add(new PatternValidator(VALIDATE_PATTERN));
-    }
-
-    protected void onComponentTag(final ComponentTag componentTag)
-    {
-        ((BaseForm) getForm()).onFormComponentTag(this, componentTag);
-        super.onComponentTag(componentTag);
     }
 
     public ReflectedFormFieldDefn getReflectedFormFieldDefn()

@@ -60,18 +60,13 @@ import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.form.DropDownChoice;
 import wicket.markup.html.form.Form;
-import wicket.markup.html.form.FormComponent;
-import wicket.markup.html.form.validation.RequiredValidator;
 import wicket.model.BoundCompoundPropertyModel;
 import wicket.model.IModel;
-import wicket.util.value.ValueMap;
 
 public class BaseForm extends Form implements IComponentResolver
 {
     private static final Log log = LogFactory.getLog(BaseForm.class);
 
-    protected static final String FIELD_LABEL_SUFFIX = "_label";
-    protected static final String FIELD_CONTROL_SUFFIX = "_control";
     protected static final Collection TEST_CHOICES = new ArrayList();
     protected static final Collection RELATIONSHIP_TO_RESPONSIBLE_CHOICES = new ArrayList();
     protected static final Collection EMPLOYMENT_STATUS_CHOICES = new ArrayList();
@@ -119,7 +114,7 @@ public class BaseForm extends Form implements IComponentResolver
             public boolean addComponent(final MarkupContainer container, final MarkupStream markupStream, final ComponentTag tag)
             {
                 final String labelId = tag.getAttributes().getString(ATTRNAME_WICKET_ID);
-                container.autoAdd(new FieldLabel(labelId, (labelId.endsWith(FIELD_LABEL_SUFFIX) ? labelId.substring(0, labelId.length() - FIELD_LABEL_SUFFIX.length()) : labelId)));
+                container.autoAdd(new FieldLabel(labelId));
                 return true;
             }
         });
@@ -130,8 +125,7 @@ public class BaseForm extends Form implements IComponentResolver
             {
                 final String controlId = tag.getAttributes().getString(ATTRNAME_WICKET_ID);
                 final Class serviceBeanClass = getModel().getObject(null).getClass();
-                final String propertyName = controlId;
-                container.autoAdd(((BoundCompoundPropertyModel) getModel()).bind(FormFieldFactory.getInstance().createField(controlId, propertyName, serviceBeanClass, getModel().getClass()), propertyName));
+                container.autoAdd(((BoundCompoundPropertyModel) getModel()).bind(FormFieldFactory.getInstance().createField(controlId, controlId, serviceBeanClass, getModel().getClass()), controlId));
                 return true;
             }
         };
@@ -181,23 +175,6 @@ public class BaseForm extends Form implements IComponentResolver
         add(new CheckBox(fieldName));
     }
 
-    protected void onFormComponentTag(final FormComponent formComponent, final ComponentTag componentTag)
-    {
-        final ValueMap attributes = componentTag.getAttributes();
-        final String idAttr = attributes.getString("id");
-        if(idAttr == null)
-            attributes.put("id", formComponent.getId());  // label will point to this ID using for="{fieldName}_control"
-
-        componentTag.put("onfocus", "return controlOnFocus(this, event)");
-        componentTag.put("onchange", "controlOnChange(this, event)");
-        componentTag.put("onblur", "controlOnBlur(this, event)");
-        componentTag.put("onkeypress", "return controlOnKeypress(this, event)");
-        componentTag.put("onclick", "controlOnClick(this, event)");
-
-        if(formComponent.getValidators().contains(RequiredValidator.getInstance()))
-            componentTag.put("class", "required");
-    }
-
     protected void onComponentTag(ComponentTag componentTag)
     {
         super.onComponentTag(componentTag);
@@ -209,7 +186,7 @@ public class BaseForm extends Form implements IComponentResolver
         super.onComponentTagBody(markupStream, componentTag);
 
         final FormJavaScriptGenerator generator = new FormJavaScriptGenerator(this);
-        generator.setAllowClientValidation(false);
+        generator.setAllowClientValidation(true);
 
         generator.appendDialogRegistrationStart();
         visitFormComponents(generator.getFormComponentVisitor());

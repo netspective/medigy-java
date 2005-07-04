@@ -212,17 +212,14 @@ public class FormJavaScriptGenerator
                 component.getClass().getName();
 
         final StringBuilder defJS = new StringBuilder();
-        final String controlId = component.getId();
-        final String fieldVarName = controlId;
+        final String fieldVarName = component.getId();
 
         defJS.append("var ");
         defJS.append(fieldVarName);
         defJS.append(" = ");
-        defJS.append("dialog.createField(");
-        defJS.append(jsFormObjectVarName);
-        defJS.append("[\"");
-        defJS.append(component.getId());
-        defJS.append("\"], FIELD_TYPES[\"");
+        defJS.append("dialog.createField(\"");
+        defJS.append(component.getPath());
+        defJS.append("\", FIELD_TYPES[\"");
         defJS.append(fieldTypeName);
         defJS.append("\"]);\n");
 
