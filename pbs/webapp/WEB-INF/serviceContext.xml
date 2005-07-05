@@ -183,7 +183,7 @@
 		</property>
         <property name="transactionAttributes">
             <props>
-                <prop key="add*">PROPAGATION_REQUIRED</prop>
+                <prop key="registerPatient*">PROPAGATION_REQUIRED</prop>
             </props>
         </property>
     </bean>
