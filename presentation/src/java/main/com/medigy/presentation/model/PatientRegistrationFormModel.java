@@ -3,93 +3,89 @@
  */
 package com.medigy.presentation.model;
 
-import java.io.Serializable;
-import java.util.Date;
-
-import org.hibernate.validator.NotNull;
-
 import com.medigy.persist.reference.custom.insurance.InsuranceSequenceType;
 import com.medigy.persist.reference.custom.person.EthnicityType;
 import com.medigy.persist.reference.custom.person.PatientResponsiblePartyRoleType;
-import com.medigy.persist.reference.type.BloodType;
-import com.medigy.persist.reference.type.EmploymentStatusType;
-import com.medigy.persist.reference.type.GenderType;
-import com.medigy.persist.reference.type.LanguageType;
-import com.medigy.persist.reference.type.MaritalStatusType;
-import com.medigy.persist.reference.type.PersonNamePrefixType;
+import com.medigy.persist.reference.type.*;
+import com.medigy.service.ServiceVersion;
 import com.medigy.service.dto.person.RegisterPatientParameters;
 import com.medigy.service.validator.ValidEntity;
 import com.medigy.wicket.form.FieldCreator;
-import com.medigy.wicket.form.FormFieldFactory.EmailFieldCreator;
-import com.medigy.wicket.form.FormFieldFactory.MemoFieldCreator;
-import com.medigy.wicket.form.FormFieldFactory.PhoneFieldCreator;
-import com.medigy.wicket.form.FormFieldFactory.SocialSecurityFieldCreator;
-import com.medigy.wicket.form.FormFieldFactory.ZipCodeFieldCreator;
+import com.medigy.wicket.form.FormFieldFactory.*;
 import com.medigy.wicket.form.SelectFieldStyle;
+
+import java.util.Date;
 
 /**
  * Simple model object for FormInput example. Has a number of simple properties
  * that can be retrieved and set.
  */
-public final class PatientRegistrationFormModel implements Serializable
+public final class PatientRegistrationFormModel implements RegisterPatientParameters
 {
 	private String firstName;
     private String lastName;
 	private String middleName;
     private String suffix;
-    private Date dateOfBirth;
-    private String gender;     // TODO: change to xxxCode
-    private String maritalStatus;   // TODO: change to xxxCode
-	private String socialSecurityNumber;
+    private Date birthDate;
+    private String genderCode;     // TODO: change to xxxCode
+    private String maritalStatusCode;   // TODO: change to xxxCode
+	private String ssn;
     private String driversLicenseNumber;
-	private String driversLicenseState;   // TODO: change to xxxCode
-    private String employer;                // TODO: change to employerName
+	private String driversLicenseStateCode;   // TODO: change to xxxCode
+    private String employerName;                // TODO: change to employerName
     private String employerId;
     private String occupation;
-    private String ethnicity;     // TODO: multiple choice - change to xxxCodes array
-    private String languageCodes; // TODO: this one is not on the form - add?
-
+    private String[] ethnicityCodes;     // TODO: multiple choice - change to xxxCodes array
+    private String[] languageCodes; // TODO: this one is not on the form - add?
 	private String personId;
 	private String account;
 	private String chartNumber;
-	private String responsibleParty;
-	private String relationshipToResponsibleOtherRelationship;
+	private String responsiblePartyId;
+	private String responsiblePartyRole;
 	private String miscNotes;
+	private String homePhoneNumber;
+	private String workPhoneNumber;
 	private String homePhone;
 	private String workPhone;
-	private String homePhone2;
-	private String workPhone2;
-	private String cellPhone;
+	private String mobilePhone;
 	private String pager;
 	private String alternate;
-	private String homeAddress;
-	private String homeAddress2;
+	private String street1;
+	private String street2;
 	private String city;
 	private String state;
-	private String zip;
+	private String postalCode;
+    private String province;
+    private String county;
+    private String country;
+    private String postalAddressPurposeType;
+    private String postalAddressPurposeDescription;
 	private String email;
 	private String employerPhoneNumber;
-	private String insuranceProduct;
-	private String insurancePlan;
-	private String patientRelationshipToInsuredPtherRelationship;
-	private String insuredPersonId;
-	private String groupName;
-	private String groupNumber;
-	private String memberNumber;
-	private String coverageBeginDate;
-	private String coverageEndDate;
-	private String individualDeductible;
-	private String familyDeductible;
-	private String individualDeductibleRemaining;
-	private String familyDeductibleRemaining;
-	private String percentagePay;
-	private String threshold;
-	private String officeVisitCoPay;
+	private String primaryInsuranceProductId;
+	private String primaryInsurancePlanId;
+	private String patientRelationshipToInsuredOtherRelationship;
+	private String primaryInsurancePolicyTypeCode;
+	private String primaryInsuranceGroupNumber;
+	private String primaryInsurancePolicyNumber;
+	private Date primaryInsuranceCoverageStartDate;
+	private Date primaryInsuranceCoverageEndDate;
+	private Float primaryInsuranceIndividualDeductibleAmount;
+	private Float primaryInsuranceFamilyDeductibleAmount;
+	private String individualDeductibleRemaining;   // TODO: this field is not in the RegisterPatientParameters interface. Ask Aye if it is needed
+	private String familyDeductibleRemaining;       // TODO: this field is not in the RegisterPatientParameters interface. Ask Aye if it is needed
+	private Float primaryInsurancePercentagePay;
+	private Float primaryInsuranceMaxThresholdAmount;
+	private Float primaryInsuranceOfficeVisitCoPay;
 	private String relationshipToResponsible;
 	private String employmentStatus;
 	private String insuranceSequence;
-	private String patientRelationshipToInsured;
+    private String primaryInsuranceContractHolderId;
+	private String primaryInsuranceContractHolderRole;
 	private String bloodType;
+    private String primaryCareProviderId;
+    private String primaryInsuranceCarrierId;
+    private ServiceVersion version;
 
     private RegisterPatientParameters params;
 
@@ -100,6 +96,16 @@ public final class PatientRegistrationFormModel implements Serializable
 
         // initialize bean from param data
 	}
+
+    public ServiceVersion getServiceVersion()
+    {
+        return version;
+    }
+
+    public void setServiceVersion(ServiceVersion version)
+    {
+        this.version = version;
+    }
 
 	public String getPersonId()
 	{
@@ -131,19 +137,16 @@ public final class PatientRegistrationFormModel implements Serializable
 		this.chartNumber = chartNumber;
 	}
 
-    @NotNull
 	public String getLastName()
 	{
 		return lastName;
 	}
 
-    @NotNull
 	public void setLastName(String lastName)
 	{
 		this.lastName = lastName;
 	}
 
-    @NotNull
 	public String getFirstName()
 	{
 		return firstName;
@@ -177,44 +180,44 @@ public final class PatientRegistrationFormModel implements Serializable
     }
 
     @FieldCreator(creator = SocialSecurityFieldCreator.class)
-	public String getSocialSecurityNumber()
+	public String getSsn()
 	{
-		return socialSecurityNumber;
+		return ssn;
 	}
 
-	public void setSocialSecurityNumber(String socialSecurityNumber)
+	public void setSsn(String ssn)
 	{
-		this.socialSecurityNumber = socialSecurityNumber;
+		this.ssn = ssn;
 	}
 
-	public Date getDateOfBirth()
+	public Date getBirthDate()
 	{
-		return dateOfBirth;
+		return birthDate;
 	}
 
-	public void setDateOfBirth(Date dateOfBirth)
+	public void setBirthDate(Date birthDate)
 	{
-		this.dateOfBirth = dateOfBirth;
+		this.birthDate = birthDate;
 	}
 
-    public String getResponsibleParty()
+    public String getResponsiblePartyId()
 	{
-		return responsibleParty;
+		return responsiblePartyId;
 	}
 
-	public void setResponsibleParty(String responsibleParty)
+	public void setResponsiblePartyId(String responsiblePartyId)
 	{
-		this.responsibleParty = responsibleParty;
+		this.responsiblePartyId = responsiblePartyId;
 	}
 
-    public String getRelationshipToResponsibleOtherRelationship()
+    public String getResponsiblePartyRole()
 	{
-		return relationshipToResponsibleOtherRelationship;
+		return responsiblePartyRole;
 	}
 
-	public void setRelationshipToResponsibleOtherRelationship(String relationshipToResponsibleOtherRelationship)
+    public void setResponsiblePartyRole(String responsiblePartyRole)
 	{
-		this.relationshipToResponsibleOtherRelationship = relationshipToResponsibleOtherRelationship;
+		this.responsiblePartyRole = responsiblePartyRole;
 	}
 
     public String getDriversLicenseNumber()
@@ -227,14 +230,14 @@ public final class PatientRegistrationFormModel implements Serializable
 		this.driversLicenseNumber = driversLicenseNumber;
 	}
 
-    public String getDriversLicenseState()
+    public String getDriversLicenseStateCode()
 	{
-		return driversLicenseState;
+		return driversLicenseStateCode;
 	}
 
-	public void setDriversLicenseState(String driversLicenseState)
+	public void setDriversLicenseStateCode(String driversLicenseStateCode)
 	{
-		this.driversLicenseState = driversLicenseState;
+		this.driversLicenseStateCode = driversLicenseStateCode;
 	}
 
     @FieldCreator(creator = MemoFieldCreator.class)
@@ -246,6 +249,28 @@ public final class PatientRegistrationFormModel implements Serializable
 	public void setMiscNotes(String miscNotes)
 	{
 		this.miscNotes = miscNotes;
+	}
+
+    @FieldCreator(creator = PhoneFieldCreator.class)
+    public String getHomePhoneNumber()
+	{
+		return homePhoneNumber;
+	}
+
+	public void setHomePhoneNumber(String homePhoneNumber)
+	{
+		this.homePhoneNumber = homePhoneNumber;
+	}
+
+    @FieldCreator(creator = PhoneFieldCreator.class)
+    public String getWorkPhoneNumber()
+	{
+		return workPhoneNumber;
+	}
+
+	public void setWorkPhoneNumber(String workPhoneNumber)
+	{
+		this.workPhoneNumber = workPhoneNumber;
 	}
 
     @FieldCreator(creator = PhoneFieldCreator.class)
@@ -261,49 +286,27 @@ public final class PatientRegistrationFormModel implements Serializable
 
     @FieldCreator(creator = PhoneFieldCreator.class)
     public String getWorkPhone()
-	{
-		return workPhone;
-	}
-
-	public void setWorkPhone(String workPhone)
-	{
-		this.workPhone = workPhone;
-	}
-
-    @FieldCreator(creator = PhoneFieldCreator.class)
-    public String getHomePhone2()
-	{
-		return homePhone2;
-	}
-
-	public void setHomePhone2(String homePhone2)
-	{
-		this.homePhone2 = homePhone2;
-	}
-
-    @FieldCreator(creator = PhoneFieldCreator.class)
-    public String getWorkPhone2()
     {
-        return workPhone2;
+        return workPhone;
     }
 
-    public void setWorkPhone2(String workPhone2)
+    public void setWorkPhone(String workPhone)
     {
-        this.workPhone2 = workPhone2;
+        this.workPhone = workPhone;
     }
 
     @FieldCreator(creator = PhoneFieldCreator.class)
-    public String getCellPhone()
+    public String getMobilePhone()
     {
-        return cellPhone;
+        return mobilePhone;
     }
 
-    public void setCellPhone(String cellPhone)
+    public void setMobilePhone(String mobilePhone)
     {
-        this.cellPhone = cellPhone;
+        this.mobilePhone = mobilePhone;
     }
 
-    @FieldCreator(creator = PhoneFieldCreator.class)
+     @FieldCreator(creator = PhoneFieldCreator.class)
     public String getPager()
     {
         return pager;
@@ -324,24 +327,24 @@ public final class PatientRegistrationFormModel implements Serializable
         this.alternate = alternate;
     }
 
-    public String getHomeAddress()
+    public String getStreet1()
     {
-        return homeAddress;
+        return street1;
     }
 
-    public void setHomeAddress(String homeAddress)
+    public void setStreet1(String street1)
     {
-        this.homeAddress = homeAddress;
+        this.street1= street1;
     }
 
-    public String getHomeAddress2()
+    public String getStreet2()
     {
-        return homeAddress2;
+        return street2;
     }
 
-    public void setHomeAddress2(String homeAddress2)
+    public void setStreet2(String street2)
     {
-        this.homeAddress2 = homeAddress2;
+        this.street2 = street2;
     }
 
     public String getCity()
@@ -365,14 +368,64 @@ public final class PatientRegistrationFormModel implements Serializable
     }
 
     @FieldCreator(creator = ZipCodeFieldCreator.class)
-    public String getZip()
+    public String getPostalCode()
     {
-        return zip;
+        return postalCode;
     }
 
-    public void setZip(String zip)
+    public void setPostalCode(String postalCode)
     {
-        this.zip = zip;
+        this.postalCode = postalCode;
+    }
+
+    public String getProvince()
+    {
+        return province;
+    }
+
+    public void setProvince(String province)
+    {
+        this.province = province;
+    }
+
+    public String getCounty()
+    {
+        return county;
+    }
+
+    public void setCounty(String county)
+    {
+        this.county= county;
+    }
+
+    public String getCountry()
+    {
+        return country;
+    }
+
+    public void setCountry(String country)
+    {
+        this.country = country;
+    }
+
+    public String getPostalAddressPurposeType()
+    {
+        return postalAddressPurposeType;
+    }
+
+    public void setPostalAddressPurposeType(String postalAddressPurposeType)
+    {
+        this.postalAddressPurposeType = postalAddressPurposeType;
+    }
+
+    public String getPostalAddressPurposeDescription()
+    {
+        return postalAddressPurposeDescription;
+    }
+
+    public void setPostalAddressPurposeDescription(String postalAddressPurposeDescription)
+    {
+        this.postalAddressPurposeDescription = postalAddressPurposeDescription;
     }
 
     @FieldCreator(creator = EmailFieldCreator.class)
@@ -416,124 +469,124 @@ public final class PatientRegistrationFormModel implements Serializable
         this.employerPhoneNumber = employerPhoneNumber;
     }
 
-    public String getInsuranceProduct()
+    public String getPrimaryInsuranceProductId()
     {
-        return insuranceProduct;
+        return primaryInsuranceProductId;
     }
 
-    public void setInsuranceProduct(String insuranceProduct)
+    public void setPrimaryInsuranceProductId(String primaryInsuranceProductId)
     {
-        this.insuranceProduct = insuranceProduct;
+        this.primaryInsuranceProductId = primaryInsuranceProductId;
     }
 
-    public String getInsurancePlan()
+    public String getPrimaryInsurancePlanId()
     {
-        return insurancePlan;
+        return primaryInsurancePlanId;
     }
 
-    public void setInsurancePlan(String insurancePlan)
+    public void setPrimaryInsurancePlanId(String primaryInsurancePlanId)
     {
-        this.insurancePlan = insurancePlan;
+        this.primaryInsurancePlanId = primaryInsurancePlanId;
     }
 
-    public String getPatientRelationshipToInsuredPtherRelationship()
+    public String getPatientRelationshipToInsuredOtherRelationship()
     {
-        return patientRelationshipToInsuredPtherRelationship;
+        return patientRelationshipToInsuredOtherRelationship;
     }
 
-    public void setPatientRelationshipToInsuredPtherRelationship(String patientRelationshipToInsuredPtherRelationship)
+    public void setPatientRelationshipToInsuredOtherRelationship(String patientRelationshipToInsuredOtherRelationship)
     {
-        this.patientRelationshipToInsuredPtherRelationship = patientRelationshipToInsuredPtherRelationship;
+        this.patientRelationshipToInsuredOtherRelationship = patientRelationshipToInsuredOtherRelationship;
     }
 
-    public String getInsuredPersonId()
+    public String getPrimaryInsuranceContractHolderId()
     {
-        return insuredPersonId;
+        return primaryInsuranceContractHolderId;
     }
 
-    public void setInsuredPersonId(String insuredPersonId)
+    public void setPrimaryInsuranceContractHolderId(String primaryInsuranceContractHolderId)
     {
-        this.insuredPersonId = insuredPersonId;
+        this.primaryInsuranceContractHolderId = primaryInsuranceContractHolderId;
     }
 
-    public String getEmployer()
+    public String getEmployerName()
     {
-        return employer;
+        return employerName;
     }
 
-    public void setEmployer(String employer)
+    public void setEmployerName(String employerName)
     {
-        this.employer = employer;
+        this.employerName = employerName;
     }
 
-    public String getGroupName()
+    public String getPrimaryInsurancePolicyTypeCode()
     {
-        return groupName;
+        return primaryInsurancePolicyTypeCode;
     }
 
-    public void setGroupName(String groupName)
+    public void setPrimaryInsurancePolicyTypeCode(String primaryInsurancePolicyTypeCode)
     {
-        this.groupName = groupName;
+        this.primaryInsurancePolicyTypeCode = primaryInsurancePolicyTypeCode;
     }
 
-    public String getGroupNumber()
+    public String getPrimaryInsuranceGroupNumber()
     {
-        return groupNumber;
+        return primaryInsuranceGroupNumber;
     }
 
-    public void setGroupNumber(String groupNumber)
+    public void setPrimaryInsuranceGroupNumber(String primaryInsuranceGroupNumber)
     {
-        this.groupNumber = groupNumber;
+        this.primaryInsuranceGroupNumber = primaryInsuranceGroupNumber;
     }
 
-    public String getMemberNumber()
+    public String getPrimaryInsurancePolicyNumber()
     {
-        return memberNumber;
+        return primaryInsurancePolicyNumber;
     }
 
-    public void setMemberNumber(String memberNumber)
+    public void setPrimaryInsurancePolicyNumber(String primaryInsurancePolicyNumber)
     {
-        this.memberNumber = memberNumber;
+        this.primaryInsurancePolicyNumber = primaryInsurancePolicyNumber;
     }
 
-    public String getCoverageBeginDate()
+    public Date getPrimaryInsuranceCoverageStartDate()
     {
-        return coverageBeginDate;
+        return primaryInsuranceCoverageStartDate;
     }
 
-    public void setCoverageBeginDate(String coverageBeginDate)
+    public void setPrimaryInsuranceCoverageStartDate(Date primaryInsuranceCoverageStartDate)
     {
-        this.coverageBeginDate = coverageBeginDate;
+        this.primaryInsuranceCoverageStartDate = primaryInsuranceCoverageStartDate;
     }
 
-    public String getCoverageEndDate()
+    public Date getPrimaryInsuranceCoverageEndDate()
     {
-        return coverageEndDate;
+        return primaryInsuranceCoverageEndDate;
     }
 
-    public void setCoverageEndDate(String coverageEndDate)
+    public void setPrimaryInsuranceCoverageEndDate(Date primaryInsuranceCoverageEndDate)
     {
-        this.coverageEndDate = coverageEndDate;
+        this.primaryInsuranceCoverageEndDate = primaryInsuranceCoverageEndDate;
     }
 
-    public String getIndividualDeductible()
+    public Float getPrimaryInsuranceIndividualDeductibleAmount()
     {
-        return individualDeductible;
+        return primaryInsuranceIndividualDeductibleAmount;
     }
 
-    public void setIndividualDeductible(String individualDeductible)
+    public void setPrimaryInsuranceIndividualDeductibleAmount(Float primaryInsuranceIndividualDeductibleAmount)
     {
-        this.individualDeductible = individualDeductible;
+        this.primaryInsuranceIndividualDeductibleAmount = primaryInsuranceIndividualDeductibleAmount;
     }
 
-    public String getFamilyDeductible()
+    public Float getPrimaryInsuranceFamilyDeductibleAmount()
     {
-        return familyDeductible;
+        return primaryInsuranceFamilyDeductibleAmount;
     }
 
-    public void setFamilyDeductible(String familyDeductible)
+    public void setPrimaryInsuranceFamilyDeductibleAmount(Float primaryInsuranceFamilyDeductibleAmount)
     {
-        this.familyDeductible = familyDeductible;
+        this.primaryInsuranceFamilyDeductibleAmount = primaryInsuranceFamilyDeductibleAmount;
     }
 
     public String getIndividualDeductibleRemaining()
@@ -556,58 +609,58 @@ public final class PatientRegistrationFormModel implements Serializable
         this.familyDeductibleRemaining = familyDeductibleRemaining;
     }
 
-    public String getPercentagePay()
+    public Float getPrimaryInsurancePercentagePay()
     {
-        return percentagePay;
+        return primaryInsurancePercentagePay;
     }
 
-    public void setPercentagePay(String percentagePay)
+    public void setPrimaryInsurancePercentagePay(Float primaryInsurancePercentagePay)
     {
-        this.percentagePay = percentagePay;
+        this.primaryInsurancePercentagePay = primaryInsurancePercentagePay;
     }
 
-    public String getThreshold()
+    public Float getPrimaryInsuranceMaxThresholdAmount()
     {
-        return threshold;
+        return primaryInsuranceMaxThresholdAmount;
     }
 
-    public void setThreshold(String threshold)
+    public void setPrimaryInsuranceMaxThresholdAmount(Float primaryInsuranceMaxThresholdAmount)
     {
-        this.threshold = threshold;
+        this.primaryInsuranceMaxThresholdAmount = primaryInsuranceMaxThresholdAmount;
     }
 
-    public String getOfficeVisitCoPay()
+    public Float getPrimaryInsuranceOfficeVisitCoPay()
     {
-        return officeVisitCoPay;
+        return primaryInsuranceOfficeVisitCoPay;
     }
 
-    public void setOfficeVisitCoPay(String officeVisitCoPay)
+    public void setPrimaryInsuranceOfficeVisitCoPay(Float primaryInsuranceOfficeVisitCoPay)
     {
-        this.officeVisitCoPay = officeVisitCoPay;
+        this.primaryInsuranceOfficeVisitCoPay = primaryInsuranceOfficeVisitCoPay;
     }
 
     @ValidEntity(entity = GenderType.class)
     @SelectFieldStyle(style = SelectFieldStyle.Style.COMBO)
-    public String getGender()
+    public String getGenderCode()
     {
-        return gender;
+        return genderCode;
     }
 
-    public void setGender(String gender)
+    public void setGenderCode(String genderCode)
     {
-        this.gender = gender;
+        this.genderCode = genderCode;
     }
 
     @ValidEntity(entity = MaritalStatusType.class)
     @SelectFieldStyle(style = SelectFieldStyle.Style.COMBO)
-    public String getMaritalStatus()
+    public String getMaritalStatusCode()
     {
-        return maritalStatus;
+        return maritalStatusCode;
     }
 
-    public void setMaritalStatus(String maritalStatus)
+    public void setMaritalStatusCode(String maritalStatusCode)
     {
-        this.maritalStatus = maritalStatus;
+        this.maritalStatusCode = maritalStatusCode;
     }
 
     @ValidEntity(entity = PatientResponsiblePartyRoleType.class)
@@ -648,14 +701,14 @@ public final class PatientRegistrationFormModel implements Serializable
 
     @ValidEntity(entity = PatientResponsiblePartyRoleType.class)
     @SelectFieldStyle(style = SelectFieldStyle.Style.COMBO)
-    public String getPatientRelationshipToInsured()
+    public String getPrimaryInsuranceContractHolderRole()
     {
-        return patientRelationshipToInsured;
+        return primaryInsuranceContractHolderRole;
     }
 
-    public void setPatientRelationshipToInsured(String patientRelationshipToInsured)
+    public void setPrimaryInsuranceContractHolderRole(String primaryInsuranceContractHolderRole)
     {
-        this.patientRelationshipToInsured = patientRelationshipToInsured;
+        this.primaryInsuranceContractHolderRole = primaryInsuranceContractHolderRole;
     }
 
     @ValidEntity(entity = BloodType.class)
@@ -672,87 +725,114 @@ public final class PatientRegistrationFormModel implements Serializable
 
     @ValidEntity(entity = EthnicityType.class)
     @SelectFieldStyle(style = SelectFieldStyle.Style.RADIO)
-    public String getEthnicity()
+    public String[] getEthnicityCodes()
     {
-        return ethnicity;
+        return ethnicityCodes;
     }
 
-    public void setEthnicity(String ethnicity)
+    public void setEthnicityCodes(String[] ethnicityCodes)
     {
-        this.ethnicity = ethnicity;
+        this.ethnicityCodes = ethnicityCodes;
     }
 
     @ValidEntity(entity = LanguageType.class)
     @SelectFieldStyle(style = SelectFieldStyle.Style.RADIO)
-    public String getLanguageCodes()
+    public String[] getLanguageCodes()
     {
         return languageCodes;
     }
 
-    public void setLanguageCodes(String languageCodes)
+    public void setLanguageCodes(String[] languageCodes)
     {
         this.languageCodes = languageCodes;
+    }
+
+    public String getPrimaryCareProviderId()
+    {
+        return primaryCareProviderId;
+    }
+
+    public void setPrimaryCareProviderId(String primaryCareProviderId)
+    {
+        this.primaryCareProviderId = primaryCareProviderId;
+    }
+
+    public String getPrimaryInsuranceCarrierId()
+    {
+        return primaryInsuranceCarrierId;
+    }
+
+    public void setPrimaryInsuranceCarrierId(String primaryInsuranceCarrierId)
+    {
+        this.primaryInsuranceCarrierId = primaryInsuranceCarrierId;
     }
 
     public String toString()
 	{
 		StringBuffer b = new StringBuffer();
-		b.append("[TestInputObject personIdProperty = '").append(personId)
-		 .append("', accountProperty = ").append(account)
-		 .append(", chartNumberProperty = ").append(chartNumber)
-		 .append(", lastNameProperty = ").append(lastName)
-		 .append(", firstNameProperty = ").append(firstName)
-		 .append(", middleNameProperty = ").append(middleName)
-		 .append(", dateOfBirthProperty = ").append(dateOfBirth)
-		 .append(", socialSecurityNumberProperty = ").append(socialSecurityNumber)
-		 .append(", responsibleParty = ").append(responsibleParty)
-		 .append(", responsibleParty = ").append(relationshipToResponsibleOtherRelationship)
+		b.append("[TestInputObject personId = '").append(personId)
+		 .append("', account = ").append(account)
+		 .append(", chartNumber = ").append(chartNumber)
+		 .append(", lastName = ").append(lastName)
+		 .append(", firstName = ").append(firstName)
+		 .append(", middleName = ").append(middleName)
+		 .append(", birthDate = ").append(birthDate)
+		 .append(", ssn = ").append(ssn)
+		 .append(", responsiblePartyId = ").append(responsiblePartyId)
+		 .append(", responsiblePartyRole = ").append(responsiblePartyRole)
 		 .append(", driversLicenseNumber = ").append(driversLicenseNumber)
-		 .append(", driversLicenseState = ").append(driversLicenseState)
+		 .append(", driversLicenseStateCode = ").append(driversLicenseStateCode)
 		 .append(", miscNotes = ").append(miscNotes)
-		 .append(", homePhone = ").append(homePhone)
+		 .append(", homePhoneNumber = ").append(homePhoneNumber)
 		 .append(", workPhone = ").append(workPhone)
-		 .append(", homePhone2 = ").append(homePhone2)
-		 .append(", workPhone2 = ").append(workPhone2)
-		 .append(", cellPhone = ").append(cellPhone)
+		 .append(", homePhone = ").append(homePhone)
+		 .append(", workPhoneNumber = ").append(workPhoneNumber)
+		 .append(", mobilePhone = ").append(mobilePhone)
 		 .append(", pager = ").append(pager)
 		 .append(", alternate = ").append(alternate)
-		 .append(", homeAddress = ").append(homeAddress)
-		 .append(", homeAddress2 = ").append(homeAddress2)
+		 .append(", street1 = ").append(street1)
+		 .append(", street2 = ").append(street2)
 		 .append(", city = ").append(city)
 		 .append(", state = ").append(state)
-		 .append(", zip = ").append(zip)
+		 .append(", postalCode = ").append(postalCode)
+		 .append(", province = ").append(province)
+		 .append(", county = ").append(county)
+		 .append(", country = ").append(country)
+		 .append(", postalAddressPurposeType = ").append(postalAddressPurposeType)
+		 .append(", postalAddressPurposeDescription = ").append(postalAddressPurposeDescription)
 		 .append(", email = ").append(email)
 		 .append(", employerId = ").append(employerId)
 		 .append(", occupation = ").append(occupation)
 		 .append(", employerPhoneNumber = ").append(employerPhoneNumber)
-		 .append(", insuranceProduct = ").append(insuranceProduct)
-		 .append(", insurancePlan = ").append(insurancePlan)
-		 .append(", patientRelationshipToInsuredPtherRelationship = ").append(patientRelationshipToInsuredPtherRelationship)
-		 .append(", insuredPersonId = ").append(insuredPersonId)
-		 .append(", employer = ").append(employer)
-		 .append(", groupName = ").append(groupName)
-		 .append(", groupNumber = ").append(groupNumber)
-		 .append(", memberNumber = ").append(memberNumber)
-		 .append(", coverageBeginDate = ").append(coverageBeginDate)
-		 .append(", coverageEndDate = ").append(coverageEndDate)
-		 .append(", individualDeductible = ").append(individualDeductible)
-		 .append(", familyDeductible = ").append(familyDeductible)
+		 .append(", primaryInsuranceProductId = ").append(primaryInsuranceProductId)
+		 .append(", primaryInsurancePlanId = ").append(primaryInsurancePlanId)
+		 .append(", patientRelationshipToInsuredOtherRelationship = ").append(patientRelationshipToInsuredOtherRelationship)
+		 .append(", primaryInsuranceContractHolderId = ").append(primaryInsuranceContractHolderId)
+		 .append(", employerName = ").append(employerName)
+		 .append(", primaryInsurancePolicyTypeCode = ").append(primaryInsurancePolicyTypeCode)
+		 .append(", primaryInsuranceGroupNumber = ").append(primaryInsuranceGroupNumber)
+		 .append(", primaryInsurancePolicyNumber = ").append(primaryInsurancePolicyNumber)
+		 .append(", primaryInsuranceCoverageStartDate = ").append(primaryInsuranceCoverageStartDate)
+		 .append(", primaryInsuranceCoverageEndDate = ").append(primaryInsuranceCoverageEndDate)
+		 .append(", primaryInsuranceIndividualDeductibleAmount = ").append(primaryInsuranceIndividualDeductibleAmount)
+		 .append(", primaryInsuranceFamilyDeductibleAmount = ").append(primaryInsuranceFamilyDeductibleAmount)
 		 .append(", individualDeductibleRemaining = ").append(individualDeductibleRemaining)
 		 .append(", familyDeductibleRemaining = ").append(familyDeductibleRemaining)
-		 .append(", percentagePay = ").append(percentagePay)
-		 .append(", threshold = ").append(threshold)
-		 .append(", officeVisitCoPay = ").append(officeVisitCoPay)
+		 .append(", primaryInsurancePercentagePay = ").append(primaryInsurancePercentagePay)
+		 .append(", primaryInsuranceMaxThresholdAmount = ").append(primaryInsuranceMaxThresholdAmount)
+		 .append(", primaryInsuranceOfficeVisitCoPay = ").append(primaryInsuranceOfficeVisitCoPay)
 		 .append(", suffix = ").append(suffix)
-		 .append(", gender = ").append(gender)
-		 .append(", maritalStatus = ").append(maritalStatus)
+		 .append(", genderCode = ").append(genderCode)
+		 .append(", maritalStatusCode = ").append(maritalStatusCode)
 		 .append(", relationshipToResponsible = ").append(relationshipToResponsible)
 		 .append(", employmentStatus = ").append(employmentStatus)
 		 .append(", insuranceSequence = ").append(insuranceSequence)
-		 .append(", patientRelationshipToInsured = ").append(patientRelationshipToInsured)
+		 .append(", primaryInsuranceContractHolderRole = ").append(primaryInsuranceContractHolderRole)
 		 .append(", bloodType = ").append(bloodType)
-		 .append(", ethnicity = ").append(ethnicity)
-		 .append(", languageCodes = ").append(languageCodes);
+		 .append(", ethnicityCodes = ").append(ethnicityCodes)
+		 .append(", languageCodes = ").append(languageCodes)
+		 .append(", primaryCareProviderId = ").append(primaryCareProviderId)
+		 .append(", primaryInsuranceCarrierId = ").append(primaryInsuranceCarrierId);
 
 		b.append("]");
 		return b.toString();

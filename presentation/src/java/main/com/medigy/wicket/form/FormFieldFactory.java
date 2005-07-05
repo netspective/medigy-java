@@ -43,24 +43,17 @@
  */
 package com.medigy.wicket.form;
 
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.regex.Pattern;
-
 import com.medigy.presentation.model.ChoicesFactory;
 import com.medigy.service.validator.ValidEntity;
-import wicket.markup.html.form.DropDownChoice;
-import wicket.markup.html.form.FormComponent;
-import wicket.markup.html.form.RadioChoice;
-import wicket.markup.html.form.TextArea;
-import wicket.markup.html.form.TextField;
+import wicket.markup.html.form.*;
 import wicket.markup.html.form.model.IChoiceList;
 import wicket.markup.html.form.validation.EmailAddressPatternValidator;
 import wicket.markup.html.form.validation.PatternValidator;
 import wicket.markup.html.form.validation.TypeValidator;
+
+import java.io.Serializable;
+import java.util.*;
+import java.util.regex.Pattern;
 
 public class FormFieldFactory
 {
@@ -78,6 +71,7 @@ public class FormFieldFactory
     {
         addFieldCreator(ValidEntity.class, new ReferenceEntityFieldCreator());
         addFieldCreator(String.class, new TextFieldCreator());
+        addFieldCreator(Float.class, new FloatFieldCreator());
         addFieldCreator(Date.class, new DateFieldCreator());
         addFieldCreator(SocialSecurityFieldCreator.class, new SocialSecurityFieldCreator());
         addFieldCreator(PhoneFieldCreator.class, new PhoneFieldCreator());
@@ -91,8 +85,11 @@ public class FormFieldFactory
         fieldCreatorMap.put(dataType, creator);
     }
 
-    public FieldCreator getFieldCreator(final Class dataType)
+    public FieldCreator getFieldCreator(Class dataType)
     {
+        if(dataType.isAssignableFrom(Serializable.class))  // TODO: some of the getter return types in RegisterPatientParameters are Serializable - need to figure out how to handle this
+            dataType = String.class;
+
         return fieldCreatorMap.get(dataType);
     }
 

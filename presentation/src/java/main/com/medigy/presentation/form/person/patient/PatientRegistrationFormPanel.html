@@ -56,25 +56,25 @@
                             </tr>
                             <tr class="field">
                                 <td class="label">
-                                    <label wicket:id="socialSecurityNumber_label">Social Security</label> /
-                                    <label wicket:id="dateOfBirth_label">Date of Birth</label>
+                                    <label wicket:id="ssn_label">Social Security</label> /
+                                    <label wicket:id="birthDate_label">Date of Birth</label>
                                 </td>
                                 <td class="control">
-                                    <input type="text" wicket:id="socialSecurityNumber" value="999-99-9999"/>
-                                    <input type="text" wicket:id="dateOfBirth" value="09/13/1968"/>
+                                    <input type="text" wicket:id="ssn" value="999-99-9999"/>
+                                    <input type="text" wicket:id="birthDate" value="09/13/1968"/>
                                 </td>
                             </tr>
                             <tr class="field">
                                 <td class="label">
-                                    <label wicket:id="gender_label">Gender</label> /
-                                    <label wicket:id="maritalStatus_label">Marital Status</label>
+                                    <label wicket:id="genderCode_label">Gender</label> /
+                                    <label wicket:id="maritalStatusCode_label">Marital Status</label>
                                 </td>
                                 <td class="control">
-                                    <select wicket:id="gender">
+                                    <select wicket:id="genderCode">
                                         <option>Male</option>
                                         <option>Female</option>
                                     </select>
-                                    <select wicket:id="maritalStatus">
+                                    <select wicket:id="maritalStatusCode">
                                         <option>Married</option>
                                         <option>Unmarried</option>
                                     </select>
@@ -95,10 +95,10 @@
                             </tr>
                             <tr>
                                 <td class="label">
-                                    <label wicket:id="ethnicity_label">Ethnicity</label>
+                                    <label wicket:id="ethnicityCodes_label">Ethnicity</label>
                                 </td>
                                 <td class="control">
-                                    <span wicket:id="ethnicity">
+                                    <span wicket:id="ethnicityCodes">
                                         <input type="radio">Native-American
                                         <input type="radio">Caucasian
                                         <input type="radio">African-American
@@ -127,33 +127,33 @@
                             </tr>
                             <tr class="field">
                                 <td class="label">
-                                    <label wicket:id="responsibleParty_label">Responsible Party</label>
+                                    <label wicket:id="responsiblePartyId_label">Responsible Party</label>
                                 </td>
                                 <td class="control">
-                                    <input type="text" wicket:id="responsibleParty" value=""/>
+                                    <input type="text" wicket:id="responsiblePartyId" value=""/>
                                 </td>
                             </tr>
                             <tr class="field">
                                 <td class="label">
                                     <label wicket:id="relationshipToResponsible_label">Relationship To Responsible Party</label> /
-                                    <label wicket:id="relationshipToResponsibleOtherRelationship_label">Other Relationship Name</label>
+                                    <label wicket:id="patientRelationshipToInsuredOtherRelationship_label">Other Relationship Name</label>
                                 </td>
                                 <td class="control">
                                     <select wicket:id="relationshipToResponsible">
                                         <option>Self</option>
                                         <option>Spouse</option>
                                     </select>
-                                    <input type="text" wicket:id="relationshipToResponsibleOtherRelationship" value=""/>
+                                    <input type="text" wicket:id="patientRelationshipToInsuredOtherRelationship" value=""/>
                                 </td>
                             </tr>
                             <tr class="field">
                                 <td class="label">
                                     <label wicket:id="driversLicenseNumber_label">Driver's License Number</label> /
-                                    <label wicket:id="driversLicenseState_label">State</label>
+                                    <label wicket:id="driversLicenseStateCode_label">State</label>
                                 </td>
                                 <td class="control">
                                     <input type="text" wicket:id="driversLicenseNumber" value=""/>
-                                    <input type="text" wicket:id="driversLicenseState" value=""/>
+                                    <input type="text" wicket:id="driversLicenseStateCode" value=""/>
                                 </td>
                             </tr>
                             <tr class="field">
@@ -161,7 +161,7 @@
                                     <label wicket:id="miscNotes_label">Misc Notes</label>
                                 </td>
                                 <td class="control">
-                                    <textarea wicket:id="miscNotes" value=""></textarea>
+                                    <input type="memo" wicket:id="miscNotes" value=""/>
                                 </td>
                             </tr>
                             <tr class="field">
@@ -181,21 +181,21 @@
                         <table class="vertical-fields">
                             <tr class="field">
                                 <td class="label">
-                                    <label wicket:id="homePhone2_label">Home Phone</label> /
-                                    <label wicket:id="workPhone2_label">Work Phone</label>
+                                    <label wicket:id="homePhoneNumber_label">Home Phone</label> /
+                                    <label wicket:id="workPhoneNumber_label">Work Phone</label>
                                 </td>
                                 <td class="control">
-                                    <input type="text" wicket:id="homePhone2" value=""/>
-                                    <input type="text" wicket:id="workPhone2" value=""/>
+                                    <input type="text" wicket:id="homePhoneNumber" value=""/>
+                                    <input type="text" wicket:id="workPhoneNumber" value=""/>
                                 </td>
                             </tr>
                             <tr class="field">
                                 <td class="label">
-                                    <label wicket:id="cellPhone_label">Cell Phone</label> /
+                                    <label wicket:id="mobilePhone_label">Cell Phone</label> /
                                     <label wicket:id="pager_label">Pager</label>
                                 </td>
                                 <td class="control">
-                                    <input type="text" wicket:id="cellPhone" value="703-345-7752"/>
+                                    <input type="text" wicket:id="mobilePhone" value="703-345-7752"/>
                                     <input type="text" wicket:id="pager" value=""/>
                                 </td>
                             </tr>
@@ -209,30 +209,58 @@
                             </tr>
                             <tr class="field">
                                 <td class="label">
-                                    <label wicket:id="homeAddress_label">Home Address</label>
+                                    <label wicket:id="street1_label">Home Address</label>
                                 </td>
                                 <td class="control">
-                                    <input type="text" wicket:id="homeAddress" value=""/>
+                                    <input type="text" wicket:id="street1" value=""/>
                                 </td>
                             </tr>
                             <tr class="field">
                                 <td class="label">
-                                    <label wicket:id="homeAddress2_label"></label>
+                                    <label wicket:id="street2_label"></label>
                                 </td>
                                 <td class="control">
-                                    <input type="text" wicket:id="homeAddress2" value=""/>
+                                    <input type="text" wicket:id="street2" value=""/>
                                 </td>
                             </tr>
                             <tr class="field">
                                 <td class="label">
                                     <label wicket:id="city_label">City</label> /
                                     <label wicket:id="state_label">State</label> /
-                                    <label wicket:id="zip_label">Zip</label>
+                                    <label wicket:id="postalCode_label">Zip</label>
                                 </td>
                                 <td class="control">
                                     <input type="text" wicket:id="city" value=""/>
                                     <input type="text" wicket:id="state" value=""/>
-                                    <input type="text" wicket:id="zip" value=""/>
+                                    <input type="text" wicket:id="postalCode" value=""/>
+                                </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="label">
+                                    <label wicket:id="province_label">Provence</label> /
+                                    <label wicket:id="county_label">County</label> /
+                                    <label wicket:id="country_label">Country</label>
+                                </td>
+                                <td class="control">
+                                    <input type="text" wicket:id="province" value=""/>
+                                    <input type="text" wicket:id="county" value=""/>
+                                    <input type="text" wicket:id="country" value=""/>
+                                </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="label">
+                                    <label wicket:id="postalAddressPurposeType_label">Address Purpose</label>
+                                </td>
+                                <td class="control">
+                                    <input type="text" wicket:id="postalAddressPurposeType" value=""/>
+                                </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="label">
+                                    <label wicket:id="postalAddressPurposeDescription_label">Address Purpose Description</label>
+                                </td>
+                                <td class="control">
+                                    <input type="text" wicket:id="postalAddressPurposeDescription" value=""/>
                                 </td>
                             </tr>
                             <tr class="field">
@@ -308,18 +336,18 @@
                                       </tr>
                                       <tr class="field">
                                           <td class="label">
-                                              <label wicket:id="insuranceProduct_label">Insurance Product</label>
+                                              <label wicket:id="primaryInsuranceProductId_label">Insurance Product</label>
                                           </td>
                                           <td class="control">
-                                              <input type="text" wicket:id="insuranceProduct" value=""/>
+                                              <input type="text" wicket:id="primaryInsuranceProductId" value=""/>
                                           </td>
                                       </tr>
                                       <tr class="field">
                                           <td class="label">
-                                              <label wicket:id="insurancePlan_label">Insurance Plan</label>
+                                              <label _wicket:id="primaryInsurancePlanId_label">Insurance Plan</label>
                                           </td>
                                           <td class="control">
-                                              <input type="text" wicket:id="insurancePlan" value=""/>
+                                              <input type="text" _wicket:id="primaryInsurancePlanId" value=""/>
                                           </td>
                                       </tr>
                                 </table>
@@ -335,63 +363,63 @@
                             <td>
                                 <fieldset class="group">
                                     <legend wicket:id="generalPlanInformation-group-label">General Plan Information</legend>
-                        <table class="vertical-fields">
-                            <tr class="field">
-                                <td class="label">
-                                    <label wicket:id="patientRelationshipToInsured_label">Patient's Relationship to Insured</label>
-                                </td>
-                                <td class="control">
-                                    <select wicket:id="patientRelationshipToInsured">
-                                        <option>Self</option>
-                                        <option>Spouse</option>
-                                        <option>Paternal</option>
-                                        <option>Maternal</option>
-                                    </select>
-                                </td>
-                            </tr>
-                            <tr class="field">
-                                <td class="label">
-                                    <label wicket:id="patientRelationshipToInsuredPtherRelationship_label">Other Relationship</label>
-                                </td>
-                                <td class="control">
-                                    <input type="text" wicket:id="patientRelationshipToInsuredPtherRelationship" value=""/>
-                                </td>
-                            </tr>
-                            <tr class="field">
-                                <td class="label">
-                                    <label wicket:id="insuredPersonId_label">Insured Person ID</label>
-                                </td>
-                                <td class="control">
-                                    <input type="text" wicket:id="insuredPersonId" value=""/>
-                                </td>
-                            </tr>
-                            <tr class="field">
-                                <td class="label">
-                                    <label wicket:id="employer_label">Employer</label>
-                                </td>
-                                <td class="control">
-                                    <input type="text" wicket:id="employer" value=""/>
-                                </td>
-                            </tr>
-                            <tr class="field">
-                                <td class="label">
-                                    <label wicket:id="groupName_label">Group Name</label> /
-                                    <label wicket:id="groupNumber_label">Number</label>
-                                </td>
-                                <td class="control">
-                                    <input type="text" wicket:id="groupName" value=""/>
-                                    <input type="text" wicket:id="groupNumber" value=""/>
-                                </td>
-                            </tr>
-                            <tr class="field">
-                                <td class="label">
-                                    <label wicket:id="memberNumber_label">Member Number</label>
-                                </td>
-                                <td class="control">
-                                    <input type="text" wicket:id="memberNumber" value=""/>
-                                </td>
-                            </tr>
-                        </table>
+                                    <table class="vertical-fields">
+                                        <tr class="field">
+                                            <td class="label">
+                                                <label wicket:id="primaryInsuranceContractHolderRole_label">Patient's Relationship to Insured</label>
+                                            </td>
+                                            <td class="control">
+                                                <select wicket:id="primaryInsuranceContractHolderRole">
+                                                    <option>Self</option>
+                                                    <option>Spouse</option>
+                                                    <option>Paternal</option>
+                                                    <option>Maternal</option>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                       <tr class="field">
+                                           <td class="label">
+                                               <label wicket:id="patientRelationshipToInsuredOtherRelationship_label">Other Relationship</label>
+                                           </td>
+                                           <td class="control">
+                                               <input type="text" wicket:id="patientRelationshipToInsuredOtherRelationship" value=""/>
+                                           </td>
+                                       </tr>
+                                       <tr class="field">
+                                           <td class="label">
+                                               <label wicket:id="primaryInsuranceContractHolderId_label">Insured Person ID</label>
+                                           </td>
+                                           <td class="control">
+                                               <input type="text" wicket:id="primaryInsuranceContractHolderId" value=""/>
+                                           </td>
+                                       </tr>
+                                       <tr class="field">
+                                           <td class="label">
+                                               <label wicket:id="employerName_label">Employer</label>
+                                           </td>
+                                           <td class="control">
+                                               <input type="text" wicket:id="employerName" value=""/>
+                                           </td>
+                                       </tr>
+                                       <tr class="field">
+                                           <td class="label">
+                                               <label wicket:id="primaryInsurancePolicyTypeCode_label">Group Name</label> /
+                                               <label wicket:id="primaryInsuranceGroupNumber_label">Number</label>
+                                           </td>
+                                           <td class="control">
+                                               <input type="text" wicket:id="primaryInsurancePolicyTypeCode" value=""/>
+                                               <input type="text" wicket:id="primaryInsuranceGroupNumber" value=""/>
+                                           </td>
+                                       </tr>
+                                       <tr class="field">
+                                           <td class="label">
+                                               <label wicket:id="primaryInsurancePolicyNumber_label">Member Number</label>
+                                           </td>
+                                           <td class="control">
+                                               <input type="text" wicket:id="primaryInsurancePolicyNumber" value=""/>
+                                           </td>
+                                       </tr>
+                                   </table>
                                </fieldset>
 	                      </td>
                           <td class="container-separator">&nbsp;</td>
@@ -401,22 +429,22 @@
                         <table class="vertical-fields">
                             <tr class="field">
                                 <td class="label">
-                                    <label wicket:id="coverageBeginDate_label">Coverage Begin Date</label> /
-                                    <label wicket:id="coverageEndDate_label">End Date</label>
+                                    <label wicket:id="primaryInsuranceCoverageStartDate_label">Coverage Begin Date</label> /
+                                    <label wicket:id="primaryInsuranceCoverageEndDate_label">End Date</label>
                                 </td>
                                 <td class="control">
-                                    <input type="text" wicket:id="coverageBeginDate" value=""/>
-                                    <input type="text" wicket:id="coverageEndDate" value=""/>
+                                    <input type="text" wicket:id="primaryInsuranceCoverageStartDate" value=""/>
+                                    <input type="text" wicket:id="primaryInsuranceCoverageEndDate" value=""/>
                                 </td>
                             </tr>
                             <tr class="field">
                                 <td class="label">
-                                    <label wicket:id="individualDeductible_label">Individual</label> /
-                                    <label wicket:id="familyDeductible_label">Family Deductible Amounts</label>
+                                    <label wicket:id="primaryInsuranceIndividualDeductibleAmount_label">Individual</label> /
+                                    <label wicket:id="primaryInsuranceFamilyDeductibleAmount_label">Family Deductible Amounts</label>
                                 </td>
                                 <td class="control">
-                                    <input type="text" wicket:id="individualDeductible" value=""/>
-                                    <input type="text" wicket:id="familyDeductible" value=""/>
+                                    <input type="text" wicket:id="primaryInsuranceIndividualDeductibleAmount" value=""/>
+                                    <input type="text" wicket:id="primaryInsuranceFamilyDeductibleAmount" value=""/>
                                 </td>
                             </tr>
                             <tr class="field">
@@ -431,20 +459,20 @@
                             </tr>
                             <tr class="field">
                                 <td class="label">
-                                    <label wicket:id="percentagePay_label">Percentage Pay</label> /
-                                    <label wicket:id="threshold_label">Threshold</label>
+                                    <label wicket:id="primaryInsurancePercentagePay_label">Percentage Pay</label> /
+                                    <label wicket:id="primaryInsuranceMaxThresholdAmount_label">Threshold</label>
                                 </td>
                                 <td class="control">
-                                    <input type="text" wicket:id="percentagePay" value=""/>
-                                    <input type="text" wicket:id="threshold" value=""/>
+                                    <input type="text" wicket:id="primaryInsurancePercentagePay" value=""/>
+                                    <input type="text" wicket:id="primaryInsuranceMaxThresholdAmount" value=""/>
                                 </td>
                             </tr>
                             <tr class="field">
                                 <td class="label">
-                                    <label wicket:id="officeVisitCoPay_label">Office Visit Co-pay</label>
+                                    <label wicket:id="primaryInsuranceOfficeVisitCoPay_label">Office Visit Co-pay</label>
                                 </td>
                                 <td class="control">
-                                    <input type="text" wicket:id="officeVisitCoPay" value=""/>
+                                    <input type="text" wicket:id="primaryInsuranceOfficeVisitCoPay" value=""/>
                                 </td>
                             </tr>
                         </table>
@@ -452,7 +480,20 @@
 					        </td>
                         </tr>
                     </table>
-                    
+                    <fieldset class="top-level">
+                        <legend wicket:id="careProvider-group-label">Care Provider</legend>
+                        <table class="vertical-fields">
+                            <tr class="field">
+                                <td class="label">
+                                    <label wicket:id="primaryCareProviderId_label">Provider ID</label>
+                                </td>
+                                <td class="control">
+                                    <input type="text" wicket:id="primaryCareProviderId" value=""/>
+                                </td>
+                            </tr>
+                        </table>
+                    </fieldset>
+
                     <div class="director">
                         <input class="button" type="submit" value="OK"/>
                         <input class="button" type="reset" value="Reset"/>
