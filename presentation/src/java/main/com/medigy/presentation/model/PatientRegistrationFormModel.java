@@ -16,10 +16,7 @@ import com.medigy.wicket.form.SelectFieldStyle;
 
 import java.util.Date;
 
-/**
- * Simple model object for FormInput example. Has a number of simple properties
- * that can be retrieved and set.
- */
+
 public final class PatientRegistrationFormModel implements RegisterPatientParameters
 {
 	private String firstName;
@@ -27,16 +24,16 @@ public final class PatientRegistrationFormModel implements RegisterPatientParame
 	private String middleName;
     private String suffix;
     private Date birthDate;
-    private String genderCode;     // TODO: change to xxxCode
-    private String maritalStatusCode;   // TODO: change to xxxCode
+    private String genderCode;
+    private String maritalStatusCode;
 	private String ssn;
     private String driversLicenseNumber;
-	private String driversLicenseStateCode;   // TODO: change to xxxCode
-    private String employerName;                // TODO: change to employerName
+	private String driversLicenseStateCode;
+    private String employerName;
     private String employerId;
     private String occupation;
-    private String[] ethnicityCodes;     // TODO: multiple choice - change to xxxCodes array
-    private String[] languageCodes; // TODO: this one is not on the form - add?
+    private String[] ethnicityCodes;
+    private String[] languageCodes;
 	private String personId;
 	private String account;
 	private String chartNumber;
