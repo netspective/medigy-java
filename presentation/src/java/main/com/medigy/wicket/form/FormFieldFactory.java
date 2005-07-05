@@ -45,6 +45,8 @@ package com.medigy.wicket.form;
 
 import com.medigy.presentation.model.ChoicesFactory;
 import com.medigy.service.validator.ValidEntity;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import wicket.markup.html.form.*;
 import wicket.markup.html.form.model.IChoiceList;
 import wicket.markup.html.form.validation.EmailAddressPatternValidator;
@@ -57,6 +59,8 @@ import java.util.regex.Pattern;
 
 public class FormFieldFactory
 {
+    private static final Log log = LogFactory.getLog(FormFieldFactory.class);
+
     private static final FormFieldFactory INSTANCE = new FormFieldFactory();
 
     public static FormFieldFactory getInstance()
@@ -88,9 +92,19 @@ public class FormFieldFactory
     public FieldCreator getFieldCreator(Class dataType)
     {
         if(dataType.isAssignableFrom(Serializable.class))  // TODO: some of the getter return types in RegisterPatientParameters are Serializable - need to figure out how to handle this
+        {
+            log.warn("Attempt to create field with return type of 'Serializable'");
             dataType = String.class;
+        }
 
-        return fieldCreatorMap.get(dataType);
+        FieldCreator creator = fieldCreatorMap.get(dataType);
+        if(creator == null)
+        {
+            log.error("FieldCreator for dataType '" + dataType + "' not found in fieldCreatorMap");
+            throw new RuntimeException("FieldCreator for dataType '" + dataType + "' not found in fieldCreatorMap");
+        }
+
+        return creator;
     }
 
     public ReflectedFormFieldDefn getReflectedFormFieldDefn(final String propertyName, final Class ... cls)
@@ -142,7 +156,7 @@ public class FormFieldFactory
         {
             final TextField result = new TextField(controlId);
             reflectedFormFieldDefn.initializeField(reflectedFormFieldDefn, result);
-            // TODO: need to add wicket validator class
+            result.add(new TypeValidator(Boolean.class));
             return result;
         }
 
@@ -190,7 +204,7 @@ public class FormFieldFactory
         {
             final TextField result = new TextField(controlId);
             reflectedFormFieldDefn.initializeField(reflectedFormFieldDefn, result);
-            // TODO: need to add wicket validator class
+            result.add(new TypeValidator(Float.class));
             return result;
         }
 
@@ -206,7 +220,7 @@ public class FormFieldFactory
         {
             final TextField result = new TextField(controlId);
             reflectedFormFieldDefn.initializeField(reflectedFormFieldDefn, result);
-            // TODO: need to add wicket validator class
+            result.add(new TypeValidator(Integer.class));
             return result;
         }
 
@@ -322,7 +336,10 @@ public class FormFieldFactory
         {
             final ValidEntity reAnn = (ValidEntity) reflectedFormFieldDefn.getAnnotation(ValidEntity.class);
             if(reAnn == null)
+            {
+                log.error("Unable to find a reference entity annotation on " + reflectedFormFieldDefn);
                 throw new RuntimeException("Unable to find a reference entity annotation on " + reflectedFormFieldDefn);
+            }
 
             final SelectFieldStyle sfsAnn = (SelectFieldStyle) reflectedFormFieldDefn.getAnnotation(SelectFieldStyle.class);
             final SelectFieldStyle.Style style = sfsAnn != null ? sfsAnn.style() : SelectFieldStyle.Style.COMBO;
@@ -336,7 +353,10 @@ public class FormFieldFactory
                     return new RadioChoice(controlId, referenceEntityChoices);
 
                 default:
-                    throw new RuntimeException("No other styles supported yet...make this error message better.");
+                {
+                    log.error("Style with enumeration code '" + style + "' not supported yet.");
+                    throw new RuntimeException("Style with enumeration code '" + style + "' not supported yet.");
+                }
             }
         }
 

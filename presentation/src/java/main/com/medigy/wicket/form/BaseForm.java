@@ -43,18 +43,12 @@
  */
 package com.medigy.wicket.form;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import com.medigy.wicket.form.FormFieldFactory.ConstructedField;
 import com.medigy.wicket.form.FormFieldFactory.FieldCreator;
 import com.medigy.wicket.form.FormJavaScriptGenerator.FieldCustomizationScriptContributor;
 import com.medigy.wicket.form.FormJavaScriptGenerator.FieldTypeNameContributor;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import wicket.IComponentResolver;
 import wicket.IFeedback;
 import wicket.MarkupContainer;
@@ -64,6 +58,11 @@ import wicket.markup.html.form.Form;
 import wicket.markup.html.form.FormComponent;
 import wicket.model.BoundCompoundPropertyModel;
 import wicket.model.IModel;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 public class BaseForm extends Form implements IComponentResolver
 {
@@ -155,17 +154,22 @@ public class BaseForm extends Form implements IComponentResolver
 
     public void setEnableClientSideValidation(boolean enableClientSideValidation)
     {
+        log.info("Setting client side validation to '" + enableClientSideValidation + "'");
         this.enableClientSideValidation = enableClientSideValidation;
     }
 
-    public boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
-                           final ComponentTag tag)
+    public boolean resolve(final MarkupContainer container, final MarkupStream markupStream, final ComponentTag tag)
     {
         if(tag.getAttributes().containsKey(ATTRNAME_WICKET_ID))
         {
             final IComponentResolver resolver = autoResolvers.get(tag.getName());
             if(resolver != null)
                 return resolver.resolve(container, markupStream, tag);
+            else
+            {
+                log.error("No resolver found for tag '" + tag.getName() + "'");
+                throw new RuntimeException("No resolver found for tag '" + tag.getName() + "'");
+            }
         }
         return false;
     }

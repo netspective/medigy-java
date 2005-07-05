@@ -3,6 +3,13 @@
  */
 package com.medigy.wicket.form;
 
+import com.medigy.service.validator.ValidEntity;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.hibernate.validator.NotNull;
+import wicket.markup.html.form.FormComponent;
+import wicket.markup.html.form.validation.RequiredValidator;
+
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
@@ -11,14 +18,6 @@ import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.hibernate.validator.NotNull;
-
-import com.medigy.service.validator.ValidEntity;
-import wicket.markup.html.form.FormComponent;
-import wicket.markup.html.form.validation.RequiredValidator;
 
 public class ReflectedFormFieldDefn
 {
@@ -71,7 +70,10 @@ public class ReflectedFormFieldDefn
         }
 
         if(method == null)
+        {
+            log.error("No accessor or mutator found for property '" + propertyName + "' in " + container);
             throw new RuntimeException("No accessor or mutator found for property '" + propertyName + "' in " + container);
+        }
 
         this.method = method;
         this.methodIsAccessor = isAccessor;
@@ -156,7 +158,10 @@ public class ReflectedFormFieldDefn
     {
         final com.medigy.wicket.form.FormFieldFactory.FieldCreator result = FormFieldFactory.getInstance().getFieldCreator(dataTypeOrValidEntity);
         if(result == null)
+        {
+            log.error("Unable to find a field creator for " + dataTypeOrValidEntity);
             throw new RuntimeException("Unable to find a field creator for " + dataTypeOrValidEntity);
+        }
         else
             return result;
     }
