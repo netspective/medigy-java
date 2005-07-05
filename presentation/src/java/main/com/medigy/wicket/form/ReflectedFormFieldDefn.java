@@ -17,7 +17,6 @@ import org.apache.commons.logging.LogFactory;
 import org.hibernate.validator.NotNull;
 
 import com.medigy.service.validator.ValidEntity;
-import com.medigy.wicket.form.FormFieldFactory.FieldCreator;
 import wicket.markup.html.form.FormComponent;
 import wicket.markup.html.form.validation.RequiredValidator;
 
@@ -33,7 +32,7 @@ public class ReflectedFormFieldDefn
     private final Method method;
     private final boolean methodIsAccessor;
     private final Map<Class, Annotation> constraints = Collections.synchronizedMap(new HashMap<Class, Annotation>());
-    private final FormFieldFactory.FieldCreator creator;
+    private final com.medigy.wicket.form.FormFieldFactory.FieldCreator creator;
 
     public ReflectedFormFieldDefn(final String propertyName, final Class ... containers)
     {
@@ -118,7 +117,7 @@ public class ReflectedFormFieldDefn
         }
 
         this.validEntity = isAnnotationPresent(ValidEntity.class) ? ((ValidEntity) getAnnotation(ValidEntity.class)).entity() : null;
-        this.customType = isAnnotationPresent(FormFieldType.class) ? ((FormFieldType) getAnnotation(FormFieldType.class)).type() : null;
+        this.customType = isAnnotationPresent(FieldCreator.class) ? ((FieldCreator) getAnnotation(FieldCreator.class)).creator() : null;
         this.creator = getFieldCreator(customType == null ? (validEntity == null ? dataType : ValidEntity.class) : customType);
 
         if(log.isInfoEnabled())
@@ -153,9 +152,9 @@ public class ReflectedFormFieldDefn
 
     }
 
-    public FormFieldFactory.FieldCreator getFieldCreator(final Class dataTypeOrValidEntity)
+    public com.medigy.wicket.form.FormFieldFactory.FieldCreator getFieldCreator(final Class dataTypeOrValidEntity)
     {
-        final FieldCreator result = FormFieldFactory.getInstance().getFieldCreator(dataTypeOrValidEntity);
+        final com.medigy.wicket.form.FormFieldFactory.FieldCreator result = FormFieldFactory.getInstance().getFieldCreator(dataTypeOrValidEntity);
         if(result == null)
             throw new RuntimeException("Unable to find a field creator for " + dataTypeOrValidEntity);
         else
@@ -202,7 +201,7 @@ public class ReflectedFormFieldDefn
         return constraints;
     }
 
-    public FormFieldFactory.FieldCreator getCreator()
+    public com.medigy.wicket.form.FormFieldFactory.FieldCreator getCreator()
     {
         return creator;
     }

@@ -53,21 +53,9 @@ public class FormJavaScriptGenerator
      * Any form component that implements this method will have a DialogField javascript instance created and
      * automatically registered in the client's Dialog object.
      */
-    public interface Contributor
+    public interface FieldTypeNameContributor
     {
-        public ReflectedFormFieldDefn getReflectedFormFieldDefn();
-    }
-
-    /**
-     * Any form component that wants to provide an alternate key for the FIELD_TYPES javascript lookup map should
-     * implement this interface.
-     */
-    public interface FieldTypeNameContributor extends Contributor
-    {
-        /**
-         * The key that will be used by the client code's FIELD_TYPES lookup map.
-         */
-        public String getJavaScriptFieldTypeName(final FormJavaScriptGenerator generator);
+        public String getJavaScriptFieldTypeId(FormJavaScriptGenerator generator);
     }
 
     /**
@@ -99,7 +87,7 @@ public class FormJavaScriptGenerator
      * Any form component that wants to provide its own javascript field registration (instead of the default
      * field registration) shoudld implement this interface.
      */
-    public interface FieldCustomizationScriptContributor extends Contributor
+    public interface FieldCustomizationScriptContributor
     {
         /**
          * Using the generator.getScript() method, contribute any valid JavaScript.
@@ -112,7 +100,7 @@ public class FormJavaScriptGenerator
      * Any form component that wants to let the generator provide the field registration but wants to set some
      * additional fields in the created DialogField instance should implement this interface.
      */
-    public interface FieldRegistrationContributor extends Contributor
+    public interface FieldRegistrationContributor extends FieldTypeNameContributor
     {
         /**
          * Using the generator.getScript() method, contribute any valid JavaScript like the following:
@@ -125,20 +113,6 @@ public class FormJavaScriptGenerator
         public void appendJavaScriptFieldRegistration(final FormJavaScriptGenerator generator, final String fieldVarName);
     }
 
-    public class FormComponentVisitor implements FormComponent.IVisitor
-    {
-        public void formComponent(final FormComponent formComponent)
-        {
-            if(formComponent instanceof Contributor)
-            {
-                if(formComponent instanceof FieldCustomizationScriptContributor)
-                    ((FieldCustomizationScriptContributor) formComponent).appendJavaScriptFieldCustomization(FormJavaScriptGenerator.this);
-                else
-                    registrationScript.append(getDefaultFieldRegistrationScript(formComponent));
-            }
-        }
-    }
-
     private final StringBuilder typeDefnScript = new StringBuilder();
     private final StringBuilder registrationScript = new StringBuilder();
     private final Form form;
@@ -146,7 +120,6 @@ public class FormJavaScriptGenerator
     private final String jsFormObjectVarName;
     private boolean allowClientValidation = true;
     private boolean showDataChangedMessageOnLeave = true;
-    private FormComponentVisitor visitor = new FormComponentVisitor();
 
     public FormJavaScriptGenerator(final Form form, final String jsDialogVarName, final String jsFormObjectVarName)
     {
@@ -205,12 +178,8 @@ public class FormJavaScriptGenerator
         this.showDataChangedMessageOnLeave = showDataChangedMessageOnLeave;
     }
 
-    public String getDefaultFieldRegistrationScript(final FormComponent component)
+    public String getDefaultFieldRegistrationScript(final FormComponent component, final String fieldTypeName)
     {
-        final String fieldTypeName = component instanceof FieldTypeNameContributor ?
-                ((FieldTypeNameContributor) component).getJavaScriptFieldTypeName(this) :
-                component.getClass().getName();
-
         final StringBuilder defJS = new StringBuilder();
         final String fieldVarName = component.getId();
 
@@ -236,11 +205,6 @@ public class FormJavaScriptGenerator
             ((FieldTypeScriptContributor) component).appendJavaScriptFieldTypeDefn(this, typeDefnScript);
 
         return defJS.toString();
-    }
-
-    public FormComponent.IVisitor getFormComponentVisitor()
-    {
-        return visitor;
     }
 
     public void appendDialogRegistrationStart()

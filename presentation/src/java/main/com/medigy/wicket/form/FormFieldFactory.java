@@ -43,14 +43,24 @@
  */
 package com.medigy.wicket.form;
 
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.regex.Pattern;
+
 import com.medigy.presentation.model.ChoicesFactory;
 import com.medigy.service.validator.ValidEntity;
 import wicket.markup.html.form.DropDownChoice;
 import wicket.markup.html.form.FormComponent;
 import wicket.markup.html.form.RadioChoice;
+import wicket.markup.html.form.TextArea;
+import wicket.markup.html.form.TextField;
 import wicket.markup.html.form.model.IChoiceList;
-
-import java.util.*;
+import wicket.markup.html.form.validation.EmailAddressPatternValidator;
+import wicket.markup.html.form.validation.PatternValidator;
+import wicket.markup.html.form.validation.TypeValidator;
 
 public class FormFieldFactory
 {
@@ -67,12 +77,13 @@ public class FormFieldFactory
     protected FormFieldFactory()
     {
         addFieldCreator(ValidEntity.class, new ReferenceEntityFieldCreator());
-        addFieldCreator(String.class, new TextField.TextFieldCreator());
-        addFieldCreator(Date.class, new DateField.DateFieldCreator());
-        addFieldCreator(SocialSecurityField.class, new SocialSecurityField.SocialSecurityFieldCreator());
-        addFieldCreator(PhoneField.class, new PhoneField.PhoneFieldCreator());
-        addFieldCreator(ZipCodeField.class, new ZipCodeField.ZipCodeFieldCreator());
-        addFieldCreator(EmailField.class, new EmailField.EmailFieldCreator());
+        addFieldCreator(String.class, new TextFieldCreator());
+        addFieldCreator(Date.class, new DateFieldCreator());
+        addFieldCreator(SocialSecurityFieldCreator.class, new SocialSecurityFieldCreator());
+        addFieldCreator(PhoneFieldCreator.class, new PhoneFieldCreator());
+        addFieldCreator(ZipCodeFieldCreator.class, new ZipCodeFieldCreator());
+        addFieldCreator(MemoFieldCreator.class, new MemoFieldCreator());
+        addFieldCreator(EmailFieldCreator.class, new EmailFieldCreator());
     }
 
     public void addFieldCreator(final Class dataType, final FieldCreator creator)
@@ -98,10 +109,29 @@ public class FormFieldFactory
         return result;
     }
 
-    public FormComponent createField(final String componentId, final String propertyName, final Class ... classes)
+    public ConstructedField createField(final String componentId, final String propertyName, final Class ... classes)
     {
-        // TODO: classes beyond the first are not managed yet
-        return getReflectedFormFieldDefn(propertyName, classes).createField(componentId);
+        final ReflectedFormFieldDefn rffd = getReflectedFormFieldDefn(propertyName, classes);
+        final FormComponent fc = rffd.createField(componentId);
+
+        return new ConstructedField()
+        {
+            public FormComponent getField()
+            {
+                return fc;
+            }
+
+            public ReflectedFormFieldDefn getReflectedFormFieldDefn()
+            {
+                return rffd;
+            }
+        };
+    }
+
+    public interface ConstructedField
+    {
+        public FormComponent getField();
+        public ReflectedFormFieldDefn getReflectedFormFieldDefn();
     }
 
     public interface FieldCreator
@@ -109,7 +139,187 @@ public class FormFieldFactory
         public FormComponent createField(final String controlId, final ReflectedFormFieldDefn reflectedFormFieldDefn);
     }
 
-    public class ReferenceEntityFieldCreator implements FieldCreator
+    public class BooleanFieldCreator implements FieldCreator, FormJavaScriptGenerator.FieldTypeNameContributor
+    {
+        public FormComponent createField(final String controlId, final ReflectedFormFieldDefn reflectedFormFieldDefn)
+        {
+            final TextField result = new TextField(controlId);
+            reflectedFormFieldDefn.initializeField(reflectedFormFieldDefn, result);
+            // TODO: need to add wicket validator class
+            return result;
+        }
+
+        public String getJavaScriptFieldTypeId(FormJavaScriptGenerator generator)
+        {
+            return "boolean";
+        }
+    }
+
+    public class DateFieldCreator implements FieldCreator, FormJavaScriptGenerator.FieldTypeNameContributor
+    {
+        public FormComponent createField(final String controlId, final ReflectedFormFieldDefn reflectedFormFieldDefn)
+        {
+            final TextField result = new TextField(controlId);
+            reflectedFormFieldDefn.initializeField(reflectedFormFieldDefn, result);
+            result.add(new TypeValidator(Date.class));
+            return result;
+        }
+
+        public String getJavaScriptFieldTypeId(FormJavaScriptGenerator generator)
+        {
+            return "date-time";
+        }
+    }
+
+    public class EmailFieldCreator implements FieldCreator, FormJavaScriptGenerator.FieldTypeNameContributor
+    {
+        public FormComponent createField(final String controlId, final ReflectedFormFieldDefn reflectedFormFieldDefn)
+        {
+            final TextField result = new TextField(controlId);
+            reflectedFormFieldDefn.initializeField(reflectedFormFieldDefn, result);
+            result.add(new EmailAddressPatternValidator());
+            return result;
+        }
+
+        public String getJavaScriptFieldTypeId(FormJavaScriptGenerator generator)
+        {
+            return "text";
+        }
+    }
+
+    public class FloatFieldCreator implements FieldCreator, FormJavaScriptGenerator.FieldTypeNameContributor
+    {
+        public FormComponent createField(final String controlId, final ReflectedFormFieldDefn reflectedFormFieldDefn)
+        {
+            final TextField result = new TextField(controlId);
+            reflectedFormFieldDefn.initializeField(reflectedFormFieldDefn, result);
+            // TODO: need to add wicket validator class
+            return result;
+        }
+
+        public String getJavaScriptFieldTypeId(FormJavaScriptGenerator generator)
+        {
+            return "float";
+        }
+    }
+
+    public class IntegerFieldCreator implements FieldCreator, FormJavaScriptGenerator.FieldTypeNameContributor
+    {
+        public FormComponent createField(final String controlId, final ReflectedFormFieldDefn reflectedFormFieldDefn)
+        {
+            final TextField result = new TextField(controlId);
+            reflectedFormFieldDefn.initializeField(reflectedFormFieldDefn, result);
+            // TODO: need to add wicket validator class
+            return result;
+        }
+
+        public String getJavaScriptFieldTypeId(FormJavaScriptGenerator generator)
+        {
+            return "integer";
+        }
+    }
+
+    public class MemoFieldCreator implements FieldCreator, FormJavaScriptGenerator.FieldTypeNameContributor
+    {
+        public FormComponent createField(final String controlId, final ReflectedFormFieldDefn reflectedFormFieldDefn)
+        {
+            final TextArea result = new TextArea(controlId);
+            reflectedFormFieldDefn.initializeField(reflectedFormFieldDefn, result);
+            return result;
+        }
+
+        public String getJavaScriptFieldTypeId(FormJavaScriptGenerator generator)
+        {
+            return "memo";
+        }
+    }
+
+    public class PasswordFieldCreator implements FieldCreator, FormJavaScriptGenerator.FieldTypeNameContributor
+    {
+        public FormComponent createField(final String controlId, final ReflectedFormFieldDefn reflectedFormFieldDefn)
+        {
+            final TextField result = new TextField(controlId);
+            reflectedFormFieldDefn.initializeField(reflectedFormFieldDefn, result);
+            // TODO: need to add wicket validator class
+            return result;
+        }
+
+        public String getJavaScriptFieldTypeId(FormJavaScriptGenerator generator)
+        {
+            return "text";
+        }
+    }
+
+    public class PhoneFieldCreator implements FieldCreator, FormJavaScriptGenerator.FieldTypeNameContributor
+    {
+        private final Pattern DASH_VALIDATE_PATTERN = Pattern.compile("^([\\d][\\d][\\d])[\\.-]?([\\d][\\d][\\d])[\\.-]?([\\d]{4})([ ][x][\\d]{1,5})?$");
+
+        public FormComponent createField(final String controlId, final ReflectedFormFieldDefn reflectedFormFieldDefn)
+        {
+            final TextField result = new TextField(controlId);
+            reflectedFormFieldDefn.initializeField(reflectedFormFieldDefn, result);
+            result.add(new PatternValidator(DASH_VALIDATE_PATTERN));
+            return result;
+        }
+
+        public String getJavaScriptFieldTypeId(FormJavaScriptGenerator generator)
+        {
+            return "phone";
+        }
+    }
+
+    public class SocialSecurityFieldCreator implements FieldCreator, FormJavaScriptGenerator.FieldTypeNameContributor
+    {
+        private final Pattern SOCIAL_SECURITY_PATTERN = Pattern.compile("^([\\d]{3})[-]?([\\d]{2})[-]?([\\d]{4})$");
+
+        public FormComponent createField(final String controlId, final ReflectedFormFieldDefn reflectedFormFieldDefn)
+        {
+            final TextField result = new TextField(controlId);
+            reflectedFormFieldDefn.initializeField(reflectedFormFieldDefn, result);
+            result.add(new PatternValidator(SOCIAL_SECURITY_PATTERN));
+            return result;
+        }
+
+        public String getJavaScriptFieldTypeId(FormJavaScriptGenerator generator)
+        {
+            return "ssn";
+        }
+    }
+
+    public class TextFieldCreator implements FieldCreator, FormJavaScriptGenerator.FieldTypeNameContributor
+    {
+        public FormComponent createField(final String controlId, final ReflectedFormFieldDefn reflectedFormFieldDefn)
+        {
+            final TextField result = new TextField(controlId);
+            reflectedFormFieldDefn.initializeField(reflectedFormFieldDefn, result);
+            return result;
+        }
+
+        public String getJavaScriptFieldTypeId(FormJavaScriptGenerator generator)
+        {
+            return "text";
+        }
+    }
+
+    public class ZipCodeFieldCreator implements FieldCreator, FormJavaScriptGenerator.FieldTypeNameContributor
+    {
+        public static final String VALIDATE_PATTERN = "^([\\d]{5})([-][\\d]{4})?$";
+
+        public FormComponent createField(final String controlId, final ReflectedFormFieldDefn reflectedFormFieldDefn)
+        {
+            final TextField result = new TextField(controlId);
+            reflectedFormFieldDefn.initializeField(reflectedFormFieldDefn, result);
+            result.add(new PatternValidator(VALIDATE_PATTERN));
+            return result;
+        }
+
+        public String getJavaScriptFieldTypeId(FormJavaScriptGenerator generator)
+        {
+            return "text"; // TODO: need to supply special client side validation for zip fields, too
+        }
+    }
+
+    protected class ReferenceEntityFieldCreator implements FieldCreator, FormJavaScriptGenerator.FieldTypeNameContributor
     {
         public FormComponent createField(final String controlId, final ReflectedFormFieldDefn reflectedFormFieldDefn)
         {
@@ -131,6 +341,11 @@ public class FormFieldFactory
                 default:
                     throw new RuntimeException("No other styles supported yet...make this error message better.");
             }
+        }
+
+        public String getJavaScriptFieldTypeId(FormJavaScriptGenerator generator)
+        {
+            return "select";
         }
     }
 

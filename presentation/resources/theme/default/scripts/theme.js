@@ -1663,16 +1663,16 @@ function SelectField_isValid(field, control)
 	return true;
 }
 
-addFieldType("com.medigy.wicket.form.TextField", null, TextField_isValid, null, TextField_onFocus, TextField_valueChanged, null, null);
-addFieldType("com.netspective.sparx.form.field.type.SelectField", null, SelectField_isValid, null, null, SelectField_loseFocus, null, SelectField_onClick);
-addFieldType("com.medigy.wicket.form.BooleanField", null, null, null, null, null, null, BooleanField_onClick);
-addFieldType("com.medigy.wicket.form.MemoField", null, MemoField_isValid, null, null, null, MemoField_onKeyPress);
-addFieldType("com.netspective.sparx.form.field.type.DateTimeField", DateField_finalizeDefn, DateField_isValid, null, null, DateField_valueChanged, DateField_onKeyPress, null);
-addFieldType("com.medigy.wicket.form.IntegerField", null, IntegerField_isValid, null, null, null, IntegerField_onKeyPress, null);
-addFieldType("com.medigy.wicket.form.FloatField", null, FloatField_isValid, null, null, null, FloatField_onKeyPress, null);
-addFieldType("com.medigy.wicket.form.SocialSecurityField", null, SocialSecurityField_isValid, null, null, SocialSecurityField_valueChanged, SocialSecurityField_onKeyPress, null);
-addFieldType("com.medigy.wicket.form.PhoneField", null, PhoneField_isValid, null, null, PhoneField_valueChanged, null, null);
-addFieldType("com.medigy.wicket.form.CurrencyField", null, CurrencyField_isValid, CurrencyField_valueChanged, null, null, null, null);
+addFieldType("text", null, TextField_isValid, null, TextField_onFocus, TextField_valueChanged, null, null);
+addFieldType("select", null, SelectField_isValid, null, null, SelectField_loseFocus, null, SelectField_onClick);
+addFieldType("boolean", null, null, null, null, null, null, BooleanField_onClick);
+addFieldType("memo", null, MemoField_isValid, null, null, null, MemoField_onKeyPress);
+addFieldType("date-time", DateField_finalizeDefn, DateField_isValid, null, null, DateField_valueChanged, DateField_onKeyPress, null);
+addFieldType("integer", null, IntegerField_isValid, null, null, null, IntegerField_onKeyPress, null);
+addFieldType("float", null, FloatField_isValid, null, null, null, FloatField_onKeyPress, null);
+addFieldType("ssn", null, SocialSecurityField_isValid, null, null, SocialSecurityField_valueChanged, SocialSecurityField_onKeyPress, null);
+addFieldType("phone", null, PhoneField_isValid, null, null, PhoneField_valueChanged, null, null);
+addFieldType("currency", null, CurrencyField_isValid, CurrencyField_valueChanged, null, null, null, null);
 
 //****************************************************************************
 // Date Formatting

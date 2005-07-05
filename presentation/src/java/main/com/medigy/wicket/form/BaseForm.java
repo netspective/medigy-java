@@ -51,12 +51,17 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.medigy.wicket.form.FormFieldFactory.ConstructedField;
+import com.medigy.wicket.form.FormFieldFactory.FieldCreator;
+import com.medigy.wicket.form.FormJavaScriptGenerator.FieldCustomizationScriptContributor;
+import com.medigy.wicket.form.FormJavaScriptGenerator.FieldTypeNameContributor;
 import wicket.IComponentResolver;
 import wicket.IFeedback;
 import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.form.Form;
+import wicket.markup.html.form.FormComponent;
 import wicket.model.BoundCompoundPropertyModel;
 import wicket.model.IModel;
 
@@ -80,6 +85,13 @@ public class BaseForm extends Form implements IComponentResolver
      * automatically created instead of having to be manually added within the form.
      */
     private Map<String, IComponentResolver> autoResolvers = new HashMap<String, IComponentResolver>();
+
+    /**
+     * The map with tracks a component and the associated reflected field information that was constructed by
+     * the form field factory. Although wicket manages the components we want to keep track of auto-generated fields
+     * by knowing their original types and such.
+     */
+    private Map<FormComponent, ReflectedFormFieldDefn> reflectedFields = new HashMap<FormComponent, ReflectedFormFieldDefn>();
 
     protected BaseForm(final String componentName)
     {
@@ -123,7 +135,9 @@ public class BaseForm extends Form implements IComponentResolver
             {
                 final String controlId = tag.getAttributes().getString(ATTRNAME_WICKET_ID);
                 final Class serviceBeanClass = getModel().getObject(null).getClass();
-                container.autoAdd(((BoundCompoundPropertyModel) getModel()).bind(FormFieldFactory.getInstance().createField(controlId, controlId, serviceBeanClass, getModel().getClass()), controlId));
+                final ConstructedField newField = FormFieldFactory.getInstance().createField(controlId, controlId, serviceBeanClass, getModel().getClass());
+                container.autoAdd(((BoundCompoundPropertyModel) getModel()).bind(newField.getField(), controlId));
+                reflectedFields.put(newField.getField(), newField.getReflectedFormFieldDefn());
                 return true;
             }
         };
@@ -131,6 +145,7 @@ public class BaseForm extends Form implements IComponentResolver
         autoResolvers.put("input", controlResolver);
         autoResolvers.put("select", controlResolver);
         autoResolvers.put("span", controlResolver);
+        autoResolvers.put("textarea", controlResolver);
     }
 
     public boolean isEnableClientSideValidation()
@@ -171,7 +186,44 @@ public class BaseForm extends Form implements IComponentResolver
             final FormJavaScriptGenerator generator = new FormJavaScriptGenerator(this);
 
             generator.appendDialogRegistrationStart();
-            visitFormComponents(generator.getFormComponentVisitor());
+            visitFormComponents(
+                new FormComponent.IVisitor()
+                {
+                    /**
+                     * For each form field we're going to check if it implements some special javascript generation
+                     * interfaces. If the form field itself does not implement the interfaces check to see if the
+                     * reflected form fields' original creator implements the methods in question.
+                     * @param formComponent
+                     */
+                    public void formComponent(final FormComponent formComponent)
+                    {
+                        if(formComponent instanceof FieldTypeNameContributor)
+                            generator.getRegistrationScript().append(generator.getDefaultFieldRegistrationScript(formComponent,
+                                    ((FieldTypeNameContributor) formComponent).getJavaScriptFieldTypeId(generator)));
+                        else if(formComponent instanceof FieldCustomizationScriptContributor)
+                            ((FieldCustomizationScriptContributor) formComponent).appendJavaScriptFieldCustomization(generator);
+                        else
+                        {
+                            // Since the formComponent itself doesn't imlement any of our special methods, see if the
+                            // associated field creators do (it is very common for formComponent to not implement the
+                            // special methods since they are typically wicket components that don't know about our
+                            // javascript generation.
+
+                            final ReflectedFormFieldDefn rffd = reflectedFields.get(formComponent);
+                            if(rffd != null)
+                            {
+                                final FieldCreator creator = rffd.getCreator();
+
+                                if(creator instanceof FieldTypeNameContributor)
+                                    generator.getRegistrationScript().append(generator.getDefaultFieldRegistrationScript(formComponent,
+                                            ((FieldTypeNameContributor) creator).getJavaScriptFieldTypeId(generator)));
+                                else if(creator instanceof FieldCustomizationScriptContributor)
+                                    ((FieldCustomizationScriptContributor) formComponent).appendJavaScriptFieldCustomization(generator);
+                            }
+                        }
+                    }
+                }
+            );
             generator.appendDialogRegistrationEnd();
 
             getResponse().write(generator.getTypeDefnScript().toString());

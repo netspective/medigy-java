@@ -3,17 +3,29 @@
  */
 package com.medigy.presentation.model;
 
+import java.io.Serializable;
+import java.util.Date;
+
+import org.hibernate.validator.NotNull;
+
 import com.medigy.persist.reference.custom.insurance.InsuranceSequenceType;
 import com.medigy.persist.reference.custom.person.EthnicityType;
 import com.medigy.persist.reference.custom.person.PatientResponsiblePartyRoleType;
-import com.medigy.persist.reference.type.*;
+import com.medigy.persist.reference.type.BloodType;
+import com.medigy.persist.reference.type.EmploymentStatusType;
+import com.medigy.persist.reference.type.GenderType;
+import com.medigy.persist.reference.type.LanguageType;
+import com.medigy.persist.reference.type.MaritalStatusType;
+import com.medigy.persist.reference.type.PersonNamePrefixType;
 import com.medigy.service.dto.person.RegisterPatientParameters;
 import com.medigy.service.validator.ValidEntity;
-import com.medigy.wicket.form.*;
-import org.hibernate.validator.NotNull;
-
-import java.io.Serializable;
-import java.util.Date;
+import com.medigy.wicket.form.FieldCreator;
+import com.medigy.wicket.form.FormFieldFactory.EmailFieldCreator;
+import com.medigy.wicket.form.FormFieldFactory.MemoFieldCreator;
+import com.medigy.wicket.form.FormFieldFactory.PhoneFieldCreator;
+import com.medigy.wicket.form.FormFieldFactory.SocialSecurityFieldCreator;
+import com.medigy.wicket.form.FormFieldFactory.ZipCodeFieldCreator;
+import com.medigy.wicket.form.SelectFieldStyle;
 
 /**
  * Simple model object for FormInput example. Has a number of simple properties
@@ -164,7 +176,7 @@ public final class PatientRegistrationFormModel implements Serializable
         this.suffix = suffix;
     }
 
-    @FormFieldType(type = SocialSecurityField.class)
+    @FieldCreator(creator = SocialSecurityFieldCreator.class)
 	public String getSocialSecurityNumber()
 	{
 		return socialSecurityNumber;
@@ -225,6 +237,7 @@ public final class PatientRegistrationFormModel implements Serializable
 		this.driversLicenseState = driversLicenseState;
 	}
 
+    @FieldCreator(creator = MemoFieldCreator.class)
     public String getMiscNotes()
 	{
 		return miscNotes;
@@ -235,7 +248,7 @@ public final class PatientRegistrationFormModel implements Serializable
 		this.miscNotes = miscNotes;
 	}
 
-    @FormFieldType(type = PhoneField.class)
+    @FieldCreator(creator = PhoneFieldCreator.class)
     public String getHomePhone()
 	{
 		return homePhone;
@@ -246,7 +259,7 @@ public final class PatientRegistrationFormModel implements Serializable
 		this.homePhone = homePhone;
 	}
 
-    @FormFieldType(type = PhoneField.class)
+    @FieldCreator(creator = PhoneFieldCreator.class)
     public String getWorkPhone()
 	{
 		return workPhone;
@@ -257,7 +270,7 @@ public final class PatientRegistrationFormModel implements Serializable
 		this.workPhone = workPhone;
 	}
 
-    @FormFieldType(type = PhoneField.class)
+    @FieldCreator(creator = PhoneFieldCreator.class)
     public String getHomePhone2()
 	{
 		return homePhone2;
@@ -268,7 +281,7 @@ public final class PatientRegistrationFormModel implements Serializable
 		this.homePhone2 = homePhone2;
 	}
 
-    @FormFieldType(type = PhoneField.class)
+    @FieldCreator(creator = PhoneFieldCreator.class)
     public String getWorkPhone2()
     {
         return workPhone2;
@@ -279,7 +292,7 @@ public final class PatientRegistrationFormModel implements Serializable
         this.workPhone2 = workPhone2;
     }
 
-    @FormFieldType(type = PhoneField.class)
+    @FieldCreator(creator = PhoneFieldCreator.class)
     public String getCellPhone()
     {
         return cellPhone;
@@ -290,7 +303,7 @@ public final class PatientRegistrationFormModel implements Serializable
         this.cellPhone = cellPhone;
     }
 
-    @FormFieldType(type = PhoneField.class)
+    @FieldCreator(creator = PhoneFieldCreator.class)
     public String getPager()
     {
         return pager;
@@ -351,7 +364,7 @@ public final class PatientRegistrationFormModel implements Serializable
         this.state = state;
     }
 
-    @FormFieldType(type = ZipCodeField.class)
+    @FieldCreator(creator = ZipCodeFieldCreator.class)
     public String getZip()
     {
         return zip;
@@ -362,7 +375,7 @@ public final class PatientRegistrationFormModel implements Serializable
         this.zip = zip;
     }
 
-    @FormFieldType(type = EmailField.class)
+    @FieldCreator(creator = EmailFieldCreator.class)
     public String getEmail()
     {
         return email;

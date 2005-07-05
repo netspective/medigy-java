@@ -48,15 +48,12 @@ import com.medigy.service.dto.person.RegisterPatientParameters;
 import com.medigy.service.person.PatientRegistrationService;
 import com.medigy.wicket.DefaultApplication;
 import com.medigy.wicket.form.BaseForm;
-import com.medigy.wicket.form.TextField;
 import com.medigy.wicket.panel.DefaultFormPanel;
 import wicket.IFeedback;
 import wicket.model.BoundCompoundPropertyModel;
 
 public class PatientRegistrationFormPanel extends DefaultFormPanel
 {
-    private TextField personId;
-
     public PatientRegistrationFormPanel(final String componentName)
     {
         super(componentName);
@@ -65,7 +62,8 @@ public class PatientRegistrationFormPanel extends DefaultFormPanel
     protected PatientRegistrationForm createForm(final String componentName, final IFeedback feedback)
     {
         final PatientRegistrationService service = (PatientRegistrationService) ((DefaultApplication) getApplication()).getService(PatientRegistrationService.class);
-        return new PatientRegistrationForm(componentName, feedback, new BoundCompoundPropertyModel(new PatientRegistrationFormModel()), service.getNewPatientParameters());
+        final RegisterPatientParameters newPatientParameters = service.getNewPatientParameters();
+        return new PatientRegistrationForm(componentName, feedback, new BoundCompoundPropertyModel(new PatientRegistrationFormModel(newPatientParameters)), newPatientParameters);
     }
 
     protected class PatientRegistrationForm extends BaseForm
