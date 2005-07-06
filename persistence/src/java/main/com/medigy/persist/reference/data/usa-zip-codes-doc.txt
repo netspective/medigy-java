@@ -1,0 +1,785 @@
+                        ZIPList5 Plus User's Guide
+                 Copyright (c) 1995 - 2005 CD Light, LLC
+                          All Rights Reserved
+                                July 2005
+
+
+CONTENTS OF THIS DOCUMENT
+
+New This Month
+Other Recent Changes
+Overview
+Installation
+Importing into a Database Program
+Record Layout
+Additional ZIP Code Information
+
+
+NEW THIS MONTH
+
+For July 2005 the US Postal Service added 35 new 5-digit ZIP code, deleted 
+8 existing 5-digit ZIP codes, and changed the preferred city name for no
+5-digit ZIP codes:
+
+    Added   06042   Manchester, CT
+    Added   06461   Milford, CT
+    Added   21409   Annapolis, MD
+    Added   22025   Dumfries, VA
+    Added   34692   Holiday, FL
+    Added   37934   Knoxville, TN
+    Added   46037   Fishers, IN
+    Added   48168   Northville, MI
+    Added   48193   Riverview, MI
+    Added   48638   Saginaw, MI
+    Added   49528   Grand Rapids, MI
+    Added   49534   Grand Rapids, MI
+    Added   50023   Ankeny, IA
+    Added   60502   Aurora, IL
+    Added   60503   Aurora, IL
+    Added   60585   Plainfield, IL
+    Added   60586   Plainfield, IL
+    Added   63368   O Fallon, MO
+    Added   85209   Mesa, AZ
+    Added   85243   Queen Creek, AZ
+    Added   85388   Surprise, AZ
+    Added   85396   Buckeye, AZ
+    Added   85755   Tucson, AZ
+    Added   85757   Tucson, AZ
+    Added   86409   Kingman, AZ
+    Added   89077   Henderson, NV
+    Added   89105   Las Vegas, NV
+    Added   89140   Las Vegas, NV
+    Added   89161   Las Vegas, NV
+    Added   89165   Las Vegas, NV
+    Added   92010   Carlsbad, CA
+    Added   92011   Carlsbad, CA
+    Added   92344   Hesperia, CA
+    Added   98087   Lynnwood, WA
+    Added   98391   Bonney Lake, WA
+
+    Deleted 09304   APO, AE
+    Deleted 09335   APO, AE
+    Deleted 09349   APO, AE
+    Deleted 09370   APO, AE
+    Deleted 09392   APO, AE
+    Deleted 09398   APO, AE
+    Deleted 09791   APO, AE
+    Deleted 37955   Knoxville, TN
+           
+There are no new area code splits or overlays for this month.
+
+
+OTHER RECENT CHANGES
+
+For June 2005 the US Postal Service added 13 new 5-digit ZIP code, deleted 
+8 existing 5-digit ZIP codes, and changed the preferred city name for 7
+5-digit ZIP codes:
+
+    Added   06792   Harwinton, CT
+    Added   09312   APO, AE
+    Added   09322   APO, AE
+    Added   09324   APO, AE
+    Added   09336   APO, AE
+    Added   09343   APO, AE
+    Added   09361   APO, AE
+    Added   09738   APO, AE
+    Added   09739   APO, AE
+    Added   09825   APO, AE
+    Added   09856   APO, AE
+    Added   20511   Washington, DC
+    Added   34019   APO, AA
+
+    Deleted 09385   APO, AE
+    Deleted 23272   Richmond, VA
+    Deleted 23275   Richmond, VA
+    Deleted 23530   Norfolk, VA
+    Deleted 89077   Henderson, NV
+    Deleted 96402   APO, AP
+    Deleted 96403   APO, AP
+    Deleted 96404   APO, AP
+
+    Renamed 75069   from Mc Kinney to McKinney TX
+    Renamed 75070   from Mc Kinney to McKinney TX
+    Renamed 75071   from Mc Kinney to McKinney TX
+    Renamed 77325   from Humble to Kingwood TX
+    Renamed 77339   from Humble to Kingwood TX
+    Renamed 77345   from Humble to Kingwood TX
+    Renamed 80470   from Pine to Pine Grove CO
+
+There are no new area code splits or overlays for this month.
+
+For May 2005 the US Postal Service added two new 5-digit ZIP codes, deleted 
+seventeen existing 5-digit ZIP codes, and changed the preferred city name 
+for one 5-digit ZIP code:
+
+    Added   09302   APO, AE
+    Added   09734   APO, AE
+
+    Deleted 04283   Turner Center, ME
+    Deleted 04615   Blue Hill Falls, ME
+    Deleted 04656   Manset, ME
+    Deleted 18401   Aldenville, PA
+    Deleted 25004   Ameagle, WV
+    Deleted 25046   Clio, WV
+    Deleted 25147   Ohley, WV
+    Deleted 26334   Brownton, WV
+    Deleted 37155   Saint Bethlehem, TN
+    Deleted 38912   Avalon, MS
+    Deleted 41156   Lloyd, KY
+    Deleted 54975   Royalton, WI
+    Deleted 59902   Kalispell, MT
+    Deleted 63661   New Offenburg, MO
+    Deleted 63772   Painton, MO
+    Deleted 65572   Swedeborg, MO
+    Deleted 68819   Berwyn, NE
+
+    Renamed 86053   from Kaibito to Kaibeto, AZ
+
+There are no new area code splits or overlays for this month.
+
+
+ZIP CODES CHANGE EVERY MONTH
+
+You have received from us THE MOST ACCURATE AND UP-TO-DATE list of ZIP codes
+you can get anywhere! EACH MONTH THE USPS ADDS, DELETES, OR MODIFIES DOZENS OF
+ZIP CODES. Yes, they do ADD AND DELETE ZIP codes each month! We get the
+current list of every active ZIP code directly from the US Postal Service each
+month. If you can't find a ZIP code in our database, there is just one simple
+reason: your ZIP code is not an active ZIP code at this time! If your list of
+ZIP codes is a few years old, there may be thousands of differences between
+your list and the current list of active ZIP codes. Isn't that exactly why you
+obtained the data from us? Then you shouldn't be surprised if you find that
+our database differs from your list. Our database is correct. If you were to
+get the data directly from the USPS you would find exactly the same ZIP codes
+as in our database. And it would cost you a lot more money!
+
+
+END-USER LICENSE
+
+Please read the accompanying license document, Z5PLIC.TXT, which defines your
+rights and restrictions for using ZIPList5 Plus. Your license level is
+indicated on the invoice for ZIPList5 Plus issued to you by CD Light.
+ 
+
+OVERVIEW
+
+ZIPList5 Plus is a database of every ZIP code in the United States and its
+territories to which the US Postal Service (USPS) delivers mail. The database
+contains the city name, state abbreviation, county name and county FIPS code,
+primary telephone area code, time zone, and Daylight Saving Time flag for
+each of the nearly 42,500 ZIP codes defined by the USPS. Additionally, the
+database also includes approximately 29,000 "alias" city name records, for a
+total of approximately 71,500 records.
+
+The database is formatted as a comma delimited ASCII text file, making it easy
+to import the data into most database programs. The text file can also be
+searched by most text editors and word processors, although the size of the
+file (4.6 MB) can be a problem for some text editors. 
+
+The data in this database was compiled by CD Light from a variety of sources,
+including the US Postal Service, maps, published telephone books, direct
+communication with various telephone companies, and Bellcore. We have invested
+considerable effort in making this list as accurate as possible. 
+
+Because this database is a simple text file, it can be used on almost every
+type of computer, including PCs and compatibles, Macintoshes, and UNIX
+workstations.
+
+Caution: not all of the city names in this database are approved by the US
+Postal Service for use on mail pieces. City names with the Preferred? flag set
+to "N" are alias names which are NOT approved for delivery to the associated
+ZIP code. Note that a particular city name MAY be approved for delivery to
+some ZIP codes and not others. See the discussion below for more information
+on the file format and proper use of the Preferred? flag.
+
+
+COUNTY, ZIP CODE, AREA CODE, and TIME ZONE BOUNDARIES
+
+County boundaries, state boundaries, ZIP code boundaries, area code
+boundaries, and time zone boundaries are all administered by different
+federal, state, and local government and private agencies. As you probably
+already know, cooperation between these various agencies is virtually
+nonexistent. As a result, these various boundaries do not necessarily align.
+This means that a ZIP code area may actually cross county, area code, and/or
+time zone boundaries. But each ZIP code record in ZIPList5 Plus has only a
+single field each for county name, area code, and time zone. An attempt to add
+additional records to document all the variations which can occur would make
+the product too complex and difficult to use, and is beyond the scope of this
+inexpensive database.
+
+We have attempted to provide the most accurate information for each ZIP code
+by selecting the most prevalent county, area code, and time zone for each ZIP
+code in the database. However, you should be aware that because of this
+boundary alignment problem the county name and FIPS code, area code and time
+zone provided for each ZIP code in the database may not apply to every address
+which lies within within the boundaries of that ZIP code.
+
+Where multiple area codes exist within one ZIP code zone we have selected the
+most prevalent area code. This means that in areas such as Houston or the
+State of Maryland where area code "overlays" exist, we list only one area code
+- the one area code used by the most people in that area.
+
+When a new area code is announced by the telephone companies, we update this
+database only ON or AFTER the effective date when dialing with the new area
+code is permissible. That way you are assured that all area codes in the
+database are valid and active on the date the database was created.
+
+
+INSTALLATION
+
+ZIPList5 Plus is available on CDROM or can be downloaded from our 
+secure database server. The data content is the same in either case. You 
+should select the proper installation notes below depending upon the the 
+distribution medium you selected at the time you placed your order.
+
+INSTALLATION from CDROM
+
+ZIPList5 Plus is available on the CDROM in a variety of different formats. 
+Each file contains the exact same data, but the data has been formatted 
+for a specific desktop database program. This means that all you need to 
+do is select the proper format for your database program and simply copy 
+the file containing that format from the CDROM to the proper folder on 
+your computer. The files on the CDROM are not compressed.
+
+To install this database from a CDROM, follow these steps:
+
+   1. Identify the file which has the data in the format you wish to
+      use. The following table identifies the various formats available
+      on the CDROM for this database:
+
+      File Name         Format
+      z5plus.txt        Comma-delimited ASCII (also known as CSV)
+      z5pA2K.mdb        MS Access 2000
+      z5pA97.mdb        MS Access 97
+      z5plus.dbf        dBase/FoxPro
+      z5plus.db         Paradox
+      
+   2. Using Windows Explorer, copy the file in the format of your choice from 
+      the CDROM to the desired folder on your computer.
+
+   3. Open the file using the database program of your choice.
+
+
+INSTALLATION AFTER DOWNLOADING OVER THE INTERNET
+
+ZIPList5 Plus is available to download from our secure database server in a 
+variety of different formats. Each file contains the exact same data, but the 
+data has been formatted for a specific desktop database program. You should 
+download the proper format for your database program. You can download more 
+than one format, if you wish, and you can download the data as often as you 
+need to. There is no charge for downloading the data more than once.
+
+Most files on our database server have been compressed for faster downloading. 
+These files must be decompressed before you can use them with your database 
+program. To make the decompression easier, most of the files have been made 
+"self-extracting", which means that you do not need to use a specific program 
+to decompress the files - they decompress themselves!
+
+To install ZIPList5 Plus after downloading, follow these steps:
+
+   1. Download the format of your choice from the secure database server. Be
+      sure to save the file to your hard drive, and note the name of the file
+      and the folder where it has been saved.
+
+   2. If the file name ends in ".exe", such as z5plus.exe, the file is a
+      "self-extracting" compressed file. To decompress the file you must 
+      "run" the file as a program so that it can decompress itself. Just
+      double-click on the file name using Windows Explorer. The file will 
+      extract itself from the compressed form to its original format and 
+      name. Hint: Windows Explorer may not show the file extensions, depending 
+      upon settings in the View | Options menu.
+
+   3. The actual database file name depends upon the format of the data:
+
+      File Name         Format
+      z5plus.txt        Comma-delimited ASCII (also known as CSV)
+      z5pA2K.mdb        MS Access 2000
+      z5pA97.mdb        MS Access 97
+      z5plus.dbf        dBase/FoxPro
+      z5plus.db         Paradox
+                      
+   3. Open the file using the database program of your choice.
+
+
+SUPPORT FILES
+
+ZIPList5 Plus contains several additional support files in ASCII text format
+which you may find useful. These files can be found on the CDROM or in 
+the folder where the compressed file was decompressed. Here are the files
+you should find:
+
+    FILE             CONTENT
+    ac.txt           List of area codes for North America, including overlays
+    stfips.txt       List of state FIPS codes and state abbreviations
+    z5pdoc.txt       ZIPList5 Plus documentation file (this file)
+    z5plic.txt       ZIPList5 Plus license file
+
+
+SEARCHING Z5PLUS.TXT USING A TEXT EDITOR
+
+Many text editors can work directly with Z5PLUS.TXT. Just open the file and
+use the normal search commands to find a particular city, county, area code,
+or ZIP code. However, some text editors, such as Windows Notepad, cannot
+process a file as large as ZIPList5 Plus.
+
+
+SEARCHING USING A WORD PROCESSOR
+
+Many word processing programs can import a text file and search it using the
+normal search commands. If you must specify the import file format, choose
+something like this: "ASCII (DOS) TEXT".
+
+
+IMPORTING INTO A DATABASE PROGRAM
+
+You may wish to import the Z5PLUS.TXT data file into a database program where
+you will be able to search the data more efficiently and sort the data into an
+order which better suites your needs. Z5PLUS.TXT can be used with almost any
+commercial database program, such as Microsoft ACCESS, Paradox, dBase, FoxPro,
+etc. Note: Excel is NOT a database program; it is a spreadsheet program. Excel
+cannot handle the number of records contained in ZIPList5 Plus.
+
+To import ZIPList5 Plus into a database program:
+
+  1. Start your database program in the usual way. 
+
+  2. Select "IMPORT" from one of the menus.
+
+  3. Select the file to import: Z5PLUS.TXT
+
+  4. If necessary, specify the import data format. Any of the following
+     terms may be used to describe the text format of the Z5PLUS.TXT file:
+
+     delimited text
+     delimited ASCII
+     comma delimited ASCII
+     ASCII (DOS) text
+
+After importing the data, save the converted data in the native format of the
+database program. You should now be able to sort and search the data using the
+normal sort and search functions of the database program.
+     
+You may wish to build an index for the database. Using an index may shorten
+searches of the data by your database program. Note, however, that some
+database programs cannot create an index for a data field which is not unique.
+The data fields of Z5PLUS.TXT are not unique, since the same data can (and
+often does) appear in more than one record of the file.
+
+
+WHY ZIP CODES ARE NOT UNIQUE
+
+The ZIPList5 Plus ZIP code field is not unique (duplicates exist within the
+database). The reason for this is that the database contains common local
+(alias) names for many cities. Such a name is an alternate name by which that
+city (or some part of that city) is known to local people. 
+
+Some people object to using the "preferred" name specified by the US Postal
+Service; these people may instead use some other, locally preferred name. This
+can be quite confusing. Accordingly, we have included in the database these
+"alias" city names, along with the ZIP codes to which they apply. This means
+that a particular ZIP code may exist in a "preferred name" record and again in
+one or more "alias name" records. 
+
+The one preferred name record has the preferred field set to "P", while all
+alias name records have the preferred field set to "A" or "N". Note that in
+some cases a particular name may be preferred for some ZIP codes but an alias
+name for other ZIP codes. This frequently occurs when the exact political
+boundary between adjacent cities is obscure, leading people to use the two
+city names interchangeably within the boundary area.
+
+
+RECORD LAYOUT 
+
+The data records of the ZIPList5 Plus file consist of ten quote-delimited,
+comma-separated, ASCII text fields, arranged as follows:
+
+"City Name","State Code","ZIP code","Area code","County FIPS code","County
+Name","Preferred flag","Time zone","DST?","ZIP Code Type"CRLF
+
+The fields are defined as follows:
+
+FIELD             TYPE                    LENGTH
+
+City Name         Variable length ASCII   28 maximum
+State Code        Fixed length ASCII      2
+ZIP code          Fixed length ASCII      5 numeric characters
+Area code         Fixed length ASCII      3 numeric characters
+County FIPS       Fixed length ASCII      5 numeric characters
+County Name       Variable length ASCII   25 maximum
+Preferred?        Fixed length ASCII      1 (P, A, or N)
+Time zone         Variable length ASCII   5 maximum (see below)
+DST?              Fixed length ASCII      1 (Y or N)
+ZIP code type     Fixed length ASCII      1 char (P, U, M, or blank) 
+
+The City Name field identifies a city name associated with the ZIP code (but
+NOT necessarily with the County) by the USPS. There may be several different
+city names associated with a particular ZIP code. If so, the ZIP code will
+appear in several different records, each with a different city name. You can
+use the Prefered? field (described below) to identify the one city name which
+is "preferred" by the USPS for use on mail delivered to that ZIP code.
+
+A particular ZIP code may appear in more than one record if the USPS has
+defined more than one city name for that ZIP code. If you wish to eliminate
+the "duplicate" ZIP code records, you can use the Preferred? field (described
+below) to isolate those records which contain the city names "preferred" by
+the USPS for mail delivery. There should be exactly one such record for each
+of the approximately 43,000 active ZIP codes.
+
+The ZIP code field lists only valid 5-digit ZIP codes currently defined by the
+USPS. Obsolete ZIP codes which have been "retired" from service by the USPS
+are not included in this database. 
+
+The ZIP code field is treated as a text field, not a numeric field. This is to
+prevent the loss of the leading zeroes in certain ZIP codes when the data is
+imported into a database program. The area code field and County FIPS field
+are also treated as text fields. Treating all fields as text fields simplifies
+the importing and exporting of the data using a database program.
+
+The County FIPS code field and the County Name field identify the "most
+prevalent" county for the 5-digit ZIP code listed in a given record. This
+relationship of the "most prevalent" county to a particular 5-digit ZIP code
+is determined by the USPS, and we do not second-guess their decision. Note
+that the specified county is related to the ZIP code, NOT necessarily to the
+city name specified in that record. It is quite possible that some or all of
+the specified city may actually lie in a different county (see discussion
+below). Please note also that ZIP codes often cross county boundaries.
+ZIPList5 Plus lists only one county for a given ZIP code (the "most prevalent"
+county, as determined by the USPS) no matter how many counties the ZIP code
+may cross. Our product County-ZIP Code Database lists every county and ZIP
+code combination, which is useful if you need to know EVERY ZIP code which
+lies within a particular county or all counties which include a portion of a
+particular ZIP code. If you wish to resolve an address to an exact county,
+please be aware that you cannot determine the correct county with 100 percent
+accuracy using the 5-digit ZIP code alone. For this you must use a different
+product, such as our Perfect Address, which uses the full street address to
+determine the correct county.
+
+The County FIPS code is a 5-digit numeric field containing a unique numeric
+identification assigned to each county by the US government. The county FIPS
+code is actually a 3-digit code, but most people prefer to combine the 2-digit
+state FIPS code with the 3-digit county FIPS code to yield a 5-digit code
+which can be used to uniquely identify each county in the USA. If you do not
+wish to use the county FIPS code in this way, contact CD Light to obtain a
+copy of ZIPList5 Plus with the 3-digit form of the county FIPS code. ZIPList5
+Plus includes a separate text file, stfips.txt, which defines the state FIPS
+codes for all 50 states plus the territories.
+
+The Preferred? flag can have one of three states, which indicate how that that
+name can be used for delivery of mail to the associated ZIP code. The three
+states are:
+
+P - This is the preferred city name for this ZIP code
+A - This city name is approved (but NOT preferred) for this ZIP code
+N - This city name is NOT approved for mail delivery to this ZIP code
+    
+For every ZIP code in the database there is one and only one record in the
+database in which the Preferred? field is set to "P". This record contains the
+one city name preferred by the US Postal Service for use on all mail sent to
+that particular ZIP code. In addition to the record marked "P", there may be
+one or more additional records with the same ZIP code in which the Preferred?
+field is set to either "A" or "N". A record marked "A" contains an alternate
+city name which may be used for mail delivery TO THAT ONE ZIP CODE. A record
+marked "N" contains an alternate city name which is NOT approved by the US
+Postal Service for mail delivery purposes to that one ZIP code. An alias city
+name which is not approved for mail delivery should be changed to the
+preferred city name for that same ZIP code. Note that a given city name may be
+preferred for some ZIP codes and approved or not approved for other ZIP codes. 
+
+We have included the approved and unapproved city names along with the
+preferred city names because people across the country routinely use these
+alternate city names in their addresses, even though these city names are not
+preferred or even approved by the US Postal Service for mail delivery. You can
+use these non-preferred city names to verify an address and/or ZIP code, and
+then correct the city name to the preferred city name, if you wish. Using the
+preferred city name for all addresses in your database helps find and
+eliminate duplicate addresses in your database.
+
+Note that in some cases a particular city name may be preferred for some ZIP
+codes but an alias name (approved or not approved) for other ZIP codes. This
+frequently occurs when the exact political boundary between adjacent cities is
+poorly defined, leading people to use the two city names interchangeably
+within the boundary area. 
+
+Here is an example:
+
+ZIP         Preferred     Alias                          
+CODE        City Name     City Name
+
+80014       Aurora        Denver (not approved)
+80220       Denver        Aurora (not approved)
+80215       Lakewood      Denver (approved}
+80202       Denver        (None)
+
+ZIP codes 80014 and 80220 fall into the boundary area between the adjacent
+cities of Denver and Aurora, Colorado. Because the actual political boundary
+between these two cities is not clearly defined (at least in the minds of many
+people), people often get confused about the correct city name to use within
+this boundary area. Although Denver is listed in the database as an alias city
+name for ZIP code 80014, the USPS wants the name Denver to be changed to
+Aurora. Denver is "not approved" by the USPS for use as the city name for mail
+addressed to ZIP code 80014. Likewise, Aurora is listed in the database as not
+approved for mail addressed to ZIP code 80220. The USPS wants Aurora to be
+changed to Denver for this particular ZIP code.
+
+However, for mail addressed to 80215, for which Lakewood is the preferred city
+name, Denver is an approved alias city name. For mail addressed to ZIP code
+80215 the USPS says Denver CAN be used as the city name, even though Lakewood
+is the preferred city name. So in this case it really doesn't matter to the
+USPS which city name you use on mail addressed to this particular ZIP code. Go
+figure.
+
+For ZIP code 80202 Denver is the preferred city name. For this ZIP code there
+is no alias city name listed in the database. Denver, therefore, is an example
+of a city name which is preferred for 80202 and 80220, approved for 80215, and
+not approved for 80014. And you thought ZIP codes are so simple!
+ 
+The time zone field always contains the standard time zone designation for a
+particular ZIP code. If that ZIP code falls within a political entity which
+participates in Daylight Saving Time (DST) during the summer months, the DST?
+field is set to "Y". Otherwise the DST? field is set to "N". Note that most
+(but not all) of Arizona, parts of Indiana, and all of Hawaii, Puerto Rico,
+and Guam DO NOT switch to DST.
+
+The following codes may be found in the time zone field:
+
+  Zone       GMT     Geographic Area
+  Code       Offset
+
+  EST        GMT-5   Eastern standard time
+  CST        GMT-6   Central standard time
+  MST        GMT-7   Mountain standard time
+  PST        GMT-8   Pacific standard time
+  EST+1      GMT-4   Puerto Rico, Virgin Islands, APO/FPO (Central America)
+  GMT+1      GMT+1   APO/FPO (Central Europe)
+  PST-1      GMT-9   Alaska (except Aleutian Islands)
+  PST-2      GMT-10  Hawaii, Aleutian Islands
+  PST-3      GMT-11  Pago Pago
+  PST-4      GMT+12  Marshall Islands, Wake Island
+  PST-5      GMT+11  Micronesia
+  PST-6      GMT+10  Guam
+  PST-7      GMT+9   APO/FPO (Pacific)
+
+Note that if GMT plus the time zone offset exceeds 23, the current date must
+be increased by one.
+
+Three small eastern Alabama towns, Linett, Valley, and Phonix City, on the 
+Alabama-Georgia border, observe eastern time, by local custom, instead of 
+central time. However, the US Department of Transportation, which is 
+responsible under federal law for regulating time zone boundaries, does not 
+recognize these towns as being within the eastern time zone. Accordingly, 
+we do not show the associated ZIP codes as being in the eastern time zone. 
+However, you may wish to note this exception in your use of the time zone data 
+in this database. The ZIP codes affected by this are:
+
+    36854 Valley, AL      
+    36863 Lanett, AL      
+    36867 Phenix City, AL 
+    36868 Phenix City, AL 
+    36869 Phenix City, AL 
+    36870 Phenix City, AL 
+    36872 Valley, AL      
+
+Likewise, the towns of Jackpot, Mountain City, and Owyhee, Nevada, in the 
+northeastern corner of Nevada near the Idaho border, observe mountain time,
+by local custom, instead of pacific time. The correct time zone for all of 
+Nevada is pacific time, which is what we show for the ZIP codes associated 
+with these towns. The ZIP codes affected by this are:
+
+    89825 Jackpot, NV
+    89831 Mountain City, NV
+    89832 Owyhee, NV
+
+The ZIP code type field identifies special kinds of ZIP codes. For normal
+residential ZIP codes (which MAY include PO Boxes) this field is blank. The
+following codes may appear in this field:
+
+  P  ZIP code applies only to PO Boxes
+  M  Military ZIP code (APO/FPO)
+  U  "Unique" ZIP code assigned to a particular business or organization
+
+
+SORTED ORDER
+
+ZIPList5 Plus data records are sorted in ascending order by City Name, State
+Code, and ZIP code. If you prefer to order the data by ZIP code or some other
+order, we suggest that you import the data into your own database program
+where you can sort the data into the order you prefer.
+
+
+MILITARY ZIP CODES AND APO/FPO
+
+The USPS delivers mail to US military installations around the world. As a
+result, the USPS has assigned ZIP codes to these facilities, even though they
+are actually on foreign soil. These ZIP codes have been given a state code
+which generally defines the area of the world in which they are found, and a
+city name of APO (Army Post Office) or FPO (Fleet Post Office). The military
+ZIP codes and assigned state codes are as follows:
+
+  ZIP Code Range         State Code  Area
+
+  09000 - 09999            AE        Europe
+  34000 - 34099            AA        Central America (Canal Zone)
+  96200 - 96699            AP        Pacific
+
+Please note that these ZIP codes lie outside the territorial boundaries of the
+United States, and therefore do not include county name, or county FIPS codes. 
+
+
+ZIP Code 45275
+
+ZIP code 45275 is unusual in that it violates the usual rules for ZIP code 
+assignment.
+
+ZIP code 45275 is assigned by the USPS to the Cincinnati - Northern Kentucky
+International Airport. The USPS has assigned an Ohio ZIP code and the
+preferred city name Cincinnati, Ohio to this ZIP code even though the airport
+lies entirely inside of the State of Kentucky.
+
+We have adjusted the county name, county FIPS code, area code, and other 
+information to match the physical reality of Kentucky instead of Ohio. 
+This means that 45275 has the county name and FIPS code of Boone County, 
+Kentucky, even though it is known (by the USPS, at least) as Cincinnati, OH.
+
+
+MISSING AREA CODES AND COUNTIES
+
+All records for areas outside of the normal domestic calling areas of the
+United States have the area code field set to "000". This applies primarily to
+APO/FPO (military) ZIP codes and ZIP codes for some Pacific Islands. These
+places also have no county FIPS code or county name.
+
+
+UNUSUAL COUNTIES
+
+Alaska Counties - Alaska officially has no counties, according to the usual
+political definition of the word. Instead, Alaska has sixteen "boroughs", one
+for each of the major cities. For statistical and budgetary purposes the US
+Government (Census Bureau) has created eleven additional "Census Areas" to
+cover the remainder of Alaska. These 27 boroughs and census areas make up the
+"county equivalents" for Alaska used in this database.
+
+Kalawao County, HI - This "county" formerly was a leper colony on the island
+of Molokai. It has no county government. Many databases omit it entirely.
+However, Kalawao has one small community of about 80 residents, Kalaupapa,
+with its own ZIP code (96742), a post office, and mail delivery. For that
+reason we have chosen to include Kalawao County in our database, even though
+the USPS omits it from the "official" USPS city-state database.
+
+Yellowstone National Park County, MT - This "county" is actually that small
+part of Yellowstone National Park which lies within the borders of the state
+of Montana. It has no towns, no inhabitants (unless you count the animals), no
+county government, and no mail delivery. The US Government recently removed
+this county from its list of "official" counties. For these reasons we have
+chosen to omit it from our databases as well. Portions of this area lie within
+the boundaries of three ZIP codes: 59027, 59030, and 59758, all of which are
+assigned to towns in other counties.
+
+
+WRONG COUNTY SHOWN FOR SOME CITIES??
+
+ZIPList5 Plus is organized as a ZIP code database. It is not really a city-
+state-county database. The information in each record is related to the 5-
+digit ZIP code in that record. That can lead to some combinations of city and
+county which appear to be wrong. For example:
+
+  ZIP Code           City         State     County
+  80214              Denver       CO        Jefferson
+
+Some observant people have pointed out that the city of Denver and Denver
+county are geographically one and the same. Therefore if an address is in the
+city of Denver, it must also be in Denver county. However, according to the US
+Postal Service, the ZIPList5 Plus record above is actually correct as
+presented. How can that be?
+
+One part of the answer is that ZIP code boundaries and political
+boundaries almost never exactly coincide. For that reason, the county
+designation for a 5-digit ZIP code such as 80214 can be somewhat misleading;
+some addresses within the ZIP code boundaries lie in one county and some in
+another. That is the case with 80214: part of it lies in Jefferson County and
+part in Denver County. To find the absolutely correct county for a given
+address, one must always use the full street address or the ZIP+4, not just
+the 5-digit ZIP code. Our product Perfect Address does this.
+
+By examining the address data for ZIP code 80214 contained in the National
+ZIP+4 Address Database (one of our other products), you would find that 1,749
+address records indicate Jefferson County, while only 31 indicate Denver
+County. Clearly at the 5-digit level Jefferson County is the correct county
+designation for ZIP code 80214. That is the reason the USPS designates 80214
+as Jefferson County.
+
+The next question is what city name should be applied to 80214. This question
+is not always easy to answer. The USPS explains that their "official" address
+database is maintained by 159 different local "address management" offices
+scattered across the nation. Each is responsible for all addresses within its
+local district.
+
+Now how are city names handled in the Denver regional address management
+office? That is hard to say. As in most states, some parts of Colorado lie in
+"unincorporated county" areas, where there is no "official" city designation.
+For example, this writer once lived in an unincorporated area of Jefferson
+County, which, for postal purposes, was given the name of the nearest town
+within that ZIP code: Golden. So Golden was the city name of my address, even
+though I lived miles outside the city limits of Golden. This same situation
+seems to be true for ZIP code 80214. The people who live in 80214 are probably
+happy to be called "Denver". Thirty-one address records actually do exist in
+Denver city and county, while the rest lie in that unincorporated area of
+Jefferson County which has no city name. Hence Denver becomes the most logical
+city name to apply to 80214, even though more of 80214 lies within Jefferson
+County than Denver County. Again, this decision was made by the USPS. So we
+end up with a ZIPList5 Plus record for ZIP code 80214 showing the city name of
+Denver but a county name of Jefferson. Don't you just love it!
+
+
+DO ZIP CODES EVER CHANGE?
+
+Yes, ZIP codes do change, and far more often than you might imagine. Many
+parts of the country are growing, with new subdivisions and streets being
+added daily. As the population density increases in urban areas, apartment
+buildings replace single-family dwellings. The US Postal Service is constantly
+forced to add more ZIP+4 codes just to handle the growth. And just like area
+codes, a given 5-digit ZIP code can reach its ZIP+4 expansion limit. This
+forces the USPS to split existing ZIP codes and add new ZIP codes. When ZIP
+code ranges become too fragmented or because of USPS service area changes,
+entire ranges of 5-digit ZIP codes are sometimes "realigned". This happened on
+July 1, 1996, on July 1, 1997, and again on July 1, 1998. Such realignments
+can affect hundreds of thousands of addresses. It isn't unusual for hundreds
+of new 5-digit ZIP codes to be assigned or hundreds to be deleted by the USPS
+in each calender quarter.
+
+Another source of change in ZIPList5 Plus is area code splits.
+
+
+QUARTERLY AND MONTHLY ZIPList5 Plus UPDATES AVAILABLE
+
+With all these changes happening so fast, it is hard to keep up. That is why
+we offer quarterly and monthly updates for ZIPList5 Plus. If you need the most
+current ZIP code and area code information, we suggest a quarterly or monthly
+subscription to ZIPList5 Plus. A quarterly subscription consists of four
+quarterly releases (the current version plus the next three quarterly
+updates). A monthly subscription consists of 12 monthly releases (the current
+version plus the next 11 monthly updates). Order once, pay once, and receive a
+full year's worth of the latest ZIP code data. Best of all, we offer this
+service at a discounted price. If you did not specify a subscription when you
+placed your original order, contact CD Light within 30 days of your original
+purchase. We will convert your order to a subscription, and credit your
+original purchase price toward the subscription fee. For more details, see our
+Internet site, www.zipinfo.com, or call us at 800-571-3914.
+
+
+ERRORS and OMISSIONS
+
+We have created ZIPList5 Plus with care and considerable effort. The data is
+as accurate as we can reasonably make it. We recognize, of course, that errors
+are bound to exist, and that, over time, the data will become "out-of-date".
+If you find errors, we would like to hear from you. Please send corrections to
+us via any of these methods:
+
+Voice      800-571-3914 or 281-292-3270
+Fax        281-292-3608
+email      support@zipinfo.com
+
+CD Light, LLC d.b.a. ZipInfo.com(TM)
+230 N Tranquil Path Dr
+The Woodlands, TX 77380
+www.zipinfo.com
+#
