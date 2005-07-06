@@ -138,6 +138,8 @@ public class PatientRegistrationServiceImpl extends AbstractService implements P
 
     protected void registerInsuranceInformation(final Person person, final RegisterPatientParameters params) throws Exception
     {
+        if (params.getPrimaryInsurancePlanId() == null)
+                return;
         final InsuranceCoverageParameters[] insurancePolicies = new InsuranceCoverageParameters[] {
             new InsuranceCoverageParameters() {
                 public Serializable getInsuranceCarrierId()
