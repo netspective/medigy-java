@@ -353,18 +353,19 @@ public class PatientRegistrationServiceImpl extends AbstractService implements P
             person.addGender(genderType);
 
             // add the languages
-            for (String language : params.getLanguageCodes())
-                person.addLanguage(referenceEntityFacade.getLanguageType(language));
+            if(params.getLanguageCodes() != null)
+                for (String language : params.getLanguageCodes())
+                    person.addLanguage(referenceEntityFacade.getLanguageType(language));
 
             // add the ethnicities
-            for (String ethnicity : params.getEthnicityCodes())
-                person.addEthnicity(referenceEntityFacade.getEthnicityType(ethnicity));
+            if(params.getEthnicityCodes() != null)
+                for (String ethnicity : params.getEthnicityCodes())
+                    person.addEthnicity(referenceEntityFacade.getEthnicityType(ethnicity));
 
             if (params.getSsn() != null)
                 person.setSsn(params.getSsn());
             if (params.getDriversLicenseNumber() != null)
             {
-
                 person.setDriversLicenseNumber(params.getDriversLicenseNumber());
             }
 
@@ -372,7 +373,8 @@ public class PatientRegistrationServiceImpl extends AbstractService implements P
             // TODO: Temporary. uncomment when Country/State data are in (Aye 7/5/05)
             //registerPostalAddress(person, params);
             //registerInsuranceInformation(person, params);
-            registerHomePhone(person, params);
+            if(params.getHomePhone() != null)
+                registerHomePhone(person, params);
 
             final Long patientId = (Long) person.getPersonId();
             final RegisteredPatient patient = new RegisteredPatient()
