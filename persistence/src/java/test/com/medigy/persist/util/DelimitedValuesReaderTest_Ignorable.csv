@@ -1,0 +1,37 @@
+# header comment 1
+# header comment 2 (this file has two header lines)
+FIPS,Alpha,State
+Code,Code,or Equivalent
+00,AA,Armed Forces - Americas
+00,AE,Armed Forces - Europe
+00,AP,Armed Forces - Pacific
+01,AL,Alabama,
+02,AK,Alaska,
+
+# body comment after blank line
+04,AZ,Arizona,
+05,AR,Arkansas,
+06,CA,California
+08,CO,Colorado
+09,CT,Connecticut
+
+# body 2 comment after blank line
+10,DE,Delaware
+11,DC,District of Columbia
+12,FL,Florida
+
+# body 3 comment after blank line
+13,GA,Georgia
+15,HI,Hawaii
+16,ID,Idaho
+
+# body 4 comment after blank line
+17,IL,Illinois
+18,IN,Indiana
+19,IA,Iowa
+
+# body 3 comment after blank line
+20,KS,Kansas
+
+# trailing comments
+# more trailing comments
