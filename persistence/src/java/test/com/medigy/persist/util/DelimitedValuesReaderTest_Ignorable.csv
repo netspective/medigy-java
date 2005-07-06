@@ -26,12 +26,12 @@ Code,Code,or Equivalent
 16,ID,Idaho
 
 # body 4 comment after blank line
-17,IL,Illinois
+"17,1",IL,Illinois
 18,IN,Indiana
 19,IA,Iowa
 
 # body 3 comment after blank line
-20,KS,Kansas
+"20,2",KS,Kansas
 
 # trailing comments
 # more trailing comments
