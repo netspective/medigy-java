@@ -45,6 +45,7 @@ package com.medigy.presentation.form.person.patient;
 
 import com.medigy.presentation.model.PatientRegistrationFormModel;
 import com.medigy.service.dto.person.RegisterPatientParameters;
+import com.medigy.service.dto.person.RegisteredPatient;
 import com.medigy.service.person.PatientRegistrationService;
 import com.medigy.wicket.DefaultApplication;
 import com.medigy.wicket.form.BaseForm;
@@ -68,7 +69,7 @@ public class PatientRegistrationFormPanel extends DefaultFormPanel
 
     protected class PatientRegistrationForm extends BaseForm
     {
-        public PatientRegistrationForm(final String componentName, final IFeedback feedback, BoundCompoundPropertyModel model, RegisterPatientParameters params)
+        public PatientRegistrationForm(final String componentName, final IFeedback feedback, BoundCompoundPropertyModel model, final RegisterPatientParameters params)
         {
             super(componentName, model, feedback);
         }
@@ -76,6 +77,9 @@ public class PatientRegistrationFormPanel extends DefaultFormPanel
 		public final void onSubmit()
 		{
             info("Saved model " + getModelObject());
+            PatientRegistrationService service = (PatientRegistrationService)((DefaultApplication) getApplication()).getService(PatientRegistrationService.class);
+            RegisteredPatient registeredPatient = service.registerPatient((PatientRegistrationFormModel)getModelObject());
+            System.out.println(registeredPatient.getPatientId());
 		}
     }
 }

@@ -13,6 +13,8 @@ import com.medigy.service.validator.ValidEntity;
 import com.medigy.wicket.form.FieldCreator;
 import com.medigy.wicket.form.FormFieldFactory.*;
 import com.medigy.wicket.form.SelectFieldStyle;
+import org.apache.commons.beanutils.BeanUtils;
+import org.hibernate.validator.NotNull;
 
 import java.util.Date;
 
@@ -90,8 +92,14 @@ public final class PatientRegistrationFormModel implements RegisterPatientParame
 	public PatientRegistrationFormModel(RegisterPatientParameters params)
 	{
         this.params = params;
+        try
+        {
+            BeanUtils.copyProperties(this, params);
+        }
+        catch(Exception e)
+        {
 
-        // initialize bean from param data
+        }
 	}
 
     public ServiceVersion getServiceVersion()
@@ -134,6 +142,7 @@ public final class PatientRegistrationFormModel implements RegisterPatientParame
 		this.chartNumber = chartNumber;
 	}
 
+    @NotNull
 	public String getLastName()
 	{
 		return lastName;
@@ -144,6 +153,7 @@ public final class PatientRegistrationFormModel implements RegisterPatientParame
 		this.lastName = lastName;
 	}
 
+    @NotNull
 	public String getFirstName()
 	{
 		return firstName;
@@ -187,6 +197,7 @@ public final class PatientRegistrationFormModel implements RegisterPatientParame
 		this.ssn = ssn;
 	}
 
+    @NotNull
 	public Date getBirthDate()
 	{
 		return birthDate;
@@ -324,6 +335,7 @@ public final class PatientRegistrationFormModel implements RegisterPatientParame
         this.alternate = alternate;
     }
 
+    @NotNull
     public String getStreet1()
     {
         return street1;
@@ -344,6 +356,7 @@ public final class PatientRegistrationFormModel implements RegisterPatientParame
         this.street2 = street2;
     }
 
+    @NotNull
     public String getCity()
     {
         return city;
@@ -354,6 +367,7 @@ public final class PatientRegistrationFormModel implements RegisterPatientParame
         this.city = city;
     }
 
+    @NotNull
     public String getState()
     {
         return state;
@@ -364,6 +378,7 @@ public final class PatientRegistrationFormModel implements RegisterPatientParame
         this.state = state;
     }
 
+    @NotNull
     @FieldCreator(creator = ZipCodeFieldCreator.class)
     public String getPostalCode()
     {
@@ -395,6 +410,7 @@ public final class PatientRegistrationFormModel implements RegisterPatientParame
         this.county= county;
     }
 
+    @NotNull
     public String getCountry()
     {
         return country;
@@ -476,6 +492,7 @@ public final class PatientRegistrationFormModel implements RegisterPatientParame
         this.primaryInsuranceProductId = primaryInsuranceProductId;
     }
 
+    @NotNull
     public String getPrimaryInsurancePlanId()
     {
         return primaryInsurancePlanId;
@@ -496,6 +513,7 @@ public final class PatientRegistrationFormModel implements RegisterPatientParame
         this.patientRelationshipToInsuredOtherRelationship = patientRelationshipToInsuredOtherRelationship;
     }
 
+    @NotNull
     public String getPrimaryInsuranceContractHolderId()
     {
         return primaryInsuranceContractHolderId;
@@ -526,6 +544,7 @@ public final class PatientRegistrationFormModel implements RegisterPatientParame
         this.primaryInsurancePolicyTypeCode = primaryInsurancePolicyTypeCode;
     }
 
+    @NotNull
     public String getPrimaryInsuranceGroupNumber()
     {
         return primaryInsuranceGroupNumber;
@@ -536,6 +555,7 @@ public final class PatientRegistrationFormModel implements RegisterPatientParame
         this.primaryInsuranceGroupNumber = primaryInsuranceGroupNumber;
     }
 
+    @NotNull
     public String getPrimaryInsurancePolicyNumber()
     {
         return primaryInsurancePolicyNumber;
@@ -636,6 +656,7 @@ public final class PatientRegistrationFormModel implements RegisterPatientParame
         this.primaryInsuranceOfficeVisitCoPay = primaryInsuranceOfficeVisitCoPay;
     }
 
+    @NotNull
     @ValidEntity(entity = GenderType.class)
     @SelectFieldStyle(style = SelectFieldStyle.Style.COMBO)
     public String getGenderCode()

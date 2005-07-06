@@ -38,8 +38,6 @@
  */
 package com.medigy.presentation.model;
 
-import com.medigy.persist.reference.ReferenceEntity;
-import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
 import com.medigy.persist.reference.custom.CustomReferenceEntity;
 import wicket.markup.html.form.model.IChoice;
 import wicket.markup.html.form.model.IChoiceList;
@@ -70,7 +68,7 @@ public class CustomReferenceEntityChoices implements IChoiceList
 
         public Object getObject()
         {
-            return object;
+            return object.getCode();
         }
     }
 

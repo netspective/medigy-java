@@ -105,7 +105,7 @@ public class ReferenceEntityChoices implements IChoiceList
 		 */
 		public Object getObject()
 		{
-			return object;
+			return object.getCode();
 		}
 	}
 
