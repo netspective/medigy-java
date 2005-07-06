@@ -69,6 +69,7 @@ import com.medigy.service.util.ReferenceEntityFacade;
 import com.medigy.service.util.UnknownReferenceTypeException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.hibernate.SessionFactory;
 import org.hibernate.validator.NotNull;
 import org.hibernate.validator.Past;
@@ -223,12 +224,18 @@ public class PatientRegistrationServiceImpl extends AbstractService implements P
 
         for (InsuranceCoverageParameters param: insurancePolicies)
         {
-            final Person contractHolder = personFacade.getPersonById(param.getInsuranceContractHolderId());
+            Person contractHolder = null;
+            if (param.getInsuranceContractHolderId() != null)
+                contractHolder = personFacade.getPersonById(param.getInsuranceContractHolderId());
+            else
+                contractHolder = person;
+
             final InsurancePlan insPlan = insurancePolicyFacade.getInsurancePlanById(param.getInsurancePlanId());
             final InsurancePolicyType type = referenceEntityFacade.getInsurancePolicyType(param.getInsurancePolicyTypeCode());
 
-            final InsurancePolicy policy = insurancePolicyFacade.createInsurancePolicy(person, contractHolder, insPlan, param.getInsurancePolicyNumber(),
-                param.getInsuranceGroupNumber(), type, param.getCoverageStartDate(), param.getCoverageEndDate());
+            final InsurancePolicy policy = insurancePolicyFacade.createInsurancePolicy(person, contractHolder, insPlan,
+                    param.getInsurancePolicyNumber(), param.getInsuranceGroupNumber(), type,
+                    param.getCoverageStartDate(), param.getCoverageEndDate());
 
             if (param.getIndividualDeductibleAmount() != null)
                 insurancePolicyFacade.addInsurancePolicyCoverageLevel(policy, CoverageLevelType.Cache.INDIVIDUAL_DEDUCTIBLE.getEntity(),
@@ -325,7 +332,7 @@ public class PatientRegistrationServiceImpl extends AbstractService implements P
 
         // NOTE: using the PostalAddress as the contact mechanism introduces multiple
         // PartyContactMechanisms so don't use the PostalAddress, instead use ContactMechanism
-        ContactMechanism cm = (ContactMechanism) HibernateUtil.getSession().load(ContactMechanism.class, address.getContactMechanismId());
+        ContactMechanism cm = (ContactMechanism) getSession().load(ContactMechanism.class, address.getContactMechanismId());
         contactMechanismFacade.addPartyContactMechanism(cm, patient, param.getPurposeType(), param.getPurposeDescription());
 
     }
@@ -362,8 +369,9 @@ public class PatientRegistrationServiceImpl extends AbstractService implements P
             }
 
             getSession().save(person);
-            registerPostalAddress(person, params);
-            registerInsuranceInformation(person, params);
+            // TODO: Temporary. uncomment when Country/State data are in (Aye 7/5/05)
+            //registerPostalAddress(person, params);
+            //registerInsuranceInformation(person, params);
             registerHomePhone(person, params);
 
             final Long patientId = (Long) person.getPersonId();
@@ -395,7 +403,7 @@ public class PatientRegistrationServiceImpl extends AbstractService implements P
         }
         catch (final Exception e)
         {
-            log.error(e);
+            log.error(ExceptionUtils.getStackTrace(e));
             return createErrorResponse(params, e.getMessage());
         }
     }
