@@ -43,74 +43,17 @@
  */
 package com.medigy.wicket.page;
 
-import java.util.List;
-import java.util.ArrayList;
-
 import wicket.markup.html.WebPage;
-import wicket.markup.html.list.ListView;
-import wicket.markup.html.list.ListItem;
 import wicket.model.IModel;
-import wicket.model.Model;
-import wicket.AttributeModifier;
-import wicket.Component;
-import com.medigy.wicket.HeaderContributor;
 
 public class BasePage extends WebPage
 {
-    /** default styles. */
-    private static final List DEFAULT_STYLES = new ArrayList(1);
-
-    static
-    {
-        DEFAULT_STYLES.add("/medigy/resources/theme/default/css/theme.css");
-    }
-
     public BasePage()
     {
-        // this listview renders a <link rel="stylesheet"... line for each list item
-        // TODO: figure out why this isn't working -- bug in Wicket or my code?
-        // super.add(new StylesListView("styles", new StylesModel()));
     }
 
-    public BasePage(IModel iModel)
+    public BasePage(final IModel iModel)
     {
         super(iModel);
     }
-
-   private static final class StylesListView extends ListView
-   {
-       public StylesListView(final String name, final IModel model)
-       {
-           super(name, model);
-       }
-
-       protected void populateItem(final ListItem listItem)
-       {
-           String style = (String)listItem.getModelObject();
-           // replace the href attribute with the contributed style reference (e.g. 'subdir/mystyle.css')
-           listItem.add(new AttributeModifier("href", new Model(style)));
-       }
-   }
-
-   /* model that pulls style contributions from all nested components of this page */
-   private final class StylesModel extends Model
-   {
-       public Object getObject(final Component component)
-       {
-           final List styles = new ArrayList();
-           styles.addAll(DEFAULT_STYLES); // add the default styles
-
-           // visit all children that implement interface HeaderContributor
-           BasePage.this.visitChildren(HeaderContributor.class, new IVisitor()
-           {
-               public Object component(final Component component)
-               {
-                   // call HeaderContributor.getCSSStyleHrefs and append the result to the list
-                   styles.addAll(((HeaderContributor)component).getCSSStyleHrefs());
-                   return CONTINUE_TRAVERSAL;
-               }
-           });
-           return styles; // we now have our default styles and the contributed styles
-       }
-   }
 }
