@@ -83,8 +83,10 @@ public class PatientRegistrationFormPanel extends DefaultFormPanel
                 PatientRegistrationService service = (PatientRegistrationService)((DefaultApplication) getApplication()).getService(PatientRegistrationService.class);
                 RegisteredPatient registeredPatient = service.registerPatient(patient);
                 if(registeredPatient.getPatientId() != null)
-                    info("Saved patient " + registeredPatient.getRegisterPatientParameters().getFirstName() + " " + registeredPatient.getRegisterPatientParameters().getLastName());
-                //info("Saved model " + getModelObject());
+                    info("Saved patient: " + registeredPatient.getRegisterPatientParameters().getFirstName() + " " + registeredPatient.getRegisterPatientParameters().getLastName());
+
+                if(registeredPatient.getErrorMessage() != null)
+                    info("Errors: " + registeredPatient.getErrorMessage());
             }
             else
             {

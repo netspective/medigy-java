@@ -742,6 +742,7 @@ public final class PatientRegistrationFormModel implements RegisterPatientParame
         this.bloodType = bloodType;
     }
 
+    @NotNull
     @ValidEntity(entity = EthnicityType.class)
     @SelectFieldStyle(style = SelectFieldStyle.Style.MULTILIST)
     public List getEthnicityCodes()
@@ -754,6 +755,7 @@ public final class PatientRegistrationFormModel implements RegisterPatientParame
         this.ethnicityCodes = ethnicityCodes;
     }
 
+    @NotNull
     @ValidEntity(entity = LanguageType.class)
     @SelectFieldStyle(style = SelectFieldStyle.Style.MULTILIST)
     public List getLanguageCodes()
