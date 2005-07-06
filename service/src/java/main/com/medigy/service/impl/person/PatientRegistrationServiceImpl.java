@@ -66,6 +66,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.SessionFactory;
 import org.hibernate.validator.NotNull;
+import org.hibernate.validator.InvalidStateException;
+import org.hibernate.validator.InvalidValue;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -399,6 +401,13 @@ public class PatientRegistrationServiceImpl extends AbstractService implements P
             if (log.isInfoEnabled())
                 log.info("New PERSON created with id = " + patient.getPatientId());
            return patient;
+        }
+        catch (InvalidStateException e)
+        {
+            log.error(e);
+            for (InvalidValue value : e.getInvalidValues())
+                log.error("\t" + value.getPropertyName() + " " + value.getMessage());
+            return createErrorResponse(params, e.getMessage());
         }
         catch (final Exception e)
         {
