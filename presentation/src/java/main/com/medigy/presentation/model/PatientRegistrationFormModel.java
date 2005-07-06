@@ -17,6 +17,7 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.hibernate.validator.NotNull;
 
 import java.util.Date;
+import java.util.List;
 
 
 public final class PatientRegistrationFormModel implements RegisterPatientParameters
@@ -34,8 +35,8 @@ public final class PatientRegistrationFormModel implements RegisterPatientParame
     private String employerName;
     private String employerId;
     private String occupation;
-    private String[] ethnicityCodes;
-    private String[] languageCodes;
+    private List<String> ethnicityCodes;
+    private List<String> languageCodes;
 	private String personId;
 	private String account;
 	private String chartNumber;
@@ -742,25 +743,25 @@ public final class PatientRegistrationFormModel implements RegisterPatientParame
     }
 
     @ValidEntity(entity = EthnicityType.class)
-    @SelectFieldStyle(style = SelectFieldStyle.Style.RADIO)
-    public String[] getEthnicityCodes()
+    @SelectFieldStyle(style = SelectFieldStyle.Style.MULTILIST)
+    public List getEthnicityCodes()
     {
         return ethnicityCodes;
     }
 
-    public void setEthnicityCodes(String[] ethnicityCodes)
+    public void setEthnicityCodes(List<String> ethnicityCodes)
     {
         this.ethnicityCodes = ethnicityCodes;
     }
 
     @ValidEntity(entity = LanguageType.class)
-    @SelectFieldStyle(style = SelectFieldStyle.Style.RADIO)
-    public String[] getLanguageCodes()
+    @SelectFieldStyle(style = SelectFieldStyle.Style.MULTILIST)
+    public List getLanguageCodes()
     {
         return languageCodes;
     }
 
-    public void setLanguageCodes(String[] languageCodes)
+    public void setLanguageCodes(List<String> languageCodes)
     {
         this.languageCodes = languageCodes;
     }

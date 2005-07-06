@@ -42,6 +42,7 @@ import com.medigy.persist.reference.custom.CustomReferenceEntity;
 import wicket.markup.html.form.model.IChoice;
 import wicket.markup.html.form.model.IChoiceList;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -72,14 +73,14 @@ public class CustomReferenceEntityChoices implements IChoiceList
         }
     }
 
-    private Choice[] choiceList;
+    private List<Choice> choiceList;
 
     public CustomReferenceEntityChoices(final List<CustomReferenceEntity> list)
     {
-        this.choiceList = new Choice[list.size()];
-        for (int i = 0; i < choiceList.length; i++)
+        this.choiceList = new ArrayList<Choice>();
+        for (int i = 0; i < list.size(); i++)
         {
-            choiceList[i] = new Choice(list.get(i));
+            choiceList.add(new Choice(list.get(i)));
         }
     }
 
@@ -107,12 +108,12 @@ public class CustomReferenceEntityChoices implements IChoiceList
 
     public IChoice get(int i)
     {
-        return choiceList[i];
+        return choiceList.get(i);
     }
 
     public int size()
     {
-        return choiceList.length;
+        return choiceList.size();
     }
 
     public void detach()

@@ -351,6 +351,8 @@ public class FormFieldFactory
                     return new DropDownChoice(controlId, referenceEntityChoices);
                 case RADIO:
                     return new RadioChoice(controlId, referenceEntityChoices);
+                case MULTILIST:
+                    return new ListMultipleChoice(controlId, referenceEntityChoices);
 
                 default:
                 {

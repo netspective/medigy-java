@@ -50,17 +50,15 @@ import com.medigy.persist.reference.type.LanguageType;
 import com.medigy.persist.reference.type.MaritalStatusType;
 import com.medigy.service.AbstractSpringTestCase;
 import com.medigy.service.ServiceVersion;
-import com.medigy.service.dto.insurance.InsuranceCoverageParameters;
-import com.medigy.service.dto.party.PhoneParameters;
-import com.medigy.service.dto.party.PostalAddressParameters;
-import com.medigy.service.dto.person.PersonParameters;
 import com.medigy.service.dto.person.RegisterPatientParameters;
 import com.medigy.service.dto.person.RegisteredPatient;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 public class TestPatientRegistrationService extends AbstractSpringTestCase
 {
@@ -134,14 +132,14 @@ public class TestPatientRegistrationService extends AbstractSpringTestCase
                             return "111111111";
                         }
 
-                        public String[] getEthnicityCodes()
+                        public List<String> getEthnicityCodes()
                         {
-                            return new String[] { EthnicityType.Cache.AFRICAN_AMERICAN.getCode(), EthnicityType.Cache.ASIAN_PACIFIC_ISLANDER.getCode() };
+                            return Arrays.asList(new String[] { EthnicityType.Cache.AFRICAN_AMERICAN.getCode(), EthnicityType.Cache.ASIAN_PACIFIC_ISLANDER.getCode() });
                         }
 
-                        public String[] getLanguageCodes()
+                        public List<String> getLanguageCodes()
                         {
-                            return new String[] { LanguageType.Cache.ENGLISH.getCode(), LanguageType.Cache.SPANISH.getCode() };
+                            return Arrays.asList(new String[] { LanguageType.Cache.ENGLISH.getCode(), LanguageType.Cache.SPANISH.getCode() });
                         }
 
                         public String getDriversLicenseNumber()

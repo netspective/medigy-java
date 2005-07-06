@@ -19,8 +19,6 @@
     <orderEntry type="library" name="Persistence Dependencies (Main)" level="project" />
     <orderEntry type="module" module-name="service" />
     <orderEntry type="library" name="Service Dependencies (Main)" level="project" />
-    <orderEntry type="library" name="AspectJ Dependencies (Build)" level="project" />
-    <orderEntry type="library" name="AspectJ Depdencies (Main)" level="project" />
     <orderEntryProperties />
   </component>
 </module>

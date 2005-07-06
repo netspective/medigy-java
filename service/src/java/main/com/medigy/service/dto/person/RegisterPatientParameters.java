@@ -39,15 +39,13 @@
 package com.medigy.service.dto.person;
 
 import com.medigy.service.dto.ServiceParameters;
-import com.medigy.service.dto.insurance.InsuranceCoverageParameters;
-import com.medigy.service.dto.party.PhoneParameters;
-import com.medigy.service.dto.party.PostalAddressParameters;
 import com.medigy.service.validator.ValidEntity;
 import org.hibernate.validator.NotNull;
 import org.hibernate.validator.Past;
 
-import java.util.Date;
 import java.io.Serializable;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Interface for DTO containing data specific to the Add Patient service
@@ -141,14 +139,14 @@ public interface RegisterPatientParameters extends ServiceParameters
      * @return
      * @see com.medigy.persist.reference.custom.person.EthnicityType#getCode()
      */
-    public String[] getEthnicityCodes();
+    public List<String> getEthnicityCodes();
 
     /**
      * Gets the patient's spoken languages. The first one is considered the primary language.
      * @return
      * @see com.medigy.persist.reference.type.LanguageType#getCode()
      */
-    public String[] getLanguageCodes();
+    public List<String> getLanguageCodes();
 
 
     /**

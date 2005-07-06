@@ -44,22 +44,16 @@ import com.medigy.persist.model.party.ContactMechanism;
 import com.medigy.persist.model.party.PhoneNumber;
 import com.medigy.persist.model.party.PostalAddress;
 import com.medigy.persist.model.person.Person;
-import com.medigy.persist.model.person.Gender;
-import com.medigy.persist.model.contact.Country;
 import com.medigy.persist.reference.custom.insurance.CoverageLevelType;
 import com.medigy.persist.reference.custom.insurance.InsurancePolicyType;
 import com.medigy.persist.reference.type.GenderType;
 import com.medigy.persist.reference.type.MaritalStatusType;
-import com.medigy.persist.util.HibernateUtil;
-import com.medigy.service.ServiceVersion;
 import com.medigy.service.AbstractService;
-import com.medigy.service.validator.ValidEntity;
+import com.medigy.service.ServiceVersion;
 import com.medigy.service.contact.ContactMechanismFacade;
 import com.medigy.service.dto.ServiceParameters;
 import com.medigy.service.dto.insurance.InsuranceCoverageParameters;
-import com.medigy.service.dto.party.PhoneParameters;
 import com.medigy.service.dto.party.PostalAddressParameters;
-import com.medigy.service.dto.person.PersonParameters;
 import com.medigy.service.dto.person.RegisterPatientParameters;
 import com.medigy.service.dto.person.RegisteredPatient;
 import com.medigy.service.insurance.InsurancePolicyFacade;
@@ -67,15 +61,16 @@ import com.medigy.service.person.PatientRegistrationService;
 import com.medigy.service.person.PersonFacade;
 import com.medigy.service.util.ReferenceEntityFacade;
 import com.medigy.service.util.UnknownReferenceTypeException;
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.commons.lang.exception.ExceptionUtils;
 import org.hibernate.SessionFactory;
 import org.hibernate.validator.NotNull;
-import org.hibernate.validator.Past;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Service class for registering a new patient
@@ -478,14 +473,14 @@ public class PatientRegistrationServiceImpl extends AbstractService implements P
                 return null;
             }
 
-            public String[] getEthnicityCodes()
+            public List<String> getEthnicityCodes()
             {
-                return new String[0];
+                return new ArrayList<String>();
             }
 
-            public String[] getLanguageCodes()
+            public List<String> getLanguageCodes()
             {
-                return new String[0];
+                return new ArrayList<String>();
             }
 
             public String getResponsiblePartyId()
@@ -672,11 +667,11 @@ public class PatientRegistrationServiceImpl extends AbstractService implements P
         RegisterPatientParameters patientParameters = (RegisterPatientParameters) params;
         assert  patientParameters.getGenderCode() != null :
             "Gender cannot be empty.";
-        final String[] languageCodes = patientParameters.getLanguageCodes();
-        assert languageCodes != null && languageCodes.length > 0 :
+        final List<String> languageCodes = patientParameters.getLanguageCodes();
+        assert languageCodes != null && languageCodes.size() > 0 :
             "There must be at least one language.";
-        final String[] ethnicities = patientParameters.getEthnicityCodes();
-        assert ethnicities != null && ethnicities.length > 0 :
+        final List<String> ethnicities = patientParameters.getEthnicityCodes();
+        assert ethnicities != null && ethnicities.size() > 0 :
             "There must be at least one ethnicity.";
 
         return null;

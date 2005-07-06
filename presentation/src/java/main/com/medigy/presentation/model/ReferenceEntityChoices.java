@@ -48,6 +48,9 @@ import com.medigy.persist.reference.ReferenceEntity;
 import wicket.markup.html.form.model.IChoice;
 import wicket.markup.html.form.model.IChoiceList;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Simple choice list for providing choices in a static ReferenceEntity. This class implements
  * {@link wicket.markup.html.form.model.IChoiceList}so that it is easier to
@@ -57,7 +60,7 @@ public class ReferenceEntityChoices implements IChoiceList
 {
 	/** The reference entity that we're getting the enums from */
 	private Class entity;
-    private Choice[] choices;
+    private List<Choice> choices;
 
     /**
 	 * Implementation of IChoice for simple objects.
@@ -124,10 +127,10 @@ public class ReferenceEntityChoices implements IChoiceList
                 if (ic.isEnum())
                 {
                     int i = 0;
-                    choices = new Choice[ic.getEnumConstants().length];
+                    choices = new ArrayList<Choice>();
                     for(final CachedReferenceEntity c : (CachedReferenceEntity[]) ic.getEnumConstants())
                     {
-                        choices[i] = new Choice(c, i);
+                        choices.add(new Choice(c, i));
                         i++;
                     }
                     foundCache = true;
@@ -194,7 +197,7 @@ public class ReferenceEntityChoices implements IChoiceList
 	{
 		attach();
 		if (index != -1)
-			return choices[index];
+			return choices.get(index);
 
 		return null;
 	}
@@ -205,6 +208,6 @@ public class ReferenceEntityChoices implements IChoiceList
 	public int size()
 	{
 		attach();
-		return choices.length;
+		return choices.size();
 	}
 }
