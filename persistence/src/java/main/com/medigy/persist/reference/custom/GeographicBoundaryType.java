@@ -148,7 +148,7 @@ public class GeographicBoundaryType extends AbstractCustomHierarchyReferenceEnti
             return getGeoBoundaryTypeId().equals(((GeographicBoundaryType) obj).getGeoBoundaryTypeId());
     }
 
-    @ManyToOne(targetEntity = "com.medigy.persist.reference.custom.GeographicBoundaryType")
+    @ManyToOne(targetEntity = com.medigy.persist.reference.custom.GeographicBoundaryType.class)
     @JoinColumn(name = "parent_geo_boundary_type_id", referencedColumnName = "geo_boundary_type_id")
     public CustomHierarchyReferenceEntity getParentEntity()
     {

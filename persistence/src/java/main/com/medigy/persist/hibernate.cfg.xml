@@ -4,7 +4,12 @@
 
 <hibernate-configuration>
     <session-factory>
-        <!--mapping package="com.medigy.persist.reference"/-->
+
+        <mapping class="com.medigy.persist.model.common.AbstractEntity"/>
+        <mapping class="com.medigy.persist.model.common.AbstractTopLevelEntity"/>
+        <mapping class="com.medigy.persist.model.common.AbstractDateDurationEntity"/>
+        <mapping class="com.medigy.persist.reference.AbstractReferenceEntity"/>
+        <mapping class="com.medigy.persist.reference.custom.AbstractCustomReferenceEntity"/>
         <mapping class="com.medigy.persist.reference.ModelVersion"/>
 
         <!--mapping package="com.medigy.persist.reference.type"/-->

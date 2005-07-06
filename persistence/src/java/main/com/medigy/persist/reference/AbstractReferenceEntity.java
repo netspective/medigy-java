@@ -47,8 +47,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import javax.persistence.Id;
+import javax.persistence.EmbeddableSuperclass;
 import java.io.Serializable;
 
+@EmbeddableSuperclass
 public abstract class AbstractReferenceEntity implements ReferenceEntity, Serializable, Comparable
 {
     private static final Log log = LogFactory.getLog(AbstractReferenceEntity.class);

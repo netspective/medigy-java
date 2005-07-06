@@ -19,6 +19,7 @@ public class InsurancePolicyCoverageLevel  extends CoverageLevelRelationship
 
     private Long insuranceProductCoverageLevelId;
     private InsurancePolicy insurancePolicy;
+    private CoverageLevel coverageLevel;
 
     @Id(generate = GeneratorType.AUTO)
     @Column(name = PK_COLUMN_NAME)
@@ -44,4 +45,15 @@ public class InsurancePolicyCoverageLevel  extends CoverageLevelRelationship
         this.insurancePolicy = insurancePolicy;
     }
 
+    @ManyToOne
+    @JoinColumn(name = CoverageLevel.PK_COLUMN_NAME, nullable = false)
+    public CoverageLevel getCoverageLevel()
+    {
+        return coverageLevel;
+    }
+
+    public void setCoverageLevel(final CoverageLevel coverageLevel)
+    {
+        this.coverageLevel = coverageLevel;
+    }
 }

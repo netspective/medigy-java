@@ -50,9 +50,11 @@ import com.medigy.persist.reference.ModelVersion;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Version;
+import javax.persistence.EmbeddableSuperclass;
 import java.io.Serializable;
 import java.util.Date;
 
+@EmbeddableSuperclass
 public abstract class AbstractEntity implements Serializable
 {
     private RecordStatusType recordStatus = RecordStatusType.ACTIVE;

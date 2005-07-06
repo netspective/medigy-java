@@ -76,7 +76,7 @@ public class EmploymentAgreement extends AbstractDateDurationEntity implements A
         this.agreementId = agreementId;
     }
 
-    @OneToMany(targetEntity = "com.medigy.persist.model.party.EmploymentAgreementRole")
+    @OneToMany(targetEntity = com.medigy.persist.model.party.EmploymentAgreementRole.class)
     @JoinColumn(name = "emp_agreement_id")
     public Set<EmploymentAgreementRole> getAgreementRoles()
     {

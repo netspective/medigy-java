@@ -562,7 +562,9 @@ public class Person extends Party
         getLicenses().add(healthCareLicense);
     }
 
-    @Lob(type = LobType.BLOB)
+    // TODO: Commented out because migration to HB annotations beta3 is giving  "not-null property references a null or transient value:" error
+    /*
+    @Lob(type = LobType.BLOB, optional = true)
     public byte[] getPhoto()
     {
         return photo;
@@ -572,6 +574,7 @@ public class Person extends Party
     {
         this.photo = photo;
     }
+    */
 
     public String getFirstNameSoundex()
     {

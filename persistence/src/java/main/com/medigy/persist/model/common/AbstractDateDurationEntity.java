@@ -42,7 +42,9 @@ package com.medigy.persist.model.common;
 import java.util.Date;
 
 import javax.persistence.Transient;
+import javax.persistence.EmbeddableSuperclass;
 
+@EmbeddableSuperclass
 public abstract class AbstractDateDurationEntity extends AbstractTopLevelEntity
 {
     private EffectiveDates effectiveDates = new EffectiveDates();

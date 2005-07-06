@@ -93,7 +93,7 @@ public class EmploymentAgreementItem  extends AbstractTopLevelEntity implements 
         this.agreementText = agreementText;
     }
 
-    @ManyToOne(targetEntity = "com.medigy.persist.model.party.EmploymentAgreement")
+    @ManyToOne(targetEntity = com.medigy.persist.model.party.EmploymentAgreement.class)
     @JoinColumn(name = "emp_agreement_id")
     public Agreement getAgreement()
     {
@@ -116,7 +116,7 @@ public class EmploymentAgreementItem  extends AbstractTopLevelEntity implements 
         this.agreementImage = agreementImage;
     }
 
-    @ManyToOne(targetEntity = "com.medigy.persist.model.party.EmploymentAgreementItem")
+    @ManyToOne(targetEntity = com.medigy.persist.model.party.EmploymentAgreementItem.class)
     @JoinColumn(name = "parent_emp_agreement_item_id", referencedColumnName = "emp_agreement_item_id")
     public AgreementItem getParentAgreementItem()
     {

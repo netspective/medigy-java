@@ -16,6 +16,7 @@ public class InsuranceProductCoverage  extends CoverageRelationship
 
     private Long insuranceProductCoverageId;
     private InsuranceProduct insuranceProduct;
+    private Coverage coverage;
 
     @Id(generate = GeneratorType.AUTO)
     public Long getInsuranceProductCoverageId()
@@ -38,5 +39,17 @@ public class InsuranceProductCoverage  extends CoverageRelationship
     public void setInsuranceProduct(final InsuranceProduct insuranceProduct)
     {
         this.insuranceProduct = insuranceProduct;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = Coverage.PK_COLUMN_NAME)
+    public Coverage getCoverage()
+    {
+        return coverage;
+    }
+
+    public void setCoverage(final Coverage coverage)
+    {
+        this.coverage = coverage;
     }
 }

@@ -78,7 +78,7 @@ public class CoverageLevelBasis extends AbstractEntity
     }
 
     @ManyToOne
-    @JoinColumn(name = "coverage_level_id", nullable = false)
+    @JoinColumn(name = CoverageLevel.PK_COLUMN_NAME, nullable = false)
     public CoverageLevel getCoverageLevel()
     {
         return coverageLevel;

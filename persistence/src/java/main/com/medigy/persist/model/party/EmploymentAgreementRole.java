@@ -66,7 +66,7 @@ public class EmploymentAgreementRole implements AgreementRole
         this.agreementRoleId = agreementRoleId;
     }
 
-    @ManyToOne (targetEntity = "com.medigy.persist.model.party.EmploymentAgreement")
+    @ManyToOne (targetEntity = com.medigy.persist.model.party.EmploymentAgreement.class)
     @JoinColumn(name = "emp_agreement_id")
     public Agreement getAgreement()
     {
@@ -91,7 +91,7 @@ public class EmploymentAgreementRole implements AgreementRole
     }
 
 
-    @ManyToOne(targetEntity = "com.medigy.persist.reference.custom.party.EmploymentAgreementRoleType")
+    @ManyToOne(targetEntity = com.medigy.persist.reference.custom.party.EmploymentAgreementRoleType.class)
     @JoinColumn(name = "emp_agree_role_type_id")
     public AgreementRoleType getType()
     {

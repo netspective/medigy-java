@@ -43,6 +43,9 @@
  */
 package com.medigy.persist.model.common;
 
+import javax.persistence.EmbeddableSuperclass;
+
+@EmbeddableSuperclass
 public abstract class AbstractTopLevelEntity extends AbstractEntity implements Entity
 {
 }

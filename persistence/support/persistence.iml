@@ -16,6 +16,16 @@
     <orderEntry type="library" name="Persistence Dependencies (Main)" level="project" />
     <orderEntry type="library" name="Persistence Dependencies (Test)" level="project" />
     <orderEntry type="library" name="Common Dependencies (Test)" level="project" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../depend/lib/test/mysql-connector-java-3.1.8-bin.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="library" name="Ant 1.6.2" level="application" />
     <orderEntryProperties />
   </component>
 </module>
