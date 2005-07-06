@@ -74,6 +74,8 @@ import javax.persistence.Lob;
 import javax.persistence.LobType;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
@@ -82,6 +84,7 @@ import java.util.TreeSet;
 
 @Entity
 @Inheritance(strategy=InheritanceType.JOINED)
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames={"firstName", "lastName", "birthDate"})})
 public class Person extends Party
 {
     public static final String PK_COLUMN_NAME = Party.PK_COLUMN_NAME;
