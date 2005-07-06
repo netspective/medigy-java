@@ -11,7 +11,9 @@ import javax.persistence.Column;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
+import javax.persistence.EmbeddableSuperclass;
 
+@EmbeddableSuperclass
 public abstract class AbstractCustomHierarchyReferenceEntity extends AbstractEntity implements CustomHierarchyReferenceEntity, Comparable
 {
     private Long systemId;
