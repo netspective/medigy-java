@@ -84,6 +84,7 @@
         <mapping class="com.medigy.persist.reference.custom.party.CommunicationEventPurposeType"/>
         <mapping class="com.medigy.persist.reference.custom.party.CommunicationEventRoleType"/>
         <mapping class="com.medigy.persist.reference.custom.party.ContactMechanismPurposeType"/>
+        <mapping class="com.medigy.persist.reference.custom.party.AgreementRoleType"/>
         <mapping class="com.medigy.persist.reference.custom.party.EmploymentAgreementRoleType"/>
         <mapping class="com.medigy.persist.reference.custom.party.FacilityType"/>
         <mapping class="com.medigy.persist.reference.custom.party.OrganizationRoleType"/>
