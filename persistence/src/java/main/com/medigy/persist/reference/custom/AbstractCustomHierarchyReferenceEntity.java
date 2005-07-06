@@ -71,8 +71,8 @@ public abstract class AbstractCustomHierarchyReferenceEntity extends AbstractEnt
         this.description = description;
     }
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "party_id", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = Party.PK_COLUMN_NAME, nullable = false)
     public Party getParty()
     {
         return party;

@@ -10,6 +10,7 @@
         <mapping class="com.medigy.persist.model.common.AbstractDateDurationEntity"/>
         <mapping class="com.medigy.persist.reference.AbstractReferenceEntity"/>
         <mapping class="com.medigy.persist.reference.custom.AbstractCustomReferenceEntity"/>
+        <mapping class="com.medigy.persist.reference.custom.AbstractCustomHierarchyReferenceEntity"/>
         <mapping class="com.medigy.persist.reference.ModelVersion"/>
 
         <!--mapping package="com.medigy.persist.reference.type"/-->

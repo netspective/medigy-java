@@ -50,6 +50,7 @@ import com.medigy.persist.reference.custom.party.PartyClassificationType;
 import com.medigy.persist.reference.custom.party.PartyIdentifierType;
 import com.medigy.persist.reference.custom.party.PartyRelationshipType;
 import com.medigy.persist.reference.custom.party.PartyRoleType;
+import com.medigy.persist.reference.custom.GeographicBoundaryType;
 import com.medigy.persist.reference.type.party.PartyType;
 
 import javax.persistence.CascadeType;
@@ -120,6 +121,7 @@ public class Party extends AbstractTopLevelEntity
     private Set<PartyRelationshipType> partyRelationshipTypes = new HashSet<PartyRelationshipType>();
     private Set<CommunicationEventPurposeType> communicationEventPurposeTypes = new HashSet<CommunicationEventPurposeType>();
     private Set<CommunicationEventRoleType> communicationEventRoleTypes = new HashSet<CommunicationEventRoleType>();
+    private Set<GeographicBoundaryType> geographicBoundaryTypes = new HashSet<GeographicBoundaryType>();
 
     public Party()
     {
@@ -431,5 +433,16 @@ public class Party extends AbstractTopLevelEntity
     public void addInvoiceRole(final InvoiceRole role)
     {
         invoiceRoles.add(role);
+    }
+
+    @OneToMany(mappedBy = "party")
+    public Set<GeographicBoundaryType> getGeographicBoundaryTypes()
+    {
+        return geographicBoundaryTypes;
+    }
+
+    public void setGeographicBoundaryTypes(final Set<GeographicBoundaryType> geographicBoundaryTypes)
+    {
+        this.geographicBoundaryTypes = geographicBoundaryTypes;
     }
 }
