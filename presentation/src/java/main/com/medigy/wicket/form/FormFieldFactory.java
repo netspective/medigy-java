@@ -43,19 +43,29 @@
  */
 package com.medigy.wicket.form;
 
-import com.medigy.presentation.model.ChoicesFactory;
-import com.medigy.service.validator.ValidEntity;
+import java.io.Serializable;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.regex.Pattern;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import wicket.markup.html.form.*;
+
+import com.medigy.presentation.model.ChoicesFactory;
+import com.medigy.service.validator.ValidEntity;
+import wicket.markup.html.form.DropDownChoice;
+import wicket.markup.html.form.FormComponent;
+import wicket.markup.html.form.ListMultipleChoice;
+import wicket.markup.html.form.RadioChoice;
+import wicket.markup.html.form.TextArea;
+import wicket.markup.html.form.TextField;
 import wicket.markup.html.form.model.IChoiceList;
 import wicket.markup.html.form.validation.EmailAddressPatternValidator;
 import wicket.markup.html.form.validation.PatternValidator;
 import wicket.markup.html.form.validation.TypeValidator;
-
-import java.io.Serializable;
-import java.util.*;
-import java.util.regex.Pattern;
 
 public class FormFieldFactory
 {
@@ -351,6 +361,9 @@ public class FormFieldFactory
                     return new DropDownChoice(controlId, referenceEntityChoices);
                 case RADIO:
                     return new RadioChoice(controlId, referenceEntityChoices);
+
+                case MULTICHECK: // TODO: implement this but it defaults to MULTILIST
+                case MULTIDUAL:  // TODO: implement this but it defaults to MULTILIST
                 case MULTILIST:
                     return new ListMultipleChoice(controlId, referenceEntityChoices);
 
