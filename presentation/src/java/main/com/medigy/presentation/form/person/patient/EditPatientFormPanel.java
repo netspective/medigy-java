@@ -43,50 +43,51 @@
  */
 package com.medigy.presentation.form.person.patient;
 
-import com.medigy.presentation.model.PatientRegistrationFormModel;
-import com.medigy.service.dto.person.RegisterPatientParameters;
-import com.medigy.service.dto.person.RegisteredPatient;
-import com.medigy.service.person.PatientRegistrationService;
+import com.medigy.presentation.model.EditPatientFormModel;
+import com.medigy.service.dto.person.EditPatient;
+import com.medigy.service.dto.person.EditPatientParameters;
+import com.medigy.service.person.EditPatientService;
 import com.medigy.wicket.DefaultApplication;
 import com.medigy.wicket.form.BaseForm;
 import com.medigy.wicket.panel.DefaultFormPanel;
 import wicket.IFeedback;
 import wicket.model.BoundCompoundPropertyModel;
 
-public class PatientRegistrationFormPanel extends DefaultFormPanel
+public class EditPatientFormPanel extends DefaultFormPanel
 {
-    public PatientRegistrationFormPanel(final String componentName)
+    public EditPatientFormPanel(final String componentName)
     {
         super(componentName);
     }
 
-    protected PatientRegistrationForm createForm(final String componentName, final IFeedback feedback)
+    protected EditPatientForm createForm(final String componentName, final IFeedback feedback)
     {
-        final PatientRegistrationService service = (PatientRegistrationService) ((DefaultApplication) getApplication()).getService(PatientRegistrationService.class);
-        final RegisterPatientParameters newPatientParameters = service.getNewPatientParameters();
-        return new PatientRegistrationForm(componentName, feedback, new BoundCompoundPropertyModel(new PatientRegistrationFormModel(newPatientParameters)), newPatientParameters);
+        Long personId = new Long("113"); // TODO: remove - TEST CASE
+        final EditPatientService service = (EditPatientService) ((DefaultApplication) getApplication()).getService(EditPatientService.class);
+        final EditPatientParameters editPatientParameters = service.getEditPatientParameters(personId);
+        return new EditPatientForm(componentName, feedback, new BoundCompoundPropertyModel(new EditPatientFormModel(editPatientParameters)), editPatientParameters);
     }
 
-    protected class PatientRegistrationForm extends BaseForm
+    protected class EditPatientForm extends BaseForm
     {
-        public PatientRegistrationForm(final String componentName, final IFeedback feedback, BoundCompoundPropertyModel model, final RegisterPatientParameters params)
+        public EditPatientForm(final String componentName, final IFeedback feedback, BoundCompoundPropertyModel model, final EditPatientParameters params)
         {
             super(componentName, model, feedback, params.getClass());
         }
 
 		public final void onSubmit()
 		{
-            PatientRegistrationFormModel patient = (PatientRegistrationFormModel)getModelObject();
+            EditPatientFormModel patient = (EditPatientFormModel)getModelObject();
 			boolean isNew = (patient.getPersonId() == null);
             if(isNew)
             {
-                PatientRegistrationService service = (PatientRegistrationService)((DefaultApplication) getApplication()).getService(PatientRegistrationService.class);
-                RegisteredPatient registeredPatient = service.registerPatient(patient);
-                if(registeredPatient.getPatientId() != null)
-                    info("Saved patient: " + registeredPatient.getRegisterPatientParameters().getFirstName() + " " + registeredPatient.getRegisterPatientParameters().getLastName());
+                EditPatientService service = (EditPatientService)((DefaultApplication) getApplication()).getService(EditPatientService.class);
+                EditPatient editPatient = service.editPatient(patient);
+                if(editPatient.getPatientId() != null)
+                    info("Saved patient: " + editPatient.getEditPatientParameters().getFirstName() + " " + editPatient.getEditPatientParameters().getLastName());
 
-                if(registeredPatient.getErrorMessage() != null)
-                    info("Errors: " + registeredPatient.getErrorMessage());
+                if(editPatient.getErrorMessage() != null)
+                    info("Errors: " + editPatient.getErrorMessage());
             }
             else
             {

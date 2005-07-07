@@ -102,7 +102,7 @@ public class BaseForm extends Form implements IComponentResolver
         super(componentName, feedback);
     }
 
-    public BaseForm(String componentName, IModel model, IFeedback feedback)
+    public BaseForm(String componentName, IModel model, IFeedback feedback, final Class serviceParameterClass)
     {
         super(componentName, model, feedback);
 

@@ -35,63 +35,18 @@
  * CAUSED AND REGARDLESS OF THE THEORY OF LIABILITY, ARISING OUT OF THE USE OF OR INABILITY TO USE THE SOFTWARE, EVEN
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
- * @author Shahid N. Shah
  */
+package com.medigy.service.person;
 
-/*
- * Copyright (c) 2005 Your Corporation. All Rights Reserved.
- */
-package com.medigy.presentation.form.person.patient;
+import com.medigy.service.Service;
+import com.medigy.service.dto.person.EditPatient;
+import com.medigy.service.dto.person.EditPatientParameters;
 
-import com.medigy.presentation.model.PatientRegistrationFormModel;
-import com.medigy.service.dto.person.RegisterPatientParameters;
-import com.medigy.service.dto.person.RegisteredPatient;
-import com.medigy.service.person.PatientRegistrationService;
-import com.medigy.wicket.DefaultApplication;
-import com.medigy.wicket.form.BaseForm;
-import com.medigy.wicket.panel.DefaultFormPanel;
-import wicket.IFeedback;
-import wicket.model.BoundCompoundPropertyModel;
+import java.io.Serializable;
 
-public class PatientRegistrationFormPanel extends DefaultFormPanel
+public interface EditPatientService extends Service
 {
-    public PatientRegistrationFormPanel(final String componentName)
-    {
-        super(componentName);
-    }
+    public EditPatient editPatient(EditPatientParameters person);
 
-    protected PatientRegistrationForm createForm(final String componentName, final IFeedback feedback)
-    {
-        final PatientRegistrationService service = (PatientRegistrationService) ((DefaultApplication) getApplication()).getService(PatientRegistrationService.class);
-        final RegisterPatientParameters newPatientParameters = service.getNewPatientParameters();
-        return new PatientRegistrationForm(componentName, feedback, new BoundCompoundPropertyModel(new PatientRegistrationFormModel(newPatientParameters)), newPatientParameters);
-    }
-
-    protected class PatientRegistrationForm extends BaseForm
-    {
-        public PatientRegistrationForm(final String componentName, final IFeedback feedback, BoundCompoundPropertyModel model, final RegisterPatientParameters params)
-        {
-            super(componentName, model, feedback, params.getClass());
-        }
-
-		public final void onSubmit()
-		{
-            PatientRegistrationFormModel patient = (PatientRegistrationFormModel)getModelObject();
-			boolean isNew = (patient.getPersonId() == null);
-            if(isNew)
-            {
-                PatientRegistrationService service = (PatientRegistrationService)((DefaultApplication) getApplication()).getService(PatientRegistrationService.class);
-                RegisteredPatient registeredPatient = service.registerPatient(patient);
-                if(registeredPatient.getPatientId() != null)
-                    info("Saved patient: " + registeredPatient.getRegisterPatientParameters().getFirstName() + " " + registeredPatient.getRegisterPatientParameters().getLastName());
-
-                if(registeredPatient.getErrorMessage() != null)
-                    info("Errors: " + registeredPatient.getErrorMessage());
-            }
-            else
-            {
-                // TODO: call EditPatientService once that is ready
-            }
-		}
-    }
+    public EditPatientParameters getEditPatientParameters(Serializable personId);
 }

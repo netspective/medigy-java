@@ -106,7 +106,7 @@ public class PersonFacadeImpl extends AbstractFacade implements PersonFacade
      */
     public Person getPersonById(final Serializable id)
     {
-        return (Person) getSession().load(Person.class, id);
+        return (Person) getSession().get(Person.class, id);
     }
 
     /**

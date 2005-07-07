@@ -43,18 +43,13 @@
  */
 package com.medigy.app.pbs;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.medigy.app.pbs.page.FormTestPage1;
-import com.medigy.app.pbs.page.HomePage;
-import com.medigy.app.pbs.page.TestPage1;
-import com.medigy.app.pbs.page.TestPage2;
-import com.medigy.app.pbs.page.TestPage3;
+import com.medigy.app.pbs.page.*;
+import com.medigy.wicket.DefaultApplication;
 import com.medigy.wicket.menu.Menu;
 import com.medigy.wicket.menu.MenuItem;
-import com.medigy.wicket.DefaultApplication;
-import wicket.contrib.spring.SpringApplication;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class PhysicianBillingSystemApplication extends DefaultApplication 
 {
@@ -85,7 +80,8 @@ public class PhysicianBillingSystemApplication extends DefaultApplication
             menuItems.add(new MainMenuItem("TestPage1", TestPage1.class));
             menuItems.add(new MainMenuItem("TestPage2", TestPage2.class));
             menuItems.add(new MainMenuItem("TestPage3", TestPage3.class));
-            menuItems.add(new MainMenuItem("FormTestPage1", FormTestPage1.class));
+            menuItems.add(new MainMenuItem("Register Patient", PatientRegistrationPage.class));
+            menuItems.add(new MainMenuItem("Edit Patient", EditPatientPage.class));
         }
 
         public String getLabel()
