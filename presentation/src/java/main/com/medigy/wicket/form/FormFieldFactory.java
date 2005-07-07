@@ -64,7 +64,6 @@ import wicket.markup.html.form.TextArea;
 import wicket.markup.html.form.TextField;
 import wicket.markup.html.form.model.IChoiceList;
 import wicket.markup.html.form.validation.EmailAddressPatternValidator;
-import wicket.markup.html.form.validation.PatternValidator;
 import wicket.markup.html.form.validation.TypeValidator;
 
 public class FormFieldFactory
@@ -279,7 +278,7 @@ public class FormFieldFactory
         {
             final TextField result = new TextField(controlId);
             reflectedFormFieldDefn.initializeField(reflectedFormFieldDefn, result);
-            result.add(new PatternValidator(DASH_VALIDATE_PATTERN));
+            result.add(new PatternValidator(DASH_VALIDATE_PATTERN, "999-999-9999 x999"));
             return result;
         }
 
@@ -297,7 +296,7 @@ public class FormFieldFactory
         {
             final TextField result = new TextField(controlId);
             reflectedFormFieldDefn.initializeField(reflectedFormFieldDefn, result);
-            result.add(new PatternValidator(SOCIAL_SECURITY_PATTERN));
+            result.add(new PatternValidator(SOCIAL_SECURITY_PATTERN, "999-99-9999"));
             return result;
         }
 
@@ -330,7 +329,7 @@ public class FormFieldFactory
         {
             final TextField result = new TextField(controlId);
             reflectedFormFieldDefn.initializeField(reflectedFormFieldDefn, result);
-            result.add(new PatternValidator(VALIDATE_PATTERN));
+            result.add(new PatternValidator(VALIDATE_PATTERN, "99999-9999"));
             return result;
         }
 
