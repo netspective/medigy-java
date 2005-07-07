@@ -37,7 +37,7 @@ public final class EditPatientFormModel implements EditPatientParameters
     private String occupation;
     private List<String> ethnicityCodes;
     private List<String> languageCodes;
-	private String personId;
+	private Long personId;
 	private String account;
 	private String chartNumber;
 	private String responsiblePartyId;
@@ -121,12 +121,12 @@ public final class EditPatientFormModel implements EditPatientParameters
         this.version = version;
     }
 
-	public String getPersonId()
+	public Long getPersonId()
 	{
 		return personId;
 	}
 
-	public void setPersonId(String personId)
+	public void setPersonId(Long personId)
 	{
 		this.personId = personId;
 	}

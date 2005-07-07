@@ -43,6 +43,7 @@ import com.medigy.persist.model.insurance.InsurancePolicy;
 import com.medigy.persist.model.party.ContactMechanism;
 import com.medigy.persist.model.party.PhoneNumber;
 import com.medigy.persist.model.party.PostalAddress;
+import com.medigy.persist.model.person.Gender;
 import com.medigy.persist.model.person.Person;
 import com.medigy.persist.reference.custom.insurance.CoverageLevelType;
 import com.medigy.persist.reference.custom.insurance.InsurancePolicyType;
@@ -61,11 +62,13 @@ import com.medigy.service.person.EditPatientService;
 import com.medigy.service.person.PersonFacade;
 import com.medigy.service.util.ReferenceEntityFacade;
 import com.medigy.service.util.UnknownReferenceTypeException;
+import com.medigy.service.validator.ValidEntity;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.SessionFactory;
 import org.hibernate.validator.NotNull;
+import org.hibernate.validator.Past;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -99,7 +102,7 @@ public class EditPatientServiceImpl extends AbstractService implements EditPatie
 
     public EditPatient editPatient(final EditPatientParameters params)
     {
-        Person person = (Person)getSession().get(Person.class,  params.getId());
+        Person person = (Person)getSession().get(Person.class,  params.getPersonId());
         try
         {
             person.setLastName(params.getLastName());
@@ -173,10 +176,13 @@ public class EditPatientServiceImpl extends AbstractService implements EditPatie
     public EditPatientParameters getEditPatientParameters(Serializable personId)
     {
         final Person person = this.personFacade.getPersonById(personId);
+        EditPatientBean patient = new EditPatientBean();
+
+
 
         return new EditPatientParameters() {
 
-            public Long getId()
+            public Long getPersonId()
             {
                 return person.getPersonId();
             }
@@ -717,5 +723,379 @@ public class EditPatientServiceImpl extends AbstractService implements EditPatie
                 return errorMessage;
             }
         };
+    }
+
+    public class EditPatientBean implements EditPatientParameters
+    {
+        private String firstName;
+        private String lastName;
+        private String middleName;
+        private String suffix;
+        private Date birthDate;
+        private Date deathDate;
+        private String genderCode;
+        private String maritalStatusCode;
+        private String ssn;
+        private String driversLicenseNumber;
+        private String driversLicenseStateCode;
+        private String employerName;
+        private String employerId;
+        private String occupation;
+        private List<String> ethnicityCodes;
+        private List<String> languageCodes;
+        private Long personId;
+        private String account;
+        private String chartNumber;
+        private String responsiblePartyId;
+        private String responsiblePartyRole;
+        private String miscNotes;
+        private String homePhoneNumber;
+        private String workPhoneNumber;
+        private String homePhone;
+        private String workPhone;
+        private String mobilePhone;
+        private String pager;
+        private String alternate;
+        private String street1;
+        private String street2;
+        private String city;
+        private String state;
+        private String postalCode;
+        private String province;
+        private String county;
+        private String country;
+        private String postalAddressPurposeType;
+        private String postalAddressPurposeDescription;
+        private String email;
+        private String employerPhoneNumber;
+        private String primaryInsuranceProductId;
+        private String primaryInsurancePlanId;
+        private String patientRelationshipToInsuredOtherRelationship;
+        private String primaryInsurancePolicyTypeCode;
+        private String primaryInsuranceGroupNumber;
+        private String primaryInsurancePolicyNumber;
+        private Date primaryInsuranceCoverageStartDate;
+        private Date primaryInsuranceCoverageEndDate;
+        private Float primaryInsuranceIndividualDeductibleAmount;
+        private Float primaryInsuranceFamilyDeductibleAmount;
+        private String individualDeductibleRemaining;
+        private String familyDeductibleRemaining;
+        private Float primaryInsurancePercentagePay;
+        private Float primaryInsuranceMaxThresholdAmount;
+        private Float primaryInsuranceOfficeVisitCoPay;
+        private String relationshipToResponsible;
+        private String employmentStatus;
+        private String insuranceSequence;
+        private String primaryInsuranceContractHolderId;
+        private String primaryInsuranceContractHolderRole;
+        private String bloodType;
+        private String primaryCareProviderId;
+        private String primaryInsuranceCarrierId;
+        private ServiceVersion version;
+
+        @NotNull public Long getPersonId()
+        {
+            return personId;
+        }
+
+        public void setPersonId(Long id)
+        {
+            this.personId = id;
+        }
+
+        @NotNull public String getFirstName()
+        {
+            return firstName;
+        }
+
+        public void setFirstName(String firstName)
+        {
+            this.firstName = firstName;
+        }
+
+        @NotNull public String getLastName()
+        {
+            return lastName;
+        }
+
+        public void setLastName(String lastName)
+        {
+            this.lastName = lastName;
+        }
+
+        public String getMiddleName()
+        {
+            return middleName;
+        }
+
+        public void setMiddleName(String middleName)
+        {
+            this.middleName = middleName;
+        }
+
+        public String getSuffix()
+        {
+            return suffix;
+        }
+
+        public void setSuffix(String suffix)
+        {
+            this.suffix = suffix;
+        }
+
+        @NotNull @Past public Date getBirthDate()
+        {
+            return birthDate;
+        }
+
+        public void setBirthDate(Date birthDate)
+        {
+            this.birthDate = birthDate;
+        }
+
+        @NotNull @Past public Date getDeathDate()
+        {
+            return deathDate;
+        }
+
+        public void setDeathDate(Date deathDate)
+        {
+            this.deathDate = deathDate;
+        }
+
+        @NotNull @ValidEntity(entity = Gender.class) public String getGenderCode()
+        {
+            return this.genderCode;
+        }
+
+        public void setGenderCode(String genderCode)
+        {
+            this.genderCode = genderCode;
+        }
+
+        public String getMaritalStatusCode()
+        {
+            return maritalStatusCode;
+        }
+
+        public void setMaritalStatusCode(String maritalStatusCode)
+        {
+            this.maritalStatusCode = maritalStatusCode;
+        }
+
+        public String getSsn()
+        {
+            return ssn;
+        }
+
+        public void setSsn(String ssn)
+        {
+            this.ssn = ssn;
+        }
+
+        public String getDriversLicenseNumber()
+        {
+            return driversLicenseNumber;
+        }
+
+        public void setDriversLicenseNumber(String driversLicenseNumber)
+        {
+            this.driversLicenseNumber = driversLicenseNumber;
+        }
+
+        public String getDriversLicenseStateCode()
+        {
+            return driversLicenseStateCode;
+        }
+
+        public void setDriversLicenseStateCode(String driversLicenseStateCode)
+        {
+            this.driversLicenseStateCode = driversLicenseStateCode;
+        }
+
+        public String getEmployerName()
+        {
+            return null;  //To change body of implemented methods use File | Settings | File Templates.
+        }
+
+        public String getEmployerId()
+        {
+            return null;  //To change body of implemented methods use File | Settings | File Templates.
+        }
+
+        public String getOccupation()
+        {
+            return null;  //To change body of implemented methods use File | Settings | File Templates.
+        }
+
+        public List<String> getEthnicityCodes()
+        {
+            return null;  //To change body of implemented methods use File | Settings | File Templates.
+        }
+
+        public List<String> getLanguageCodes()
+        {
+            return null;  //To change body of implemented methods use File | Settings | File Templates.
+        }
+
+        public String getResponsiblePartyId()
+        {
+            return null;  //To change body of implemented methods use File | Settings | File Templates.
+        }
+
+        public String getResponsiblePartyRole()
+        {
+            return null;  //To change body of implemented methods use File | Settings | File Templates.
+        }
+
+        public String getHomePhone()
+        {
+            return null;  //To change body of implemented methods use File | Settings | File Templates.
+        }
+
+        public String getWorkPhone()
+        {
+            return null;  //To change body of implemented methods use File | Settings | File Templates.
+        }
+
+        public String getMobilePhone()
+        {
+            return null;  //To change body of implemented methods use File | Settings | File Templates.
+        }
+
+        @NotNull public String getStreet1()
+        {
+            return null;  //To change body of implemented methods use File | Settings | File Templates.
+        }
+
+        public String getStreet2()
+        {
+            return null;  //To change body of implemented methods use File | Settings | File Templates.
+        }
+
+        @NotNull public String getCity()
+        {
+            return null;  //To change body of implemented methods use File | Settings | File Templates.
+        }
+
+        @NotNull public String getState()
+        {
+            return null;  //To change body of implemented methods use File | Settings | File Templates.
+        }
+
+        public String getProvince()
+        {
+            return null;  //To change body of implemented methods use File | Settings | File Templates.
+        }
+
+        @NotNull public String getPostalCode()
+        {
+            return null;  //To change body of implemented methods use File | Settings | File Templates.
+        }
+
+        public String getCounty()
+        {
+            return null;  //To change body of implemented methods use File | Settings | File Templates.
+        }
+
+        @NotNull public String getCountry()
+        {
+            return null;  //To change body of implemented methods use File | Settings | File Templates.
+        }
+
+        public String getPostalAddressPurposeType()
+        {
+            return null;  //To change body of implemented methods use File | Settings | File Templates.
+        }
+
+        public String getPostalAddressPurposeDescription()
+        {
+            return null;  //To change body of implemented methods use File | Settings | File Templates.
+        }
+
+        public String getPrimaryCareProviderId()
+        {
+            return null;  //To change body of implemented methods use File | Settings | File Templates.
+        }
+
+        public Serializable getPrimaryInsuranceCarrierId()
+        {
+            return null;  //To change body of implemented methods use File | Settings | File Templates.
+        }
+
+        public Serializable getPrimaryInsuranceProductId()
+        {
+            return null;  //To change body of implemented methods use File | Settings | File Templates.
+        }
+
+        @NotNull public Serializable getPrimaryInsurancePlanId()
+        {
+            return null;  //To change body of implemented methods use File | Settings | File Templates.
+        }
+
+        @NotNull public String getPrimaryInsurancePolicyNumber()
+        {
+            return null;  //To change body of implemented methods use File | Settings | File Templates.
+        }
+
+        public String getPrimaryInsurancePolicyTypeCode()
+        {
+            return null;  //To change body of implemented methods use File | Settings | File Templates.
+        }
+
+        @NotNull public String getPrimaryInsuranceGroupNumber()
+        {
+            return null;  //To change body of implemented methods use File | Settings | File Templates.
+        }
+
+        @NotNull public Serializable getPrimaryInsuranceContractHolderId()
+        {
+            return null;  //To change body of implemented methods use File | Settings | File Templates.
+        }
+
+        @NotNull public String getPrimaryInsuranceContractHolderRole()
+        {
+            return null;  //To change body of implemented methods use File | Settings | File Templates.
+        }
+
+        public Date getPrimaryInsuranceCoverageStartDate()
+        {
+            return null;  //To change body of implemented methods use File | Settings | File Templates.
+        }
+
+        public Date getPrimaryInsuranceCoverageEndDate()
+        {
+            return null;  //To change body of implemented methods use File | Settings | File Templates.
+        }
+
+        public Float getPrimaryInsuranceIndividualDeductibleAmount()
+        {
+            return null;  //To change body of implemented methods use File | Settings | File Templates.
+        }
+
+        public Float getPrimaryInsuranceFamilyDeductibleAmount()
+        {
+            return null;  //To change body of implemented methods use File | Settings | File Templates.
+        }
+
+        public Float getPrimaryInsuranceOfficeVisitCoPay()
+        {
+            return null;  //To change body of implemented methods use File | Settings | File Templates.
+        }
+
+        public Float getPrimaryInsurancePercentagePay()
+        {
+            return null;  //To change body of implemented methods use File | Settings | File Templates.
+        }
+
+        public Float getPrimaryInsuranceMaxThresholdAmount()
+        {
+            return null;  //To change body of implemented methods use File | Settings | File Templates.
+        }
+
+        public ServiceVersion getServiceVersion()
+        {
+            return null;  //To change body of implemented methods use File | Settings | File Templates.
+        }
     }
 }

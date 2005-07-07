@@ -355,7 +355,7 @@ public class TestEditPatientService extends AbstractSpringTestCase
         {
             editPatientParameters = new EditPatientParameters()
             {
-                public Long getId()
+                public Long getPersonId()
                 {
                     return persistedPerson.getPersonId();
                 }
