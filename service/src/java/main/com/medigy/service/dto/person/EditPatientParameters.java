@@ -58,7 +58,7 @@ public interface EditPatientParameters extends ServiceParameters
      * @return id
      */
     @NotNull
-    public Long getId();
+    public Long getPersonId();
 
     /**
      * Gets the patient's first name.
