@@ -215,7 +215,7 @@ public class TestRegisterHealthCareProviderService extends AbstractSpringTestCas
         assertNotNull(person);
         assertEquals(person.getLastName(), ("Bond"));
         assertEquals(person.getFirstName(), ("James"));
-        assertEquals(person.getCurrentGender().getCode(), (GenderType.Cache.MALE.getEntity().getCode()));
+        assertEquals(person.getCurrentGenderType().getCode(), (GenderType.Cache.MALE.getEntity().getCode()));
         assertEquals(person.getLicenses().size(), (1));
         assertEquals(person.getEthnicities().size(), (2));
         assertEquals(person.getLanguages().size(), (2));
