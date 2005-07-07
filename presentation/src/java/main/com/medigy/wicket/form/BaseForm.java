@@ -146,7 +146,6 @@ public class BaseForm extends Form implements IComponentResolver
 
                 final String labelId = tag.getAttributes().getString(ATTRNAME_WICKET_ID);
                 container.autoAdd(new FieldLabel(labelId, labelTextInMarkup.toString()));
-                System.out.println("Read label " + labelId + " as '" + labelTextInMarkup + "'");
                 return true;
             }
         });
