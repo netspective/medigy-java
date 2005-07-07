@@ -53,6 +53,19 @@ import java.util.List;
 public interface RegisterPatientParameters extends ServiceParameters
 {
     /**
+     * Gets the person's unique pk id that is stored in the database.
+     * @return person id
+     */
+    public String getPersonId();
+
+    /**
+     * Gets the patient's id.
+     * @return patient id
+     */
+    @NotNull
+    public String getPatientId();
+
+    /**
      * Gets the patient's first name.
      * @return first name
      */
@@ -85,6 +98,14 @@ public interface RegisterPatientParameters extends ServiceParameters
     @NotNull
     @Past
     public Date getBirthDate();
+
+    /**
+     * Get's the patient's death date. .
+     * @return the patient's death date
+     */
+    @NotNull
+    @Past
+    public Date getDeathDate();
 
     /**
      * Gets the patients gender. .

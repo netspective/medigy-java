@@ -22,7 +22,7 @@
                 <value>com.medigy.app.pbs.page.TestPage2</value>
                 <value>com.medigy.app.pbs.page.TestPage3</value>
                 <value>com.medigy.app.pbs.page.PatientRegistrationPage</value>
-                <value>com.medigy.app.pbs.page.EditPatientPage</value>
+                <value>com.medigy.app.pbs.page.PatientRegistrationPage</value>
             </list>
         </property>
     </bean>

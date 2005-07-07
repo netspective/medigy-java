@@ -48,36 +48,56 @@ import com.medigy.service.dto.person.RegisterPatientParameters;
 import com.medigy.service.dto.person.RegisteredPatient;
 import com.medigy.service.person.PatientRegistrationService;
 import com.medigy.wicket.DefaultApplication;
-import com.medigy.wicket.form.BaseForm;
+import com.medigy.wicket.form.FormMode;
+import com.medigy.wicket.form.RecordEditorForm;
 import com.medigy.wicket.panel.DefaultFormPanel;
 import wicket.IFeedback;
 import wicket.model.BoundCompoundPropertyModel;
 
 public class PatientRegistrationFormPanel extends DefaultFormPanel
 {
-    public PatientRegistrationFormPanel(final String componentName)
+    public PatientRegistrationFormPanel(final String componentName, final FormMode formPerspective)
     {
-        super(componentName);
+        super(componentName, formPerspective);
     }
 
-    protected PatientRegistrationForm createForm(final String componentName, final IFeedback feedback)
+    protected RecordEditorForm createForm(final String componentName, final IFeedback feedback, final FormMode formMode)
     {
         final PatientRegistrationService service = (PatientRegistrationService) ((DefaultApplication) getApplication()).getService(PatientRegistrationService.class);
         final RegisterPatientParameters newPatientParameters = service.getNewPatientParameters();
-        return new PatientRegistrationForm(componentName, feedback, new BoundCompoundPropertyModel(new PatientRegistrationFormModel(newPatientParameters)), newPatientParameters);
+
+        return new PatientRegistrationForm(componentName, feedback, new BoundCompoundPropertyModel(new PatientRegistrationFormModel(newPatientParameters)), newPatientParameters, formMode, RegisterPatientParameters.class);
     }
 
-    protected class PatientRegistrationForm extends BaseForm
+    protected class PatientRegistrationForm extends RecordEditorForm
     {
-        public PatientRegistrationForm(final String componentName, final IFeedback feedback, BoundCompoundPropertyModel model, final RegisterPatientParameters params)
+        public PatientRegistrationForm(final String componentName, final IFeedback feedback, BoundCompoundPropertyModel model,
+            final RegisterPatientParameters params, final FormMode formPerspective, final Class paramClz)
         {
-            super(componentName, model, feedback, params.getClass());
+            super(componentName, model, feedback, formPerspective, paramClz);
         }
 
-		public final void onSubmit()
-		{
+        public void initInsert()
+        {
+             // hide form fields?
+        }
+
+        public void initUpdate()
+        {
+            // hide form fields
+        }
+
+        public void initDelete()
+        {
+
+        }
+
+        public final void onSubmit()
+        {
             PatientRegistrationFormModel patient = (PatientRegistrationFormModel)getModelObject();
-			boolean isNew = (patient.getPersonId() == null);
+
+
+            boolean isNew = (patient.getPersonId() == null);
             if(isNew)
             {
                 PatientRegistrationService service = (PatientRegistrationService)((DefaultApplication) getApplication()).getService(PatientRegistrationService.class);
@@ -90,8 +110,16 @@ public class PatientRegistrationFormPanel extends DefaultFormPanel
             }
             else
             {
-                // TODO: call EditPatientService once that is ready
+                PatientRegistrationService service = (PatientRegistrationService)((DefaultApplication) getApplication()).getService(PatientRegistrationService.class);
+                RegisteredPatient registeredPatient = service.registerPatient(patient);
+                if(registeredPatient.getPatientId() != null)
+                    info("Saved patient: " + registeredPatient.getRegisterPatientParameters().getFirstName() + " " + registeredPatient.getRegisterPatientParameters().getLastName());
+
+                if(registeredPatient.getErrorMessage() != null)
+                    info("Errors: " + registeredPatient.getErrorMessage());
             }
-		}
+        }
+
+
     }
 }

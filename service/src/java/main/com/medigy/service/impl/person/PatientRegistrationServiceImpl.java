@@ -65,9 +65,10 @@ import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.SessionFactory;
-import org.hibernate.validator.NotNull;
 import org.hibernate.validator.InvalidStateException;
 import org.hibernate.validator.InvalidValue;
+import org.hibernate.validator.NotNull;
+import org.hibernate.validator.Past;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -419,6 +420,16 @@ public class PatientRegistrationServiceImpl extends AbstractService implements P
     public RegisterPatientParameters getNewPatientParameters()
     {
         return new RegisterPatientParameters() {
+            public String getPersonId()
+            {
+                return null;  //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            @NotNull public String getPatientId()
+            {
+                return null;  //To change body of implemented methods use File | Settings | File Templates.
+            }
+
             public String getFirstName()
             {
                 return null;
@@ -442,6 +453,11 @@ public class PatientRegistrationServiceImpl extends AbstractService implements P
             public Date getBirthDate()
             {
                 return null;
+            }
+
+            @NotNull @Past public Date getDeathDate()
+            {
+                return null;  //To change body of implemented methods use File | Settings | File Templates.
             }
 
             public String getGenderCode()

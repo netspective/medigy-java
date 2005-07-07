@@ -54,6 +54,8 @@ import com.medigy.service.dto.person.RegisterPatientParameters;
 import com.medigy.service.dto.person.RegisteredPatient;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.validator.NotNull;
+import org.hibernate.validator.Past;
 
 import java.io.Serializable;
 import java.util.Arrays;
@@ -77,6 +79,16 @@ public class TestPatientRegistrationService extends AbstractSpringTestCase
                 try
                 {
                     patientParameters = new RegisterPatientParameters() {
+                        public String getPersonId()
+                        {
+                            return null;  //To change body of implemented methods use File | Settings | File Templates.
+                        }
+
+                        @NotNull public String getPatientId()
+                        {
+                            return null;  //To change body of implemented methods use File | Settings | File Templates.
+                        }
+
                         public String getFirstName()
                         {
                             return "Ryan";
@@ -100,6 +112,11 @@ public class TestPatientRegistrationService extends AbstractSpringTestCase
                         public Date getBirthDate()
                         {
                             return new Date();
+                        }
+
+                        @NotNull @Past public Date getDeathDate()
+                        {
+                            return null;  //To change body of implemented methods use File | Settings | File Templates.
                         }
 
                         public String getGenderCode()
