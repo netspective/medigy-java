@@ -111,7 +111,7 @@ public class DelimitedValuesReaderTest extends TestCase
         final TestLineHandler lineHandler = new TestLineHandler();
         final DelimitedValuesReader dvr = new DelimitedValuesReader(lineHandler, new InputStreamReader(getClass().getResource("DelimitedValuesReaderTest_Ignorable.csv").openStream()),
                 "DelimitedValuesReaderTest_Ignorable.csv", new DelimitedValuesParser(), 2, true, "^#.*", lineHandler,
-                true, DelimitedValuesReader.AUTO_CALC_EXPECTED_FIELDS, false);
+                true, DelimitedValuesReader.AUTO_CALC_EXPECTED_FIELDS, false, 10);
 
         dvr.readAll();
 

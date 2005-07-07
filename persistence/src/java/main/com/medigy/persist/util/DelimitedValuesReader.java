@@ -72,6 +72,7 @@ public class DelimitedValuesReader
     private final Pattern ignoreLinePattern;
     private final IgnoredLineHandler ignoredLineHandler;
     private final List<String> errors = new ArrayList<String>();
+    private final int maxErrors;
 
     private List<List<String>> headerLines;
     private int expectedFieldsPerlLineCount = AUTO_CALC_EXPECTED_FIELDS;
@@ -85,7 +86,8 @@ public class DelimitedValuesReader
                                  final IgnoredLineHandler ignoredLineHandler,
                                  final boolean validateFieldsCount,
                                  final int expectedFieldsCount, // send in AUTO_CALC_EXPECTED_FIELDS to auto-calculate based on first line
-                                 final boolean throwExceptionOnValidationError)
+                                 final boolean throwExceptionOnValidationError,
+                                 final int maxErrors)
     {
         this.lineHandler = lineHandler;
         this.reader = new LineNumberReader(reader);
@@ -99,6 +101,7 @@ public class DelimitedValuesReader
         this.validateFieldsCount = validateFieldsCount;
         this.throwExceptionOnValidationError = throwExceptionOnValidationError;
         this.expectedFieldsPerlLineCount = expectedFieldsCount;
+        this.maxErrors = maxErrors;
     }
 
     public void readAll() throws IOException, DelimitedValuesReaderException
@@ -128,13 +131,15 @@ public class DelimitedValuesReader
     public DelimitedValuesReader(final LineHandler lineHandler, final URL resource, boolean headerRow) throws IOException
     {
         this(lineHandler, new InputStreamReader(resource.openStream()), resource.toExternalForm(),
-             new DelimitedValuesParser(), headerRow ? 1 : 0, true, null, null, true, AUTO_CALC_EXPECTED_FIELDS, true);
+             new DelimitedValuesParser(), headerRow ? 1 : 0, true, null, null, true, AUTO_CALC_EXPECTED_FIELDS, true,
+                10);
     }
 
     public DelimitedValuesReader(final LineHandler lineHandler, final File file, boolean headerRow) throws IOException
     {
         this(lineHandler, new FileReader(file), file.getAbsolutePath(),
-             new DelimitedValuesParser(), headerRow ? 1 : 0, true, null, null, true, AUTO_CALC_EXPECTED_FIELDS, true);
+             new DelimitedValuesParser(), headerRow ? 1 : 0, true, null, null, true, AUTO_CALC_EXPECTED_FIELDS, true,
+                10);
     }
 
     protected void parseHeader(final int skipFirstRows) throws IOException
@@ -194,10 +199,7 @@ public class DelimitedValuesReader
                     if(throwExceptionOnValidationError)
                         throw new DelimitedValuesReaderException(validationErrorMsg, e);
                     else
-                    {
                         errors.add(validationErrorMsg);
-                        continue;
-                    }
                 }
             }
 
@@ -218,6 +220,15 @@ public class DelimitedValuesReader
             try
             {
                 lineHandler.handleLine(this, line);
+
+                if(! throwExceptionOnValidationError)
+                {
+                    if(errors.size() > maxErrors)
+                    {
+                        errors.add("Maximum error count " + maxErrors + " reached.");
+                        return;
+                    }
+                }
             }
             catch (Exception e)
             {
@@ -227,7 +238,13 @@ public class DelimitedValuesReader
                 else
                 {
                     errors.add(validationErrorMsg);
-                    continue;
+                    if(errors.size() > maxErrors)
+                    {
+                        errors.add("Maximum error count " + maxErrors + " reached.");
+                        return;
+                    }
+                    else
+                        continue;
                 }
             }
         }
@@ -236,6 +253,11 @@ public class DelimitedValuesReader
     public void close() throws IOException
     {
         reader.close();
+    }
+
+    public LineNumberReader getReader()
+    {
+        return reader;
     }
 
     public int getExpectedFieldsPerlLineCount()

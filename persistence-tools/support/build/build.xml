@@ -93,6 +93,30 @@
             showSql="no"/>
     </target>
 
+    <target name="db.load-reference-data" depends="compile.main,init.define-module.dependencies.main.classpath">
+        <property name="db.load-reference-data.database.dialectClass" value="org.hibernate.dialect.MySQLInnoDBDialect"/>
+        <property name="db.load-reference-data.database.driverClass" value="com.mysql.jdbc.Driver"/>
+        <property name="db.load-reference-data.database.url" value="jdbc:mysql://192.168.0.100:3306/medigy_demo_01"/>
+        <property name="db.load-reference-data.database.userid" value="medigy_demo"/>
+        <property name="db.load-reference-data.database.password" value="medigy_demo"/>
+
+        <taskdef name="load-entity" classname="com.medigy.tool.persist.loader.EntityLoaderTask"
+                                classpathref="module.dependencies.test.classpath">
+            <classpath location="${module.artifacts.classes.main.home}"/>
+        </taskdef>
+
+        <load-entity
+            resource="/com/medigy/tool/persist/loader/data/icd9.csv"
+            beforeLoadUpdateHQL="delete from Icd"
+            hibernateConfigClass="com.medigy.persist.util.HibernateConfiguration"
+            hibernateConfigFile="/com/medigy/persist/hibernate.cfg.xml"
+            dialect="${db.load-reference-data.database.dialectClass}"
+            driver="${db.load-reference-data.database.driverClass}"
+            url="${db.load-reference-data.database.url}"
+            userid="${db.load-reference-data.database.userid}" password="${db.load-reference-data.database.password}"
+            showSql="no"/>
+    </target>
+
     <target name="doc.generate-dbdd-source" depends="compile.main,init.define-modules,init.define-module.dependencies.main.classpath,graphviz.init">
         <taskdef name="dbdg" classname="org.sns.tool.hibernate.dbdd.DatabaseDesignGeneratorTask"
                              classpathref="module.dependencies.main.classpath">
