@@ -283,7 +283,7 @@ function Dialog_associateFieldLabels()
             }
         }
 
-        if(! found)
+        if(! found && ! && this.style != SELECTSTYLE_RADIO && this.style != SELECTSTYLE_MULTICHECK)
             alert("Label '" + label.childNodes[0].nodeValue + "' with id '"+ label.id +"' does not have an associated form control with id " + label.htmlFor);
     }
 }
@@ -445,6 +445,7 @@ function DialogField(dialog, fieldIndex, control, type)
 	this.isReadOnly = DialogField_isReadOnly;
 	this.alertMessage = DialogField_alertMessage;
 	this.isVisible = DialogField_isVisible;
+	this.setStyle = DialogField_setStyle;
 	this.setVisible = DialogField_setVisible;
 	this.setRequired = DialogField_setRequired;
 	this.setValue = DialogField_setValue;
@@ -458,6 +459,11 @@ function DialogField(dialog, fieldIndex, control, type)
 	this.resetClassName = DialogField_resetClassName;
 	this.createAdjancentArea = DialogField_createAdjancentArea;
 	this.populateAdjacentArea = DialogField_populateAdjacentArea;
+}
+
+function DialogField_setStyle(style)
+{
+    this.style = style;
 }
 
 function DialogField_createAdjancentArea(id, className, invisible)

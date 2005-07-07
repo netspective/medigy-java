@@ -390,7 +390,7 @@ public class FormFieldFactory
                 final SelectFieldStyle sfsAnn = (SelectFieldStyle) reflectedFormFieldDefn.getAnnotation(SelectFieldStyle.class);
                 final SelectFieldStyle.Style style = sfsAnn != null ? sfsAnn.style() : SelectFieldStyle.Style.COMBO;
 
-                generator.getRegistrationScript().append(fieldVarName + ".style = SELECTSTYLE_" + style.name() + "\n");
+                generator.getRegistrationScript().append(fieldVarName + ".setStyle(SELECTSTYLE_" + style.name() + ");\n");
             }
         }
     }
