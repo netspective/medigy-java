@@ -339,7 +339,8 @@ public class FormFieldFactory
         }
     }
 
-    protected class ReferenceEntityFieldCreator implements FieldCreator, FormJavaScriptGenerator.FieldTypeNameContributor
+    protected class ReferenceEntityFieldCreator implements FieldCreator, FormJavaScriptGenerator.FieldTypeNameContributor,
+                                                                         FormJavaScriptGenerator.FieldRegistrationContributor
     {
         public FormComponent createField(final String controlId, final ReflectedFormFieldDefn reflectedFormFieldDefn)
         {
@@ -379,6 +380,18 @@ public class FormFieldFactory
         public String getJavaScriptFieldTypeId(FormJavaScriptGenerator generator)
         {
             return "select";
+        }
+
+        public void appendJavaScriptFieldRegistration(final FormJavaScriptGenerator generator, final FormComponent component, final String fieldVarName)
+        {
+            final ReflectedFormFieldDefn reflectedFormFieldDefn = ((BaseForm) component.getForm()).getReflectedFields().get(component);
+            if(reflectedFormFieldDefn != null)
+            {
+                final SelectFieldStyle sfsAnn = (SelectFieldStyle) reflectedFormFieldDefn.getAnnotation(SelectFieldStyle.class);
+                final SelectFieldStyle.Style style = sfsAnn != null ? sfsAnn.style() : SelectFieldStyle.Style.COMBO;
+
+                generator.getRegistrationScript().append(fieldVarName + ".style = SELECTSTYLE_" + style.name() + "\n");
+            }
         }
     }
 

@@ -56,12 +56,12 @@ import wicket.util.string.Strings;
 
 /**
  * A multiple choice group of checkboxes component.
- *
- * @author Jonathan Locke
- * @author Johan Compagner
  */
 public class MultiCheckChoice extends ListMultipleChoice
 {
+    private String choicePrefixHtml = "";
+    private String choiceSuffixHtml = "<br>\n";
+
 	/**
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String)
 	 */
@@ -147,15 +147,15 @@ public class MultiCheckChoice extends ListMultipleChoice
      */
     protected String getPrefix()
     {
-        return "";
+        return choicePrefixHtml;
     }
 
     /**
-     * @return Separator to use between radio options
+     * @return Separator to use between checkbox options
      */
     protected String getSuffix()
     {
-        return "<br>\n";
+        return choiceSuffixHtml;
     }
 
     /**
@@ -164,6 +164,14 @@ public class MultiCheckChoice extends ListMultipleChoice
     protected final void onComponentTagBody(final MarkupStream markupStream,
             final ComponentTag openTag)
     {
+        String choicePrefix = openTag.getAttributes().getString("choice-prefix");
+        if(choicePrefix == null)
+            choicePrefix = getPrefix();
+
+        String choiceSuffix = openTag.getAttributes().getString("choice-suffix");
+        if(choiceSuffix == null)
+            choiceSuffix = getSuffix();
+
         // Buffer to hold generated body
         final StringBuffer buffer = new StringBuffer();
 
@@ -181,15 +189,16 @@ public class MultiCheckChoice extends ListMultipleChoice
 
             // If there is a display value for the choice, then we know that the
             // choice is automatic in some way. If label is /null/ then we know
-            // that the choice is a manually created radio tag at some random
+            // that the choice is a manually created checkbox tag at some random
             // location in the page markup!
             if (label != null)
             {
                 // Append option suffix
                 buffer.append(getPrefix());
 
-                // Add radio tag
-                buffer.append("<input name=\"" + getPath() + "\"" + " type=\"checkbox\""
+                // Add checkbox tag
+                final String tagId = getPath() + "_" + i;
+                buffer.append("<input id=\""+ tagId +"\" name=\"" + getPath() + "\"" + " type=\"checkbox\""
                         + (isSelected(choice) ? " checked" : "") + " value=\"" + choice.getId()
                         + "\"");
 
@@ -205,10 +214,10 @@ public class MultiCheckChoice extends ListMultipleChoice
 
                 buffer.append(">");
 
-                // Add label for radio button
+                // Add label for checkbox button
                 String display = getLocalizer().getString(getId() + "." + label, this, label);
                 String escaped = Strings.escapeMarkup(display, false, true);
-                buffer.append(escaped);
+                buffer.append("<label for=\""+ tagId +"\">" + escaped + "</label>");
 
                 // Append option suffix
                 buffer.append(getSuffix());

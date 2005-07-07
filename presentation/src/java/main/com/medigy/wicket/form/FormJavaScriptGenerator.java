@@ -79,8 +79,9 @@ public class FormJavaScriptGenerator
          * </pre>
          * If you do not have a specific method that must be provided you can pass in null to addFieldType().
          * @param generator The generator that is generating the rest of the Dialog javascript code.
+         * @param component
          */
-        public void appendJavaScriptFieldTypeDefn(final FormJavaScriptGenerator generator, final StringBuilder typeDefScript);
+        public void appendJavaScriptFieldTypeDefn(final FormJavaScriptGenerator generator, FormComponent component, final StringBuilder typeDefScript);
     }
 
     /**
@@ -92,8 +93,9 @@ public class FormJavaScriptGenerator
         /**
          * Using the generator.getScript() method, contribute any valid JavaScript.
          * @param generator The generator that is generating the rest of the Dialog javascript code.
+         * @param component
          */
-        public void appendJavaScriptFieldCustomization(final FormJavaScriptGenerator generator);
+        public void appendJavaScriptFieldCustomization(final FormJavaScriptGenerator generator, final FormComponent component);
     }
 
     /**
@@ -108,9 +110,9 @@ public class FormJavaScriptGenerator
          *     generator.getScript().append(fieldVarName + ".required = false;\n");
          * </pre>
          * @param generator The generator that is generating the rest of the Dialog javascript code.
-         * @param generator The local variable that was created to track the newly registered dialog field instance.
+         * @param component
          */
-        public void appendJavaScriptFieldRegistration(final FormJavaScriptGenerator generator, final String fieldVarName);
+        public void appendJavaScriptFieldRegistration(final FormJavaScriptGenerator generator, final FormComponent component, final String fieldVarName);
     }
 
     private final StringBuilder typeDefnScript = new StringBuilder();
@@ -178,33 +180,33 @@ public class FormJavaScriptGenerator
         this.showDataChangedMessageOnLeave = showDataChangedMessageOnLeave;
     }
 
-    public String getDefaultFieldRegistrationScript(final FormComponent component, final String fieldTypeName)
+    public void appendDefaultFieldRegistrationScript(final FormComponent component,
+                                                     final FieldRegistrationContributor frc,
+                                                     final FieldTypeScriptContributor ftsc,
+                                                     final String fieldTypeName)
     {
-        final StringBuilder defJS = new StringBuilder();
         final String fieldVarName = component.getId();
 
-        defJS.append("var ");
-        defJS.append(fieldVarName);
-        defJS.append(" = ");
-        defJS.append("dialog.createField(\"");
-        defJS.append(component.getPath());
-        defJS.append("\", FIELD_TYPES[\"");
-        defJS.append(fieldTypeName);
-        defJS.append("\"]);\n");
+        registrationScript.append("var ");
+        registrationScript.append(fieldVarName);
+        registrationScript.append(" = ");
+        registrationScript.append("dialog.createField(\"");
+        registrationScript.append(component.getPath());
+        registrationScript.append("\", FIELD_TYPES[\"");
+        registrationScript.append(fieldTypeName);
+        registrationScript.append("\"]);\n");
 
         if(component.getValidators().contains(RequiredValidator.getInstance()))
         {
-            defJS.append(fieldVarName);
-            defJS.append(".setRequired(true);\n");
+            registrationScript.append(fieldVarName);
+            registrationScript.append(".setRequired(true);\n");
         }
 
-        if(component instanceof FieldRegistrationContributor)
-            ((FieldRegistrationContributor) component).appendJavaScriptFieldRegistration(this, fieldVarName);
+        if(frc != null)
+            frc.appendJavaScriptFieldRegistration(this, component, fieldVarName);
 
-        if(component instanceof FieldTypeScriptContributor)
-            ((FieldTypeScriptContributor) component).appendJavaScriptFieldTypeDefn(this, typeDefnScript);
-
-        return defJS.toString();
+        if(ftsc != null)
+            ftsc.appendJavaScriptFieldTypeDefn(this, component, typeDefnScript);
     }
 
     public void appendDialogRegistrationStart()

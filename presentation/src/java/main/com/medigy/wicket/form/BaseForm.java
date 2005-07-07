@@ -54,7 +54,9 @@ import org.apache.commons.logging.LogFactory;
 import com.medigy.wicket.form.FormFieldFactory.ConstructedField;
 import com.medigy.wicket.form.FormFieldFactory.FieldCreator;
 import com.medigy.wicket.form.FormJavaScriptGenerator.FieldCustomizationScriptContributor;
+import com.medigy.wicket.form.FormJavaScriptGenerator.FieldRegistrationContributor;
 import com.medigy.wicket.form.FormJavaScriptGenerator.FieldTypeNameContributor;
+import com.medigy.wicket.form.FormJavaScriptGenerator.FieldTypeScriptContributor;
 import wicket.IComponentResolver;
 import wicket.IFeedback;
 import wicket.MarkupContainer;
@@ -169,6 +171,11 @@ public class BaseForm extends Form implements IComponentResolver
         autoResolvers.put("textarea", controlResolver);
     }
 
+    public Map<FormComponent, ReflectedFormFieldDefn> getReflectedFields()
+    {
+        return reflectedFields;
+    }
+
     public boolean isEnableClientSideValidation()
     {
         return enableClientSideValidation;
@@ -224,10 +231,15 @@ public class BaseForm extends Form implements IComponentResolver
                     public void formComponent(final FormComponent formComponent)
                     {
                         if(formComponent instanceof FieldTypeNameContributor)
-                            generator.getRegistrationScript().append(generator.getDefaultFieldRegistrationScript(formComponent,
-                                    ((FieldTypeNameContributor) formComponent).getJavaScriptFieldTypeId(generator)));
+                        {
+                            final FieldRegistrationContributor frc = formComponent instanceof FieldRegistrationContributor ? (FieldRegistrationContributor) formComponent : null;
+                            final FieldTypeScriptContributor ftsc = formComponent instanceof FieldTypeScriptContributor ? (FieldTypeScriptContributor) formComponent : null;
+
+                            generator.appendDefaultFieldRegistrationScript(formComponent, frc, ftsc,
+                                    ((FieldTypeNameContributor) formComponent).getJavaScriptFieldTypeId(generator));
+                        }
                         else if(formComponent instanceof FieldCustomizationScriptContributor)
-                            ((FieldCustomizationScriptContributor) formComponent).appendJavaScriptFieldCustomization(generator);
+                            ((FieldCustomizationScriptContributor) formComponent).appendJavaScriptFieldCustomization(generator, formComponent);
                         else
                         {
                             // Since the formComponent itself doesn't imlement any of our special methods, see if the
@@ -241,10 +253,15 @@ public class BaseForm extends Form implements IComponentResolver
                                 final FieldCreator creator = rffd.getCreator();
 
                                 if(creator instanceof FieldTypeNameContributor)
-                                    generator.getRegistrationScript().append(generator.getDefaultFieldRegistrationScript(formComponent,
-                                            ((FieldTypeNameContributor) creator).getJavaScriptFieldTypeId(generator)));
+                                {
+                                    final FieldRegistrationContributor frc = creator instanceof FieldRegistrationContributor ? (FieldRegistrationContributor) creator : null;
+                                    final FieldTypeScriptContributor ftsc = creator instanceof FieldTypeScriptContributor ? (FieldTypeScriptContributor) creator : null;
+
+                                    generator.appendDefaultFieldRegistrationScript(formComponent, frc, ftsc,
+                                            ((FieldTypeNameContributor) creator).getJavaScriptFieldTypeId(generator));
+                                }
                                 else if(creator instanceof FieldCustomizationScriptContributor)
-                                    ((FieldCustomizationScriptContributor) formComponent).appendJavaScriptFieldCustomization(generator);
+                                    ((FieldCustomizationScriptContributor) formComponent).appendJavaScriptFieldCustomization(generator, formComponent);
                             }
                         }
                     }
