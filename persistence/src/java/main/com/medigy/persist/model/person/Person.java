@@ -70,17 +70,18 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import javax.persistence.Lob;
-import javax.persistence.LobType;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.persistence.OrderBy;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.List;
+import java.util.ArrayList;
 
 @Entity
 @Inheritance(strategy=InheritanceType.JOINED)
@@ -103,7 +104,7 @@ public class Person extends Party
     //private Set<CareProviderSelection> careProviderSelections = new HashSet<CareProviderSelection>();
 
     private Set<Ethnicity> ethnicities = new HashSet<Ethnicity>();
-    private Set<Gender> genders = new HashSet<Gender>();
+    private List<Gender> genders = new ArrayList<Gender>();
     private Set<MaritalStatus> maritalStatuses = new HashSet<MaritalStatus>();
     private Set<PhysicalCharacteristic> physicalCharacteristics = new HashSet<PhysicalCharacteristic>();
     private Set<HealthCareVisit> healthCareVisits = new HashSet<HealthCareVisit>();
@@ -247,13 +248,14 @@ public class Person extends Party
     }
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "person")
+    @OrderBy("fromDate desc")           // Order a collection using SQL ordering (not HQL ordering)
     @Size(min = 1)
-    public Set<Gender> getGenders()
+    public List<Gender> getGenders()
     {
         return genders;
     }
 
-    protected void setGenders(final Set<Gender> genders)
+    protected void setGenders(final List<Gender> genders)
     {
         this.genders = genders;
     }
@@ -272,15 +274,18 @@ public class Person extends Party
         gender.setPerson(this);
         if (fromDate != null)
             gender.setFromDate(fromDate);
+        else if (birthDate != null)
+            gender.setFromDate(birthDate);
+        else
+            gender.setFromDate(new Date());
         if (throughDate != null)
             gender.setThroughDate(throughDate);
         this.genders.add(gender);
     }
 
     @Transient
-    public GenderType getCurrentGender()
+    public GenderType getCurrentGenderType()
     {
-        final Set<Gender> genders = getGenders();
         if (genders.size() == 0)
             return GenderType.Cache.UNKNOWN.getEntity();
         TreeSet<Gender> inverseSorted = new TreeSet<Gender>(Collections.reverseOrder());
@@ -421,7 +426,7 @@ public class Person extends Party
         return false;
     }
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "person", fetch = FetchType.LAZY)    
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "person", fetch = FetchType.LAZY)
     public Set<Language> getLanguages()
     {
         return languages;
@@ -608,8 +613,8 @@ public class Person extends Party
                 ", middleName='" + middleName + "'" +
                 ", suffix=" + suffix + "'" +
                 ", birthdate= '" + birthDate + "'" +
-                ", deathdate= '" + deathDate + "'" + 
-                //", gender='" + getCurrentGender().getLabel() + "'" +
+                ", deathdate= '" + deathDate + "'" +
+                //", gender='" + getCurrentGenderType().getLabel() + "'" +
                 ", maritalStatuses=" + maritalStatuses +
                 //", contactMechanisms=" + getPartyContactMechanisms() +
                 "}";

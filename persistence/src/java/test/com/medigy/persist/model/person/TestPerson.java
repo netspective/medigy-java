@@ -56,6 +56,8 @@ import org.hibernate.validator.InvalidValue;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Map;
+import java.util.HashMap;
 
 public class TestPerson extends TestCase
 {
@@ -77,8 +79,14 @@ public class TestPerson extends TestCase
         {
             final InvalidValue[] invalidValues = e.getInvalidValues();
             assertThat(invalidValues.length, eq(2));
-            assertThat(invalidValues[0].getPropertyName(), eq("birthDate"));
-            assertThat(invalidValues[1].getPropertyName(),  eq("genders"));
+            Map<String, InvalidValue> map = new HashMap<String, InvalidValue>();
+            for (InvalidValue val : invalidValues)
+            {
+                map.put(val.getPropertyName(), val);
+            }
+
+            assertTrue(map.containsKey("birthDate"));
+            assertTrue(map.containsKey("genders"));
             getSession().clear();
         }
 
@@ -95,7 +103,13 @@ public class TestPerson extends TestCase
         calendar.set(1990, 6, 14);
         newPerson.addMaritalStatus(MaritalStatusType.Cache.SINGLE.getEntity(), calendar.getTime(), new Date());
         newPerson.addMaritalStatus(MaritalStatusType.Cache.MARRIED.getEntity(), new Date(), null);
-        newPerson.addGender(GenderType.Cache.MALE.getEntity());
+
+        cal.set(1975, 1, 1);
+        final Date genderStartDate = cal.getTime();
+        cal.set(1995, 1, 1);
+        final Date genderEndDate = cal.getTime();
+        newPerson.addGender(GenderType.Cache.MALE.getEntity(), genderStartDate, genderEndDate);
+        newPerson.addGender(GenderType.Cache.FEMALE.getEntity(), genderEndDate, new Date());
 
         newPerson.setBirthDate(calendar.getTime());
         newPerson.addEthnicity(EthnicityType.Cache.CAUCASIAN.getEntity());
@@ -120,5 +134,14 @@ public class TestPerson extends TestCase
         assertThat(persistedPerson.getEthnicities().size(), eq(2));
         assertThat(persistedPerson.hasEthnicity(EthnicityType.Cache.CAUCASIAN.getEntity()), eq(true));
         assertThat(persistedPerson.hasEthnicity(EthnicityType.Cache.NATIVE_AMERICAN.getEntity()), eq(true));
+
+        // verify the genders
+        assertEquals(2, persistedPerson.getGenders().size());
+        for (Gender gender : persistedPerson.getGenders())
+        {
+            System.out.println(gender.getIdentifier() + " " + gender.getType().getCode() +
+                gender.getFromDate());
+        }
+        assertEquals(GenderType.Cache.FEMALE.getEntity().getCode(), persistedPerson.getCurrentGenderType().getCode());
     }
 }

@@ -43,12 +43,15 @@ import java.util.Date;
 
 import javax.persistence.Transient;
 import javax.persistence.EmbeddableSuperclass;
+import javax.persistence.Basic;
+import javax.persistence.TemporalType;
 
 @EmbeddableSuperclass
 public abstract class AbstractDateDurationEntity extends AbstractTopLevelEntity
 {
     private EffectiveDates effectiveDates = new EffectiveDates();
 
+    @Basic(temporalType = TemporalType.DATE)
     public Date getFromDate()
     {
         return effectiveDates.getFromDate();
@@ -59,6 +62,7 @@ public abstract class AbstractDateDurationEntity extends AbstractTopLevelEntity
         effectiveDates.setFromDate(fromDate);
     }
 
+    @Basic(temporalType = TemporalType.DATE)
     public Date getThroughDate()
     {
         return effectiveDates.getThroughDate();

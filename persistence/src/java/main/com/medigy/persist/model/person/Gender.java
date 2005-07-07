@@ -110,7 +110,8 @@ public class Gender extends AbstractDateDurationEntity implements Comparable
             return 0;
 
         final Gender otherStatus = (Gender) o;
-        return ((GenderType) getType()).compareTo(otherStatus.getType());
+        return getFromDate().compareTo(otherStatus.getFromDate());
+        //return ((GenderType) getType()).compareTo(otherStatus.getType());
     }
 
     public String toString()
