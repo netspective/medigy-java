@@ -283,8 +283,7 @@ function Dialog_associateFieldLabels()
             }
         }
 
-        if(! found && ! && this.style != SELECTSTYLE_RADIO && this.style != SELECTSTYLE_MULTICHECK)
-            alert("Label '" + label.childNodes[0].nodeValue + "' with id '"+ label.id +"' does not have an associated form control with id " + label.htmlFor);
+        // alert("Label '" + label.childNodes[0].nodeValue + "' with id '"+ label.id +"' does not have an associated form control with id " + label.htmlFor + " style = " + this.style);
     }
 }
 
