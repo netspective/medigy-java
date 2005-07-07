@@ -121,7 +121,7 @@ public class DefaultValidationMessagesResourceLoader implements IStringResourceL
     {
         public String getValidationErrorMessage(final FormComponent component, final String key)
         {
-            return getAssociatedLabel(component) + " '${input}' is not valid."; // TODO: provide custom PatternValidors so that we can display format? bug 46
+            return getAssociatedLabel(component) + " '${input}' is not valid. Please use the format ${format}.";
         }
     }
 
