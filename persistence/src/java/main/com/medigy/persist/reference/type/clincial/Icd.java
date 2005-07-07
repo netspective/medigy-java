@@ -36,14 +36,15 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.persist.reference.type.insurance;
+package com.medigy.persist.reference.type.clincial;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.medigy.persist.reference.AbstractReferenceEntity;
 import com.medigy.persist.reference.type.GenderType;
-
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Column;
 
 @Entity
 @Table(name = "ICD")
@@ -66,6 +67,8 @@ public class Icd  extends AbstractReferenceEntity
         <column name="cpts_allowed" type="text" size="4000" descr="List of CPT codes allowed"/>
      */
 
+    private String shortDescr;
+    private String mediumDescr;
     private Boolean nonSpecificCode;
     private GenderType gender;
     private IcdAge age;
@@ -80,6 +83,38 @@ public class Icd  extends AbstractReferenceEntity
     private Boolean nonSpecificProcedure;
     private Boolean nonCoveredProcedure;
     private String cptsAllowed;
+
+    public String getShortDescr()
+    {
+        return shortDescr;
+    }
+
+    public void setShortDescr(final String shortDescr)
+    {
+        this.shortDescr = shortDescr;
+    }
+
+    public String getMediumDescr()
+    {
+        return mediumDescr;
+    }
+
+    public void setMediumDescr(final String mediumDescr)
+    {
+        this.mediumDescr = mediumDescr;
+    }
+
+    @Transient
+    public String getLongDescr()
+    {
+        return getDescription();
+    }
+
+    @Transient
+    public void setLongDescr(final String longDescr)
+    {
+        setDescription(longDescr);
+    }
 
     public Boolean getNonSpecificCode()
     {

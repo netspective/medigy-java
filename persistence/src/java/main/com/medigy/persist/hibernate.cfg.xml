@@ -22,10 +22,10 @@
         <mapping class="com.medigy.persist.reference.type.MaritalStatusType"/>
         <mapping class="com.medigy.persist.reference.type.PriorityType"/>
         <mapping class="com.medigy.persist.reference.type.UnitOfMeasureType"/>
-        <mapping class="com.medigy.persist.reference.type.insurance.CPT"/>
-        <mapping class="com.medigy.persist.reference.type.insurance.HCPCS"/>
-        <mapping class="com.medigy.persist.reference.type.insurance.IcdAge"/>
-        <mapping class="com.medigy.persist.reference.type.insurance.Icd"/>
+        <mapping class="com.medigy.persist.reference.type.clincial.CPT"/>
+        <mapping class="com.medigy.persist.reference.type.clincial.HCPCS"/>
+        <mapping class="com.medigy.persist.reference.type.clincial.IcdAge"/>
+        <mapping class="com.medigy.persist.reference.type.clincial.Icd"/>
 
         <!--mapping package="com.medigy.persist.reference.type.party"/-->
         <mapping class="com.medigy.persist.reference.type.party.PartyFacilityRoleType"/>

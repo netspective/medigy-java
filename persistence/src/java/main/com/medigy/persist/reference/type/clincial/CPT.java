@@ -36,15 +36,15 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.persist.reference.type.insurance;
+package com.medigy.persist.reference.type.clincial;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 import com.medigy.persist.reference.AbstractReferenceEntity;
 import com.medigy.persist.reference.type.GenderType;
-
-import javax.persistence.Entity;
-import javax.persistence.Column;
-import javax.persistence.ManyToOne;
-import javax.persistence.JoinColumn;
 
 @Entity
 public class CPT extends AbstractReferenceEntity

@@ -36,11 +36,11 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.persist.reference.type.insurance;
-
-import com.medigy.persist.reference.AbstractReferenceEntity;
+package com.medigy.persist.reference.type.clincial;
 
 import javax.persistence.Entity;
+
+import com.medigy.persist.reference.AbstractReferenceEntity;
 
 @Entity
 public class HCPCS extends AbstractReferenceEntity
