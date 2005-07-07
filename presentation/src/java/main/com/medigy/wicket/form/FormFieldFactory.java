@@ -361,7 +361,9 @@ public class FormFieldFactory
                 case RADIO:
                     return new RadioChoice(controlId, referenceEntityChoices);
 
-                case MULTICHECK: // TODO: implement this but it defaults to MULTILIST
+                case MULTICHECK:
+                    return new MultiCheckChoice(controlId, referenceEntityChoices);
+
                 case MULTIDUAL:  // TODO: implement this but it defaults to MULTILIST
                 case MULTILIST:
                     return new ListMultipleChoice(controlId, referenceEntityChoices);

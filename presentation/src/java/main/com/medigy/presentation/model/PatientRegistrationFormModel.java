@@ -3,21 +3,31 @@
  */
 package com.medigy.presentation.model;
 
+import java.util.Date;
+import java.util.List;
+
+import org.apache.commons.beanutils.BeanUtils;
+import org.hibernate.validator.NotNull;
+
 import com.medigy.persist.reference.custom.insurance.InsuranceSequenceType;
 import com.medigy.persist.reference.custom.person.EthnicityType;
 import com.medigy.persist.reference.custom.person.PatientResponsiblePartyRoleType;
-import com.medigy.persist.reference.type.*;
+import com.medigy.persist.reference.type.BloodType;
+import com.medigy.persist.reference.type.EmploymentStatusType;
+import com.medigy.persist.reference.type.GenderType;
+import com.medigy.persist.reference.type.LanguageType;
+import com.medigy.persist.reference.type.MaritalStatusType;
+import com.medigy.persist.reference.type.PersonNamePrefixType;
 import com.medigy.service.ServiceVersion;
 import com.medigy.service.dto.person.RegisterPatientParameters;
 import com.medigy.service.validator.ValidEntity;
 import com.medigy.wicket.form.FieldCreator;
-import com.medigy.wicket.form.FormFieldFactory.*;
+import com.medigy.wicket.form.FormFieldFactory.EmailFieldCreator;
+import com.medigy.wicket.form.FormFieldFactory.MemoFieldCreator;
+import com.medigy.wicket.form.FormFieldFactory.PhoneFieldCreator;
+import com.medigy.wicket.form.FormFieldFactory.SocialSecurityFieldCreator;
+import com.medigy.wicket.form.FormFieldFactory.ZipCodeFieldCreator;
 import com.medigy.wicket.form.SelectFieldStyle;
-import org.apache.commons.beanutils.BeanUtils;
-import org.hibernate.validator.NotNull;
-
-import java.util.Date;
-import java.util.List;
 
 
 public final class PatientRegistrationFormModel implements RegisterPatientParameters
@@ -744,7 +754,7 @@ public final class PatientRegistrationFormModel implements RegisterPatientParame
 
     @NotNull
     @ValidEntity(entity = EthnicityType.class)
-    @SelectFieldStyle(style = SelectFieldStyle.Style.MULTILIST)
+    @SelectFieldStyle(style = SelectFieldStyle.Style.MULTICHECK)
     public List getEthnicityCodes()
     {
         return ethnicityCodes;
