@@ -43,12 +43,18 @@
  */
 package com.medigy.wicket.form;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import com.medigy.wicket.form.FormFieldFactory.ConstructedField;
 import com.medigy.wicket.form.FormFieldFactory.FieldCreator;
 import com.medigy.wicket.form.FormJavaScriptGenerator.FieldCustomizationScriptContributor;
 import com.medigy.wicket.form.FormJavaScriptGenerator.FieldTypeNameContributor;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import wicket.IComponentResolver;
 import wicket.IFeedback;
 import wicket.MarkupContainer;
@@ -58,11 +64,6 @@ import wicket.markup.html.form.Form;
 import wicket.markup.html.form.FormComponent;
 import wicket.model.BoundCompoundPropertyModel;
 import wicket.model.IModel;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
 public class BaseForm extends Form implements IComponentResolver
 {
@@ -122,8 +123,30 @@ public class BaseForm extends Form implements IComponentResolver
         {
             public boolean resolve(final MarkupContainer container, final MarkupStream markupStream, final ComponentTag tag)
             {
+                // to allow the default string resource loader to work with form fields, we need to get the label
+                // that's stored in the markup so we try to grab it now. For non
+                final StringBuilder labelTextInMarkup = new StringBuilder();
+
+                if (tag.isOpen())
+                {
+                    final int initialIndex = markupStream.getCurrentIndex();
+
+                    // Skip <tag>
+                    markupStream.next();
+
+                    while(! markupStream.get().closes(tag))
+                    {
+                        labelTextInMarkup.append(markupStream.get().toString());
+                        markupStream.next();
+                    }
+
+                    // rewind in case others need to do additional parsing
+                    markupStream.setCurrentIndex(initialIndex);
+                }
+
                 final String labelId = tag.getAttributes().getString(ATTRNAME_WICKET_ID);
-                container.autoAdd(new FieldLabel(labelId));
+                container.autoAdd(new FieldLabel(labelId, labelTextInMarkup.toString()));
+                System.out.println("Read label " + labelId + " as '" + labelTextInMarkup + "'");
                 return true;
             }
         });

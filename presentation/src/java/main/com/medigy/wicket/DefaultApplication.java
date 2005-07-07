@@ -43,6 +43,14 @@
  */
 package com.medigy.wicket;
 
+import java.util.Map;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+
 import com.medigy.wicket.menu.Menu;
 import com.medigy.wicket.session.AuthenticatedSession;
 import wicket.ApplicationSettings;
@@ -53,13 +61,6 @@ import wicket.util.file.File;
 import wicket.util.file.Folder;
 import wicket.util.file.Path;
 import wicket.util.time.Duration;
-import org.springframework.context.ApplicationContextAware;
-import org.springframework.context.ApplicationContext;
-import org.springframework.beans.BeansException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import java.util.Map;
 
 public abstract class DefaultApplication extends SpringApplication implements ApplicationContextAware
 {
@@ -122,6 +123,8 @@ public abstract class DefaultApplication extends SpringApplication implements Ap
         {
             devlEnvironment = false;
         }
+
+        settings.addStringResourceLoader(new DefaultValidationMessagesResourceLoader());
     }
 
     public boolean isDevlEnvironment()

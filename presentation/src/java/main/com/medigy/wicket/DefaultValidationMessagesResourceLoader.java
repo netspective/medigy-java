@@ -41,49 +41,75 @@
 /*
  * Copyright (c) 2005 Your Corporation. All Rights Reserved.
  */
-package com.medigy.wicket.form;
+package com.medigy.wicket;
 
-import wicket.markup.ComponentTag;
-import wicket.markup.MarkupStream;
-import wicket.markup.html.WebMarkupContainer;
-import wicket.util.value.ValueMap;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
-public class FieldLabel extends WebMarkupContainer
+import org.hibernate.validator.NotNullValidator;
+
+import com.medigy.wicket.form.FieldLabel;
+import wicket.Component;
+import wicket.markup.html.form.FormComponent;
+import wicket.resource.IStringResourceLoader;
+import wicket.util.lang.Classes;
+import wicket.util.string.Strings;
+
+public class DefaultValidationMessagesResourceLoader implements IStringResourceLoader
 {
-    /**
-     * For a label to be "attached" it should have this suffix added to the same name as its input component.
-     */
-    public static final String COMMON_SUFFIX = "_label";
-
-    private final String labelTextFromMarkup;
-
-    public FieldLabel(final String id, final String labelTextFromMarkup)
+    public interface MessageProvider
     {
-        super(id);
-        this.labelTextFromMarkup = labelTextFromMarkup;
+        public String getValidationErrorMessage(final FormComponent component, final String key);
+    }
+    
+    private final Map<String, MessageProvider> providers = new HashMap<String, MessageProvider>();
+
+    public DefaultValidationMessagesResourceLoader()
+    {
+        providers.put(Classes.name(NotNullValidator.class), new NotNullValidatorMessageProvider());
+        providers.put(Classes.name(TypeValidatorMessageProvider.class), new TypeValidatorMessageProvider());
     }
 
-    public String getLabelTextFromMarkup()
+    public String loadStringResource(final Component component, final String key, final Locale locale, final String style)
     {
-        return labelTextFromMarkup;
+        // a form validation message key looks like FormName.FieldId.ValidatorClassName
+        if(component instanceof FormComponent)
+        {
+            final String validatorName = Strings.lastPathComponent(key, '.');
+            if(validatorName != null)
+            {
+                final MessageProvider provider = providers.get(validatorName);
+                if(provider != null)
+                    return provider.getValidationErrorMessage((FormComponent) component, key);
+            }
+        }
+
+        return null;
     }
 
-    protected void onComponentTag(final ComponentTag componentTag)
+    public abstract class AbstractMessageProvider implements MessageProvider
     {
-        final ValueMap attributes = componentTag.getAttributes();
-        final String forAttr = attributes.getString("id");
-        if(forAttr == null)
-            attributes.put("id", getPath());
-
-        super.onComponentTag(componentTag);
+        public String getAssociatedLabel(final FormComponent component)
+        {
+            final Component label = (Component) component.getForm().get(component.getId() + FieldLabel.COMMON_SUFFIX);
+            return label instanceof FieldLabel ? ((FieldLabel) label).getLabelTextFromMarkup() : component.getId();
+        }
     }
 
-    protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag componentTag)
+    public class NotNullValidatorMessageProvider extends AbstractMessageProvider
     {
-        // if we have the label already in the markup and a model is not provided, leave the markup label as-is
-        if(getModel() != null)
-            super.onComponentTagBody(markupStream, componentTag);
-        else
-            renderComponentTagBody(markupStream, componentTag);
+        public String getValidationErrorMessage(final FormComponent component, final String key)
+        {
+            return getAssociatedLabel(component) + " is required.";
+        }
+    }
+
+    public class TypeValidatorMessageProvider extends AbstractMessageProvider
+    {
+        public String getValidationErrorMessage(final FormComponent component, final String key)
+        {
+            return getAssociatedLabel(component) + " '${input}' is not valid. Please use the format ${format}.";
+        }
     }
 }
