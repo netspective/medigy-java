@@ -98,10 +98,17 @@ public class EntityLoader implements DelimitedValuesReader.LineHandler
      */
     public void handleHeaderLine(final DelimitedValuesReader dvReader, final List<String> line)
     {
+        if(entity != null && propertyNames != null)
+        {
+            if(eventHandler != null)
+                eventHandler.log("Skipping header line " + dvReader.getReader().getLineNumber() + " since both entity and propertyNames are already set.");
+            return;
+        }
+
         propertyNames = new String[line.size()];
         for(int i = 0; i < line.size(); i++)
         {
-            final String fieldName = line.get(i);
+            final String fieldName = line.get(i).trim();
             final Matcher matcher = ENTITY_AND_FIELDNAME_PATTERN.matcher(fieldName);
             if(matcher.matches())
             {
@@ -131,6 +138,18 @@ public class EntityLoader implements DelimitedValuesReader.LineHandler
             }
             else
                 propertyNames[i] = fieldName;
+        }
+
+        if(eventHandler != null)
+        {
+            final StringBuilder pnMsg = new StringBuilder();
+            for(final String propertyName : propertyNames)
+            {
+                if(pnMsg.length() > 0) pnMsg.append(", ");
+                pnMsg.append("'" + propertyName + "'");
+            }
+
+            eventHandler.log("Set propertyNames to " + pnMsg + " from line " + dvReader.getReader().getLineNumber());
         }
     }
 

@@ -84,6 +84,32 @@ public class EntityLoaderTask extends Task
     private int stopAfterErrors = 10;
     private String beforeLoadUpdateHQL;
 
+    public void init() throws BuildException
+    {
+        super.init();
+
+        hibernateConfigClass = null;
+        hibernateConfigFile = null;
+        dialect = null;
+        url = null;
+        driver = null;
+        userid = null;
+        password = null;
+        showSql = false;
+        delimiter = DelimitedValuesParser.DEFAULT_SEP;
+        commitRowsInterval = 250;
+        file = null;
+        resource = null;
+        entity = null;
+        propertyNames = null;
+        ignoreBlankLines = true;
+        validateFieldsCount = true;
+        throwExceptionOnValidationError = false;
+        modifierClass = null;
+        stopAfterErrors = 10;
+        beforeLoadUpdateHQL = null;
+    }
+
     public void execute() throws BuildException
     {
         if(hibernateConfigClass == null)
@@ -109,9 +135,7 @@ public class EntityLoaderTask extends Task
             configuration.setProperty(Environment.URL, url);
             configuration.setProperty(Environment.USER, userid);
             configuration.setProperty(Environment.PASS, password);
-
-            if(showSql)
-                configuration.setProperty(Environment.SHOW_SQL, "true");
+            configuration.setProperty(Environment.SHOW_SQL, Boolean.toString(showSql));
         }
         catch (final Exception e)
         {
@@ -182,7 +206,8 @@ public class EntityLoaderTask extends Task
             if(beforeLoadUpdateHQL != null)
             {
                 log("Executing session.createQuery(\""+ beforeLoadUpdateHQL + "\").executeUpdate()");
-                session.createQuery(beforeLoadUpdateHQL).executeUpdate();
+                int updates = session.createQuery(beforeLoadUpdateHQL).executeUpdate();
+                log("session.createQuery(\""+ beforeLoadUpdateHQL + "\").executeUpdate() returned " + updates);
             }
 
             dvr.readAll();
