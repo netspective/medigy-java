@@ -43,18 +43,20 @@
  */
 package com.medigy.wicket;
 
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-
-import org.hibernate.validator.NotNullValidator;
-
 import com.medigy.wicket.form.FieldLabel;
+import org.hibernate.validator.NotNullValidator;
 import wicket.Component;
 import wicket.markup.html.form.FormComponent;
+import wicket.markup.html.form.validation.EmailAddressPatternValidator;
+import wicket.markup.html.form.validation.PatternValidator;
+import wicket.markup.html.form.validation.TypeValidator;
 import wicket.resource.IStringResourceLoader;
 import wicket.util.lang.Classes;
 import wicket.util.string.Strings;
+
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
 public class DefaultValidationMessagesResourceLoader implements IStringResourceLoader
 {
@@ -68,7 +70,9 @@ public class DefaultValidationMessagesResourceLoader implements IStringResourceL
     public DefaultValidationMessagesResourceLoader()
     {
         providers.put(Classes.name(NotNullValidator.class), new NotNullValidatorMessageProvider());
-        providers.put(Classes.name(TypeValidatorMessageProvider.class), new TypeValidatorMessageProvider());
+        providers.put(Classes.name(TypeValidator.class), new TypeValidatorMessageProvider());
+        providers.put(Classes.name(PatternValidator.class), new PatternValidatorMessageProvider());
+        providers.put(Classes.name(EmailAddressPatternValidator.class), new EmailAddressPatternValidatorMessageProvider());
     }
 
     public String loadStringResource(final Component component, final String key, final Locale locale, final String style)
@@ -110,6 +114,22 @@ public class DefaultValidationMessagesResourceLoader implements IStringResourceL
         public String getValidationErrorMessage(final FormComponent component, final String key)
         {
             return getAssociatedLabel(component) + " '${input}' is not valid. Please use the format ${format}.";
+        }
+    }
+
+    public class PatternValidatorMessageProvider extends AbstractMessageProvider
+    {
+        public String getValidationErrorMessage(final FormComponent component, final String key)
+        {
+            return getAssociatedLabel(component) + " '${input}' is not valid."; // TODO: provide custom PatternValidors so that we can display format? bug 46
+        }
+    }
+
+    public class EmailAddressPatternValidatorMessageProvider extends AbstractMessageProvider
+    {
+        public String getValidationErrorMessage(final FormComponent component, final String key)
+        {
+            return getAssociatedLabel(component) + " '${input}' is not valid. Please use a valid email address.";
         }
     }
 }

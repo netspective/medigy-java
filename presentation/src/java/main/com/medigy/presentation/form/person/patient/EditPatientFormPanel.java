@@ -75,24 +75,17 @@ public class EditPatientFormPanel extends DefaultFormPanel
             super(componentName, model, feedback, params.getClass());
         }
 
-		public final void onSubmit()
-		{
+        public final void onSubmit()
+        {
             EditPatientFormModel patient = (EditPatientFormModel)getModelObject();
-			boolean isNew = (patient.getPersonId() == null);
-            if(isNew)
-            {
-                EditPatientService service = (EditPatientService)((DefaultApplication) getApplication()).getService(EditPatientService.class);
-                EditPatient editPatient = service.editPatient(patient);
-                if(editPatient.getPatientId() != null)
-                    info("Saved patient: " + editPatient.getEditPatientParameters().getFirstName() + " " + editPatient.getEditPatientParameters().getLastName());
 
-                if(editPatient.getErrorMessage() != null)
-                    info("Errors: " + editPatient.getErrorMessage());
-            }
-            else
-            {
-                // TODO: call EditPatientService once that is ready
-            }
-		}
+            EditPatientService service = (EditPatientService)((DefaultApplication) getApplication()).getService(EditPatientService.class);
+            EditPatient editPatient = service.editPatient(patient);
+            if(editPatient.getPatientId() != null)
+                info("Updated patient: " + editPatient.getEditPatientParameters().getFirstName() + " " + editPatient.getEditPatientParameters().getLastName());
+
+            if(editPatient.getErrorMessage() != null)
+                info("Errors: " + editPatient.getErrorMessage());
+        }
     }
 }
