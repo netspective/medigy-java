@@ -43,6 +43,7 @@
  */
 package com.medigy.wicket.form;
 
+import wicket.Component;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebMarkupContainer;
@@ -55,17 +56,29 @@ public class FieldLabel extends WebMarkupContainer
      */
     public static final String COMMON_SUFFIX = "_label";
 
+    private final String associatedControlId;
     private final String labelTextFromMarkup;
 
     public FieldLabel(final String id, final String labelTextFromMarkup)
     {
         super(id);
         this.labelTextFromMarkup = labelTextFromMarkup;
+        this.associatedControlId = id.substring(0, id.length() - COMMON_SUFFIX.length());
     }
 
     public String getLabelTextFromMarkup()
     {
         return labelTextFromMarkup;
+    }
+
+    public String getAssociatedControlId()
+    {
+        return associatedControlId;
+    }
+
+    public Component getAssocicatedControl()
+    {
+        return getParent().get(associatedControlId);
     }
 
     protected void onComponentTag(final ComponentTag componentTag)
@@ -80,6 +93,10 @@ public class FieldLabel extends WebMarkupContainer
 
     protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag componentTag)
     {
+        final Component associatedControl = getAssocicatedControl();
+        if(associatedControl != null && ! associatedControl.isVisible())
+            return;
+
         // if we have the label already in the markup and a model is not provided, leave the markup label as-is
         if(getModel() != null)
             super.onComponentTagBody(markupStream, componentTag);
