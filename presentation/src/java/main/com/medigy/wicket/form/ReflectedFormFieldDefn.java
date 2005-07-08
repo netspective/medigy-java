@@ -3,13 +3,6 @@
  */
 package com.medigy.wicket.form;
 
-import com.medigy.service.validator.ValidEntity;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.hibernate.validator.NotNull;
-import wicket.markup.html.form.FormComponent;
-import wicket.markup.html.form.validation.RequiredValidator;
-
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
@@ -18,6 +11,14 @@ import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.hibernate.validator.NotNull;
+
+import com.medigy.service.validator.ValidEntity;
+import wicket.markup.html.form.FormComponent;
+import wicket.markup.html.form.validation.RequiredValidator;
 
 public class ReflectedFormFieldDefn
 {
@@ -136,15 +137,15 @@ public class ReflectedFormFieldDefn
         }
     }
 
-    public FormComponent createField(final String componentId)
+    public FormComponent createField(final BaseForm form, final String componentId)
     {
         if(log.isInfoEnabled())
             log.info("Auto-creating form field for component '" + componentId + "' using" + creator);
 
-        return creator.createField(componentId, this);
+        return creator.createField(form, componentId, this);
     }
 
-    public void initializeField(final ReflectedFormFieldDefn reflectedFormFieldDefn, final FormComponent formComponent)
+    public void initializeField(final BaseForm form, final ReflectedFormFieldDefn reflectedFormFieldDefn, final FormComponent formComponent)
     {
         // at this point we have the originating class, the creator, and the newly created field so we can do
         // basic annotations processing first (all common annotations) and then let the field handle what it
@@ -155,7 +156,6 @@ public class ReflectedFormFieldDefn
         // TODO: find the BaseForms FormMode and check against annotation. Hide the formComponent's label.
         if(this.isAnnotationPresent(InvisibleWhen.class))
             formComponent.setVisible(false);
-
     }
 
     public com.medigy.wicket.form.FormFieldFactory.FieldCreator getFieldCreator(final Class dataTypeOrValidEntity)
