@@ -44,17 +44,11 @@
 package com.medigy.presentation.form.person.patient;
 
 import com.medigy.wicket.form.BaseForm;
-import com.medigy.wicket.form.FormMode;
 import com.medigy.wicket.panel.DefaultFormPanel;
 import wicket.IFeedback;
 
 public class PatientResponsiblePartyFormPanel extends DefaultFormPanel
 {
-    public PatientResponsiblePartyFormPanel(final String componentName, final FormMode formMode)
-    {
-        super(componentName, formMode);
-    }
-
     public PatientResponsiblePartyFormPanel(final String componentName)
     {
         super(componentName);

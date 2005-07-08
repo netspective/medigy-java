@@ -56,11 +56,6 @@ import wicket.model.BoundCompoundPropertyModel;
 
 public class PatientRegistrationFormPanel extends DefaultFormPanel
 {
-    public PatientRegistrationFormPanel(final String componentName, final FormMode formMode)
-    {
-        super(componentName, formMode);
-    }
-
     public PatientRegistrationFormPanel(final String componentName)
     {
         super(componentName);

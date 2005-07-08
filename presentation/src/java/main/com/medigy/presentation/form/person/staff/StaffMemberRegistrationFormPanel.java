@@ -44,23 +44,17 @@
 package com.medigy.presentation.form.person.staff;
 
 import com.medigy.wicket.form.BaseForm;
-import com.medigy.wicket.form.FormMode;
 import com.medigy.wicket.panel.DefaultFormPanel;
 import wicket.IFeedback;
 
 public class StaffMemberRegistrationFormPanel extends DefaultFormPanel
 {
-    public StaffMemberRegistrationFormPanel(final String componentName, final FormMode formMode)
-    {
-        super(componentName, formMode);
-    }
-
     public StaffMemberRegistrationFormPanel(final String componentName)
     {
         super(componentName);
     }
 
-    protected Form createForm(final String componentName, final IFeedback feedback) 
+    protected Form createForm(final String componentName, final IFeedback feedback)
     {
         return new Form(componentName, feedback);
     }
