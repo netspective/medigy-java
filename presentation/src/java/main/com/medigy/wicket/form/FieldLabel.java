@@ -84,8 +84,8 @@ public class FieldLabel extends WebMarkupContainer
     protected void onComponentTag(final ComponentTag componentTag)
     {
         final ValueMap attributes = componentTag.getAttributes();
-        final String forAttr = attributes.getString("id");
-        if(forAttr == null)
+        final String idAttr = attributes.getString("id");
+        if(idAttr == null)
             attributes.put("id", getPath());
 
         super.onComponentTag(componentTag);
