@@ -43,20 +43,14 @@
  */
 package com.medigy.wicket.form;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import com.medigy.wicket.form.FormFieldFactory.ConstructedField;
 import com.medigy.wicket.form.FormFieldFactory.FieldCreator;
 import com.medigy.wicket.form.FormJavaScriptGenerator.FieldCustomizationScriptContributor;
 import com.medigy.wicket.form.FormJavaScriptGenerator.FieldRegistrationContributor;
 import com.medigy.wicket.form.FormJavaScriptGenerator.FieldTypeNameContributor;
 import com.medigy.wicket.form.FormJavaScriptGenerator.FieldTypeScriptContributor;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import wicket.IComponentResolver;
 import wicket.IFeedback;
 import wicket.MarkupContainer;
@@ -67,12 +61,19 @@ import wicket.markup.html.form.FormComponent;
 import wicket.model.BoundCompoundPropertyModel;
 import wicket.model.IModel;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+
 public class BaseForm extends Form implements IComponentResolver
 {
     private static final Log log = LogFactory.getLog(BaseForm.class);
 
     protected static final Collection TEST_CHOICES = new ArrayList();
     public static final String ATTRNAME_WICKET_ID = "wicket:id";
+
+    private FormMode formMode;
 
     /**
      * Ascertain whether or not client side validation scripts and event handlers should be attached.
@@ -105,12 +106,14 @@ public class BaseForm extends Form implements IComponentResolver
         super(componentName, feedback);
     }
 
-    public BaseForm(String componentName, IModel model, IFeedback feedback, final Class serviceParameterClass)
+    public BaseForm(String componentName, IModel model, IFeedback feedback, final Class serviceParameterClass, final FormMode formMode)
     {
         super(componentName, model, feedback);
 
         assert(model instanceof BoundCompoundPropertyModel); // we only handle this kind of model right now
         assert(getModel().getObject(null) != null);  // make sure a service bean is attached
+
+        this.formMode = formMode;
 
         autoResolvers.put("legend", new IComponentResolver()
         {
@@ -272,5 +275,10 @@ public class BaseForm extends Form implements IComponentResolver
             getResponse().write(generator.getTypeDefnScript().toString());
             getResponse().write(generator.getRegistrationScript().toString());
         }
+    }
+
+    public FormMode getFormMode()
+    {
+        return this.formMode;
     }
 }

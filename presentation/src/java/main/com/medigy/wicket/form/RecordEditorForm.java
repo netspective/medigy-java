@@ -6,7 +6,6 @@ import wicket.MarkupContainer;
 import wicket.markup.html.form.FormComponent;
 import wicket.model.IModel;
 
-
 abstract public class RecordEditorForm extends BaseForm
 {
     public interface RecordEditorModel extends IModel
@@ -14,12 +13,10 @@ abstract public class RecordEditorForm extends BaseForm
         public Class getServiceParametersClass();
     }
 
-    private final FormMode mode;
 
     public RecordEditorForm(final String componentName, final IModel model, final IFeedback feedback, final FormMode formMode, final Class serviceParamClass)
     {
-        super(componentName, model, feedback, serviceParamClass);
-        this.mode = formMode;
+        super(componentName, model, feedback, serviceParamClass, formMode);
 
         switch(formMode)
         {
@@ -41,14 +38,31 @@ abstract public class RecordEditorForm extends BaseForm
     {
         final MarkupContainer mc = super.add(component);
 
-        if(mc instanceof FormComponent)
+        if(component instanceof FormComponent)
         {
             final FormComponent fc = (FormComponent) component;
-            //final ReflectedFormFieldDefn rffd = getReflectedFields().get(fc);
-            // check for InvisibleWhen annotation and set visible to false based on the mode
+//            final ReflectedFormFieldDefn rffd = getReflectedFields().get(fc);
         }
 
         return mc;
+    }
+
+    public void onSubmit()
+    {
+        switch(getFormMode())
+        {
+            case INSERT:
+                onSubmitInsert();
+                break;
+            case UPDATE:
+                onSubmitUpdate();
+                break;
+            case DELETE:
+                onSubmitDelete();
+                break;
+            default:
+                throw new RuntimeException("Invalid Mode");
+        }
     }
 
     public void initInsert() {}
@@ -58,9 +72,4 @@ abstract public class RecordEditorForm extends BaseForm
     public void onSubmitInsert() {}
     public void onSubmitUpdate() {}
     public void onSubmitDelete() {}
-
-    public FormMode getFormMode()
-    {
-        return this.mode;
-    }
 }

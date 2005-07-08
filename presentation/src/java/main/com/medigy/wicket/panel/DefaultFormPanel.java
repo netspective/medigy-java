@@ -4,14 +4,13 @@
 package com.medigy.wicket.panel;
 
 import com.medigy.wicket.border.StandardPanelBorder;
-import com.medigy.wicket.form.FormMode;
 import wicket.IFeedback;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.panel.FeedbackPanel;
 
 public abstract class DefaultFormPanel extends DefaultPanel
 {
-	public DefaultFormPanel(final String componentName, final FormMode formPerspective)
+    public DefaultFormPanel(final String componentName)
 	{
         super(componentName);
 
@@ -22,8 +21,8 @@ public abstract class DefaultFormPanel extends DefaultPanel
         final FeedbackPanel feedback = new FeedbackPanel("feedback");
         border.add(feedback);
 
-        border.add(createForm("form", feedback, formPerspective));
+        border.add(createForm("form", feedback));
     }
-
-    protected abstract Form createForm(final String componentName, final IFeedback feedback, final FormMode mode);
+    
+    protected abstract Form createForm(final String componentName, final IFeedback feedback);
 }

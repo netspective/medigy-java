@@ -152,6 +152,10 @@ public class ReflectedFormFieldDefn
         if(this.isAnnotationPresent(NotNull.class))
             formComponent.add(RequiredValidator.getInstance());
 
+        // TODO: find the BaseForms FormMode and check against annotation. Hide the formComponent's label.
+        if(this.isAnnotationPresent(InvisibleWhen.class))
+            formComponent.setVisible(false);
+
     }
 
     public com.medigy.wicket.form.FormFieldFactory.FieldCreator getFieldCreator(final Class dataTypeOrValidEntity)

@@ -55,7 +55,12 @@ public class PatientResponsiblePartyFormPanel extends DefaultFormPanel
         super(componentName, formMode);
     }
 
-    protected Form createForm(final String componentName, final IFeedback feedback, final FormMode formMode)
+    public PatientResponsiblePartyFormPanel(final String componentName)
+    {
+        super(componentName);
+    }
+
+    protected Form createForm(final String componentName, final IFeedback feedback)
     {
         return new Form(componentName, feedback);
     }

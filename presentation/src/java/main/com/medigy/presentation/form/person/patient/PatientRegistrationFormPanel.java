@@ -56,13 +56,19 @@ import wicket.model.BoundCompoundPropertyModel;
 
 public class PatientRegistrationFormPanel extends DefaultFormPanel
 {
-    public PatientRegistrationFormPanel(final String componentName, final FormMode formPerspective)
+    public PatientRegistrationFormPanel(final String componentName, final FormMode formMode)
     {
-        super(componentName, formPerspective);
+        super(componentName, formMode);
     }
 
-    protected RecordEditorForm createForm(final String componentName, final IFeedback feedback, final FormMode formMode)
+    public PatientRegistrationFormPanel(final String componentName)
     {
+        super(componentName);
+    }
+
+    protected RecordEditorForm createForm(final String componentName, final IFeedback feedback)
+    {
+        final FormMode formMode = FormMode.INSERT; // TODO: Remove once we figure out how to pass in
         final PatientRegistrationService service = (PatientRegistrationService) ((DefaultApplication) getApplication()).getService(PatientRegistrationService.class);
         final RegisterPatientParameters newPatientParameters = service.getNewPatientParameters();
 
@@ -92,34 +98,34 @@ public class PatientRegistrationFormPanel extends DefaultFormPanel
 
         }
 
-        public final void onSubmit()
+
+        public void onSubmitInsert()
         {
             PatientRegistrationFormModel patient = (PatientRegistrationFormModel)getModelObject();
+            PatientRegistrationService service = (PatientRegistrationService)((DefaultApplication) getApplication()).getService(PatientRegistrationService.class);
+            RegisteredPatient registeredPatient = service.registerPatient(patient);
+            if(registeredPatient.getPatientId() != null)
+                info("Saved patient: " + registeredPatient.getRegisterPatientParameters().getFirstName() + " " + registeredPatient.getRegisterPatientParameters().getLastName());
 
-
-            boolean isNew = (patient.getPersonId() == null);
-            if(isNew)
-            {
-                PatientRegistrationService service = (PatientRegistrationService)((DefaultApplication) getApplication()).getService(PatientRegistrationService.class);
-                RegisteredPatient registeredPatient = service.registerPatient(patient);
-                if(registeredPatient.getPatientId() != null)
-                    info("Saved patient: " + registeredPatient.getRegisterPatientParameters().getFirstName() + " " + registeredPatient.getRegisterPatientParameters().getLastName());
-
-                if(registeredPatient.getErrorMessage() != null)
-                    info("Errors: " + registeredPatient.getErrorMessage());
-            }
-            else
-            {
-                PatientRegistrationService service = (PatientRegistrationService)((DefaultApplication) getApplication()).getService(PatientRegistrationService.class);
-                RegisteredPatient registeredPatient = service.registerPatient(patient);
-                if(registeredPatient.getPatientId() != null)
-                    info("Saved patient: " + registeredPatient.getRegisterPatientParameters().getFirstName() + " " + registeredPatient.getRegisterPatientParameters().getLastName());
-
-                if(registeredPatient.getErrorMessage() != null)
-                    info("Errors: " + registeredPatient.getErrorMessage());
-            }
+            if(registeredPatient.getErrorMessage() != null)
+                info("Errors: " + registeredPatient.getErrorMessage());
         }
 
+        public void onSubmitUpdate()
+        {
+            PatientRegistrationFormModel patient = (PatientRegistrationFormModel)getModelObject();
+            PatientRegistrationService service = (PatientRegistrationService)((DefaultApplication) getApplication()).getService(PatientRegistrationService.class);
+            RegisteredPatient registeredPatient = service.registerPatient(patient);
+            if(registeredPatient.getPatientId() != null)
+                info("Saved patient: " + registeredPatient.getRegisterPatientParameters().getFirstName() + " " + registeredPatient.getRegisterPatientParameters().getLastName());
 
+            if(registeredPatient.getErrorMessage() != null)
+                info("Errors: " + registeredPatient.getErrorMessage());
+        }
+
+        public void onSubmitDelete()
+        {
+
+        }
     }
 }

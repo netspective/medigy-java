@@ -25,11 +25,13 @@ import java.util.List;
 
 public final class PatientRegistrationFormModel implements RegisterPatientParameters
 {
+	private String patientId;
 	private String firstName;
     private String lastName;
 	private String middleName;
     private String suffix;
     private Date birthDate;
+    private Date deathDate;
     private String genderCode;
     private String maritalStatusCode;
 	private String ssn;
@@ -102,19 +104,29 @@ public final class PatientRegistrationFormModel implements RegisterPatientParame
         }
         catch(Exception e)
         {
-
+            System.out.println("BeanUtils Exception");
         }
 	}
 
     @NotNull public String getPatientId()
     {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return patientId;
+    }
+
+    public void setPatientId(String id)
+    {
+        this.patientId = id;
     }
 
     @InvisibleWhen(mode = FormMode.INSERT)
     @NotNull @Past public Date getDeathDate()
     {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return deathDate;
+    }
+
+    public void setDeathDate(Date deathDate)
+    {
+        this.deathDate = deathDate;
     }
 
     public ServiceVersion getServiceVersion()
@@ -771,7 +783,7 @@ public final class PatientRegistrationFormModel implements RegisterPatientParame
 
     @NotNull
     @ValidEntity(entity = LanguageType.class)
-    @SelectFieldStyle(style = SelectFieldStyle.Style.MULTILIST)
+    @SelectFieldStyle(style = SelectFieldStyle.Style.MULTICHECK)
     public List getLanguageCodes()
     {
         return languageCodes;
