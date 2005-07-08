@@ -56,18 +56,17 @@ import wicket.model.BoundCompoundPropertyModel;
 
 public class PatientRegistrationFormPanel extends DefaultFormPanel
 {
-    public PatientRegistrationFormPanel(final String componentName)
+    public PatientRegistrationFormPanel(final String componentName, final FormMode mode)
     {
-        super(componentName);
+        super(componentName, mode);
     }
 
-    protected RecordEditorForm createForm(final String componentName, final IFeedback feedback)
+    protected RecordEditorForm createForm(final String componentName, final IFeedback feedback, final FormMode mode)
     {
-        final FormMode formMode = FormMode.INSERT; // TODO: Remove once we figure out how to pass in
         final PatientRegistrationService service = (PatientRegistrationService) ((DefaultApplication) getApplication()).getService(PatientRegistrationService.class);
         final RegisterPatientParameters newPatientParameters = service.getNewPatientParameters();
 
-        return new PatientRegistrationForm(componentName, feedback, new BoundCompoundPropertyModel(new PatientRegistrationFormModel(newPatientParameters)), newPatientParameters, formMode, RegisterPatientParameters.class);
+        return new PatientRegistrationForm(componentName, feedback, new BoundCompoundPropertyModel(new PatientRegistrationFormModel(newPatientParameters)), newPatientParameters, mode, RegisterPatientParameters.class);
     }
 
     protected class PatientRegistrationForm extends RecordEditorForm
@@ -94,7 +93,7 @@ public class PatientRegistrationFormPanel extends DefaultFormPanel
         }
 
 
-        public void onSubmitInsert()
+        public void onSubmit()
         {
             PatientRegistrationFormModel patient = (PatientRegistrationFormModel)getModelObject();
             PatientRegistrationService service = (PatientRegistrationService)((DefaultApplication) getApplication()).getService(PatientRegistrationService.class);
@@ -104,6 +103,11 @@ public class PatientRegistrationFormPanel extends DefaultFormPanel
 
             if(registeredPatient.getErrorMessage() != null)
                 info("Errors: " + registeredPatient.getErrorMessage());
+        }
+
+        public void onSubmitInsert()
+        {
+            
         }
 
         public void onSubmitUpdate()

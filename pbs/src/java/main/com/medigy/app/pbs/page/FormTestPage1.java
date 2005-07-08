@@ -44,12 +44,13 @@
 package com.medigy.app.pbs.page;
 
 import com.medigy.presentation.form.person.patient.PatientRegistrationFormPanel;
+import com.medigy.wicket.form.FormMode;
 import com.medigy.wicket.page.DefaultFormPage;
 
 public class FormTestPage1 extends DefaultFormPage
 {
     public FormTestPage1()
     {
-        super(PatientRegistrationFormPanel.class);
+        super(PatientRegistrationFormPanel.class, FormMode.INSERT);
     }
 }

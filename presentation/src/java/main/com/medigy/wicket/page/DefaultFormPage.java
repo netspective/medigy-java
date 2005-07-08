@@ -43,17 +43,18 @@
  */
 package com.medigy.wicket.page;
 
-import java.lang.reflect.InvocationTargetException;
-
+import com.medigy.wicket.form.FormMode;
 import wicket.Component;
+
+import java.lang.reflect.InvocationTargetException;
 
 public class DefaultFormPage extends AuthenticatedWebPage
 {
-    public DefaultFormPage(final Class formPanelClass)
+    public DefaultFormPage(final Class formPanelClass, final FormMode mode)
     {
         try
         {
-            final Component formPanel = (Component) formPanelClass.getConstructor(new Class[] { String.class }).newInstance("form_panel");
+            final Component formPanel = (Component) formPanelClass.getConstructor(new Class[] { String.class, FormMode.class }).newInstance("form_panel", mode);
             add(formPanel);
         }
         catch (InstantiationException e)

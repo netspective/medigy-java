@@ -4,6 +4,7 @@
 package com.medigy.wicket.form;
 
 import wicket.IFeedback;
+import wicket.MarkupContainer;
 import wicket.model.IModel;
 
 abstract public class RecordEditorForm extends BaseForm
@@ -59,22 +60,26 @@ abstract public class RecordEditorForm extends BaseForm
 
     public void onSubmit()
     {
+        MarkupContainer mc = this.getParent();
+        if(mc instanceof RecordEditorForm)
+        {
         switch(getFormMode())
         {
             case INSERT:
-                onSubmitInsert();
+                ((RecordEditorForm)mc).onSubmitInsert();
                 break;
 
             case UPDATE:
-                onSubmitUpdate();
+                ((RecordEditorForm)mc).onSubmitUpdate();
                 break;
 
             case DELETE:
-                onSubmitDelete();
+                ((RecordEditorForm)mc).onSubmitDelete();
                 break;
 
             default:
                 throw new RuntimeException("Invalid Mode " + getFormMode());
+        }
         }
     }
 
@@ -82,9 +87,9 @@ abstract public class RecordEditorForm extends BaseForm
     public void initUpdate() {}
     public void initDelete() {}
 
-    public void onSubmitInsert() {}
-    public void onSubmitUpdate() {}
-    public void onSubmitDelete() {}
+    public abstract void onSubmitInsert();
+    public abstract void onSubmitUpdate();
+    public abstract void onSubmitDelete();
 
     public void onValidateInsert() {}
     public void onValidateUpdate() {}
