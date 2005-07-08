@@ -2,11 +2,12 @@ package com.medigy.wicket.form;
 
 public enum FormMode
 {
-    INSERT("add", "Add perspective"),
-    UPDATE("edit", "Edit perspective"),
-    DELETE("delete", "Delete perspective"),
-    CONFIRM("confirm", "Confirm perspective"),
-    PRINT("print", "Print perspective");
+    NONE("none", "No specific mode"),
+    INSERT("insert", "Add mode"),
+    UPDATE("update", "Edit mode"),
+    DELETE("delete", "Delete mode"),
+    CONFIRM("confirm", "Confirm mode"),
+    PRINT("print", "Print mode");
 
     private final String label;
     private final String description;

@@ -202,6 +202,12 @@ public class FormJavaScriptGenerator
             registrationScript.append(".setRequired(true);\n");
         }
 
+        if(! component.isVisible())
+        {
+            registrationScript.append(fieldVarName);
+            registrationScript.append(".setVisible(false);\n");
+        }
+
         if(frc != null)
             frc.appendJavaScriptFieldRegistration(this, component, fieldVarName);
 

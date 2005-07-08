@@ -43,14 +43,20 @@
  */
 package com.medigy.wicket.form;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import com.medigy.wicket.form.FormFieldFactory.ConstructedField;
 import com.medigy.wicket.form.FormFieldFactory.FieldCreator;
 import com.medigy.wicket.form.FormJavaScriptGenerator.FieldCustomizationScriptContributor;
 import com.medigy.wicket.form.FormJavaScriptGenerator.FieldRegistrationContributor;
 import com.medigy.wicket.form.FormJavaScriptGenerator.FieldTypeNameContributor;
 import com.medigy.wicket.form.FormJavaScriptGenerator.FieldTypeScriptContributor;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import wicket.IComponentResolver;
 import wicket.IFeedback;
 import wicket.MarkupContainer;
@@ -60,11 +66,6 @@ import wicket.markup.html.form.Form;
 import wicket.markup.html.form.FormComponent;
 import wicket.model.BoundCompoundPropertyModel;
 import wicket.model.IModel;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
 public class BaseForm extends Form implements IComponentResolver
 {
@@ -161,7 +162,7 @@ public class BaseForm extends Form implements IComponentResolver
             {
                 final String controlId = tag.getAttributes().getString(ATTRNAME_WICKET_ID);
                 final Class serviceBeanClass = getModel().getObject(null).getClass();
-                final ConstructedField newField = FormFieldFactory.getInstance().createField(controlId, controlId, serviceBeanClass, getModel().getClass());
+                final ConstructedField newField = FormFieldFactory.getInstance().createField(BaseForm.this, controlId, controlId, serviceBeanClass, getModel().getClass());
                 container.autoAdd(((BoundCompoundPropertyModel) getModel()).bind(newField.getField(), controlId));
                 reflectedFields.put(newField.getField(), newField.getReflectedFormFieldDefn());
                 return true;

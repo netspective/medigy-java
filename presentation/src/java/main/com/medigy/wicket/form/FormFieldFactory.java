@@ -129,10 +129,10 @@ public class FormFieldFactory
         return result;
     }
 
-    public ConstructedField createField(final String componentId, final String propertyName, final Class ... classes)
+    public ConstructedField createField(final BaseForm form, final String componentId, final String propertyName, final Class... classes)
     {
         final ReflectedFormFieldDefn rffd = getReflectedFormFieldDefn(propertyName, classes);
-        final FormComponent fc = rffd.createField(componentId);
+        final FormComponent fc = rffd.createField(form, componentId);
 
         return new ConstructedField()
         {
@@ -156,15 +156,15 @@ public class FormFieldFactory
 
     public interface FieldCreator
     {
-        public FormComponent createField(final String controlId, final ReflectedFormFieldDefn reflectedFormFieldDefn);
+        public FormComponent createField(final BaseForm form, final String controlId, final ReflectedFormFieldDefn reflectedFormFieldDefn);
     }
 
     public class BooleanFieldCreator implements FieldCreator, FormJavaScriptGenerator.FieldTypeNameContributor
     {
-        public FormComponent createField(final String controlId, final ReflectedFormFieldDefn reflectedFormFieldDefn)
+        public FormComponent createField(final BaseForm form, final String controlId, final ReflectedFormFieldDefn reflectedFormFieldDefn)
         {
             final TextField result = new TextField(controlId);
-            reflectedFormFieldDefn.initializeField(reflectedFormFieldDefn, result);
+            reflectedFormFieldDefn.initializeField(form, reflectedFormFieldDefn, result);
             result.add(new TypeValidator(Boolean.class));
             return result;
         }
@@ -177,10 +177,10 @@ public class FormFieldFactory
 
     public class DateFieldCreator implements FieldCreator, FormJavaScriptGenerator.FieldTypeNameContributor
     {
-        public FormComponent createField(final String controlId, final ReflectedFormFieldDefn reflectedFormFieldDefn)
+        public FormComponent createField(final BaseForm form, final String controlId, final ReflectedFormFieldDefn reflectedFormFieldDefn)
         {
             final TextField result = new TextField(controlId);
-            reflectedFormFieldDefn.initializeField(reflectedFormFieldDefn, result);
+            reflectedFormFieldDefn.initializeField(form, reflectedFormFieldDefn, result);
             result.add(new TypeValidator(Date.class));
             return result;
         }
@@ -193,10 +193,10 @@ public class FormFieldFactory
 
     public class EmailFieldCreator implements FieldCreator, FormJavaScriptGenerator.FieldTypeNameContributor
     {
-        public FormComponent createField(final String controlId, final ReflectedFormFieldDefn reflectedFormFieldDefn)
+        public FormComponent createField(final BaseForm form, final String controlId, final ReflectedFormFieldDefn reflectedFormFieldDefn)
         {
             final TextField result = new TextField(controlId);
-            reflectedFormFieldDefn.initializeField(reflectedFormFieldDefn, result);
+            reflectedFormFieldDefn.initializeField(form, reflectedFormFieldDefn, result);
             result.add(new EmailAddressPatternValidator());
             return result;
         }
@@ -209,10 +209,10 @@ public class FormFieldFactory
 
     public class FloatFieldCreator implements FieldCreator, FormJavaScriptGenerator.FieldTypeNameContributor
     {
-        public FormComponent createField(final String controlId, final ReflectedFormFieldDefn reflectedFormFieldDefn)
+        public FormComponent createField(final BaseForm form, final String controlId, final ReflectedFormFieldDefn reflectedFormFieldDefn)
         {
             final TextField result = new TextField(controlId);
-            reflectedFormFieldDefn.initializeField(reflectedFormFieldDefn, result);
+            reflectedFormFieldDefn.initializeField(form, reflectedFormFieldDefn, result);
             result.add(new TypeValidator(Float.class));
             return result;
         }
@@ -225,10 +225,10 @@ public class FormFieldFactory
 
     public class IntegerFieldCreator implements FieldCreator, FormJavaScriptGenerator.FieldTypeNameContributor
     {
-        public FormComponent createField(final String controlId, final ReflectedFormFieldDefn reflectedFormFieldDefn)
+        public FormComponent createField(final BaseForm form, final String controlId, final ReflectedFormFieldDefn reflectedFormFieldDefn)
         {
             final TextField result = new TextField(controlId);
-            reflectedFormFieldDefn.initializeField(reflectedFormFieldDefn, result);
+            reflectedFormFieldDefn.initializeField(form, reflectedFormFieldDefn, result);
             result.add(new TypeValidator(Integer.class));
             return result;
         }
@@ -241,10 +241,10 @@ public class FormFieldFactory
 
     public class MemoFieldCreator implements FieldCreator, FormJavaScriptGenerator.FieldTypeNameContributor
     {
-        public FormComponent createField(final String controlId, final ReflectedFormFieldDefn reflectedFormFieldDefn)
+        public FormComponent createField(final BaseForm form, final String controlId, final ReflectedFormFieldDefn reflectedFormFieldDefn)
         {
             final TextArea result = new TextArea(controlId);
-            reflectedFormFieldDefn.initializeField(reflectedFormFieldDefn, result);
+            reflectedFormFieldDefn.initializeField(form, reflectedFormFieldDefn, result);
             return result;
         }
 
@@ -256,10 +256,10 @@ public class FormFieldFactory
 
     public class PasswordFieldCreator implements FieldCreator, FormJavaScriptGenerator.FieldTypeNameContributor
     {
-        public FormComponent createField(final String controlId, final ReflectedFormFieldDefn reflectedFormFieldDefn)
+        public FormComponent createField(final BaseForm form, final String controlId, final ReflectedFormFieldDefn reflectedFormFieldDefn)
         {
             final TextField result = new TextField(controlId);
-            reflectedFormFieldDefn.initializeField(reflectedFormFieldDefn, result);
+            reflectedFormFieldDefn.initializeField(form, reflectedFormFieldDefn, result);
             // TODO: need to add wicket validator class
             return result;
         }
@@ -274,10 +274,10 @@ public class FormFieldFactory
     {
         private final Pattern DASH_VALIDATE_PATTERN = Pattern.compile("^([\\d][\\d][\\d])[\\.-]?([\\d][\\d][\\d])[\\.-]?([\\d]{4})([ ][x][\\d]{1,5})?$");
 
-        public FormComponent createField(final String controlId, final ReflectedFormFieldDefn reflectedFormFieldDefn)
+        public FormComponent createField(BaseForm form, final String controlId, final ReflectedFormFieldDefn reflectedFormFieldDefn)
         {
             final TextField result = new TextField(controlId);
-            reflectedFormFieldDefn.initializeField(reflectedFormFieldDefn, result);
+            reflectedFormFieldDefn.initializeField(form, reflectedFormFieldDefn, result);
             result.add(new PatternValidator(DASH_VALIDATE_PATTERN, "999-999-9999 x999"));
             return result;
         }
@@ -292,10 +292,10 @@ public class FormFieldFactory
     {
         private final Pattern SOCIAL_SECURITY_PATTERN = Pattern.compile("^([\\d]{3})[-]?([\\d]{2})[-]?([\\d]{4})$");
 
-        public FormComponent createField(final String controlId, final ReflectedFormFieldDefn reflectedFormFieldDefn)
+        public FormComponent createField(final BaseForm form, final String controlId, final ReflectedFormFieldDefn reflectedFormFieldDefn)
         {
             final TextField result = new TextField(controlId);
-            reflectedFormFieldDefn.initializeField(reflectedFormFieldDefn, result);
+            reflectedFormFieldDefn.initializeField(form, reflectedFormFieldDefn, result);
             result.add(new PatternValidator(SOCIAL_SECURITY_PATTERN, "999-99-9999"));
             return result;
         }
@@ -308,10 +308,10 @@ public class FormFieldFactory
 
     public class TextFieldCreator implements FieldCreator, FormJavaScriptGenerator.FieldTypeNameContributor
     {
-        public FormComponent createField(final String controlId, final ReflectedFormFieldDefn reflectedFormFieldDefn)
+        public FormComponent createField(final BaseForm form, final String controlId, final ReflectedFormFieldDefn reflectedFormFieldDefn)
         {
             final TextField result = new TextField(controlId);
-            reflectedFormFieldDefn.initializeField(reflectedFormFieldDefn, result);
+            reflectedFormFieldDefn.initializeField(form, reflectedFormFieldDefn, result);
             return result;
         }
 
@@ -325,10 +325,10 @@ public class FormFieldFactory
     {
         public static final String VALIDATE_PATTERN = "^([\\d]{5})([-][\\d]{4})?$";
 
-        public FormComponent createField(final String controlId, final ReflectedFormFieldDefn reflectedFormFieldDefn)
+        public FormComponent createField(final BaseForm form, final String controlId, final ReflectedFormFieldDefn reflectedFormFieldDefn)
         {
             final TextField result = new TextField(controlId);
-            reflectedFormFieldDefn.initializeField(reflectedFormFieldDefn, result);
+            reflectedFormFieldDefn.initializeField(form, reflectedFormFieldDefn, result);
             result.add(new PatternValidator(VALIDATE_PATTERN, "99999-9999"));
             return result;
         }
@@ -342,7 +342,7 @@ public class FormFieldFactory
     protected class ReferenceEntityFieldCreator implements FieldCreator, FormJavaScriptGenerator.FieldTypeNameContributor,
                                                                          FormJavaScriptGenerator.FieldRegistrationContributor
     {
-        public FormComponent createField(final String controlId, final ReflectedFormFieldDefn reflectedFormFieldDefn)
+        public FormComponent createField(final BaseForm form, final String controlId, final ReflectedFormFieldDefn reflectedFormFieldDefn)
         {
             final ValidEntity reAnn = (ValidEntity) reflectedFormFieldDefn.getAnnotation(ValidEntity.class);
             if(reAnn == null)
