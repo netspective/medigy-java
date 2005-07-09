@@ -39,6 +39,9 @@
 package com.medigy.service.impl.contact;
 
 import com.medigy.persist.model.contact.GeographicBoundary;
+import com.medigy.persist.model.contact.State;
+import com.medigy.persist.model.contact.Country;
+import com.medigy.persist.model.contact.City;
 import com.medigy.persist.reference.custom.GeographicBoundaryType;
 import com.medigy.service.contact.GeographicBoundaryFacade;
 import com.medigy.service.util.AbstractFacade;
@@ -47,6 +50,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 
 import java.util.List;
+import java.util.ArrayList;
 
 public class GeographicBoundaryFacadeImpl extends AbstractFacade implements GeographicBoundaryFacade
 {
@@ -106,13 +110,16 @@ public class GeographicBoundaryFacadeImpl extends AbstractFacade implements Geog
      * List all geographic boundaries of the same type
      *
      * @param type
-     * @return
+     * @return list of geo boundaries
      */
-    public List listGeographicBoundaries(GeographicBoundaryType type)
+    public List<GeographicBoundary> listGeographicBoundaries(GeographicBoundaryType type)
     {
         Criteria criteria = getSession().createCriteria(GeographicBoundary.class);
-        criteria.createAlias("type", "type").add(Restrictions.eq("type.code", type.getCode()));
-        return criteria.list();
+        List list = criteria.createAlias("type", "type").add(Restrictions.eq("type.code", type.getCode())).list();
+        List<GeographicBoundary> geoList = new ArrayList<GeographicBoundary>();
+
+        convert(GeographicBoundary.class, list, geoList);
+        return geoList;
     }
 
     /**
@@ -140,16 +147,32 @@ public class GeographicBoundaryFacadeImpl extends AbstractFacade implements Geog
         return boundary;
     }
 
-    /*
-    public GeographicBoundaryAssociation addGeographicBoundaryAssociation(final GeographicBoundary boundary,
-                                                 final GeographicBoundary parentBoundary)
+    public List<State> listStates()
     {
-        final GeographicBoundaryAssociation assc = new  GeographicBoundaryAssociation();
-        assc.setParentState(boundary);
-        assc.setParentGeographicBoundary(boundary);
-        HibernateUtil.getSession().save(assc);
-        return assc;
+        final Country usa = Country.Cache.USA.getEntity();
+        return listStates(usa);
     }
-*/
+
+    public List<State> listStates(Country country)
+    {
+        List stateList = getSession().createQuery("from State state where state.parentCountry.id = ?").setLong(0, country.getGeoId()).list();
+        List<State> newList = new ArrayList<State>();
+        convert(State.class, stateList, newList);
+        return newList;
+    }
+
+    public State getStateByAbbreviation(final String abbrev)
+    {
+        final State state = (State) getSession().createCriteria(State.class).add(Restrictions.eq("stateAbbreviation", abbrev).ignoreCase()).uniqueResult();
+        return state;
+    }
+
+    public List<City> listCitiesByState(final State state)
+    {
+        List cityList = getSession().createQuery("from City city where city.parentState.id = ?").setLong(0, state.getGeoId()).list();
+        List<City> newList = new ArrayList<City>();
+        convert(City.class, cityList, newList);
+        return newList;
+    }
 
 }

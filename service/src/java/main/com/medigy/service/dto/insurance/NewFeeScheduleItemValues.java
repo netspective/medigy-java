@@ -46,6 +46,4 @@ public interface NewFeeScheduleItemValues extends ServiceReturnValues
 {
     public Serializable getNewFeeScheduleItemId();
 
-    public AddFeeScheduleItemParameters getAddFeeScheduleItemParameters();
-    
 }

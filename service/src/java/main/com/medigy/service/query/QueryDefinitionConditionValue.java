@@ -23,6 +23,13 @@ public class QueryDefinitionConditionValue
     private String propertyName;
     private Method propertyReadMethod;
 
+    private Object value;
+
+    public QueryDefinitionConditionValue(final Object value)
+    {
+        this.value = value;
+    }
+
     public QueryDefinitionConditionValue(final Class parameterClass, final String propertyName)
     {
         this.serviceParameterClass = parameterClass;
@@ -73,8 +80,15 @@ public class QueryDefinitionConditionValue
         }
     }
 
+
+    public Object getValue()
+    {
+        return this.value;
+    }
+
     public Object getValue(final ServiceParameters params) throws QueryDefinitionException
     {
+
         if (!serviceParameterClass.isAssignableFrom(params.getClass()))
             throw new QueryDefinitionException(condition.getOwner(), "The service parameter object " +
                     " is not assignable to: " + serviceParameterClass.getClass());

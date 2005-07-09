@@ -12,43 +12,30 @@ import com.medigy.service.dto.ServiceParameters;
 
 public abstract class BinaryOpComparison implements SqlComparison
 {
-    private String name;
-    private String caption;
     private String sqlExpr;
+    private Group group;
 
-    public BinaryOpComparison(final String name)
+    public BinaryOpComparison(final Group group)
     {
-        this.name = name;
+        this.group = group;
     }
 
-    public BinaryOpComparison(String name, String caption)
+    public BinaryOpComparison(String sqlExpr, final Group group)
     {
-        this.name = name;
-        this.caption = caption;
-    }
-
-    public BinaryOpComparison(String name, String caption, String sqlExpr)
-    {
-        this.name = name;
-        this.caption = caption;
         this.sqlExpr = sqlExpr;
+        this.group = group;
     }
 
-    public final String getName()
+    public Group getGroup()
     {
-        return name;
+        return group;
     }
 
-    public final String getCaption()
-    {
-        return caption;
-    }
-
-    public String getWhereCondExpr(QueryDefinitionSelect select, QueryDefnStatementGenerator statement,
-                                   QueryDefnCondition cond, final ServiceParameters params) throws QueryDefinitionException
+    public String getWhereCondExpr(final QueryDefinitionSelect select, final QueryDefnStatementGenerator statement,
+                                   final QueryDefnCondition cond, final Object value) throws QueryDefinitionException
     {
         String retString = "";
-        statement.addBindParam(cond.getField(), cond.getValue(params));
+        statement.addBindParam(cond.getField(), value);
         String bindExpression = cond.getBindExpr();
 
         if(bindExpression != null && bindExpression.length() > 0)

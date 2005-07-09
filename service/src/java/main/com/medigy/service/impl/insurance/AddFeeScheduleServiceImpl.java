@@ -83,7 +83,7 @@ public class AddFeeScheduleServiceImpl implements AddFeeScheduleService
                 return feeSchedule.getFeeScheduleId();
             }
 
-            public AddFeeScheduleParameters getAddFeeScheduleParameters()
+            public AddFeeScheduleParameters getParameters()
             {
                 return parameters;
             }
@@ -103,7 +103,7 @@ public class AddFeeScheduleServiceImpl implements AddFeeScheduleService
                 return null;
             }
 
-            public AddFeeScheduleParameters getAddFeeScheduleParameters()
+            public AddFeeScheduleParameters getParameters()
             {
                 return (AddFeeScheduleParameters) params;
             }

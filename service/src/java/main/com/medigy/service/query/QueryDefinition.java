@@ -3,94 +3,36 @@
  */
 package com.medigy.service.query;
 
+import com.medigy.service.query.impl.QueryDefinitionFieldImpl;
+import com.medigy.service.query.impl.QueryDefinitionSelectImpl;
+import com.medigy.service.query.exception.QueryDefinitionException;
+
 import java.util.Map;
 import java.util.HashMap;
+import java.util.List;
+import java.util.ArrayList;
 
-public class QueryDefinition
+public interface QueryDefinition
 {
-    private String name;
-    // these are all the possible joins and fields
-    private Map<String, QueryDefnField> fields = new HashMap<String, QueryDefnField>();
-    private QueryDefnJoins joins = new QueryDefnJoins();
+    public String getName();
 
-    // these are the actual SELECT objects utilizing the above joins and fields
-    private QueryDefnSelects selects = new QueryDefnSelects();
+    public List<String> getFieldNames();
+    public Map<String, QueryDefinitionField> getFields();
+    public void setFields(final Map<String, QueryDefinitionField> fields);
 
-    public String getName()
-    {
-        return name;
-    }
+    public QueryDefinitionField addField(final String fieldName, final String columnName, final String joinName) throws QueryDefinitionException;
+    public QueryDefinitionField addField(final String fieldName, final String columnName, final QueryDefinitionJoin join);
+    public QueryDefinitionField getField(final String fieldName) throws QueryDefinitionException;
 
-    public void setName(final String name)
-    {
-        this.name = name;
-    }
+    public void addJoin(final QueryDefinitionJoin join);
+    public QueryDefinitionJoins getJoins();
+    public void setJoins(final QueryDefinitionJoins joins);
 
-    public Map<String, QueryDefnField> getFields()
-    {
-        return fields;
-    }
+    public QueryDefinitionSelect createSelect(final String selectName);
+    public QueryDefinitionJoin createJoin();
 
-    public void setFields(final Map<String, QueryDefnField> fields)
-    {
-        this.fields = fields;
-    }
-
-    public void addField(final QueryDefnField field)
-    {
-        this.fields.put(field.getName(), field);
-    }
-
-    public void addField(final String fieldName, final String columnName, final String joinName)
-    {
-        final QueryDefnField field = new QueryDefnField(fieldName, columnName, this);
-        addField(field);
-    }
-
-    public QueryDefnField addField(final String fieldName, final String columnName, final QueryDefnJoin join)
-    {
-        final QueryDefnField field = new QueryDefnField(fieldName, columnName, this);
-        field.setJoinDefn(join);
-        addField(field);
-        return field;
-    }
-
-    public QueryDefnField getField(final String fieldName)
-    {
-        return this.fields.get(fieldName);
-    }
-
-    public void addJoin(final QueryDefnJoin join)
-    {
-        this.joins.add(join);
-    }
-
-    public QueryDefnJoins getJoins()
-    {
-        return joins;
-    }
-
-    public void setJoins(final QueryDefnJoins joins)
-    {
-        this.joins = joins;
-    }
-
-    public QueryDefnSelects getSelects()
-    {
-        return selects;
-    }
-
-    public void setSelects(final QueryDefnSelects selects)
-    {
-        this.selects = selects;
-    }
-
-    public void addSelect(final QueryDefinitionSelect select)
-    {
-        select.setQueryDefinition(this);
-        this.selects.add(select);
-    }
-
-
+    public QueryDefnSelects getSelects();
+    public void setSelects(final QueryDefnSelects selects);
+    public void addSelect(final QueryDefinitionSelect select);
 
 }

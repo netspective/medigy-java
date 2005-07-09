@@ -44,8 +44,6 @@ import java.io.Serializable;
 
 public interface NewInsuranceCoverageData extends ServiceReturnValues
 {
-    public AddInsuranceCoverageParameters getAddInsuranceCoverageParameters();
-
     public Serializable getInsurancePolicyId();
 
 }

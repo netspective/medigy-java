@@ -44,7 +44,5 @@ import java.io.Serializable;
 
 public interface RegisteredProvider extends ServiceReturnValues
 {
-    public RegisterHealthCareProviderParameters getParameters();
-
     public Serializable getRegisteredProviderId();
 }

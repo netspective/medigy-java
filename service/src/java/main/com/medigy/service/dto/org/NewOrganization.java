@@ -46,5 +46,4 @@ public interface NewOrganization extends ServiceReturnValues
 {
     public Serializable getNewOrganizationId();
 
-    public AddOrganization getAddOrganizationParameters();
 }

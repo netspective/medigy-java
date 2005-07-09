@@ -1,54 +1,49 @@
 /*
  * Copyright (c) 2005 Your Corporation. All Rights Reserved.
  */
-package com.medigy.service.query;
+package com.medigy.service.query.impl;
 
+import com.medigy.service.query.QueryDefinitionJoin;
+import com.medigy.service.query.QueryDefinition;
+import com.medigy.service.query.QueryDefinitionField;
+import com.medigy.service.query.SqlComparison;
 import com.medigy.service.query.exception.QueryDefinitionException;
-import com.medigy.service.query.exception.QueryDefnJoinNotFoundException;
 
-public class QueryDefnField
+import java.util.List;
+import java.util.ArrayList;
+
+public class QueryDefinitionFieldImpl implements QueryDefinitionField
 {
     private String name;
-    private String caption;
-    private String column;
+
+    private String caption; // Localizable name
+    private String columnName;
+
     private String selectClauseExpr;
     private String selectClauseExprAndLabel;
     private String whereClauseExpr;
     private String orderByClauseExpr;
-    private String join;
-    private QueryDefnJoin joinDefn;
+    private QueryDefinitionJoin join;
     private QueryDefinition parentQueryDefinition;
     private boolean allowDisplay = true;
+    private List<SqlComparison> validSqlComparisons = new ArrayList<SqlComparison>();
 
-    public QueryDefnField(final String name, final String column, final QueryDefinition queryDefn)
+    public QueryDefinitionFieldImpl(final String name, final String column, final QueryDefinitionJoin join,  final QueryDefinition queryDefn)
     {
         this.name = name;
-        this.column = column;
-        this.parentQueryDefinition = queryDefn;
-    }
-
-    public QueryDefnField(final String name, final String column, final String join,  final QueryDefinition queryDefn)
-    {
-        this.name = name;
-        this.column = column;
+        this.columnName = column;
         this.join = join;
         this.parentQueryDefinition = queryDefn;
     }
-
 
     public String getName()
     {
         return name;
     }
 
-    public void setName(final String name)
-    {
-        this.name = name;
-    }
-
     public String getCaption()
     {
-        return caption;
+        return caption != null ? caption : name;
     }
 
     public void setCaption(final String caption)
@@ -56,14 +51,9 @@ public class QueryDefnField
         this.caption = caption;
     }
 
-    public String getColumn()
+    public String getColumnName()
     {
-        return column;
-    }
-
-    public void setColumn(final String column)
-    {
-        this.column = column;
+        return columnName;
     }
 
     public String getColumnLabel()
@@ -79,18 +69,17 @@ public class QueryDefnField
     public String getQualifiedColName() throws QueryDefinitionException
     {
         String tableAlias = getTableAlias();
-        return tableAlias != null ? (tableAlias + "." + getColumn()) : getColumn();
+        return tableAlias != null ? (tableAlias + "." + getColumnName()) : getColumnName();
     }
 
     public String getTableName() throws QueryDefinitionException
     {
-        QueryDefnJoin join = getJoin();
+        QueryDefinitionJoin join = getJoin();
         return join != null ? join.getTable() : null;
     }
 
     public String getTableAlias() throws QueryDefinitionException
     {
-        QueryDefnJoin join = getJoin();
         return join != null ? join.getName() : null;
     }
 
@@ -137,25 +126,31 @@ public class QueryDefnField
         this.orderByClauseExpr = orderByClauseExpr;
     }
 
-    public QueryDefnJoin getJoin() throws QueryDefinitionException
+    public QueryDefinitionJoin getJoin() throws QueryDefinitionException
     {
-        if(join != null && joinDefn == null)
+        return join;
+    }
+
+    /**
+     * Gets all the SQL comparisons allowed for this field
+     * @return list of SqlComparison
+     */
+    public List<SqlComparison> getValidSqlComparisons()
+    {
+        if (validSqlComparisons.size() == 0)
         {
-            joinDefn = parentQueryDefinition.getJoins().get(join);
-            if(joinDefn == null)
-                throw new QueryDefnJoinNotFoundException(parentQueryDefinition, join, "join '" + join + "' not found in field '" + getName() + "'");
+
         }
-        return joinDefn;
+        return validSqlComparisons;
     }
 
-    public void setJoinDefn(final QueryDefnJoin join)
+    public QueryDefinition getQueryDefinition()
     {
-        this.joinDefn = join;
-        this.join = join.getName();
+        return this.parentQueryDefinition;
     }
 
-    public void setJoin(final String join)
+    public void setValidSqlComparisons(final List<SqlComparison> validSqlComparisons)
     {
-        this.join = join;
+        this.validSqlComparisons = validSqlComparisons;
     }
 }

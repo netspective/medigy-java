@@ -40,11 +40,17 @@ package com.medigy.service.person;
 
 
 import com.medigy.persist.model.contact.State;
+import com.medigy.persist.model.contact.Country;
 import com.medigy.persist.model.person.Person;
+import com.medigy.persist.model.org.Organization;
+import com.medigy.persist.model.insurance.InsuranceProduct;
+import com.medigy.persist.model.insurance.InsurancePlan;
 import com.medigy.persist.reference.custom.insurance.InsurancePolicyType;
+import com.medigy.persist.reference.custom.insurance.InsuranceProductType;
 import com.medigy.persist.reference.custom.party.ContactMechanismPurposeType;
 import com.medigy.persist.reference.custom.party.PartyRelationshipType;
 import com.medigy.persist.reference.custom.person.EthnicityType;
+import com.medigy.persist.reference.custom.org.OrganizationClassificationType;
 import com.medigy.persist.reference.type.GenderType;
 import com.medigy.persist.reference.type.LanguageType;
 import com.medigy.persist.reference.type.MaritalStatusType;
@@ -60,6 +66,7 @@ import org.hibernate.validator.Past;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Calendar;
 import java.util.List;
 
 public class TestPatientRegistrationService extends AbstractSpringTestCase
@@ -75,6 +82,36 @@ public class TestPatientRegistrationService extends AbstractSpringTestCase
 
     public void testPatientRegistrationService()
     {
+        final Calendar cal = Calendar.getInstance();
+        cal.set(1980, 1, 1);
+
+        Country usa = new Country();
+        usa.setCountryName("United States of America");
+        usa.setCountryAbbreviation("USA");
+
+        final State virginia = new State();
+        virginia.setStateName("Virginia");
+        virginia.setStateAbbreviation("VA");
+        usa.addState(virginia);
+        getSession().save(usa);
+
+        final Organization blueCross = new Organization();
+        blueCross.setOrganizationName("Blue Cross Blue Shield");
+        blueCross.addPartyClassification(OrganizationClassificationType.Cache.INSURANCE.getEntity());
+
+        final InsuranceProduct insProduct = new InsuranceProduct();
+        insProduct.setType(InsuranceProductType.Cache.PPO.getEntity());
+        insProduct.setOrganization(blueCross);
+        blueCross.addInsuranceProduct(insProduct);
+
+        final InsurancePlan insPlan = new InsurancePlan();
+        insPlan.setName("Test Plan");
+        insPlan.setOrganization(blueCross);
+        insPlan.setMedigapId("123");
+        insPlan.setInsuranceProduct(insProduct);
+        insProduct.addInsurancePlan(insPlan);
+        getSession().save(blueCross);
+
         RegisterPatientParameters patientParameters = null;
                 try
                 {
@@ -111,7 +148,7 @@ public class TestPatientRegistrationService extends AbstractSpringTestCase
 
                         public Date getBirthDate()
                         {
-                            return new Date();
+                            return cal.getTime();
                         }
 
                         @NotNull @Past public Date getDeathDate()
@@ -232,7 +269,7 @@ public class TestPatientRegistrationService extends AbstractSpringTestCase
 
                         public String getState()
                         {
-                            return "KY";
+                            return "VA";
                         }
 
                         public String getPostalCode()
@@ -253,17 +290,17 @@ public class TestPatientRegistrationService extends AbstractSpringTestCase
 
                         public Serializable getPrimaryInsuranceCarrierId()
                         {
-                            return new Long(2);
+                            return blueCross.getPartyId();
                         }
 
                         public Serializable getPrimaryInsuranceProductId()
                         {
-                            return new Long(1);
+                            return insProduct.getInsuranceProductId();
                         }
 
                         public Serializable getPrimaryInsurancePlanId()
                         {
-                            return new Long(1);
+                            return insPlan.getInsurancePlanId();
                         }
 
                         public String getPrimaryInsurancePolicyNumber()
@@ -339,7 +376,10 @@ public class TestPatientRegistrationService extends AbstractSpringTestCase
 
         final RegisteredPatient registeredPatient = patientRegistrationService.registerPatient(patientParameters, "insert");
         if (registeredPatient.getErrorMessage() != null)
+        {
             fail(registeredPatient.getErrorMessage());
+            return;
+        }
 
         final Person persistedPerson = (Person) getSession().load(Person.class, registeredPatient.getPatientId());
         assertEquals(persistedPerson.getFirstName(), "Ryan");

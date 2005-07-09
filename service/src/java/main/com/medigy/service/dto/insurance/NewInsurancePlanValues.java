@@ -11,6 +11,4 @@ public interface NewInsurancePlanValues extends ServiceReturnValues
 {
     public Serializable getNewInsurancePlanId();
 
-    public AddInsurancePlanParameters getAddInsurancePlanParameters();    
-
 }

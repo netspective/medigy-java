@@ -250,7 +250,7 @@
     <bean id="personSearchService"  class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
         <property name="transactionManager"> <ref bean="hibernateTransactionManager"/> </property>
         <property name="target">
-                <bean class="com.medigy.service.impl.person.PersonSearchServiceImpl">
+                <bean class="com.medigy.service.impl.person.QueryDefinitionSearchServiceImpl">
 				    <constructor-arg type="org.hibernate.SessionFactory"> <ref bean="hibernateSessionFactory"/> </constructor-arg>
             </bean>
 		</property>

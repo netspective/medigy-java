@@ -114,22 +114,13 @@ public class AddContactMechanismServiceImpl extends AbstractService implements A
     public NewPostalAddress createErrorResponse(final ServiceParameters params, final String errorMessage)
     {
         return new NewPostalAddress() {
-                /**
-                 * Gets the unique ID of the newly added postal address
-                 *
-                 * @return
-                 */
+
                 public Serializable getPostalAddressId()
                 {
                     return null;
                 }
 
-                /**
-                 * Gets the input parameters passed to the service
-                 *
-                 * @return
-                 */
-                public AddPostalAddressParameters getAddPostalAddressParameters()
+                public AddPostalAddressParameters getParameters()
                 {
                     return (AddPostalAddressParameters) params;
                 }
@@ -193,7 +184,7 @@ public class AddContactMechanismServiceImpl extends AbstractService implements A
                 return address.getContactMechanismId();
             }
 
-            public AddPostalAddressParameters getAddPostalAddressParameters()
+            public AddPostalAddressParameters getParameters()
             {
                 return addParams;
             }
@@ -205,7 +196,7 @@ public class AddContactMechanismServiceImpl extends AbstractService implements A
         };
     }
 
-    public NewEmail addEmail(AddEmailParameters param)
+    public NewEmail addEmail(final AddEmailParameters param)
     {
         final Party party = (Party) HibernateUtil.getSession().load(Party.class, param.getPartyId());
         final ElectronicAddress email = new ElectronicAddress();
@@ -231,6 +222,11 @@ public class AddContactMechanismServiceImpl extends AbstractService implements A
                 {
                     return error;
                 }
+
+                public ServiceParameters getParameters()
+                {
+                    return null;
+                }
             } ;
         }
 
@@ -244,10 +240,15 @@ public class AddContactMechanismServiceImpl extends AbstractService implements A
             {
                 return null;
             }
+
+            public ServiceParameters getParameters()
+            {
+                return param;
+            }
         } ;
     }
 
-    public NewPhone addPhone(AddPhoneParameters param)
+    public NewPhone addPhone(final AddPhoneParameters param)
     {
         final Party party = (Party) HibernateUtil.getSession().load(Party.class, param.getPartyId());
         final PhoneNumber phone = new PhoneNumber();
@@ -277,6 +278,11 @@ public class AddContactMechanismServiceImpl extends AbstractService implements A
                 {
                     return error;
                 }
+
+                public ServiceParameters getParameters()
+                {
+                    return null;
+                }
             };
         }
         return new NewPhone() {
@@ -288,6 +294,11 @@ public class AddContactMechanismServiceImpl extends AbstractService implements A
             public String getErrorMessage()
             {
                 return null;
+            }
+
+            public ServiceParameters getParameters()
+            {
+                return param;
             }
         };
     }

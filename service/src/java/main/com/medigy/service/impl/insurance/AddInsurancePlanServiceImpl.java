@@ -95,7 +95,7 @@ public class AddInsurancePlanServiceImpl implements AddInsurancePlanService
                 return null;
             }
 
-            public AddInsurancePlanParameters getAddInsurancePlanParameters()
+            public AddInsurancePlanParameters getParameters()
             {
                 return (AddInsurancePlanParameters) params;
             }

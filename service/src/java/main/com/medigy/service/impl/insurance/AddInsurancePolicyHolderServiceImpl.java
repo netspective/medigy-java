@@ -69,7 +69,7 @@ public class AddInsurancePolicyHolderServiceImpl implements AddInsurancePolicyHo
                 return person.getPartyId();
             }
 
-            public AddInsurancePolicyHolderParameters getAddInsurancePolicyHolderParameters()
+            public AddInsurancePolicyHolderParameters getParameters()
             {
                 return policyHolderParams;
             }
@@ -89,7 +89,7 @@ public class AddInsurancePolicyHolderServiceImpl implements AddInsurancePolicyHo
                 return null;
             }
 
-            public AddInsurancePolicyHolderParameters getAddInsurancePolicyHolderParameters()
+            public AddInsurancePolicyHolderParameters getParameters()
             {
                 return (AddInsurancePolicyHolderParameters) params;
             }

@@ -151,7 +151,7 @@ public class AddInsuranceProductServiceImpl implements AddInsuranceProductServic
                 return null;
             }
 
-            public AddInsuranceProductParameters getAddInsuranceProductParameters()
+            public AddInsuranceProductParameters getParameters()
             {
                 return (AddInsuranceProductParameters) params;
             }

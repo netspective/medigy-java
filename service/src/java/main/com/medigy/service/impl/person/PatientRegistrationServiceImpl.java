@@ -389,7 +389,7 @@ public class PatientRegistrationServiceImpl extends AbstractService implements P
                     return patientId;
                 }
 
-                public RegisterPatientParameters getRegisterPatientParameters()
+                public RegisterPatientParameters getParameters()
                 {
                     return params;
                 }
@@ -718,7 +718,7 @@ public class PatientRegistrationServiceImpl extends AbstractService implements P
                     return null;
                 }
 
-                public RegisterPatientParameters getRegisterPatientParameters()
+                public RegisterPatientParameters getParameters()
                 {
                     return (RegisterPatientParameters) params;
                 }

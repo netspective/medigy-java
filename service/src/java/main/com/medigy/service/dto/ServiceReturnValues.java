@@ -40,5 +40,6 @@ package com.medigy.service.dto;
 
 public interface ServiceReturnValues 
 {
+    public ServiceParameters getParameters();
     public String getErrorMessage();
 }

@@ -5,40 +5,57 @@ package com.medigy.service.person;
 
 import com.medigy.service.AbstractSpringTestCase;
 import com.medigy.service.ServiceVersion;
-import com.medigy.service.dto.person.PersonSearchParameters;
-import com.medigy.persist.reference.custom.party.PartyRelationshipType;
+import com.medigy.service.query.QueryDefinitionSearchService;
+import com.medigy.service.query.SqlComparison;
+import com.medigy.service.query.QueryDefnCondition;
+import com.medigy.service.query.SqlComparisonFactory;
+import com.medigy.service.query.comparison.StartsWithComparisonIgnoreCase;
+import com.medigy.service.dto.person.QueryDefinitionSearchParameters;
+import com.medigy.service.dto.query.QueryDefinitionSearchCondition;
+
+import java.util.List;
+import java.util.ArrayList;
 
 public class TestPersonSearchService  extends AbstractSpringTestCase
 {
-    private PersonSearchService personSearchService;
+    private QueryDefinitionSearchService queryDefinitionSearchService;
 
-    public void setPersonSearchService(final PersonSearchService personSearchService)
+    public void setPersonSearchService(final QueryDefinitionSearchService queryDefinitionSearchService)
     {
-        this.personSearchService = personSearchService;
+        this.queryDefinitionSearchService = queryDefinitionSearchService;
     }
 
     public void testSearch()
     {
-        personSearchService.search(new PersonSearchParameters() {
-            public String getLastName()
+        queryDefinitionSearchService.search(new QueryDefinitionSearchParameters() {
+
+            public Class getQueryDefinitionClass()
             {
-                return null;
+                return PatientSearchQueryDefinition.class;
             }
 
-            public String getFirstName()
+            public List<QueryDefinitionSearchCondition> getConditionFieldList()
             {
-                return null;
+                QueryDefinitionSearchCondition condition = new QueryDefinitionSearchCondition();
+                condition.setField("lastName");
+                condition.setFieldValue("s");
+                condition.setFieldComparison(StartsWithComparisonIgnoreCase.COMPARISON_NAME);
+
+                final ArrayList<QueryDefinitionSearchCondition> conditions = new ArrayList<QueryDefinitionSearchCondition>();
+                //conditions.add(condition);
+                return conditions;
             }
 
-            // org related search criteria
-            public Long getOrganizationId()
+            public List<String> getDisplayFields()
             {
-                return null;
+                final ArrayList<String> strings = new ArrayList<String>();
+                strings.add("lastName");
+                strings.add("firstName");
+                return strings;
             }
 
-            public String getOrganizationRelationshipTypeCode()
+            public List<String> getSortByFields()
             {
-                //return PartyRelationshipType.Cache.ORGANIZATION_ROLLUP.getEntity().getCode();
                 return null;
             }
 

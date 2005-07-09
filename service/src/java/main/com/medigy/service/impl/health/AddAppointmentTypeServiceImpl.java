@@ -90,7 +90,7 @@ public class AddAppointmentTypeServiceImpl implements AddAppointmentTypeService
                 return visitType.getVisitTypeId();
             }
 
-            public AddAppointmentTypeParameters getAddAppointmentTypeParameters()
+            public AddAppointmentTypeParameters getParameters()
             {
                 return parameters;
             }
@@ -111,7 +111,7 @@ public class AddAppointmentTypeServiceImpl implements AddAppointmentTypeService
                 return null;
             }
 
-            public AddAppointmentTypeParameters getAddAppointmentTypeParameters()
+            public AddAppointmentTypeParameters getParameters()
             {
                 return (AddAppointmentTypeParameters) params;
             }

@@ -53,9 +53,5 @@ public interface NewPostalAddress extends ServiceReturnValues
      */
     public Serializable getPostalAddressId();
 
-    /**
-     * Gets the input parameters passed to the service
-     * @return
-     */
-    public AddPostalAddressParameters getAddPostalAddressParameters();
+   
 }

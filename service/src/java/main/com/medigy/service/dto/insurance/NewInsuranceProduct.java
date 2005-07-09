@@ -11,5 +11,4 @@ public interface NewInsuranceProduct extends ServiceReturnValues
 {
     public Serializable getNewInsuranceProductId();
 
-    public AddInsuranceProductParameters getAddInsuranceProductParameters();
 }

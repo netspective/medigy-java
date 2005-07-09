@@ -47,6 +47,7 @@ import com.medigy.persist.reference.custom.person.EthnicityType;
 import com.medigy.persist.reference.type.GenderType;
 import com.medigy.persist.reference.type.LanguageType;
 import com.medigy.service.AbstractSpringTestCase;
+import com.medigy.service.ServiceVersion;
 import com.medigy.service.dto.person.HealthCareLicenseParameters;
 import com.medigy.service.dto.person.PersonParameters;
 import com.medigy.service.dto.person.RegisterHealthCareProviderParameters;
@@ -204,7 +205,7 @@ public class TestRegisterHealthCareProviderService extends AbstractSpringTestCas
                 };
             }
 
-            public String getComponentVersion()
+            public ServiceVersion getServiceVersion()
             {
                 return null;
             }

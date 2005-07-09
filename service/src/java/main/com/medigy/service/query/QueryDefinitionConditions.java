@@ -4,10 +4,10 @@
 package com.medigy.service.query;
 
 import com.medigy.service.query.exception.QueryDefinitionException;
-import com.medigy.service.dto.ServiceParameters;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -79,7 +79,7 @@ public class QueryDefinitionConditions
     }
 
     public QueryDefinitionConditions getUsedConditions(QueryDefnStatementGenerator stmtGen,
-                                                       final  ServiceParameters params) throws QueryDefinitionException
+                                                       final Map<String, Object> fieldValues) throws QueryDefinitionException
     {
         // if we don't have any dynamic conditions, all the conditions will be used :)
         if(!haveAnyDynamicConditions)
@@ -93,7 +93,7 @@ public class QueryDefinitionConditions
         for(int c = 0; c < allCondsCount; c++)
         {
             QueryDefnCondition cond = list.get(c);
-            cond.useCondition(stmtGen, usedConditions, params);
+            cond.useCondition(stmtGen, usedConditions, fieldValues);
         }
 
         return usedConditions;
@@ -105,7 +105,7 @@ public class QueryDefinitionConditions
      * @return String
      */
     public String createSql(QueryDefnStatementGenerator stmtGen, QueryDefinitionConditions usedConditions,
-                            final ServiceParameters params) throws QueryDefinitionException
+                            final Map<String, Object> fieldValues) throws QueryDefinitionException
     {
         StringBuffer sb = new StringBuffer();
         QueryDefinitionSelect select = stmtGen.getQuerySelect();
@@ -118,7 +118,7 @@ public class QueryDefinitionConditions
             Object condObj = usedConditions.list.get(c);
             if(condObj instanceof QueryDefinitionConditions)
             {
-                String sql = createSql(stmtGen, (QueryDefinitionConditions) condObj, params);
+                String sql = createSql(stmtGen, (QueryDefinitionConditions) condObj, fieldValues);
                 if(sql != null && sql.length() > 0)
                 {
                     sb.append("(" + sql + ")");
@@ -130,12 +130,13 @@ public class QueryDefinitionConditions
             else
             {
                 // single query condition. not a list.
-                QueryDefnCondition cond = (QueryDefnCondition) usedConditions.list.get(c);
+                QueryDefnCondition cond = usedConditions.list.get(c);
                 if(!cond.isJoinOnly())
                 {
+                    final Object fieldValue = fieldValues.get(cond.getField().getName());
                     // create and add the where condition string only if this condition has a valid comparison
                     // (meaning the Select Condition was not inluded only for the sake of including the Join Condition of the table)
-                    sb.append(" (" + cond.getWhereCondExpr(select, stmtGen, params) + ")");
+                    sb.append(" (" + cond.getWhereCondExpr(select, stmtGen, fieldValue) + ")");
                     conditionAdded = true;
                 }
                 if(c != condsUsedLast && !((QueryDefnCondition) usedConditions.list.get(c + 1)).isJoinOnly())

@@ -114,7 +114,7 @@ public class AddAppointmentServiceImpl implements AddAppointmentService
                 return visit.getHealthCareVisitId();
             }
 
-            public AddAppointmentParameters getAddAppointmentParameters()
+            public AddAppointmentParameters getParameters()
             {
                 return parameters;
             }
@@ -134,7 +134,7 @@ public class AddAppointmentServiceImpl implements AddAppointmentService
                 return null;
             }
 
-            public AddAppointmentParameters getAddAppointmentParameters()
+            public AddAppointmentParameters getParameters()
             {
                 return (AddAppointmentParameters) params;
             }

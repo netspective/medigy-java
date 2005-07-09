@@ -8,10 +8,27 @@ import com.medigy.service.dto.ServiceParameters;
 
 public interface SqlComparison
 {
+    public enum Group
+    {
+        GENERAL("General"), STRING("String"), DATE("Date");
+
+        private String type;
+
+        Group(final String name)
+        {
+            this.type = name;
+        }
+
+        public String type()
+        {
+            return type;
+        }
+    }
+
     public String getName();
 
-    public String getCaption();
+    public Group getGroup();
 
     public String getWhereCondExpr(QueryDefinitionSelect select, QueryDefnStatementGenerator statement,
-                                   QueryDefnCondition cond, ServiceParameters params) throws QueryDefinitionException;
+                                   QueryDefnCondition cond, Object value) throws QueryDefinitionException;
 }

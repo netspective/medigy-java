@@ -46,10 +46,4 @@ public interface NewInsurancePolicyHolderValues extends ServiceReturnValues
 {
     public Serializable getPolicyHolderId();
 
-    /**
-     * Gets the input parameters given to the patient registration service
-     *
-     * @return
-     */
-    public AddInsurancePolicyHolderParameters getAddInsurancePolicyHolderParameters();
 }

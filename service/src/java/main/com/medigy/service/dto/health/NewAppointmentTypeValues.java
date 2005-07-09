@@ -46,5 +46,4 @@ public interface NewAppointmentTypeValues extends ServiceReturnValues
 {
     public Serializable getNewAppointmentTypeId();
 
-    public AddAppointmentTypeParameters getAddAppointmentTypeParameters();
 }

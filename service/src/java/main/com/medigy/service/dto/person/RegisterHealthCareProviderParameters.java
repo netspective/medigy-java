@@ -39,8 +39,9 @@
 package com.medigy.service.dto.person;
 
 import com.medigy.service.ServiceVersion;
+import com.medigy.service.dto.ServiceParameters;
 
-public interface RegisterHealthCareProviderParameters  extends ServiceVersion
+public interface RegisterHealthCareProviderParameters  extends ServiceParameters
 {
     public PersonParameters getPerson();
 

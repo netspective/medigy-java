@@ -36,41 +36,17 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.service;
+package com.medigy.service.contact;
 
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.springframework.orm.hibernate3.SessionFactoryUtils;
-import com.medigy.service.dto.ServiceReturnValues;
-import com.medigy.service.dto.ServiceParameters;
+import com.medigy.service.AbstractSpringTestCase;
 
-import java.io.Serializable;
-
-public abstract class AbstractService implements Service
+public class TestGeographicBoundaryFacade  extends AbstractSpringTestCase
 {
-    private SessionFactory sessionFactory;
-
-    public AbstractService(final SessionFactory sessionFactory)
-    {
-        this.sessionFactory = sessionFactory;
-    }
-
-    public SessionFactory getSessionFactory()
-    {
-        return sessionFactory;
-    }
-
-    public void setSessionFactory(final SessionFactory sessionFactory)
-    {
-        this.sessionFactory = sessionFactory;
-    }
-
-    public Session getSession()
-    {
-        return SessionFactoryUtils.getSession(sessionFactory, false);
-        //return HibernateUtil.getSession();
-    }
-
+    private GeographicBoundaryFacade geographicBoundaryFacade;
     
+    public void testListStatesByCountry()
+    {
+
+    }
 
 }

@@ -25,6 +25,7 @@ public interface OrganizationFacade extends Facade
     public Organization getOrganizationById(final Long orgId);
 
     public List<Organization> listOrganizationsByName(final String orgName, final boolean exactMatch);
+    public Integer countOrganizationsByName(final String orgName);
 
     public List<Organization> listOrganizationsByParentId(final Long parentOrgId);
 

@@ -50,11 +50,4 @@ public interface RegisteredPatient extends ServiceReturnValues
      */
     public Serializable getPatientId();
 
-    /**
-     * Gets the input parameters given to the patient registration service
-     *
-     * @return
-     */
-    public RegisterPatientParameters getRegisterPatientParameters();
-
 }

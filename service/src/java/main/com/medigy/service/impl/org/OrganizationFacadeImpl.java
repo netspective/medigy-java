@@ -9,6 +9,7 @@ import com.medigy.service.org.OrganizationFacade;
 import com.medigy.service.util.AbstractFacade;
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
+import org.hibernate.Query;
 import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.Restrictions;
 
@@ -18,6 +19,9 @@ import java.util.ArrayList;
 
 public class OrganizationFacadeImpl extends AbstractFacade implements OrganizationFacade
 {
+    public static final String ORG_SEARCH_WHERE_CLAUSE = "from Organization org where " +
+                "(:orgName is null or upper(org.partyName like :orgName))";
+
     protected OrganizationFacadeImpl(final SessionFactory sessionFactory)
     {
         super(sessionFactory);
@@ -92,6 +96,15 @@ public class OrganizationFacadeImpl extends AbstractFacade implements Organizati
         List<Organization> orgList = new ArrayList<Organization>();
         convert(Organization.class, list, orgList);
         return orgList;
+    }
+
+    public Integer countOrganizationsByName(final String orgName)
+    {
+        final Query query = getSession().createQuery("from Organization org where " +
+                "(:orgName is null or upper(org.partyName like :orgName))") ;
+
+
+        return null;
     }
 
     public List<Organization> listOrganizationsByParentId(final Long parentOrgId)

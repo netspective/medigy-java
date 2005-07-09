@@ -9,24 +9,24 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.Iterator;
 
-public class QueryDefnJoins
+public class QueryDefinitionJoins
 {
-    private List<QueryDefnJoin> joins = new ArrayList<QueryDefnJoin>();
-    private Map<String, QueryDefnJoin> joinsByName = new HashMap<String, QueryDefnJoin>();
-    private List<QueryDefnJoin> autoIncludeJoins = new ArrayList<QueryDefnJoin>();
+    private List<QueryDefinitionJoin> joins = new ArrayList<QueryDefinitionJoin>();
+    private Map<String, QueryDefinitionJoin> joinsByName = new HashMap<String, QueryDefinitionJoin>();
+    private List<QueryDefinitionJoin> autoIncludeJoins = new ArrayList<QueryDefinitionJoin>();
 
-    public void add(QueryDefnJoin join)
+    public void add(QueryDefinitionJoin join)
     {
         joins.add(join);
         joinsByName.put(join.getName(), join);
     }
 
-    public QueryDefnJoin get(int i)
+    public QueryDefinitionJoin get(int i)
     {
         return joins.get(i);
     }
 
-    public QueryDefnJoin get(String name)
+    public QueryDefinitionJoin get(String name)
     {
         return joinsByName.get(name);
     }
@@ -34,9 +34,8 @@ public class QueryDefnJoins
     public List getAutoIncludeJoins()
     {
         autoIncludeJoins.clear();
-        for(Iterator i = joins.iterator(); i.hasNext();)
+        for (QueryDefinitionJoin join : joins)
         {
-            QueryDefnJoin join = (QueryDefnJoin) i.next();
             if(join.isAutoInclude())
                 autoIncludeJoins.add(join);
         }

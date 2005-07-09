@@ -3,13 +3,13 @@
  */
 package com.medigy.service.query.comparison;
 
-public class EqualsComparison extends BinaryOpComparison
+public class LessThanComparison extends BinaryOpComparison
 {
-    private static final String COMPARISON_NAME = "Equals";
+    public static final String COMPARISON_NAME = "Less Than";
 
-    public EqualsComparison()
+    public LessThanComparison()
     {
-        super("=", Group.GENERAL);
+        super("<", Group.GENERAL);
     }
 
     public String getName()

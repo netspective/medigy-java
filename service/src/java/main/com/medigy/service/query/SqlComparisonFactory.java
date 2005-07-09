@@ -21,8 +21,8 @@ public class SqlComparisonFactory
 
     private SqlComparisonFactory()
     {
-        registerComparison(new StartsWithComparisonIgnoreCase("starts-with-ignore-case"));
-        registerComparison(new EqualsComparison("equals"));
+        registerComparison(new StartsWithComparisonIgnoreCase());
+        registerComparison(new EqualsComparison());
     }
 
     public static SqlComparisonFactory getInstance()
@@ -39,5 +39,21 @@ public class SqlComparisonFactory
     public SqlComparison getComparison(final String name)
     {
         return comparisonsMap.get(name);
+    }
+
+    public List<SqlComparison> listByGroup(final SqlComparison.Group group)
+    {
+        final List<SqlComparison> list = new ArrayList<SqlComparison>();
+        for (SqlComparison comp : comparisonsList)
+        {
+            if (comp.getGroup().equals(group))
+                list.add(comp);
+        }
+        return list;
+    }
+
+    public List<String> listAllNames()
+    {
+        return new ArrayList<String>(comparisonsMap.keySet());
     }
 }

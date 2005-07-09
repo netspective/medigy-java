@@ -4,7 +4,6 @@
 package com.medigy.service.query;
 
 import com.medigy.service.query.exception.QueryDefinitionException;
-import com.medigy.service.dto.ServiceParameters;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -22,7 +21,7 @@ public class QueryDefnStatementGenerator
     private List<String> fromClause = new ArrayList<String>();
     private List<String> fromClauseComments = new ArrayList<String>();
     private List<String> whereJoinClause = new ArrayList<String>();
-    private Set<QueryDefnJoin> joins = new HashSet<QueryDefnJoin>();
+    private Set<QueryDefinitionJoin> joins = new HashSet<QueryDefinitionJoin>();
 
     private List bindParams = new ArrayList();
     private Map<String, Object> bindParamsMap = new HashMap<String, Object>();
@@ -38,13 +37,13 @@ public class QueryDefnStatementGenerator
         return select;
     }
 
-    public void addJoin(QueryDefnField field) throws QueryDefinitionException
+    public void addJoin(QueryDefinitionField field) throws QueryDefinitionException
     {
-        QueryDefnJoin join = field.getJoin();
+        QueryDefinitionJoin join = field.getJoin();
         this.addJoin(join, false, null);
     }
 
-    public void addJoin(QueryDefnJoin join, boolean autoInc, QueryDefnJoin impliedBy) throws QueryDefinitionException
+    public void addJoin(QueryDefinitionJoin join, boolean autoInc, QueryDefinitionJoin impliedBy) throws QueryDefinitionException
     {
         if(join == null || joins.contains(join))
             return;
@@ -71,7 +70,7 @@ public class QueryDefnStatementGenerator
             whereJoinClause.add(whereCriteria);
         joins.add(join);
 
-        final List<QueryDefnJoin> impliedJoins = join.getImpliedJoins();
+        final List<QueryDefinitionJoin> impliedJoins = join.getImpliedJoins();
         if(impliedJoins != null && impliedJoins.size() > 0)
         {
             for(int i = 0; i < impliedJoins.size(); i++)
@@ -79,32 +78,32 @@ public class QueryDefnStatementGenerator
         }
     }
 
-    public String generateQuery(final ServiceParameters parameters)  throws QueryDefinitionException
+    public String generateQuery(final Map<String, Object> fieldValues)  throws QueryDefinitionException
     {
 
-        final Map<String, QueryDefnField> showFields = select.getDisplayFields();
+        final Map<String, QueryDefinitionField> showFields = select.getDisplayFields();
         if (showFields.size() > 0)
         {
-            for (final QueryDefnField queryDefnField : showFields.values())
+            for (final QueryDefinitionField queryDefinitionField : showFields.values())
             {
-                String selClauseAndLabel = queryDefnField.getSelectClauseExprAndLabel();
+                String selClauseAndLabel = queryDefinitionField.getSelectClauseExprAndLabel();
                 if (selClauseAndLabel != null)
                     selectClause.add(selClauseAndLabel);
-                addJoin(queryDefnField);
+                addJoin(queryDefinitionField);
             }
         }
         else
             selectClause.add("*");
 
         QueryDefinitionConditions allSelectConditions = select.getConditions();
-        QueryDefinitionConditions usedSelectConditions = allSelectConditions.getUsedConditions(this, parameters);
+        QueryDefinitionConditions usedSelectConditions = allSelectConditions.getUsedConditions(this, fieldValues);
 
         // add join tables which have the auto-include flag set and their respective conditions to the
         // from and where clause lists. If the join is already in the 'joins' list, no need to add it in.
         List autoIncJoinList = this.queryDefn.getJoins().getAutoIncludeJoins();
         for (final Object aAutoIncJoinList : autoIncJoinList)
         {
-            this.addJoin((QueryDefnJoin) aAutoIncJoinList, true, null);
+            this.addJoin((QueryDefinitionJoin) aAutoIncJoinList, true, null);
         }
 
 
@@ -162,7 +161,7 @@ public class QueryDefnStatementGenerator
         int usedCondsCount = usedSelectConditions.size();
         if(usedCondsCount > 0)
         {
-            String conditionSql = usedSelectConditions.createSql(this, usedSelectConditions, parameters);
+            String conditionSql = usedSelectConditions.createSql(this, usedSelectConditions, fieldValues);
             if(conditionSql != null && conditionSql.length() > 0)
             {
                 if(haveJoinWheres)
@@ -208,7 +207,7 @@ public class QueryDefnStatementGenerator
         // save this because some callers might need just the where clause
         sql.append(whereClauseSql);
 
-        final Map<String, QueryDefnField> groupBys = select.getGroupByFields();
+        final Map<String, QueryDefinitionField> groupBys = select.getGroupByFields();
         int groupBysCount = groupBys.size();
         if(groupBysCount > 0)
         {
@@ -216,7 +215,7 @@ public class QueryDefnStatementGenerator
             sql.append("group by\n");
             for(int gb = 0; gb < groupBysCount; gb++)
             {
-                QueryDefnField field = groupBys.get(gb);
+                QueryDefinitionField field = groupBys.get(gb);
                 sql.append("  " + field.getName());
                 if(gb != groupByLast)
                 {
@@ -236,7 +235,7 @@ public class QueryDefnStatementGenerator
         return bindParams;
     }
 
-    public void addBindParam(final QueryDefnField field, final Object obj)
+    public void addBindParam(final QueryDefinitionField field, final Object obj)
     {
         bindParams.add(obj);
         bindParamsMap.put(field.getName(), obj);

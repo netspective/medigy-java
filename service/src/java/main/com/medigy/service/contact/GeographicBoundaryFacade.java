@@ -39,6 +39,9 @@
 package com.medigy.service.contact;
 
 import com.medigy.persist.model.contact.GeographicBoundary;
+import com.medigy.persist.model.contact.State;
+import com.medigy.persist.model.contact.Country;
+import com.medigy.persist.model.contact.City;
 import com.medigy.persist.reference.custom.GeographicBoundaryType;
 import com.medigy.service.util.Facade;
 
@@ -50,6 +53,22 @@ import java.util.List;
  */
 public interface GeographicBoundaryFacade extends Facade
 {
+    /**
+     * Gets all states defined for the USA by default
+     * @return list of states
+     */
+    public List<State> listStates();
+    public List<State> listStates(Country country);
+
+    public State getStateByAbbreviation(final String abbrev);
+
+    /**
+     * Lists cities belonging to a state
+     * @param state
+     * @return list of cities
+     */
+    public List<City> listCitiesByState(final State state);
+
     /**
      * Adds a new geographic boundary who has no parents
      * @param name
@@ -69,9 +88,9 @@ public interface GeographicBoundaryFacade extends Facade
     /**
      * List all geographic boundaries of the same type
      * @param type
-     * @return
+     * @return list of geographic bounaries
      */
-    public List listGeographicBoundaries(GeographicBoundaryType type);
+    public List<GeographicBoundary> listGeographicBoundaries(GeographicBoundaryType type);
 
     /**
      * Gets a geographic boundary by its name and type. The name will be a case insensitive

@@ -99,7 +99,7 @@ public class AddInsuranceCoverageServiceImpl extends AbstractService implements 
         insurancePolicyFacade.addInsurancePolicyCoverageLevel(insPolicy, CoverageLevelType.Cache.FAMILY_DEDUCTIBLE.getEntity(), famDeductible);
 
         return new NewInsuranceCoverageData() {
-            public AddInsuranceCoverageParameters getAddInsuranceCoverageParameters()
+            public AddInsuranceCoverageParameters getParameters()
             {
                 return params;
             }
@@ -129,7 +129,7 @@ public class AddInsuranceCoverageServiceImpl extends AbstractService implements 
     public ServiceReturnValues createErrorResponse(final ServiceParameters params, final String errorMessage)
     {
         return new NewInsuranceCoverageData() {
-            public AddInsuranceCoverageParameters getAddInsuranceCoverageParameters()
+            public AddInsuranceCoverageParameters getParameters()
             {
                 return (AddInsuranceCoverageParameters) params;
             }

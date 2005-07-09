@@ -105,7 +105,7 @@ public class AddInsuranceCarrierServiceImpl implements AddInsuranceCarrierServic
                 return null;
             }
 
-            public AddOrganization getAddOrganizationParameters()
+            public AddOrganization getParameters()
             {
                 return orgParams;
             }
@@ -140,7 +140,7 @@ public class AddInsuranceCarrierServiceImpl implements AddInsuranceCarrierServic
                 return errorMessage;
             }
 
-            public AddOrganization getAddOrganizationParameters()
+            public AddOrganization getParameters()
             {
                 return (AddOrganization) params;
             }

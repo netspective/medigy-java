@@ -1,17 +1,18 @@
 /*
  * Copyright (c) 2005 Your Corporation. All Rights Reserved.
  */
-package com.medigy.service.query;
+package com.medigy.service.query.impl;
 
-import com.medigy.persist.model.common.Entity;
+import com.medigy.service.query.QueryDefinition;
+import com.medigy.service.query.QueryDefinitionJoin;
 import com.medigy.service.query.exception.QueryDefinitionException;
 import com.medigy.service.query.exception.QueryDefnJoinNotFoundException;
 
 import java.util.List;
-import java.util.StringTokenizer;
 import java.util.ArrayList;
+import java.util.StringTokenizer;
 
-public class QueryDefnJoin
+public class QueryDefinitionJoinImpl implements QueryDefinitionJoin
 {
     private QueryDefinition owner;
     private String name;
@@ -22,16 +23,16 @@ public class QueryDefnJoin
     private String condition;
     private boolean autoInclude;
     private String implyJoinsStr;
-    private List<QueryDefnJoin> impliedJoins = new ArrayList<QueryDefnJoin>();
+    private List<QueryDefinitionJoin> impliedJoins = new ArrayList<QueryDefinitionJoin>();
+
+    public QueryDefinitionJoinImpl(final QueryDefinition owner)
+    {
+        this.owner = owner;
+    }
 
     public QueryDefinition getOwner()
     {
         return owner;
-    }
-
-    public void setOwner(final QueryDefinition owner)
-    {
-        this.owner = owner;
     }
 
     public String getName()
@@ -94,31 +95,31 @@ public class QueryDefnJoin
         this.implyJoinsStr = implyJoinsStr;
     }
 
-    public List<QueryDefnJoin> getImpliedJoins() throws QueryDefinitionException
+    public List<QueryDefinitionJoin> getImpliedJoins() throws QueryDefinitionException
     {
         if(implyJoinsStr != null && impliedJoins == null)
         {
             StringTokenizer st = new StringTokenizer(implyJoinsStr, ",");
-            List<QueryDefnJoin> implyJoinsList = new ArrayList<QueryDefnJoin>();
+            List<QueryDefinitionJoin> implyJoinsList = new ArrayList<QueryDefinitionJoin>();
             while(st.hasMoreTokens())
             {
                 String join = st.nextToken();
-                QueryDefnJoin joinDefn = owner.getJoins().get(join);
-                if(joinDefn == null)
+                QueryDefinitionJoin joinDefinition = owner.getJoins().get(join);
+                if(joinDefinition == null)
                     throw new QueryDefnJoinNotFoundException(owner, join, "implied join '" + join + "' not found in join '" + getName() + "'");
-                implyJoinsList.add(joinDefn);
+                implyJoinsList.add(joinDefinition);
             }
             impliedJoins = implyJoinsList;
         }
         return impliedJoins;
     }
 
-    public void setImpliedJoins(final List<QueryDefnJoin> impliedJoins)
+    public void setImpliedJoins(final List<QueryDefinitionJoin> impliedJoins)
     {
         this.impliedJoins = impliedJoins;
     }
 
-    public void addImpliedJoin(final QueryDefnJoin impliedJoin)
+    public void addImpliedJoin(final QueryDefinitionJoin impliedJoin)
     {
         this.impliedJoins.add(impliedJoin);
     }
@@ -127,7 +128,7 @@ public class QueryDefnJoin
     {
         String tableName = getTable();
         return fromClauseExpr != null
-               ? fromClauseExpr : (tableName.equals(name) ? tableName : (tableName + " " + name));
+               ? fromClauseExpr : (tableName.equals(name) ? tableName : (tableName + " as " + name));
     }
 
     public String getTable()
