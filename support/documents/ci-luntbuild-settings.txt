@@ -1,0 +1,97 @@
+PROPERTIES
+--------------------------------------------
+Url to access luntbuild servlet: http://build.medigy.com/luntbuild/app.do
+Work directory:  /home/s-tomcat/luntbuild-artifacts/work
+Publish directory: /home/s-tomcat/luntbuild-artifacts/publish
+
+
+
+VCS Adapters
+--------------------------------------------
+Cvs root 	/home/cvs/repos/medigy
+Cvs password 	*****
+Is cygwin cvs? 	no
+Disable "-S" option for log command? 	no
+Disable history command? 	no
+Path for cvs executable 	/usr/bin
+Quiet period 	60
+
+MODULES
+common
+data-gen
+graphviz
+hibernate-doc
+pbs
+persistence
+persistence-tools
+presentation
+scheduler
+service
+support
+
+
+Platform Builder
+----------------------------------------------------------------------------
+Builder type 	Ant builder
+Command to run Ant 	/home/s-build/tools/apache-ant-1.6.5/bin/ant
+Build script path 	support/build/build.xml
+Build targets 	clean jar test doc publish
+Build properties: 	
+
+buildVersion="${build.version}"
+buildDate="${build.startDate}"
+
+consolidated.artifacts.home="${build.artifactsDir}"
+consolidated.artifacts.test.junit.home="${build.junitHtmlReportDir}"
+build.publish.latest.home="${build.publishDir}/../latest"
+
+doc.docbook-xsl.home=/home/s-build/tools/docbook-xsl-1.68.1
+
+module.test.database.dialectClass=org.hibernate.dialect.MySQLInnoDBDialect
+module.test.database.driverClass=com.mysql.jdbc.Driver
+module.test.database.url=jdbc:mysql://localhost:3306/ci_medigy_unit_test
+module.test.database.schema=ci_medigy_unit_test
+module.test.database.user=ci_medigy
+module.test.database.password=medigy
+
+
+
+PBS App Builder
+----------------------------------------------------------------------------
+Builder type 	Ant builder
+Command to run Ant 	/home/s-build/tools/apache-ant-1.6.5/bin/ant
+Build script path 	pbs/support/build/build.xml
+Build targets 	war.create-resin-3.0-war
+Build properties:
+
+buildVersion="${build.version}"
+artifactsDir="${build.artifactsDir}"
+buildDate="${build.startDate}"
+junitHtmlReportDir="${build.junitHtmlReportDir}"
+
+app.war.dest=/home/s-resin/devl/webapps/medigy-pbs.war
+
+
+
+PBS Demo DB Builder
+----------------------------------------------------------------------------
+Builder type 	Ant builder
+Command to run Ant 	/home/s-build/tools/apache-ant-1.6.5/bin/ant
+Build script path 	persistence-tools/support/build/build.xml
+Build targets 	db.create-demo-instance
+Build properties:
+
+buildVersion="${build.version}"
+artifactsDir="${build.artifactsDir}"
+buildDate="${build.startDate}"
+junitHtmlReportDir="${build.junitHtmlReportDir}"
+
+db.create-demo-instance.database.name=medigy_demo
+db.create-demo-instance.database.dialectClass=org.hibernate.dialect.MySQLInnoDBDialect
+db.create-demo-instance.database.driverClass=com.mysql.jdbc.Driver
+db.create-demo-instance.database.url=jdbc:mysql://localhost:3306/medigy_demo
+db.create-demo-instance.database.userid=medigy_demo
+db.create-demo-instance.database.password=medigy_demo
+
+
+
