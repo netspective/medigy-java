@@ -104,7 +104,7 @@
         </unjar>
 
         <!-- we use href="/medigy/resources/... in development environment to refer to global resources so we need to replace it for production/test use -->
-        <replaceregexp match="href=&quot;/medigy/resources/" replace="href=&quot;/${module.name}/resources/" byline="yes">
+        <replaceregexp match="(href|src)=&quot;/medigy/resources/" replace="\1=&quot;/${module.name}/resources/" byline="yes">
              <fileset dir="${app.jar.stage.home}">
                 <include name="**/*.html"/>
             </fileset>
