@@ -41,11 +41,10 @@ public final class OrgRegistrationFormModel implements AddOrganization
         this.params = params;
         try
         {
-            BeanUtils.copyProperties(this, new OrgRegistrationFormMockObject()); //params);
+            BeanUtils.copyProperties(this, params);
         }
         catch(Exception e)
         {
-            System.out.println("BeanUtils Exception");
         }
 	}
 
