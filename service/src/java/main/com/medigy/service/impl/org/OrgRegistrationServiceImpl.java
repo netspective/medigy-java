@@ -42,7 +42,6 @@ import com.medigy.persist.model.org.Organization;
 import com.medigy.persist.model.party.ContactMechanism;
 import com.medigy.persist.model.party.PhoneNumber;
 import com.medigy.persist.model.party.PostalAddress;
-import com.medigy.persist.model.person.Person;
 import com.medigy.service.AbstractService;
 import com.medigy.service.ServiceVersion;
 import com.medigy.service.contact.ContactMechanismFacade;
@@ -50,11 +49,7 @@ import com.medigy.service.dto.ServiceParameters;
 import com.medigy.service.dto.org.AddOrganization;
 import com.medigy.service.dto.org.RegisteredOrg;
 import com.medigy.service.dto.party.PostalAddressParameters;
-import com.medigy.service.dto.person.RegisterPatientParameters;
-import com.medigy.service.insurance.InsurancePolicyFacade;
 import com.medigy.service.org.OrgRegistrationService;
-import com.medigy.service.person.PersonFacade;
-import com.medigy.service.util.ReferenceEntityFacade;
 import com.medigy.service.util.UnknownReferenceTypeException;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
@@ -68,62 +63,23 @@ import org.hibernate.validator.NotNull;
 import java.io.Serializable;
 
 /**
- * Service class for registering a new patient
+ * Service class for registering a new organization
  */
 public class OrgRegistrationServiceImpl extends AbstractService implements OrgRegistrationService
 {
     private static final Log log = LogFactory.getLog(OrgRegistrationServiceImpl.class);
-    private boolean createEmployerIfUnknown = true;
-    private boolean createInsuranceProviderIfUnknown = true;
 
-
-    private ReferenceEntityFacade referenceEntityFacade;
-    private PersonFacade personFacade;
     private ContactMechanismFacade contactMechanismFacade;
-    private InsurancePolicyFacade insurancePolicyFacade;
 
-    public OrgRegistrationServiceImpl(final SessionFactory sessionFactory, final ReferenceEntityFacade referenceEntityFacade,
-                                          final PersonFacade personFacade, final ContactMechanismFacade contactMechanismFacade,
-                                          final InsurancePolicyFacade insurancePolicyFacade)
+    public OrgRegistrationServiceImpl(final SessionFactory sessionFactory, final ContactMechanismFacade contactMechanismFacade)
     {
         super(sessionFactory);
-        this.referenceEntityFacade = referenceEntityFacade;
-        this.personFacade = personFacade;
         this.contactMechanismFacade = contactMechanismFacade;
-        this.insurancePolicyFacade = insurancePolicyFacade;
     }
 
     public ServiceVersion[] getSupportedServiceVersions()
     {
         return new ServiceVersion[0];
-    }
-
-    /**
-     * Check to see if Employer organization should be automatically created if it is not known (no ID).
-     * @return
-     */
-    public boolean isCreateEmployerIfUnknown()
-    {
-        return createEmployerIfUnknown;
-    }
-
-    public void setCreateEmployerIfUnknown(boolean createEmployerIfUnknown)
-    {
-        this.createEmployerIfUnknown = createEmployerIfUnknown;
-    }
-
-    /**
-     * Check to see if Insurance Provider organization should be automatically created if it is not known (no ID)
-     * @return
-     */
-    public boolean isCreateInsuranceProviderIfUnknown()
-    {
-        return createInsuranceProviderIfUnknown;
-    }
-
-    public void setCreateInsuranceProviderIfUnknown(boolean createInsuranceProviderIfUnknown)
-    {
-        this.createInsuranceProviderIfUnknown = createInsuranceProviderIfUnknown;
     }
 
     private static Serializable getPrimaryKey(String keyString)
@@ -363,9 +319,9 @@ public class OrgRegistrationServiceImpl extends AbstractService implements OrgRe
         };
     }
 
-    private PhoneNumber registerHomePhone(final Person person, final RegisterPatientParameters params)
+    private PhoneNumber registerHomePhone(final Organization org, final AddOrganization params)
     {
-        return contactMechanismFacade.addPhone(null, null, params.getHomePhone());
+        return contactMechanismFacade.addPhone(null, null, params.getPhone());
     }
 
     // TODO: Put a validator and return a list of errors/warnings
