@@ -11,6 +11,21 @@
             <value>com.mysql.jdbc.Driver</value>
         </property>
         <property name="url">
+            <value>jdbc:mysql://localhost:3306/medigy_demo</value>
+        </property>
+        <property name="username">
+            <value>medigy_demo</value>
+        </property>
+        <property name="password">
+            <value>medigy_demo</value>
+        </property>
+    </bean>
+
+    <!--bean id="testDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName">
+            <value>com.mysql.jdbc.Driver</value>
+        </property>
+        <property name="url">
             <value>jdbc:mysql://localhost:3306/medigy</value>
         </property>
         <property name="username">
@@ -19,8 +34,7 @@
         <property name="password">
             <value>medigy</value>
         </property>
-        <!--property name="defaultAutoCommit"><value>false</value></property-->
-    </bean>
+    </bean-->
 
     <import resource="menuContext.xml"/>
 
