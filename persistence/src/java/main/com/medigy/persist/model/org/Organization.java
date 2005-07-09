@@ -323,7 +323,7 @@ public class Organization extends Party
      * @return the new organization with an other org unit role attached
      */
     @Transient
-    public static Organization createNewOrgranization()
+    public static Organization createNewOrganization()
     {
         final Organization org = new Organization();
         org.addPartyRole(OrganizationRoleType.Cache.OTHER_ORG_UNIT.getEntity());

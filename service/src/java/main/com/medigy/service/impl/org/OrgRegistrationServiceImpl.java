@@ -199,7 +199,7 @@ public class OrgRegistrationServiceImpl extends AbstractService implements OrgRe
     {
         Organization org = null;
         if("insert".equals(mode))
-            org = Organization.createNewOrgranization();
+            org = Organization.createNewOrganization();
         else if("update".equals(mode))
             org = (Organization)getSession().get(Organization.class, params.getOrgId());
         else if("delete".equals(mode))
