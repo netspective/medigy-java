@@ -40,66 +40,36 @@
         <ant dir="${repository.home}/persistence-tools/support/build" target="clean" inheritall="false" inheritrefs="false" />
         <ant dir="${repository.home}/scheduler/support/build" target="clean" inheritall="false" inheritrefs="false" />
         <ant dir="${repository.home}/service/support/build" target="clean" inheritall="false" inheritrefs="false" />
+        <ant dir="${repository.home}/presentation/support/build" target="clean" inheritall="false" inheritrefs="false" />
+        <ant dir="${repository.home}/pbs/support/build" target="clean" inheritall="false" inheritrefs="false" />
     </target>
 
     <target name="jar" depends="init.define-properties">
-        <ant dir="${repository.home}/data-gen/support/build" target="jar" inheritall="false" inheritrefs="false">
-            <property name="module.artifacts.home" value="${consolidated.artifacts.home}/data-gen"/>
-        </ant>
-        <ant dir="${repository.home}/graphviz/support/build" target="jar" inheritall="false" inheritrefs="false">
-            <property name="module.artifacts.home" value="${consolidated.artifacts.home}/graphviz"/>
-        </ant>
-        <ant dir="${repository.home}/hibernate-doc/support/build" target="jar" inheritall="false" inheritrefs="false">
-            <property name="graphviz.artifacts.home" value="${consolidated.artifacts.home}/graphviz"/>
-            <property name="module.artifacts.home" value="${consolidated.artifacts.home}/hibernate-doc"/>
-        </ant>
-        <ant dir="${repository.home}/persistence/support/build" target="jar" inheritall="false" inheritrefs="false">
-            <property name="common.artifacts.home" value="${consolidated.artifacts.home}/common"/>
-            <property name="module.artifacts.home" value="${consolidated.artifacts.home}/persistence"/>
-        </ant>
-        <ant dir="${repository.home}/persistence-tools/support/build" target="jar" inheritall="false" inheritrefs="false">
-            <property name="data-gen.artifacts.home" value="${consolidated.artifacts.home}/data-gen"/>
-            <property name="graphviz.artifacts.home" value="${consolidated.artifacts.home}/graphviz"/>
-            <property name="hibernate-doc.artifacts.home" value="${consolidated.artifacts.home}/hibernate-doc"/>
-            <property name="persistence.artifacts.home" value="${consolidated.artifacts.home}/persistence"/>
-            <property name="module.artifacts.home" value="${consolidated.artifacts.home}/persistence-tools"/>
-        </ant>
-        <ant dir="${repository.home}/scheduler/support/build" target="jar" inheritall="false" inheritrefs="false">
-            <property name="module.artifacts.home" value="${consolidated.artifacts.home}/scheduler"/>
-        </ant>
-        <ant dir="${repository.home}/service/support/build" target="jar" inheritall="false" inheritrefs="false">
-            <property name="persistence.artifacts.home" value="${consolidated.artifacts.home}/persistence"/>
-            <property name="module.artifacts.home" value="${consolidated.artifacts.home}/service"/>
-        </ant>
+        <ant dir="${repository.home}/data-gen/support/build" target="jar" inheritall="false" inheritrefs="false" />
+        <ant dir="${repository.home}/graphviz/support/build" target="jar" inheritall="false" inheritrefs="false" />
+        <ant dir="${repository.home}/hibernate-doc/support/build" target="jar" inheritall="false" inheritrefs="false" />
+        <ant dir="${repository.home}/persistence/support/build" target="jar" inheritall="false" inheritrefs="false" />
+        <ant dir="${repository.home}/persistence-tools/support/build" target="jar" inheritall="false" inheritrefs="false" />
+        <ant dir="${repository.home}/scheduler/support/build" target="jar" inheritall="false" inheritrefs="false" />
+        <ant dir="${repository.home}/service/support/build" target="jar" inheritall="false" inheritrefs="false" />
+        <ant dir="${repository.home}/presentation/support/build" target="jar" inheritall="false" inheritrefs="false" />
+
+        <!-- applications don't jar, they war -->
+        <ant dir="${repository.home}/pbs/support/build" target="war.create-resin-3.0-war" inheritall="false" inheritrefs="false" />
 
         <!-- DDL is considered part of the persistence JAR process since the object model needs it -->
-        <ant dir="${repository.home}/persistence-tools/support/build" target="db.generate-ddl" inheritall="false" inheritrefs="false">
-            <property name="data-gen.artifacts.home" value="${consolidated.artifacts.home}/data-gen"/>
-            <property name="graphviz.artifacts.home" value="${consolidated.artifacts.home}/graphviz"/>
-            <property name="hibernate-doc.artifacts.home" value="${consolidated.artifacts.home}/hibernate-doc"/>
-            <property name="persistence.artifacts.home" value="${consolidated.artifacts.home}/persistence"/>
-            <property name="persistence.artifacts.ddl.home" value="${consolidated.artifacts.home}/ddl"/>
-            <property name="module.artifacts.home" value="${consolidated.artifacts.home}/persistence-tools"/>
-        </ant>
+        <ant dir="${repository.home}/persistence-tools/support/build" target="db.generate-ddl" inheritall="false" inheritrefs="false"/>
     </target>
 
     <target name="test" depends="init.define-properties">
-        <ant dir="${repository.home}/persistence/support/build" target="test" inheritall="false" inheritrefs="false">
-            <property name="common.artifacts.home" value="${consolidated.artifacts.home}/common"/>
-            <property name="module.artifacts.home" value="${consolidated.artifacts.home}/persistence"/>
-        </ant>
-        <ant dir="${repository.home}/scheduler/support/build" target="test" inheritall="false" inheritrefs="false">
-            <property name="module.artifacts.home" value="${consolidated.artifacts.home}/scheduler"/>
-        </ant>
-        <ant dir="${repository.home}/service/support/build" target="test" inheritall="false" inheritrefs="false">
-            <property name="persistence.artifacts.home" value="${consolidated.artifacts.home}/persistence"/>
-            <property name="module.artifacts.home" value="${consolidated.artifacts.home}/service"/>
-        </ant>
+        <ant dir="${repository.home}/persistence/support/build" target="test" inheritall="false" inheritrefs="false"/>
+        <ant dir="${repository.home}/scheduler/support/build" target="test" inheritall="false" inheritrefs="false"/>
+        <ant dir="${repository.home}/service/support/build" target="test" inheritall="false" inheritrefs="false"/>
 
         <mkdir dir="${consolidated.artifacts.test.junit.home}"/>
         <junitreport todir="${consolidated.artifacts.test.junit.home}">
-            <fileset dir="${consolidated.artifacts.home}">
-                <include name="**/test/junit/TEST-*.xml"/>
+            <fileset dir="${repository.home}">
+                <include name="**/build/artifacts/test/junit/TEST-*.xml"/>
             </fileset>
             <report format="noframes" todir="${consolidated.artifacts.test.junit.home}"/>
         </junitreport>
@@ -113,7 +83,9 @@
         <emma>
             <report sort="+block,+name,+method,+class"
                 metrics="method:70,block:80,line:80,class:100">
-                <fileset dir="${consolidated.artifacts.home}" includes="**/*.emma"/>
+                <fileset dir="${repository.home}">
+                    <include name="**/build/artifacts/test/coverage/*.emma"/>
+                </fileset>
 
                 <sourcepath>
                     <dirset dir="${repository.home}" >
@@ -172,8 +144,8 @@
                 <include name="**/depend/lib/build/*.jar" />
                 <include name="**/depend/lib/main/*.jar" />
             </fileset>
-            <fileset dir="${consolidated.artifacts.home}" >
-                <include name="**/classes/main" />
+            <fileset dir="${repository.home}" >
+                <include name="**/build/artifacts/classes/main" />
             </fileset>
         </path>
 
@@ -221,34 +193,34 @@
         </javadoc>
     </target>
 
-    <target name="doc" depends="init.define-properties,doc.javadoc.ydoc">
-        <ant dir="${repository.home}/persistence-tools/support/build" target="doc.generate-dbdd-html" inheritall="false" inheritrefs="false">
-            <property name="data-gen.artifacts.home" value="${consolidated.artifacts.home}/data-gen"/>
-            <property name="graphviz.artifacts.home" value="${consolidated.artifacts.home}/graphviz"/>
-            <property name="hibernate-doc.artifacts.home" value="${consolidated.artifacts.home}/hibernate-doc"/>
-            <property name="persistence.artifacts.home" value="${consolidated.artifacts.home}/persistence"/>
-            <property name="persistence.artifacts.doc.home" value="${consolidated.artifacts.doc.home}"/>
-            <property name="module.artifacts.home" value="${consolidated.artifacts.home}/persistence-tools"/>
-        </ant>
+    <target name="doc.ant-build-files" depends="init.define-properties">
+        <taskdef name="antdoc" classname="org.ed.pack.ant.AntDoc">
+            <classpath path="${repository.home}/common/depend/lib/build/antdoc.jar"/>
+            <classpath path="${repository.home}/persistence/depend/lib/main/log4j-1.2.9.jar"/>
+        </taskdef>
+        
+        <antdoc destination="${consolidated.artifacts.doc.home}/ant" antURL="http://ant.apache.org">
+            <title>Medigy Platform</title>
+            <header>Medigy Platform</header>
+            <footer>Copyright Forever Medigy</footer>
+            <fileset dir="${repository.home}">
+                <include name="**/support/build/build.xml"/>
+                <include name="**/support/build/module.xml"/>
+            </fileset>
+        </antdoc>
+    </target>
+    
+    <target name="doc" depends="init.define-properties,doc.javadoc.ydoc,doc.ant-build-files">
+        <ant dir="${repository.home}/persistence-tools/support/build" target="doc.generate-dbdd-html" inheritall="false" inheritrefs="false"/>
     </target>
 
     <target name="db.create-demo-instance" depends="init.define-properties">
-        <ant dir="${repository.home}/persistence-tools/support/build" target="db.create-demo-instance" inheritall="false" inheritrefs="false">
-            <property name="data-gen.artifacts.home" value="${consolidated.artifacts.home}/data-gen"/>
-            <property name="graphviz.artifacts.home" value="${consolidated.artifacts.home}/graphviz"/>
-            <property name="hibernate-doc.artifacts.home" value="${consolidated.artifacts.home}/hibernate-doc"/>
-            <property name="persistence.artifacts.home" value="${consolidated.artifacts.home}/persistence"/>
-            <property name="persistence.artifacts.doc.home" value="${consolidated.artifacts.doc.home}"/>
-            <property name="module.artifacts.home" value="${consolidated.artifacts.home}/persistence-tools"/>
-        </ant>
+        <ant dir="${repository.home}/persistence-tools/support/build" target="db.create-demo-instance" inheritall="false" inheritrefs="false"/>
     </target>
 
     <target name="publish" depends="init.define-properties" if="build.publish.latest.home">
         <delete dir="${build.publish.latest.home}"/>
         <mkdir dir="${build.publish.latest.home}"/>
-        <copy todir="${build.publish.latest.home}/dbdd">
-            <fileset dir="${consolidated.artifacts.doc.home}/dbdd"/>
-        </copy>
         <copy todir="${build.publish.latest.home}/javadoc">
             <fileset dir="${consolidated.artifacts.doc.home}/javadoc"/>
         </copy>
@@ -258,8 +230,14 @@
         <copy todir="${build.publish.latest.home}/coverage">
             <fileset dir="${consolidated.artifacts.test.coverage.home}"/>
         </copy>
+        <copy todir="${build.publish.latest.home}/ant">
+            <fileset dir="${consolidated.artifacts.doc.home}/ant"/>
+        </copy>
+        <copy todir="${build.publish.latest.home}/dbdd">
+            <fileset dir="${repository.home}/persistence/support/build/artifacts/doc/dbdd"/>
+        </copy>
         <copy todir="${build.publish.latest.home}/ddl">
-            <fileset dir="${consolidated.artifacts.home}/ddl"/>
+            <fileset dir="${repository.home}/persistence/support/build/artifacts/ddl"/>
         </copy>
     </target>
 

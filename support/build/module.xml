@@ -250,6 +250,15 @@
 
     <!-- ========================== mySQL related targets ================================== -->
 
+    <target name="test.init-db-properties" depends="init.define-properties">
+        <property name="module.test.database.dialectClass" value="org.hibernate.dialect.MySQLInnoDBDialect"/>
+        <property name="module.test.database.driverClass" value="com.mysql.jdbc.Driver"/>
+        <property name="module.test.database.url" value="jdbc:mysql://192.168.0.100:3306/ci_medigy_unit_test"/>
+        <property name="module.test.database.schema" value="ci_medigy_unit_test"/>
+        <property name="module.test.database.user" value="ci_medigy"/>
+        <property name="module.test.database.password" value="medigy"/>
+    </target>
+
     <target name="mysql.check">
         <condition property="mysql.database.used">
             <equals arg1="${module.test.database.driverClass}" arg2="com.mysql.jdbc.Driver"/>
@@ -265,9 +274,13 @@
         </sql>
     </target>
 
+    <target name="test.init-db-instance" depends="test.init-db-properties,mysql.drop-create">
+        <!-- override this method to do test database setup if your database is not MySQL -->
+    </target>
+
     <!-- ==================== Test targets  ======================= -->
 
-    <target name="test.uninstrumented" depends="compile.main,mysql.drop-create" unless="module.test.coverage.enabled">
+    <target name="test.uninstrumented" depends="compile.main,test.init-db-instance" unless="module.test.coverage.enabled">
         <mkdir dir="${module.artifacts.test.junit.home}"/>
         <junit filtertrace="yes" fork="true" maxmemory="256m" >
             <classpath>
@@ -294,7 +307,7 @@
         </junitreport>
     </target>
 
-    <target name="test.instrumented" depends="compile.test,instrument,mysql.drop-create" if="module.test.coverage.enabled">
+    <target name="test.instrumented" depends="compile.test,instrument,test.init-db-instance" if="module.test.coverage.enabled">
         <mkdir dir="${module.artifacts.test.junit.home}"/>
         <junit filtertrace="yes" fork="true" maxmemory="256m">
             <classpath>
