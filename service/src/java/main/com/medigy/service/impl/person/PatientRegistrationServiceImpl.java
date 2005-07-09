@@ -342,14 +342,14 @@ public class PatientRegistrationServiceImpl extends AbstractService implements P
     {
         Person person = null;
         if("insert".equals(mode))
-            Person.createNewPatient();
+            person = Person.createNewPatient();
         else if("update".equals(mode))
         {
-            person = (Person)getSession().get(Person.class,  params.getPersonId());
+            person = (Person)getSession().get(Person.class,  new Long(params.getPersonId()));
         }
         else if("delete".equals(mode))
         {
-            person = (Person)getSession().get(Person.class,  params.getPersonId());
+            person = (Person)getSession().get(Person.class,  new Long(params.getPersonId()));
             getSession().delete(person);
         }
 

@@ -81,7 +81,6 @@ public class PhysicianBillingSystemApplication extends DefaultApplication
             menuItems.add(new MainMenuItem("TestPage2", TestPage2.class));
             menuItems.add(new MainMenuItem("TestPage3", TestPage3.class));
             menuItems.add(new MainMenuItem("Register Patient", PatientRegistrationPage.class));
-            menuItems.add(new MainMenuItem("Edit Patient", PatientRegistrationPage.class));
         }
 
         public String getLabel()

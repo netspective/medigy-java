@@ -34,45 +34,17 @@
  * REVENUE, PROFIT OR DATA, OR FOR DIRECT, INDIRECT, SPECIAL, CONSEQUENTIAL, INCIDENTAL OR PUNITIVE DAMAGES, HOWEVER
  * CAUSED AND REGARDLESS OF THE THEORY OF LIABILITY, ARISING OUT OF THE USE OF OR INABILITY TO USE THE SOFTWARE, EVEN
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+ *
  */
-package com.medigy.service.dto.org;
+package com.medigy.service.org;
 
-import com.medigy.service.dto.ServiceParameters;
-import com.medigy.service.dto.party.PostalAddressParameters;
-import org.hibernate.validator.NotNull;
+import com.medigy.service.Service;
+import com.medigy.service.dto.org.AddOrganization;
+import com.medigy.service.dto.org.RegisteredOrg;
 
-import java.io.Serializable;
-
-public interface AddOrganization extends ServiceParameters
+public interface OrgRegistrationService extends Service
 {
-    public Long getOrgId();
-    @NotNull
-    public String getName();
+    public RegisteredOrg registerOrganization(AddOrganization organization, final String mode);
 
-    public String getParentOrganizationName();
-    public Serializable getParentOrganizationId();
-
-    @NotNull
-    public PostalAddressParameters getMailingAddress();
-
-    public String getEmail();
-    public String getPhone();
-    public String getFax();
-    public String getWebsiteUrl();
-
-    @NotNull
-    public String getStreet1();
-    public String getStreet2();
-    @NotNull
-    public String getCity();
-    @NotNull
-    public String getState();
-    public String getProvince();
-    @NotNull
-    public String getPostalCode();
-    public String getCounty();
-    @NotNull
-    public String getCountry();
-    public String getPostalAddressPurposeType();
-    public String getPostalAddressPurposeDescription();
+    public AddOrganization getOrganizationParameters();
 }

@@ -35,44 +35,26 @@
  * CAUSED AND REGARDLESS OF THE THEORY OF LIABILITY, ARISING OUT OF THE USE OF OR INABILITY TO USE THE SOFTWARE, EVEN
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
+
 package com.medigy.service.dto.org;
 
-import com.medigy.service.dto.ServiceParameters;
-import com.medigy.service.dto.party.PostalAddressParameters;
-import org.hibernate.validator.NotNull;
+import com.medigy.service.dto.ServiceReturnValues;
 
 import java.io.Serializable;
 
-public interface AddOrganization extends ServiceParameters
+public interface RegisteredOrg extends ServiceReturnValues
 {
-    public Long getOrgId();
-    @NotNull
-    public String getName();
+    /**
+     * Gets the Id of the newly registered orgranization
+     * @return
+     */
+    public Serializable getOrgId();
 
-    public String getParentOrganizationName();
-    public Serializable getParentOrganizationId();
+    /**
+     * Gets the input parameters given to the organization registration service
+     *
+     * @return
+     */
+    public AddOrganization getOrganizationParameters();
 
-    @NotNull
-    public PostalAddressParameters getMailingAddress();
-
-    public String getEmail();
-    public String getPhone();
-    public String getFax();
-    public String getWebsiteUrl();
-
-    @NotNull
-    public String getStreet1();
-    public String getStreet2();
-    @NotNull
-    public String getCity();
-    @NotNull
-    public String getState();
-    public String getProvince();
-    @NotNull
-    public String getPostalCode();
-    public String getCounty();
-    @NotNull
-    public String getCountry();
-    public String getPostalAddressPurposeType();
-    public String getPostalAddressPurposeDescription();
 }

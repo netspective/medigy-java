@@ -12,7 +12,6 @@
                 <value>TestPage2</value>
                 <value>TestPage3</value>
                 <value>Register Patient</value>
-                <value>Edit Patient</value>
             </list>
         </property>
         <property name="menuItemClasses">
@@ -21,7 +20,6 @@
                 <value>com.medigy.app.pbs.page.TestPage1</value>
                 <value>com.medigy.app.pbs.page.TestPage2</value>
                 <value>com.medigy.app.pbs.page.TestPage3</value>
-                <value>com.medigy.app.pbs.page.PatientRegistrationPage</value>
                 <value>com.medigy.app.pbs.page.PatientRegistrationPage</value>
             </list>
         </property>
