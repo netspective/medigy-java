@@ -50,11 +50,5 @@ public interface RegisteredOrg extends ServiceReturnValues
      */
     public Serializable getOrgId();
 
-    /**
-     * Gets the input parameters given to the organization registration service
-     *
-     * @return
-     */
-    public AddOrganization getOrganizationParameters();
 
 }
