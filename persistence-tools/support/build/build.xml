@@ -59,10 +59,10 @@
     </target>
 
     <target name="db.create-demo-instance" depends="db.generate-ddl">
-        <property name="db.create-demo-instance.database.name" value="medigy_demo_01"/>
+        <property name="db.create-demo-instance.database.name" value="medigy_demo"/>
         <property name="db.create-demo-instance.database.dialectClass" value="org.hibernate.dialect.MySQLInnoDBDialect"/>
         <property name="db.create-demo-instance.database.driverClass" value="com.mysql.jdbc.Driver"/>
-        <property name="db.create-demo-instance.database.url" value="jdbc:mysql://192.168.0.100:3306/${db.create-demo-instance.database.name}"/>
+        <property name="db.create-demo-instance.database.url" value="jdbc:mysql://localhost:3306/${db.create-demo-instance.database.name}"/>
         <property name="db.create-demo-instance.database.userid" value="medigy_demo"/>
         <property name="db.create-demo-instance.database.password" value="medigy_demo"/>
 
