@@ -100,7 +100,8 @@ public class PatientRegistrationFormPanel extends DefaultFormPanel
             PatientRegistrationService service = (PatientRegistrationService)((DefaultApplication) getApplication()).getService(PatientRegistrationService.class);
             RegisteredPatient registeredPatient = service.registerPatient(patient, getFormMode().getLabel());
             if(registeredPatient.getPatientId() != null)
-                info("Saved patient: " + registeredPatient.getRegisterPatientParameters().getFirstName() + " " + registeredPatient.getRegisterPatientParameters().getLastName());
+                info("Saved patient: " + ((RegisterPatientParameters)registeredPatient.getParameters()).getFirstName() + " " +
+                        ((RegisterPatientParameters)registeredPatient.getParameters()).getLastName());
 
             if(registeredPatient.getErrorMessage() != null)
                 info("Errors: " + registeredPatient.getErrorMessage());
@@ -112,7 +113,8 @@ public class PatientRegistrationFormPanel extends DefaultFormPanel
             PatientRegistrationService service = (PatientRegistrationService)((DefaultApplication) getApplication()).getService(PatientRegistrationService.class);
             RegisteredPatient registeredPatient = service.registerPatient(patient, getFormMode().getLabel());
             if(registeredPatient.getPatientId() != null)
-                info("Saved patient: " + registeredPatient.getRegisterPatientParameters().getFirstName() + " " + registeredPatient.getRegisterPatientParameters().getLastName());
+                info("Saved patient: " + ((RegisterPatientParameters)registeredPatient.getParameters()).getFirstName() + " " +
+                        ((RegisterPatientParameters)registeredPatient.getParameters()).getLastName());
 
             if(registeredPatient.getErrorMessage() != null)
                 info("Errors: " + registeredPatient.getErrorMessage());

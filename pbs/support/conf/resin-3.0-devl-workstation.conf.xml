@@ -93,7 +93,7 @@
             <!-- this is where the /medigy/resources folder is found -->
             <!-- we use hard-coded /medigy/resources/**/* for resources during development but when war file is
                  built the /medigy/resources is replaced automatically with /<app-name>/resources -->
-            <web-app id='/medigy' document-directory="${Var['medigy.project.home']}/presentation"/>
+            <web-app id='/medigy' document-directory="${Var['medigy.project.home']}/presentation"/>            
         </host>
     </server>
 </resin>

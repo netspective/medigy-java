@@ -343,7 +343,7 @@ public class OrgRegistrationServiceImpl extends AbstractService implements OrgRe
                 return null;  //To change body of implemented methods use File | Settings | File Templates.
             }
 
-            public AddOrganization getOrganizationParameters()
+            public AddOrganization getParameters()
             {
                 return null;  //To change body of implemented methods use File | Settings | File Templates.
             }

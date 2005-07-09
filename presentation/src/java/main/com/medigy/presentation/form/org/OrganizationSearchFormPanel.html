@@ -1,0 +1,39 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.sourceforge.net/">
+    <head>
+        <title>Search Organization</title>
+        <link rel="stylesheet" type="text/css" href="../../../../../../../../resources/theme/default/css/theme.css"/>
+    </head>
+
+    <body>
+        <wicket:panel>
+            <div wicket:id="panel-border">
+                <div wicket:id="feedback" class="form-feedback"/>
+                <form wicket:id="form">
+                <div class="form-body">
+                    <fieldset class="top-level">
+                    <legend wicket:id="searchOrg-group-label">Search</legend>
+                    <table class="vertical-fields">
+                        <tr class="field">
+                            <td class="label">
+                                <label wicket:id="orgName_label">Organization Name</label>
+                            </td>
+                            <td class="control">
+                                <input type="text" wicket:id="orgName" value="Medigy"/>
+                            </td>
+                        </tr>
+                    </table>
+                    </fieldset>
+                    <div class="director">
+                        <input class="button" type="submit" value="OK"/>
+                        <input class="button" type="reset" value="Reset"/>
+                    </div>
+                </div>
+                </form>
+            </div>
+
+
+
+            
+        </wicket:panel>
+    </body>
+</html>

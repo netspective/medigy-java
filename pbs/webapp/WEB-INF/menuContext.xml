@@ -10,7 +10,7 @@
                 <value>Home</value>
                 <value>TestPage1</value>
                 <value>TestPage2</value>
-                <value>TestPage3</value>
+                <value>PatientSearchPage</value>
                 <value>Register Patient</value>
             </list>
         </property>
@@ -19,7 +19,7 @@
                 <value>com.medigy.app.pbs.page.HomePage</value>
                 <value>com.medigy.app.pbs.page.TestPage1</value>
                 <value>com.medigy.app.pbs.page.TestPage2</value>
-                <value>com.medigy.app.pbs.page.TestPage3</value>
+                <value>com.medigy.app.pbs.page.PatientSearchPage</value>
                 <value>com.medigy.app.pbs.page.PatientRegistrationPage</value>
             </list>
         </property>

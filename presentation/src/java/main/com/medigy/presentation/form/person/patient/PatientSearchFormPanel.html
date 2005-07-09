@@ -1,0 +1,90 @@
+<html xmlns:wicket="http://wicket.sourceforge.net/">
+    <head>
+        <title>Patient Search</title>
+        <link rel="stylesheet" type="text/css" href="../../../../../../../../../resources/theme/default/css/theme.css"/>
+    </head>
+    <body>
+        <wicket:panel>
+            <div wicket:id="panel_border">
+                <div wicket:id="feedback" class="form-feedback"/>
+                <form wicket:id="form">
+                <div class="form-body">
+                    <fieldset class="top-level">
+                        <legend>Search By</legend>
+                        <table>
+                            <tr wicket:id="conditionFieldList">
+                                <td><span wicket:id="fieldLabel">Available Fields</span></td>
+                                <td>
+                                    <select wicket:id="field">
+                                    </select>
+                                </td>
+                                <td>
+                                    <select wicket:id="fieldComparison">
+                                    </select>
+                                </td>
+                                <td>
+                                    <input type="text" wicket:id="fieldValue" />
+                                </td>
+                                <td>
+                                    <select wicket:id="connector"/>
+                                </td>
+                            </tr>
+                        </table>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Display Fields</legend>
+                        <table>
+                            <tr>
+                                <td>
+                                    <select wicket:id="displayFields" multiple="multiple">
+                                    </select>
+                                </td>
+                            </tr>
+                        </table>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Sort By</legend>
+                        <table>
+                            <tr>
+                                <td>
+                                    <select wicket:id="sortByFields" multiple="multiple">
+                                    </select>
+                                </td>
+                            </tr>
+                        </table>
+                    </fieldset>
+                    <table>
+                        <tr>
+                            <td><input type="submit" value="submit"/></td>
+                         </tr>
+                    </table>
+                </div>
+                </form>
+
+
+            </div>
+            <div>
+                <table id="resultsTable">
+                    <thead>
+                        <tr>
+                            <th wicket:id="resultsHeader"><span wicket:id="resultColumnName"></span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr wicket:id="results">
+
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div id="resultsNavigation">
+                <ul>
+                    <li wicket:id="navigation">
+                        <span wicket:id="separator">, </span>
+                        <a wicket:id="pageLink" href="#"><span wicket:id="pageLabel">label</span><span wicket:id="pageNumber">1</span></a>
+                    </li>
+                </ul>
+            </div>
+        </wicket:panel>
+    </body>
+</html>

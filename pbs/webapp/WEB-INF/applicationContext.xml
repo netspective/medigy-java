@@ -11,13 +11,13 @@
             <value>com.mysql.jdbc.Driver</value>
         </property>
         <property name="url">
-            <value>jdbc:mysql://localhost:3306/medigy_demo</value>
+            <value>jdbc:mysql://localhost:3306/medigy</value>
         </property>
         <property name="username">
-            <value>medigy_demo</value>
+            <value>medigy</value>
         </property>
         <property name="password">
-            <value>medigy_demo</value>
+            <value>medigy</value>
         </property>
         <!--property name="defaultAutoCommit"><value>false</value></property-->
     </bean>

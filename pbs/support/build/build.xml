@@ -15,8 +15,20 @@
             <fileset dir="${repository.home}/common/depend/lib/build" includes="*.jar"/>
             <fileset dir="${repository.home}/common/depend/lib/main" includes="*.jar"/>
 
+<<<<<<< build.xml
+            <fileset dir="${repository.home}/common/depend/lib/main" includes="*.jar"/>
+            <fileset dir="${repository.home}/common/depend/lib/main" includes="*.jar"/>
+
+            <fileset dir="${repository.home}/presentation/depend/lib/build" includes="*.jar"/>
+            <fileset dir="${repository.home}/presentation/depend/lib/main" includes="*.jar"/>
+
+            <fileset dir="${repository.home}/presentation/support/build/artifacts" includes="*.jar"/>
+        </path>
+    </target>
+=======
             <fileset dir="${repository.home}/persistence/depend/lib/build" includes="*.jar"/>
             <fileset dir="${repository.home}/persistence/depend/lib/main" includes="*.jar"/>
+>>>>>>> 1.2
 
             <fileset dir="${repository.home}/service/depend/lib/build" includes="*.jar"/>
             <fileset dir="${repository.home}/service/depend/lib/main" includes="*.jar"/>

@@ -45,10 +45,12 @@ package com.medigy.app.pbs.page;
 
 import com.medigy.wicket.page.AuthenticatedWebPage;
 import com.medigy.wicket.page.PageCalloutPanelProvider;
+import com.medigy.presentation.form.person.patient.PatientSearchFormPanel;
 
 public class TestPage2 extends AuthenticatedWebPage implements PageCalloutPanelProvider
 {
     public TestPage2()
     {
+
     }
 }
