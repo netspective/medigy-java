@@ -85,7 +85,7 @@ public class FieldLabel extends WebMarkupContainer
     {
         final ValueMap attributes = componentTag.getAttributes();
         final String idAttr = attributes.getString("id");
-        if(idAttr == null)
+        if(idAttr == null)                                                      
             attributes.put("id", getPath());
 
         super.onComponentTag(componentTag);
@@ -95,7 +95,10 @@ public class FieldLabel extends WebMarkupContainer
     {
         final Component associatedControl = getAssocicatedControl();
         if(associatedControl != null && ! associatedControl.isVisible())
+        {
+            markupStream.skipRawMarkup();
             return;
+        }
 
         // if we have the label already in the markup and a model is not provided, leave the markup label as-is
         if(getModel() != null)

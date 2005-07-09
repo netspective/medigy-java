@@ -75,6 +75,7 @@ public class PatientRegistrationFormPanel extends DefaultFormPanel
             final RegisterPatientParameters params, final FormMode formPerspective, final Class paramClz)
         {
             super(componentName, model, feedback, formPerspective, paramClz);
+
         }
 
         public void initInsert()
@@ -93,11 +94,11 @@ public class PatientRegistrationFormPanel extends DefaultFormPanel
         }
 
 
-        public void onSubmit()
+        public void onSubmitInsert()
         {
             PatientRegistrationFormModel patient = (PatientRegistrationFormModel)getModelObject();
             PatientRegistrationService service = (PatientRegistrationService)((DefaultApplication) getApplication()).getService(PatientRegistrationService.class);
-            RegisteredPatient registeredPatient = service.registerPatient(patient);
+            RegisteredPatient registeredPatient = service.registerPatient(patient, getFormMode().getLabel());
             if(registeredPatient.getPatientId() != null)
                 info("Saved patient: " + registeredPatient.getRegisterPatientParameters().getFirstName() + " " + registeredPatient.getRegisterPatientParameters().getLastName());
 
@@ -105,16 +106,11 @@ public class PatientRegistrationFormPanel extends DefaultFormPanel
                 info("Errors: " + registeredPatient.getErrorMessage());
         }
 
-        public void onSubmitInsert()
-        {
-            
-        }
-
         public void onSubmitUpdate()
         {
             PatientRegistrationFormModel patient = (PatientRegistrationFormModel)getModelObject();
             PatientRegistrationService service = (PatientRegistrationService)((DefaultApplication) getApplication()).getService(PatientRegistrationService.class);
-            RegisteredPatient registeredPatient = service.registerPatient(patient);
+            RegisteredPatient registeredPatient = service.registerPatient(patient, getFormMode().getLabel());
             if(registeredPatient.getPatientId() != null)
                 info("Saved patient: " + registeredPatient.getRegisterPatientParameters().getFirstName() + " " + registeredPatient.getRegisterPatientParameters().getLastName());
 

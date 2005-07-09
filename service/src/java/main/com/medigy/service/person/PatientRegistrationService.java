@@ -44,7 +44,7 @@ import com.medigy.service.dto.person.RegisteredPatient;
 
 public interface PatientRegistrationService extends Service
 {
-    public RegisteredPatient registerPatient(RegisterPatientParameters person);
+    public RegisteredPatient registerPatient(RegisterPatientParameters person, final String mode);
 
     public RegisterPatientParameters getNewPatientParameters();
 }

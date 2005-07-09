@@ -4,7 +4,6 @@
 package com.medigy.wicket.form;
 
 import wicket.IFeedback;
-import wicket.MarkupContainer;
 import wicket.model.IModel;
 
 abstract public class RecordEditorForm extends BaseForm
@@ -33,53 +32,49 @@ abstract public class RecordEditorForm extends BaseForm
                 break;
 
             default:
-                  throw new RuntimeException("Invalid Mode " + formMode);
+                throw new RuntimeException("Invalid Mode " + formMode);
         }
     }
 
-    protected void onValidate()
-    {
-        switch(getFormMode())
-        {
-            case INSERT:
-                onValidateInsert();
-                break;
-
-            case UPDATE:
-                onValidateUpdate();
-                break;
-
-            case DELETE:
-                onValidateDelete();
-                break;
-
-            default:
-                throw new RuntimeException("Invalid Mode " + getFormMode());
-        }
-    }
+//    protected void onValidate()
+//    {
+//        switch(getFormMode())
+//        {
+//            case INSERT:
+//                onValidateInsert();
+//                break;
+//
+//            case UPDATE:
+//                onValidateUpdate();
+//                break;
+//
+//            case DELETE:
+//                onValidateDelete();
+//                break;
+//
+//            default:
+//                throw new RuntimeException("Invalid Mode " + getFormMode());
+//        }
+//    }
 
     public void onSubmit()
     {
-        MarkupContainer mc = this.getParent();
-        if(mc instanceof RecordEditorForm)
-        {
         switch(getFormMode())
         {
             case INSERT:
-                ((RecordEditorForm)mc).onSubmitInsert();
+                onSubmitInsert();
                 break;
 
             case UPDATE:
-                ((RecordEditorForm)mc).onSubmitUpdate();
+                onSubmitUpdate();
                 break;
 
             case DELETE:
-                ((RecordEditorForm)mc).onSubmitDelete();
+                onSubmitDelete();
                 break;
 
             default:
                 throw new RuntimeException("Invalid Mode " + getFormMode());
-        }
         }
     }
 
@@ -87,9 +82,9 @@ abstract public class RecordEditorForm extends BaseForm
     public void initUpdate() {}
     public void initDelete() {}
 
-    public abstract void onSubmitInsert();
-    public abstract void onSubmitUpdate();
-    public abstract void onSubmitDelete();
+    public void onSubmitInsert() {}
+    public void onSubmitUpdate() {}
+    public void onSubmitDelete() {}
 
     public void onValidateInsert() {}
     public void onValidateUpdate() {}

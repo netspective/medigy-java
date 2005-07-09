@@ -188,25 +188,6 @@
         </property>
     </bean>
 
-    <bean id="editPatientService"  class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean" lazy-init="true">
-        <property name="transactionManager"> <ref bean="hibernateTransactionManager"/> </property>
-        <property name="target">
-                <bean class="com.medigy.service.impl.person.EditPatientServiceImpl">
-				    <constructor-arg type="org.hibernate.SessionFactory"> <ref bean="hibernateSessionFactory"/> </constructor-arg>
-                    <constructor-arg type="com.medigy.service.util.ReferenceEntityFacade"> <ref bean="referenceEntityFacade"/> </constructor-arg>
-                    <constructor-arg type="com.medigy.service.contact.ContactMechanismFacade"> <ref bean="contactMechanismFacade"/> </constructor-arg>
-                    <constructor-arg type="com.medigy.service.person.PersonFacade"> <ref bean="personFacade"/> </constructor-arg>
-                    <constructor-arg type="com.medigy.service.insurance.InsurancePolicyFacade"> <ref bean="insurancePolicyFacade"/> </constructor-arg>
-            </bean>
-		</property>
-        <property name="transactionAttributes">
-            <props>
-                <prop key="editPatient*">PROPAGATION_REQUIRED</prop>
-                <prop key="getEditPatientParameters*">PROPAGATION_REQUIRED</prop>
-            </props>
-        </property>
-    </bean>
-
     <bean id="registerHealthCareProviderService"  class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean" lazy-init="true">
         <property name="transactionManager"> <ref bean="hibernateTransactionManager"/> </property>
         <property name="target">

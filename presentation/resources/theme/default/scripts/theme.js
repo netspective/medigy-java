@@ -309,7 +309,7 @@ function Dialog_createField(control, type)
     }
 
     // if the control is not a form object it means we couldn't find the proper name so we can't add the field
-    if(typeof control == 'string' && control.isVisible())
+    if(typeof control == 'string')
     {
         alert("Dialog.createField() control '"+ control +"' was not found in form '"+ this.form.name +"'");
         return;

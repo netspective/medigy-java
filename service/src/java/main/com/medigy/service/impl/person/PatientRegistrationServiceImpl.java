@@ -61,6 +61,7 @@ import com.medigy.service.person.PatientRegistrationService;
 import com.medigy.service.person.PersonFacade;
 import com.medigy.service.util.ReferenceEntityFacade;
 import com.medigy.service.util.UnknownReferenceTypeException;
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -337,18 +338,29 @@ public class PatientRegistrationServiceImpl extends AbstractService implements P
 
     }
 
-    public RegisteredPatient registerPatient(final RegisterPatientParameters params)
+    public RegisteredPatient registerPatient(final RegisterPatientParameters params, final String mode)
     {
-        Person person = Person.createNewPatient();
+        Person person = null;
+        if("insert".equals(mode))
+            Person.createNewPatient();
+        else if("update".equals(mode))
+        {
+            person = (Person)getSession().get(Person.class,  params.getPersonId());
+        }
+        else if("delete".equals(mode))
+        {
+            person = (Person)getSession().get(Person.class,  params.getPersonId());
+            getSession().delete(person);
+        }
+
+
         try
         {
-            person.setLastName(params.getLastName());
-            person.setFirstName(params.getFirstName());
-            person.setMiddleName(params.getMiddleName());
-            person.setBirthDate(params.getBirthDate());
+            BeanUtils.copyProperties(person, params);
 
             final GenderType genderType = referenceEntityFacade.getGenderType(params.getGenderCode());
             final MaritalStatusType maritalStatusType = referenceEntityFacade.getMaritalStatusType(params.getMaritalStatusCode());
+
             person.addMaritalStatus(maritalStatusType);
             person.addGender(genderType);
 
@@ -361,13 +373,6 @@ public class PatientRegistrationServiceImpl extends AbstractService implements P
             if(params.getEthnicityCodes() != null)
                 for (String ethnicity : params.getEthnicityCodes())
                     person.addEthnicity(referenceEntityFacade.getEthnicityType(ethnicity));
-
-            if (params.getSsn() != null)
-                person.setSsn(params.getSsn());
-            if (params.getDriversLicenseNumber() != null)
-            {
-                person.setDriversLicenseNumber(params.getDriversLicenseNumber());
-            }
 
             getSession().save(person);
             // TODO: Temporary. uncomment when Country/State data are in (Aye 7/5/05)

@@ -337,7 +337,7 @@ public class TestPatientRegistrationService extends AbstractSpringTestCase
                     fail(e.getMessage());
                 }
 
-        final RegisteredPatient registeredPatient = patientRegistrationService.registerPatient(patientParameters);
+        final RegisteredPatient registeredPatient = patientRegistrationService.registerPatient(patientParameters, "insert");
         if (registeredPatient.getErrorMessage() != null)
             fail(registeredPatient.getErrorMessage());
 

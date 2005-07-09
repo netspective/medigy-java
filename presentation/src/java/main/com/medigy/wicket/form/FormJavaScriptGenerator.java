@@ -185,6 +185,9 @@ public class FormJavaScriptGenerator
                                                      final FieldTypeScriptContributor ftsc,
                                                      final String fieldTypeName)
     {
+        if(! component.isVisible())
+            return;
+
         final String fieldVarName = component.getId();
 
         registrationScript.append("var ");
@@ -200,12 +203,6 @@ public class FormJavaScriptGenerator
         {
             registrationScript.append(fieldVarName);
             registrationScript.append(".setRequired(true);\n");
-        }
-
-        if(! component.isVisible())
-        {
-            registrationScript.append(fieldVarName);
-            registrationScript.append(".setVisible(false);\n");
         }
 
         if(frc != null)
