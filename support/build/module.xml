@@ -66,6 +66,9 @@
         <property name="module.jar.name" value="${module.name}.jar"/>
         <property name="module.artifacts.jar" value="${module.artifacts.home}/${module.jar.name}"/>
 
+        <property name="module.xmlbeans.jar.name" value="${module.name}-xmlbeans.jar"/>
+        <property name="module.artifacts.xmlbeans.jar" value="${module.artifacts.home}/${module.xmlbeans.jar.name}"/>
+
         <property name="module.support.home" value="${module.home}/support"/>
         <property name="module.javadoc.stylesheet.file" value="${repository.home}/support/build/javadoc-resources/stylesheet.css"/>
 
@@ -162,7 +165,7 @@
         <taskdef resource="emma_ant.properties" classpathref="module.dependencies.test.classpath" />
     </target>
 
-    <target name="init.generate-xmlbean" depends="init.define-module.dependencies.classpaths">
+    <target name="init.generate-xmlbeans" depends="init.define-module.dependencies.classpaths">
         <taskdef name="xmlbean" classname="org.apache.xmlbeans.impl.tool.XMLBean">
             <classpath>
                 <path refid="module.dependencies.build.classpath"/>
@@ -171,9 +174,9 @@
     </target>
     <!-- ==================== Compile targets  ======================= -->
 
-    <macrodef  name="generate-xmlbean" >
+    <macrodef name="generate-xmlbeans" >
         <sequential>
-        <xmlbean destfile="medigy-service.jar"  classgendir="${module.artifacts.classes.main.home}">
+        <xmlbean destfile="${module.artifacts.xmlbeans.jar}"  classgendir="${module.artifacts.classes.main.home}">
             <fileset dir="${module.src.home}/xsd">
                 <include name="**/*.xsd"/>
             </fileset>
