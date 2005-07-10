@@ -110,6 +110,18 @@
             </fileset>
         </replaceregexp>
 
+        <replaceregexp match="\{ant.build.version\}" replace="${build.version}" byline="yes">
+             <fileset dir="${app.jar.stage.home}">
+                <include name="**/*.html"/>
+            </fileset>
+        </replaceregexp>
+
+        <replaceregexp match="\{ant.build.date\}" replace="${build.date}" byline="yes">
+             <fileset dir="${app.jar.stage.home}">
+                <include name="**/*.html"/>
+            </fileset>
+        </replaceregexp>
+
         <!-- jar up all the application classes and resources into a single jar file now -->
         <jar destfile="${module.artifacts.WEB-INF.lib.home}/${module.name}.jar" basedir="${app.jar.stage.home}"/>
 

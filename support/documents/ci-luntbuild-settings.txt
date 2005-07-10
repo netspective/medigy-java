@@ -38,8 +38,8 @@ Build script path 	support/build/build.xml
 Build targets 	clean jar test doc publish
 Build properties: 	
 
-buildVersion="${build.version}"
-buildDate="${build.startDate}"
+build.version="${build.version}"
+build.date="${build.startDate}"
 
 repository.artifacts.home="${build.artifactsDir}"
 consolidated.artifacts.test.junit.home="${build.junitHtmlReportDir}"
@@ -64,8 +64,8 @@ Build script path 	pbs/support/build/build.xml
 Build targets 	war.create-resin-3.0-war
 Build properties:
 
-buildVersion="${build.version}"
-buildDate="${build.startDate}"
+build.version="${build.version}"
+build.date="${build.startDate}"
 
 repository.artifacts.home="${build.artifactsDir}"
 module.artifacts.test.junit.home="${build.junitHtmlReportDir}"
@@ -82,8 +82,8 @@ Build script path 	persistence-tools/support/build/build.xml
 Build targets 	db.create-demo-instance
 Build properties:
 
-buildVersion="${build.version}"
-buildDate="${build.startDate}"
+build.version="${build.version}"
+build.date="${build.startDate}"
 
 repository.artifacts.home="${build.artifactsDir}"
 module.artifacts.test.junit.home="${build.junitHtmlReportDir}"
