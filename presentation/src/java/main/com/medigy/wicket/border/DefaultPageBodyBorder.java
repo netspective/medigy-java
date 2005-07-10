@@ -1,7 +1,7 @@
 /*
- * $Id: DefaultPageBodyBorder.java,v 1.7 2005-07-10 21:22:37 shahid.shah Exp $
- * $Revision: 1.7 $
- * $Date: 2005-07-10 21:22:37 $
+ * $Id: DefaultPageBodyBorder.java,v 1.8 2005-07-10 21:40:44 shahid.shah Exp $
+ * $Revision: 1.8 $
+ * $Date: 2005-07-10 21:40:44 $
  *
  * ====================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,9 +19,9 @@
 package com.medigy.wicket.border;
 
 import com.medigy.wicket.DefaultApplication;
-import com.medigy.wicket.page.PageHeadingProvider;
 import wicket.AttributeModifier;
 import wicket.Component;
+import wicket.Page;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebMarkupContainer;
@@ -30,7 +30,23 @@ import wicket.model.Model;
 
 public class DefaultPageBodyBorder extends Border
 {
-    private PageHeadingProvider headingProvider;
+    public interface HeadingProvider
+    {
+        public String getPageHeading();
+        public String getPageTitle();
+    }
+
+    public interface NavigationPanelProvider
+    {
+
+    }
+
+    public interface CalloutPanelProvider
+    {
+
+    }
+
+    private HeadingProvider headingProvider;
     private WebMarkupContainer mainMenu;
     private WebMarkupContainer navigatorPanelCell;
     private WebMarkupContainer navigatorPanelSeparatorCell;
@@ -40,7 +56,7 @@ public class DefaultPageBodyBorder extends Border
     private WebMarkupContainer footerBarCell;
     private WebMarkupContainer headingDiv;
 
-    public DefaultPageBodyBorder(final String componentName)
+    public DefaultPageBodyBorder(final String componentName, final Page parent)
     {
         super(componentName);
 
@@ -76,6 +92,12 @@ public class DefaultPageBodyBorder extends Border
                 return isCalloutPanelVisible() ? "1" : "2";
             }
         }));
+
+        if(parent instanceof HeadingProvider)
+            this.headingProvider = (HeadingProvider) parent;
+
+        setNavigatorPanelVisible(this instanceof NavigationPanelProvider);
+        setCalloutPanelVisible(this instanceof CalloutPanelProvider);
     }
 
     public boolean isCalloutPanelVisible()
@@ -100,7 +122,7 @@ public class DefaultPageBodyBorder extends Border
         navigatorPanelSeparatorCell.setVisible(navigatorPanelVisible);
     }
 
-    public void setHeadingProvider(final PageHeadingProvider headingProvider)
+    public void setHeadingProvider(final HeadingProvider headingProvider)
     {
         this.headingProvider = headingProvider;
     }

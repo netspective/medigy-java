@@ -43,9 +43,9 @@
  */
 package com.medigy.app.pbs.page.test;
 
-import com.medigy.wicket.page.PageNavigationPanelProvider;
+import com.medigy.wicket.border.DefaultPageBodyBorder.NavigationPanelProvider;
 
-public class Test1 extends AbstractTest implements PageNavigationPanelProvider
+public class Test1 extends AbstractTest implements NavigationPanelProvider
 {
     public Test1()
     {

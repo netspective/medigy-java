@@ -43,9 +43,10 @@
  */
 package com.medigy.app.pbs.page.test;
 
-import com.medigy.wicket.page.PageCalloutPanelProvider;
+import com.medigy.wicket.border.DefaultPageBodyBorder.CalloutPanelProvider;
 
-public class Test2 extends AbstractTest implements PageCalloutPanelProvider
+
+public class Test2 extends AbstractTest implements CalloutPanelProvider
 {
     public Test2()
     {

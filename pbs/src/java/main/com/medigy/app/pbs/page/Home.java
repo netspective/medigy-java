@@ -43,13 +43,13 @@
  */
 package com.medigy.app.pbs.page;
 
+import com.medigy.wicket.border.DefaultPageBodyBorder.HeadingProvider;
 import com.medigy.wicket.border.HeaderedPanelBorder;
 import com.medigy.wicket.border.StandardPanelBorder;
 import com.medigy.wicket.page.AuthenticatedWebPage;
-import com.medigy.wicket.page.PageHeadingProvider;
 import wicket.markup.html.basic.Label;
 
-public class Home extends AuthenticatedWebPage implements PageHeadingProvider
+public class Home extends AuthenticatedWebPage implements HeadingProvider
 {
     public Home()
     {

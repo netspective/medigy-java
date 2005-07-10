@@ -18,8 +18,6 @@ import wicket.markup.html.border.Border;
  * (1) subclasses do not have to repeat the code to create the border navigation and
  * (2) since subclasses do not repeat this code, they are not hardwired to page
  * navigation structure details
- *
- * @author Jonathan Locke
  */
 public class AuthenticatedWebPage extends BasePage
 {
@@ -33,12 +31,7 @@ public class AuthenticatedWebPage extends BasePage
 
     protected Border createBorder(final String componentName)
     {
-        final DefaultPageBodyBorder border = new DefaultPageBodyBorder(componentName);
-        border.setNavigatorPanelVisible(this instanceof PageNavigationPanelProvider);
-        border.setCalloutPanelVisible(this instanceof PageCalloutPanelProvider);
-        if(this instanceof PageHeadingProvider)
-            border.setHeadingProvider((PageHeadingProvider) this);
-        return border;
+        return new DefaultPageBodyBorder(componentName, this);
     }
 
     public Border getBorder()
