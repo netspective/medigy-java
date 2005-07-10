@@ -41,11 +41,19 @@
 /*
  * Copyright (c) 2005 Your Corporation. All Rights Reserved.
  */
-package com.medigy.wicket.menu;
+package com.medigy.app.pbs.page;
 
-public interface MenuItem
+import com.medigy.wicket.border.HeaderedPanelBorder;
+import com.medigy.wicket.border.StandardPanelBorder;
+import com.medigy.wicket.page.AuthenticatedWebPage;
+import wicket.markup.html.basic.Label;
+
+public class Home extends AuthenticatedWebPage
 {
-    public String getLabel();
-    public Class getPage();
-    public boolean isDisabled();
+    public Home()
+    {
+        add(new Label("message", "Hello World 2"));
+        add(new HeaderedPanelBorder("panel1").add(new Label("heading", "Test Heading 01")));
+        add(new StandardPanelBorder("panel2"));
+    }
 }

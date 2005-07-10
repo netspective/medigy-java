@@ -51,12 +51,12 @@ import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
-import com.medigy.wicket.menu.Menu;
 import com.medigy.wicket.session.AuthenticatedSession;
 import wicket.ApplicationSettings;
 import wicket.ISessionFactory;
 import wicket.Session;
 import wicket.contrib.spring.SpringApplication;
+import wicket.markup.html.WebMarkupContainer;
 import wicket.util.file.File;
 import wicket.util.file.Folder;
 import wicket.util.file.Path;
@@ -77,6 +77,8 @@ public abstract class DefaultApplication extends SpringApplication implements Ap
     {
         super();
     }
+
+    public abstract WebMarkupContainer createMainMenuComponent(final String id);
 
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException
     {
@@ -153,8 +155,6 @@ public abstract class DefaultApplication extends SpringApplication implements Ap
         final String projectDirNamePropValue = System.getProperty("medigy.project.home", DEFAULT_DEVL_ENV_PROJECT_HOME);
         return new File(projectDirNamePropValue);
     }
-
-    public abstract Menu getMainMenu();
 
 /*
     TODO: add secure URLs to prevent snooping

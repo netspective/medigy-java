@@ -43,91 +43,20 @@
  */
 package com.medigy.app.pbs;
 
-import com.medigy.app.pbs.page.*;
+import com.medigy.app.pbs.component.MainMenu;
+import com.medigy.app.pbs.page.Home;
 import com.medigy.wicket.DefaultApplication;
-import com.medigy.wicket.menu.Menu;
-import com.medigy.wicket.menu.MenuItem;
-
-import java.util.ArrayList;
-import java.util.List;
+import wicket.markup.html.WebMarkupContainer;
 
 public class PhysicianBillingSystemApplication extends DefaultApplication 
 {
-    private Menu mainMenu = new MainMenu();
-
     public PhysicianBillingSystemApplication()
     {
-        getPages().setHomePage(HomePage.class);
+        getPages().setHomePage(Home.class);
     }
 
-    public void setMainMenu(final Menu mainMenu)
+    public WebMarkupContainer createMainMenuComponent(final String id)
     {
-        this.mainMenu = mainMenu;
-    }
-
-    public Menu getMainMenu()
-    {
-        return mainMenu;
-    }
-
-    protected class MainMenu implements Menu
-    {
-        private List<MenuItem> menuItems = new ArrayList<MenuItem>();
-
-        public MainMenu()
-        {
-            menuItems.add(new MainMenuItem("Home", HomePage.class));
-            menuItems.add(new MainMenuItem("TestPage1", TestPage1.class));
-            menuItems.add(new MainMenuItem("TestPage2", TestPage2.class));
-            menuItems.add(new MainMenuItem("TestPage3", TestPage3.class));
-            menuItems.add(new MainMenuItem("Register Patient", PatientRegistrationPage.class));
-        }
-
-        public String getLabel()
-        {
-            return "Main Menu";
-        }
-
-        public Class getPage()
-        {
-            return null;
-        }
-
-        public boolean isDisabled()
-        {
-            return false;
-        }
-
-        public List<MenuItem> getMenuItems()
-        {
-            return menuItems;
-        }
-
-        protected class MainMenuItem implements MenuItem
-        {
-            private String label;
-            private Class pageClass;
-
-            public MainMenuItem(final String label, final Class pageClass)
-            {
-                this.label = label;
-                this.pageClass = pageClass;
-            }
-
-            public String getLabel()
-            {
-                return label;
-            }
-
-            public Class getPage()
-            {
-                return pageClass;
-            }
-
-            public boolean isDisabled()
-            {
-                return false;
-            }
-        }
+        return new MainMenu(id);
     }
 }

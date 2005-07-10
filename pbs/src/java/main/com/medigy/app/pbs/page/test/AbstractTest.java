@@ -41,11 +41,14 @@
 /*
  * Copyright (c) 2005 Your Corporation. All Rights Reserved.
  */
-package com.medigy.wicket.menu;
+package com.medigy.app.pbs.page.test;
 
-import java.util.List;
+import com.medigy.wicket.page.AuthenticatedWebPage;
 
-public interface Menu extends MenuItem
+public class AbstractTest extends AuthenticatedWebPage
 {
-    public List<MenuItem> getMenuItems();
+    public AbstractTest()
+    {
+        add(new TestNavigator("testNavigator"));
+    }
 }

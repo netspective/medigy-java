@@ -3,13 +3,13 @@
  */
 package com.medigy.app.pbs.page;
 
-import com.medigy.wicket.page.DefaultFormPage;
-import com.medigy.wicket.form.FormMode;
 import com.medigy.presentation.form.person.patient.PatientSearchFormPanel;
+import com.medigy.wicket.form.FormMode;
+import com.medigy.wicket.page.DefaultFormPage;
 
-public class PatientSearchPage extends DefaultFormPage
+public class Search extends DefaultFormPage
 {
-    public PatientSearchPage()
+    public Search()
     {
         super(PatientSearchFormPanel.class, FormMode.NONE);
     }

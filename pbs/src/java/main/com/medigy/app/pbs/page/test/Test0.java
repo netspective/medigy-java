@@ -41,16 +41,18 @@
 /*
  * Copyright (c) 2005 Your Corporation. All Rights Reserved.
  */
-package com.medigy.app.pbs.page;
+package com.medigy.app.pbs.page.test;
 
-import com.medigy.presentation.form.person.patient.PatientRegistrationFormPanel;
-import com.medigy.wicket.form.FormMode;
-import com.medigy.wicket.page.DefaultFormPage;
+import com.medigy.wicket.border.HeaderedPanelBorder;
+import com.medigy.wicket.border.StandardPanelBorder;
+import wicket.markup.html.basic.Label;
 
-public class FormTestPage1 extends DefaultFormPage
+public class Test0 extends AbstractTest
 {
-    public FormTestPage1()
+    public Test0()
     {
-        super(PatientRegistrationFormPanel.class, FormMode.INSERT);
+        add(new Label("message", "Hello World 2"));
+        add(new HeaderedPanelBorder("panel1").add(new Label("heading", "Test Heading 01")));
+        add(new StandardPanelBorder("panel2"));
     }
 }

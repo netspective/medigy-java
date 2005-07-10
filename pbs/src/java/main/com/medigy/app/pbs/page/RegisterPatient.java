@@ -43,14 +43,14 @@
  */
 package com.medigy.app.pbs.page;
 
-import com.medigy.wicket.page.AuthenticatedWebPage;
-import com.medigy.wicket.page.PageCalloutPanelProvider;
-import com.medigy.presentation.form.person.patient.PatientSearchFormPanel;
+import com.medigy.presentation.form.person.patient.PatientRegistrationFormPanel;
+import com.medigy.wicket.form.FormMode;
+import com.medigy.wicket.page.DefaultFormPage;
 
-public class TestPage2 extends AuthenticatedWebPage implements PageCalloutPanelProvider
+public class RegisterPatient extends DefaultFormPage
 {
-    public TestPage2()
+    public RegisterPatient()
     {
-
+        super(PatientRegistrationFormPanel.class, FormMode.INSERT);
     }
 }

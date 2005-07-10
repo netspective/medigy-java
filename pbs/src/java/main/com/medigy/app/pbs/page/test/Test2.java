@@ -41,15 +41,14 @@
 /*
  * Copyright (c) 2005 Your Corporation. All Rights Reserved.
  */
-package com.medigy.app.pbs.page;
+package com.medigy.app.pbs.page.test;
 
-import com.medigy.wicket.page.AuthenticatedWebPage;
 import com.medigy.wicket.page.PageCalloutPanelProvider;
-import com.medigy.wicket.page.PageNavigationPanelProvider;
 
-public class TestPage3 extends AuthenticatedWebPage implements PageNavigationPanelProvider, PageCalloutPanelProvider
+public class Test2 extends AbstractTest implements PageCalloutPanelProvider
 {
-    public TestPage3()
+    public Test2()
     {
+
     }
 }

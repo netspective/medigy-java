@@ -35,103 +35,20 @@
  * CAUSED AND REGARDLESS OF THE THEORY OF LIABILITY, ARISING OUT OF THE USE OF OR INABILITY TO USE THE SOFTWARE, EVEN
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
+ * @author Shahid N. Shah
  */
-package com.medigy.app.pbs.menu;
 
-import com.medigy.wicket.menu.Menu;
-import com.medigy.wicket.menu.MenuItem;
+/*
+ * Copyright (c) 2005 Your Corporation. All Rights Reserved.
+ */
+package com.medigy.app.pbs.page.test;
 
-import java.util.List;
-import java.util.ArrayList;
+import com.medigy.wicket.page.PageCalloutPanelProvider;
+import com.medigy.wicket.page.PageNavigationPanelProvider;
 
-import org.springframework.beans.factory.InitializingBean;
-
-public class BasicMenu implements Menu, InitializingBean
+public class Test3 extends AbstractTest implements PageNavigationPanelProvider, PageCalloutPanelProvider
 {
-    private String label;
-    private boolean isDisabled;
-    private List<MenuItem> menuItems = new ArrayList<MenuItem>();
-
-    private List<String> menuItemLabels = new ArrayList<String>();
-    private List<String> menuItemClasses = new ArrayList<String>();
-
-    public BasicMenu(final String label, final boolean disabled)
+    public Test3()
     {
-        this.label = label;
-        this.isDisabled = disabled;
     }
-
-    public void setMenuItemLabels(final List<String> menuItemLabels)
-    {
-        this.menuItemLabels = menuItemLabels;
-    }
-
-    public void setMenuItemClasses(final List<String> menuItemClasses)
-    {
-        this.menuItemClasses = menuItemClasses;
-    }
-
-    public void setMenuItems(final List<MenuItem> items)
-    {
-        this.menuItems = items;
-    }
-
-    public List<MenuItem> getMenuItems()
-    {
-        return menuItems;
-    }
-
-    public String getLabel()
-    {
-        return label;
-    }
-
-    public Class getPage()
-    {
-        return null;
-    }
-
-    public boolean isDisabled()
-    {
-        return isDisabled;
-    }
-
-    public void afterPropertiesSet() throws Exception
-    {
-        if (menuItemLabels.size() != menuItemClasses.size())
-            throw new RuntimeException("Menu item name count does not match item class count");
-
-        for (int i=0; i < menuItemLabels.size(); i++)
-        {
-            this.menuItems.add(new BasicMenuItem(menuItemLabels.get(i), Class.forName(menuItemClasses.get(i))));
-        }
-    }
-
-    protected class BasicMenuItem implements MenuItem
-    {
-        private String label;
-        private Class pageClass;
-
-        public BasicMenuItem(final String label, final Class pageClass)
-        {
-            this.label = label;
-            this.pageClass = pageClass;
-        }
-
-        public String getLabel()
-        {
-            return label;
-        }
-
-        public Class getPage()
-        {
-            return pageClass;
-        }
-
-        public boolean isDisabled()
-        {
-            return false;
-        }
-    }
-
 }

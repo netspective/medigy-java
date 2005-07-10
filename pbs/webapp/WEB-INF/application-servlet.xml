@@ -19,9 +19,6 @@
  
 
     <bean id="wicketApplication" class="com.medigy.app.pbs.PhysicianBillingSystemApplication" >
-        <property name="mainMenu">
-            <ref bean="mainMenu"/>
-        </property>
     </bean>
 
 

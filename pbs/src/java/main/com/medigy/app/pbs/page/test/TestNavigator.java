@@ -41,19 +41,20 @@
 /*
  * Copyright (c) 2005 Your Corporation. All Rights Reserved.
  */
-package com.medigy.app.pbs.page;
+package com.medigy.app.pbs.page.test;
 
-import wicket.markup.html.basic.Label;
-import com.medigy.wicket.page.AuthenticatedWebPage;
-import com.medigy.wicket.border.HeaderedPanelBorder;
-import com.medigy.wicket.border.StandardPanelBorder;
+import wicket.markup.html.panel.Panel;
+import wicket.model.IModel;
 
-public class HomePage extends AuthenticatedWebPage
+public class TestNavigator extends Panel
 {
-    public HomePage()
+    public TestNavigator(final String id)
     {
-        add(new Label("message", "Hello World 2"));
-        add(new HeaderedPanelBorder("panel1").add(new Label("heading", "Test Heading 01")));
-        add(new StandardPanelBorder("panel2"));
+        super(id);
+    }
+
+    public TestNavigator(final String id, final IModel model)
+    {
+        super(id, model);
     }
 }

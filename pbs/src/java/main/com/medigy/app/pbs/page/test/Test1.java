@@ -41,14 +41,13 @@
 /*
  * Copyright (c) 2005 Your Corporation. All Rights Reserved.
  */
-package com.medigy.app.pbs.page;
+package com.medigy.app.pbs.page.test;
 
-import com.medigy.wicket.page.AuthenticatedWebPage;
 import com.medigy.wicket.page.PageNavigationPanelProvider;
 
-public class TestPage1 extends AuthenticatedWebPage implements PageNavigationPanelProvider
+public class Test1 extends AbstractTest implements PageNavigationPanelProvider
 {
-    public TestPage1()
+    public Test1()
     {
     }
 }
