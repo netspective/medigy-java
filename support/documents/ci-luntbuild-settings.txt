@@ -41,7 +41,7 @@ Build properties:
 buildVersion="${build.version}"
 buildDate="${build.startDate}"
 
-consolidated.artifacts.home="${build.artifactsDir}"
+repository.artifacts.home="${build.artifactsDir}"
 consolidated.artifacts.test.junit.home="${build.junitHtmlReportDir}"
 build.publish.latest.home="${build.publishDir}/../latest"
 
@@ -65,9 +65,10 @@ Build targets 	war.create-resin-3.0-war
 Build properties:
 
 buildVersion="${build.version}"
-artifactsDir="${build.artifactsDir}"
 buildDate="${build.startDate}"
-junitHtmlReportDir="${build.junitHtmlReportDir}"
+
+repository.artifacts.home="${build.artifactsDir}"
+module.artifacts.test.junit.home="${build.junitHtmlReportDir}"
 
 app.war.dest=/home/s-resin/devl/webapps/medigy-pbs.war
 
@@ -82,9 +83,10 @@ Build targets 	db.create-demo-instance
 Build properties:
 
 buildVersion="${build.version}"
-artifactsDir="${build.artifactsDir}"
 buildDate="${build.startDate}"
-junitHtmlReportDir="${build.junitHtmlReportDir}"
+
+repository.artifacts.home="${build.artifactsDir}"
+module.artifacts.test.junit.home="${build.junitHtmlReportDir}"
 
 db.create-demo-instance.database.name=medigy_demo
 db.create-demo-instance.database.dialectClass=org.hibernate.dialect.MySQLInnoDBDialect
