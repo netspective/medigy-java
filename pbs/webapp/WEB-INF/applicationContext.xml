@@ -21,8 +21,6 @@
         </property>
     </bean>
 
-    <import resource="menuContext.xml"/>
-
     <bean id="hibernateSessionFactory" class="com.medigy.service.util.ModelSessionFactoryBean" lazy-init="true">
         <property name="configLocation"> <value>classpath:com/medigy/persist/hibernate.cfg.xml</value> </property>
         <property name="configurationClass"><value>com.medigy.persist.util.HibernateConfiguration</value></property>
