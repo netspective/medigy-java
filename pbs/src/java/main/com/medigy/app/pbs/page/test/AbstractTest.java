@@ -43,12 +43,23 @@
  */
 package com.medigy.app.pbs.page.test;
 
+import com.medigy.wicket.border.DefaultPageBodyBorder.HeadingProvider;
 import com.medigy.wicket.page.AuthenticatedWebPage;
 
-public class AbstractTest extends AuthenticatedWebPage
+public class AbstractTest extends AuthenticatedWebPage implements HeadingProvider
 {
     public AbstractTest()
     {
         add(new TestNavigator("testNavigator"));
+    }
+
+    public String getPageHeading()
+    {
+        return getClass().getSimpleName();
+    }
+
+    public String getPageTitle()
+    {
+        return getPageHeading();
     }
 }

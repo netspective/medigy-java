@@ -31,10 +31,13 @@
                                                     <a href="#">Help</a>
                                                 </wicket:remove>
                                             </div>
-                                            <div class="page-path">
-                                                <a class="first" href="?">Home</a>
-                                                <a class="middle" href="#">Other Page</a>
-                                                <a class="last" href="#">Active Page</a>
+                                            <div class="page-path" wicket:id="pagePath">
+                                                <wicket:remove>
+                                                    <a class="first" href="?">Home</a>
+                                                    <a class="middle" href="#">Other Page</a>
+                                                    <a class="middle" href="#">Another Page</a>
+                                                    <a class="last" href="#">Active Page</a>
+                                                </wicket:remove>
                                             </div>
                                         </td>
                                         <td width="183">

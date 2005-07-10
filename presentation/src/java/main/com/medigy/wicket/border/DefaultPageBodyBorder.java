@@ -1,7 +1,7 @@
 /*
- * $Id: DefaultPageBodyBorder.java,v 1.8 2005-07-10 21:40:44 shahid.shah Exp $
- * $Revision: 1.8 $
- * $Date: 2005-07-10 21:40:44 $
+ * $Id: DefaultPageBodyBorder.java,v 1.9 2005-07-10 22:08:29 shahid.shah Exp $
+ * $Revision: 1.9 $
+ * $Date: 2005-07-10 22:08:29 $
  *
  * ====================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -36,47 +36,66 @@ public class DefaultPageBodyBorder extends Border
         public String getPageTitle();
     }
 
+    public interface PathProvider
+    {
+        // TODO: implement this
+    }
+
     public interface NavigationPanelProvider
     {
-
+        // TODO: implement this
     }
 
     public interface CalloutPanelProvider
     {
-
+        // TODO: implement this
     }
 
-    private HeadingProvider headingProvider;
-    private WebMarkupContainer mainMenu;
-    private WebMarkupContainer navigatorPanelCell;
-    private WebMarkupContainer navigatorPanelSeparatorCell;
-    private WebMarkupContainer calloutPanelCell;
-    private WebMarkupContainer calloutPanelBottomCell;
-    private WebMarkupContainer mainContentCell;
-    private WebMarkupContainer footerBarCell;
-    private WebMarkupContainer headingDiv;
+    private final HeadingProvider headingProvider;
+    private final PathProvider pathProvider;
+    private final WebMarkupContainer pagePathDiv;
+    private final WebMarkupContainer navigatorPanelCell;
+    private final WebMarkupContainer navigatorPanelSeparatorCell;
+    private final WebMarkupContainer calloutPanelCell;
+    private final WebMarkupContainer calloutPanelBottomCell;
+    private final WebMarkupContainer mainContentCell;
+    private final WebMarkupContainer footerBarCell;
 
-    public DefaultPageBodyBorder(final String componentName, final Page parent)
+    public DefaultPageBodyBorder(final String componentName, final Page page)
     {
         super(componentName);
 
-        add(mainMenu = ((DefaultApplication) getApplication()).createMainMenuComponent("mainMenu"));
+        this.headingProvider = page instanceof HeadingProvider ? (HeadingProvider) page : null;
+        this.pathProvider = page instanceof PathProvider ? (PathProvider) page : null;
+
+        final boolean navigatorPanelVisible = page instanceof NavigationPanelProvider;
+        final boolean calloutPanelVisible = page instanceof CalloutPanelProvider;
+
+        add(((DefaultApplication) getApplication()).createMainMenuComponent("mainMenu"));
+
+        add((pagePathDiv = new WebMarkupContainer("pagePath")));
+        pagePathDiv.setVisible(pathProvider != null);
 
         add(calloutPanelCell = new WebMarkupContainer("callout-panel"));
         add(calloutPanelBottomCell = new WebMarkupContainer("callout-panel-bottom"));
+        calloutPanelCell.setVisible(calloutPanelVisible);
+        calloutPanelBottomCell.setVisible(calloutPanelVisible);
 
         add(mainContentCell = new WebMarkupContainer("main-content-cell"));
         mainContentCell.add(new AttributeModifier("colspan", true, new Model() {
             public Object getObject(final Component component)
             {
                 // if there is no callout panel we want the footer to extend the entire page width
-                return isCalloutPanelVisible() ? "1" : "2";
+                return calloutPanelVisible ? "1" : "2";
             }
         }));
 
         mainContentCell.add(navigatorPanelCell = new WebMarkupContainer("page-navigation-panel"));
         mainContentCell.add(navigatorPanelSeparatorCell = new WebMarkupContainer("page-nav-and-main-content-separator"));
-        mainContentCell.add(headingDiv = new WebMarkupContainer("heading")
+        navigatorPanelCell.setVisible(navigatorPanelVisible);
+        navigatorPanelSeparatorCell.setVisible(navigatorPanelVisible);
+
+        mainContentCell.add(new WebMarkupContainer("heading")
         {
             protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag componentTag)
             {
@@ -89,41 +108,8 @@ public class DefaultPageBodyBorder extends Border
             public Object getObject(final Component component)
             {
                 // if there is no callout panel we want the footer to extend the entire page width
-                return isCalloutPanelVisible() ? "1" : "2";
+                return calloutPanelVisible ? "1" : "2";
             }
         }));
-
-        if(parent instanceof HeadingProvider)
-            this.headingProvider = (HeadingProvider) parent;
-
-        setNavigatorPanelVisible(this instanceof NavigationPanelProvider);
-        setCalloutPanelVisible(this instanceof CalloutPanelProvider);
-    }
-
-    public boolean isCalloutPanelVisible()
-    {
-        return calloutPanelCell.isVisible();
-    }
-
-    public void setCalloutPanelVisible(final boolean calloutPanelVisible)
-    {
-        calloutPanelCell.setVisible(calloutPanelVisible);
-        calloutPanelBottomCell.setVisible(calloutPanelVisible);
-    }
-
-    public boolean isNavigatorPanelVisible()
-    {
-        return navigatorPanelCell.isVisible();
-    }
-
-    public void setNavigatorPanelVisible(final boolean navigatorPanelVisible)
-    {
-        navigatorPanelCell.setVisible(navigatorPanelVisible);
-        navigatorPanelSeparatorCell.setVisible(navigatorPanelVisible);
-    }
-
-    public void setHeadingProvider(final HeadingProvider headingProvider)
-    {
-        this.headingProvider = headingProvider;
     }
 }
