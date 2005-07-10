@@ -31,14 +31,17 @@
         <pathconvert targetos="unix" property="module.home" refid="tmp.module.home"/>
 
         <!-- Figure out a default the module name in case it hasn't been assigned. -->
-        <basename property="tmp.module.name" file="${module.home}"/>
-        <property name="module.name" value="medigy-${tmp.module.name}"/>
+        <basename property="simple.module.name" file="${module.home}"/>
+        <property name="module.name" value="medigy-${simple.module.name}"/>
+
+        <!-- all generated/derived/produced artifacts (*.class, etc) go in here and nothing touches the CVS-managed files -->
+        <property name="repository.artifacts.home" value="${repository.home}/ARTIFACTS"/>
 
         <property name="repository.support.home" value="${repository.home}/support"/>
         <property name="repository.support.build.home" value="${repository.support.home}/build"/>
 
         <property name="module.build.home" value="${basedir}"/>
-        <property name="module.artifacts.home" value="${module.build.home}/artifacts"/>
+        <property name="module.artifacts.home" value="${repository.artifacts.home}/${simple.module.name}"/>
         <property name="module.artifacts.doc.home" value="${module.artifacts.home}/doc"/>
         <property name="module.artifacts.test.home" value="${module.artifacts.home}/test"/>
         <property name="module.artifacts.test.junit.home" value="${module.artifacts.home}/test/junit"/>
@@ -90,14 +93,15 @@
     </target>
 
     <target name="init.define-modules-artifacts-home" depends="init.define-modules">
-        <property name="common.artifacts.home" value="${common.home}/support/build/artifacts"/>
-        <property name="data-gen.artifacts.home" value="${data-gen.home}/support/build/artifacts"/>
-        <property name="graphviz.artifacts.home" value="${graphviz.home}/support/build/artifacts"/>
-        <property name="hibernate-doc.artifacts.home" value="${hibernate-doc.home}/support/build/artifacts"/>
-        <property name="persistence.artifacts.home" value="${persistence.home}/support/build/artifacts"/>
-        <property name="persistence-tools.artifacts.home" value="${persistence-tools.home}/support/build/artifacts"/>
-        <property name="service.artifacts.home" value="${service.home}/support/build/artifacts"/>
-        <property name="presentation.artifacts.home" value="${presentation.home}/support/build/artifacts"/>
+        <property name="common.artifacts.home" value="${repository.artifacts.home}/common"/>
+        <property name="data-gen.artifacts.home" value="${repository.artifacts.home}/data-gen"/>
+        <property name="graphviz.artifacts.home" value="${repository.artifacts.home}/graphviz"/>
+        <property name="hibernate-doc.artifacts.home" value="${repository.artifacts.home}/hibernate-doc"/>
+        <property name="persistence.artifacts.home" value="${repository.artifacts.home}/persistence"/>
+        <property name="persistence-tools.artifacts.home" value="${repository.artifacts.home}/persistence-tools"/>
+        <property name="service.artifacts.home" value="${repository.artifacts.home}/service"/>
+        <property name="presentation.artifacts.home" value="${repository.artifacts.home}/presentation"/>
+        <property name="pbs.artifacts.home" value="${repository.artifacts.home}/pbs"/>
     </target>
 
     <!-- ==================== Sourcepaths  ======================= -->

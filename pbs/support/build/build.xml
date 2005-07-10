@@ -10,7 +10,7 @@
         </path>
     </target>
 
-    <target name="init.define-module.dependencies.main.classpath" depends="init.define-properties">
+    <target name="init.define-module.dependencies.main.classpath" depends="init.define-properties,init.define-modules-artifacts-home">
         <path id="module.dependencies.main.classpath">
             <fileset dir="${repository.home}/common/depend/lib/build" includes="*.jar"/>
             <fileset dir="${repository.home}/common/depend/lib/main" includes="*.jar"/>
@@ -24,9 +24,9 @@
             <fileset dir="${repository.home}/presentation/depend/lib/build" includes="*.jar"/>
             <fileset dir="${repository.home}/presentation/depend/lib/main" includes="*.jar"/>
 
-            <fileset dir="${repository.home}/presentation/support/build/artifacts" includes="*.jar"/>
-            <fileset dir="${repository.home}/persistence/support/build/artifacts" includes="*.jar"/>
-            <fileset dir="${repository.home}/service/support/build/artifacts" includes="*.jar"/>
+            <fileset dir="${presentation.artifacts.home}" includes="*.jar"/>
+            <fileset dir="${persistence.artifacts.home}" includes="*.jar"/>
+            <fileset dir="${service.artifacts.home}" includes="*.jar"/>
         </path>
     </target>
 

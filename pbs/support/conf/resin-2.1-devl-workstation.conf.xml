@@ -79,15 +79,15 @@
         <classpath id="C:/Projects/Medigy/service/depend/lib/test" library-dir='true'/>
         <classpath id="C:/Projects/Medigy/service/depend/lib/main" library-dir='true'/>
 
-        <classpath id="C:/Projects/Medigy/presentation/support/build/artifacts/classes/main"/>
-        <classpath id="C:/Projects/Medigy/persistence/support/build/artifacts/classes/main"/>
-        <classpath id="C:/Projects/Medigy/service/support/build/artifacts/classes/main"/>
+        <classpath id="C:/Projects/Medigy/ARTIFACTS/presentation/classes/main"/>
+        <classpath id="C:/Projects/Medigy/ARTIFACTS/persistence/classes/main"/>
+        <classpath id="C:/Projects/Medigy/ARTIFACTS/service/classes/main"/>
 
         <!-- the compiler should be set to put classes in this directory for exploded use -->
-        <classpath id="C:/Projects/Medigy/pbs/support/build/artifacts/classes/main"/>
+        <classpath id="C:/Projects/Medigy/ARTIFACTS/pbs/classes/main"/>
     </web-app>
 
-      <web-app id='/medigy' app-dir='C:/Projects/Medigy/presentation'/>
+    <web-app id='/medigy' app-dir='C:/Projects/Medigy/presentation'/>
   </host>
 
 </http-server>

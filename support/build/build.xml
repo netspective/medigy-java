@@ -13,7 +13,11 @@
             <pathelement location="${basedir}/../.."/>
         </path>
         <pathconvert targetos="unix" property="repository.home" refid="tmp.repository.home"/>
-        <property name="consolidated.artifacts.home" value="${basedir}/artifacts"/>
+
+        <!-- all generated/derived/produced artifacts (*.class, etc) go in here and nothing touches the CVS-managed files -->
+        <property name="repository.artifacts.home" value="${repository.home}/ARTIFACTS"/>
+
+        <property name="consolidated.artifacts.home" value="${repository.artifacts.home}/consolidated"/>
         <property name="consolidated.artifacts.doc.home" value="${consolidated.artifacts.home}/consolidated/doc"/>
         <property name="consolidated.artifacts.test.junit.home" value="${consolidated.artifacts.home}/consolidated/reports/junit"/>
         <property name="consolidated.artifacts.test.coverage.home" value="${consolidated.artifacts.home}/consolidated/reports/coverage"/>
@@ -68,8 +72,8 @@
 
         <mkdir dir="${consolidated.artifacts.test.junit.home}"/>
         <junitreport todir="${consolidated.artifacts.test.junit.home}">
-            <fileset dir="${repository.home}">
-                <include name="**/build/artifacts/test/junit/TEST-*.xml"/>
+            <fileset dir="${repository.artifacts.home}">
+                <include name="**/test/junit/TEST-*.xml"/>
             </fileset>
             <report format="noframes" todir="${consolidated.artifacts.test.junit.home}"/>
         </junitreport>
@@ -83,8 +87,8 @@
         <emma>
             <report sort="+block,+name,+method,+class"
                 metrics="method:70,block:80,line:80,class:100">
-                <fileset dir="${repository.home}">
-                    <include name="**/build/artifacts/test/coverage/*.emma"/>
+                <fileset dir="${repository.artifacts.home}">
+                    <include name="**/test/coverage/*.emma"/>
                 </fileset>
 
                 <sourcepath>
@@ -120,7 +124,7 @@
                 <dirset dir="${repository.home}" >
                     <include name="**/src/java/main" />
                 </dirset>
-            </sourcepath>            
+            </sourcepath>
 
             <classpath>
                 <fileset dir="${repository.home}" >
@@ -144,8 +148,8 @@
                 <include name="**/depend/lib/build/*.jar" />
                 <include name="**/depend/lib/main/*.jar" />
             </fileset>
-            <fileset dir="${repository.home}" >
-                <include name="**/build/artifacts/classes/main" />
+            <fileset dir="${repository.artifacts.home}" >
+                <include name="**/classes/main" />
             </fileset>
         </path>
 
@@ -198,7 +202,7 @@
             <classpath path="${repository.home}/common/depend/lib/build/antdoc.jar"/>
             <classpath path="${repository.home}/persistence/depend/lib/main/log4j-1.2.9.jar"/>
         </taskdef>
-        
+
         <antdoc destination="${consolidated.artifacts.doc.home}/ant" antURL="http://ant.apache.org">
             <title>Medigy Platform</title>
             <header>Medigy Platform</header>
@@ -209,7 +213,7 @@
             </fileset>
         </antdoc>
     </target>
-    
+
     <target name="doc" depends="init.define-properties,doc.javadoc.ydoc,doc.ant-build-files">
         <ant dir="${repository.home}/persistence-tools/support/build" target="doc.generate-dbdd-html" inheritall="false" inheritrefs="false"/>
     </target>
@@ -234,10 +238,10 @@
             <fileset dir="${consolidated.artifacts.doc.home}/ant"/>
         </copy>
         <copy todir="${build.publish.latest.home}/dbdd">
-            <fileset dir="${repository.home}/persistence/support/build/artifacts/doc/dbdd"/>
+            <fileset dir="${repository.artifacts.home}/persistence/doc/dbdd"/>
         </copy>
         <copy todir="${build.publish.latest.home}/ddl">
-            <fileset dir="${repository.home}/persistence/support/build/artifacts/ddl"/>
+            <fileset dir="${repository.artifacts.home}/persistence/ddl"/>
         </copy>
     </target>
 

@@ -69,7 +69,7 @@
         </copy>
     </target>
 
-    <target name="init.prepare-app-lib" depends="init.define-properties,init.define-modules">
+    <target name="init.prepare-app-lib" depends="init.define-properties,init.define-modules-artifacts-home">
         <ant dir="${persistence.home}/support/build" target="jar" inheritall="false" inheritrefs="false"/>
         <ant dir="${service.home}/support/build" target="jar" inheritall="false" inheritrefs="false"/>
         <ant dir="${presentation.home}/support/build" target="jar" inheritall="false" inheritrefs="false"/>
@@ -90,8 +90,8 @@
                 <include name="commons-pool-1.2.jar"/>
             </fileset>
 
-            <fileset dir="${persistence.home}/support/build/artifacts" includes="*.jar"/>
-            <fileset dir="${service.home}/support/build/artifacts" includes="*.jar"/>
+            <fileset dir="${persistence.artifacts.home}" includes="*.jar"/>
+            <fileset dir="${service.artifacts.home}" includes="*.jar"/>
         </copy>
     </target>
 
@@ -100,7 +100,7 @@
         <property name="app.jar.stage.home" value="${module.artifacts.home}/work/regexp"/>
         <unjar dest="${app.jar.stage.home}">
             <fileset dir="${module.artifacts.home}" includes="*.jar"/>
-            <fileset dir="${presentation.home}/support/build/artifacts" includes="*.jar"/>
+            <fileset dir="${presentation.artifacts.home}" includes="*.jar"/>
         </unjar>
 
         <!-- we use href="/medigy/resources/... in development environment to refer to global resources so we need to replace it for production/test use -->
