@@ -41,30 +41,8 @@
 /*
  * Copyright (c) 2005 Your Corporation. All Rights Reserved.
  */
-package com.medigy.app.pbs.page;
+package com.medigy.app.pbs.page.entity;
 
-import com.medigy.wicket.border.HeaderedPanelBorder;
-import com.medigy.wicket.border.StandardPanelBorder;
-import com.medigy.wicket.page.AuthenticatedWebPage;
-import com.medigy.wicket.page.PageHeadingProvider;
-import wicket.markup.html.basic.Label;
-
-public class Home extends AuthenticatedWebPage implements PageHeadingProvider
+public class EntityAccessException extends RuntimeException
 {
-    public Home()
-    {
-        add(new Label("message", "Hello World 2"));
-        add(new HeaderedPanelBorder("panel1").add(new Label("heading", "Test Heading 01")));
-        add(new StandardPanelBorder("panel2"));
-    }
-
-    public String getPageHeading()
-    {
-        return "Home Page Heading";
-    }
-
-    public String getPageTitle()
-    {
-        return getPageHeading();
-    }
 }

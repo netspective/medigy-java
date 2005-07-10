@@ -41,30 +41,35 @@
 /*
  * Copyright (c) 2005 Your Corporation. All Rights Reserved.
  */
-package com.medigy.app.pbs.page;
+package com.medigy.app.pbs.page.entity.person;
 
-import com.medigy.wicket.border.HeaderedPanelBorder;
-import com.medigy.wicket.border.StandardPanelBorder;
-import com.medigy.wicket.page.AuthenticatedWebPage;
-import com.medigy.wicket.page.PageHeadingProvider;
-import wicket.markup.html.basic.Label;
+import com.medigy.app.pbs.page.entity.AbstractEntityPage;
+import com.medigy.persist.model.person.Person;
+import wicket.PageParameters;
 
-public class Home extends AuthenticatedWebPage implements PageHeadingProvider
+public abstract class AbstractPersonPage extends AbstractEntityPage
 {
-    public Home()
+    public final static String REQPARAMNAME_PERSON_ID = "person_id";
+
+    private Person activePerson;
+
+    protected AbstractPersonPage(final PageParameters parameters)
     {
-        add(new Label("message", "Hello World 2"));
-        add(new HeaderedPanelBorder("panel1").add(new Label("heading", "Test Heading 01")));
-        add(new StandardPanelBorder("panel2"));
+        super(parameters);
     }
 
-    public String getPageHeading()
+    public String getEntityIdPageParamName()
     {
-        return "Home Page Heading";
+        return REQPARAMNAME_PERSON_ID;
     }
 
-    public String getPageTitle()
+    protected void loadEntity(final long entityId) throws PersonAccessException
     {
-        return getPageHeading();
+        // TODO: load the activePerson instance
+    }
+
+    public Person getEntity()
+    {
+        return activePerson;
     }
 }

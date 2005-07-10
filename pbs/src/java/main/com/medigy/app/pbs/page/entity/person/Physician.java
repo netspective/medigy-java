@@ -41,30 +41,14 @@
 /*
  * Copyright (c) 2005 Your Corporation. All Rights Reserved.
  */
-package com.medigy.app.pbs.page;
+package com.medigy.app.pbs.page.entity.person;
 
-import com.medigy.wicket.border.HeaderedPanelBorder;
-import com.medigy.wicket.border.StandardPanelBorder;
-import com.medigy.wicket.page.AuthenticatedWebPage;
-import com.medigy.wicket.page.PageHeadingProvider;
-import wicket.markup.html.basic.Label;
+import wicket.PageParameters;
 
-public class Home extends AuthenticatedWebPage implements PageHeadingProvider
+public class Physician extends AbstractPersonPage
 {
-    public Home()
+    public Physician(final PageParameters parameters)
     {
-        add(new Label("message", "Hello World 2"));
-        add(new HeaderedPanelBorder("panel1").add(new Label("heading", "Test Heading 01")));
-        add(new StandardPanelBorder("panel2"));
-    }
-
-    public String getPageHeading()
-    {
-        return "Home Page Heading";
-    }
-
-    public String getPageTitle()
-    {
-        return getPageHeading();
+        super(parameters);
     }
 }

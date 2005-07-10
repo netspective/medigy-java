@@ -41,30 +41,34 @@
 /*
  * Copyright (c) 2005 Your Corporation. All Rights Reserved.
  */
-package com.medigy.app.pbs.page;
+package com.medigy.app.pbs.page.entity;
 
-import com.medigy.wicket.border.HeaderedPanelBorder;
-import com.medigy.wicket.border.StandardPanelBorder;
-import com.medigy.wicket.page.AuthenticatedWebPage;
-import com.medigy.wicket.page.PageHeadingProvider;
-import wicket.markup.html.basic.Label;
-
-public class Home extends AuthenticatedWebPage implements PageHeadingProvider
+public class InvalidEntityIdException extends RuntimeException
 {
-    public Home()
+    private AbstractEntityPage page;
+    private String entityIdParamName;
+    private String entityId;
+
+    public InvalidEntityIdException(Throwable cause, AbstractEntityPage page, String entityIdParamName, String entityId)
     {
-        add(new Label("message", "Hello World 2"));
-        add(new HeaderedPanelBorder("panel1").add(new Label("heading", "Test Heading 01")));
-        add(new StandardPanelBorder("panel2"));
+        super("Invalid " + entityIdParamName + " \"" + entityId + "\" provided to page " + page, cause);
+        this.page = page;
+        this.entityIdParamName = entityIdParamName;
+        this.entityId = entityId;
     }
 
-    public String getPageHeading()
+    public AbstractEntityPage getPage()
     {
-        return "Home Page Heading";
+        return page;
     }
 
-    public String getPageTitle()
+    public String getEntityIdParamName()
     {
-        return getPageHeading();
+        return entityIdParamName;
+    }
+
+    public String getEntityId()
+    {
+        return entityId;
     }
 }

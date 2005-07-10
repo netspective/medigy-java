@@ -8,7 +8,6 @@ import com.medigy.wicket.session.AuthenticatedSession;
 import wicket.Component;
 import wicket.MarkupContainer;
 import wicket.markup.html.border.Border;
-import wicket.model.IModel;
 
 /**
  * Ensures that user is authenticated in session.  If no user is signed in, a sign
@@ -32,16 +31,13 @@ public class AuthenticatedWebPage extends BasePage
         super.add(border);
     }
 
-    public AuthenticatedWebPage(IModel iModel)
-    {
-        super(iModel);
-    }
-
     protected Border createBorder(final String componentName)
     {
         final DefaultPageBodyBorder border = new DefaultPageBodyBorder(componentName);
         border.setNavigatorPanelVisible(this instanceof PageNavigationPanelProvider);
         border.setCalloutPanelVisible(this instanceof PageCalloutPanelProvider);
+        if(this instanceof PageHeadingProvider)
+            border.setHeadingProvider((PageHeadingProvider) this);
         return border;
     }
 

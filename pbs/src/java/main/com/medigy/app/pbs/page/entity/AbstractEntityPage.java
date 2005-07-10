@@ -41,30 +41,52 @@
 /*
  * Copyright (c) 2005 Your Corporation. All Rights Reserved.
  */
-package com.medigy.app.pbs.page;
+package com.medigy.app.pbs.page.entity;
 
-import com.medigy.wicket.border.HeaderedPanelBorder;
-import com.medigy.wicket.border.StandardPanelBorder;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import com.medigy.wicket.page.AuthenticatedWebPage;
-import com.medigy.wicket.page.PageHeadingProvider;
-import wicket.markup.html.basic.Label;
+import wicket.PageParameters;
+import wicket.util.string.StringValueConversionException;
 
-public class Home extends AuthenticatedWebPage implements PageHeadingProvider
+public abstract class AbstractEntityPage extends AuthenticatedWebPage
 {
-    public Home()
+    private static final Log log = LogFactory.getLog(AbstractEntityPage.class);
+
+    private final long entityId;
+
+    public AbstractEntityPage(final PageParameters parameters)
     {
-        add(new Label("message", "Hello World 2"));
-        add(new HeaderedPanelBorder("panel1").add(new Label("heading", "Test Heading 01")));
-        add(new StandardPanelBorder("panel2"));
+        final String entityIdPageParamName = getEntityIdPageParamName();
+        final long entityId;
+        try
+        {
+            entityId = parameters.getLong(entityIdPageParamName);
+            loadEntity(entityId);
+        }
+        catch (final StringValueConversionException e)
+        {
+            log.error(e);
+            throw new InvalidEntityIdException(e, this, entityIdPageParamName, parameters.getString(entityIdPageParamName));
+        }
+
+        this.entityId = entityId;
     }
 
-    public String getPageHeading()
+    public long getEntityId()
     {
-        return "Home Page Heading";
+        return entityId;
     }
 
-    public String getPageTitle()
+    protected abstract void loadEntity(long entityId) throws EntityAccessException;
+
+    public abstract String getEntityIdPageParamName();
+    public abstract Object getEntity();
+
+    public String getEntityHeader()
     {
-        return getPageHeading();
+        final Object entity = getEntity();
+        return entity == null ? ("Entity ID "+ entityId +" is NULL") : (entity.getClass() + " ID " + entityId);
     }
 }
