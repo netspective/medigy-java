@@ -41,19 +41,16 @@
 /*
  * Copyright (c) 2005 Your Corporation. All Rights Reserved.
  */
-package com.medigy.app.pbs.page.test;
+package com.medigy.app.pbs.page.search;
 
 import com.medigy.wicket.border.DefaultPageBodyBorder.NavigationPanelProvider;
+import com.medigy.wicket.page.AuthenticatedWebPage;
 import wicket.markup.html.panel.Panel;
 
-public class Test1 extends AbstractTest implements NavigationPanelProvider
+public class AbstractSearchPage extends AuthenticatedWebPage implements NavigationPanelProvider
 {
-    public Test1()
+    public Panel getPageNavigationPanel(final String id)
     {
-    }
-
-    public Panel getPageNavigationPanel(String id)
-    {
-        return new TestNavigator(id);
+        return new SearchNavigator(id);
     }
 }

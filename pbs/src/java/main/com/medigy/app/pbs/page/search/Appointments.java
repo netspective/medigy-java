@@ -41,19 +41,8 @@
 /*
  * Copyright (c) 2005 Your Corporation. All Rights Reserved.
  */
-package com.medigy.app.pbs.page.test;
+package com.medigy.app.pbs.page.search;
 
-import com.medigy.wicket.border.DefaultPageBodyBorder.NavigationPanelProvider;
-import wicket.markup.html.panel.Panel;
-
-public class Test1 extends AbstractTest implements NavigationPanelProvider
+public class Appointments extends AbstractSearchPage
 {
-    public Test1()
-    {
-    }
-
-    public Panel getPageNavigationPanel(String id)
-    {
-        return new TestNavigator(id);
-    }
 }

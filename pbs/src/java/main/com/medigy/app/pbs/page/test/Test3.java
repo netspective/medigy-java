@@ -45,10 +45,16 @@ package com.medigy.app.pbs.page.test;
 
 import com.medigy.wicket.border.DefaultPageBodyBorder.CalloutPanelProvider;
 import com.medigy.wicket.border.DefaultPageBodyBorder.NavigationPanelProvider;
+import wicket.markup.html.panel.Panel;
 
 public class Test3 extends AbstractTest implements NavigationPanelProvider, CalloutPanelProvider
 {
     public Test3()
     {
     }
+
+    public Panel getPageNavigationPanel(String id)
+    {
+        return new TestNavigator(id);
+    }    
 }

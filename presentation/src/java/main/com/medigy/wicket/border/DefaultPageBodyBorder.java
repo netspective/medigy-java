@@ -1,7 +1,7 @@
 /*
- * $Id: DefaultPageBodyBorder.java,v 1.9 2005-07-10 22:08:29 shahid.shah Exp $
- * $Revision: 1.9 $
- * $Date: 2005-07-10 22:08:29 $
+ * $Id: DefaultPageBodyBorder.java,v 1.10 2005-07-11 00:48:59 shahid.shah Exp $
+ * $Revision: 1.10 $
+ * $Date: 2005-07-11 00:48:59 $
  *
  * ====================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,6 +26,7 @@ import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.border.Border;
+import wicket.markup.html.panel.Panel;
 import wicket.model.Model;
 
 public class DefaultPageBodyBorder extends Border
@@ -43,7 +44,7 @@ public class DefaultPageBodyBorder extends Border
 
     public interface NavigationPanelProvider
     {
-        // TODO: implement this
+        public Panel getPageNavigationPanel(final String id);
     }
 
     public interface CalloutPanelProvider
@@ -90,7 +91,8 @@ public class DefaultPageBodyBorder extends Border
             }
         }));
 
-        mainContentCell.add(navigatorPanelCell = new WebMarkupContainer("page-navigation-panel"));
+        final String pageNavPanelId = "page-navigation-panel";
+        mainContentCell.add(navigatorPanelCell = navigatorPanelVisible ? ((NavigationPanelProvider) page).getPageNavigationPanel(pageNavPanelId) : new WebMarkupContainer(pageNavPanelId));
         mainContentCell.add(navigatorPanelSeparatorCell = new WebMarkupContainer("page-nav-and-main-content-separator"));
         navigatorPanelCell.setVisible(navigatorPanelVisible);
         navigatorPanelSeparatorCell.setVisible(navigatorPanelVisible);
