@@ -7,7 +7,36 @@
 
     <body wicket:id="border" class="page">
         <div wicket:id="worklistBorder">
-            Patient flow worklist view will go here.
+            <table class="view">
+                <tr class="heading-descriptor">
+                    <th></th> <!-- buttons -->
+                    <th></th> <!-- Patient -->
+                    <th colspan="3" align="center">Time</th> <!-- spans Appt, Checkin, Checkout -->
+                    <th></th> <!-- Claim -->
+                    <th></th> <!-- OV Copay -->
+                    <th colspan="2" align="center">Balance</th> <!-- spans Account and Claim balance -->
+                </tr>
+                <tr class="heading">
+                    <th><!-- this is where cancel/reschedule appointments buttons appear --></th>
+                    <th>Patient</th> <!-- will contain patient type like new or established on second line -->
+
+                    <th>Appt</th>
+                    <th>Checkin</th>
+                    <th>Checkout</th>
+
+                    <th>Claim</th>
+                    <th>OV Copay</th>
+
+                    <th>Account</th>
+                    <th>Patient</th>
+
+                    <th>Confirm</th> <!-- buttons that allow confirming various things -->
+                    <th>Action</th>
+                </tr>
+                <tr>
+                    <td></td>
+                </tr>
+            </table>
         </div>
     </body>
 </html>

@@ -177,11 +177,8 @@ ul.vertical-menu li
 	background-position: 0px 1px;
 }
 
-ul.vertical-menu li a
-{
-    text-decoration: none;
-    color: blue;
-}
+ul.vertical-menu li a { text-decoration: none; color: blue; }
+ul.vertical-menu li a:hover { text-decoration: underline; color: black; }
 
 /*********************************************************************
  ** ACTIVE USER PANEL                                               **
@@ -307,9 +304,11 @@ table.panel table.content tr.bottom td.right { background: url(../images/panel/s
  ** WORKLISTS                                                       **
  *********************************************************************/
 
- div.worklist { }
- div.worklist div.control-bar { }
- div.worklist div.view { }
+div.worklist { }
+div.worklist div.control-bar { }
+div.worklist div.control-bar a { text-decoration: none; color: blue; }
+div.worklist div.control-bar a:hover { text-decoration: underline; color: black; }
+div.worklist div.view { }
 
 /*********************************************************************
  ** FOOTER MENU                                                     **
