@@ -1,0 +1,32 @@
+<html xmlns:wicket="http://wicket.sourceforge.net/">
+    <head>
+        <title>Person Flow Worklist Controlbar</title>
+        <link rel="stylesheet" type="text/css" href="../../../../../../../../../resources/theme/default/css/theme.css"/>
+    </head>
+    <body>
+        <wicket:panel>
+            <form method="post">
+		        Find By:
+		        <select name="search_type" class="record-type">
+			        <option value="id">Person ID</option>
+			        <option value="lastname" selected>Last Name</option>
+			        <option value="anyname">First or Last Name</option>
+			        <option value="ssn">Social Security</option>
+			        <option value="dob">Date of Birth</option>
+			        <option value="phone">Phone Number</option>
+			        <option value="account">Account Number</option>
+			        <option value="chart">Chart Number</option>
+		        </select>
+                <input name='search_expression' size=17 maxlength=64 value="x,y,z" title='Person'>
+                <input type=submit name="execute" value="Go">
+                <select name="create_newrec_select" class="add-record" onchange="if(this.selectedIndex > 0) window.location.href = '/medigy-pbs/app?bookmarkablePage=' + this.options[this.selectedIndex].value">
+				    <option value="com.medigy.app.pbs.page.search.Person">Add New Record</option>
+				    <option value="com.medigy.app.pbs.page.PatientRegistrationPage">Patient</option>
+				    <option value="com.medigy.app.pbs.page.search.Person">Physician</option>
+				    <option value="com.medigy.app.pbs.page.search.Person">Nurse</option>
+				    <option value="com.medigy.app.pbs.page.search.Person">Staff</option>
+			    </select>
+             </form>
+        </wicket:panel>
+    </body>
+</html>
