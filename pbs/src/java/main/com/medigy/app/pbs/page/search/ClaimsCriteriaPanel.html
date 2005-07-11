@@ -1,0 +1,44 @@
+<html xmlns:wicket="http://wicket.sourceforge.net/">
+    <head>
+        <title>Claim Flow Worklist Controlbar</title>
+        <link rel="stylesheet" type="text/css" href="../../../../../../../../../resources/theme/default/css/theme.css"/>
+    </head>
+    <body>
+        <wicket:panel>
+            <form method="post">
+		        Find By:
+		        <select name="search_status" class="record-type">
+			        <option value="all">All</option>
+			        <option value="14">Appealed</option>
+			        <option value="0">Created</option>
+			        <option value="3">On Hold</option>
+			        <option value="17">Paper Claim Printed</option>
+			        <option value="4">Submitted</option>
+			        <option value="5">Transferred</option>
+			        <option value="8">Electronically Transmitted</option>
+			        <option value="9">Transmitted via Paper</option>
+			        <option value="7">Rejected Internally</option>
+			        <option value="11">Rejected Externally</option>
+			        <option value="12">Awaiting Insurance Payment</option>
+			        <option value="18">Awaiting Client Payment</option>
+			        <option value="13">Payments Applied</option>
+			        <option value="15">Closed</option>
+			        <option value="16">Voided</option>
+		        </select>
+		        <select name="search_type" class="record-type">
+			        <option value="id">Claim #</option>
+			        <option value="patientid">Patient ID</option>
+			        <option value="lastname">Patient Last Name</option>
+			        <option value="ssn">Patient SSN</option>
+			        <option value="date">Date of Visit</option>
+			        <option value="servicedate">Service Date</option>
+			        <option value="upin">Physician UPIN</option>
+			        <option value="insurance">Payer</option>
+			        <option value="employer">Employer</option>
+		        </select>
+		        <input name='claim' size=17 maxlength=64 value="x,y,z" title='Claim'>
+                <input type=submit name="execute" value="Go">
+             </form>
+        </wicket:panel>
+    </body>
+</html>
