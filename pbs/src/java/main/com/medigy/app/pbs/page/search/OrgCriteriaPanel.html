@@ -1,0 +1,23 @@
+<html xmlns:wicket="http://wicket.sourceforge.net/">
+    <head>
+        <title>Org Flow Worklist Controlbar</title>
+        <link rel="stylesheet" type="text/css" href="../../../../../../../../../resources/theme/default/css/theme.css"/>
+    </head>
+    <body>
+        <wicket:panel>
+            <form method="post">
+		        Find By:
+		            <select name="search_type" style="color: darkred">
+			            <option value="id">Org ID</option>
+			            <option value="primname" selected>Primary Name</option>
+			            <option value="category">Type of Org</option>
+		            </select>
+                <input name='org' size=17 maxlength=64 value="x,y,z" title='Org'>
+                    <a href="javascript:doFindLookup(document.search_form, document.search_form.org, '/lookup/org', ',', false);">
+                <img src='/resources/icons/arrow_down_blue.gif' border=0 title="Lookup Org"></a>
+
+                <input type=submit name="execute" value="Go">
+             </form>
+        </wicket:panel>
+    </body>
+</html>
