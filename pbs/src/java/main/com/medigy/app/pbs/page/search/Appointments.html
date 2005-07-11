@@ -6,43 +6,8 @@
     </head>
 
     <body wicket:id="border" class="page">
-    <form method="post">
-    Type:
-        <SELECT name='appt_status'>
-            <option value="0,0">Scheduled</option>
-            <option value="1,1">In Progress</option>
-            <option value="2,2">Complete</option>
-            <option value="3,3">Cancelled</option>
-            <option value="0,3">All appointments</option>
-        </SELECT>
-
-        &nbsp; Date Range:
-        <input name='search_from_date' size=10 maxlength=10 value="today" onblur="validateChange_Date(event)" title='From Date'>
-        <input name='search_to_date' size=10 maxlength=10 value="today" onblur="validateChange_Date(event)" title='To Date'>
-        <nobr>
-            &nbsp <input name='unAvailEventSearch' type=checkbox $unAvailEventSearchChecked>
-            Appointments Outside Available Templates
-        </nobr>
-        <br>
-        Resource(s):
-        <input name='resource_ids' size=17 maxlength=64 value="x,y,z" title='Resource ID'>
-            <a href="javascript:doFindLookup(document.search_form, document.search_form.resource_ids, '/lookup/physician/id', ',', false);">
-        <img src='/resources/icons/arrow_down_blue.gif' border=0 title="Lookup Resource ID"></a>
-
-        Facility(s):
-        <input name='facility_ids' size=17 maxlength=64 value="x,y,z" title='Facility ID'>
-            <a href="javascript:doFindLookup(document.search_form, document.search_form.facility_ids, '/lookup/org/id', ',', false);">
-        <img src='/resources/icons/arrow_down_blue.gif' border=0 title="Lookup Facility ID"></a>
-
-        <input type=submit name="execute" value="Go">
-
-        &nbsp; &nbsp; Order by:
-        <SELECT name='order_by'>
-            <option value="time">Appointment Time</option>
-            <option value="name">Patient Name</option>
-            <option value="account">Account Number</option>
-            <option value="chart">Chart Number</option>
-        </SELECT>
-     </form>
+        <div wicket:id="searchBorder">
+            Search results will go here.
+        </div>
     </body>
 </html>

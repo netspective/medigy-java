@@ -47,8 +47,20 @@ import com.medigy.wicket.border.DefaultPageBodyBorder.NavigationPanelProvider;
 import com.medigy.wicket.page.AuthenticatedWebPage;
 import wicket.markup.html.panel.Panel;
 
-public class AbstractSearchPage extends AuthenticatedWebPage implements NavigationPanelProvider
+public abstract class AbstractSearchPage extends AuthenticatedWebPage implements NavigationPanelProvider
 {
+    private final Panel criteriaPanel;
+    private final SearchBorder searchBorder;
+
+    public AbstractSearchPage()
+    {
+        add(searchBorder = new SearchBorder("searchBorder", this));
+        searchBorder.add(criteriaPanel = getSearchCriteriaPanel("criteriaPanel"));
+    }
+
+    public abstract Panel getSearchCriteriaPanel(final String id);
+
+
     public Panel getPageNavigationPanel(final String id)
     {
         return new SearchNavigator(id);

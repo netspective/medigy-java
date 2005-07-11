@@ -45,10 +45,10 @@ package com.medigy.app.pbs.page.search;
 
 import wicket.markup.html.panel.Panel;
 
-public class Appointments extends AbstractSearchPage
+public class AppointmentsCriteriaPanel extends Panel
 {
-    public Panel getSearchCriteriaPanel(final String id)
+    public AppointmentsCriteriaPanel(final String id)
     {
-        return new AppointmentsCriteriaPanel(id);
+        super(id);
     }
 }
