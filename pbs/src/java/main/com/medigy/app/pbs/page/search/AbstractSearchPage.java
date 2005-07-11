@@ -45,21 +45,32 @@ package com.medigy.app.pbs.page.search;
 
 import com.medigy.wicket.border.DefaultPageBodyBorder.NavigationPanelProvider;
 import com.medigy.wicket.page.AuthenticatedWebPage;
+import wicket.Component;
+import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.panel.Panel;
 
 public abstract class AbstractSearchPage extends AuthenticatedWebPage implements NavigationPanelProvider
 {
     private final Panel criteriaPanel;
+    private final Component onSelectPanel;
     private final SearchBorder searchBorder;
 
     public AbstractSearchPage()
     {
         add(searchBorder = new SearchBorder("searchBorder", this));
         searchBorder.add(criteriaPanel = getSearchCriteriaPanel("criteriaPanel"));
+
+        final Panel customSelectPanel = getOnSelectPanel("onSelectPanel");
+        searchBorder.add(onSelectPanel = customSelectPanel != null ? customSelectPanel : new WebMarkupContainer("onSelectPanel"));
+        onSelectPanel.setVisible(customSelectPanel != null);
     }
 
     public abstract Panel getSearchCriteriaPanel(final String id);
 
+    public Panel getOnSelectPanel(final String id)
+    {
+        return null;
+    }
 
     public Panel getPageNavigationPanel(final String id)
     {

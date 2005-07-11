@@ -44,9 +44,9 @@ package com.medigy.app.pbs.page.search;
 
 import wicket.markup.html.panel.Panel;
 
-public class OrganizationCriteriaPanel extends Panel
+public class OrganizationsCriteriaPanel extends Panel
 {
-    public OrganizationCriteriaPanel(final String id)
+    public OrganizationsCriteriaPanel(final String id)
     {
         super(id);
     }
