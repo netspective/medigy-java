@@ -171,10 +171,16 @@ ul.vertical-menu li
 {
 	line-height: 15px;
 	padding-left: 15px;
-	padding-top: 0px;
+	padding-bottom: 5px;
 	background-image: url(../images/navigation/vertical-menu-bullet.png);
 	background-repeat: no-repeat;
 	background-position: 0px 1px;
+}
+
+ul.vertical-menu li a
+{
+    text-decoration: none;
+    color: blue;
 }
 
 /*********************************************************************

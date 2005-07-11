@@ -44,17 +44,11 @@
 package com.medigy.app.pbs.page.search;
 
 import wicket.markup.html.panel.Panel;
-import wicket.model.IModel;
 
 public class SearchNavigator extends Panel
 {
     public SearchNavigator(final String id)
     {
         super(id);
-    }
-
-    public SearchNavigator(final String id, final IModel model)
-    {
-        super(id, model);
     }
 }

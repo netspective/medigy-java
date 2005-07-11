@@ -41,17 +41,8 @@
 /*
  * Copyright (c) 2005 Your Corporation. All Rights Reserved.
  */
-package com.medigy.app.pbs.page;
+package com.medigy.app.pbs.page.worklist;
 
-import com.medigy.app.pbs.page.search.SearchNavigator;
-import com.medigy.app.pbs.page.worklist.WorklistNavigator;
-import com.medigy.wicket.page.AuthenticatedWebPage;
-
-public class Home extends AuthenticatedWebPage
+public class PatientFlow extends AbstractWorklistPage
 {
-    public Home()
-    {
-        add(new SearchNavigator("searchNavigator"));
-        add(new WorklistNavigator("worklistNavigator"));
-    }
 }

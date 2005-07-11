@@ -58,8 +58,4 @@ public class AbstractTest extends AuthenticatedWebPage implements HeadingProvide
         return getClass().getSimpleName();
     }
 
-    public String getPageTitle()
-    {
-        return getPageHeading();
-    }
 }

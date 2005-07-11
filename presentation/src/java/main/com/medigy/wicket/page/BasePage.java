@@ -55,5 +55,5 @@ public class BasePage extends WebPage
     public BasePage(final IModel iModel)
     {
         super(iModel);
-    }
+    }        
 }

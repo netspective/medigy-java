@@ -1,7 +1,7 @@
 /*
- * $Id: DefaultPageBodyBorder.java,v 1.10 2005-07-11 00:48:59 shahid.shah Exp $
- * $Revision: 1.10 $
- * $Date: 2005-07-11 00:48:59 $
+ * $Id: DefaultPageBodyBorder.java,v 1.11 2005-07-11 14:45:12 shahid.shah Exp $
+ * $Revision: 1.11 $
+ * $Date: 2005-07-11 14:45:12 $
  *
  * ====================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -31,10 +31,13 @@ import wicket.model.Model;
 
 public class DefaultPageBodyBorder extends Border
 {
+    /**
+     * If a dynamic heading (something not available in the HTML head title tag) is required, then the page that
+     * needs a dynamic heading should implement this interface and provide the dynamic heading.
+     */
     public interface HeadingProvider
     {
         public String getPageHeading();
-        public String getPageTitle();
     }
 
     public interface PathProvider
@@ -101,7 +104,7 @@ public class DefaultPageBodyBorder extends Border
         {
             protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag componentTag)
             {
-                replaceComponentTagBody(markupStream, componentTag, headingProvider == null ? "No Page Heading Provider Available" : headingProvider.getPageHeading());
+                replaceComponentTagBody(markupStream, componentTag, headingProvider == null ? "<script>document.write(document.title ? document.title : 'No HeadingProvider or &lt;title&gt; tag available.')</script>" : headingProvider.getPageHeading());
             }
         });
 

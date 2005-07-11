@@ -1,26 +1,24 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.sourceforge.net/">
     <head>
+        <title>Welcome to Medigy</title>
         <link rel="stylesheet" type="text/css" href="/medigy/resources/theme/default/css/theme.css"></link>
     </head>
 
     <body wicket:id="border" class="page">
-        <div wicket:id="message">Message goes here</div>
-        <p>
-        <div wicket:id="panel1">
-            Some body panel text that will show up inside the panel.  This should also show up with a heading for
-            the panel.
-        </div>
-        <p>
-        <div wicket:id="panel2">
-            Some body panel text that will show up inside the panel.
-            This is a body page that does not have a left page navigator panel (or vertical separator) and does
-            not contain a callout panel on the right.
-            <p/>
-            <wicket:link><a href="/com/medigy/app/pbs/page/test/Test1.html">Try a page with a page navigator on the left.</a></wicket:link><br/>
-            <wicket:link><a href="/com/medigy/app/pbs/page/test/Test2.html">Try a page with a callout panel on the right.</a></wicket:link><br/>
-            <wicket:link><a href="/com/medigy/app/pbs/page/test/Test3.html">Try a page with both page navigator and callout panel.</a></wicket:link><br/>
-        </div>
-
+        <table>
+            <tr valign="top">
+                <td>
+                    Search
+                    <hr size="1" color="silver"/>
+                    <div wicket:id="searchNavigator"/>
+                </td>
+                <td>
+                    Worklists
+                    <hr size="1" color="silver"/>
+                    <div wicket:id="worklistNavigator"/>
+                </td>
+            </tr>
+        </table>
     </body>
 </html>

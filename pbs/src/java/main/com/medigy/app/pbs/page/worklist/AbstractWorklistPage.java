@@ -41,17 +41,16 @@
 /*
  * Copyright (c) 2005 Your Corporation. All Rights Reserved.
  */
-package com.medigy.app.pbs.page;
+package com.medigy.app.pbs.page.worklist;
 
-import com.medigy.app.pbs.page.search.SearchNavigator;
-import com.medigy.app.pbs.page.worklist.WorklistNavigator;
+import com.medigy.wicket.border.DefaultPageBodyBorder.NavigationPanelProvider;
 import com.medigy.wicket.page.AuthenticatedWebPage;
+import wicket.markup.html.panel.Panel;
 
-public class Home extends AuthenticatedWebPage
+public class AbstractWorklistPage extends AuthenticatedWebPage implements NavigationPanelProvider
 {
-    public Home()
+    public Panel getPageNavigationPanel(final String id)
     {
-        add(new SearchNavigator("searchNavigator"));
-        add(new WorklistNavigator("worklistNavigator"));
+        return new WorklistNavigator(id);
     }
 }
