@@ -1,0 +1,30 @@
+<html xmlns:wicket="http://wicket.sourceforge.net/">
+    <head>
+        <title>Org Flow Worklist Controlbar</title>
+        <link rel="stylesheet" type="text/css" href="../../../../../../../../../resources/theme/default/css/theme.css"/>
+    </head>
+    <body>
+        <wicket:panel>
+            <form method="post">
+		        Find By:
+		        <select name="search_type" style="color: darkred">
+			        <option value="product">Product Name</option>
+			        <option value="insorgid">Insurance Org ID</option>
+			        <option value="street">Street</option>
+			        <option value="city">City</option>
+			        <option value="state">State</option>
+		        </select>
+                <input name='insurance' size=17 maxlength=64 value="x,y,z" title='Insurance'>
+                    <a href="javascript:doFindLookup(document.search_form, document.search_form.insurance, '/lookup/insurance', ',', false);">
+                <img src='/resources/icons/arrow_down_blue.gif' border=0 title="Lookup Insurance"></a>
+
+                <input type=submit name="execute" value="Go">
+                <select name="create_newrec_select" style="color: green" onchange="if(this.selectedIndex > 0) window.location.href = this.options[this.selectedIndex].value">
+				    <option>Add New Record</option>
+				    <option value="add-ins-product">Insurance Product</option>
+				    <option value="add-ins-plan">Insurance Plan</option>
+			    </select>
+             </form>
+        </wicket:panel>
+    </body>
+</html>
