@@ -7,25 +7,23 @@
         <wicket:panel>
             <form method="post">
 		        Find By:
-		            <select name="search_type" style="color: darkred">
-			            <option value="id">Org ID</option>
-			            <option value="primname" selected>Primary Name</option>
-			            <option value="category">Type of Org</option>
-		            </select>
+		        <select name="search_type" class="record-type">
+			        <option value="id">Org ID</option>
+			        <option value="primname" selected>Primary Name</option>
+			        <option value="category">Type of Org</option>
+		        </select>
                 <input name='org' size=17 maxlength=64 value="x,y,z" title='Org'>
-                    <a href="javascript:doFindLookup(document.search_form, document.search_form.org, '/lookup/org', ',', false);">
-                <img src='/resources/icons/arrow_down_blue.gif' border=0 title="Lookup Org"></a>
-
                 <input type=submit name="execute" value="Go">
-                    <select name="create_newrec_select" style="color: green" onchange="if(this.selectedIndex > 0) window.location.href = this.options[this.selectedIndex].value">
-				        <option>Add New Record</option>
-				        <option value="add-org-main">Main</option>
-				        <option value="add-org-dept">Department</option>
-				        <option value="add-org-provider">Provider</option>
-				        <option value="add-org-employer">Employer</option>
-				        <option value="add-org-insurance">Insurance</option>
-				        <option value="add-org-ipa">IPA</option>
-			        </select>
+                <select name="create_newrec_select" class="add-record" onchange="if(this.selectedIndex > 0) window.location.href = '/medigy-pbs/app?bookmarkablePage=' + this.options[this.selectedIndex].value">
+				    <option value=""></option>
+				    <option value="com.medigy.app.pbs.page.search.Organizations">Add New Record</option>
+				    <option value="com.medigy.app.pbs.page.search.Organizations">Main</option>
+				    <option value="com.medigy.app.pbs.page.search.Organizations">Department</option>
+				    <option value="com.medigy.app.pbs.page.search.Organizations">Provider</option>
+				    <option value="com.medigy.app.pbs.page.search.Organizations">Employer</option>
+				    <option value="com.medigy.app.pbs.page.search.Organizations">Insurance</option>
+				    <option value="com.medigy.app.pbs.page.search.Organizations">IPA</option>
+			    </select>
              </form>
         </wicket:panel>
     </body>
