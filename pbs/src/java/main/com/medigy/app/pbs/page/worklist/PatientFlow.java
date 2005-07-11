@@ -43,6 +43,16 @@
  */
 package com.medigy.app.pbs.page.worklist;
 
+import wicket.markup.html.panel.Panel;
+
 public class PatientFlow extends AbstractWorklistPage
 {
+    public PatientFlow()
+    {
+    }
+
+    public Panel getWorklistControlBarPanel(final String id)
+    {
+        return new PatientFlowControlBar(id);
+    }
 }

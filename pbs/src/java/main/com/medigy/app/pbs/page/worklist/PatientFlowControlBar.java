@@ -43,25 +43,12 @@
  */
 package com.medigy.app.pbs.page.worklist;
 
-import com.medigy.wicket.border.DefaultPageBodyBorder.NavigationPanelProvider;
-import com.medigy.wicket.page.AuthenticatedWebPage;
 import wicket.markup.html.panel.Panel;
 
-public abstract class AbstractWorklistPage extends AuthenticatedWebPage implements NavigationPanelProvider
+public class PatientFlowControlBar extends Panel
 {
-    private final Panel controlBar;
-    private final WorklistBorder worklistBorder;
-
-    public AbstractWorklistPage()
+    public PatientFlowControlBar(final String id)
     {
-        add(worklistBorder = new WorklistBorder("worklistBorder", this));
-        worklistBorder.add(controlBar = getWorklistControlBarPanel("controlBar"));
-    }
-
-    public abstract Panel getWorklistControlBarPanel(final String id);
-
-    public Panel getPageNavigationPanel(final String id)
-    {
-        return new WorklistNavigator(id);
+        super(id);
     }
 }

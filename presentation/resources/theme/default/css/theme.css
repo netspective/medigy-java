@@ -304,6 +304,14 @@ table.panel table.content tr.bottom td.middle { background: url(../images/panel/
 table.panel table.content tr.bottom td.right { background: url(../images/panel/shadow-corner-bottom-right.png) no-repeat right top;}
 
 /*********************************************************************
+ ** WORKLISTS                                                       **
+ *********************************************************************/
+
+ div.worklist { }
+ div.worklist div.control-bar { }
+ div.worklist div.view { }
+
+/*********************************************************************
  ** FOOTER MENU                                                     **
  *********************************************************************/
 
