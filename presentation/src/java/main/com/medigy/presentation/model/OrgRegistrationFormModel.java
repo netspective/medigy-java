@@ -35,6 +35,10 @@ public final class OrgRegistrationFormModel implements AddOrganization
 
     private AddOrganization params;
 
+    // TODO: remove once the service is ready
+    public OrgRegistrationFormModel()
+	{
+	}
 
 	public OrgRegistrationFormModel(AddOrganization params)
 	{
