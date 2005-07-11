@@ -1,0 +1,26 @@
+<html xmlns:wicket="http://wicket.sourceforge.net/">
+    <head>
+        <title>Catalog Flow Worklist Controlbar</title>
+        <link rel="stylesheet" type="text/css" href="../../../../../../../../../resources/theme/default/css/theme.css"/>
+    </head>
+    <body>
+        <wicket:panel>
+            <form method="post">
+		        Find By:
+		        <select name="search_type" class="record-type">
+			        <option value="id">ID</option>
+			        <option value="name">Name</option>
+			        <option value="description">Description</option>
+			        <option value="nameordescr" selected>Name or Description</option>
+		        </select>
+		        <input name='claim' size=17 maxlength=64 value="x,y,z" title='Claim'>
+                <input type=submit name="execute" value="Go">
+                <select name="create_newrec_select" class="add-record" onchange="if(this.selectedIndex > 0) window.location.href = '/medigy-pbs/app?bookmarkablePage=' + this.options[this.selectedIndex].value">
+				    <option value=""></option>
+				    <option value="com.medigy.app.pbs.page.search.Catalog">Add New Fee Schedule</option>
+				    <option value="com.medigy.app.pbs.page.search.Catalog">Add Fee Schedule Item</option>
+			    </select>
+             </form>
+        </wicket:panel>
+    </body>
+</html>
