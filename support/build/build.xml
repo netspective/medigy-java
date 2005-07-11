@@ -243,6 +243,12 @@
         <copy todir="${build.publish.latest.home}/ddl">
             <fileset dir="${repository.artifacts.home}/persistence/ddl"/>
         </copy>
+        <copy todir="${build.publish.latest.home}/lib">
+            <fileset dir="${repository.artifacts.home}" includes="**/*.jar"/>
+        </copy>
+        <copy todir="${build.publish.latest.home}/war">
+            <fileset dir="${repository.artifacts.home}" includes="**/*.war"/>
+        </copy>
     </target>
 
     <target name="all" depends="clean,jar"/>
