@@ -7,34 +7,87 @@
 
     <body wicket:id="border" class="page">
         <div wicket:id="worklistBorder">
-            <table class="view">
+            <table class="report" cellpadding="0" border="0" cellspacing="0">
                 <tr class="heading-descriptor">
-                    <th></th> <!-- buttons -->
-                    <th></th> <!-- Patient -->
-                    <th colspan="3" align="center">Time</th> <!-- spans Appt, Checkin, Checkout -->
+                    <th class="first"></th> <!-- Patient -->
+                    <th colspan="3">Time</th> <!-- spans Appt, Checkin, Checkout -->
                     <th></th> <!-- Claim -->
-                    <th></th> <!-- OV Copay -->
-                    <th colspan="2" align="center">Balance</th> <!-- spans Account and Claim balance -->
+                    <th>OV</th> <!-- OV Copay -->
+                    <th colspan="2">Balance</th> <!-- spans Account and Claim balance -->
+                    <th></th> <!-- Confirm -->
+                    <th class="last"></th> <!-- Action -->
                 </tr>
                 <tr class="heading">
-                    <th><!-- this is where cancel/reschedule appointments buttons appear --></th>
-                    <th>Patient</th> <!-- will contain patient type like new or established on second line -->
+                    <th class="first">Patient</th> <!-- will contain patient type like new or established on second line -->
 
                     <th>Appt</th>
                     <th>Checkin</th>
                     <th>Checkout</th>
 
                     <th>Claim</th>
-                    <th>OV Copay</th>
+                    <th>Copay</th>
 
                     <th>Account</th>
                     <th>Patient</th>
 
                     <th>Confirm</th> <!-- buttons that allow confirming various things -->
-                    <th>Action</th>
+                    <th class="last">Action</th>
                 </tr>
-                <tr>
-                    <td></td>
+
+                <tr valign="top">
+                    <td class="first">
+                        <a href="#">Shah, S</a><br/>
+                        <a href="#">Physician, 1</a>
+                    </td>
+
+                    <td>
+                        09:30a<br/>
+                        <center>(New)</center> <!-- the patient type -->
+                    </td>
+                    <td><a href="#">Checkin</a></td>
+                    <td>&nbsp;</td>
+
+                    <td>&nbsp;</td>
+                    <td class="currency">$20.00</td>
+
+                    <td class="currency">$575.00</td>
+                    <td class="currency">$27.50</td>
+
+                    <td>
+                        <a class="action" href="#">A</a>
+                        <a class="action" href="#">I</a>
+                        <a class="action" href="#">R</a>
+                        <a class="action" href="#">C</a>
+                    </td> <!-- buttons that allow confirming various things -->
+                    <td class="last">Action</td>
+                </tr>
+
+                <tr valign="top">
+                    <td class="first">
+                        <a href="#">James, R</a><br/>
+                        <a href="#">Physician, 2</a>
+                    </td>
+
+                    <td>
+                        09:45a<br/>
+                        <center>(Est)</center>
+                    </td>
+                    <td>09:45a</td>
+                    <td><a href="#">Checkout</a></td>
+
+                    <td><a href="#">700</a></td>
+                    <td class="currency">$10.00</td>
+
+                    <td class="currency">$75.00</td>
+                    <td class="currency">$0.00</td>
+
+                    <td>
+                        <a class="action" href="#">A</a>
+                        <a class="action" href="#">I</a>
+                        <a class="action" href="#">R</a>
+                        <a class="action" href="#">C</a>
+                    </td> <!-- buttons that allow confirming various things -->
+                    <td class="last">Action</td>
                 </tr>
             </table>
         </div>
