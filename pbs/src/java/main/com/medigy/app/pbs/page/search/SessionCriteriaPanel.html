@@ -1,0 +1,19 @@
+<html xmlns:wicket="http://wicket.sourceforge.net/">
+    <head>
+        <title>Session Flow Worklist Controlbar</title>
+        <link rel="stylesheet" type="text/css" href="../../../../../../../../../resources/theme/default/css/theme.css"/>
+    </head>
+    <body>
+        <wicket:panel>
+            <form method="post">
+		        Find By:
+		        <select name="search_type" class="record-type">
+			        <option value="active">Active</option>
+			        <option value="inactive" selected>Inactive</option>
+		        </select>
+                <input name='search_expression' size=17 maxlength=64 value="x,y,z" title='Search Expression'>
+                <input type=submit name="execute" value="Go">
+             </form>
+        </wicket:panel>
+    </body>
+</html>
