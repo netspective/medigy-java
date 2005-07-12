@@ -150,7 +150,8 @@ div.main-menu a
     border-right: 1px solid white;
 }
 
-div.main-menu a:link, a:visited { color: white; text-decoration: none; }
+div.main-menu a:link { color: white; text-decoration: none; }
+div.main-menu a:visited { color: white; text-decoration: none; }
 div.main-menu a:hover { background: url(../images/navigation/main-menu-hover-bg.png) repeat-x; color: black; }
 div.main-menu a.active { background: url(../images/navigation/main-menu-hover-bg.png) repeat-x; color: white; }
 
