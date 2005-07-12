@@ -178,8 +178,10 @@ ul.vertical-menu li
 	background-position: 0px 1px;
 }
 
-ul.vertical-menu li a { text-decoration: none; color: blue; }
-ul.vertical-menu li a:hover { text-decoration: underline; color: black; }
+ul.vertical-menu li a { text-decoration: none; color: black; }
+ul.vertical-menu li a:link { text-decoration: none; color: black; }
+ul.vertical-menu li a:visited { text-decoration: none; color: black; }
+ul.vertical-menu li a:hover { text-decoration: underline; color: blue; }
 
 /*********************************************************************
  ** ACTIVE USER PANEL                                               **
@@ -307,8 +309,10 @@ table.panel table.content tr.bottom td.right { background: url(../images/panel/s
 
 div.worklist { }
 div.worklist div.control-bar { }
-div.worklist div.control-bar a { text-decoration: none; color: blue; }
-div.worklist div.control-bar a:hover { text-decoration: underline; color: black; }
+div.worklist div.control-bar a.action { text-decoration: none; color: black; padding: 3px; border: 1px solid #999999; background-color: #DDDDDD; }
+div.worklist div.control-bar a.action:link { text-decoration: none; color: black; padding: 3px; border: 1px solid #999999; background-color: #DDDDDD; }
+div.worklist div.control-bar a.action:visited { text-decoration: none; color: black; padding: 3px; border: 1px solid #999999; background-color: #DDDDDD; }
+div.worklist div.control-bar a.action:hover { background-color: black; color: white; }
 div.worklist div.view { }
 
 /*********************************************************************
