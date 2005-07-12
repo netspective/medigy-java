@@ -27,10 +27,12 @@ public class QueryDefinitionSearchModel extends AbstractReadOnlyDetachableModel
     private ISelectCountAndListAction countAndListAction = new PatientSearchCountAndListAction();
     private QueryDefinitionSearchFormPanel.QueryDefinitionSearchModelObject searchParameters;
     private QueryDefinitionSearchService service;
+    private Class queryDefinitionClass;
 
-    public QueryDefinitionSearchModel(final QueryDefinitionSearchService service)
+    public QueryDefinitionSearchModel(final QueryDefinitionSearchService service, final Class queryDefinitionClass)
     {
         this.service = service;
+        this.queryDefinitionClass = queryDefinitionClass;
     }
 
     public IModel getNestedModel()
@@ -95,7 +97,7 @@ public class QueryDefinitionSearchModel extends AbstractReadOnlyDetachableModel
                 final QueryDefinitionSearchReturnValues values = service.search(new QueryDefinitionSearchParameters() {
                     public Class getQueryDefinitionClass()
                     {
-                        return PatientSearchQueryDefinition.class;
+                        return queryDefinitionClass;
                     }
 
                     public List<QueryDefinitionSearchCondition> getConditionFieldList()

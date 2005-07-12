@@ -62,7 +62,7 @@ public class QueryDefinitionSearchFormPanel extends DefaultPanel
         final int rowsPerPage = 10;
 
         // The service was looked up inside createForm which gets called in the super constructor.
-        searchModel = new QueryDefinitionSearchModel(service);
+        searchModel = new QueryDefinitionSearchModel(service, queryDefinitionClass);
         resultsListView = createSearchResultsListView(searchModel, rowsPerPage);
         add(resultsListView);
 
