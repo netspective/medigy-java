@@ -255,11 +255,11 @@ public class PatientSearchQueryDefinition extends BasicQueryDefinition implement
 
         addField("firstName", "firstName", personJoin);
         addField("lastName", "lastName", personJoin);
-        addField("firstName", "firstName", personJoin);
+        //addField("firstName", "firstName", personJoin);
         addField("gender", "currentGenderType.label", personJoin);
-        addField("personRole", "type.code", personRoleJoin);
-        addField("ssn", "identifierValue", personIdentifierJoin);
-        addField("driversLicense", "driversLicenseNumber", personJoin);
+        //addField("personRole", "type.code", personRoleJoin);
+        //addField("ssn", "identifierValue", personIdentifierJoin);
+        //addField("driversLicense", "driversLicenseNumber", personJoin);
 
 
         addField("organizationId", "partyId", orgJoin);
