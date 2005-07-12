@@ -1,0 +1,24 @@
+<html xmlns:wicket="http://wicket.sourceforge.net/">
+    <head>
+        <title>GPCI Flow Worklist Controlbar</title>
+        <link rel="stylesheet" type="text/css" href="../../../../../../../../../resources/theme/default/css/theme.css"/>
+    </head>
+    <body>
+        <wicket:panel>
+            <form method="post">
+                Effective Dates:
+                <input name='search_from_date' size=10 maxlength=10 value="today" onblur="validateChange_Date(event)" title='From Date'>
+                <input name='search_to_date' size=10 maxlength=10 value="today" onblur="validateChange_Date(event)" title='To Date'>
+                <SELECT name='search_type'>
+                    <option value="state">State</option>
+                    <option value="carrierNo">Carrier Number</option>
+                    <option value="locality">Locality</option>
+                    <option value="county">County</option>
+                    <option value="id">GPCI Id</option>
+                </SELECT>
+                <input name='search_expression' size=17 maxlength=64 value="x,y,z" title='Search Expression'>
+                <input type=submit name="execute" value="Go">
+             </form>
+        </wicket:panel>
+    </body>
+</html>
