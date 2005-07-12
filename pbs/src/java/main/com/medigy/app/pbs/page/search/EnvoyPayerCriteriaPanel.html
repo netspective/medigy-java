@@ -1,0 +1,19 @@
+<html xmlns:wicket="http://wicket.sourceforge.net/">
+    <head>
+        <title>Envoy Payer Flow Worklist Controlbar</title>
+        <link rel="stylesheet" type="text/css" href="../../../../../../../../../resources/theme/default/css/theme.css"/>
+    </head>
+    <body>
+        <wicket:panel>
+            <form method="post">
+		        Find By:
+		        <select name="search_type" class="record-type">
+			        <option value="id">ID</option>
+			        <option value="name">Name</option>
+		        </select>
+                <input name='envoy-payer' size=17 maxlength=64 value="x,y,z" title='Envoy Payer'>
+                <input type=submit name="execute" value="Go">
+             </form>
+        </wicket:panel>
+    </body>
+</html>
