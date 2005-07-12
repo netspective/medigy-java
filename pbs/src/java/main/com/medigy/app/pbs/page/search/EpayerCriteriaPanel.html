@@ -1,0 +1,19 @@
+<html xmlns:wicket="http://wicket.sourceforge.net/">
+    <head>
+        <title>Epayer Flow Worklist Controlbar</title>
+        <link rel="stylesheet" type="text/css" href="../../../../../../../../../resources/theme/default/css/theme.css"/>
+    </head>
+    <body>
+        <wicket:panel>
+            <form method="post">
+		        Find By:
+		        <select name="search_type" class="record-type">
+			        <option value="name">Name</option>
+			        <option value="id">ID</option>
+		        </select>
+                <input name='epayer' size=17 maxlength=64 value="x,y,z" title='Epayer'>
+                <input type=submit name="execute" value="Go">
+             </form>
+        </wicket:panel>
+    </body>
+</html>
