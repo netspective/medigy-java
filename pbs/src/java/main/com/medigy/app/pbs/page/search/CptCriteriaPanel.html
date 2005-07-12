@@ -1,0 +1,27 @@
+<html xmlns:wicket="http://wicket.sourceforge.net/">
+    <head>
+        <title>CPT Flow Worklist Controlbar</title>
+        <link rel="stylesheet" type="text/css" href="../../../../../../../../../resources/theme/default/css/theme.css"/>
+    </head>
+    <body>
+        <wicket:panel>
+            <form method="post">
+		        Find By:
+		        <select name="search_type">
+			        <option value="code">Code</option>
+			        <option value="name">Name</option>
+			        <option value="description">Description</option>
+			        <option value="nameordescr">Name or Description</option>
+		        </select>
+		        <select name="search_compare">
+			        <option value="contains">contains</option>
+			        <option value="is">is</option>
+		        </select>
+                <input name='search_expression' size=17 maxlength=64 value="x,y,z" title='CPT'>
+                <input name='hcpcs_search' size=17 maxlength=64 value="x,y,z" title='HCPCS'>
+                <label for="hcpcs_search">HCPCS Search</label> &nbsp; &nbsp;
+                <input type=submit name="execute" value="Go">
+             </form>
+        </wicket:panel>
+    </body>
+</html>
