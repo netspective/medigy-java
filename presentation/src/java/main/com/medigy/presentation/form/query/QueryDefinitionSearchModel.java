@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2005 Your Corporation. All Rights Reserved.
  */
-package com.medigy.presentation.form.person.patient;
+package com.medigy.presentation.form.query;
 
 import wicket.model.AbstractReadOnlyDetachableModel;
 import wicket.model.IModel;
@@ -12,24 +12,23 @@ import wicket.contrib.data.model.ISelectCountAndListAction;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
-import java.util.ArrayList;
 
 import com.medigy.service.query.QueryDefinitionSearchService;
 import com.medigy.service.person.PatientSearchQueryDefinition;
-import com.medigy.service.dto.person.QueryDefinitionSearchParameters;
+import com.medigy.service.dto.query.QueryDefinitionSearchParameters;
 import com.medigy.service.dto.query.QueryDefinitionSearchReturnValues;
 import com.medigy.service.dto.query.QueryDefinitionSearchCondition;
 import com.medigy.service.ServiceVersion;
 
-public class PatientSearchModel extends AbstractReadOnlyDetachableModel
+public class QueryDefinitionSearchModel extends AbstractReadOnlyDetachableModel
 {
     private PageableList list;
     private int rowsPerPage = 10;
     private ISelectCountAndListAction countAndListAction = new PatientSearchCountAndListAction();
-    private PatientSearchFormPanel.PatientSearchModelObject searchParameters;
+    private QueryDefinitionSearchFormPanel.QueryDefinitionSearchModelObject searchParameters;
     private QueryDefinitionSearchService service;
 
-    public PatientSearchModel(final QueryDefinitionSearchService service)
+    public QueryDefinitionSearchModel(final QueryDefinitionSearchService service)
     {
         this.service = service;
     }
@@ -60,13 +59,13 @@ public class PatientSearchModel extends AbstractReadOnlyDetachableModel
         return (!results.isEmpty());
     }
 
-    public final void setSearchParameters(final PatientSearchFormPanel.PatientSearchModelObject params)
+    public final void setSearchParameters(final QueryDefinitionSearchFormPanel.QueryDefinitionSearchModelObject params)
     {
         detach();
         this.searchParameters = params;
     }
 
-    public PatientSearchFormPanel.PatientSearchModelObject getSearchParameters()
+    public QueryDefinitionSearchFormPanel.QueryDefinitionSearchModelObject getSearchParameters()
     {
         return searchParameters;
     }
@@ -80,7 +79,7 @@ public class PatientSearchModel extends AbstractReadOnlyDetachableModel
 
         protected void setParameters()
         {
-            final PatientSearchFormPanel.PatientSearchModelObject searchParameters = getSearchParameters();
+            final QueryDefinitionSearchFormPanel.QueryDefinitionSearchModelObject searchParameters = getSearchParameters();
 
         }
 
