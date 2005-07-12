@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2005 Your Corporation. All Rights Reserved.
  */
-package com.medigy.service.query.comparison;
+package com.medigy.persist.util.query.comparison;
 
 public class LessThanComparison extends BinaryOpComparison
 {

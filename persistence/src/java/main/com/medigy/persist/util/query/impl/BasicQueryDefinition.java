@@ -1,21 +1,18 @@
 /*
  * Copyright (c) 2005 Your Corporation. All Rights Reserved.
  */
-package com.medigy.service.query.impl;
+package com.medigy.persist.util.query.impl;
 
-import com.medigy.service.query.QueryDefinitionField;
-import com.medigy.service.query.QueryDefinitionJoins;
-import com.medigy.service.query.QueryDefnSelects;
-import com.medigy.service.query.QueryDefinitionJoin;
-import com.medigy.service.query.QueryDefinitionSelect;
-import com.medigy.service.query.QueryDefinition;
-import com.medigy.service.query.QueryDefnCondition;
-import com.medigy.service.query.exception.QueryDefinitionException;
+import com.medigy.persist.util.query.QueryDefinition;
+import com.medigy.persist.util.query.QueryDefinitionField;
+import com.medigy.persist.util.query.QueryDefinitionJoin;
+import com.medigy.persist.util.query.QueryDefinitionJoins;
+import com.medigy.persist.util.query.QueryDefinitionSelect;
+import com.medigy.persist.util.query.QueryDefnSelects;
+import com.medigy.persist.util.query.exception.QueryDefinitionException;
 
-import java.util.Map;
 import java.util.HashMap;
-import java.util.List;
-import java.util.ArrayList;
+import java.util.Map;
 
 public class BasicQueryDefinition implements QueryDefinition
 {
@@ -35,11 +32,6 @@ public class BasicQueryDefinition implements QueryDefinition
     public String getName()
     {
         return name;
-    }
-
-    public List<String> getFieldNames()
-    {
-        return new ArrayList<String>(fields.keySet());
     }
 
     public Map<String, QueryDefinitionField> getFields()
@@ -113,10 +105,7 @@ public class BasicQueryDefinition implements QueryDefinition
         return new QueryDefinitionSelectImpl(selectName, this);
     }
 
-    public QueryDefinitionJoin createJoin()
-    {
-        return new QueryDefinitionJoinImpl(this);
-    }
+
 
     public QueryDefnSelects getSelects()
     {

@@ -1,15 +1,14 @@
 /*
  * Copyright (c) 2005 Your Corporation. All Rights Reserved.
  */
-package com.medigy.service.query;
+package com.medigy.persist.util.query;
 
-import com.medigy.service.query.comparison.BinaryOpComparison;
-import com.medigy.service.query.comparison.StartsWithComparisonIgnoreCase;
-import com.medigy.service.query.comparison.EqualsComparison;
+import com.medigy.persist.util.query.comparison.EqualsComparison;
+import com.medigy.persist.util.query.comparison.StartsWithComparisonIgnoreCase;
 
-import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class SqlComparisonFactory

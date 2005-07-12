@@ -1,10 +1,9 @@
 /*
  * Copyright (c) 2005 Your Corporation. All Rights Reserved.
  */
-package com.medigy.service.query;
+package com.medigy.persist.util.query;
 
-import com.medigy.service.query.exception.QueryDefinitionException;
-import com.medigy.service.dto.ServiceParameters;
+import com.medigy.persist.util.query.exception.QueryDefinitionException;
 
 public interface SqlComparison
 {

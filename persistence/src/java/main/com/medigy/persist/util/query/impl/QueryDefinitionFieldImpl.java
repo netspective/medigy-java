@@ -1,16 +1,16 @@
 /*
  * Copyright (c) 2005 Your Corporation. All Rights Reserved.
  */
-package com.medigy.service.query.impl;
+package com.medigy.persist.util.query.impl;
 
-import com.medigy.service.query.QueryDefinitionJoin;
-import com.medigy.service.query.QueryDefinition;
-import com.medigy.service.query.QueryDefinitionField;
-import com.medigy.service.query.SqlComparison;
-import com.medigy.service.query.exception.QueryDefinitionException;
+import com.medigy.persist.util.query.QueryDefinition;
+import com.medigy.persist.util.query.QueryDefinitionField;
+import com.medigy.persist.util.query.QueryDefinitionJoin;
+import com.medigy.persist.util.query.SqlComparison;
+import com.medigy.persist.util.query.exception.QueryDefinitionException;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 public class QueryDefinitionFieldImpl implements QueryDefinitionField
 {

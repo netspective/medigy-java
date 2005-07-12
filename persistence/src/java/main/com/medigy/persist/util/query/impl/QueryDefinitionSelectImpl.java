@@ -1,18 +1,20 @@
 /*
  * Copyright (c) 2005 Your Corporation. All Rights Reserved.
  */
-package com.medigy.service.query.impl;
+package com.medigy.persist.util.query.impl;
 
-import com.medigy.service.query.QueryDefinition;
-import com.medigy.service.query.QueryDefinitionField;
-import com.medigy.service.query.QueryDefinitionConditions;
-import com.medigy.service.query.QueryDefnCondition;
-import com.medigy.service.query.SqlComparison;
-import com.medigy.service.query.QueryDefinitionConditionValue;
-import com.medigy.service.query.QueryDefinitionSelect;
+import com.medigy.persist.util.query.QueryDefinition;
+import com.medigy.persist.util.query.QueryDefinitionConditions;
+import com.medigy.persist.util.query.QueryDefinitionField;
+import com.medigy.persist.util.query.QueryDefinitionSelect;
+import com.medigy.persist.util.query.QueryDefinitionSortFieldReference;
+import com.medigy.persist.util.query.QueryDefnCondition;
+import com.medigy.persist.util.query.SqlComparison;
 
-import java.util.Map;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class QueryDefinitionSelectImpl implements QueryDefinitionSelect
 {
@@ -21,7 +23,7 @@ public class QueryDefinitionSelectImpl implements QueryDefinitionSelect
     private boolean distinctRows;
 
     private Map<String, QueryDefinitionField> displayFields = new HashMap<String, QueryDefinitionField>();
-    //private QueryDefnSortFieldReferences orderByFieldRefs = new QueryDefnSortFieldReferences();
+    private List<QueryDefinitionSortFieldReference> orderBys = new ArrayList<QueryDefinitionSortFieldReference>();
     private Map<String, QueryDefinitionField> groupByFields = new HashMap<String, QueryDefinitionField>();
     private QueryDefinitionConditions conditions = new QueryDefinitionConditions();
     //private QueryDefnSqlWhereExpressions whereExprs = new QueryDefnSqlWhereExpressions();
@@ -97,11 +99,14 @@ public class QueryDefinitionSelectImpl implements QueryDefinitionSelect
         this.conditions = conditions;
     }
 
-    public void addCondition(final QueryDefinitionField field, final SqlComparison comparison)
+
+    public void addCondition(final QueryDefnCondition condition)
     {
-        final QueryDefnCondition condition = new QueryDefinitionConditionImpl(this, queryDefinition);
-        condition.setField(field);
-        condition.setComparison(comparison);
         this.conditions.add(condition);
+    }
+
+    public void addOrderBy(final QueryDefinitionSortFieldReference fieldReference)
+    {
+
     }
 }

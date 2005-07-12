@@ -75,6 +75,8 @@ import javax.persistence.Transient;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.persistence.OrderBy;
+import javax.persistence.ManyToOne;
+import javax.persistence.JoinColumn;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
@@ -101,11 +103,13 @@ public class Person extends Party
     private String firstNameSoundex;
     private String lastNameSoundex;
 
+    private GenderType currentGenderType;
+
     //private Set<CareProviderSelection> careProviderSelections = new HashSet<CareProviderSelection>();
 
     private Set<Ethnicity> ethnicities = new HashSet<Ethnicity>();
     private List<Gender> genders = new ArrayList<Gender>();
-    private Set<MaritalStatus> maritalStatuses = new HashSet<MaritalStatus>();
+    private List<MaritalStatus> maritalStatuses = new ArrayList<MaritalStatus>();
     private Set<PhysicalCharacteristic> physicalCharacteristics = new HashSet<PhysicalCharacteristic>();
     private Set<HealthCareVisit> healthCareVisits = new HashSet<HealthCareVisit>();
     private Set<HealthCareEpisode> healthCareEpisodes = new HashSet<HealthCareEpisode>();
@@ -248,7 +252,7 @@ public class Person extends Party
     }
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "person")
-    @OrderBy("fromDate desc")           // Order a collection using SQL ordering (not HQL ordering)
+    @OrderBy(value = "fromDate asc")           // Order a collection using SQL ordering (not HQL ordering)
     @Size(min = 1)
     public List<Gender> getGenders()
     {
@@ -280,23 +284,33 @@ public class Person extends Party
             gender.setFromDate(new Date());
         if (throughDate != null)
             gender.setThroughDate(throughDate);
+        this.currentGenderType = type;
         this.genders.add(gender);
     }
 
-    @Transient
+    public void setCurrentGenderType(final GenderType currentGenderType)
+    {
+        this.currentGenderType = currentGenderType;
+    }
+
+    @ManyToOne
+    @JoinColumn(referencedColumnName= GenderType.PK_COLUMN_NAME, name = "curr_gender_type_id")
     public GenderType getCurrentGenderType()
     {
+        return currentGenderType;
+        /*
         if (genders.size() == 0)
             return GenderType.Cache.UNKNOWN.getEntity();
         TreeSet<Gender> inverseSorted = new TreeSet<Gender>(Collections.reverseOrder());
         inverseSorted.addAll(genders);
         return inverseSorted.first().getType();
+        */
     }
 
     @Transient
     public MaritalStatusType getCurrentMaritalStatus()
     {
-        final Set<MaritalStatus> maritalStatuses = getMaritalStatuses();
+        final List<MaritalStatus> maritalStatuses = getMaritalStatuses();
         if(maritalStatuses.size() == 0)
             return MaritalStatusType.Cache.UNKNOWN.getEntity();
 
@@ -306,12 +320,13 @@ public class Person extends Party
     }
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "person", fetch = FetchType.LAZY)
-    public Set<MaritalStatus> getMaritalStatuses()
+    @OrderBy(value = "fromDate asc")
+    public List<MaritalStatus> getMaritalStatuses()
     {
         return maritalStatuses;
     }
 
-    protected void setMaritalStatuses(final Set<MaritalStatus> maritalStatuses)
+    protected void setMaritalStatuses(final List<MaritalStatus> maritalStatuses)
     {
         this.maritalStatuses = maritalStatuses;
     }

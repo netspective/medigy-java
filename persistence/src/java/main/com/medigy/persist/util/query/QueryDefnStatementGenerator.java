@@ -1,16 +1,16 @@
 /*
  * Copyright (c) 2005 Your Corporation. All Rights Reserved.
  */
-package com.medigy.service.query;
+package com.medigy.persist.util.query;
 
-import com.medigy.service.query.exception.QueryDefinitionException;
+import com.medigy.persist.util.query.exception.QueryDefinitionException;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.HashSet;
-import java.util.HashMap;
 
 public class QueryDefnStatementGenerator
 {
@@ -48,7 +48,7 @@ public class QueryDefnStatementGenerator
         if(join == null || joins.contains(join))
             return;
 
-        fromClause.add(join.getFromExpr());
+        fromClause.add(join.getTable() + " " + join.getName());
         if(autoInc || impliedBy != null)
         {
             StringBuffer comments = new StringBuffer();

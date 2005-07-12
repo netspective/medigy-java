@@ -3,10 +3,11 @@
  */
 package com.medigy.service.query;
 
+import com.medigy.persist.util.query.QueryDefinition;
 import com.medigy.service.person.PatientSearchQueryDefinition;
 
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
 public class QueryDefinitionFactory
 {

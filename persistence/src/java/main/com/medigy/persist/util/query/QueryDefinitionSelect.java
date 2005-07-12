@@ -1,10 +1,9 @@
 /*
  * Copyright (c) 2005 Your Corporation. All Rights Reserved.
  */
-package com.medigy.service.query;
+package com.medigy.persist.util.query;
 
 import java.util.Map;
-import java.util.HashMap;
 
 public interface QueryDefinitionSelect
 {
@@ -22,5 +21,6 @@ public interface QueryDefinitionSelect
 
     public QueryDefinitionConditions getConditions();
     public void setConditions(final QueryDefinitionConditions conditions);
-    public void addCondition(final QueryDefinitionField field, final SqlComparison comparison);
+    public void addCondition(final QueryDefnCondition condition);
+    public void addOrderBy(final QueryDefinitionSortFieldReference fieldReference);
 }

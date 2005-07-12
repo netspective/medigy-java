@@ -3,13 +3,19 @@
  */
 package com.medigy.service.person;
 
-import com.medigy.service.query.QueryDefinition;
-import com.medigy.service.query.QueryDefinitionField;
-import com.medigy.service.query.QueryDefinitionJoin;
-import com.medigy.service.query.impl.BasicQueryDefinition;
-import com.medigy.persist.model.person.Person;
+import com.medigy.persist.util.query.QueryDefinition;
+import com.medigy.persist.util.query.QueryDefinitionField;
+import com.medigy.persist.util.query.QueryDefinitionJoin;
+import com.medigy.persist.util.query.exception.QueryDefinitionException;
+import com.medigy.persist.util.query.impl.BasicQueryDefinition;
 import com.medigy.persist.model.party.PartyRelationship;
+import com.medigy.persist.model.party.PartyRole;
+import com.medigy.persist.model.party.PartyIdentifier;
 import com.medigy.persist.model.org.Organization;
+import com.medigy.persist.reference.custom.person.PersonIdentifierType;
+
+import java.util.List;
+import java.util.ArrayList;
 
 public class PatientSearchQueryDefinition extends BasicQueryDefinition implements QueryDefinition
 {
@@ -23,34 +29,242 @@ public class PatientSearchQueryDefinition extends BasicQueryDefinition implement
 
     protected void register()
     {
-        final QueryDefinitionJoin personJoin = createJoin();
-        personJoin.setTableName(Person.class.getSimpleName());
-        personJoin.setName("person");
-        personJoin.setAutoInclude(true);
+        final QueryDefinitionJoin personJoin = new QueryDefinitionJoin() {
+            public QueryDefinition getOwner()
+            {
+                return null;
+            }
 
-        final QueryDefinitionJoin orgJoin = createJoin();
-        orgJoin.setTableName(Organization.class.getSimpleName());
-        orgJoin.setName("org");
+            public String getName()
+            {
+                return "person";
+            }
 
-        final QueryDefinitionJoin partyRelationshipJoin = createJoin();
-        partyRelationshipJoin.setTableName(PartyRelationship.class.getName());
-        partyRelationshipJoin.setName("rel");
-        partyRelationshipJoin.setCondition("rel.partyFrom.id = org.partyId AND rel.partyTo.id = person.partyId");
-        partyRelationshipJoin.addImpliedJoin(orgJoin);
+            public String getFromExpr()
+            {
+                return getTable() + " " + getName();
+            }
+
+            public String getCondition()
+            {
+                return null;
+            }
+
+            public boolean isAutoInclude()
+            {
+                return true;
+            }
+
+            public String getImplyJoinsStr()
+            {
+                return null;
+            }
+
+            public List<QueryDefinitionJoin> getImpliedJoins()
+            {
+                return null;
+            }
+
+            public String getTable()
+            {
+                return "Person";
+            }
+        };
+
+        final QueryDefinitionJoin personIdentifierJoin = new QueryDefinitionJoin() {
+            public QueryDefinition getOwner()
+            {
+                return null;
+            }
+
+            public String getName()
+            {
+                return "personIdent";
+            }
+
+            public String getFromExpr()
+            {
+                return getTable() + " " + getName();
+            }
+
+            public String getCondition()
+            {
+                return "personIdent.party.id = person.id and personIdent.type.id = " + PersonIdentifierType.Cache.SSN.getEntity().getSystemId();
+            }
+
+            public boolean isAutoInclude()
+            {
+                return false;
+            }
+
+            public String getImplyJoinsStr()
+            {
+                return null;
+            }
+
+            public List<QueryDefinitionJoin> getImpliedJoins()
+            {
+                return null;
+            }
+
+            public String getTable()
+            {
+                return PartyIdentifier.class.getSimpleName();
+            }
+        };
+
+        final QueryDefinitionJoin orgJoin = new QueryDefinitionJoin() {
+            public QueryDefinition getOwner()
+            {
+                return null;
+            }
+
+            public String getName()
+            {
+                return "org";
+            }
+
+            public String getFromExpr()
+            {
+                return getTable() + " " + getName();
+            }
+
+            public String getCondition()
+            {
+                return null;
+            }
+
+            public boolean isAutoInclude()
+            {
+                return false;
+            }
+
+            public String getImplyJoinsStr()
+            {
+                return null;
+            }
+
+            public List<QueryDefinitionJoin> getImpliedJoins()
+            {
+                return null;
+            }
+
+            public String getTable()
+            {
+                return Organization.class.getSimpleName();
+            }
+        };
+
+        final QueryDefinitionJoin partyRelationshipJoin = new QueryDefinitionJoin() {
+            public QueryDefinition getOwner()
+            {
+                return null;
+            }
+
+            public String getName()
+            {
+                return "rel";
+            }
+
+            public String getFromExpr()
+            {
+                return getTable() + " " + getName();
+            }
+
+            public String getCondition()
+            {
+                return "rel.partyFrom.id = org.partyId AND rel.partyTo.id = person.partyId";
+            }
+
+            public boolean isAutoInclude()
+            {
+                return false;
+            }
+
+            public String getImplyJoinsStr()
+            {
+                return null;
+            }
+
+            public List<QueryDefinitionJoin> getImpliedJoins()
+            {
+                final List<QueryDefinitionJoin> impliedJoins = new ArrayList<QueryDefinitionJoin>();
+                impliedJoins.add(orgJoin);
+                return impliedJoins;
+            }
+
+            public String getTable()
+            {
+                return PartyRelationship.class.getSimpleName();
+            }
+        };
+
+
+        final QueryDefinitionJoin personRoleJoin = new QueryDefinitionJoin() {
+            public QueryDefinition getOwner()
+            {
+                return null;
+            }
+
+            public String getName()
+            {
+                return "personRole";
+            }
+
+            public String getFromClauseExpr()
+            {
+                return getTable() + " " + getName();
+            }
+
+            public String getCondition()
+            {
+                return "personRole.party.id = person.id";
+            }
+
+            public boolean isAutoInclude()
+            {
+                return false;
+            }
+
+            public String getImplyJoinsStr()
+            {
+                return null;
+            }
+
+            public List<QueryDefinitionJoin> getImpliedJoins()
+            {
+                return null;
+            }
+
+            public String getFromExpr()
+            {
+                return null;
+            }
+
+            public String getTable()
+            {
+                return PartyRole.class.getSimpleName();
+            }
+        };
 
         this.addJoin(personJoin);
         this.addJoin(orgJoin);
-        this.addJoin(partyRelationshipJoin);
+        //this.addJoin(partyRelationshipJoin);
+        this.addJoin(personIdentifierJoin);
+        this.addJoin(personRoleJoin);
 
-        final QueryDefinitionField firstNameField = addField("firstName", "firstName", personJoin);
-        final QueryDefinitionField lastNameField = addField("lastName", "lastName", personJoin);
-        final QueryDefinitionField genderField = addField("gender", "genders[]", 
-                personJoin);
+        addField("firstName", "firstName", personJoin);
+        addField("lastName", "lastName", personJoin);
+        addField("firstName", "firstName", personJoin);
+        addField("gender", "currentGenderType.label", personJoin);
+        addField("personRole", "type.code", personRoleJoin);
+        addField("ssn", "identifierValue", personIdentifierJoin);
+        addField("driversLicense", "driversLicenseNumber", personJoin);
 
-        final QueryDefinitionField orgIdField = addField("organizationId", "partyId", orgJoin);
-        final QueryDefinitionField personIdField = addField("personId", "partyId", personJoin);
-        final QueryDefinitionField partyRelTypeField = addField("organizationRelationshipTypeCode", "type.code",
-                partyRelationshipJoin);
+
+        addField("organizationId", "partyId", orgJoin);
+        addField("personId", "id", personJoin);
+        //addField("organizationRelationshipTypeCode", "type.code", partyRelationshipJoin);
 
     }
 

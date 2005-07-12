@@ -1,14 +1,13 @@
 /*
  * Copyright (c) 2005 Your Corporation. All Rights Reserved.
  */
-package com.medigy.service.query.comparison;
+package com.medigy.persist.util.query.comparison;
 
-import com.medigy.service.query.SqlComparison;
-import com.medigy.service.query.QueryDefinitionSelect;
-import com.medigy.service.query.QueryDefnCondition;
-import com.medigy.service.query.QueryDefnStatementGenerator;
-import com.medigy.service.query.exception.QueryDefinitionException;
-import com.medigy.service.dto.ServiceParameters;
+import com.medigy.persist.util.query.QueryDefinitionSelect;
+import com.medigy.persist.util.query.QueryDefnCondition;
+import com.medigy.persist.util.query.QueryDefnStatementGenerator;
+import com.medigy.persist.util.query.SqlComparison;
+import com.medigy.persist.util.query.exception.QueryDefinitionException;
 
 public abstract class BinaryOpComparison implements SqlComparison
 {

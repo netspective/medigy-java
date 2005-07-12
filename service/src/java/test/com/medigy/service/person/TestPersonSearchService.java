@@ -6,11 +6,9 @@ package com.medigy.service.person;
 import com.medigy.service.AbstractSpringTestCase;
 import com.medigy.service.ServiceVersion;
 import com.medigy.service.query.QueryDefinitionSearchService;
-import com.medigy.service.query.SqlComparison;
-import com.medigy.service.query.QueryDefnCondition;
-import com.medigy.service.query.SqlComparisonFactory;
-import com.medigy.service.query.comparison.StartsWithComparisonIgnoreCase;
-import com.medigy.service.dto.person.QueryDefinitionSearchParameters;
+import com.medigy.persist.util.query.QueryDefinition;
+import com.medigy.persist.util.query.comparison.StartsWithComparisonIgnoreCase;
+import com.medigy.service.dto.query.QueryDefinitionSearchParameters;
 import com.medigy.service.dto.query.QueryDefinitionSearchCondition;
 
 import java.util.List;
@@ -28,6 +26,10 @@ public class TestPersonSearchService  extends AbstractSpringTestCase
     public void testSearch()
     {
         queryDefinitionSearchService.search(new QueryDefinitionSearchParameters() {
+            public QueryDefinition getQueryDefinition()
+            {
+                return null;
+            }
 
             public Class getQueryDefinitionClass()
             {
@@ -48,7 +50,7 @@ public class TestPersonSearchService  extends AbstractSpringTestCase
 
             public List<String> getDisplayFields()
             {
-                final ArrayList<String> strings = new ArrayList<String>();
+                final List<String> strings = new ArrayList<String>();
                 strings.add("lastName");
                 strings.add("firstName");
                 return strings;

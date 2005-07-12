@@ -1,21 +1,26 @@
 /*
  * Copyright (c) 2005 Your Corporation. All Rights Reserved.
  */
-package com.medigy.service.impl.person;
+package com.medigy.service.impl.query;
 
 import com.medigy.service.AbstractService;
 import com.medigy.service.ServiceVersion;
 import com.medigy.service.dto.ServiceParameters;
 import com.medigy.service.dto.query.QueryDefinitionSearchReturnValues;
 import com.medigy.service.dto.query.QueryDefinitionSearchCondition;
-import com.medigy.service.dto.person.QueryDefinitionSearchParameters;
+import com.medigy.service.dto.query.QueryDefinitionSearchParameters;
+import com.medigy.service.dto.query.QueryDefinitionSearchFormPopulateValues;
+import com.medigy.persist.util.query.QueryDefinitionSortFieldReference;
 import com.medigy.service.query.QueryDefinitionSearchService;
-import com.medigy.service.query.QueryDefinition;
 import com.medigy.service.query.QueryDefinitionFactory;
-import com.medigy.service.query.QueryDefinitionSelect;
-import com.medigy.service.query.QueryDefnStatementGenerator;
-import com.medigy.service.query.SqlComparisonFactory;
-import com.medigy.service.query.exception.QueryDefinitionException;
+import com.medigy.persist.util.query.QueryDefinition;
+import com.medigy.persist.util.query.QueryDefinitionSelect;
+import com.medigy.persist.util.query.QueryDefnStatementGenerator;
+import com.medigy.persist.util.query.SqlComparisonFactory;
+import com.medigy.persist.util.query.QueryDefinitionField;
+import com.medigy.persist.util.query.QueryDefnCondition;
+import com.medigy.persist.util.query.SqlComparison;
+import com.medigy.persist.util.query.exception.QueryDefinitionException;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -32,73 +37,24 @@ public class QueryDefinitionSearchServiceImpl extends AbstractService implements
 {
     private final Log log = LogFactory.getLog(QueryDefinitionSearchServiceImpl.class);
 
-    public static final String LAST_NAME_FIELD = "lastName";
-    public static final String FIRST_NAME_FIELD = "firstName";
-
-
     public QueryDefinitionSearchServiceImpl(final SessionFactory sessionFactory)
     {
         super(sessionFactory);
-        /*
-        final QueryDefinitionJoin personJoin = new QueryDefinitionJoinImpl();
-        personJoin.setTableName(Person.class.getName());
-        personJoin.setName("person");
-        personJoin.setAutoInclude(true);
+    }
 
-        final QueryDefinitionJoin orgJoin = new QueryDefinitionJoinImpl();
-        orgJoin.setTableName(Organization.class.getName());
-        orgJoin.setName("org");
-        //orgJoin.setImplyJoinsStr("org.");
-
-        final QueryDefinitionJoin personRoleJoin = new QueryDefinitionJoinImpl();
-        personRoleJoin.setTableName("PartyRole");
-        personRoleJoin.setName("personRole");
-
-
-        final QueryDefinitionJoin orgRoleJoin = new QueryDefinitionJoinImpl();
-        orgRoleJoin.setTableName("PartyRole");
-        orgRoleJoin.setName("personRole");
-
-        final QueryDefinitionJoin partyRelationshipJoin = new QueryDefinitionJoinImpl();
-        partyRelationshipJoin.setTableName(PartyRelationship.class.getName());
-        partyRelationshipJoin.setName("rel");
-        partyRelationshipJoin.setCondition("rel.partyFrom.id = org.partyId AND rel.partyTo.id = person.partyId");
-        partyRelationshipJoin.addImpliedJoin(orgJoin);
-
-        // add all the supported fields
-        final QueryDefinitionField firstNameField = queryDefn.addField("firstName", "firstName", personJoin);
-        final QueryDefinitionField lastNameField = queryDefn.addField("lastName", "lastName", personJoin);
-        final QueryDefinitionField orgIdField = queryDefn.addField("organizationId", "partyId", orgJoin);
-        final QueryDefinitionField personIdField = queryDefn.addField("personId", "partyId", personJoin);
-        final QueryDefinitionField partyRelTypeField = queryDefn.addField("organizationRelationshipTypeCode", "type.code", partyRelationshipJoin);
-
-
-        final QueryDefinitionSelect select = new QueryDefinitionSelectImpl("searchPerson", queryDefn);
-        select.addDisplayField(lastNameField);
-        select.addDisplayField(firstNameField);
-        select.addCondition(lastNameField, SqlComparisonFactory.getInstance().getComparison("starts-with-ignore-case"),
-            new QueryDefinitionConditionValue(QueryDefinitionSearchParameters.class, "lastName"));
-        select.addCondition(firstNameField, SqlComparisonFactory.getInstance().getComparison("starts-with-ignore-case"),
-            new QueryDefinitionConditionValue(QueryDefinitionSearchParameters.class, "firstName"));
-        select.addCondition(partyRelTypeField, SqlComparisonFactory.getInstance().getComparison("equals"),
-            new QueryDefinitionConditionValue(QueryDefinitionSearchParameters.class, "organizationRelationshipTypeCode"));
-
-        queryDefn.addJoin(personJoin);
-        queryDefn.addJoin(orgJoin);
-        queryDefn.addSelect(select);
-        */
+    public QueryDefinition getQueryDefinition(final Class queryDefClass)
+    {
+        return QueryDefinitionFactory.getInstance().getQueryDefinition(queryDefClass);
     }
 
     public QueryDefinitionSearchReturnValues search(final QueryDefinitionSearchParameters params)
     {
         final List<Map<String, Object>> searchResult = new ArrayList<Map<String, Object>>();
-
         final QueryDefinition queryDefiniton = QueryDefinitionFactory.getInstance().getQueryDefinition(params.getQueryDefinitionClass());
 
         // create a new select object on the fly
         final QueryDefinitionSelect select = queryDefiniton.createSelect("searchPerson");
         final List<String> displayFields = params.getDisplayFields();
-
         try
         {
             if (displayFields != null)
@@ -109,18 +65,64 @@ public class QueryDefinitionSearchServiceImpl extends AbstractService implements
                     select.addDisplayField(queryDefiniton.getField(field));
                 }
             }
-
             final List<QueryDefinitionSearchCondition> conditionFieldList = params.getConditionFieldList();
             final Map<String, Object> conditionFieldValues = new HashMap<String, Object>();
             for (QueryDefinitionSearchCondition condition : conditionFieldList)
             {
                 if (condition.getField() == null)
                     continue;
-                // add all the where clause fields
-                select.addCondition(queryDefiniton.getField(condition.getField()),
-                    SqlComparisonFactory.getInstance().getComparison(condition.getFieldComparison()));
+                final QueryDefinitionField field = queryDefiniton.getField(condition.getField());
+                final SqlComparison comparison = SqlComparisonFactory.getInstance().getComparison(condition.getFieldComparison());
+                final String connector = condition.getConnector();
+                select.addCondition(new QueryDefnCondition() {
+                    public boolean isRemoveIfValueNull()
+                    {
+                        return true;
+                    }
+
+                    public String getConnectorSql()
+                    {
+                        return connector;
+                    }
+
+                    public QueryDefinitionField getField()
+                    {
+                        return field;
+                    }
+
+                    public String getBindExpr()
+                    {
+                        return null;
+                    }
+
+                    public SqlComparison getComparison()
+                    {
+                        return comparison;
+                    }
+
+                    public boolean isJoinOnly()
+                    {
+                        return false;
+                    }
+                });
                 // TODO: Need to convert the String values into column type specific values!
                 conditionFieldValues.put(condition.getField(), condition.getFieldValue());
+            }
+
+            for (String orderByField : params.getSortByFields())
+            {
+                final QueryDefinitionField field = queryDefiniton.getField(orderByField);
+                select.addOrderBy(new QueryDefinitionSortFieldReference() {
+                    public QueryDefinitionField getField()
+                    {
+                        return field;
+                    }
+
+                    public OrderBy getOrderBy()
+                    {
+                        return null;
+                    }
+                });
             }
 
             // construct the HQL generator
@@ -129,7 +131,7 @@ public class QueryDefinitionSearchServiceImpl extends AbstractService implements
             String sql = generator.generateQuery(conditionFieldValues);
             final Query query = getSession().createQuery(sql);
             final List bindParams = generator.getBindParams();
-            log.info(sql + "\n" + bindParams.size());
+            System.out.println(sql + "\n" + bindParams.size());
 
             int i=0;
             for (Object param : bindParams)
@@ -152,7 +154,7 @@ public class QueryDefinitionSearchServiceImpl extends AbstractService implements
             for (int k=0; k < list.size(); k++)
             {
                 final Map<String, Object> map = new HashMap<String, Object>();
-                final Object[] columns = (Object[]) list.get(i);
+                final Object[] columns = (Object[]) list.get(k);
                 for (int j=0; j < columns.length; j++)
                 {
                     String displayFieldName = displayFields.get(j);
@@ -178,6 +180,44 @@ public class QueryDefinitionSearchServiceImpl extends AbstractService implements
             public ServiceParameters getParameters()
             {
                 return params;
+            }
+
+            public String getErrorMessage()
+            {
+                return null;
+            }
+        };
+    }
+
+    public QueryDefinitionSearchFormPopulateValues getAvailableSearchParameters(final Class queryDefinitionClass)
+    {
+        final QueryDefinition queryDefinition = QueryDefinitionFactory.getInstance().getQueryDefinition(queryDefinitionClass);
+
+        return new QueryDefinitionSearchFormPopulateValues() {
+
+            public Map<String, QueryDefinitionField> getSortByFields()
+            {
+                return queryDefinition.getFields();
+            }
+
+            public List<String>getConnectors()
+            {
+                return QueryDefnCondition.Connector.listNames();
+            }
+
+            public Map<String, QueryDefinitionField> getConditionFields()
+            {
+                return queryDefinition.getFields();
+            }
+
+            public Map<String,QueryDefinitionField> getDisplayFields()
+            {
+                return queryDefinition.getFields();
+            }
+
+            public ServiceParameters getParameters()
+            {
+                return null;
             }
 
             public String getErrorMessage()

@@ -1,9 +1,9 @@
 /*
  * Copyright (c) 2005 Your Corporation. All Rights Reserved.
  */
-package com.medigy.service.query.exception;
+package com.medigy.persist.util.query.exception;
 
-import com.medigy.service.query.QueryDefinition;
+import com.medigy.persist.util.query.QueryDefinition;
 
 public class QueryDefnJoinNotFoundException extends  QueryDefinitionException
 {

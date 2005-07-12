@@ -1,16 +1,15 @@
 /*
  * Copyright (c) 2005 Your Corporation. All Rights Reserved.
  */
-package com.medigy.service.query;
+package com.medigy.persist.util.query;
 
-import com.medigy.service.query.exception.QueryDefinitionException;
-
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Map;
-
+import com.medigy.persist.util.query.exception.QueryDefinitionException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class QueryDefinitionConditions
 {
@@ -93,10 +92,49 @@ public class QueryDefinitionConditions
         for(int c = 0; c < allCondsCount; c++)
         {
             QueryDefnCondition cond = list.get(c);
-            cond.useCondition(stmtGen, usedConditions, fieldValues);
+            //cond.useCondition(stmtGen, usedConditions, fieldValues);
+            if (useCondition(cond, fieldValues.get(cond.getField().getName())))
+            {
+                usedConditions.add(cond);
+                stmtGen.addJoin(cond.getField());
+            }
         }
 
         return usedConditions;
+    }
+
+    /**
+     * Checks to see if the condition should be included in the statement
+     * @param condition
+     * @param fieldValue
+     * @return
+     */
+    protected boolean useCondition(final QueryDefnCondition condition, final Object fieldValue)
+    {
+        // if we don't allow nulls, always use the condition
+        if(!condition.isRemoveIfValueNull())
+            return true;
+
+        // DOES NOT SUPPORT NESTED CONDITIONS
+        if(fieldValue == null)
+            return false;
+
+        // TODO: Need to figure out using reflection?
+        /*
+        if(value.isListValue())
+        {
+            String[] values = value.getTextValues();
+            if(values == null || values.length == 0 || (values.length == 1 && (values[0] == null || values[0].length() == 0)))
+                return false;
+        }
+        else
+        {
+            String textValue = value.getTextValue();
+            if(textValue == null || textValue.length() == 0)
+                return false;
+        }
+        */
+        return true;
     }
 
     /**
@@ -134,9 +172,7 @@ public class QueryDefinitionConditions
                 if(!cond.isJoinOnly())
                 {
                     final Object fieldValue = fieldValues.get(cond.getField().getName());
-                    // create and add the where condition string only if this condition has a valid comparison
-                    // (meaning the Select Condition was not inluded only for the sake of including the Join Condition of the table)
-                    sb.append(" (" + cond.getWhereCondExpr(select, stmtGen, fieldValue) + ")");
+                    sb.append(" (" + cond.getComparison().getWhereCondExpr(select, stmtGen, cond, fieldValue) + ")");
                     conditionAdded = true;
                 }
                 if(c != condsUsedLast && !((QueryDefnCondition) usedConditions.list.get(c + 1)).isJoinOnly())
@@ -148,5 +184,4 @@ public class QueryDefinitionConditions
         log.info("Condition SQL: " + sb.toString());
         return sb.toString();
     }
-
 }
