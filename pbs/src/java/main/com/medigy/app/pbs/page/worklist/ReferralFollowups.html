@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.sourceforge.net/">
     <head>
-        <title>Collections Worklist</title>
+        <title>Referrals Worklist</title>
         <link rel="stylesheet" type="text/css" href="/medigy/resources/theme/default/css/theme.css"></link>
         <style>
             div.worklist table.report td.balance { text-align:right }
@@ -24,25 +24,25 @@
         <div wicket:id="worklistBorder">
             <table class="report" cellpadding="0" border="0" cellspacing="0">
                 <tr class="heading">
+                    <th>ID</th>
+                    <th>Status</th>
                     <th>Patient</th>
-                    <th>Bill</th>
-                    <th>Event</th>
-                    <th>Balance</th>
-                    <th>Age</th>
-                    <th>Next Appt</th>
-                    <th>Reck Date</th>
-                    <th>Action</th>
+                    <th>Request Date</th>
+                    <th>Intake Coordinator</th>
+                    <th>Actions</th>
                 </tr>
 
                 <tr valign="top">
-                    <td class="patient"><a href="#">Shah, Shahid N.</a><br/></td>
-                    <td class="bill"><a href="#">12762-A</a></td>
-                    <td class="event">Flu shot</td>
-                    <td class="balance">$76.50</td>
-                    <td class="age">112</td>
-                    <td class="next-appointment">11/15/2005 09:30a</td>
-                    <td class="reck-date">10/10/2005</td>
-                    <td class="action"><script>addActions(0, 'x')</script></td>
+                    <td><a href="#">X</a><br/></td>
+                    <td><a href="#">Unknown</a></td>
+                    <td><a href="#">Shah, Shahid N.</a></td>
+                    <td>11/15/2005</td>
+                    <td>Elliot, Elizabeth</td>
+                    <td>
+                        <a href="#" class="action">Add Note</a>
+                        <a href="#" class="action">Update</a>
+                    </td>
+                    <!-- <td><script>addActions(0, 'x')</script></td> -->
                 </tr>
             </table>
         </div>
