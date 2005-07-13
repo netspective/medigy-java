@@ -49,6 +49,7 @@ import com.medigy.service.dto.person.PersonParameters;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 public class TestPersonFacade extends AbstractSpringTestCase
 {
@@ -57,6 +58,13 @@ public class TestPersonFacade extends AbstractSpringTestCase
     public void setPersonFacade(final PersonFacade personFacade)
     {
         this.personFacade = personFacade;
+    }
+
+    public void testHql()
+    {
+
+        List list = getSession().createQuery("from person RIGHT OUTER JOIN partyRelationship.partyTo").list();
+        System.out.println(list);
     }
 
     public void testListPersonByLastName() throws Exception

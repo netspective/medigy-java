@@ -62,6 +62,8 @@ import javax.persistence.*;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Specialized party for organizations.
@@ -81,6 +83,8 @@ public class Organization extends Party
 
     private Set<OrganizationAttribute> attributes = new HashSet<OrganizationAttribute>();
     private Set<User> users = new HashSet<User>();
+
+    private List<OrganizationRole> roles = new ArrayList<OrganizationRole>();
 
     private String tradeName;
 
@@ -326,7 +330,55 @@ public class Organization extends Party
     public static Organization createNewOrganization()
     {
         final Organization org = new Organization();
-        org.addPartyRole(OrganizationRoleType.Cache.OTHER_ORG_UNIT.getEntity());
+        org.addRole(OrganizationRoleType.Cache.OTHER_ORG_UNIT.getEntity());
         return org;
+    }
+
+    @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL)
+    public List<OrganizationRole> getRoles()
+    {
+        return roles;
+    }
+
+    public void setRoles(final List<OrganizationRole> roles)
+    {
+        this.roles = roles;
+    }
+
+    @Transient
+    public void addRole(final OrganizationRole role)
+    {
+        this.roles.add(role);
+    }
+
+    @Transient
+    public void addRole(final OrganizationRoleType type)
+    {
+        final OrganizationRole role = new OrganizationRole();
+        role.setOrganization(this);
+        role.setType(type);
+        this.roles.add(role);
+    }
+
+    @Transient
+    public OrganizationRole getRole(final OrganizationRoleType entity)
+    {
+        for (OrganizationRole role: roles)
+        {
+            if (role.getType().equals(entity))
+                return role;
+        }
+        return null;
+    }
+
+    @Transient
+    public boolean hasRole(final OrganizationRoleType entity)
+    {
+        for (OrganizationRole role: roles)
+        {
+            if (role.getType().equals(entity))
+                return true;
+        }
+        return false;
     }
 }

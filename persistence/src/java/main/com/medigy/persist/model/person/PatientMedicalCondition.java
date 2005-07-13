@@ -53,8 +53,7 @@ import com.medigy.persist.reference.custom.person.MedicalConditionType;
 public class PatientMedicalCondition extends AbstractDateDurationEntity
 {
     private Long medicalConditionId;
-    private Person party;
-    private PartyRole partyRole;
+    private Person person;
     private MedicalConditionType type;
     private String comments;
 
@@ -77,27 +76,15 @@ public class PatientMedicalCondition extends AbstractDateDurationEntity
     }
 
     @ManyToOne
-    @JoinColumn(name = "party_id", nullable = false)
-    public Person getParty()
+    @JoinColumn(name = Person.PK_COLUMN_NAME, nullable = false)
+    public Person getPerson()
     {
-        return party;
+        return person;
     }
 
-    public void setParty(final Person party)
+    public void setPerson(final Person person)
     {
-        this.party = party;
-    }
-
-    @ManyToOne
-    @JoinColumn(name = "party_role_id")
-    public PartyRole getPartyRole()
-    {
-        return partyRole;
-    }
-
-    public void setPartyRole(final PartyRole partyRole)
-    {
-        this.partyRole = partyRole;
+        this.person = person;
     }
 
     @ManyToOne

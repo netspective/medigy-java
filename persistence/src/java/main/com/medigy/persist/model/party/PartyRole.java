@@ -39,151 +39,47 @@
  */
 package com.medigy.persist.model.party;
 
-import com.medigy.persist.model.common.AbstractDateDurationEntity;
+import com.medigy.persist.model.common.AbstractEntity;
 import com.medigy.persist.reference.custom.party.PartyRoleType;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.Table;
 import javax.persistence.Transient;
-import java.util.HashSet;
+import javax.persistence.EmbeddableSuperclass;
 import java.util.Set;
 
-@Entity
-@Table(name = PartyRole.TABLE_NAME)
-public class PartyRole extends AbstractDateDurationEntity implements Comparable
+@EmbeddableSuperclass
+public abstract class PartyRole extends AbstractEntity
 {
     public static final String TABLE_NAME = "Party_Role";
-    public static final String PK_COLUMN_NAME = "party_role_id";
+    public static final String PK_COLUMN_NAME = "role_id";
 
-    private Long partyRoleId;
-
-    private Party party;
-    private PartyRoleType type;
-
-    private Set<PartyRelationship> fromPartyRelationships = new HashSet<PartyRelationship>();
-    private Set<PartyRelationship> toPartyRelationships = new HashSet<PartyRelationship>();
-
-    /**
-     * This entity only stores the fact that these parties may be involved in these roles.
-     * For example,
-     * John Doe has a role called Patient. This role can be involved in two relationships:
-     * one to his health care provider organization and one to the individual health care practitioner.
-     *
-     */
-    public PartyRole()
-    {
-
-    }
+    private Long roleId;
 
     @Id(generate = GeneratorType.AUTO)
     @Column(name = PartyRole.PK_COLUMN_NAME)
-    public Long getPartyRoleId()
+    public Long getRoleId()
     {
-        return partyRoleId;
+        return roleId;
     }
 
-    protected void setPartyRoleId(final Long partyRoleId)
+    protected void setRoleId(final Long roleId)
     {
-        this.partyRoleId = partyRoleId;
+        this.roleId = roleId;
     }
 
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "partyRoleFrom")
-    public Set<PartyRelationship> getFromPartyRelationships()
-    {
-        return fromPartyRelationships;
-    }
-
-    public void setFromPartyRelationships(final Set<PartyRelationship> fromPartyRelationships)
-    {
-        this.fromPartyRelationships = fromPartyRelationships;
-    }
-
+    /**
+     * Gets the party associated with the role
+     * @return specific party type such as Person or Org
+     */
     @Transient
-    public void addFromPartyRelationship(final PartyRelationship relationship)
-    {
-        this.fromPartyRelationships.add(relationship);
-    }
+    public abstract Party getParty();
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "partyRoleTo")
-    public Set<PartyRelationship> getToPartyRelationships()
-    {
-        return toPartyRelationships;
-    }
+    
 
-    public void setToPartyRelationships(final Set<PartyRelationship> toPartyRelationships)
-    {
-        this.toPartyRelationships = toPartyRelationships;
-    }
-
-
-    @ManyToOne
-    @JoinColumn(name = "party_id", nullable = false)
-    public Party getParty()
-    {
-        return party;
-    }
-
-    public void setParty(final Party party)
-    {
-        this.party = party;
-    }
-
-    @ManyToOne
-    @JoinColumn(name = "party_role_type_id", nullable = false)
-    public PartyRoleType getType()
-    {
-        return type;
-    }
-
-    public void setType(final PartyRoleType type)
-    {
-        this.type = type;
-    }
-
-    public int compareTo(Object o)
-    {
-        if (o == this)
-            return 0;
-
-        final PartyRole otherRole = (PartyRole) o;
-        return ((PartyRoleType) getType()).compareTo(otherRole.getType());
-    }
-
-    @Override
-    public boolean equals(Object obj)
-    {
-        if (obj == null || !(obj instanceof PartyRole))
-            return false;
-        final PartyRole compareRole = (PartyRole) obj;
-        if (getPartyRoleId() != null && compareRole.getPartyRoleId() != null &&
-            getPartyRoleId().longValue() == compareRole.getPartyRoleId().longValue())
-        {
-            return  true;
-        }
-        return false;
-    }
-
-    @Override
-    public String toString()
-    {
-        return "PartyRole{" +
-                "party_role_id=" + partyRoleId +
-                ", party_id=" + (party != null ? party.getPartyId() : null) +
-                ", type=" + type +
-                "}";
-    }
-
-    @Transient
-    public void addToPartyRelationship(final PartyRelationship relationship)
-    {
-        toPartyRelationships.add(relationship);
-    }
 }

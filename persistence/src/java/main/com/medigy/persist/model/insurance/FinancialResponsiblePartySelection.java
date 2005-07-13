@@ -39,7 +39,8 @@
 package com.medigy.persist.model.insurance;
 
 import com.medigy.persist.model.common.AbstractDateDurationEntity;
-import com.medigy.persist.model.party.PartyRelationship;
+import com.medigy.persist.model.person.PeopleRelationship;
+import com.medigy.persist.model.person.PersonAndOrgRelationship;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -61,7 +62,9 @@ public class FinancialResponsiblePartySelection extends AbstractDateDurationEnti
 
     public Long selectionId;
     public InsurancePolicy insurancePolicy;
-    public PartyRelationship partyRelationship;
+    public PeopleRelationship peopleRelationship;
+    public PersonAndOrgRelationship personOrgRelationship;
+
 
     @Id(generate = GeneratorType.AUTO)
     @Column(name = PK_COLUMN_NAME)
@@ -88,14 +91,27 @@ public class FinancialResponsiblePartySelection extends AbstractDateDurationEnti
     }
 
     @ManyToOne
-    @JoinColumn(name = PartyRelationship.PK_COLUMN_NAME, nullable = false)
-    public PartyRelationship getPartyRelationship()
+    @JoinColumn(name = PeopleRelationship.PK_COLUMN_NAME)
+    public PeopleRelationship getPeopleRelationship()
     {
-        return partyRelationship;
+        return peopleRelationship;
     }
 
-    public void setPartyRelationship(final PartyRelationship partyRelationship)
+    public void setPeopleRelationship(final PeopleRelationship peopleRelationship)
     {
-        this.partyRelationship = partyRelationship;
+        this.peopleRelationship = peopleRelationship;
     }
+
+    @ManyToOne
+    @JoinColumn(name = PersonAndOrgRelationship.PK_COLUMN_NAME)
+    public PersonAndOrgRelationship getPersonOrgRelationship()
+    {
+        return personOrgRelationship;
+    }
+
+    public void setPersonOrgRelationship(final PersonAndOrgRelationship personOrgRelationship)
+    {
+        this.personOrgRelationship = personOrgRelationship;
+    }
+
 }

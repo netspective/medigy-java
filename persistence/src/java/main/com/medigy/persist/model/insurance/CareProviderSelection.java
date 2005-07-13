@@ -38,8 +38,7 @@
  */
 package com.medigy.persist.model.insurance;
 
-import com.medigy.persist.model.party.PartyRelationship;
-import com.medigy.persist.reference.custom.party.PartyRelationshipType;
+import com.medigy.persist.model.common.AbstractEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
@@ -49,25 +48,12 @@ import javax.persistence.ManyToOne;
 import javax.persistence.JoinColumn;
 
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED)
-public class CareProviderSelection extends PartyRelationship
+public class CareProviderSelection extends AbstractEntity
 {
     private InsurancePolicy insurancePolicy;
 
     public CareProviderSelection()
     {
-        setType(PartyRelationshipType.Cache.CARE_PROVIDER_SELECTION.getEntity());   
-    }
-
-    @Transient
-    public Long getCareProviderSelectionId()
-    {
-        return getPartyRelationshipId();
-    }
-
-    public void setCareProviderSelectionId(final Long careProviderSelectionId)
-    {
-       setPartyRelationshipId(careProviderSelectionId);
     }
 
     @ManyToOne

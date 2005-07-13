@@ -122,6 +122,8 @@ public class Person extends Party
     private Set<FeeSchedule> feeSchedules = new HashSet<FeeSchedule>();
     private Set<User> users = new HashSet<User>();
 
+    private List<PersonRole> roles = new ArrayList<PersonRole>();
+
     public Person()
     {
         super();
@@ -688,7 +690,7 @@ public class Person extends Party
     public static Person createNewPatient()
     {
         final Person patient = new Person();
-        patient.addPartyRole(PersonRoleType.Cache.PATIENT.getEntity());
+        patient.addRole(PersonRoleType.Cache.PATIENT.getEntity());
         return patient;
     }
 
@@ -700,7 +702,7 @@ public class Person extends Party
     public static Person createNewPhysician()
     {
         final Person doctor = new Person();
-        doctor.addPartyRole(PersonRoleType.Cache.INDIVIDUAL_HEALTH_CARE_PRACTITIONER.getEntity());
+        doctor.addRole(PersonRoleType.Cache.INDIVIDUAL_HEALTH_CARE_PRACTITIONER.getEntity());
         return doctor;
     }
 
@@ -735,5 +737,54 @@ public class Person extends Party
     public void setUsers(final Set<User> users)
     {
         this.users = users;
+    }
+
+    @OneToMany(mappedBy = "person", cascade = CascadeType.ALL)
+    public List<PersonRole> getRoles()
+    {
+        return roles;
+    }
+
+    public void setRoles(final List<PersonRole> roles)
+    {
+        this.roles = roles;
+    }
+
+    @Transient
+    public void addRole(final PersonRole role)
+    {
+        this.roles.add(role);
+    }
+
+    @Transient
+    public PersonRole addRole(final PersonRoleType type)
+    {
+        final PersonRole role = new PersonRole();
+        role.setPerson(this);
+        role.setType(type);
+        this.roles.add(role);
+        return role;
+    }
+
+    @Transient
+    public PersonRole getRole(final PersonRoleType entity)
+    {
+        for (PersonRole role: roles)
+        {
+            if (role.getType().equals(entity))
+                return role;
+        }
+        return null;
+    }
+
+    @Transient
+    public boolean hasRole(final PersonRoleType entity)
+    {
+        for (PersonRole role: roles)
+        {
+            if (role.getType().equals(entity))
+                return true;
+        }
+        return false;
     }
 }

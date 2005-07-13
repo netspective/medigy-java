@@ -44,4 +44,11 @@ public interface QueryDefinitionField
     public void setValidSqlComparisons(final List<SqlComparison> comparisonList);
 
     public QueryDefinition getQueryDefinition();
+
+    /**
+     * Returns a HQL ansi-style JOIN expression
+     * @return HQL join expression
+     */
+    public String getHqlJoinExpr();
+    public void setHqlJoinExpr(String expr);
 }

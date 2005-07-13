@@ -41,6 +41,7 @@ package com.medigy.persist.model.health;
 import com.medigy.persist.TestCase;
 import com.medigy.persist.model.party.PartyRole;
 import com.medigy.persist.model.person.Person;
+import com.medigy.persist.model.person.PersonRole;
 import com.medigy.persist.reference.custom.health.HealthCareReferralType;
 import com.medigy.persist.reference.custom.person.PersonRoleType;
 import com.medigy.persist.reference.type.GenderType;
@@ -64,10 +65,10 @@ public class TestHealthCareReferral extends TestCase
         patient.addLanguage(LanguageType.Cache.ENGLISH.getEntity());
 
 
-        final PartyRole patientRole = new PartyRole();
+        final PersonRole patientRole = new PersonRole();
         patientRole.setType(PersonRoleType.Cache.PATIENT.getEntity());
-        patientRole.setParty(patient);
-        patient.addPartyRole(patientRole);
+        patientRole.setPerson(patient);
+        patient.addRole(patientRole);
 
         final Person requestorDoctor = Person.createNewPhysician();
         requestorDoctor.setLastName("Doctor");
@@ -76,10 +77,10 @@ public class TestHealthCareReferral extends TestCase
         requestorDoctor.addGender(GenderType.Cache.MALE.getEntity());
         requestorDoctor.addLanguage(LanguageType.Cache.ENGLISH.getEntity());
 
-        final PartyRole requestorRole = new PartyRole();
+        final PersonRole requestorRole = new PersonRole();
         requestorRole.setType(PersonRoleType.Cache.INDIVIDUAL_HEALTH_CARE_PRACTITIONER.getEntity());
-        requestorRole.setParty(requestorDoctor);
-        requestorDoctor.addPartyRole(requestorRole);
+        requestorRole.setPerson(requestorDoctor);
+        requestorDoctor.addRole(requestorRole);
 
         final Person provider = Person.createNewPhysician();
         provider.setLastName("Doctor");
@@ -88,10 +89,10 @@ public class TestHealthCareReferral extends TestCase
         provider.addGender(GenderType.Cache.MALE.getEntity());
         provider.addLanguage(LanguageType.Cache.ENGLISH.getEntity());
 
-        final PartyRole providerRole = new PartyRole();
+        final PersonRole providerRole = new PersonRole();
         providerRole.setType(PersonRoleType.Cache.INDIVIDUAL_HEALTH_CARE_PRACTITIONER.getEntity());
-        providerRole.setParty(provider);
-        provider.addPartyRole(providerRole);
+        providerRole.setPerson(provider);
+        provider.addRole(providerRole);
 
         HibernateUtil.getSession().save(patient);
         HibernateUtil.getSession().save(requestorDoctor);

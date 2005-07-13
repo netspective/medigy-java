@@ -23,6 +23,8 @@ public class QueryDefinitionFieldImpl implements QueryDefinitionField
     private String selectClauseExprAndLabel;
     private String whereClauseExpr;
     private String orderByClauseExpr;
+    private String hqlJoinExpr;
+
     private QueryDefinitionJoin join;
     private QueryDefinition parentQueryDefinition;
     private boolean allowDisplay = true;
@@ -97,7 +99,7 @@ public class QueryDefinitionFieldImpl implements QueryDefinitionField
     {
         return allowDisplay
                ? (selectClauseExprAndLabel != null
-                  ? selectClauseExprAndLabel : (getColumnExpr() + " as " + getColumnLabel() + ""))
+                  ? selectClauseExprAndLabel : (getColumnExpr()))
                : null;
     }
 
@@ -147,6 +149,16 @@ public class QueryDefinitionFieldImpl implements QueryDefinitionField
     public QueryDefinition getQueryDefinition()
     {
         return this.parentQueryDefinition;
+    }
+
+    public String getHqlJoinExpr()
+    {
+        return hqlJoinExpr;
+    }
+
+    public void setHqlJoinExpr(final String hqlJoinExpr)
+    {
+        this.hqlJoinExpr = hqlJoinExpr;
     }
 
     public void setValidSqlComparisons(final List<SqlComparison> validSqlComparisons)

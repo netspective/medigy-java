@@ -41,6 +41,7 @@ package com.medigy.persist.model.health;
 import com.medigy.persist.model.common.AbstractEntity;
 import com.medigy.persist.model.party.PartyRole;
 import com.medigy.persist.model.person.Person;
+import com.medigy.persist.model.person.PersonRole;
 import com.medigy.persist.reference.custom.health.HealthCareReferralType;
 import com.medigy.persist.reference.custom.person.PersonRoleType;
 
@@ -53,6 +54,8 @@ import javax.persistence.Column;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import java.util.Date;
+
+import org.hibernate.validator.NotNull;
 
 @Entity
 @Table(name = HealthCareReferral.TABLE_NAME)
@@ -68,9 +71,9 @@ public class HealthCareReferral extends AbstractEntity
     private Date referralDate;
     private Long allowedVisits;
 
-    private PartyRole patientRole;
-    private PartyRole requesterRole;
-    private PartyRole providerRole;
+    private PersonRole patientRole;
+    private PersonRole requesterRole;
+    private PersonRole providerRole;
     private Diagnosis diagnosis;
     private HealthCareEpisode episode;
     private HealthCareReferralType type;
@@ -150,13 +153,14 @@ public class HealthCareReferral extends AbstractEntity
      * @return
      */
     @ManyToOne
-    @JoinColumn(name="patient_role_id", referencedColumnName = "party_role_id", nullable = false)
-    public PartyRole getPatientRole()
+    @JoinColumn(name="patient_role_id", referencedColumnName = PersonRole.PK_COLUMN_NAME, nullable = false)
+    @NotNull
+    public PersonRole getPatientRole()
     {
         return patientRole;
     }
 
-    public void setPatientRole(final PartyRole patientRole)
+    public void setPatientRole(final PersonRole patientRole)
     {
         this.patientRole = patientRole;
     }
@@ -164,14 +168,9 @@ public class HealthCareReferral extends AbstractEntity
     @Transient
     public void setPatient(final Person person)
     {
-        PartyRole role = person.getPartyRole(PersonRoleType.Cache.PATIENT.getEntity());
+        PersonRole role = person.getRole(PersonRoleType.Cache.PATIENT.getEntity());
         if (role == null)
-        {
-            role = new PartyRole();
-            role.setType(PersonRoleType.Cache.PATIENT.getEntity());
-            role.setParty(person);
-            person.addPartyRole(role);
-        }
+            person.addRole(PersonRoleType.Cache.PATIENT.getEntity());
         setPatientRole(role);
     }
 
@@ -180,13 +179,14 @@ public class HealthCareReferral extends AbstractEntity
      * @return
      */
     @ManyToOne
-    @JoinColumn(name = "requester_role_id", referencedColumnName = "party_role_id", nullable = false)
-    public PartyRole getRequesterRole()
+    @JoinColumn(name = "requester_role_id", referencedColumnName = PersonRole.PK_COLUMN_NAME, nullable = false)
+    @NotNull
+    public PersonRole getRequesterRole()
     {
         return requesterRole;
     }
 
-    public void setRequesterRole(final PartyRole requesterRole)
+    public void setRequesterRole(final PersonRole requesterRole)
     {
         this.requesterRole = requesterRole;
     }
@@ -194,14 +194,9 @@ public class HealthCareReferral extends AbstractEntity
     @Transient
     public void setRequestor(final Person person)
     {
-        PartyRole role = person.getPartyRole(PersonRoleType.Cache.INDIVIDUAL_HEALTH_CARE_PRACTITIONER.getEntity());
+        PersonRole role = person.getRole(PersonRoleType.Cache.INDIVIDUAL_HEALTH_CARE_PRACTITIONER.getEntity());
         if (role == null)
-        {
-            role = new PartyRole();
-            role.setType(PersonRoleType.Cache.INDIVIDUAL_HEALTH_CARE_PRACTITIONER.getEntity());
-            role.setParty(person);
-            person.addPartyRole(role);
-        }
+            person.addRole(PersonRoleType.Cache.INDIVIDUAL_HEALTH_CARE_PRACTITIONER.getEntity());
         setRequesterRole(role);
     }
 
@@ -210,13 +205,13 @@ public class HealthCareReferral extends AbstractEntity
      * @return
      */
     @ManyToOne
-    @JoinColumn(name = "provider_role_id", referencedColumnName = "party_role_id", nullable = false)
-    public PartyRole getProviderRole()
+    @JoinColumn(name = "provider_role_id", referencedColumnName = PersonRole.PK_COLUMN_NAME, nullable = false)
+    public PersonRole getProviderRole()
     {
         return providerRole;
     }
 
-    public void setProviderRole(final PartyRole providerRole)
+    public void setProviderRole(final PersonRole providerRole)
     {
         this.providerRole = providerRole;
     }
@@ -224,23 +219,18 @@ public class HealthCareReferral extends AbstractEntity
     @Transient
     public void setProvider(final Person person)
     {
-        PartyRole role = person.getPartyRole(PersonRoleType.Cache.INDIVIDUAL_HEALTH_CARE_PRACTITIONER.getEntity());
+        PersonRole role = person.getRole(PersonRoleType.Cache.INDIVIDUAL_HEALTH_CARE_PRACTITIONER.getEntity());
         if (role == null)
-        {
-            role = new PartyRole();
-            role.setType(PersonRoleType.Cache.INDIVIDUAL_HEALTH_CARE_PRACTITIONER.getEntity());
-            role.setParty(person);
-            person.addPartyRole(role);
-        }
+            person.addRole(PersonRoleType.Cache.INDIVIDUAL_HEALTH_CARE_PRACTITIONER.getEntity());
         setProviderRole(role);
     }
 
    /**
      * Gets the diagnosis basis for the referral
-     * @return
+     * @return diagnosis
      */
     @ManyToOne
-    @JoinColumn(name = "diagnosis_id")
+    @JoinColumn(name = Diagnosis.PK_COLUMN_NAME)
     public Diagnosis getDiagnosis()
     {
         return diagnosis;

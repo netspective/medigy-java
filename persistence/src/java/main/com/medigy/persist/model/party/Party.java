@@ -101,9 +101,6 @@ public class Party extends AbstractTopLevelEntity
     protected PartyType partyType;
 
     private Set<PartyClassification> partyClassifications = new HashSet<PartyClassification>();
-    private Set<PartyRole> partyRoles = new HashSet<PartyRole>();
-    private Set<PartyRelationship> fromPartyRelationships = new HashSet<PartyRelationship>();
-    private Set<PartyRelationship> toPartyRelationships = new HashSet<PartyRelationship>();
     private Set<PartyQualification> partyQualifications = new HashSet<PartyQualification>();
 
     protected Set<PartyIdentifier> partyIdentifiers = new HashSet<PartyIdentifier>();
@@ -200,64 +197,6 @@ public class Party extends AbstractTopLevelEntity
         {
             if (pc.getType().equals(type))
             return pc;
-        }
-        return null;
-    }
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "party")
-    public Set<PartyRole> getPartyRoles()
-    {
-        return partyRoles;
-    }
-
-    public void setPartyRoles(final Set<PartyRole> partyRoles)
-    {
-        this.partyRoles = partyRoles;
-    }
-
-    @Transient
-    public void addPartyRole(final PartyRole role)
-    {
-        this.partyRoles.add(role);
-    }
-
-    /**
-     * Adds a party role of the requested type to the list of roles assigned to the party.
-     *
-     * @param type  party role type
-     */
-    @Transient
-    public void addPartyRole(final PartyRoleType type)
-    {
-        final PartyRole partyRole = new PartyRole();
-        partyRole.setType(type);
-        partyRole.setParty(this);
-        addPartyRole(partyRole);
-    }
-
-    /**
-     * Checks to see if the party has a role with the passed in partyType
-     * @param type
-     * @return
-     */
-    @Transient
-    public boolean hasPartyRole(final PartyRoleType type)
-    {
-        for (PartyRole role: this.partyRoles)
-        {
-            if (role.getType().equals(type))
-                return true;
-        }
-        return false;
-    }
-    
-    @Transient
-    public PartyRole getPartyRole(final PartyRoleType type)
-    {
-        for (PartyRole role: this.partyRoles)
-        {
-            if (role.getType().equals(type))
-                return role;
         }
         return null;
     }
@@ -394,28 +333,6 @@ public class Party extends AbstractTopLevelEntity
     public void setInvoiceRoles(final Set<InvoiceRole> invoiceRoles)
     {
         this.invoiceRoles = invoiceRoles;
-    }
-
-    @OneToMany(mappedBy = "partyFrom")
-    public Set<PartyRelationship> getFromPartyRelationships()
-    {
-        return fromPartyRelationships;
-    }
-
-    public void setFromPartyRelationships(final Set<PartyRelationship> fromPartyRelationships)
-    {
-        this.fromPartyRelationships = fromPartyRelationships;
-    }
-
-    @OneToMany(mappedBy = "partyTo")
-    public Set<PartyRelationship> getToPartyRelationships()
-    {
-        return toPartyRelationships;
-    }
-
-    public void setToPartyRelationships(final Set<PartyRelationship> toPartyRelationships)
-    {
-        this.toPartyRelationships = toPartyRelationships;
     }
 
     @OneToMany(mappedBy = "party")

@@ -48,7 +48,16 @@ public class QueryDefnStatementGenerator
         if(join == null || joins.contains(join))
             return;
 
-        fromClause.add(join.getTable() + " " + join.getName());
+        // HQL Rules: OUTER JOINS and INNER JOINS can be defined so at the FROM clause there could be some more HQL
+        // text appended after the table name. There might be limitations on this!
+        String fromExpr = join.getFromExpr();
+        for (QueryDefinitionField field : select.getDisplayFields().values())
+        {
+            if (field.getHqlJoinExpr() != null && field.getJoin().equals(join))
+                fromExpr = fromExpr + " " + field.getHqlJoinExpr();
+        }
+        fromClause.add(fromExpr);
+
         if(autoInc || impliedBy != null)
         {
             StringBuffer comments = new StringBuffer();

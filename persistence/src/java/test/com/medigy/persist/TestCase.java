@@ -122,7 +122,7 @@ public abstract class TestCase extends MockObjectTestCase
         hibProperties.setProperty(Environment.CONNECTION_PREFIX + ".username", userName);
         hibProperties.setProperty(Environment.CONNECTION_PREFIX + ".password", password);
         hibProperties.setProperty(Environment.HBM2DDL_AUTO, "create-drop");
-        hibProperties.setProperty(Environment.SHOW_SQL, "false");
+        hibProperties.setProperty(Environment.SHOW_SQL, "true");
         return hibProperties;
     }
 

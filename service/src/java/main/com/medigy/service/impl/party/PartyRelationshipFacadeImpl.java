@@ -38,26 +38,19 @@
  */
 package com.medigy.service.impl.party;
 
-import com.medigy.persist.model.party.Party;
-import com.medigy.persist.model.party.PartyRelationship;
-import com.medigy.persist.model.party.PartyRole;
-import com.medigy.persist.model.party.ValidPartyRelationshipRole;
-import com.medigy.persist.model.party.ValidResponsiblePartyRole;
 import com.medigy.persist.model.person.Person;
-import com.medigy.persist.reference.custom.party.PartyRelationshipType;
-import com.medigy.persist.reference.custom.party.PartyRoleType;
+import com.medigy.persist.model.person.PeopleRelationship;
+import com.medigy.persist.model.person.PersonRole;
+import com.medigy.persist.model.insurance.FinancialResponsiblePartySelection;
+import com.medigy.persist.reference.custom.party.PeopleRelationshipType;
 import com.medigy.persist.reference.custom.person.PersonRoleType;
 import com.medigy.service.party.PartyRelationshipFacade;
 import com.medigy.service.util.AbstractFacade;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Expression;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 public class PartyRelationshipFacadeImpl extends AbstractFacade implements PartyRelationshipFacade
 {
@@ -68,69 +61,7 @@ public class PartyRelationshipFacadeImpl extends AbstractFacade implements Party
         super(sessionFactory);
     }
 
-    public List getValidPartyRolesByRelationshipType(PartyRelationshipType type)
-    {
-        Criteria criteria = getSession().createCriteria(ValidPartyRelationshipRole.class);
-        Criteria relationshipCriteria = criteria.createCriteria("partyRelationshipType");
-        relationshipCriteria.add(Expression.eq("code", type.getCode()));
 
-        return criteria.list();
-    }
-
-    public PartyRelationship addPartyRelationship(PartyRelationshipType entity, PartyRole fromRole, PartyRole toRole)
-    {
-        PartyRelationship rel = new PartyRelationship();
-        rel.setType(entity);
-        rel.setPartyRoleFrom(fromRole);
-        rel.setPartyRoleTo(toRole);
-        rel.setPartyFrom(fromRole.getParty());
-        rel.setPartyTo(toRole.getParty());
-        rel.setFromDate(new Date());
-
-        getSession().save(rel);
-        if(log.isInfoEnabled())
-            log.info("New party relationship created: id = " + rel.getPartyRelationshipId());
-        return rel;
-    }
-
-
-    public List listPartyRelationshipsByTypeAndFromRole(PartyRelationshipType type, PartyRole fromRole)
-    {
-        Criteria criteria = getSession().createCriteria(PartyRelationship.class).createCriteria("partyRelationshipType");
-        criteria.add(Expression.eq("code", type.getCode()));
-        criteria.createCriteria("fromPartyRole").add(Expression.eq("partyRoleId", fromRole.getPartyRoleId()));
-        return criteria.list();
-    }
-
-    /**
-     * Lists all relationships where the party is the responsible party for a patient
-     *
-     * @param patient
-     * @return List of Party Relationships
-     */
-    public List listPatientResponsiblePartyRelationship(Party patient)
-    {
-        Criteria criteria = getSession().createCriteria(PartyRelationship.class);
-        Criteria partyRelTypeCriteria = criteria.createCriteria("type");
-        partyRelTypeCriteria.add(Expression.eq("code", PartyRelationshipType.Cache.PATIENT_RESPONSIBLE_PARTY.getCode()));
-        criteria.createCriteria("partyFrom").add(Expression.eq("partyId", patient.getPartyId()));
-        return criteria.list();
-    }
-
-    /**
-     * Lists all party role types that are valid for a responsible party 
-     * @return
-     */
-    public List<PartyRoleType> listValidResponsiblePartyRoleTypes()
-    {
-        List list  = getSession().createCriteria(ValidResponsiblePartyRole.class).list();
-        List<PartyRoleType> roleTypeList = new ArrayList<PartyRoleType>();
-        for (int i=0; i < list.size(); i++)
-        {
-            roleTypeList.add(((ValidResponsiblePartyRole) list.get(i)).getResponsiblePartyRoleType());
-        }
-        return roleTypeList;
-    }
 
     /**
      * Creates a new party relationship between the patient and the responsible party (org or person) who will be
@@ -139,25 +70,27 @@ public class PartyRelationshipFacadeImpl extends AbstractFacade implements Party
      * @param patient                   patient person
      * @param responsibleParty          the financially responsible party for the patient
      * @param responsiblePartyRoleType  the party role type of the responsible party (e.g. parent, employer)
-     * @return the newly created party relationship
      */
-    public PartyRelationship addFinancialResposiblePartyRelationship(final Person patient, final Party responsibleParty,
-                                                                           final PartyRoleType responsiblePartyRoleType)
+    public void addFinancialResposiblePersonRelationship(final Person patient, final Person responsibleParty,
+                                                                      final PersonRoleType responsiblePartyRoleType)
     {
-        if (!responsibleParty.hasPartyRole(responsiblePartyRoleType))
-            responsibleParty.addPartyRole(responsiblePartyRoleType);
-        if (!patient.hasPartyRole(PersonRoleType.Cache.PATIENT.getEntity()))
-            patient.addPartyRole(PersonRoleType.Cache.PATIENT.getEntity());
+        if (!responsibleParty.hasRole(responsiblePartyRoleType))
+            responsibleParty.addRole(responsiblePartyRoleType);
+        if (!patient.hasRole(PersonRoleType.Cache.PATIENT.getEntity()))
+            patient.addRole(PersonRoleType.Cache.PATIENT.getEntity());
 
-        PartyRole patientRole = patient.getPartyRole(PersonRoleType.Cache.PATIENT.getEntity());
-        PartyRole responsiblePartyRole = responsibleParty.getPartyRole(responsiblePartyRoleType);
-        final PartyRelationship relationship = new PartyRelationship();
-        relationship.setPartyRoleFrom(patientRole);
-        relationship.setPartyRoleTo(responsiblePartyRole);
-        relationship.setType(PartyRelationshipType.Cache.PATIENT_RESPONSIBLE_PARTY.getEntity());
+        PersonRole patientRole = patient.getRole(PersonRoleType.Cache.PATIENT.getEntity());
+        PersonRole responsiblePartyRole = responsibleParty.getRole(responsiblePartyRoleType);
+        final PeopleRelationship relationship = new PeopleRelationship();
+        relationship.setPrimaryPersonRole(patientRole);
+        relationship.setSecondaryPersonRole(responsiblePartyRole);
+        relationship.setType(PeopleRelationshipType.Cache.PARENT_CHILD.getEntity());
         relationship.setFromDate(new Date());
-
         getSession().save(relationship);
-        return relationship;
+
+        FinancialResponsiblePartySelection selection = new FinancialResponsiblePartySelection();
+        selection.setPeopleRelationship(relationship);
+        getSession().save(selection);
+
     }
 }

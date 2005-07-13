@@ -28,7 +28,7 @@ public class User extends AbstractTopLevelEntity
     private Organization organization;
 
     // TODO: Need to discuss if  USER should be associated to Person and Org thorugh the person's roles
-    private PartyRole partyRole;
+    private PersonRole personRole;
 
     @Id(generate = GeneratorType.AUTO)
     public Long getUserId()

@@ -40,19 +40,26 @@ package com.medigy.persist.reference.custom.party;
 
 import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
 import com.medigy.persist.reference.custom.CustomReferenceEntity;
+import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.Table;
+import javax.persistence.Id;
+import javax.persistence.GeneratorType;
+import javax.persistence.Column;
 
 @Entity
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE, discriminatorValue = PeopleRelationshipType.RELATIONSHIP_TYPE_NAME)
-public class PeopleRelationshipType extends PartyRelationshipType
+@Table(name = "Person_Rel_Type")
+public class PeopleRelationshipType extends AbstractCustomReferenceEntity
 {
     public static final String RELATIONSHIP_TYPE_NAME = "person-to-person";
+    public static final String PK_COLUMN_NAME = "rel_type_id";
 
     public enum Cache implements CachedCustomReferenceEntity
     {
+        FINANCIAL_RESP_PARTY("FIN_RESP", "Financial Responsible Party"),
         PARENT_CHILD("PARENT_CHILD", "Parent/Child Relationship"),
         DOMESTIC_PARTNERSHIP("DOMESTIC", "Domestic Partnership"),
         MARRIAGE("MARRIAGE", "Marriage"),
@@ -63,7 +70,7 @@ public class PeopleRelationshipType extends PartyRelationshipType
 
         private final String label;
         private final String code;
-        private PartyRelationshipType entity;
+        private PeopleRelationshipType entity;
 
         Cache(final String code, final String label)
         {
@@ -76,14 +83,14 @@ public class PeopleRelationshipType extends PartyRelationshipType
             return code;
         }
 
-        public PartyRelationshipType getEntity()
+        public PeopleRelationshipType getEntity()
         {
             return entity;
         }
 
         public void setEntity(final CustomReferenceEntity entity)
         {
-            this.entity = (PartyRelationshipType) entity;
+            this.entity = (PeopleRelationshipType) entity;
         }
 
         public String getLabel()
@@ -92,4 +99,15 @@ public class PeopleRelationshipType extends PartyRelationshipType
         }
     }
 
+    @Id(generate = GeneratorType.AUTO)
+    @Column(name = PK_COLUMN_NAME)
+    public Long getRelationshipTypeId()
+    {
+        return getSystemId();
+    }
+
+    public void setRelationshipTypeId(final Long id)
+    {
+        setSystemId(id);
+    }
 }

@@ -1,10 +1,8 @@
 package com.medigy.service.org;
 
 import com.medigy.persist.model.org.Organization;
-import com.medigy.persist.model.party.PartyRelationship;
-import com.medigy.persist.reference.custom.party.OrganizationRoleType;
-import com.medigy.persist.reference.custom.party.PartyRelationshipType;
-import com.medigy.persist.util.HibernateUtil;
+import com.medigy.persist.model.org.OrganizationsRelationship;
+import com.medigy.persist.reference.custom.party.OrganizationsRelationshipType;
 import com.medigy.service.AbstractSpringTestCase;
 
 import java.util.List;
@@ -20,19 +18,19 @@ public class TestOrganizationFacade extends AbstractSpringTestCase
 
     public void testAddInsuranceGroup()
     {
-        Organization parentOrg = (Organization) HibernateUtil.getSession().load(Organization.class, new Long(2));
+        Organization parentOrg = new Organization();
+        parentOrg.setOrganizationName("Some Big Company");
+        getSession().save(parentOrg);
 
         // TEST addInsuranceGroup
         organizationFacade.addInsuranceGroup(parentOrg, "Software Developers");
-        HibernateUtil.closeSession();
 
-        List list = HibernateUtil.getSession().createCriteria(PartyRelationship.class).list();
+        List list = getSession().createCriteria(OrganizationsRelationship.class).list();
         assertEquals(1, list.size());
-        final PartyRelationship relationship = ((PartyRelationship) list.toArray()[0]);
-        assertEquals(PartyRelationshipType.Cache.ORGANIZATION_ROLLUP.getEntity(), relationship.getType());
-        assertEquals(parentOrg.getPartyId(), relationship.getPartyTo().getPartyId());
-        assertEquals("Software Developers", relationship.getPartyFrom().getPartyName());
-        assertTrue(relationship.getPartyFrom().hasPartyRole(OrganizationRoleType.Cache.OTHER_ORG_UNIT.getEntity()));
+        final OrganizationsRelationship relationship = ((OrganizationsRelationship) list.toArray()[0]);
+        assertEquals(OrganizationsRelationshipType.Cache.ORGANIZATION_ROLLUP.getEntity(), relationship.getType());
+        assertEquals(parentOrg.getPartyId(), relationship.getPrimaryOrgRole().getOrganization().getPartyId());
+        assertEquals("Software Developers", relationship.getSecondaryOrgRole().getOrganization().getPartyName());
 
         // TEST listInsuranceGroups()
         final List groups = organizationFacade.listInsuranceGroups(parentOrg);

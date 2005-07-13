@@ -57,6 +57,12 @@ public interface SelectFinancialResponsiblePartyParameters extends ServiceVersio
      */
     public Serializable getResponsiblePartyId();
 
+    /**
+     * By default, responsible parties are assumed to be people but for certain cases, they can be orgs.
+     * @return True is the resp party is an org
+     */
+    public boolean isResponsiblePartyOrganization();
+
     public String getResponsiblePartyName();
 
     /**

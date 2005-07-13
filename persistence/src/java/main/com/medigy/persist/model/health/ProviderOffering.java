@@ -47,13 +47,15 @@ import javax.persistence.ManyToOne;
 import com.medigy.persist.model.common.AbstractDateDurationEntity;
 import com.medigy.persist.model.org.Organization;
 import com.medigy.persist.model.party.PartyRole;
+import com.medigy.persist.model.person.PersonRole;
 
 @Entity
 public class ProviderOffering extends AbstractDateDurationEntity
 {
+    //TODO: Clarify what this class if for!
     private Long providerOfferingId;
     private Organization providerOrganization;
-    private PartyRole partyRole;
+    private PersonRole personRole;
 
     @Id(generate = GeneratorType.AUTO)
     public Long getProviderOfferingId()
@@ -79,14 +81,14 @@ public class ProviderOffering extends AbstractDateDurationEntity
     }
 
     @ManyToOne
-    @JoinColumn(name = "party_role_id")
-    public PartyRole getPartyRole()
+    @JoinColumn(name = PersonRole.PK_COLUMN_NAME)
+    public PersonRole getPersonRole()
     {
-        return partyRole;
+        return personRole;
     }
 
-    public void setPartyRole(final PartyRole partyRole)
+    public void setPersonRole(final PersonRole partyRole)
     {
-        this.partyRole = partyRole;
+        this.personRole = partyRole;
     }
 }

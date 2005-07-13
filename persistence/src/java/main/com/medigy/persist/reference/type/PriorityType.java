@@ -50,6 +50,7 @@ import javax.persistence.Table;
 @Table(name = "Priority_Type")
 public class PriorityType extends AbstractReferenceEntity
 {
+    public static final String PK_COLUMN_NAME = "code";
     public enum Cache implements CachedReferenceEntity
     {
         HIGH("H", "High", ""),

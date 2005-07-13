@@ -57,6 +57,7 @@ import com.medigy.persist.reference.custom.health.DiagnosisType;
 @Entity
 public class Diagnosis extends AbstractTopLevelEntity
 {
+    public static final String PK_COLUMN_NAME = "diagnosis_id";
     private Long diagnosisId;
     private Date diagnosisDate;
     private HealthCareEpisode healthCareEpisode;
@@ -66,6 +67,7 @@ public class Diagnosis extends AbstractTopLevelEntity
     private Set<DiagnosisTreatment> diagnosisTreatments = new HashSet<DiagnosisTreatment>();
 
     @Id(generate = GeneratorType.AUTO)
+    @Column(name = PK_COLUMN_NAME)
     public Long getDiagnosisId()
     {
         return diagnosisId;

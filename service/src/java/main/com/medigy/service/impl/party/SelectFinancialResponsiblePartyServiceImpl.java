@@ -38,12 +38,13 @@
  */
 package com.medigy.service.impl.party;
 
-import com.medigy.persist.model.party.Party;
 import com.medigy.persist.model.party.ValidResponsiblePartyRole;
 import com.medigy.persist.model.person.Person;
-import com.medigy.persist.reference.custom.party.PartyRoleType;
-import com.medigy.persist.util.HibernateUtil;
+import com.medigy.persist.model.org.Organization;
+import com.medigy.persist.reference.custom.party.OrganizationRoleType;
+import com.medigy.persist.reference.custom.person.PersonRoleType;
 import com.medigy.service.ServiceVersion;
+import com.medigy.service.AbstractService;
 import com.medigy.service.dto.ServiceParameters;
 import com.medigy.service.dto.ServiceReturnValues;
 import com.medigy.service.dto.person.SelectFinancialResponsiblePartyParameters;
@@ -51,6 +52,7 @@ import com.medigy.service.party.PartyRelationshipFacade;
 import com.medigy.service.party.SelectFinancialResponsiblePartyService;
 import com.medigy.service.util.ReferenceEntityFacade;
 import org.hibernate.Criteria;
+import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 
 import java.io.Serializable;
@@ -59,10 +61,15 @@ import java.io.Serializable;
  * Service class for handling request for choosing a financial responsible party for the patient
  *
  */
-public class SelectFinancialResponsiblePartyServiceImpl implements SelectFinancialResponsiblePartyService
+public class SelectFinancialResponsiblePartyServiceImpl extends AbstractService implements SelectFinancialResponsiblePartyService
 {
     private ReferenceEntityFacade referenceEntityFacade;
     private PartyRelationshipFacade partyRelationshipFacade;
+
+    public SelectFinancialResponsiblePartyServiceImpl(final SessionFactory sessionFactory)
+    {
+        super(sessionFactory);
+    }
 
     public PartyRelationshipFacade getPartyRelationshipFacade()
     {
@@ -92,28 +99,24 @@ public class SelectFinancialResponsiblePartyServiceImpl implements SelectFinanci
     public void select(final SelectFinancialResponsiblePartyParameters params)
     {
         final Serializable respPartyId = params.getResponsiblePartyId();
-        final Party respParty = (Party) HibernateUtil.getSession().load(Party.class, respPartyId);
         final String roleCode = params.getResponsiblePartyRoleCode();
+        final Person patient = (Person) getSession().load(Person.class, params.getPartyId());
 
-        PartyRoleType roleType = null;
-        if (respParty.isPerson())
-            roleType = referenceEntityFacade.getPersonRoleType(roleCode);
+        if (params.isResponsiblePartyOrganization())
+        {
+            final Organization respParty = (Organization) getSession().load(Organization.class, respPartyId);
+            OrganizationRoleType roleType = referenceEntityFacade.getOrganizationRoleType(roleCode);
+            if (!respParty.hasRole(roleType))
+                respParty.addRole(roleType);
+        }
         else
-            roleType = referenceEntityFacade.getOrganizationRoleType(roleCode);
-        // check to see if the respParty alread has this role
-        if (!respParty.hasPartyRole(roleType))
-            respParty.addPartyRole(roleType);
-
-        // TODO: now need to create/get the patient's role with respect to the relationship
-        Criteria criteria = HibernateUtil.getSession().createCriteria(ValidResponsiblePartyRole.class);
-        criteria.createCriteria("responsiblePartyRoleType").add(Restrictions.eq("code", roleCode));
-        final ValidResponsiblePartyRole respPartyRel = (ValidResponsiblePartyRole) criteria.uniqueResult();
-        
-
-        final Person patient = (Person) HibernateUtil.getSession().load(Person.class, params.getPartyId());
-        partyRelationshipFacade.addFinancialResposiblePartyRelationship(patient, respParty, roleType);
-
-
+        {
+            final Person respParty = (Person) getSession().load(Person.class, respPartyId);
+            PersonRoleType roleType = referenceEntityFacade.getPersonRoleType(roleCode);
+            if (!respParty.hasRole(roleType))
+                respParty.addRole(roleType);
+            partyRelationshipFacade.addFinancialResposiblePersonRelationship(patient, respParty, roleType);            
+        }
 
     }
 

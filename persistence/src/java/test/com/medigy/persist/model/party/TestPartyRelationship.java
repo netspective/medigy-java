@@ -2,8 +2,15 @@ package com.medigy.persist.model.party;
 
 import com.medigy.persist.TestCase;
 import com.medigy.persist.model.org.Organization;
+import com.medigy.persist.model.org.OrganizationRole;
+import com.medigy.persist.model.org.OrganizationsRelationship;
 import com.medigy.persist.model.person.Person;
+import com.medigy.persist.model.person.PersonRole;
+import com.medigy.persist.model.person.PeopleRelationship;
 import com.medigy.persist.reference.custom.party.PartyRelationshipType;
+import com.medigy.persist.reference.custom.party.PeopleRelationshipType;
+import com.medigy.persist.reference.custom.party.OrganizationRoleType;
+import com.medigy.persist.reference.custom.party.OrganizationsRelationshipType;
 import com.medigy.persist.reference.custom.person.PatientResponsiblePartyRoleType;
 import com.medigy.persist.reference.custom.person.PersonRoleType;
 import com.medigy.persist.util.HibernateUtil;
@@ -21,10 +28,10 @@ public final class TestPartyRelationship extends TestCase
         Person dad = new Person("Hackett", "Dad");
         Person patientB = new Person("Hackett", "Sister");
 
-        patientA.addPartyRole(PersonRoleType.Cache.PATIENT.getEntity());
-        patientB.addPartyRole(PersonRoleType.Cache.PATIENT.getEntity());
-        mom.addPartyRole(PatientResponsiblePartyRoleType.Cache.PARENT.getEntity());
-        dad.addPartyRole(PatientResponsiblePartyRoleType.Cache.PARENT.getEntity());
+        patientA.addRole(PersonRoleType.Cache.PATIENT.getEntity());
+        patientB.addRole(PersonRoleType.Cache.PATIENT.getEntity());
+        mom.addRole(PatientResponsiblePartyRoleType.Cache.PARENT.getEntity());
+        dad.addRole(PatientResponsiblePartyRoleType.Cache.PARENT.getEntity());
 
         HibernateUtil.getSession().save(patientA);
         HibernateUtil.getSession().save(patientB);
@@ -32,103 +39,88 @@ public final class TestPartyRelationship extends TestCase
         HibernateUtil.getSession().save(dad);
         HibernateUtil.closeSession();
 
-        final PartyRole patientARole = patientA.getPartyRole(PersonRoleType.Cache.PATIENT.getEntity());
-        final PartyRole patientBRole = patientB.getPartyRole(PersonRoleType.Cache.PATIENT.getEntity());
-        final PartyRole dadRole = dad.getPartyRole(PersonRoleType.Cache.PARENT.getEntity());
-        final PartyRole momRole = mom.getPartyRole(PersonRoleType.Cache.PARENT.getEntity());
+        final PersonRole patientARole = patientA.addRole(PersonRoleType.Cache.PATIENT.getEntity());
+        final PersonRole patientBRole = patientB.addRole(PersonRoleType.Cache.PATIENT.getEntity());
+        final PersonRole dadRole = dad.addRole(PersonRoleType.Cache.PARENT.getEntity());
+        final PersonRole momRole = mom.addRole(PersonRoleType.Cache.PARENT.getEntity());
 
-        final PartyRelationship patientAMomRel = new PartyRelationship();
-        patientAMomRel.setType(PartyRelationshipType.Cache.PATIENT_RESPONSIBLE_PARTY.getEntity());
-        patientAMomRel.setPartyTo(mom);
-        patientAMomRel.setPartyRoleTo(momRole);
-        patientAMomRel.setPartyFrom(patientA);
-        patientAMomRel.setPartyRoleFrom(patientARole);
+        final PeopleRelationship patientAMomRel = new PeopleRelationship();
+        patientAMomRel.setType(PeopleRelationshipType.Cache.FINANCIAL_RESP_PARTY.getEntity());
+        patientAMomRel.setSecondaryPersonRole(momRole);
+        patientAMomRel.setPrimaryPersonRole(patientARole);
 
-        final PartyRelationship patientADadRel = new PartyRelationship();
-        patientADadRel.setType(PartyRelationshipType.Cache.PATIENT_RESPONSIBLE_PARTY.getEntity());
-        patientADadRel.setPartyTo(dad);
-        patientADadRel.setPartyRoleTo(dadRole);
-        patientADadRel.setPartyFrom(patientA);
-        patientADadRel.setPartyRoleFrom(patientARole);
+        final PeopleRelationship patientADadRel = new PeopleRelationship();
+        patientADadRel.setType(PeopleRelationshipType.Cache.FINANCIAL_RESP_PARTY.getEntity());
+        patientADadRel.setSecondaryPersonRole(dadRole);
+        patientADadRel.setPrimaryPersonRole(patientARole);
 
-        final PartyRelationship patientBMomRel = new PartyRelationship();
-        patientBMomRel.setType(PartyRelationshipType.Cache.PATIENT_RESPONSIBLE_PARTY.getEntity());
-        patientBMomRel.setPartyTo(mom);
-        patientBMomRel.setPartyRoleTo(momRole);
-        patientBMomRel.setPartyFrom(patientB);
-        patientBMomRel.setPartyRoleFrom(patientBRole);
+        final PeopleRelationship patientBMomRel = new PeopleRelationship();
+        patientBMomRel.setType(PeopleRelationshipType.Cache.FINANCIAL_RESP_PARTY.getEntity());
+        patientBMomRel.setSecondaryPersonRole(momRole);
+        patientBMomRel.setPrimaryPersonRole(patientBRole);
 
-        final PartyRelationship patientBDadRel = new PartyRelationship();
-        patientBDadRel.setType(PartyRelationshipType.Cache.PATIENT_RESPONSIBLE_PARTY.getEntity());
-        patientBDadRel.setPartyTo(dad);
-        patientBDadRel.setPartyRoleTo(dadRole);
-        patientBDadRel.setPartyFrom(patientB);
-        patientBDadRel.setPartyRoleFrom(patientBRole);
+        final PeopleRelationship patientBDadRel = new PeopleRelationship();
+        patientBDadRel.setType(PeopleRelationshipType.Cache.FINANCIAL_RESP_PARTY.getEntity());
+        patientBDadRel.setSecondaryPersonRole(dadRole);
+        patientBDadRel.setPrimaryPersonRole(patientBRole);
 
         HibernateUtil.getSession().save(patientAMomRel);
         HibernateUtil.getSession().save(patientBMomRel);
         HibernateUtil.getSession().save(patientADadRel);
         HibernateUtil.getSession().save(patientBDadRel);
 
-        final PartyRelationship savedPatientAMomRel = (PartyRelationship) HibernateUtil.getSession().load(PartyRelationship.class, patientAMomRel.getPartyRelationshipId());
-        assertEquals(savedPatientAMomRel.getType(), PartyRelationshipType.Cache.PATIENT_RESPONSIBLE_PARTY.getEntity());
-        assertEquals(savedPatientAMomRel.getPartyFrom(), patientA);
-        assertEquals(savedPatientAMomRel.getPartyTo(), mom);
+        final PeopleRelationship savedPatientAMomRel = (PeopleRelationship) HibernateUtil.getSession().load(PeopleRelationship.class, patientAMomRel.getRelationshipId());
+        assertEquals(savedPatientAMomRel.getType(), PeopleRelationshipType.Cache.FINANCIAL_RESP_PARTY.getEntity());
+        assertEquals(savedPatientAMomRel.getPrimaryPersonRole().getPerson(), patientA);
+        assertEquals(savedPatientAMomRel.getSecondaryPersonRole().getPerson(), mom);
 
-        final PartyRelationship savedPatientBMomRel = (PartyRelationship) HibernateUtil.getSession().load(PartyRelationship.class, patientBMomRel.getPartyRelationshipId());
+        final PeopleRelationship savedPatientBMomRel = (PeopleRelationship) HibernateUtil.getSession().load(PeopleRelationship.class, patientBMomRel.getRelationshipId());
         assertEquals(savedPatientBMomRel.getType(), PartyRelationshipType.Cache.PATIENT_RESPONSIBLE_PARTY.getEntity());
-        assertEquals(savedPatientBMomRel.getPartyFrom(), patientB);
-        assertEquals(savedPatientBMomRel.getPartyTo(), mom);
+        assertEquals(savedPatientBMomRel.getPrimaryPersonRole().getPerson(), patientB);
+        assertEquals(savedPatientBMomRel.getSecondaryPersonRole().getPerson(), mom);
 
-        final PartyRelationship savedPatientADadRel = (PartyRelationship) HibernateUtil.getSession().load(PartyRelationship.class, patientADadRel.getPartyRelationshipId());
+        final PeopleRelationship savedPatientADadRel = (PeopleRelationship) HibernateUtil.getSession().load(PeopleRelationship.class, patientADadRel.getRelationshipId());
         assertEquals(savedPatientADadRel.getType(), PartyRelationshipType.Cache.PATIENT_RESPONSIBLE_PARTY.getEntity());
-        assertEquals(savedPatientADadRel.getPartyFrom(), patientA);
-        assertEquals(savedPatientADadRel.getPartyTo(), dad);
+        assertEquals(savedPatientADadRel.getPrimaryPersonRole().getPerson(), patientA);
+        assertEquals(savedPatientADadRel.getSecondaryPersonRole().getPerson(), dad);
 
-        final PartyRelationship savedPatientBDadRel = (PartyRelationship) HibernateUtil.getSession().load(PartyRelationship.class, patientBDadRel.getPartyRelationshipId());
+        final PeopleRelationship savedPatientBDadRel = (PeopleRelationship) HibernateUtil.getSession().load(PeopleRelationship.class, patientBDadRel.getRelationshipId());
         assertEquals(savedPatientBDadRel.getType(), PartyRelationshipType.Cache.PATIENT_RESPONSIBLE_PARTY.getEntity());
-        assertEquals(savedPatientBDadRel.getPartyFrom(), patientB);
-        assertEquals(savedPatientBDadRel.getPartyTo(), dad);
+        assertEquals(savedPatientBDadRel.getPrimaryPersonRole().getPerson(), patientB);
+        assertEquals(savedPatientBDadRel.getSecondaryPersonRole().getPerson(), dad);
 
     }
 
-    public void testPartyRelationship()
+    public void testOrgRelationship()
     {
-        // don't really need to do this since the XML insertion  is WORKING?
-        List partyList = HibernateUtil.getSession().createCriteria(Party.class).list();
-        assertEquals(3, partyList.size());
-        List orgList = HibernateUtil.getSession().createCriteria(Organization.class).list();
-        assertEquals(2, orgList.size());
-        //List personList = HibernateUtil.getSession().createCriteria(Person.class).list();
-        
-        final Party parentOrg = (Party) HibernateUtil.getSession().load(Party.class, new Long(2));
-        final Party childOrg = (Party) HibernateUtil.getSession().load(Party.class, new Long(3));
+        final Organization primaryOrg = new Organization();
+        primaryOrg.setOrganizationName("Acme Inc");
+        primaryOrg.addRole(OrganizationRoleType.Cache.PARENT_ORG.getEntity());
+
+        final Organization secondaryOrg = new Organization();
+        secondaryOrg.setOrganizationName("Road Runner Enterprises");
+        secondaryOrg.addRole(OrganizationRoleType.Cache.OTHER_ORG_UNIT.getEntity());
+
+        HibernateUtil.getSession().save(primaryOrg);
+        HibernateUtil.getSession().save(secondaryOrg);
+
+        final Organization parentOrg = (Organization) HibernateUtil.getSession().load(Organization.class, primaryOrg.getOrgId());
+        final Organization childOrg = (Organization) HibernateUtil.getSession().load(Organization.class, secondaryOrg.getOrgId());
         assertNotNull(parentOrg);
         assertNotNull(childOrg);
         
-        PartyRole employerRole = (PartyRole) HibernateUtil.getSession().load(PartyRole.class, new Long(1));
-        PartyRole groupRole = (PartyRole) HibernateUtil.getSession().load(PartyRole.class, new Long(2));
-        PartyRelationshipType orgRelationshipType = (PartyRelationshipType) HibernateUtil.getSession().load(PartyRelationshipType.class, new Long(1));
-        assertNotNull(orgRelationshipType);
+        final OrganizationsRelationship rel = new OrganizationsRelationship();
+        rel.setPrimaryOrgRole(parentOrg.getRole(OrganizationRoleType.Cache.PARENT_ORG.getEntity()));
+        rel.setSecondaryOrgRole(childOrg.getRole(OrganizationRoleType.Cache.OTHER_ORG_UNIT.getEntity()));
+        rel.setType(OrganizationsRelationshipType.Cache.ORGANIZATION_ROLLUP.getEntity());
         
-        final PartyRelationship rel = new PartyRelationship();
-        rel.setPartyRoleFrom(groupRole);
-        rel.setPartyRoleTo(employerRole);
-        rel.setPartyFrom(childOrg);
-        rel.setPartyTo(parentOrg);
-        rel.setType(orgRelationshipType);
-        
-        groupRole.getFromPartyRelationships().add(rel);
-        employerRole.getToPartyRelationships().add(rel);
         HibernateUtil.getSession().save(rel);
         HibernateUtil.closeSession();
         
-        PartyRelationship newRelation = (PartyRelationship) HibernateUtil.getSession().load(PartyRelationship.class, rel.getPartyRelationshipId());
+        OrganizationsRelationship newRelation = (OrganizationsRelationship) HibernateUtil.getSession().load(OrganizationsRelationship.class, rel.getRelationshipId());
         assertNotNull(newRelation);
-        assertEquals(childOrg.getPartyId(), newRelation.getPartyFrom().getPartyId());
-        assertEquals(parentOrg.getPartyId(), newRelation.getPartyTo().getPartyId());
-        assertEquals(employerRole.getPartyRoleId(), newRelation.getPartyRoleTo().getPartyRoleId());
-        assertEquals(groupRole.getPartyRoleId(), newRelation.getPartyTo().getPartyId());
+        assertEquals(childOrg.getPartyId(), newRelation.getSecondaryOrgRole().getOrganization().getPartyId());
+        assertEquals(parentOrg.getPartyId(), newRelation.getPrimaryOrgRole().getOrganization().getPartyId());
     }
 
     public String getDataSetFile()

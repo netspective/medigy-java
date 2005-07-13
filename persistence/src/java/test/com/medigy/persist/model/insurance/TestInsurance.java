@@ -40,13 +40,13 @@ package com.medigy.persist.model.insurance;
 
 import com.medigy.persist.TestCase;
 import com.medigy.persist.model.org.Organization;
-import com.medigy.persist.model.party.PartyRelationship;
-import com.medigy.persist.model.party.PartyRole;
 import com.medigy.persist.model.person.Person;
+import com.medigy.persist.model.person.PersonRole;
+import com.medigy.persist.model.person.PeopleRelationship;
 import com.medigy.persist.reference.custom.insurance.InsurancePolicyType;
 import com.medigy.persist.reference.custom.insurance.InsuranceProductType;
 import com.medigy.persist.reference.custom.org.OrganizationClassificationType;
-import com.medigy.persist.reference.custom.party.PartyRelationshipType;
+import com.medigy.persist.reference.custom.party.PeopleRelationshipType;
 import com.medigy.persist.reference.custom.person.PersonRoleType;
 import com.medigy.persist.reference.type.GenderType;
 import com.medigy.persist.reference.type.LanguageType;
@@ -103,10 +103,10 @@ public class TestInsurance extends TestCase
         johnDoe.addGender(GenderType.Cache.MALE.getEntity());
         johnDoe.addLanguage(LanguageType.Cache.ENGLISH.getEntity());
 
-        final PartyRole parentRole = new PartyRole();
+        final PersonRole parentRole = new PersonRole();
         parentRole.setType(PersonRoleType.Cache.PARENT.getEntity());
-        parentRole.setParty(johnDoe);
-        johnDoe.addPartyRole(parentRole);
+        parentRole.setPerson(johnDoe);
+        johnDoe.addRole(parentRole);
 
         cal.set(1985, 1, 1);
         final Person patient = new Person();
@@ -116,19 +116,19 @@ public class TestInsurance extends TestCase
         patient.addGender(GenderType.Cache.FEMALE.getEntity());
         patient.addLanguage(LanguageType.Cache.ENGLISH.getEntity());
 
-        final PartyRole childRole = new PartyRole();
+        final PersonRole childRole = new PersonRole();
         childRole.setType(PersonRoleType.Cache.PARENT.getEntity());
-        childRole.setParty(patient);
-        patient.addPartyRole(childRole);
+        childRole.setPerson(patient);
+        patient.addRole(childRole);
 
         HibernateUtil.getSession().save(patient);
         HibernateUtil.getSession().save(johnDoe);
 
-        final PartyRelationship relationship = new PartyRelationship();
-        relationship.setPartyRoleFrom(childRole);
-        relationship.setPartyRoleTo(parentRole);
+        final PeopleRelationship relationship = new PeopleRelationship();
+        relationship.setPrimaryPersonRole(childRole);
+        relationship.setSecondaryPersonRole(parentRole);
         relationship.setFromDate(new Date());
-        relationship.setType(PartyRelationshipType.Cache.FAMILY.getEntity());
+        relationship.setType(PeopleRelationshipType.Cache.PARENT_CHILD.getEntity());
         HibernateUtil.getSession().save(relationship);
 
         HibernateUtil.beginTransaction();

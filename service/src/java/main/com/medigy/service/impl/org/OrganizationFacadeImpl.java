@@ -1,17 +1,16 @@
 package com.medigy.service.impl.org;
 
 import com.medigy.persist.model.org.Organization;
-import com.medigy.persist.model.party.PartyRelationship;
-import com.medigy.persist.model.party.PartyRole;
+import com.medigy.persist.model.org.OrganizationRole;
+import com.medigy.persist.model.org.OrganizationsRelationship;
 import com.medigy.persist.reference.custom.party.OrganizationRoleType;
-import com.medigy.persist.reference.custom.party.PartyRelationshipType;
+import com.medigy.persist.reference.custom.party.OrganizationsRelationshipType;
 import com.medigy.service.org.OrganizationFacade;
 import com.medigy.service.util.AbstractFacade;
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.Query;
 import org.hibernate.criterion.Expression;
-import org.hibernate.criterion.Restrictions;
 
 import java.util.List;
 import java.util.Set;
@@ -27,9 +26,9 @@ public class OrganizationFacadeImpl extends AbstractFacade implements Organizati
         super(sessionFactory);
     }
 
-    protected PartyRelationshipType getGroupToEmployerRelationshipType()
+    protected OrganizationsRelationshipType getGroupToEmployerRelationshipType()
     {
-        return PartyRelationshipType.Cache.ORGANIZATION_ROLLUP.getEntity();
+        return OrganizationsRelationshipType.Cache.ORGANIZATION_ROLLUP.getEntity();
     }
 
     /**
@@ -41,37 +40,36 @@ public class OrganizationFacadeImpl extends AbstractFacade implements Organizati
     {
         final Organization childOrg = new Organization();
         childOrg.setOrganizationName(groupName);
-        final PartyRole childRole = new PartyRole();
+        final OrganizationRole childRole = new OrganizationRole();
         childRole.setType(OrganizationRoleType.Cache.HOSPITAL.getEntity());
-        childRole.setParty(childOrg);
-        childOrg.addPartyRole(childRole);
+        childRole.setOrganization(childOrg);
+        childOrg.addRole(childRole);
         getSession().save(childOrg);
 
         // the parent org might already have the parent role
-        PartyRole parentRole = null;
-        if (!parentOrg.hasPartyRole(OrganizationRoleType.Cache.EMPLOYER.getEntity()))
+        OrganizationRole parentRole = null;
+        if (!parentOrg.hasRole(OrganizationRoleType.Cache.EMPLOYER.getEntity()))
         {
-            parentRole = new PartyRole();
+            parentRole = new OrganizationRole();
             parentRole.setType(OrganizationRoleType.Cache.EMPLOYER.getEntity());
-            parentRole.setParty(parentOrg);
-            parentOrg.addPartyRole(parentRole);
+            parentRole.setOrganization(parentOrg);
+            parentOrg.addRole(parentRole);
             getSession().save(parentRole);
         }
         else
         {
-            parentRole = parentOrg.getPartyRole(OrganizationRoleType.Cache.EMPLOYER.getEntity());
+            parentRole = parentOrg.getRole(OrganizationRoleType.Cache.EMPLOYER.getEntity());
         }
-        final PartyRelationship relationship = new PartyRelationship();
+        final OrganizationsRelationship relationship = new OrganizationsRelationship();
         relationship.setType(getGroupToEmployerRelationshipType());
-        relationship.setPartyRoleFrom(childRole);
-        relationship.setPartyRoleTo(parentRole);
-        relationship.setPartyFrom(childOrg);
-        relationship.setPartyTo(parentOrg);
+        relationship.setSecondaryOrgRole(childRole);
+        relationship.setPrimaryOrgRole(parentRole);
         getSession().save(relationship);
     }
 
     public List listInsuranceGroups(Organization parentOrg)
     {
+        //TODO: This is failing
         Criteria criteria = getSession().createCriteria(Organization.class);
         final Criteria relationshipCriteria = criteria.createCriteria("toPartyRelationships");
         relationshipCriteria.createCriteria("type").add(Expression.eq("partyRelationshipTypeId", getGroupToEmployerRelationshipType().getSystemId()));

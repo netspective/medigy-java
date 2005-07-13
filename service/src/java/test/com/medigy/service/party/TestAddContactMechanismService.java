@@ -169,7 +169,7 @@ public class TestAddContactMechanismService extends AbstractSpringTestCase
 
         assertEquals(1, partyContactMechList.size());
         PartyContactMechanism partyContactMechanism = ((PartyContactMechanism)partyContactMechList.toArray()[0]);
-        final Party party = partyContactMechanism.getParty();
+        final Party party = partyContactMechanism.getPerson();
         assertEquals(party.getPartyId(), p.getPartyId());
         assertEquals(partyContactMechanism.getContactMechanism().getType(), ContactMechanismType.Cache.POSTAL_ADDRESS.getEntity());
         assertEquals(partyContactMechanism.getPurposes().size(), 1);

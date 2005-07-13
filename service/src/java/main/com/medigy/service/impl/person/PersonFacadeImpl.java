@@ -45,6 +45,7 @@ import com.medigy.persist.model.party.PartyContactMechanismPurpose;
 import com.medigy.persist.model.party.PartyRole;
 import com.medigy.persist.model.party.PostalAddress;
 import com.medigy.persist.model.person.Person;
+import com.medigy.persist.model.person.PersonRole;
 import com.medigy.persist.reference.custom.health.HealthCareLicenseType;
 import com.medigy.persist.reference.custom.party.ContactMechanismPurposeType;
 import com.medigy.persist.reference.custom.person.EthnicityType;
@@ -141,14 +142,14 @@ public class PersonFacadeImpl extends AbstractFacade implements PersonFacade
      * @param type
      * @return PersonRole
      */
-    public PartyRole addPersonRole(final Person person, final PersonRoleType type)
+    public PersonRole addPersonRole(final Person person, final PersonRoleType type)
     {
         if (!getSession().contains(person))
             throw new HibernateException("Party role cannot be added to a PERSON which is not in current session.");
-        final PartyRole respPartyRole = new PartyRole();
+        final PersonRole respPartyRole = new PersonRole();
         respPartyRole.setType(type);
-        respPartyRole.setParty(person);
-        person.addPartyRole(respPartyRole);
+        respPartyRole.setPerson(person);
+        person.addRole(respPartyRole);
         return respPartyRole;
     }
 

@@ -202,7 +202,7 @@ public class QueryDefinitionSearchServiceImpl extends AbstractService implements
 
             public List<String>getConnectors()
             {
-                return QueryDefnCondition.Connector.listNames();
+                return queryDefinition.getConnectors();
             }
 
             public Map<String, QueryDefinitionField> getConditionFields()

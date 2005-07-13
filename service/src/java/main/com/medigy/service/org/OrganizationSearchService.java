@@ -5,13 +5,7 @@ package com.medigy.service.org;
 
 public interface OrganizationSearchService
 {
-    /**
-     * Column for SELECT
-     */
-    public void addColumn(final String column);
-
-    public void addOrderBy(final String column, boolean ascending);
-
+    public void search(final String params);
     
 
 }

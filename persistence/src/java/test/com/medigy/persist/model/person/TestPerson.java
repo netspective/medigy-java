@@ -44,6 +44,11 @@
 package com.medigy.persist.model.person;
 
 import com.medigy.persist.TestCase;
+import com.medigy.persist.model.party.TestPersonRole;
+import com.medigy.persist.model.party.TestPersonOrgRelationship;
+import com.medigy.persist.model.party.TestOrg;
+import com.medigy.persist.model.party.TestOrgRole;
+import com.medigy.persist.model.party.TestPersonRoleType;
 import com.medigy.persist.reference.custom.person.EthnicityType;
 import com.medigy.persist.reference.type.GenderType;
 import com.medigy.persist.reference.type.LanguageType;
@@ -53,15 +58,75 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.validator.InvalidStateException;
 import org.hibernate.validator.InvalidValue;
+import org.hibernate.Query;
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.List;
 
 public class TestPerson extends TestCase
 {
     private static final Log log = LogFactory.getLog(TestPerson.class);
+
+    public void testHql()
+    {
+        com.medigy.persist.model.party.TestPerson person = new com.medigy.persist.model.party.TestPerson();
+        person.setName("Bob");
+        com.medigy.persist.model.party.TestPerson person2 = new com.medigy.persist.model.party.TestPerson();
+        person2.setName("Joe");
+        TestOrg org = new TestOrg();
+        org.setName("Acme Inc");
+
+        TestPersonRoleType personRoleTypeA = new TestPersonRoleType();
+        personRoleTypeA.setCode("A");
+        TestPersonRoleType personRoleTypeB = new TestPersonRoleType();
+        personRoleTypeB.setCode("B");
+        getSession().save(personRoleTypeA);
+        getSession().save(personRoleTypeB);
+
+        TestPersonRole personRole = new TestPersonRole();
+        personRole.setType(personRoleTypeA);
+
+        TestPersonRole personRoleB = new TestPersonRole();
+        personRoleB.setType(personRoleTypeB);
+
+        person.addRole(personRole);
+        person.addRole(personRoleB);
+        TestOrgRole orgRole = new TestOrgRole();
+        org.addRole(orgRole);
+
+        getSession().save(person);
+        getSession().save(person2);
+        getSession().save(org);
+
+        TestPersonOrgRelationship rel = new TestPersonOrgRelationship();
+        rel.setPersonRole(personRole);
+        rel.setOrganizationRole(orgRole);
+        getSession().save(rel);
+
+
+        final Query query = getSession().createQuery("select person.name as personName, org.name as orgName from TestPerson as person " +
+                "left outer join person.roles as personRoles " +
+                "left outer join personRoles.personOrgRelationships as rel " +
+                "left outer join rel.organizationRole as orgRole " +
+                "left outer join orgRole.organization as org ");
+                //"WHERE " +
+                //"personRoles.type.code = 'A'");
+        final List list = query.list();
+        System.out.println(list.size() + " " + list.get(0).getClass().getCanonicalName());
+        for (int i=0; i < list.size(); i++)
+        {
+            final Object[] columns = (Object[]) list.get(i);
+            for (int j=0; j < columns.length; j++)
+            {
+                System.out.print(columns[j] + "\t");
+            }
+            System.out.println("");
+        }
+        //System.out.println(row0.get("personName") + " " + row0.get("orgName"));
+    }
 
     public void testPerson()
     {
@@ -123,7 +188,9 @@ public class TestPerson extends TestCase
         getSession().save(newPerson);
         HibernateUtil.commitTransaction();
 
-        final Person persistedPerson = (Person) getSession().load(Person.class, newPerson.getPersonId());
+        HibernateUtil.beginTransaction();
+        //final Person persistedPerson = (Person) getSession().get(Person.class, newPerson.getPersonId());
+        final Person persistedPerson = (Person) getSession().createQuery("from Person where id = " + newPerson.getPersonId()).uniqueResult();
         assertThat(persistedPerson, NOT_NULL);
         assertThat(persistedPerson.getFirstName(), eq("Ryan"));
         assertThat(persistedPerson.getMiddleName(), eq("Bluegrass"));
@@ -142,6 +209,11 @@ public class TestPerson extends TestCase
             System.out.println(gender.getIdentifier() + " " + gender.getType().getCode() +
                 gender.getFromDate());
         }
+        for (MaritalStatus maritalStatus: persistedPerson.getMaritalStatuses())
+        {
+            System.out.println(maritalStatus.getType().getLabel() + " " + maritalStatus.getFromDate());
+        }
         assertEquals(GenderType.Cache.FEMALE.getEntity().getCode(), persistedPerson.getCurrentGenderType().getCode());
+        HibernateUtil.commitTransaction();
     }
 }

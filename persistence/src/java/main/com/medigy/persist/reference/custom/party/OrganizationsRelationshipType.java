@@ -40,16 +40,22 @@ package com.medigy.persist.reference.custom.party;
 
 import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
 import com.medigy.persist.reference.custom.CustomReferenceEntity;
+import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.Table;
+import javax.persistence.Id;
+import javax.persistence.GeneratorType;
+import javax.persistence.Column;
 
 @Entity
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE, discriminatorValue = OrganizationsRelationshipType.RELATIONSHIP_TYPE_NAME)
-public class OrganizationsRelationshipType extends PartyRelationshipType
+@Table(name = "Org_Rel_Type")
+public class OrganizationsRelationshipType extends AbstractCustomReferenceEntity
 {
     public static final String RELATIONSHIP_TYPE_NAME = "org-to-org";
+    public static final String PK_COLUMN_NAME = "rel_type_id";
 
     public enum Cache implements CachedCustomReferenceEntity
     {
@@ -88,4 +94,15 @@ public class OrganizationsRelationshipType extends PartyRelationshipType
         }
     }
 
+    @Id(generate = GeneratorType.AUTO)
+    @Column(name = PK_COLUMN_NAME)
+    public Long getRelationshipTypeId()
+    {
+        return getSystemId();
+    }
+
+    public void setRelationshipTypeId(final Long id)
+    {
+        setSystemId(id);
+    }
 }

@@ -6,13 +6,12 @@ package com.medigy.service.person;
 import com.medigy.persist.util.query.QueryDefinition;
 import com.medigy.persist.util.query.QueryDefinitionField;
 import com.medigy.persist.util.query.QueryDefinitionJoin;
-import com.medigy.persist.util.query.exception.QueryDefinitionException;
 import com.medigy.persist.util.query.impl.BasicQueryDefinition;
-import com.medigy.persist.model.party.PartyRelationship;
-import com.medigy.persist.model.party.PartyRole;
 import com.medigy.persist.model.party.PartyIdentifier;
 import com.medigy.persist.model.org.Organization;
+import com.medigy.persist.model.person.PersonRole;
 import com.medigy.persist.reference.custom.person.PersonIdentifierType;
+import com.medigy.persist.reference.custom.person.PersonRoleType;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -57,7 +56,7 @@ public class PatientSearchQueryDefinition extends BasicQueryDefinition implement
 
             public String getImplyJoinsStr()
             {
-                return null;
+                return "";
             }
 
             public List<QueryDefinitionJoin> getImpliedJoins()
@@ -155,49 +154,6 @@ public class PatientSearchQueryDefinition extends BasicQueryDefinition implement
             }
         };
 
-        final QueryDefinitionJoin partyRelationshipJoin = new QueryDefinitionJoin() {
-            public QueryDefinition getOwner()
-            {
-                return null;
-            }
-
-            public String getName()
-            {
-                return "rel";
-            }
-
-            public String getFromExpr()
-            {
-                return getTable() + " " + getName();
-            }
-
-            public String getCondition()
-            {
-                return "rel.partyFrom.id = org.partyId AND rel.partyTo.id = person.partyId";
-            }
-
-            public boolean isAutoInclude()
-            {
-                return false;
-            }
-
-            public String getImplyJoinsStr()
-            {
-                return null;
-            }
-
-            public List<QueryDefinitionJoin> getImpliedJoins()
-            {
-                final List<QueryDefinitionJoin> impliedJoins = new ArrayList<QueryDefinitionJoin>();
-                impliedJoins.add(orgJoin);
-                return impliedJoins;
-            }
-
-            public String getTable()
-            {
-                return PartyRelationship.class.getSimpleName();
-            }
-        };
 
 
         final QueryDefinitionJoin personRoleJoin = new QueryDefinitionJoin() {
@@ -243,7 +199,7 @@ public class PatientSearchQueryDefinition extends BasicQueryDefinition implement
 
             public String getTable()
             {
-                return PartyRole.class.getSimpleName();
+                return PersonRole.class.getSimpleName();
             }
         };
 
@@ -253,17 +209,24 @@ public class PatientSearchQueryDefinition extends BasicQueryDefinition implement
         this.addJoin(personIdentifierJoin);
         this.addJoin(personRoleJoin);
 
-        addField("firstName", "firstName", personJoin);
-        addField("lastName", "lastName", personJoin);
+        addField("firstName", "firstName", "First Name", personJoin);
+        addField("lastName", "lastName", "Last Name", personJoin);
         //addField("firstName", "firstName", personJoin);
-        addField("gender", "currentGenderType.label", personJoin);
+        addField("gender", "currentGenderType.label", "Gender", personJoin);
         //addField("personRole", "type.code", personRoleJoin);
         //addField("ssn", "identifierValue", personIdentifierJoin);
         //addField("driversLicense", "driversLicenseNumber", personJoin);
 
 
-        addField("organizationId", "partyId", orgJoin);
-        addField("personId", "id", personJoin);
+        final QueryDefinitionField orgField = addField("organizationId", "org.id", "Organization ID", personJoin);
+        orgField.setHqlJoinExpr("left outer join person.roles as personRoles " +
+                "left outer join personRoles.personOrgRelationships as rel " +
+                "left outer join rel.organizationRole as orgRole " +
+                "left outer join orgRole.organization as org ");
+
+
+
+        addField("personId", "id", "Patient ID", personJoin);
         //addField("organizationRelationshipTypeCode", "type.code", partyRelationshipJoin);
 
     }

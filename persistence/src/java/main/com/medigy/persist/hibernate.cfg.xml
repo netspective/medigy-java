@@ -5,6 +5,15 @@
 <hibernate-configuration>
     <session-factory>
 
+        <!--mapping class="com.medigy.persist.model.party.TestParty"/>
+        <mapping class="com.medigy.persist.model.party.TestPartyRole"/>
+        <mapping class="com.medigy.persist.model.party.TestPerson"/>
+        <mapping class="com.medigy.persist.model.party.TestOrg"/>
+        <mapping class="com.medigy.persist.model.party.TestOrgRole"/>
+        <mapping class="com.medigy.persist.model.party.TestPersonRoleType"/>
+        <mapping class="com.medigy.persist.model.party.TestPersonRole"/>
+        <mapping class="com.medigy.persist.model.party.TestPersonOrgRelationship"/-->
+
         <mapping class="com.medigy.persist.model.common.AbstractEntity"/>
         <mapping class="com.medigy.persist.model.common.AbstractTopLevelEntity"/>
         <mapping class="com.medigy.persist.model.common.AbstractDateDurationEntity"/>
@@ -136,7 +145,6 @@
         <mapping class="com.medigy.persist.model.party.PartyFacilityRole"/>
         <mapping class="com.medigy.persist.model.party.PartyIdentifier"/>
         <mapping class="com.medigy.persist.model.party.PartyQualification"/>
-        <mapping class="com.medigy.persist.model.party.PartyRelationship"/>
         <!--mapping class="com.medigy.persist.model.party.PartyRelationshipStatus"/-->
         <mapping class="com.medigy.persist.model.party.PartyRole"/>
         <mapping class="com.medigy.persist.model.party.PhoneNumber"/>

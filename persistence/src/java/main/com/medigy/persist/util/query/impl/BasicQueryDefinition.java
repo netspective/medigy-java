@@ -13,9 +13,14 @@ import com.medigy.persist.util.query.exception.QueryDefinitionException;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
 
 public class BasicQueryDefinition implements QueryDefinition
 {
+
+    private String[] conditionConnectors = new String[] {"and", "or"};
+
     private String name;
     // these are all the possible joins and fields
     private Map<String, QueryDefinitionField> fields = new HashMap<String, QueryDefinitionField>();
@@ -45,7 +50,6 @@ public class BasicQueryDefinition implements QueryDefinition
     }
 
     /**
-     * Used by {@link #addField(String, String, String)}. Override to use a specific field implementation.
      * @param fieldName
      * @param columnName
      * @return the field
@@ -55,19 +59,11 @@ public class BasicQueryDefinition implements QueryDefinition
         return new QueryDefinitionFieldImpl(fieldName, columnName, join, this);
     }
 
-    public QueryDefinitionField addField(final String fieldName, final String columnName, final String joinName) throws QueryDefinitionException
-    {
-        final QueryDefinitionJoin join = getJoins().get(joinName);
-        if (join == null)
-            throw new QueryDefinitionException(this, "Failed to find the Join with name: " + joinName);
-        final QueryDefinitionField field = createField(fieldName, columnName, join);
-        this.fields.put(field.getName(), field);
-        return field;
-    }
-
-    public QueryDefinitionField addField(final String fieldName, final String columnName, final QueryDefinitionJoin join)
+    public QueryDefinitionField addField(final String fieldName, final String columnName, final String caption,
+                                         final QueryDefinitionJoin join)
     {
         final QueryDefinitionField field = new QueryDefinitionFieldImpl(fieldName, columnName, join, this);
+        field.setCaption(caption);
         this.fields.put(field.getName(), field);
         return field;
     }
@@ -105,8 +101,6 @@ public class BasicQueryDefinition implements QueryDefinition
         return new QueryDefinitionSelectImpl(selectName, this);
     }
 
-
-
     public QueryDefnSelects getSelects()
     {
         return selects;
@@ -124,6 +118,16 @@ public class BasicQueryDefinition implements QueryDefinition
     public void addSelect(final QueryDefinitionSelect select)
     {
         this.selects.add(select);
+    }
+
+    public List<String> getConnectors()
+    {
+        final List<String> list= new ArrayList<String>();
+        for (String connector : conditionConnectors)
+        {
+            list.add(connector);
+        }
+        return list;
     }
 
 
