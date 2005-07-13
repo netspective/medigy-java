@@ -333,7 +333,7 @@ table.report td.last { }
 table.report td.currency { text-align: right; }
 table.report td.date { }
 table.report a.action { border: 1px solid black; padding-left: 2px; padding-right: 2px; background-color: #999999; color: white; font-weight: bold; text-decoration: none; }
-table.report a.action:hover { color: black; border: 1px solid #999999; }
+table.report a.action:hover { background-color: black; border: 1px solid #999999; }
 
 /*********************************************************************
  ** FOOTER MENU                                                     **
