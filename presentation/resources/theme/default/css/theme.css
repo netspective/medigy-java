@@ -323,16 +323,20 @@ div.worklist table.report select { font-family: tahoma, arial, sans serif; font-
 table.report { }
 table.report tr.heading-descriptor { background-color: #DDDDDD; }
 table.report tr.heading-descriptor th { border-left: 1px solid silver; border-top: 1px solid silver; text-align: center; }
-table.report tr.heading-descriptor th.last { border-right: 1px solid silver; }
 table.report tr.heading { background-color: #DDDDDD; }
-table.report tr.heading th { padding-left: 5px; padding-right: 5px; border-left: 1px solid silver; border-bottom: 2px solid silver; text-align: center; }
-table.report tr.heading th.last { border-right: 1px solid silver; }
+table.report tr.heading th { padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 3px; border-left: 1px solid silver; border-bottom: 2px solid silver; text-align: center; }
 table.report tr { }
 table.report td { padding-left: 5px; padding-right: 5px; border-left: none; border-bottom: 1px solid silver; padding-top: 5px; padding-bottom: 5px; }
 table.report td.last { }
 table.report td.currency { text-align: right; }
 table.report td.date { }
+table.report td a { color: blue; text-decoration: underline; } 
+table.report td a:visited { color: blue; text-decoration: underline;  } 
+table.report td a:link { color: blue; text-decoration: underline;  } 
+table.report td a:hover { color: white; background-color: blue; text-decoration: none; } 
 table.report a.action { border: 1px solid black; padding-left: 2px; padding-right: 2px; background-color: #999999; color: white; font-weight: bold; text-decoration: none; }
+table.report a.action:visited { border: 1px solid black; padding-left: 2px; padding-right: 2px; background-color: #999999; color: white; font-weight: bold; text-decoration: none; }
+table.report a.action:link { border: 1px solid black; padding-left: 2px; padding-right: 2px; background-color: #999999; color: white; font-weight: bold; text-decoration: none; }
 table.report a.action:hover { background-color: black; border: 1px solid #999999; }
 
 /*********************************************************************
