@@ -1,0 +1,28 @@
+<wicket:panel>
+    <!-- TODO: the addRecord function hardcodes the application URL, very bad! -->
+    <script>
+        function addRecord(select)
+        {
+            if(select.selectedIndex > 0)
+               window.location.href = '/medigy-pbs/app?bookmarkablePage=' + select.options[select.selectedIndex].value;
+        }
+    </script>
+	<TABLE>
+		<TR>
+			<TD ALIGN=RIGHT>People:</TD>
+			<TD><wicket:component name="people" class="com.medigy.app.pbs.component.record.add.AddPersonRecordSelect" menuLabel="Select Type"/></TD>
+		</TR>
+		<TR>
+			<TD ALIGN=RIGHT>Organizations:</TD>
+			<TD><wicket:component name="orgs" class="com.medigy.app.pbs.component.record.add.AddOrgRecordSelect" menuLabel="Select Type"/></TD>
+		</TR>
+		<TR>
+			<TD ALIGN=RIGHT>Billing:</TD>
+			<TD><wicket:component name="billing" class="com.medigy.app.pbs.component.record.add.AddBillingRecordSelect" menuLabel="Select Type"/></TD>
+		</TR>
+		<TR>
+			<TD ALIGN=RIGHT>Appointments:</TD>
+			<TD><wicket:component name="appointments" class="com.medigy.app.pbs.component.record.add.AddAppointmentsRecordSelect" menuLabel="Select Type"/></TD>
+		</TR>
+	</TABLE>
+</wicket:panel>

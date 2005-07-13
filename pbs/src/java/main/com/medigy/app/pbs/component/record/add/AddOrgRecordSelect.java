@@ -41,22 +41,12 @@
 /*
  * Copyright (c) 2005 Your Corporation. All Rights Reserved.
  */
-package com.medigy.app.pbs;
+package com.medigy.app.pbs.component.record.add;
 
-import com.medigy.app.pbs.component.navigate.MainMenu;
-import com.medigy.app.pbs.page.Home;
-import com.medigy.wicket.DefaultApplication;
-import wicket.markup.html.WebMarkupContainer;
-
-public class PhysicianBillingSystemApplication extends DefaultApplication 
+public class AddOrgRecordSelect extends AbstractAddRecordSelect
 {
-    public PhysicianBillingSystemApplication()
+    public AddOrgRecordSelect(final String id)
     {
-        getPages().setHomePage(Home.class);
-    }
-
-    public WebMarkupContainer createMainMenuComponent(final String id)
-    {
-        return new MainMenu(id);
+        super(id);
     }
 }

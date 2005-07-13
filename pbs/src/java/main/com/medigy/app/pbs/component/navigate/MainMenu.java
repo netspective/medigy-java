@@ -1,4 +1,4 @@
-package com.medigy.app.pbs.component;
+package com.medigy.app.pbs.component.navigate;
 
 import wicket.Component;
 import wicket.MarkupContainer;
