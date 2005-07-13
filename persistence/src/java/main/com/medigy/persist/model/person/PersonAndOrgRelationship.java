@@ -6,6 +6,7 @@ package com.medigy.persist.model.person;
 import com.medigy.persist.model.common.AbstractDateDurationEntity;
 import com.medigy.persist.model.person.Person;
 import com.medigy.persist.model.org.Organization;
+import com.medigy.persist.model.org.OrganizationRole;
 import com.medigy.persist.reference.custom.party.PersonOrgRelationshipType;
 
 import javax.persistence.Entity;
@@ -25,8 +26,8 @@ public class PersonAndOrgRelationship extends AbstractDateDurationEntity
     public static final String PK_COLUMN_NAME = "relationship_id";
     private Long relationshipId;
 
-    private Person person;
-    private Organization organization;
+    private PersonRole personRole;
+    private OrganizationRole organizationRole;
     private PersonOrgRelationshipType type;
     private String typeDescription;
 
@@ -43,29 +44,29 @@ public class PersonAndOrgRelationship extends AbstractDateDurationEntity
 
 
     @ManyToOne
-    @JoinColumn(name = Person.PK_COLUMN_NAME, nullable = false)
+    @JoinColumn(name = "person_role_id", referencedColumnName = PersonRole.PK_COLUMN_NAME, nullable = false)
     @NotNull
-    public Person getPerson()
+    public PersonRole getPersonRole()
     {
-        return person;
+        return personRole;
     }
 
-    public void setPerson(final Person person)
+    public void setPersonRole(final PersonRole personRole)
     {
-        this.person = person;
+        this.personRole = personRole;
     }
 
     @ManyToOne
-    @JoinColumn(name = Organization.PK_COLUMN_NAME, nullable = false)
+    @JoinColumn(name = "org_role_id", referencedColumnName = OrganizationRole.PK_COLUMN_NAME, nullable = false)
     @NotNull
-    public Organization getOrganization()
+    public OrganizationRole getOrganizationRole()
     {
-        return organization;
+        return organizationRole;
     }
 
-    public void setOrganization(final Organization organization)
+    public void setOrganizationRole(final OrganizationRole organizationRole)
     {
-        this.organization = organization;
+        this.organizationRole = organizationRole;
     }
 
     @ManyToOne

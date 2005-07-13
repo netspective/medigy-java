@@ -91,7 +91,7 @@ public class FinancialResponsiblePartySelection extends AbstractDateDurationEnti
     }
 
     @ManyToOne
-    @JoinColumn(name = PeopleRelationship.PK_COLUMN_NAME)
+    @JoinColumn(name = "people_rel_id", referencedColumnName = PeopleRelationship.PK_COLUMN_NAME)
     public PeopleRelationship getPeopleRelationship()
     {
         return peopleRelationship;
@@ -103,7 +103,7 @@ public class FinancialResponsiblePartySelection extends AbstractDateDurationEnti
     }
 
     @ManyToOne
-    @JoinColumn(name = PersonAndOrgRelationship.PK_COLUMN_NAME)
+    @JoinColumn(name = "person_org_rel_id", referencedColumnName = PersonAndOrgRelationship.PK_COLUMN_NAME)
     public PersonAndOrgRelationship getPersonOrgRelationship()
     {
         return personOrgRelationship;

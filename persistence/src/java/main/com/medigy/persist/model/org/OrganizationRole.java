@@ -29,6 +29,8 @@ public class OrganizationRole extends PartyRole
     private List<OrganizationsRelationship> primaryOrgRelationships = new ArrayList<OrganizationsRelationship>();
     private List<OrganizationsRelationship> secondaryOrgRelationships = new ArrayList<OrganizationsRelationship>();
 
+    @ManyToOne
+    @JoinColumn(name = Organization.PK_COLUMN_NAME)
     public Organization getOrganization()
     {
         return organization;
@@ -39,7 +41,7 @@ public class OrganizationRole extends PartyRole
         this.organization = organization;
     }
 
-    @OneToMany(mappedBy = "organizaton", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "organizationRole", cascade = CascadeType.ALL)
     public List<PersonAndOrgRelationship> getPersonOrgRelationships()
     {
         return personOrgRelationships;
@@ -68,7 +70,7 @@ public class OrganizationRole extends PartyRole
         this.type = type;
     }
 
-    @OneToMany(mappedBy = "primaryOrg", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "primaryOrgRole", cascade = CascadeType.ALL)
     public List<OrganizationsRelationship> getPrimaryOrgRelationships()
     {
         return primaryOrgRelationships;
@@ -79,7 +81,7 @@ public class OrganizationRole extends PartyRole
         this.primaryOrgRelationships = primaryOrgRelationships;
     }
 
-    @OneToMany(mappedBy = "secondaryOrg", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "secondaryOrgRole", cascade = CascadeType.ALL)
     public List<OrganizationsRelationship> getSecondaryOrgRelationships()
     {
         return secondaryOrgRelationships;

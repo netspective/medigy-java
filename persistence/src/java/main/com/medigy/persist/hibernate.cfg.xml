@@ -102,6 +102,9 @@
         <mapping class="com.medigy.persist.reference.custom.party.PartyQualificationType"/>
         <mapping class="com.medigy.persist.reference.custom.party.PartyRelationshipType"/>
         <mapping class="com.medigy.persist.reference.custom.party.PartyClassificationType"/>
+        <mapping class="com.medigy.persist.reference.custom.party.PersonOrgRelationshipType"/>
+        <mapping class="com.medigy.persist.reference.custom.party.OrganizationsRelationshipType"/>
+        <mapping class="com.medigy.persist.reference.custom.party.PeopleRelationshipType"/>
 
         <!--mapping package="com.medigy.persist.reference.custom.person"/-->
         <mapping class="com.medigy.persist.reference.custom.person.EthnicityType"/>
@@ -219,6 +222,8 @@
 
         <!--mapping package="com.medigy.persist.model.org"/-->
         <mapping class="com.medigy.persist.model.org.Organization"/>
+        <mapping class="com.medigy.persist.model.org.OrganizationRole"/>
+        <mapping class="com.medigy.persist.model.org.OrganizationsRelationship"/>
         <mapping class="com.medigy.persist.model.org.attribute.OrganizationAttribute"/>
         <mapping class="com.medigy.persist.model.org.attribute.OrganizationStringAttribute"/>
         <mapping class="com.medigy.persist.model.org.attribute.OrganizationLongAttribute"/>
@@ -228,6 +233,9 @@
 
         <!--mapping package="com.medigy.persist.model.person"/-->
         <mapping class="com.medigy.persist.model.person.Person"/>
+        <mapping class="com.medigy.persist.model.person.PersonRole"/>
+        <mapping class="com.medigy.persist.model.person.PersonAndOrgRelationship"/>
+        <mapping class="com.medigy.persist.model.person.PeopleRelationship"/>
         <mapping class="com.medigy.persist.model.person.User"/>
         <mapping class="com.medigy.persist.model.person.Ethnicity"/>
         <mapping class="com.medigy.persist.model.person.Gender"/>

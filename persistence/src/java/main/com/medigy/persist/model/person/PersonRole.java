@@ -22,7 +22,7 @@ import java.util.ArrayList;
 public class PersonRole extends PartyRole
 {
     public static final String PK_COLUMN_NAME = PartyRole.PK_COLUMN_NAME;
-    
+
     private Person person;
     private PersonRoleType type;
 
@@ -60,7 +60,7 @@ public class PersonRole extends PartyRole
         this.type = (PersonRoleType) type;
     }
 
-    @OneToMany(mappedBy = "person", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "personRole", cascade = CascadeType.ALL)
     public List<PersonAndOrgRelationship> getPersonOrgRelationships()
     {
         return personOrgRelationships;
@@ -83,7 +83,7 @@ public class PersonRole extends PartyRole
      * the relationship is Financial Responsible Party relationship)
      * @return list of relationships
      */
-    @OneToMany(mappedBy = "primaryPerson", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "primaryPersonRole", cascade = CascadeType.ALL)
     public List<PeopleRelationship> getPrimaryPersonRelationships()
     {
         return primaryPersonRelationships;
@@ -100,7 +100,7 @@ public class PersonRole extends PartyRole
      * the relationship is Financial Responsible Party relationship)
      * @return list of relationships
      */
-    @OneToMany(mappedBy = "secondaryPerson", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "secondaryPersonRole", cascade = CascadeType.ALL)
     public List<PeopleRelationship> getSecondaryPersonRelationships()
     {
         return secondaryPersonRelationships;
