@@ -22,9 +22,9 @@
                 <select name="create_newrec_select" class="add-record" onchange="if(this.selectedIndex > 0) window.location.href = '/medigy-pbs/app?bookmarkablePage=' + this.options[this.selectedIndex].value">
 				    <option value="com.medigy.app.pbs.page.search.Person">Add New Record</option>
 				    <option value="com.medigy.app.pbs.page.PatientRegistrationPage">Patient</option>
-				    <option value="com.medigy.app.pbs.page.search.Person">Physician</option>
-				    <option value="com.medigy.app.pbs.page.search.Person">Nurse</option>
-				    <option value="com.medigy.app.pbs.page.search.Person">Staff</option>
+				    <option value="com.medigy.app.pbs.form.PhysicianRegistrationPage">Physician</option>
+				    <option value="com.medigy.app.pbs.form.NurseRegistrationPage">Nurse</option>
+				    <option value="com.medigy.app.pbs.form.StaffRegistrationPage">Staff</option>
 			    </select>
              </form>
         </wicket:panel>

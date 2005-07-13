@@ -1,0 +1,601 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.sourceforge.net/">
+    <head>
+        <title>Physician Registration</title>
+        <link rel="stylesheet" type="text/css" href="/medigy/resources/theme/default/css/theme.css"></link>
+    </head>
+
+    <body wicket:id="border" class="page">
+        <form wicket-id="mainForm">
+                <div class="form-body">
+                    <fieldset class="top-level">
+                        <legend _wicket:id="providerIdGroup_label">Physician / Provider Identification</legend>
+                        <table class="vertical-fields">
+                            <tr class="field">
+                                <td class="label">
+                                    <label _wicket:id="lastName_label">Last Name</label> /
+                                    <label _wicket:id="firstName_label">First Name</label> /
+                                    <label _wicket:id="middleName_label">Middle Name</label> /
+                                    <label _wicket:id="suffix_label">Suffix</label>
+                                </td>
+                                <td class="control">
+                                    <input type="text" _wicket:id="lastName" value="Hackett"/>
+                                    <input type="text" _wicket:id="firstName" value="Ryan"/>
+                                    <input type="text" _wicket:id="middleName" value="A."/>
+                                    <select _wicket:id="suffix">
+                                        <option selected="selected" value="0">Mr.</option>
+                                        <option value="1">Ms.</option>
+                                        <option value="2">Mrs.</option>
+                                        <option value="3">Dr.</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="label">
+                                    <label _wicket:id="socialSecurityNumber_label">Social Security</label> /
+                                    <label _wicket:id="dateOfBirth_label">Date of Birth</label>
+                                </td>
+                                <td class="control">
+                                    <input type="text" _wicket:id="socialSecurityNumber" value="999-99-9999"/>
+                                    <input type="text" _wicket:id="dateOfBirth" value="09/13/1968"/>
+                                </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="label">
+                                    <label _wicket:id="gender_label">Gender</label> /
+                                    <label _wicket:id="maritalStatus_label">Marital Status</label>
+                                </td>
+                                <td class="control">
+                                    <select _wicket:id="gender">
+                                        <option>Male</option>
+                                        <option>Female</option>
+                                    </select>
+                                    <select _wicket:id="maritalStatus">
+                                        <option>Married</option>
+                                        <option>Unmarried</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr class="field">
+							    <td class="label">
+							        <label _wicket:id="blood-type">Blood Type</label>
+							    </td>
+							    <td class="control">
+							        <select _wicket:id="bloodType">
+							            <option>A</option>
+							            <option>B</option>
+							            <option>AB</option>
+							            <option>O</option>
+							        </select>
+							     </td>
+                            </tr>
+                        </table>
+                    </fieldset>
+                    <fieldset class="top-level">
+                        <legend _wicket:id="contactMethodsGroup_label">Contact Methods</legend>
+                        <table class="vertical-fields">
+                            <tr class="field">
+                                <td class="label">
+                                    <label _wicket:id="homePhone_label">Home Phone</label> /
+                                    <label _wicket:id="workPhone_label">Work Phone</label>
+                                </td>
+                                <td class="control">
+                                    <input type="text" _wicket:id="homePhone" value=""/>
+                                    <input type="text" _wicket:id="workPhone" value=""/>
+                                </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="label">
+                                    <label _wicket:id="cellPhone_label">Cell Phone</label> /
+                                    <label _wicket:id="pager_label">Pager</label>
+                                </td>
+                                <td class="control">
+                                    <input type="text" _wicket:id="cellPhone" value="703-345-7752"/>
+                                    <input type="text" _wicket:id="pager" value=""/>
+                                </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="label">
+                                    <label _wicket:id="alternate_label">Alternate</label>
+                                </td>
+                                <td class="control">
+                                    <input type="text" _wicket:id="alternate" value=""/>
+                                </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="label">
+                                    <label _wicket:id="homeAddress_label">Home Address</label>
+                                </td>
+                                <td class="control">
+                                    <input type="text" _wicket:id="homeAddress" value=""/>
+                                </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="label">
+                                    <label _wicket:id="homeAddress2_label"></label>
+                                </td>
+                                <td class="control">
+                                    <input type="text" _wicket:id="homeAddress2" value=""/>
+                                </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="label">
+                                    <label _wicket:id="city_label">City</label> /
+                                    <label _wicket:id="state_label">State</label> /
+                                    <label _wicket:id="zip_label">Zip</label>
+                                </td>
+                                <td class="control">
+                                    <input type="text" _wicket:id="city" value=""/>
+                                    <input type="text" _wicket:id="state" value=""/>
+                                    <input type="text" _wicket:id="zip" value=""/>
+                                </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="label">
+                                    <label _wicket:id="email_label">Email</label>
+                                </td>
+                                <td class="control">
+                                    <input type="text" _wicket:id="email" value=""/>
+                                </td>
+                            </tr>
+                        </table>
+                    </fieldset>
+                    <fieldset class="top-level">
+                        <legend _wicket:id="licenseIdNumbersGroup_label">License ID Numbers</legend>
+                        <table class="vertical-fields">
+						    <tr class="field">
+						        <td>
+                                    <table>
+                                        <tr>
+										    <td class="label-top">
+                                                <label _wicket:id="license_label">License</label>
+                                             </td>
+                                             <td class="label-top">
+                                                <label _wicket:id="number_label">Number</label>
+                                             </td>
+                                             <td class="label-top">
+                                                <label _wicket:id="expDate_label">Exp Date</label>
+                                             </td>
+							                 <td class="label-top">
+                                                <label _wicket:id="facilityId_label">Facility ID</label>
+                                            </td>
+									    </tr>
+									    <tr class="field">
+                                            <td class="control">
+                                                <select _wicket:id="licenseId">
+							                        <option>DEA</option>
+							                        <option>DPS</option>
+							                        <option>BCBS</option>
+                 							        <option>EPSDT</option>
+                                                    <option>EPSDT WERTOS VB</option>
+							                    </select>
+                                            </td>
+										    <td class="control">
+                                                <input type="text" _wicket:id="number1" value=""/>
+                                            </td>
+										    <td class="control">
+                                                <input type="text" _wicket:id="expDate1" value=""/>
+                                            </td>
+										   <td class="control">
+                                               <select _wicket:id="licenseId">
+							                       <option>MEDINET</option>
+												   <option>EPSDT WERTOS VB</option>
+							                   </select>
+                                            </td>
+                                        </tr>
+									    <tr class="field">
+                                            <td class="control">
+                                                <select _wicket:id="licenseId2">
+							                        <option>DEA</option>
+							                        <option>DPS</option>
+							                        <option>BCBS</option>
+                 							        <option>EPSDT</option>
+												    <option>EPSDT WERTOS VB</option>
+							                    </select>
+                                            </td>
+										    <td class="control">
+                                               <input type="text" _wicket:id="number22" value=""/>
+                                            </td>
+										    <td class="control">
+                                                <input type="text" _wicket:id="expDate22" value=""/>
+                                            </td>
+										    <td class="control">
+                                                <select _wicket:id="licenseId2">
+							                        <option>MEDINET</option>
+												    <option>EPSDT WERTOS VB</option>
+							                    </select>
+                                            </td>
+                                        </tr>
+									    <tr class="field">
+                                            <td class="control">
+                                                <select _wicket:id="licenseId3">
+							                        <option>DEA</option>
+							                        <option>DPS</option>
+							                        <option>BCBS</option>
+                 							        <option>EPSDT</option>
+                 							        <option>EPSDT WERTOS VB</option>
+							                    </select>
+                                            </td>
+                                            <td class="control">
+                                                <input type="text" _wicket:id="number33" value=""/>
+                                            </td>
+                                            <td class="control">
+                                                <input type="text" _wicket:id="expDate33" value=""/>
+                                            </td>
+                                            <td class="control">
+                                                <select _wicket:id="licenseId3">
+											        <option></option>
+							                        <option>MEDINET</option>
+													<option>EPSDT WERTOS VB</option>
+							                    </select>
+                                            </td>
+                                        </tr>
+									    <tr class="field">
+                                            <td class="control">
+                                                <select _wicket:id="licenseId4">
+							                        <option>DEA</option>
+							                        <option>DPS</option>
+							                        <option>BCBS</option>
+                 							        <option>EPSDT</option>
+                 							        <option>EPSDT WERTOS VB</option>
+							                    </select>
+                                            </td>
+										    <td class="control">
+                                                <input type="text" _wicket:id="number44" value=""/>
+                                            </td>
+                                            <td class="control">
+                                                <input type="text" _wicket:id="expDate44" value=""/>
+                                            </td>
+                                            <td class="control">
+                                               <select _wicket:id="licenseId4">
+                                                   <option></option>
+							                       <option>MEDINET</option>
+							                       <option>EPSDT WERTOS VB</option>
+							                   </select>
+                                            </td>
+                                        </tr>
+									    <tr class="field">
+                                            <td class="control">
+                                                <select _wicket:id="licenseId5">
+							                        <option>DEA</option>
+							                        <option>DPS</option>
+							                        <option>BCBS</option>
+                 							        <option>EPSDT</option>
+												    <option>EPSDT WERTOS VB</option>
+							                    </select>
+                                            </td>
+										    <td class="control">
+                                                <input type="text" _wicket:id="number55" value=""/>
+                                            </td>
+										    <td class="control">
+                                                <input type="text" _wicket:id="expDate55" value=""/>
+                                            </td>
+										    <td class="control">
+                                                <select _wicket:id="licenseId5">
+									                <option></option>
+							                        <option>MEDINET</option>
+												    <option>EPSDT WERTOS VB</option>
+							                    </select>
+                                            </td>
+                                        </tr>
+									    <tr class="field">
+                                            <td class="control">
+                                                <select _wicket:id="licenseId6">
+							                        <option>DEA</option>
+							                        <option>DPS</option>
+							                        <option>BCBS</option>
+                 							        <option>EPSDT</option>
+												    <option>EPSDT WERTOS VB</option>
+							                    </select>
+                                            </td>
+										    <td class="control">
+                                                <input type="text" _wicket:id="number66" value=""/>
+                                            </td>
+									        <td class="control">
+                                                <input type="text" _wicket:id="expDate66" value=""/>
+                                            </td>
+											<td class="control">
+                                                <select _wicket:id="licenseId6">
+											        <option></option>
+							                        <option>MEDINET</option>
+												    <option>EPSDT WERTOS VB</option>
+							                    </select>
+                                             </td>
+                                         </tr>
+								     </table>
+								 </td>
+                            </tr>
+                        </table>
+                    </fieldset>
+                    <fieldset class="top-level">
+                        <legend _wicket:id="providerNumbersGroup_label">Provider Numbers</legend>
+                        <table class="vertical-fields">
+                            <tr class="field">
+                                <td>
+	                                <table>
+			                              <tr>
+                                           <td class="label-top">
+                                              <label _wicket:id="providerLicense_label">License</label>
+                                           </td>
+                                           <td class="label-top">
+                                              <label _wicket:id="providerNumber_label">Number</label>
+                                           </td>
+                                           <td class="label-top">
+                                              <label _wicket:id="providerExpDate_label">Exp Date</label>
+                                            </td>
+										    <td class="label-top">
+                                                <label _wicket:id="providerFacilityId_label">Facility ID</label>
+                                            </td>
+									        </tr>
+                                            <tr class="field">
+                                            <td class="control">
+                                                <select _wicket:id="providerLicense">
+                                                    <option>MEDICARE</option>
+							                        <option>MEDICADE</option>
+							                        <option>UPIN</option>
+                                                    <option>EPSDT</option>
+                                                    <option>EPSDT WERTOS VB</option>
+							                    </select>
+                                            </td>
+							                <td class="control">
+                                                <input type="text" _wicket:id="providerNumber1" value=""/>
+                                            </td>
+								            <td class="control">
+                                                <input type="text" _wicket:id="providerExpDate1" value=""/>
+                                            </td>
+				                                <td class="control">
+                                                <select _wicket:id="providerFacilityId">
+                                                    <option>MEDINET</option>
+					                                <option>EPSDT WERTOS VB</option>
+							                    </select>
+                                            </td>
+                                        </tr>
+                                        <tr class="field">
+                                            <td class="control">
+                                                <select _wicket:id="providerLicense2">
+                                                    <option>MEDICARE</option>
+							                        <option>MEDICADE</option>
+							                        <option>UPIN</option>
+                                                    <option>EPSDT</option>
+                                                    <option>EPSDT WERTOS VB</option>
+							                    </select>
+                                            </td>
+						                    <td class="control">
+                                                <input type="text" _wicket:id="providerNumber22" value=""/>
+                                            </td>
+							                <td class="control">
+                                                <input type="text" _wicket:id="providerExpDate22" value=""/>
+                                            </td>
+                                            <td class="control">
+                                                <select _wicket:id="providerFacilityId2">
+                                                    <option>MEDINET</option>
+											        <option>EPSDT WERTOS VB</option>
+							                    </select>
+                                            </td>
+                                        </tr>
+                                        <tr class="field">
+                                            <td class="control">
+                                                <select _wicket:id="providerLicense3">
+                                                    <option>MEDICARE</option>
+							                        <option>MEDICADE</option>
+							                        <option>UPIN</option>
+                                                    <option>EPSDT</option>
+                                                    <option>EPSDT WERTOS VB</option>
+							                    </select>
+                                            </td>
+											<td class="control">
+                                                <input type="text" _wicket:id="providerNumber33" value=""/>
+                                            </td>
+											<td class="control">
+                                                <input type="text" _wicket:id="providerExpDate33" value=""/>
+                                            </td>
+											<td class="control">
+                                                <select _wicket:id="providerFacilityId3">
+												    <option></option>
+							                        <option>MEDINET</option>
+													<option>EPSDT WERTOS VB</option>
+							                    </select>
+                                            </td>
+                                        </tr>
+										<tr class="field">
+                                            <td class="control">
+                                                <select _wicket:id="providerLicense4">
+                                                    <option>MEDICARE</option>
+							                        <option>MEDICADE</option>
+							                        <option>UPIN</option>
+                                                    <option>EPSDT</option>
+                                                    <option>EPSDT WERTOS VB</option>
+							                    </select>
+                                            </td>
+											<td class="control">
+                                                <input type="text" _wicket:id="providerNumber4" value=""/>
+                                            </td>
+											<td class="control">
+                                                <input type="text" _wicket:id="providerExpDate4" value=""/>
+                                            </td>
+											<td class="control">
+                                                <select _wicket:id="providerFacilityId4">
+												    <option></option>
+							                        <option>MEDINET</option>
+													<option>EPSDT WERTOS VB</option>
+							                    </select>
+                                            </td>
+                                        </tr>
+										<tr class="field">
+                                            <td class="control">
+                                                <select _wicket:id="providerLicense5">
+                                                    <option>MEDICARE</option>
+							                        <option>MEDICADE</option>
+							                        <option>UPIN</option>
+                                                    <option>EPSDT</option>
+                                                    <option>EPSDT WERTOS VB</option>
+							                    </select>
+                                            </td>
+											<td class="control">
+                                                <input type="text" _wicket:id="providerNumber5" value=""/>
+                                            </td>
+											<td class="control">
+                                                <input type="text" _wicket:id="providerExpDate5" value=""/>
+                                            </td>
+											<td class="control">
+                                                <select _wicket:id="providerFacilityId5">
+												    <option></option>
+							                        <option>MEDINET</option>
+													<option>EPSDT WERTOS VB</option>
+							                    </select>
+                                            </td>
+                                        </tr>
+										<tr class="field">
+                                            <td class="control">
+                                                <select _wicket:id="providerLicense6">
+                                                    <option>MEDICARE</option>
+							                        <option>MEDICADE</option>
+							                        <option>UPIN</option>
+                                                    <option>EPSDT</option>
+                                                    <option>EPSDT WERTOS VB</option>
+							                    </select>
+                                            </td>
+											<td class="control">
+                                                <input type="text" _wicket:id="providerNumber6" value=""/>
+                                            </td>
+											<td class="control">
+                                                <input type="text" _wicket:id="providerExpDate6" value=""/>
+                                            </td>
+											<td class="control">
+                                                <select _wicket:id="providerFacilityId6">
+											        <option></option>
+							                        <option>MEDINET</option>
+													<option>EPSDT WERTOS VB</option>
+							                    </select>
+                                            </td>
+                                        </tr>
+								    </table>
+							    </td>
+                            </tr>
+                        </table>
+                    </fieldset>
+						<fieldset class="top-level">
+                        <legend _wicket:id="certificationsGroup_label">Certifications / Accrediations</legend>
+                        <table class="vertical-fields">
+                            <tr class="field">
+                                <td class="label">
+                                    <label _wicket:id="specialty1_label">1. Specialty</label> /
+                                    <label _wicket:id="sequence1_label">Sequence</label>
+                                </td>
+                                <td class="control">
+								    <select _wicket:id="specialty1">
+									    <option></option>
+							            <option>MEDINET</option>
+										<option>EPSDT WERTOS VB</option>
+							        </select>
+                                    <select _wicket:id="sequence1">
+									    <option></option>
+										<option>MEDINET</option>
+										<option>EPSDT WERTOS VB</option>
+							        </select>
+                               </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="label">
+                                    <label _wicket:id="specialty2_label">2. Specialty</label> /
+                                    <label _wicket:id="sequence2_label">Sequence</label>
+                                </td>
+                                <td class="control">
+								    <select _wicket:id="specialty2">
+									    <option></option>
+							            <option>MEDINET</option>
+										<option>EPSDT WERTOS VB</option>
+							        </select>
+                                    <select _wicket:id="sequence2">
+									    <option></option>
+										<option>MEDINET</option>
+										<option>EPSDT WERTOS VB</option>
+							        </select>
+                               </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="label">
+                                    <label _wicket:id="specialty3_label">3. Specialty</label> /
+                                    <label _wicket:id="sequence3_label">Sequence</label>
+                                </td>
+                                <td class="control">
+								    <select _wicket:id="specialty3">
+									    <option></option>
+							            <option>MEDINET</option>
+										<option>EPSDT WERTOS VB</option>
+							        </select>
+                                    <select _wicket:id="sequence3">
+									    <option></option>
+										<option>MEDINET</option>
+										<option>EPSDT WERTOS VB</option>
+							        </select>
+                               </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="label">
+                                    <label _wicket:id="affiliation_label">Affiliation</label> /
+                                    <label _wicket:id="affiliationExpDate_label">Exp Date</label>
+                                </td>
+                                <td class="control">
+                                    <input type="text" _wicket:id="affiliation" value=""/>
+                                    <input type="text" _wicket:id="affiliationExpDate" value=""/>
+                                </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="label">
+                                    <label _wicket:id="state1_label">1. State</label> /
+                                    <label _wicket:id="license1_label">License</label> /
+									<label _wicket:id="expDate1_label">Exp Date</label>
+                                </td>
+                                <td class="control">
+                                    <input type="text" _wicket:id="state1" value=""/>
+                                    <input type="text" _wicket:id="license1" value=""/>
+									<input type="text" _wicket:id="expDate1" value=""/>
+                                </td>
+                            </tr>
+							<tr class="field">
+                                <td class="label">
+                                    <label _wicket:id="state2_label">2. State</label> /
+                                    <label _wicket:id="license2_label">License</label> /
+									<label _wicket:id="expDate2_label">Exp Date</label>
+                                </td>
+                                <td class="control">
+                                    <input type="text" _wicket:id="state2" value=""/>
+                                    <input type="text" _wicket:id="license2" value=""/>
+									<input type="text" _wicket:id="expDate2" value=""/>
+                                </td>
+                            </tr>
+							<tr class="field">
+                                <td class="label">
+                                    <label _wicket:id="state3_label">3. State</label> /
+                                    <label _wicket:id="license3_label">License</label> /
+									<label _wicket:id="expDate3_label">Exp Date</label>
+                                </td>
+                                <td class="control">
+                                    <input type="text" _wicket:id="state3" value=""/>
+                                    <input type="text" _wicket:id="license3" value=""/>
+									<input type="text" _wicket:id="expDate3" value=""/>
+                                </td>
+                            </tr>
+                        </table>
+                    </fieldset>
+                    <div class="director">
+                    <table class="vertical-fields">
+                        <tr class="field">
+                            <td class="label">
+                                <label _wicket:id="nextAction_label">Next Action</label>
+                            </td>
+                            <td class="control">
+                                <select _wicket:id="nextAction">
+                                    <option>View Physician Summary</option>
+                                </select>
+                                <input class="button" _wicket:id="formSubmit" type="submit" value="OK"/>
+                                <input class="button" _wicket:id="formReset" type="reset" value="Reset"/>
+                            </td>
+                        </tr>
+                    </table>
+                    </div>
+                </div>
+            </form>
+    </body>
+</html>
