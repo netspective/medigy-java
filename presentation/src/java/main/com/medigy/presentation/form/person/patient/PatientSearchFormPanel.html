@@ -11,7 +11,7 @@
                 <div class="form-body">
                     <fieldset class="top-level">
                         <legend>Search By</legend>
-                        <table>
+                        <table class="vertical-fields">
                             <tr wicket:id="conditionFieldList">
                                 <td><span wicket:id="fieldLabel">Available Fields</span></td>
                                 <td>
@@ -32,16 +32,14 @@
                         </table>
                     </fieldset>
                     <fieldset>
-                        <table>
+                        <table class="vertical-fields">
                             <tr>
-                                <td>
+                                <td class="label">
                                     <label>Display Fields</label>
                                     <select wicket:id="displayFields" multiple="multiple">
                                     </select>
                                 </td>
-                            </tr>
-                            <tr>
-                                <td>
+                                <td class="label">
                                     <label>Sort By Fields</label>
                                     <select wicket:id="sortByFields" multiple="multiple">
                                     </select>
@@ -60,17 +58,13 @@
 
             </div>
             <div>
-                <table id="resultsTable">
-                    <thead>
-                        <tr>
+                <table id="resultsTable" class="report">
+                        <tr class="heading">
                             <th wicket:id="resultsHeader"><span wicket:id="resultColumnName"></span></th>
                         </tr>
-                    </thead>
-                    <tbody>
                         <tr wicket:id="results">
 
                         </tr>
-                    </tbody>
                 </table>
             </div>
             <div id="resultsNavigation">
