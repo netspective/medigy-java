@@ -46,14 +46,28 @@ import javax.persistence.InheritanceType;
 import javax.persistence.Transient;
 import javax.persistence.ManyToOne;
 import javax.persistence.JoinColumn;
+import javax.persistence.Id;
+import javax.persistence.GeneratorType;
 
 @Entity
 public class CareProviderSelection extends AbstractEntity
 {
+    private Long selectionId;
     private InsurancePolicy insurancePolicy;
 
     public CareProviderSelection()
     {
+    }
+
+    @Id(generate = GeneratorType.AUTO)
+    public Long getSelectionId()
+    {
+        return selectionId;
+    }
+
+    public void setSelectionId(final Long selectionId)
+    {
+        this.selectionId = selectionId;
     }
 
     @ManyToOne
