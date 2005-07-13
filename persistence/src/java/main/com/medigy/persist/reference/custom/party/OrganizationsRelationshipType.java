@@ -61,6 +61,7 @@ public class OrganizationsRelationshipType extends AbstractCustomReferenceEntity
     {
         ORGANIZATION_ROLLUP("ORG_ROLLUP", "Organization Rollup"),
         PARTNERSHIP("PARTNER", "Partnership"),
+        CUSTOMER("CUST", "Customer"),
         OTHER("OTHER", "Other");
 
         private final String label;

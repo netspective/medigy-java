@@ -23,6 +23,7 @@ public class PersonOrgRelationshipType extends AbstractCustomReferenceEntity
     {
         FINANCIAL_RESPONSIBLE_PARTY("FIN_RESP", "Financial Responsible Party"), // org is responsible for the patient
         EMPLOYER("EMP", "Employer"), // Org is the employer of the person
+        PATIENT_CLINIC("PC", "Patient-Clinic Relationship"),
         OTHER("OTH", "Other");
 
         private final String label;

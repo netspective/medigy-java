@@ -27,7 +27,7 @@ public class QueryDefinitionFieldImpl implements QueryDefinitionField
 
     private QueryDefinitionJoin join;
     private QueryDefinition parentQueryDefinition;
-    private boolean allowDisplay = true;
+    private boolean displayAllowed = true;
     private List<SqlComparison> validSqlComparisons = new ArrayList<SqlComparison>();
 
     public QueryDefinitionFieldImpl(final String name, final String column, final QueryDefinitionJoin join,  final QueryDefinition queryDefn)
@@ -65,7 +65,7 @@ public class QueryDefinitionFieldImpl implements QueryDefinitionField
 
     public String getColumnExpr() throws QueryDefinitionException
     {
-        return allowDisplay ? (selectClauseExpr != null ? selectClauseExpr : getQualifiedColName()) : null;
+        return displayAllowed ? (selectClauseExpr != null ? selectClauseExpr : getQualifiedColName()) : null;
     }
 
     public String getQualifiedColName() throws QueryDefinitionException
@@ -97,7 +97,7 @@ public class QueryDefinitionFieldImpl implements QueryDefinitionField
 
     public String getSelectClauseExprAndLabel() throws QueryDefinitionException
     {
-        return allowDisplay
+        return displayAllowed
                ? (selectClauseExprAndLabel != null
                   ? selectClauseExprAndLabel : (getColumnExpr()))
                : null;
@@ -164,5 +164,16 @@ public class QueryDefinitionFieldImpl implements QueryDefinitionField
     public void setValidSqlComparisons(final List<SqlComparison> validSqlComparisons)
     {
         this.validSqlComparisons = validSqlComparisons;
+    }
+
+
+    public boolean isDisplayAllowed()
+    {
+        return displayAllowed;
+    }
+
+    public void setDisplayAllowed(final boolean displayAllowed)
+    {
+        this.displayAllowed = displayAllowed;
     }
 }

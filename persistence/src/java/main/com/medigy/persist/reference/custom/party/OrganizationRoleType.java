@@ -65,7 +65,8 @@ public class OrganizationRoleType extends PartyRoleType
         IPA("IPA", "IPA"),
         EMPLOYER("EMPLOYER", "Employer"),
         ANCILLIARY_SERVICE("ANC_SERV", "Ancilliary Service"),
-        PHARMACY("PHARMACY", "Pharmacy");
+        PHARMACY("PHARMACY", "Pharmacy"),
+        BILLING_PROVIDER("BILL", "Billing Service Provider");
 
         private final String label;
         private final String code;

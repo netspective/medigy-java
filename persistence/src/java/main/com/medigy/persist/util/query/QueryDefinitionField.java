@@ -51,4 +51,11 @@ public interface QueryDefinitionField
      */
     public String getHqlJoinExpr();
     public void setHqlJoinExpr(String expr);
+
+    /**
+     * Whether or not this field should be a part of the fields allowed for display in a query def
+     * @return True if field is allowed for display and False if field is only for conditions
+     */
+    public boolean isDisplayAllowed();
+    public void setDisplayAllowed(final boolean display);
 }
