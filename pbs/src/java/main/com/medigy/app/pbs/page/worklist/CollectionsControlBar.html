@@ -1,0 +1,34 @@
+<html xmlns:wicket="http://wicket.sourceforge.net/">
+    <head>
+        <title>Insurance Verification Worklist Controlbar</title>
+        <link rel="stylesheet" type="text/css" href="../../../../../../../../../resources/theme/default/css/theme.css"/>
+    </head>
+    <body>
+        <wicket:panel>
+            <form _wicket:id="form">
+            <div class="form-body">
+                <select _wicket:id="chooseDay" >
+                    <option>Choose Day</option>
+                    <option>Today</option>
+                    <option>Previous Day</option>
+                    <option>Previous Week</option>
+                    <option>Previous Month</option>
+                    <option>Previous Year</option>
+                    <option>Next Day</option>
+                    <option>Next Week</option>
+                    <option>Next Month</option>
+                    <option>Next Year</option>
+                    <option>Tomorrow</option>
+                    <option>Day After Tomorrow</option>
+                    <option>1 Week from Today</option>
+                </select>
+                <input type="button" name="left" value="<"  onclick=""/>
+                <input type="text" _wicket:id="selectedDate" />
+                <input type="button" name="right" value=">" onclick=""/>
+
+                <input type="submit" value="Go"/>
+            </div>
+            </form>
+        </wicket:panel>
+    </body>
+</html>
