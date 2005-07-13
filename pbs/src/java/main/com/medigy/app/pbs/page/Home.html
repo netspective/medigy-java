@@ -9,10 +9,21 @@
         <table>
             <tr valign="top">
                 <td>
-                    Search
+                    Add
+                    <hr size="1" color="silver"/>
+                    <wicket:component name="addRecords" class="com.medigy.app.pbs.component.AddRecordsPanel"/>
+                    <p/>&nbsp;<p/>
+                    Quick Search
+                    <hr size="1" color="silver"/>
+                    <wicket:component name="quickSearch" class="com.medigy.app.pbs.component.QuickSearchPanel"/>
+                </td>
+                <td>&nbsp;&nbsp;&nbsp;</td>
+                <td>
+                    Custom Search
                     <hr size="1" color="silver"/>
                     <div wicket:id="searchNavigator"/>
                 </td>
+                <td>&nbsp;&nbsp;&nbsp;</td>
                 <td>
                     Worklists
                     <hr size="1" color="silver"/>

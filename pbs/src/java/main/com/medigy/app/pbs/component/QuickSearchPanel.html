@@ -1,0 +1,39 @@
+<wicket:panel>
+	<nobr>
+	    <input id="qs_person" type="radio" name="search_scope" value="person" checked="yes"/>
+	    <label for="qs_person">Person/Patient</label>
+	</nobr><br/>
+
+	<nobr>
+	    <input id="qs_appointment" type="radio" name="search_scope" value="appointment"/>
+	    <label for="qs_appointment">Appointment</label>
+	    <input id="qs_apptslot" type="radio" name="search_scope" value="apptslot"/>
+	    <label for="qs_apptslot">Avail. Slot&nbsp;</label>
+	</nobr><br/>
+
+	<nobr>
+	    <input id="qs_claim" type="radio" name="search_scope" value="claim"/>
+	    <label for="qs_claim">Claim/Invoice</label>
+	</nobr><br/>
+
+	<nobr>
+	    <input id="qs_insplan" type="radio" name="search_scope" value="insplan"/>
+	    <label for="qs_insplan">Ins./Workers Comp Plan&nbsp;</label>
+	</nobr><br/>
+
+	<nobr>
+	    <input id="qs_org" type="radio" name="search_scope" value="org"/>
+	    <label for="qs_org">Organization/Facility</label>
+	</nobr><br/>
+
+	<nobr>
+		<input id="qs_icd" type="radio" name="search_scope" value="icd"/> <label for="qs_icd">ICD-9</label>
+		<input id="qs_cpt" type="radio" name="search_scope" value="cpt"/> <label for="qs_cpt">CPT</label>
+		<input id="qs_hcpcs" type="radio" name="search_scope" value="hcpcs"/> <label for="qs_hcpcs">HCPCS</label>
+	</nobr><br/>
+	<nobr>
+		<input id="qs_drug_name" type="radio" name="search_scope" value="drug_name"/> <label for="qs_drug_name">Drug Name</label>
+		<input id="qs_drug_keyword" type="radio" name="search_scope" value="drug_keyword"/> <label for="qs_drug_keyword">Drug Keywords</label>
+	</nobr>
+	<center><input name="search_expression"/><input type="submit" value="Search"/></center>
+</wicket:panel>

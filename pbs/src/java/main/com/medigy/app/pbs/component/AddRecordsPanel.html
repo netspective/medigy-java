@@ -1,0 +1,61 @@
+<wicket:panel>
+    <!-- TODO: the addRecord function hardcodes the application URL, very bad! -->
+    <script>
+        function addRecord(select)
+        {
+            if(select.selectedIndex > 0)
+               window.location.href = '/medigy-pbs/app?bookmarkablePage=' + select.options[select.selectedIndex].value;
+        }
+    </script>
+	<TABLE>
+		<TR>
+			<TD ALIGN=RIGHT>People</TD>
+			<TD>
+				<SELECT ONCHANGE="addRecord(this)">
+					<OPTION>Select type</OPTION>
+					<OPTION VALUE="com.medigy.app.pbs.page.RegisterPatient">Patient</OPTION>
+					<OPTION VALUE="com.medigy.app.pbs.page.NotImplemented">Physician</OPTION>
+					<OPTION VALUE="com.medigy.app.pbs.page.NotImplemented">Nurse</OPTION>
+					<OPTION VALUE="com.medigy.app.pbs.page.NotImplemented">Staff Member</OPTION>
+				</SELECT>
+			</TD>
+		</TR>
+		<TR>
+			<TD ALIGN=RIGHT>Organizations:</TD>
+			<TD>
+				<SELECT ONCHANGE="addRecord(this)">
+					<OPTION>Select type</OPTION>
+					<OPTION VALUE="com.medigy.app.pbs.page.NotImplemented">Department</OPTION>
+					<OPTION VALUE="com.medigy.app.pbs.page.NotImplemented">Associated Provider</OPTION>
+					<OPTION VALUE="com.medigy.app.pbs.page.NotImplemented">Employer</OPTION>
+					<OPTION VALUE="com.medigy.app.pbs.page.NotImplemented">Insurance</OPTION>
+					<OPTION VALUE="com.medigy.app.pbs.page.NotImplemented">IPA</OPTION>
+				</SELECT>
+			</TD>
+		</TR>
+		<TR>
+			<TD ALIGN=RIGHT>Billing:</TD>
+			<TD>
+				<SELECT ONCHANGE="addRecord(this)">
+					<OPTION>Select type</OPTION>
+					<OPTION VALUE="com.medigy.app.pbs.page.NotImplemented">Claim</OPTION>
+					<OPTION VALUE="com.medigy.app.pbs.page.NotImplemented">Fee Schedule</OPTION>
+					<OPTION VALUE="com.medigy.app.pbs.page.NotImplemented">Fee Schedule Item</OPTION>
+					<OPTION VALUE="com.medigy.app.pbs.page.NotImplemented">Insurance Product</OPTION>
+					<OPTION VALUE="com.medigy.app.pbs.page.NotImplemented">Insurance Plan</OPTION>
+				</SELECT>
+			</TD>
+		</TR>
+		<TR>
+			<TD ALIGN=RIGHT>Appointments:</TD>
+			<TD>
+				<SELECT ONCHANGE="addRecord(this)">
+					<OPTION>Select type</OPTION>
+					<OPTION VALUE="com.medigy.app.pbs.page.NotImplemented">Appointment</OPTION>
+					<OPTION VALUE="com.medigy.app.pbs.page.NotImplemented">Schedule Template</OPTION>
+					<OPTION VALUE="com.medigy.app.pbs.page.NotImplemented">Appointment Type</OPTION>
+				</SELECT>
+			</TD>
+		</TR>
+	</TABLE>
+</wicket:panel>
