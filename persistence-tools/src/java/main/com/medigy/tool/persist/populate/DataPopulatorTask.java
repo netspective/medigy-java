@@ -46,6 +46,7 @@ package com.medigy.tool.persist.populate;
 import java.text.MessageFormat;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.Date;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
@@ -64,7 +65,11 @@ import org.sns.tool.data.USAddressDataGenerator;
 import com.medigy.persist.model.org.Organization;
 import com.medigy.persist.model.person.Ethnicity;
 import com.medigy.persist.model.person.Person;
+import com.medigy.persist.model.person.PersonAndOrgRelationship;
 import com.medigy.persist.reference.custom.person.EthnicityType.Cache;
+import com.medigy.persist.reference.custom.person.PersonRoleType;
+import com.medigy.persist.reference.custom.party.OrganizationRoleType;
+import com.medigy.persist.reference.custom.party.PersonOrgRelationshipType;
 import com.medigy.persist.reference.type.GenderType;
 import com.medigy.persist.util.ModelInitializer;
 import com.medigy.persist.util.ModelInitializer.SeedDataPopulationType;
@@ -79,9 +84,16 @@ public class DataPopulatorTask extends Task
     private String userid;
     private String password;
     private boolean showSql;
-    private String orgNameTemplate = "Medigy Demo Billing Service {1}";
-    private int generatePrimaryOrgsCount = 10;
+    private String billingOrgNameTemplate = "Medigy Demo Billing Service {1}";
+    private String clinicOrgNameTemplate = "Medigy Demo Clinic {1}";
+    private String carrierOrgNameTemplate = "Medigy Demo Insurance Carrier {1}";
+
+    private int generateCarrierOrgsCount = 5;
+    private int generateClinicOrgsCount = 10;
+    private int generateBillingOrgsCount = 5;
     private int generatePatientsPerOrgCount = 10;
+    private int generateEmployeesPerClinicCount = 5;
+
     private DataGeneratorSources dataGeneratorSources;
 
     public void execute() throws BuildException
@@ -157,24 +169,28 @@ public class DataPopulatorTask extends Task
 
     protected void populateData(final Session session)
     {
-        for(int i = 1; i <= generatePrimaryOrgsCount; i++)
-            populateOrg(session, i);
+        for(int i = 1; i <= generateBillingOrgsCount; i++)
+            populateBillingService(session, 1);
+
+        // TODO: Need to create relationships between orgs
+        // for every 10 clinics, create one billing service
+        for (int i = 1; i <= generateCarrierOrgsCount; i++)
+            populateCarrier(session, i);
+
     }
 
-    protected void populateOrg(final Session session, final int number)
+    protected void populateCarrier(final Session session, final int number)
     {
         final Transaction tx = session.beginTransaction();
         try
         {
             final Organization org = new Organization();
-            org.setOrganizationName(MessageFormat.format(orgNameTemplate, number));
+            final String organizationName = MessageFormat.format(carrierOrgNameTemplate, number);
+            org.setOrganizationName(organizationName);
+            org.addRole(OrganizationRoleType.Cache.INSURANCE_PROVIDER.getEntity());
             session.save(org);
 
-            for(int i = 1; i <= generatePatientsPerOrgCount; i++)
-                populatePatient(session, org, i);
-
-            log("Created " + generatePatientsPerOrgCount + " patients in org " + number);
-
+            log("Created insurance carrier: " + organizationName);
             tx.commit();
         }
         catch(final Exception e)
@@ -182,6 +198,81 @@ public class DataPopulatorTask extends Task
             tx.rollback();
             throw new BuildException(e);
         }
+    }
+
+    protected void populateClinic(final Session session, final int number)
+    {
+        final Transaction tx = session.beginTransaction();
+        try
+        {
+            final Organization org = new Organization();
+            final String organizationName = MessageFormat.format(clinicOrgNameTemplate, number);
+            org.setOrganizationName(organizationName);
+            org.addRole(OrganizationRoleType.Cache.CLINIC.getEntity());
+            session.save(org);
+
+            for(int i = 1; i <= generatePatientsPerOrgCount; i++)
+                populatePatient(session, org, i);
+
+            log("Created " + generatePatientsPerOrgCount + " patients in clinic: " + organizationName);
+            tx.commit();
+        }
+        catch(final Exception e)
+        {
+            tx.rollback();
+            throw new BuildException(e);
+        }
+    }
+
+    protected void populateBillingService(final Session session, final int number)
+    {
+        final Transaction tx = session.beginTransaction();
+        try
+        {
+            final Organization org = new Organization();
+            final String organizationName = MessageFormat.format(billingOrgNameTemplate, number);
+            org.setOrganizationName(organizationName);
+            org.addRole(OrganizationRoleType.Cache.BILLING_PROVIDER.getEntity());
+            session.save(org);
+
+            for(int i = 1; i <= generateEmployeesPerClinicCount; i++)
+                populateEmployee(session, org, i);
+
+            // for each billing service, create client clinics/hospitals and their corresponding patients
+            for (int i = 1; i < generateClinicOrgsCount; i++)
+                populateClinic(session, i);
+
+            log("Created " + generateEmployeesPerClinicCount + " employees in org " + organizationName);
+            tx.commit();
+        }
+        catch(final Exception e)
+        {
+            tx.rollback();
+            throw new BuildException(e);
+        }
+    }
+
+    protected void populateEmployee(final Session session, final Organization org, final int number)
+    {
+        final PersonDataGenerator personDataGenerator = new PersonDataGenerator(dataGeneratorSources);
+        final Gender gender = personDataGenerator.getRandomGender();
+        final Person employee = new Person();
+        if(gender == Gender.MALE)
+            employee.addGender(GenderType.Cache.MALE.getEntity());
+        else
+            employee.addGender(GenderType.Cache.FEMALE.getEntity());
+        employee.setFirstName(personDataGenerator.getRandomFirstName(gender));
+        employee.setLastName(personDataGenerator.getRandomSurname());
+        employee.addRole(PersonRoleType.Cache.EMPLOYEE.getEntity());
+        session.save(employee);
+
+        // now create the link between the patient and the clinic through their roles
+        PersonAndOrgRelationship rel = new PersonAndOrgRelationship();
+        rel.setOrganizationRole(org.getRole(OrganizationRoleType.Cache.BILLING_PROVIDER.getEntity()));
+        rel.setPersonRole(employee.getRole(PersonRoleType.Cache.EMPLOYEE.getEntity()));
+        rel.setType(PersonOrgRelationshipType.Cache.EMPLOYER.getEntity());
+        rel.setFromDate(new Date());
+        session.save(rel);
     }
 
     protected void populatePatient(final Session session, final Organization org, final int number)
@@ -223,8 +314,16 @@ public class DataPopulatorTask extends Task
 
         // TODO: replace with a real drivers license number generator for various states
         patient.setDriversLicenseNumber(personDataGenerator.getRandomSocialSecurityNumber());
-
+        patient.addRole(PersonRoleType.Cache.PATIENT.getEntity());
         session.save(patient);
+
+        // now create the link between the patient and the clinic through their roles
+        PersonAndOrgRelationship rel = new PersonAndOrgRelationship();
+        rel.setOrganizationRole(org.getRole(OrganizationRoleType.Cache.CLINIC.getEntity()));
+        rel.setPersonRole(patient.getRole(PersonRoleType.Cache.PATIENT.getEntity()));
+        rel.setType(PersonOrgRelationshipType.Cache.PATIENT_CLINIC.getEntity());
+        rel.setFromDate(new Date());
+        session.save(rel);
     }
 
     public void setHibernateConfigClass(final String cls) throws ClassNotFoundException
