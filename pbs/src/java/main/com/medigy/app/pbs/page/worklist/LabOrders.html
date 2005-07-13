@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.sourceforge.net/">
+    <head>
+        <title>Lab Orders Worklist</title>
+        <link rel="stylesheet" type="text/css" href="/medigy/resources/theme/default/css/theme.css"></link>
+        <style>
+            div.worklist table.report td.balance { text-align:right }
+        </style>
+        <script>
+            function addActions(index, patientId)
+            {
+                document.write("<SELECT onChange=''>");
+                document.write("    <option value=''>Choose Action</option>");
+                document.write("    <option value=''>Add Account Notes</option>");
+                document.write("    <option value=''>Transfer Patient Account</option>");
+                document.write("    <option value=''>Add Reck Date</option>");
+                document.write("    <option value=''>Close Account</option>");
+                document.write("</SELECT>");
+            }
+        </script>
+    </head>
+
+    <body wicket:id="border" class="page">
+        <div wicket:id="worklistBorder">
+            <table class="report" cellpadding="0" border="0" cellspacing="0">
+                <tr class="heading">
+                    <th>#</th>
+                    <th>Status</th>
+                    <th>Patient</th>
+                    <th>Practitioner</th>
+                    <th>Test Name</th>
+                    <th>Collected On</th>
+                    <th>Reported On</th>
+                </tr>
+            </table>
+
+            <p/>
+            For each lab order, the following drilldown is available:
+            <table class="report" cellpadding="0" border="0" cellspacing="0">
+                <tr class="heading">
+                    <th>Seq</th>
+                    <th>Name</th>
+                    <th>Result</th>
+                    <th>Normal Range</th>
+                    <th>Flags</th>
+                    <th>Status</th>
+                    <th>Notes</th>
+                </tr>
+            </table>
+        </div>
+    </body>
+</html>
