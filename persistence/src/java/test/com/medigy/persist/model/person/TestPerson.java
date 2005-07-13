@@ -44,11 +44,6 @@
 package com.medigy.persist.model.person;
 
 import com.medigy.persist.TestCase;
-import com.medigy.persist.model.party.TestPersonRole;
-import com.medigy.persist.model.party.TestPersonOrgRelationship;
-import com.medigy.persist.model.party.TestOrg;
-import com.medigy.persist.model.party.TestOrgRole;
-import com.medigy.persist.model.party.TestPersonRoleType;
 import com.medigy.persist.reference.custom.person.EthnicityType;
 import com.medigy.persist.reference.type.GenderType;
 import com.medigy.persist.reference.type.LanguageType;
@@ -58,18 +53,17 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.validator.InvalidStateException;
 import org.hibernate.validator.InvalidValue;
-import org.hibernate.Query;
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 import java.util.HashMap;
-import java.util.List;
 
 public class TestPerson extends TestCase
 {
     private static final Log log = LogFactory.getLog(TestPerson.class);
 
+    /*
     public void testHql()
     {
         com.medigy.persist.model.party.TestPerson person = new com.medigy.persist.model.party.TestPerson();
@@ -127,6 +121,7 @@ public class TestPerson extends TestCase
         }
         //System.out.println(row0.get("personName") + " " + row0.get("orgName"));
     }
+        */
 
     public void testPerson()
     {
