@@ -1,0 +1,90 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.sourceforge.net/">
+    <head>
+        <title>Insurance Verification Worklist</title>
+        <link rel="stylesheet" type="text/css" href="/medigy/resources/theme/default/css/theme.css"></link>
+        <style>
+            div.worklist table.report td.verified { padding: 3px; border: 1px solid #999999; background-color: green; text-align: center; }
+            div.worklist table.report td.verified a { text-decoration: none; color: white; font-weight: bold;  }
+            div.worklist table.report td.partial { text-decoration: none; color: white; padding: 3px; border: 1px solid #999999; background-color: black; text-align: center; }
+            div.worklist table.report td.partial a { text-decoration: none; color: white; font-weight: bold;  }
+            div.worklist table.report td.unverified { text-decoration: none; color: white; padding: 3px; border: 1px solid #999999; background-color: red; text-align: center; }
+            div.worklist table.report td.unverified a { text-decoration: none; color: white; font-weight: bold;  }
+        </style>
+        <script>
+            function addActions(index, patientId, physicianId)
+            {
+                document.write("<SELECT onChange=''>");
+                document.write("    <option value=''>Choose Action</option>");
+                document.write("    <option value=''>Verify Insurance</option>");
+                document.write("    <option value=''>Add Insurance Product</option>");
+                document.write("    <option value=''>Add Insurance Plan</option>");
+                document.write("</SELECT>");
+            }
+        </script>
+    </head>
+
+    <body wicket:id="border" class="page">
+        <div wicket:id="worklistBorder">
+            <table class="report" cellpadding="0" border="0" cellspacing="0">
+                <tr class="heading">
+                    <th>&nbsp;</th> <!-- status -->
+                    <th>Patient</th>
+                    <th>Practitioner</th>
+                    <th>Appointment</th>
+                    <th>Type</th>
+                    <th>Action</th>
+                </tr>
+
+                <tr valign="top">
+                    <td class="verified">
+                        <a href="javascript:alert('This patient\'s insurance has been verified.')">V</a>
+                    </td>
+                    <td class="patient">
+                        <a href="#">Shah, Shahid N.</a><br/>
+                    </td>
+                    <td class="practitioner">
+                        <a href="#">Physician, 1</a><br/>
+                    </td>
+
+                    <td class="appointment">09:30a</td>
+                    <td class="appointment-type">New</td>
+                    <td class="action"><script>addActions(0, 'x', 'y')</script></td>
+                </tr>
+
+                <tr valign="top">
+                    <td class="unverified">
+                        <a href="javascript:alert('Clicking here will allow you to verify the insurance.')">U</a>
+                    </td>
+                    <td class="patient">
+                        <a href="#">Allison, Margaret N.</a><br/>
+                    </td>
+                    <td class="practitioner">
+                        <a href="#">Physician, 2</a><br/>
+                    </td>
+
+                    <td class="appointment">09:45a</td>
+                    <td class="appointment-type">Established</td>
+                    <td class="action"><script>addActions(0, 'x', 'y')</script></td>
+                </tr>
+
+                <tr valign="top">
+                    <td class="partial">
+                        <a href="javascript:alert('This patient\'s insurance has been partially verified.')">P</a>
+                    </td>
+                    <td class="patient">
+                        <a href="#">James, Robert L.</a><br/>
+                    </td>
+                    <td class="practitioner">
+                        <a href="#">Physician, 1</a><br/>
+                    </td>
+
+                    <td class="appointment">10:30a</td>
+                    <td class="appointment-type">Established</td>
+                    <td class="action"><script>addActions(0, 'x', 'y')</script></td>
+                </tr>
+
+            </table>
+        </div>
+    </body>
+</html>
