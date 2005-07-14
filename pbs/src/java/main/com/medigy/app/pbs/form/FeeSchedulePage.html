@@ -1,0 +1,110 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.sourceforge.net/">
+    <head>
+        <title>Add Fee Schedule</title>
+        <link rel="stylesheet" type="text/css" href="/medigy/resources/theme/default/css/theme.css"></link>
+    </head>
+
+    <body wicket:id="border" class="page">
+        <form wicket-id="mainForm">
+                <div class="form-body">
+                    <fieldset class="top-level">
+	                    <legend _wicket:id="nurseIdGroup_label">Fee Schedule Information</legend>
+	                    <table class="vertical-fields">
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="feeScheduleName_label">Fee Schedule Name</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" _wicket:id="feeScheduleName" value=""/>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="feeScheduleCaption_label">Fee Schedule Caption</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" _wicket:id="feeScheduleCaption" value=""/>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="description_label">Description</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="memo" _wicket:id="description" value=""/>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="effectiveDateRange_label">Effective Date Range</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" _wicket:id="fromDate" value=""/>
+	                                <input type="text" _wicket:id="toDate" value=""/>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="rvrbsMultiplier_label">RVRBS Multiplier</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" _wicket:id="rvrbsMultiplier" value=""/>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="physicianId_label">Physician Id</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" _wicket:id="physicianId" value=""/>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="siteOrganizationId_label">Site Organization Id</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" _wicket:id="siteOrganizationId" value=""/>
+	                            </td>
+	                        </tr><tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="patientFeeScheduleId_label">Patient Fee Schedule Id</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" _wicket:id="patientFeeScheduleId" value=""/>
+	                            </td>
+	                        </tr>
+	                        <tr>
+                                <td class="label">
+                                    <label _wicket:id="capitatedContract_label"></label>
+                                </td>
+
+                                <td class="control">
+                                    <span _wicket:id="capitatedContract">
+                                        <input type="checkbox">Capitated Contract
+                                    </span>
+                                 </td>
+                            </tr>
+	                    </table>
+	                </fieldset>
+                    <div class="director">
+                    <table class="vertical-fields">
+                        <tr class="field">
+                            <td class="label">
+                                <label _wicket:id="nextAction_label">Next Action</label>
+                            </td>
+                            <td class="control">
+                                <select _wicket:id="nextAction">
+                                    <option>Add Another Fee Schedule</option>
+                                </select>
+                                <input class="button" _wicket:id="formSubmit" type="submit" value="OK"/>
+                                <input class="button" _wicket:id="formReset" type="reset" value="Reset"/>
+                            </td>
+                        </tr>
+                    </table>
+                    </div>
+                </div>
+            </form>
+    </body>
+</html>

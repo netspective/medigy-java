@@ -45,11 +45,11 @@
             </wicket:link>
 
             &nbsp;
-            <SELECT onChange="">
+            <SELECT onChange="if(this.selectedIndex > 0) window.location.href = '?bookmarkablePage=' + this.options[this.selectedIndex].value">
                 <option value='#'>Select Action</option>
-                <option value=''>Add Insurance Product</option>
-                <option value=''>Add Insurance Plan</option>
-                <option value=''>Reassign Physician</option>
+                <option value='com.medigy.app.pbs.form.InsuranceProductPage'>Add Insurance Product</option>
+                <option value='com.medigy.app.pbs.form.InsurancePlanPage'>Add Insurance Plan</option>
+                <option value='com.medigy.app.pbs.page.NotImplemented'>Reassign Physician</option>
             </SELECT>
         </wicket:panel>
     </body>
