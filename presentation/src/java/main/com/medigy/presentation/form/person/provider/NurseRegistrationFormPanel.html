@@ -300,18 +300,20 @@
                         </table>
                     </fieldset>
                     <div class="director">
+                        <table class="vertical-fields">
                         <tr class="field">
-                                <td class="label">
-                                    <label wicket:id="nextAction_label">Next Action</label>
-                                </td>
-                                <td class="control">
-                                    <select wicket:id="nextAction">
-                                        <option>View Nurse Summary</option>
-                                    </select>
-                                </td>
-                            </tr>
-                        <input class="button" wicket:id="formSubmit" type="submit" value="OK"/>
-                        <input class="button" wicket:id="formReset" type="reset" value="Reset"/>
+                            <td class="label">
+                                <label _wicket:id="nextAction_label">Next Action</label>
+                            </td>
+                            <td class="control">
+                                <select _wicket:id="nextAction">
+                                    <option>View Nurse Summary</option>
+                                </select>
+                                <input class="button" _wicket:id="formSubmit" type="submit" value="OK"/>
+                                <input class="button" _wicket:id="formReset" type="reset" value="Reset"/>
+                            </td>
+                        </tr>
+                        </table>
                     </div>
                 </div>
             </form>

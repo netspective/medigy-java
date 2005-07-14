@@ -1,0 +1,110 @@
+<html xmlns:wicket="http://wicket.sourceforge.net/">
+    <head>
+        <title>Fee Schedule Add</title>
+        <link rel="stylesheet" type="text/css" href="../../../../../../../../resources/theme/default/css/theme.css"/>
+    </head>
+    <body>
+        <wicket:panel>
+            <form wicket-id="mainForm">
+                <div class="form-body">
+                    <fieldset class="top-level">
+	                    <legend wicket:id="nurseIdGroup_label">Fee Schedule Add</legend>
+	                    <table class="vertical-fields">
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label wicket:id="feeScheduleName_label">Fee Schedule Name</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" wicket:id="feeScheduleName" value=""/>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label wicket:id="feeScheduleCaption_label">Fee Schedule Caption</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" wicket:id="feeScheduleCaption" value=""/>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label wicket:id="description_label">Description</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="memo" wicket:id="description" value=""/>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label wicket:id="effectiveDateRange_label">Effective Date Range</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" wicket:id="fromDate" value=""/>
+	                                <input type="text" wicket:id="toDate" value=""/>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label wicket:id="rvrbsMultiplier_label">RVRBS Multiplier</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" wicket:id="rvrbsMultiplier" value=""/>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label wicket:id="physicianId_label">Physician Id</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" wicket:id="physicianId" value=""/>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label wicket:id="siteOrganizationId_label">Site Organization Id</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" wicket:id="siteOrganizationId" value=""/>
+	                            </td>
+	                        </tr><tr class="field">
+	                            <td class="label">
+	                                <label wicket:id="patientFeeScheduleId_label">Patient Fee Schedule Id</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" wicket:id="patientFeeScheduleId" value=""/>
+	                            </td>
+	                        </tr>
+	                        <tr>
+                                <td class="label">
+                                    <label wicket:id="capitatedContract_label"></label>
+                                </td>
+
+                                <td class="control">
+                                    <span wicket:id="capitatedContract">
+                                        <input type="checkbox">Capitated Contract
+                                    </span>
+                                 </td>
+                            </tr>
+	                    </table>
+	                </fieldset>
+                    <div class="director">
+                    <table class="vertical-fields">
+                        <tr class="field">
+                            <td class="label">
+                                <label wicket:id="nextAction_label">Next Action</label>
+                            </td>
+                            <td class="control">
+                                <select wicket:id="nextAction">
+                                    <option>Add Another Fee Schedule</option>
+                                </select>
+                                <input class="button" wicket:id="formSubmit" type="submit" value="OK"/>
+                                <input class="button" wicket:id="formReset" type="reset" value="Reset"/>
+                            </td>
+                        </tr>
+                    </table>
+
+                </div>
+            </form>
+        </wicket:panel>
+    </body>
+</html>

@@ -1,0 +1,143 @@
+<html xmlns:wicket="http://wicket.sourceforge.net/">
+    <head>
+        <title>Fee Schedule Add</title>
+        <link rel="stylesheet" type="text/css" href="../../../../../../../../resources/theme/default/css/theme.css"/>
+    </head>
+    <body>
+        <wicket:panel>
+            <form wicket-id="mainForm">
+                <div class="form-body">
+                    <fieldset class="top-level">
+	                    <legend wicket:id="nurseIdGroup_label">Fee Schedule Add</legend>
+	                    <table class="vertical-fields">
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label wicket:id="feeScheduleId_label">Fee Schedule Id</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" wicket:id="feeScheduleId" value=""/>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label wicket:id="feeScheduleEntryType_label">Fee Schedule Entry Type</label>
+	                            </td>
+	                            <td class="control">
+	                                <select wicket:id="feeScheduleEntryType">
+                                        <option selected="selected" value="0">CPT</option>
+                                        <option value="1">HCPC</option>
+                                        <option value="2">EPSDT</option>
+                                        <option value="3">MISC CODE</option>
+                                    </select>
+	                            </td>
+	                        </tr>
+
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label wicket:id="code_label">Code</label> /
+	                                <label wicket:id="modifier_label">Modifier</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" wicket:id="code" value=""/>
+	                                <input type="text" wicket:id="modifier" value=""/>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label wicket:id="itemName_label">Item Name</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" wicket:id="itemName" value=""/>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label wicket:id="description_label">Description</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="memo" wicket:id="description" value=""/>
+	                            </td>
+	                        </tr>
+
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label wicket:id="serviceType_label">Service Type</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" wicket:id="serviceType" value=""/>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label wicket:id="status_label">Status</label>
+	                            </td>
+	                            <td class="control">
+	                                <select wicket:id="status">
+                                        <option selected="selected" value="0">Active</option>
+                                        <option value="1">Inactive</option>
+                                    </select>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label wicket:id="costType_label">Cost Type</label>
+	                            </td>
+	                            <td class="control">
+	                                <select wicket:id="costType">
+                                        <option selected="selected" value="0">Specific Dolar</option>
+                                        <option value="1">No Cost</option>
+                                        <option value="2">Multiple of Group</option>
+                                        <option value="3">Multiple of Parent</option>
+                                        <option value="4">Medicare Value</option>
+                                        <option value="5">Multiple of RVU</option>
+                                        <option value="6">UCR 75% Value</option>
+                                    </select>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label wicket:id="unitCost_label">Unit Cost</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" wicket:id="unitCost" value=""/>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label wicket:id="unitsAvailable_label">Units Available</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" wicket:id="unitsAvailable" value=""/>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label wicket:id="parentEntryId_label">Parent Entry ID</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" wicket:id="parentEntryId" value=""/>
+	                            </td>
+	                        </tr>
+	                    </table>
+	                </fieldset>
+                    <div class="director">
+                    <table class="vertical-fields">
+                        <tr class="field">
+                            <td class="label">
+                                <label wicket:id="nextAction_label">Next Action</label>
+                            </td>
+                            <td class="control">
+                                <select wicket:id="nextAction">
+                                    <option>Add Another Fee Schedule Item</option>
+                                </select>
+                                <input class="button" wicket:id="formSubmit" type="submit" value="OK"/>
+                                <input class="button" wicket:id="formReset" type="reset" value="Reset"/>
+                            </td>
+                        </tr>
+                    </table>
+
+                </div>
+            </form>
+        </wicket:panel>
+    </body>
+</html>
