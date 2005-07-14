@@ -1,5 +1,40 @@
 /*
- * Copyright (c) 2005 Your Corporation. All Rights Reserved.
+ * Copyright (c) 2000-2003 Netspective Communications LLC. All rights reserved.
+ *
+ * Netspective Communications LLC ("Netspective") permits redistribution, modification and use of this file in source
+ * and binary form ("The Software") under the Netspective Source License ("NSL" or "The License"). The following
+ * conditions are provided as a summary of the NSL but the NSL remains the canonical license and must be accepted
+ * before using The Software. Any use of The Software indicates agreement with the NSL.
+ *
+ * 1. Each copy or derived work of The Software must preserve the copyright notice and this notice unmodified.
+ *
+ * 2. Redistribution of The Software is allowed in object code form only (as Java .class files or a .jar file
+ *    containing the .class files) and only as part of an application that uses The Software as part of its primary
+ *    functionality. No distribution of the package is allowed as part of a software development kit, other library,
+ *    or development tool without written consent of Netspective. Any modified form of The Software is bound by these
+ *    same restrictions.
+ *
+ * 3. Redistributions of The Software in any form must include an unmodified copy of The License, normally in a plain
+ *    ASCII text file unless otherwise agreed to, in writing, by Netspective.
+ *
+ * 4. The names "Netspective", "Axiom", "Commons", "Junxion", and "Sparx" are trademarks of Netspective and may not be
+ *    used to endorse products derived from The Software without without written consent of Netspective. "Netspective",
+ *    "Axiom", "Commons", "Junxion", and "Sparx" may not appear in the names of products derived from The Software
+ *    without written consent of Netspective.
+ *
+ * 5. Please attribute functionality where possible. We suggest using the "powered by Netspective" button or creating
+ *    a "powered by Netspective(tm)" link to http://www.netspective.com for each application using The Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS" WITHOUT A WARRANTY OF ANY KIND. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND
+ * WARRANTIES, INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT,
+ * ARE HEREBY DISCLAIMED.
+ *
+ * NETSPECTIVE AND ITS LICENSORS SHALL NOT BE LIABLE FOR ANY DAMAGES SUFFERED BY LICENSEE OR ANY THIRD PARTY AS A
+ * RESULT OF USING OR DISTRIBUTING THE SOFTWARE. IN NO EVENT WILL NETSPECTIVE OR ITS LICENSORS BE LIABLE FOR ANY LOST
+ * REVENUE, PROFIT OR DATA, OR FOR DIRECT, INDIRECT, SPECIAL, CONSEQUENTIAL, INCIDENTAL OR PUNITIVE DAMAGES, HOWEVER
+ * CAUSED AND REGARDLESS OF THE THEORY OF LIABILITY, ARISING OUT OF THE USE OF OR INABILITY TO USE THE SOFTWARE, EVEN
+ * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+ *
  */
 package com.medigy.service.impl.query;
 
@@ -10,7 +45,7 @@ import com.medigy.service.dto.query.QueryDefinitionSearchReturnValues;
 import com.medigy.service.dto.query.QueryDefinitionSearchCondition;
 import com.medigy.service.dto.query.QueryDefinitionSearchParameters;
 import com.medigy.service.dto.query.QueryDefinitionSearchFormPopulateValues;
-import com.medigy.persist.util.query.QueryDefinitionSortFieldReference;
+import com.medigy.persist.util.query.QueryDefinitionSortBy;
 import com.medigy.service.query.QueryDefinitionSearchService;
 import com.medigy.service.query.QueryDefinitionFactory;
 import com.medigy.persist.util.query.QueryDefinition;
@@ -20,6 +55,8 @@ import com.medigy.persist.util.query.SqlComparisonFactory;
 import com.medigy.persist.util.query.QueryDefinitionField;
 import com.medigy.persist.util.query.QueryDefnCondition;
 import com.medigy.persist.util.query.SqlComparison;
+import com.medigy.persist.util.value.ValueLocator;
+import com.medigy.persist.util.value.ValueContext;
 import com.medigy.persist.util.query.exception.QueryDefinitionException;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.commons.logging.Log;
@@ -66,7 +103,6 @@ public class QueryDefinitionSearchServiceImpl extends AbstractService implements
                 }
             }
             final List<QueryDefinitionSearchCondition> conditionFieldList = params.getConditionFieldList();
-            final Map<String, Object> conditionFieldValues = new HashMap<String, Object>();
             for (QueryDefinitionSearchCondition condition : conditionFieldList)
             {
                 if (condition.getField() == null)
@@ -74,6 +110,8 @@ public class QueryDefinitionSearchServiceImpl extends AbstractService implements
                 final QueryDefinitionField field = queryDefiniton.getField(condition.getField());
                 final SqlComparison comparison = SqlComparisonFactory.getInstance().getComparison(condition.getFieldComparison());
                 final String connector = condition.getConnector();
+                final String value = condition.getFieldValue();
+
                 select.addCondition(new QueryDefnCondition() {
                     public boolean isRemoveIfValueNull()
                     {
@@ -83,6 +121,16 @@ public class QueryDefinitionSearchServiceImpl extends AbstractService implements
                     public String getConnectorSql()
                     {
                         return connector;
+                    }
+
+                    public ValueLocator getValueLocator()
+                    {
+                        return new ValueLocator() {
+                            public Object getValue(final ValueContext context)
+                            {
+                                return value;
+                            }
+                        };
                     }
 
                     public QueryDefinitionField getField()
@@ -105,20 +153,23 @@ public class QueryDefinitionSearchServiceImpl extends AbstractService implements
                         return false;
                     }
                 });
-                // TODO: Need to convert the String values into column type specific values!
-                conditionFieldValues.put(condition.getField(), condition.getFieldValue());
             }
 
             for (String orderByField : params.getSortByFields())
             {
                 final QueryDefinitionField field = queryDefiniton.getField(orderByField);
-                select.addOrderBy(new QueryDefinitionSortFieldReference() {
+                select.addOrderBy(new QueryDefinitionSortBy() {
+                    public boolean isDescending()
+                    {
+                        return false;
+                    }
+
                     public QueryDefinitionField getField()
                     {
                         return field;
                     }
 
-                    public OrderBy getOrderBy()
+                    public String getExplicitOrderByClause()
                     {
                         return null;
                     }
@@ -128,8 +179,12 @@ public class QueryDefinitionSearchServiceImpl extends AbstractService implements
             // construct the HQL generator
             QueryDefnStatementGenerator generator = new QueryDefnStatementGenerator(select);
             // pass the condition field values and create the HQL
-            String sql = generator.generateQuery(conditionFieldValues);
+            String sql = generator.generateQuery(new ValueContext() {
+                // for now the value context is empty
+            });
             final Query query = getSession().createQuery(sql);
+            query.setFirstResult(params.getStartFromRow());
+
             final List bindParams = generator.getBindParams();
             System.out.println(sql + "\n" + bindParams.size());
 
@@ -154,7 +209,14 @@ public class QueryDefinitionSearchServiceImpl extends AbstractService implements
             for (int k=0; k < list.size(); k++)
             {
                 final Map<String, Object> map = new HashMap<String, Object>();
-                final Object[] columns = (Object[]) list.get(k);
+                final Object rowObject = list.get(k);
+
+                Object[] columns = null;
+                if (rowObject instanceof Object[])
+                    columns = (Object[]) rowObject;
+                else
+                    columns = new Object[] { rowObject };
+
                 for (int j=0; j < columns.length; j++)
                 {
                     String displayFieldName = displayFields.get(j);
@@ -212,7 +274,14 @@ public class QueryDefinitionSearchServiceImpl extends AbstractService implements
 
             public Map<String,QueryDefinitionField> getDisplayFields()
             {
-                return queryDefinition.getFields();
+                Map<String, QueryDefinitionField> map = new HashMap<String, QueryDefinitionField>();
+                List<QueryDefinitionField> fieldList = new ArrayList<QueryDefinitionField>(queryDefinition.getFields().values());
+                for (QueryDefinitionField field: fieldList)
+                {
+                    if (field.isDisplayAllowed())
+                        map.put(field.getName(), field);
+                }
+                return map;
             }
 
             public ServiceParameters getParameters()

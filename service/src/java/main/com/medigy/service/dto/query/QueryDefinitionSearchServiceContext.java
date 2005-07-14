@@ -36,26 +36,10 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.persist.util.query;
+package com.medigy.service.dto.query;
 
-import com.medigy.persist.util.value.ValueLocator;
+import com.medigy.service.dto.ServiceContext;
 
-/**
- * This interface is used to declare a condition  defined after the WHERE clause.
- * The condition describes the field it is associated with and the SQL comparison to use; it DOES NOT
- * describe where it is getting the value from to bind to the field. Also there is no concrete
- * implementation of this interface and all logic has been moved into the
- * {@link QueryDefinitionConditions} class.
- *
- */
-public interface QueryDefnCondition
+public interface QueryDefinitionSearchServiceContext extends ServiceContext
 {
-    public boolean isRemoveIfValueNull();
-    public String getConnectorSql();
-    public QueryDefinitionField getField();
-    public String getBindExpr();
-    public SqlComparison getComparison();
-    public boolean isJoinOnly();
-
-    public ValueLocator getValueLocator();
 }

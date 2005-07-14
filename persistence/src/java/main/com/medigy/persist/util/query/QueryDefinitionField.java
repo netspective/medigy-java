@@ -17,9 +17,9 @@ public interface QueryDefinitionField
     public String getColumnLabel();
     public String getColumnExpr() throws QueryDefinitionException;
 
-    public String getQualifiedColName() throws QueryDefinitionException;
+    public String getQualifiedColName();
     public String getTableName() throws QueryDefinitionException;
-    public String getTableAlias() throws QueryDefinitionException;
+    public String getTableAlias();
     public String getSelectClauseExpr();
     public void setSelectClauseExpr(final String selectClauseExpr);
     public String getSelectClauseExprAndLabel() throws QueryDefinitionException;

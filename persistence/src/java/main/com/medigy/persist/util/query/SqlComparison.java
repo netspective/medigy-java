@@ -4,6 +4,7 @@
 package com.medigy.persist.util.query;
 
 import com.medigy.persist.util.query.exception.QueryDefinitionException;
+import com.medigy.persist.util.value.ValueContext;
 
 public interface SqlComparison
 {
@@ -28,6 +29,6 @@ public interface SqlComparison
 
     public Group getGroup();
 
-    public String getWhereCondExpr(QueryDefinitionSelect select, QueryDefnStatementGenerator statement,
-                                   QueryDefnCondition cond, Object value) throws QueryDefinitionException;
+    public String getWhereCondExpr(final QueryDefinitionSelect select, final QueryDefnStatementGenerator statement,
+                                   final QueryDefnCondition cond, final ValueContext valueContext) throws QueryDefinitionException;
 }

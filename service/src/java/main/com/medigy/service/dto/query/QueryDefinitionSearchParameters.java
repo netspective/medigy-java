@@ -16,4 +16,6 @@ public interface QueryDefinitionSearchParameters  extends ServiceParameters
     public List<QueryDefinitionSearchCondition> getConditionFieldList();
     public List<String> getDisplayFields();
     public List<String> getSortByFields();
+
+    public int getStartFromRow();			
 }

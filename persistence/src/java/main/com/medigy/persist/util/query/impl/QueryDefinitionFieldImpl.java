@@ -68,10 +68,13 @@ public class QueryDefinitionFieldImpl implements QueryDefinitionField
         return displayAllowed ? (selectClauseExpr != null ? selectClauseExpr : getQualifiedColName()) : null;
     }
 
-    public String getQualifiedColName() throws QueryDefinitionException
+    public String getQualifiedColName()
     {
         String tableAlias = getTableAlias();
-        return tableAlias != null ? (tableAlias + "." + getColumnName()) : getColumnName();
+        if (selectClauseExpr != null)
+            return selectClauseExpr;
+        else
+            return tableAlias != null ? (tableAlias + "." + getColumnName()) : getColumnName();
     }
 
     public String getTableName() throws QueryDefinitionException
@@ -80,7 +83,7 @@ public class QueryDefinitionFieldImpl implements QueryDefinitionField
         return join != null ? join.getTable() : null;
     }
 
-    public String getTableAlias() throws QueryDefinitionException
+    public String getTableAlias()
     {
         return join != null ? join.getName() : null;
     }
@@ -120,7 +123,7 @@ public class QueryDefinitionFieldImpl implements QueryDefinitionField
 
     public String getOrderByClauseExpr()
     {
-        return orderByClauseExpr;
+        return orderByClauseExpr != null ? orderByClauseExpr : getQualifiedColName();
     }
 
     public void setOrderByClauseExpr(final String orderByClauseExpr)

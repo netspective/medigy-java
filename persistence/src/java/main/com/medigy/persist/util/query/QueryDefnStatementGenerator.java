@@ -4,6 +4,7 @@
 package com.medigy.persist.util.query;
 
 import com.medigy.persist.util.query.exception.QueryDefinitionException;
+import com.medigy.persist.util.value.ValueContext;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,7 +25,6 @@ public class QueryDefnStatementGenerator
     private Set<QueryDefinitionJoin> joins = new HashSet<QueryDefinitionJoin>();
 
     private List bindParams = new ArrayList();
-    private Map<String, Object> bindParamsMap = new HashMap<String, Object>();
 
     public QueryDefnStatementGenerator(final QueryDefinitionSelect select)
     {
@@ -55,6 +55,11 @@ public class QueryDefnStatementGenerator
         {
             if (field.getHqlJoinExpr() != null && field.getJoin().equals(join))
                 fromExpr = fromExpr + " " + field.getHqlJoinExpr();
+        }
+        for (QueryDefnCondition cond : select.getConditions().getList())
+        {
+            if (cond.getField().getHqlJoinExpr() != null && cond.getField().getJoin().equals(join))
+                fromExpr = fromExpr + " " + cond.getField().getHqlJoinExpr();
         }
         fromClause.add(fromExpr);
 
@@ -87,7 +92,7 @@ public class QueryDefnStatementGenerator
         }
     }
 
-    public String generateQuery(final Map<String, Object> fieldValues)  throws QueryDefinitionException
+    public String generateQuery(final ValueContext valueContext)  throws QueryDefinitionException
     {
 
         final Map<String, QueryDefinitionField> showFields = select.getDisplayFields();
@@ -105,7 +110,7 @@ public class QueryDefnStatementGenerator
             selectClause.add("*");
 
         QueryDefinitionConditions allSelectConditions = select.getConditions();
-        QueryDefinitionConditions usedSelectConditions = allSelectConditions.getUsedConditions(this, fieldValues);
+        QueryDefinitionConditions usedSelectConditions = allSelectConditions.getUsedConditions(this, valueContext);
 
         // add join tables which have the auto-include flag set and their respective conditions to the
         // from and where clause lists. If the join is already in the 'joins' list, no need to add it in.
@@ -170,7 +175,7 @@ public class QueryDefnStatementGenerator
         int usedCondsCount = usedSelectConditions.size();
         if(usedCondsCount > 0)
         {
-            String conditionSql = usedSelectConditions.createSql(this, usedSelectConditions, fieldValues);
+            String conditionSql = usedSelectConditions.createSql(this, usedSelectConditions, valueContext);
             if(conditionSql != null && conditionSql.length() > 0)
             {
                 if(haveJoinWheres)
@@ -235,7 +240,30 @@ public class QueryDefnStatementGenerator
 
         }
 
-        // TODO: Add order by
+        final List<QueryDefinitionSortBy> orderBys = select.getOrderBys();
+        final int orderBySize = orderBys.size();
+        if(orderBySize > 0)
+        {
+            sql.append("order by\n");
+            for(int i = 0; i < orderBySize; i++)
+            {
+                QueryDefinitionSortBy sortRef = orderBys.get(i);
+                if (sortRef.getExplicitOrderByClause() != null)
+                {
+                    sql.append(sortRef.getExplicitOrderByClause());
+                }
+                else
+                {
+                    sql.append(sortRef.getField().getOrderByClauseExpr());
+                    if(sortRef.isDescending())
+                        sql.append(" desc");
+                }
+                if(i < orderBySize-1)
+                    sql.append(", ");
+                sql.append("\n");
+            }
+        }
+
         return sql.toString();
     }
 
@@ -244,19 +272,9 @@ public class QueryDefnStatementGenerator
         return bindParams;
     }
 
-    public void addBindParam(final QueryDefinitionField field, final Object obj)
+    public void addBindParam(final Object obj)
     {
         bindParams.add(obj);
-        bindParamsMap.put(field.getName(), obj);
     }
 
-    public Object getBindParam(final String fieldName)
-    {
-        return bindParamsMap.get(fieldName);
-    }
-
-    public Object getBindParam(final int index)
-    {
-        return bindParams.get(index);
-    }
 }

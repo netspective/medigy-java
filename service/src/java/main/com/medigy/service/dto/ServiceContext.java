@@ -38,6 +38,8 @@
  */
 package com.medigy.service.dto;
 
-public interface ServiceContext
+import com.medigy.persist.util.value.ValueContext;
+
+public interface ServiceContext extends ValueContext
 {
 }

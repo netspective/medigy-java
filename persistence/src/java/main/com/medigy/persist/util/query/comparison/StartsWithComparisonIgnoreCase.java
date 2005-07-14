@@ -8,6 +8,7 @@ import com.medigy.persist.util.query.QueryDefnCondition;
 import com.medigy.persist.util.query.QueryDefnStatementGenerator;
 import com.medigy.persist.util.query.SqlComparison;
 import com.medigy.persist.util.query.exception.QueryDefinitionException;
+import com.medigy.persist.util.value.ValueContext;
 
 public class StartsWithComparisonIgnoreCase extends BinaryOpComparison
 {
@@ -18,12 +19,9 @@ public class StartsWithComparisonIgnoreCase extends BinaryOpComparison
     }
 
     public String getWhereCondExpr(QueryDefinitionSelect select, QueryDefnStatementGenerator statement,
-                                   QueryDefnCondition cond, final Object value) throws QueryDefinitionException
+                                   QueryDefnCondition cond, final ValueContext valueContext) throws QueryDefinitionException
     {
-        if (!(value instanceof String))
-            throw new QueryDefinitionException("Cannot assign a non-string value to a string" +
-                    "comparison.");
-        statement.addBindParam(cond.getField(), value + "%");
+        statement.addBindParam(cond.getValueLocator().getValue(valueContext) + "%");
         String retString = "";
         String bindExpression = cond.getBindExpr();
         if(bindExpression != null && bindExpression.length() > 0)

@@ -224,6 +224,8 @@ public class PatientSearchQueryDefinition extends BasicQueryDefinition implement
                 "left outer join rel.organizationRole as orgRole " +
                 "left outer join orgRole.organization as org ");
         orgField.setSelectClauseExpr("org.id");
+        orgField.setWhereClauseExpr("org.id");
+        orgField.setDisplayAllowed(false);
 
 
 

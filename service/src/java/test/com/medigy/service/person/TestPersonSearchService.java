@@ -31,6 +31,11 @@ public class TestPersonSearchService  extends AbstractSpringTestCase
                 return null;
             }
 
+            public int getStartFromRow()
+            {
+                return 0;
+            }
+
             public Class getQueryDefinitionClass()
             {
                 return PatientSearchQueryDefinition.class;

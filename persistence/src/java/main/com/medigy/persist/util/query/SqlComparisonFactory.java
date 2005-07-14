@@ -5,6 +5,7 @@ package com.medigy.persist.util.query;
 
 import com.medigy.persist.util.query.comparison.EqualsComparison;
 import com.medigy.persist.util.query.comparison.StartsWithComparisonIgnoreCase;
+import com.medigy.persist.util.query.comparison.ContainsComparisonIgnoreCase;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,6 +23,7 @@ public class SqlComparisonFactory
     {
         registerComparison(new StartsWithComparisonIgnoreCase());
         registerComparison(new EqualsComparison());
+        registerComparison(new ContainsComparisonIgnoreCase());
     }
 
     public static SqlComparisonFactory getInstance()

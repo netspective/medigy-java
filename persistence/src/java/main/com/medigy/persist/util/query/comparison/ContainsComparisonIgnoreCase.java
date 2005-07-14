@@ -3,46 +3,37 @@
  */
 package com.medigy.persist.util.query.comparison;
 
-import com.medigy.persist.util.query.QueryDefinitionSelect;
-import com.medigy.persist.util.query.QueryDefnCondition;
-import com.medigy.persist.util.query.QueryDefnStatementGenerator;
 import com.medigy.persist.util.query.SqlComparison;
+import com.medigy.persist.util.query.QueryDefinitionSelect;
+import com.medigy.persist.util.query.QueryDefnStatementGenerator;
+import com.medigy.persist.util.query.QueryDefnCondition;
 import com.medigy.persist.util.query.exception.QueryDefinitionException;
 import com.medigy.persist.util.value.ValueContext;
 
-public abstract class BinaryOpComparison implements SqlComparison
+public class ContainsComparisonIgnoreCase extends BinaryOpComparison
 {
-    private String sqlExpr;
-    private Group group;
+    public static final String COMPARISON_NAME = "Contains (ignore case)";
 
-    public BinaryOpComparison(final Group group)
+    public ContainsComparisonIgnoreCase()
     {
-        this.group = group;
+        super(SqlComparison.Group.STRING);
     }
 
-    public BinaryOpComparison(String sqlExpr, final Group group)
+    public String getName()
     {
-        this.sqlExpr = sqlExpr;
-        this.group = group;
-    }
-
-    public Group getGroup()
-    {
-        return group;
+        return COMPARISON_NAME;
     }
 
     public String getWhereCondExpr(final QueryDefinitionSelect select, final QueryDefnStatementGenerator statement,
                                    final QueryDefnCondition cond, final ValueContext valueContext) throws QueryDefinitionException
     {
+        statement.addBindParam("%" + cond.getValueLocator().getValue(valueContext) + "%");
         String retString = "";
-        statement.addBindParam(cond.getValueLocator().getValue(valueContext));
         String bindExpression = cond.getBindExpr();
-
         if(bindExpression != null && bindExpression.length() > 0)
-            retString = cond.getField().getWhereClauseExpr() + " " + sqlExpr + " " + bindExpression;
+            retString = "UPPER(" + cond.getField().getWhereClauseExpr() + ") like UPPER(" + bindExpression + ")";
         else
-            retString = cond.getField().getWhereClauseExpr() + " " + sqlExpr + " ?";
+            retString = "UPPER(" + cond.getField().getWhereClauseExpr() + ") like UPPER(?)";
         return retString;
     }
-
 }

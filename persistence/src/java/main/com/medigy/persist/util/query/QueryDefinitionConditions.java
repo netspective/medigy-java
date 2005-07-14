@@ -4,6 +4,7 @@
 package com.medigy.persist.util.query;
 
 import com.medigy.persist.util.query.exception.QueryDefinitionException;
+import com.medigy.persist.util.value.ValueContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -17,7 +18,7 @@ public class QueryDefinitionConditions
 
     private List<QueryDefnCondition> list = new ArrayList<QueryDefnCondition>();
     private QueryDefnCondition parentCondition;
-    private boolean haveAnyDynamicConditions;
+    private boolean haveAnyDynamicConditions = false;
 
     public QueryDefinitionConditions()
     {
@@ -77,8 +78,8 @@ public class QueryDefinitionConditions
         return list.size();
     }
 
-    public QueryDefinitionConditions getUsedConditions(QueryDefnStatementGenerator stmtGen,
-                                                       final Map<String, Object> fieldValues) throws QueryDefinitionException
+    public QueryDefinitionConditions getUsedConditions(final QueryDefnStatementGenerator stmtGen,
+                                                       final ValueContext valueContext) throws QueryDefinitionException
     {
         // if we don't have any dynamic conditions, all the conditions will be used :)
         if(!haveAnyDynamicConditions)
@@ -93,10 +94,15 @@ public class QueryDefinitionConditions
         {
             QueryDefnCondition cond = list.get(c);
             //cond.useCondition(stmtGen, usedConditions, fieldValues);
-            if (useCondition(cond, fieldValues.get(cond.getField().getName())))
+            if (useCondition(cond, valueContext))
             {
+                System.out.println("Use condition: " + cond.getField().getName());
                 usedConditions.add(cond);
                 stmtGen.addJoin(cond.getField());
+            }
+            else
+            {
+                System.out.println("Dont use: " + cond.getField().getName());
             }
         }
 
@@ -106,17 +112,17 @@ public class QueryDefinitionConditions
     /**
      * Checks to see if the condition should be included in the statement
      * @param condition
-     * @param fieldValue
-     * @return
+     * @param valueContext  the context to use to lookup condition values
+     * @return True if the condition should be used as part of the query
      */
-    protected boolean useCondition(final QueryDefnCondition condition, final Object fieldValue)
+    protected boolean useCondition(final QueryDefnCondition condition, final ValueContext valueContext)
     {
         // if we don't allow nulls, always use the condition
         if(!condition.isRemoveIfValueNull())
             return true;
 
         // DOES NOT SUPPORT NESTED CONDITIONS
-        if(fieldValue == null)
+        if(condition.getValueLocator().getValue(valueContext) == null)
             return false;
 
         // TODO: Need to figure out using reflection?
@@ -143,7 +149,7 @@ public class QueryDefinitionConditions
      * @return String
      */
     public String createSql(QueryDefnStatementGenerator stmtGen, QueryDefinitionConditions usedConditions,
-                            final Map<String, Object> fieldValues) throws QueryDefinitionException
+                            final ValueContext valueContext) throws QueryDefinitionException
     {
         StringBuffer sb = new StringBuffer();
         QueryDefinitionSelect select = stmtGen.getQuerySelect();
@@ -156,7 +162,7 @@ public class QueryDefinitionConditions
             Object condObj = usedConditions.list.get(c);
             if(condObj instanceof QueryDefinitionConditions)
             {
-                String sql = createSql(stmtGen, (QueryDefinitionConditions) condObj, fieldValues);
+                String sql = createSql(stmtGen, (QueryDefinitionConditions) condObj, valueContext);
                 if(sql != null && sql.length() > 0)
                 {
                     sb.append("(" + sql + ")");
@@ -171,12 +177,11 @@ public class QueryDefinitionConditions
                 QueryDefnCondition cond = usedConditions.list.get(c);
                 if(!cond.isJoinOnly())
                 {
-                    final Object fieldValue = fieldValues.get(cond.getField().getName());
-                    sb.append(" (" + cond.getComparison().getWhereCondExpr(select, stmtGen, cond, fieldValue) + ")");
+                    sb.append(" (" + cond.getComparison().getWhereCondExpr(select, stmtGen, cond, valueContext) + ")");
                     conditionAdded = true;
                 }
                 if(c != condsUsedLast && !((QueryDefnCondition) usedConditions.list.get(c + 1)).isJoinOnly())
-                    sb.append(cond.getConnectorSql());
+                    sb.append(" " + cond.getConnectorSql() + " ");
             }
             if(conditionAdded)
                 sb.append("\n");

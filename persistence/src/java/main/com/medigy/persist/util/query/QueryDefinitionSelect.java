@@ -4,6 +4,7 @@
 package com.medigy.persist.util.query;
 
 import java.util.Map;
+import java.util.List;
 
 public interface QueryDefinitionSelect
 {
@@ -22,5 +23,6 @@ public interface QueryDefinitionSelect
     public QueryDefinitionConditions getConditions();
     public void setConditions(final QueryDefinitionConditions conditions);
     public void addCondition(final QueryDefnCondition condition);
-    public void addOrderBy(final QueryDefinitionSortFieldReference fieldReference);
+    public void addOrderBy(final QueryDefinitionSortBy sortBy);
+    public List<QueryDefinitionSortBy> getOrderBys();
 }
