@@ -1,6 +1,6 @@
 <wicket:panel>
     <SELECT ONCHANGE="if(this.selectedIndex > 0) window.location.href = '?bookmarkablePage=' + this.options[this.selectedIndex].value">
-        <OPTION>Add Record</OPTION>
+        <OPTION wicket:id="menuLabel">Add Record</OPTION>
         <OPTION VALUE="com.medigy.app.pbs.form.AppointmentPage">Appointment</OPTION>
         <OPTION VALUE="com.medigy.app.pbs.page.NotImplemented">Schedule Template</OPTION>
         <OPTION VALUE="com.medigy.app.pbs.page.NotImplemented">Appointment Type</OPTION>

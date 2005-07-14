@@ -3,9 +3,9 @@
  */
 package com.medigy.app.pbs.component.record.add;
 
-import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
+import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.panel.Panel;
 
 public class AbstractAddRecordSelect extends Panel
@@ -18,16 +18,7 @@ public class AbstractAddRecordSelect extends Panel
     public AbstractAddRecordSelect(final String id)
     {
         super(id);
-        //TODO: add custom label support -- add(new MenuLabelComponent("menuLabel"));
-    }
-
-    protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag componentTag)
-    {
-        // TODO: the /medigy-pbs/app is hardcoded right now and should be fixed
-        if(componentTag.getName().equalsIgnoreCase("select"))
-            componentTag.getAttributes().put("onchange",
-                    "if(select.selectedIndex > 0) window.location.href = '/medigy-pbs/app?bookmarkablePage=' + select.options[select.selectedIndex].value");
-        super.onComponentTagBody(markupStream, componentTag);
+        add(new MenuLabelComponent("menuLabel"));
     }
 
     public String getMenuLabel()
@@ -40,7 +31,7 @@ public class AbstractAddRecordSelect extends Panel
         this.menuLabel = menuLabel;
     }
 
-    public class MenuLabelComponent extends MarkupContainer
+    public class MenuLabelComponent extends WebMarkupContainer
     {
         public MenuLabelComponent(final String id)
         {
