@@ -24,7 +24,7 @@ public class QueryDefinitionSearchModel extends AbstractReadOnlyDetachableModel
 {
     private PageableList list;
     private int rowsPerPage = 10;
-    private ISelectCountAndListAction countAndListAction = new PatientSearchCountAndListAction();
+    private ISelectCountAndListAction countAndListAction = new SearchCountAndListAction();
     private QueryDefinitionSearchFormPanel.QueryDefinitionSearchModelObject searchParameters;
     private QueryDefinitionSearchService service;
     private Class queryDefinitionClass;
@@ -72,10 +72,10 @@ public class QueryDefinitionSearchModel extends AbstractReadOnlyDetachableModel
         return searchParameters;
     }
 
-    public class PatientSearchCountAndListAction implements  ISelectCountAndListAction
+    public class SearchCountAndListAction implements  ISelectCountAndListAction
     {
 
-        public PatientSearchCountAndListAction()
+        public SearchCountAndListAction()
         {
         }
 
@@ -115,6 +115,11 @@ public class QueryDefinitionSearchModel extends AbstractReadOnlyDetachableModel
                         return searchParameters.getSortByFields();
                     }
 
+                    public int getStartFromRow()
+                    {
+                        return 0;
+                    }
+
                     public ServiceVersion getServiceVersion()
                     {
                         return null;
@@ -132,7 +137,7 @@ public class QueryDefinitionSearchModel extends AbstractReadOnlyDetachableModel
             return 0;
         }
 
-        public List execute(Object object, int startFromRow, int numberOfRows)
+        public List execute(Object object, final int startFromRow, int numberOfRows)
         {
             final Map<String, Object> fieldValues = new HashMap<String, Object>();
             // execute the query in here
@@ -164,6 +169,11 @@ public class QueryDefinitionSearchModel extends AbstractReadOnlyDetachableModel
                     public ServiceVersion getServiceVersion()
                     {
                         return null;
+                    }
+
+                    public int getStartFromRow()
+                    {
+                        return startFromRow;
                     }
                 });
                 if (values.getErrorMessage() != null)

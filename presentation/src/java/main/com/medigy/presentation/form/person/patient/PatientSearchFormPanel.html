@@ -26,7 +26,7 @@
                                     <input type="text" wicket:id="fieldValue" />
                                 </td>
                                 <td>
-                                    <select wicket:id="connector"/>
+                                    <select wicket:id="connector"> </select>
                                 </td>
                             </tr>
                         </table>
@@ -68,12 +68,16 @@
                 </table>
             </div>
             <div id="resultsNavigation">
-                <ul>
-                    <li wicket:id="navigation">
-                        <span wicket:id="separator">, </span>
-                        <a wicket:id="pageLink" href="#"><span wicket:id="pageLabel">label</span><span wicket:id="pageNumber">1</span></a>
-                    </li>
-                </ul>
+                <table>
+                    <tr wicket:id="navigation-panel"/>
+                                        <!--td wicket:id="navigation">
+                                            <span wicket:id="separator"/>
+                                            <a wicket:id="pageLink" href="#">
+                                                <span wicket:id="pageLabel"/><span wicket:id="pageNumber"/>
+                                            </a>
+                                        </td-->
+
+                </table>
             </div>
         </wicket:panel>
     </body>

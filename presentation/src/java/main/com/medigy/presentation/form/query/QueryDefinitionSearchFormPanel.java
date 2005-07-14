@@ -28,6 +28,7 @@ import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.PageableListViewNavigation;
 import wicket.markup.html.list.PageableListView;
 import wicket.markup.html.list.PageableListViewNavigationLink;
+import wicket.markup.html.list.PageableListViewNavigator;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.panel.FeedbackPanel;
 import wicket.markup.ComponentTag;
@@ -42,6 +43,7 @@ public class QueryDefinitionSearchFormPanel extends DefaultPanel
     private SearchResultsHeaderView resultsHeaderView;
     private QueryDefinitionSearchModel searchModel;
     private QueryDefinitionSearchService service;
+    private PageableListViewNavigator navPanel;
     private Class queryDefinitionClass;
 
     public QueryDefinitionSearchFormPanel(final String componentName, final FormMode formMode, final Class queryDefinitionClass)
@@ -49,14 +51,12 @@ public class QueryDefinitionSearchFormPanel extends DefaultPanel
         super(componentName);
         this.queryDefinitionClass = queryDefinitionClass;
         service = (QueryDefinitionSearchService) ((DefaultApplication) getApplication()).getService(QueryDefinitionSearchService.class);
-
         final StandardPanelBorder border = new StandardPanelBorder("panel_border");
         add(border);
 
         // Create feedback panel and add to page
         final FeedbackPanel feedback = new FeedbackPanel("feedback");
         border.add(feedback);
-
         border.add(createForm("form", feedback, formMode));
 
         final int rowsPerPage = 10;
@@ -69,7 +69,10 @@ public class QueryDefinitionSearchFormPanel extends DefaultPanel
         resultsHeaderView = new SearchResultsHeaderView("resultsHeader");
         // results yet
         add(resultsHeaderView);
-        add(new SearchResultTableNavigation("navigation", resultsListView));
+        //add(new SearchResultTableNavigation("navigation", resultsListView));
+        navPanel = new PageableListViewNavigator("navigation-panel", resultsListView);
+        navPanel.setVisible(false);
+        add(navPanel);
     }
 
     /**
@@ -128,8 +131,13 @@ public class QueryDefinitionSearchFormPanel extends DefaultPanel
 
         public final void onSubmit()
         {
-            this.setVisible(false);
+            this.getParent().setVisible(false);
             final QueryDefinitionSearchModelObject modelObject = (QueryDefinitionSearchModelObject) getModelObject();
+            if (modelObject.getDisplayFields().size() == 0)
+            {
+                modelObject.setDisplayFields(new ArrayList<String>(defaultValues.getDisplayFields().keySet()));
+            }
+            navPanel.setVisible(true);
             searchModel.setSearchParameters(modelObject);
             resultsHeaderView.setModel(new Model((Serializable)modelObject.getDisplayFields()));
             setCurrentResultPageToFirst();
@@ -174,6 +182,8 @@ public class QueryDefinitionSearchFormPanel extends DefaultPanel
             });
             item.add(new DropDownChoice("fieldComparison", SqlComparisonFactory.getInstance().listAllNames()));
             item.add(new TextField("fieldValue"));
+
+            System.out.println("CONNECTORS: " + defaultValues.getConnectors());
             item.add(new DropDownChoice("connector", defaultValues.getConnectors()));
         }
     }
