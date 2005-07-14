@@ -19,13 +19,8 @@
 		        </select>
                 <input name='search_expression' size=17 maxlength=64 value="x,y,z" title='Person'>
                 <input type=submit name="execute" value="Go">
-                <select name="create_newrec_select" class="add-record" onchange="if(this.selectedIndex > 0) window.location.href = '/medigy-pbs/app?bookmarkablePage=' + this.options[this.selectedIndex].value">
-				    <option value="com.medigy.app.pbs.page.search.Person">Add New Record</option>
-				    <option value="com.medigy.app.pbs.page.PatientRegistrationPage">Patient</option>
-				    <option value="com.medigy.app.pbs.form.PhysicianRegistrationPage">Physician</option>
-				    <option value="com.medigy.app.pbs.form.NurseRegistrationPage">Nurse</option>
-				    <option value="com.medigy.app.pbs.form.StaffRegistrationPage">Staff</option>
-			    </select>
+
+                <wicket:component name="people" class="com.medigy.app.pbs.component.record.add.AddPersonRecordSelect"/>
              </form>
         </wicket:panel>
     </body>
