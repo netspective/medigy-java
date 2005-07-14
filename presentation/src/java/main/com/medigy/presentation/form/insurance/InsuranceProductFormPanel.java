@@ -50,9 +50,9 @@ import wicket.IFeedback;
 
 public class InsuranceProductFormPanel extends DefaultFormPanel
 {
-    public InsuranceProductFormPanel(final String componentName, final FormMode mode, final Class pageClass)
+    public InsuranceProductFormPanel(final String componentName, final FormMode mode)
     {
-        super(componentName, mode, pageClass);
+        super(componentName, mode);
     }
 
     protected Form createForm(final String componentName, final IFeedback feedback, final FormMode mode)
