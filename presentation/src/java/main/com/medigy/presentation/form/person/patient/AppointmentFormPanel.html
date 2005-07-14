@@ -1,0 +1,127 @@
+<html xmlns:wicket="http://wicket.sourceforge.net/">
+    <head>
+        <title>Appointment Add</title>
+        <link rel="stylesheet" type="text/css" href="../../../../../../../../../resources/theme/default/css/theme.css"/>
+    </head>
+    <body>
+        <wicket:panel>
+            <form wicket-id="mainForm">
+                <div class="form-body">
+                    <fieldset class="top-level">
+	                    <legend wicket:id="nurseIdGroup_label">Appointment Add</legend>
+	                    <table class="vertical-fields">
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label wicket:id="patientId_label">Patient ID</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" wicket:id="patientId" value=""/>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label wicket:id="patientType_label">Patient Type</label>
+	                            </td>
+	                            <td class="control">
+	                                <select wicket:id="patientType">
+                                        <option selected="selected" value="0">New</option>
+                                        <option value="1">Established</option>
+                                        <option value="2">Temporary</option>
+                                    </select>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label wicket:id="reasonForVisit_label">Reason For Visit</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" wicket:id="reasonForVisit" value=""/>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label wicket:id="symptoms_label">Symptoms</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="memo" wicket:id="symptoms" value=""/>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label wicket:id="appointmentType_label">Appointment Type</label>
+	                            </td>
+	                            <td class="control">
+	                                <select wicket:id="appointmentType">
+                                        <option selected="selected" value="0">New</option>
+                                    </select>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label wicket:id="date_label">Appointment Date</label> /
+	                                <label wicket:id="time_label">Time</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" wicket:id="date" value=""/>
+	                                <input type="text" wicket:id="time" value=""/>
+	                            </td>
+	                        </tr>
+	                        <tr>
+                                <td class="label">
+                                    <label wicket:id="checkForConflicts_label"></label>
+                                </td>
+
+                                <td class="control">
+                                    <span wicket:id="checkForConflicts">
+                                        <input type="checkbox">Check for Conflicts
+                                    </span>
+                                 </td>
+                            </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label wicket:id="physicianId_label">Physician ID</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" wicket:id="physicianId" value=""/>
+	                            </td>
+	                        </tr>
+
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label wicket:id="rovingPhysician_label">Roving Physician</label>
+	                            </td>
+	                            <td class="control">
+	                                <select wicket:id="rovingPhysician">
+                                        <option selected="selected" value="0"></option>
+                                        <option value="1"></option>
+                                        <option value="2"></option>
+                                    </select>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label wicket:id="facility_label">Facility</label>
+	                            </td>
+	                            <td class="control">
+	                                <select wicket:id="facility">
+                                        <option selected="selected" value="0">Clark Medical Center, Greenspoint</option>
+                                    </select>
+	                            </td>
+	                        </tr>
+	                    </table>
+	                </fieldset>
+                    <div class="director">
+                    <table class="vertical-fields">
+                        <tr class="field">
+                            <td class="control">
+                                <input class="button" wicket:id="formSubmit" type="submit" value="OK"/>
+                                <input class="button" wicket:id="formReset" type="reset" value="Reset"/>
+                            </td>
+                        </tr>
+                    </table>
+
+                </div>
+            </form>
+        </wicket:panel>
+    </body>
+</html>
