@@ -1,0 +1,243 @@
+<html xmlns:wicket="http://wicket.sourceforge.net/">
+    <head>
+        <title>Appointment Template Add</title>
+        <link rel="stylesheet" type="text/css" href="../../../../../../../../../resources/theme/default/css/theme.css"/>
+    </head>
+    <body>
+        <wicket:panel>
+            <form wicket-id="mainForm">
+                <div class="form-body">
+                    <fieldset class="top-level">
+	                    <legend wicket:id="appointmentTemplateGroup_label">Appointment Template Add</legend>
+	                    <table class="vertical-fields">
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label wicket:id="effectiveDate_label">Effective Dates</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" wicket:id="beginDate" value=""/>
+	                                <input type="text" wicket:id="endDate" value=""/>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label wicket:id="caption_label">Caption</label>
+	                            </td>
+	                            <td class="control">
+	                                <textarea maxlength="16394" type="text" wicket:id="caption" value="">
+	                                </textarea>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label wicket:id="caption_label">Resource(s)</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" wicket:id="resources" value=""/>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label wicket:id="rovingPhysician_label">Roving Physician</label>
+	                            </td>
+	                            <td class="control">
+	                                <select wicket:id="rovingPhysician">
+                                        <option selected="selected" value="0"></option>
+                                        <option value="1"></option>
+                                        <option value="2"></option>
+                                    </select>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label wicket:id="facility_label">Facility</label> /
+	                                <label wicket:id="type_label">Type</label> /
+	                                <label wicket:id="status_label">Status</label>
+	                            </td>
+	                            <td class="control">
+	                                <select wicket:id="facility">
+                                        <option selected="selected" value="0">Clarks Medical Center, Greenspoint</option>
+                                    </select>
+                                    <select wicket:id="type">
+                                        <option selected="selected" value="0">Available</option>
+                                    </select>
+                                    <select wicket:id="status">
+                                        <option selected="selected" value="0">Active</option>
+                                        <option value="1">Inactive</option>
+                                    </select>
+	                            </td>
+	                        </tr>
+	                        <tr>
+                                <td class="label">
+                                    <label wicket:id="patientTypes_label">Patient Types</label>
+                                </td>
+                                 <td>
+							     <table class="vertical-form">
+	                                <tr class="field">
+	                                    <td class="control">
+	                                        <input type="checkbox" wicket:id="Sun"/>
+	                                        <label wicket:id="Sun_label">New Patient</label>
+	                                    </td>
+								        <td class="control">
+	                                        <input type="checkbox" wicket:id="mon"/>
+	                                        <label wicket:id="mon_label">Established Patient</label>
+	                                    </td>
+	                                    <td class="control">
+	                                        <input type="checkbox" wicket:id="Tue"/>
+	                                        <label wicket:id="Tue_label">Temporary Patient</label>
+	                                    </td>
+	                                 </tr>
+	                             </table>
+	                            </td>
+                            </tr>
+                            <tr class="field">
+	                            <td class="label">
+	                                <label wicket:id="endDate_label">Appointment Types</label>
+	                            </td>
+	                            <td class="control">
+	                                <textarea wicket:id="to" value=""></textarea>
+	                                <textarea wicket:id="from" value=""></textarea>
+	                            </td>
+	                        </tr>
+                            <tr class="field">
+	                            <td class="label">
+	                                <label wicket:id="startDate_label">Start Date</label>
+	                                <label wicket:id="endDate_label">End Date</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" wicket:id="startDate" value=""/>
+	                                <input type="text" wicket:id="endDate" value=""/>
+	                            </td>
+	                        </tr>
+	                        <tr>
+                                <td class="label">
+                                    <label wicket:id="days_label">Days</label>
+                                </td>
+                                <td>
+							    <table class="vertical-form">
+	                                <tr class="field">
+	                                    <td class="control">
+	                                        <input type="checkbox" wicket:id="Sun"/>
+	                                        <label wicket:id="Sun_label">Sun</label>
+	                                    </td>
+								        <td class="control">
+	                                        <input type="checkbox" wicket:id="mon"/>
+	                                        <label wicket:id="mon_label">Mon</label>
+	                                    </td>
+	                                    <td class="control">
+	                                        <input type="checkbox" wicket:id="Tue"/>
+	                                        <label wicket:id="Tue_label">Tue</label>
+	                                    </td>
+	                                    <td class="control">
+	                                        <input type="checkbox" wicket:id="Web"/>
+	                                        <label wicket:id="Web_label">Web</label>
+	                                    </td>
+	                                    <td class="control">
+	                                        <input type="checkbox" wicket:id="Thu"/>
+	                                        <label wicket:id="Thu_label">Thu</label>
+	                                    </td>
+	                                    <td class="control">
+	                                        <input type="checkbox" wicket:id="Fri"/>
+	                                        <label wicket:id="Fri_label">Fri</label>
+	                                    </td>
+	                                    <td class="control">
+	                                        <input type="checkbox" wicket:id="Sat"/>
+	                                        <label wicket:id="Sat_label">Sat</label>
+	                                    </td>
+	                                 </tr>
+	                             </table>
+	                            </td>
+                            </tr>
+                            <tr>
+                                <td class="label">
+                                    <label wicket:id="days_label">Months</label>
+                                </td>
+                            <td>
+							    <table class="vertical-form">
+	                                <tr class="field">
+								        <td class="control">
+	                                        <input type="checkbox" wicket:id="Jan"/>
+	                                        <label wicket:id="jan_label">Jan</label>
+	                                    </td>
+	                                    <td class="control">
+	                                        <input type="checkbox" wicket:id="Feb"/>
+	                                        <label wicket:id="feb_label">Feb</label>
+	                                    </td>
+	                                    <td class="control">
+	                                        <input type="checkbox" wicket:id="Mar"/>
+	                                        <label wicket:id="mar_label">Mar</label>
+	                                    </td>
+	                                    <td class="control">
+	                                        <input type="checkbox" wicket:id="Apr"/>
+	                                        <label wicket:id="apr_label">Apr</label>
+	                                    </td>
+	                                    <td class="control">
+	                                        <input type="checkbox" wicket:id="May"/>
+	                                        <label wicket:id="may_label">May</label>
+	                                    </td>
+	                                    <td class="control">
+	                                        <input type="checkbox" wicket:id="Jun"/>
+	                                        <label wicket:id="jun_label">Jun</label>
+	                                    </td>
+	                                    <td class="control">
+	                                        <input type="checkbox" wicket:id="Jul"/>
+	                                        <label wicket:id="jul_label">Jul</label>
+	                                    </td>
+	                                    <td class="control">
+	                                        <input type="checkbox" wicket:id="Aug"/>
+	                                        <label wicket:id="aug_label">Aug</label>
+	                                    </td>
+	                                    <td class="control">
+	                                        <input type="checkbox" wicket:id="Sep"/>
+	                                        <label wicket:id="sep_label">Sep</label>
+	                                    </td>
+	                                    <td class="control">
+	                                        <input type="checkbox" wicket:id="Oct"/>
+	                                        <label wicket:id="oct_label">Oct</label>
+	                                    </td>
+	                                    <td class="control">
+	                                        <input type="checkbox" wicket:id="Nov"/>
+	                                        <label wicket:id="nov_label">Nov</label>
+	                                    </td>
+	                                    <td class="control">
+	                                        <input type="checkbox" wicket:id="dec"/>
+	                                        <label wicket:id="dec_label">Dec</label>
+	                                    </td>
+	                                 </tr>
+	                             </table>
+	                            </td>
+	                        </tr>
+                            <tr class="field">
+	                            <td class="label">
+	                                <label wicket:id="daysOfMonth_label">Days of Month</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" wicket:id="daysOfMonth" value=""/>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label wicket:id="remarks_label">Remarks</label> /
+	                                <label wicket:id="preferences_label">Preferences</label>
+	                            </td>
+	                            <td class="control">
+	                                <textarea wicket:id="remarks" value=""></textarea>
+	                                <textarea type="text" wicket:id="preferences" value=""></textarea>
+	                            </td>
+	                        </tr>
+	                    </table>
+	                </fieldset>
+                    <div class="director">
+                    <table class="vertical-fields">
+                        <tr class="field">
+                            <td class="control">
+                                <input class="button" wicket:id="formSubmit" type="submit" value="OK"/>
+                                <input class="button" wicket:id="formReset" type="reset" value="Reset"/>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </form>
+        </wicket:panel>
+    </body>
+</html>
