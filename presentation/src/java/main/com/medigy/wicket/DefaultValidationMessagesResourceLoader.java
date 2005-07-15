@@ -43,8 +43,13 @@
  */
 package com.medigy.wicket;
 
-import com.medigy.wicket.form.FieldLabel;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+
 import org.hibernate.validator.NotNullValidator;
+
+import com.medigy.wicket.form.FieldLabel;
 import wicket.Component;
 import wicket.markup.html.form.FormComponent;
 import wicket.markup.html.form.validation.EmailAddressPatternValidator;
@@ -54,10 +59,19 @@ import wicket.resource.IStringResourceLoader;
 import wicket.util.lang.Classes;
 import wicket.util.string.Strings;
 
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-
+/**
+ * Provides string resources for various validators if none are found in *.properties files. Add this resource loader
+ * using getApplicationSettings().addStringResourceLoader(new DefaultValidationMessagesResourceLoader()) in your
+ * application subclass. Basically, we map all the validators we want default messages for in the constructor and add
+ * others as required.
+ *
+ * We also associate labels with our input fields by using a naming convention. If the field is
+ * name fieldXXX then the lable would be name fieldXXX_label. This allows lookup of the label component easily.
+ *
+ * This class assumes the use of a custom FieldLabel component that knows how to track the label's english text from
+ * the markup (HTML) source. This way, if a field label is not provided dynamically it will default to what's in the
+ * markup.
+ */
 public class DefaultValidationMessagesResourceLoader implements IStringResourceLoader
 {
     public interface MessageProvider
