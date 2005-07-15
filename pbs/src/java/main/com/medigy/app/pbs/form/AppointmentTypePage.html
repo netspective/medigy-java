@@ -1,0 +1,119 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.sourceforge.net/">
+    <head>
+        <title>Add Appointment Type</title>
+        <link rel="stylesheet" type="text/css" href="/medigy/resources/theme/default/css/theme.css"></link>
+    </head>
+
+    <body wicket:id="border" class="page">
+        <form wicket-id="mainForm">
+                <div class="form-body">
+                    <fieldset class="top-level">
+	                    <legend _wicket:id="nurseIdGroup_label">Appointment Type Information</legend>
+	                    <table class="vertical-fields">
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="resourceId_label">Resource ID(s)</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" _wicket:id="resourceId" value=""/>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="caption_label">Caption</label>
+	                            </td>
+	                            <td class="control">
+	                                <textarea></textarea>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="reasonForVisit_label">Appointment Duration</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" _wicket:id="appointmentDuration" value=""/>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="lead_label">Lead Time</label> /
+	                                <label _wicket:id="lag_label">Lag Time (minutes)</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" _wicket:id="lead" value=""/>
+	                                <input type="text" _wicket:id="lag" value=""/>
+	                            </td>
+	                        </tr>
+	                        <tr>
+                                <td class="label">
+                                    <label _wicket:id="backToBack_label"></label>
+                                </td>
+                                <td class="control">
+                                    <span _wicket:id="backToBack">
+                                        <input type="checkbox">Back to Back Appointment Allowed
+                                    </span>
+                                 </td>
+                            </tr>
+                            <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="symptoms_label">Multiple Simultaneous Appts Limits / Allowed</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="memo" _wicket:id="simultaneous" value=""/>
+	                                <input type="checkbox">Allowed
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="date_label">AM Limits</label> /
+	                                <label _wicket:id="time_label">PM Limits</label> /
+	                                <label _wicket:id="time_label">All Day Limits</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" _wicket:id="am" value=""/>
+	                                <input type="text" _wicket:id="pm" value=""/>
+	                                <input type="text" _wicket:id="day" value=""/>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="resources_label">Associated Resource(s)</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="memo" _wicket:id="resources" value=""/>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="rovingPhysician_label">Roving Physician</label>
+	                            </td>
+	                            <td class="control">
+	                                <select _wicket:id="rovingPhysician">
+                                        <option selected="selected" value="0"></option>
+                                        <option value="1"></option>
+                                        <option value="2"></option>
+                                    </select>
+                                    <select _wicket:id="rovingPhysician">
+                                        <option selected="selected" value="0">1</option>
+                                        <option value="1">2</option>
+                                        <option value="2">3</option>
+                                    </select>
+	                            </td>
+	                        </tr>
+	                    </table>
+	                </fieldset>
+                    <div class="director">
+                    <table class="vertical-fields">
+                        <tr class="field">
+                            <td class="control">
+                                <input class="button" _wicket:id="formSubmit" type="submit" value="OK"/>
+                                <input class="button" _wicket:id="formReset" type="reset" value="Reset"/>
+                            </td>
+                        </tr>
+                    </table>
+                    </div>
+                </div>
+            </form>
+    </body>
+</html>

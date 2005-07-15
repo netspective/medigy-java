@@ -1,10 +1,10 @@
 <wicket:panel>
     <SELECT ONCHANGE="if(this.selectedIndex > 0) window.location.href = '?bookmarkablePage=' + this.options[this.selectedIndex].value">
         <OPTION wicket:id="menuLabel">Add Record</OPTION>
-        <OPTION VALUE="com.medigy.app.pbs.page.NotImplemented">Department</OPTION>
-        <OPTION VALUE="com.medigy.app.pbs.page.NotImplemented">Associated Provider</OPTION>
-        <OPTION VALUE="com.medigy.app.pbs.page.NotImplemented">Employer</OPTION>
-        <OPTION VALUE="com.medigy.app.pbs.page.NotImplemented">Insurance</OPTION>
-        <OPTION VALUE="com.medigy.app.pbs.page.NotImplemented">IPA</OPTION>
+        <OPTION VALUE="com.medigy.app.pbs.form.DepartmentOrganizationPage">Department</OPTION>
+        <OPTION VALUE="com.medigy.app.pbs.form.AssociatedProviderOrganizationPage">Associated Provider</OPTION>
+        <OPTION VALUE="com.medigy.app.pbs.form.EmployerOrganizationPage">Employer</OPTION>
+        <OPTION VALUE="com.medigy.app.pbs.form.InsuranceOrganizationPage">Insurance</OPTION>
+        <OPTION VALUE="com.medigy.app.pbs.form.IpaOrganizationPage">IPA</OPTION>
     </SELECT>
 </wicket:panel>
