@@ -77,6 +77,8 @@ import javax.persistence.UniqueConstraint;
 import javax.persistence.OrderBy;
 import javax.persistence.ManyToOne;
 import javax.persistence.JoinColumn;
+import javax.persistence.Basic;
+import javax.persistence.TemporalType;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
@@ -241,8 +243,8 @@ public class Person extends Party
         return sb.toString();
     }
 
-    @Column()
     @Past
+    @Basic(temporalType = TemporalType.DATE)
     public Date getBirthDate()
     {
         return birthDate;
