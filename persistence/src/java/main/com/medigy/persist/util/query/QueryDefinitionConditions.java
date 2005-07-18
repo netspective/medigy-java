@@ -11,12 +11,15 @@ import org.apache.commons.logging.LogFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 
 public class QueryDefinitionConditions
 {
     private final Log log = LogFactory.getLog(QueryDefinitionConditions.class);
 
     private List<QueryDefnCondition> list = new ArrayList<QueryDefnCondition>();
+    private Map<String, QueryDefnCondition> map = new HashMap<String, QueryDefnCondition>();
+
     private QueryDefnCondition parentCondition;
     private boolean haveAnyDynamicConditions = false;
 
@@ -40,18 +43,25 @@ public class QueryDefinitionConditions
         this.list = list;
     }
 
+    /**
+     * A unique ID with respective to this condition list is assigned
+     * @param condition
+     */
     public void add(final QueryDefnCondition condition)
     {
+        int index = list.size();
         list.add(condition);
+        final String key = (condition.getParentCondition() != null ? condition.getParentCondition().getName() : "") + "." + condition.getField().getName() + index;
+        condition.setName(key);
+        map.put(key, condition);
         if(!haveAnyDynamicConditions && condition.isRemoveIfValueNull())
             haveAnyDynamicConditions = true;
     }
 
-    public QueryDefnCondition get(int i)
+    public QueryDefnCondition get(final String id)
     {
-        return (QueryDefnCondition) list.get(i);
+        return map.get(id);
     }
-
 
     public QueryDefnCondition getParentCondition()
     {
@@ -122,7 +132,7 @@ public class QueryDefinitionConditions
             return true;
 
         // DOES NOT SUPPORT NESTED CONDITIONS
-        if(condition.getValueLocator().getValue(valueContext) == null)
+        if(condition.getValueProvider() == null || condition.getValueProvider().getValue() == null)
             return false;
 
         // TODO: Need to figure out using reflection?
@@ -169,7 +179,7 @@ public class QueryDefinitionConditions
                     conditionAdded = true;
                 }
                 if(c != condsUsedLast)
-                    sb.append(parentCondition.getConnectorSql());
+                    sb.append(parentCondition.getConnector());
             }
             else
             {
@@ -181,7 +191,7 @@ public class QueryDefinitionConditions
                     conditionAdded = true;
                 }
                 if(c != condsUsedLast && !((QueryDefnCondition) usedConditions.list.get(c + 1)).isJoinOnly())
-                    sb.append(" " + cond.getConnectorSql() + " ");
+                    sb.append(" " + cond.getConnector() + " ");
             }
             if(conditionAdded)
                 sb.append("\n");

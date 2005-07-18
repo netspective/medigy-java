@@ -40,8 +40,8 @@ package com.medigy.service.impl.query;
 
 import com.medigy.service.AbstractService;
 import com.medigy.service.ServiceVersion;
+import com.medigy.service.SearchReturnValues;
 import com.medigy.service.dto.ServiceParameters;
-import com.medigy.service.dto.query.QueryDefinitionSearchReturnValues;
 import com.medigy.service.dto.query.QueryDefinitionSearchCondition;
 import com.medigy.service.dto.query.QueryDefinitionSearchParameters;
 import com.medigy.service.dto.query.QueryDefinitionSearchFormPopulateValues;
@@ -55,7 +55,8 @@ import com.medigy.persist.util.query.SqlComparisonFactory;
 import com.medigy.persist.util.query.QueryDefinitionField;
 import com.medigy.persist.util.query.QueryDefnCondition;
 import com.medigy.persist.util.query.SqlComparison;
-import com.medigy.persist.util.value.ValueLocator;
+import com.medigy.persist.util.query.impl.QueryDefinitionConditionImpl;
+import com.medigy.persist.util.value.ValueProvider;
 import com.medigy.persist.util.value.ValueContext;
 import com.medigy.persist.util.query.exception.QueryDefinitionException;
 import org.apache.commons.lang.exception.ExceptionUtils;
@@ -69,6 +70,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class QueryDefinitionSearchServiceImpl extends AbstractService implements QueryDefinitionSearchService
 {
@@ -84,7 +86,7 @@ public class QueryDefinitionSearchServiceImpl extends AbstractService implements
         return QueryDefinitionFactory.getInstance().getQueryDefinition(queryDefClass);
     }
 
-    public QueryDefinitionSearchReturnValues search(final QueryDefinitionSearchParameters params)
+    public SearchReturnValues search(final QueryDefinitionSearchParameters params)
     {
         final List<Map<String, Object>> searchResult = new ArrayList<Map<String, Object>>();
         final QueryDefinition queryDefiniton = QueryDefinitionFactory.getInstance().getQueryDefinition(params.getQueryDefinitionClass());
@@ -112,47 +114,15 @@ public class QueryDefinitionSearchServiceImpl extends AbstractService implements
                 final String connector = condition.getConnector();
                 final String value = condition.getFieldValue();
 
-                select.addCondition(new QueryDefnCondition() {
-                    public boolean isRemoveIfValueNull()
+                final QueryDefnCondition cond = new QueryDefinitionConditionImpl(field, comparison);
+                cond.setConnector(connector);
+                cond.setValueProvider(new ValueProvider() {
+                    public Object getValue()
                     {
-                        return true;
-                    }
-
-                    public String getConnectorSql()
-                    {
-                        return connector;
-                    }
-
-                    public ValueLocator getValueLocator()
-                    {
-                        return new ValueLocator() {
-                            public Object getValue(final ValueContext context)
-                            {
-                                return value;
-                            }
-                        };
-                    }
-
-                    public QueryDefinitionField getField()
-                    {
-                        return field;
-                    }
-
-                    public String getBindExpr()
-                    {
-                        return null;
-                    }
-
-                    public SqlComparison getComparison()
-                    {
-                        return comparison;
-                    }
-
-                    public boolean isJoinOnly()
-                    {
-                        return false;
+                        return value;
                     }
                 });
+                select.addCondition(cond);
             }
 
             for (String orderByField : params.getSortByFields())
@@ -183,6 +153,7 @@ public class QueryDefinitionSearchServiceImpl extends AbstractService implements
                 // for now the value context is empty
             });
             final Query query = getSession().createQuery(sql);
+
             query.setFirstResult(params.getStartFromRow());
 
             final List bindParams = generator.getBindParams();
@@ -225,30 +196,35 @@ public class QueryDefinitionSearchServiceImpl extends AbstractService implements
                 }
                 searchResult.add(map);
             }
+
+            return new SearchReturnValues()
+            {
+                public List<String> getColumnNames()
+                {
+                    return Arrays.asList(query.getReturnAliases());
+                }
+
+                public List<Map<String, Object>> getSearchResults()
+                {
+                    return searchResult;
+                }
+
+                public ServiceParameters getParameters()
+                {
+                    return params;
+                }
+
+                public String getErrorMessage()
+                {
+                    return null;
+                }
+            };
         }
         catch (QueryDefinitionException e)
         {
             log.error(ExceptionUtils.getStackTrace(e));
             return createErrorResponse(params, e.getMessage());
         }
-
-        return new QueryDefinitionSearchReturnValues()
-        {
-            public List<Map<String, Object>> getSearchResults()
-            {
-                return searchResult;
-            }
-
-            public ServiceParameters getParameters()
-            {
-                return params;
-            }
-
-            public String getErrorMessage()
-            {
-                return null;
-            }
-        };
     }
 
     public QueryDefinitionSearchFormPopulateValues getAvailableSearchParameters(final Class queryDefinitionClass)
@@ -306,9 +282,14 @@ public class QueryDefinitionSearchServiceImpl extends AbstractService implements
         return new String[0];
     }
 
-    public QueryDefinitionSearchReturnValues createErrorResponse(final ServiceParameters params, final String errorMessage)
+    public SearchReturnValues createErrorResponse(final ServiceParameters params, final String errorMessage)
     {
-        return new QueryDefinitionSearchReturnValues() {
+        return new SearchReturnValues() {
+            public List<String> getColumnNames()
+            {
+                return null;
+            }
+
             public ServiceParameters getParameters()
             {
                 return  params;

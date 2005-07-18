@@ -6,7 +6,16 @@ package com.medigy.service.person;
 import com.medigy.persist.util.query.QueryDefinition;
 import com.medigy.persist.util.query.QueryDefinitionField;
 import com.medigy.persist.util.query.QueryDefinitionJoin;
+import com.medigy.persist.util.query.QueryDefnCondition;
+import com.medigy.persist.util.query.QueryDefinitionSelect;
+import com.medigy.persist.util.query.QueryDefinitionSortBy;
+import com.medigy.persist.util.query.SqlComparisonFactory;
+import com.medigy.persist.util.query.comparison.StartsWithComparisonIgnoreCase;
+import com.medigy.persist.util.query.comparison.EqualsComparison;
+import com.medigy.persist.util.query.exception.QueryDefinitionException;
 import com.medigy.persist.util.query.impl.BasicQueryDefinition;
+import com.medigy.persist.util.query.impl.QueryDefinitionSelectImpl;
+import com.medigy.persist.util.query.impl.QueryDefinitionConditionImpl;
 import com.medigy.persist.model.party.PartyIdentifier;
 import com.medigy.persist.model.org.Organization;
 import com.medigy.persist.model.person.PersonRole;
@@ -209,14 +218,11 @@ public class PatientSearchQueryDefinition extends BasicQueryDefinition implement
         this.addJoin(personIdentifierJoin);
         this.addJoin(personRoleJoin);
 
+        addField("personId", "id", "Patient ID", personJoin);
         addField("firstName", "firstName", "First Name", personJoin);
         addField("lastName", "lastName", "Last Name", personJoin);
-        //addField("firstName", "firstName", personJoin);
+        addField("birthDate", "birthDate", "Date of Birth", personJoin);
         addField("gender", "currentGenderType.label", "Gender", personJoin);
-        //addField("personRole", "type.code", personRoleJoin);
-        //addField("ssn", "identifierValue", personIdentifierJoin);
-        //addField("driversLicense", "driversLicenseNumber", personJoin);
-
 
         final QueryDefinitionField orgField = addField("organizationId", "org.id", "Organization ID", personJoin);
         orgField.setHqlJoinExpr("left outer join person.roles as personRoles " +
@@ -228,10 +234,76 @@ public class PatientSearchQueryDefinition extends BasicQueryDefinition implement
         orgField.setDisplayAllowed(false);
 
 
+        try
+        {
+            addSelect(registerCriteriaSearch());
+        }
+        catch (QueryDefinitionException e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
 
-        addField("personId", "id", "Patient ID", personJoin);
-        //addField("organizationRelationshipTypeCode", "type.code", partyRelationshipJoin);
+    public enum Field
+    {
+        PATIENT_ID("personId"),
+        FIRST_NAME("firstName"),
+        LAST_NAME("lastName"),
+        DOB("birthDate"),
+        GENDER("gender"),
+        ORG_ID("orgId");
 
+        private String name;
+        Field(final String name)
+        {
+            this.name = name;
+        }
+
+        public String getName()
+        {
+            return name;
+        }
+    }
+
+    protected QueryDefinitionSelect registerCriteriaSearch() throws QueryDefinitionException
+    {
+        final QueryDefinitionSelect select = new QueryDefinitionSelectImpl("criteriaSearch", this);
+        select.addDisplayField(getField(Field.PATIENT_ID.getName()));
+        select.addDisplayField(getField(Field.FIRST_NAME.getName()));
+        select.addDisplayField(getField(Field.LAST_NAME.getName()));
+        select.addDisplayField(getField(Field.GENDER.getName()));
+
+        final QueryDefnCondition lastNameCondition = new QueryDefinitionConditionImpl(getField(Field.LAST_NAME.getName()),
+                SqlComparisonFactory.getInstance().getComparison(StartsWithComparisonIgnoreCase.COMPARISON_NAME));
+        select.addCondition(lastNameCondition);
+
+        final QueryDefnCondition idCondition = new QueryDefinitionConditionImpl(getField(Field.PATIENT_ID.getName()),
+                SqlComparisonFactory.getInstance().getComparison(EqualsComparison.COMPARISON_NAME));
+        select.addCondition(idCondition);
+
+        final QueryDefnCondition dobCondition = new QueryDefinitionConditionImpl(getField(Field.DOB.getName()),
+                SqlComparisonFactory.getInstance().getComparison(EqualsComparison.COMPARISON_NAME));
+        select.addCondition(dobCondition);
+
+
+        final QueryDefinitionField idField = getField(Field.PATIENT_ID.getName());
+        select.addOrderBy(new QueryDefinitionSortBy() {
+            public boolean isDescending()
+            {
+                return false;
+            }
+
+            public QueryDefinitionField getField()
+            {
+                return idField;
+            }
+
+            public String getExplicitOrderByClause()
+            {
+                return null;
+            }
+        });
+        return select;
     }
 
 }

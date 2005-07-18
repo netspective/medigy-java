@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.Iterator;
 import java.util.Collection;
 
-public class QueryDefinitionSearchResultsListView  extends PageableListView
+public class SearchResultsListView  extends PageableListView
 {
     /**
      * Construct.
@@ -25,7 +25,7 @@ public class QueryDefinitionSearchResultsListView  extends PageableListView
      * @param pageSizeInCells
      *            page size
      */
-    public QueryDefinitionSearchResultsListView(String id, IModel model, int pageSizeInCells)
+    public SearchResultsListView(String id, IModel model, int pageSizeInCells)
     {
         super(id, model, pageSizeInCells);
     }

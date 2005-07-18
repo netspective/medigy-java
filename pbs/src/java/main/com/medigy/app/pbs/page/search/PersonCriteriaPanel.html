@@ -5,23 +5,25 @@
     </head>
     <body>
         <wicket:panel>
-            <form method="post">
-		        Find By:
-		        <select name="search_type" class="record-type">
-			        <option value="id">Person ID</option>
-			        <option value="lastname" selected>Last Name</option>
-			        <option value="anyname">First or Last Name</option>
-			        <option value="ssn">Social Security</option>
-			        <option value="dob">Date of Birth</option>
-			        <option value="phone">Phone Number</option>
-			        <option value="account">Account Number</option>
-			        <option value="chart">Chart Number</option>
-		        </select>
-                <input name='search_expression' size=17 maxlength=64 value="x,y,z" title='Person'>
-                <input type=submit name="execute" value="Go">
 
-                <wicket:component name="people" class="com.medigy.app.pbs.component.record.add.AddPersonRecordSelect"/>
-             </form>
+            <div wicket:id="feedback" class="form-feedback"/>
+                <form wicket:id="form" >
+                    Find By:
+                    <select wicket:id="searchCriterias" name="search_type" class="record-type">
+                        <option value="id">Person ID</option>
+                        <option value="lastname" selected>Last Name</option>
+                        <option value="anyname">First or Last Name</option>
+                        <option value="ssn">Social Security</option>
+                        <option value="dob">Date of Birth</option>
+                        <option value="phone">Phone Number</option>
+                        <option value="account">Account Number</option>
+                        <option value="chart">Chart Number</option>
+                    </select>
+                    <input wicket:id="searchCriteriaValue" type="text" name='search_expression' size=17 maxlength=64 value="x,y,z" title='Person'>
+                    <input type="submit" name="execute" value="Go">
+                    <!--wicket:component name="people" class="com.medigy.app.pbs.component.record.add.AddPersonRecordSelect"/-->
+                </form>
+        
         </wicket:panel>
     </body>
 </html>

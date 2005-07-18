@@ -50,4 +50,9 @@ public class MiscProcedure extends AbstractSearchPage
     {
         return new MiscProcedureCriteriaPanel(id);
     }
+
+    public Panel getSearchResultPanel(final String id)
+    {
+        return null;
+    }
 }

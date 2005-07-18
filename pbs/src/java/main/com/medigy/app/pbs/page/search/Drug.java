@@ -50,4 +50,9 @@ public class Drug extends AbstractSearchPage
     {
         return new DrugCriteriaPanel(id);
     }
+
+    public Panel getSearchResultPanel(final String id)
+    {
+        return null;
+    }
 }

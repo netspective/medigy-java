@@ -43,11 +43,45 @@
 package com.medigy.app.pbs.page.search;
 
 import wicket.markup.html.panel.Panel;
+import wicket.markup.html.form.Form;
+import wicket.markup.html.form.ListMultipleChoice;
+import wicket.markup.html.form.TextField;
+import wicket.IFeedback;
+import wicket.model.IModel;
+import wicket.model.CompoundPropertyModel;
+import com.medigy.wicket.form.FormMode;
 
 public class OrganizationsCriteriaPanel extends Panel
 {
     public OrganizationsCriteriaPanel(final String id)
     {
         super(id);
+
+        //createForm("criteria_form")
+    }
+
+    protected Form createForm(final String componentName, final IFeedback feedback, final FormMode formMode)
+    {
+
+        final Object modelObject = new CriteriaSearchFormModelObject();
+        return new CriteriaSearchForm(componentName, new CompoundPropertyModel(modelObject), feedback);
+    }
+
+    protected class CriteriaSearchFormModelObject
+    {
+
+    }
+
+    protected class CriteriaSearchForm extends Form
+    {
+        public CriteriaSearchForm(final String componentName, final IModel iModel, final IFeedback iFeedback)
+        {
+            super(componentName, iModel, iFeedback);
+
+            add(new ListMultipleChoice("findByFields"));
+            add(new TextField("findByFieldValue"));
+            add(new ListMultipleChoice("onSelectActions"));
+            add(new ListMultipleChoice("onSelectActionLocation"));
+        }
     }
 }

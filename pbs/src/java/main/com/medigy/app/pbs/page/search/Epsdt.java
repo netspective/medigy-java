@@ -50,4 +50,9 @@ public class Epsdt extends AbstractSearchPage
     {
         return new EpsdtCriteriaPanel(id);
     }
+
+    public Panel getSearchResultPanel(final String id)
+    {
+        return null;
+    }
 }

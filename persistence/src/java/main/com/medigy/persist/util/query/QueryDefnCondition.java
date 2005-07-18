@@ -38,7 +38,7 @@
  */
 package com.medigy.persist.util.query;
 
-import com.medigy.persist.util.value.ValueLocator;
+import com.medigy.persist.util.value.ValueProvider;
 
 /**
  * This interface is used to declare a condition  defined after the WHERE clause.
@@ -50,12 +50,22 @@ import com.medigy.persist.util.value.ValueLocator;
  */
 public interface QueryDefnCondition
 {
-    public boolean isRemoveIfValueNull();
-    public String getConnectorSql();
+    public String getName();
+    public void setName(final String name);
+    public boolean isRemoveIfValueNull();   // may not be needed
+    public void setIsRemoveIfValueNull(final boolean flag);
+    public String getConnector();
+    public void setConnector(final String connector);
+
     public QueryDefinitionField getField();
     public String getBindExpr();
     public SqlComparison getComparison();
     public boolean isJoinOnly();
+    public QueryDefnCondition getParentCondition();
+    public QueryDefinition getQueryDefinition();
+    public QueryDefinitionSelect getQueryDefinitionSelect();
+    public void setQueryDefinitionSelect(QueryDefinitionSelect select);
 
-    public ValueLocator getValueLocator();
+    public ValueProvider getValueProvider();
+    public void setValueProvider(ValueProvider provider);
 }

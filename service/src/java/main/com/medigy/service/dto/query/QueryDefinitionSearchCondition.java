@@ -2,12 +2,17 @@
  * Copyright (c) 2005 Your Corporation. All Rights Reserved.
  */
 package com.medigy.service.dto.query;
+
+import com.medigy.persist.util.query.QueryDefnCondition;
+import com.medigy.persist.util.query.QueryDefinitionConditionValue;
+
 public class QueryDefinitionSearchCondition
 {
     private String field;
     private String fieldComparison;
     private String fieldValue;
     private String connector;
+
 
     public String getField()
     {

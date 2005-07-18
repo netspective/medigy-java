@@ -50,4 +50,9 @@ public class EnvoyPayer extends AbstractSearchPage
     {
         return new EnvoyPayerCriteriaPanel(id);
     }
+
+    public Panel getSearchResultPanel(final String id)
+    {
+        return null;
+    }
 }

@@ -50,4 +50,9 @@ public class Catalog extends AbstractSearchPage
     {
         return new CatalogCriteriaPanel(id);
     }
+
+    public Panel getSearchResultPanel(final String id)
+    {
+        return null;
+    }
 }

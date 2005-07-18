@@ -39,12 +39,14 @@
 
 package com.medigy.app.pbs.page.search;
 
-import wicket.markup.html.panel.Panel;
+import com.medigy.presentation.form.common.SearchCriteriaFormPanel;
+import com.medigy.wicket.form.FormMode;
+import com.medigy.service.person.PersonSearchService;
 
-public class PersonCriteriaPanel extends Panel
+public class PersonCriteriaPanel extends SearchCriteriaFormPanel
 {
     public PersonCriteriaPanel(final String id)
     {
-        super(id);
+        super(id, FormMode.NONE, PersonSearchService.class);
     }
 }

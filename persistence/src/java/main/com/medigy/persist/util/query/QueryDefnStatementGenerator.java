@@ -7,7 +7,6 @@ import com.medigy.persist.util.query.exception.QueryDefinitionException;
 import com.medigy.persist.util.value.ValueContext;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -51,7 +50,7 @@ public class QueryDefnStatementGenerator
         // HQL Rules: OUTER JOINS and INNER JOINS can be defined so at the FROM clause there could be some more HQL
         // text appended after the table name. There might be limitations on this!
         String fromExpr = join.getFromExpr();
-        for (QueryDefinitionField field : select.getDisplayFields().values())
+        for (QueryDefinitionField field : select.getDisplayFields())
         {
             if (field.getHqlJoinExpr() != null && field.getJoin().equals(join))
                 fromExpr = fromExpr + " " + field.getHqlJoinExpr();
@@ -95,10 +94,10 @@ public class QueryDefnStatementGenerator
     public String generateQuery(final ValueContext valueContext)  throws QueryDefinitionException
     {
 
-        final Map<String, QueryDefinitionField> showFields = select.getDisplayFields();
+        final List<QueryDefinitionField> showFields = select.getDisplayFields();
         if (showFields.size() > 0)
         {
-            for (final QueryDefinitionField queryDefinitionField : showFields.values())
+            for (final QueryDefinitionField queryDefinitionField : showFields)
             {
                 String selClauseAndLabel = queryDefinitionField.getSelectClauseExprAndLabel();
                 if (selClauseAndLabel != null)
@@ -209,7 +208,7 @@ public class QueryDefnStatementGenerator
                 if(first)
                     first = false;
                 else
-                    whereClauseSql.append(expr.getConnectorSql());
+                    whereClauseSql.append(expr.getConnector());
 
                 whereClauseSql.append(" (");
                 whereClauseSql.append(expr.getWhereCondExpr(this, vc));

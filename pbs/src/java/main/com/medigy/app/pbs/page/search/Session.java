@@ -52,6 +52,11 @@ public class Session extends AbstractSearchPage
         return new SessionCriteriaPanel(id);
     }
 
+    public Panel getSearchResultPanel(final String id)
+    {
+        return null;
+    }
+
     public Panel getOnSelectPanel(final String id)
     {
         return new SessionOnSelectPanel(id);

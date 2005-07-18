@@ -36,11 +36,63 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.persist.util.value;
+package com.medigy.service.impl.org;
 
-import com.medigy.persist.util.value.ValueContext;
+import com.medigy.service.org.OrganizationSearchService;
+import com.medigy.service.org.OrganizationSearchQueryDefinition;
+import com.medigy.service.dto.query.QueryDefinitionSearchParameters;
+import com.medigy.service.dto.query.QueryDefinitionSearchCondition;
+import com.medigy.service.query.QueryDefinitionSearchService;
+import com.medigy.service.ServiceVersion;
 
-public interface ValueLocator
+import java.util.List;
+import java.util.ArrayList;
+
+public class OrganizationSearchServiceImpl implements OrganizationSearchService
 {
-    public Object getValue(final ValueContext context);
+    private QueryDefinitionSearchService qdService;
+
+    public OrganizationSearchServiceImpl(final QueryDefinitionSearchService qdService)
+    {
+        this.qdService = qdService;
+    }
+
+    public void search(final String params)
+    {
+        new QueryDefinitionSearchParameters() {
+            public int getStartFromRow()
+            {
+                return 0;
+            }
+
+            public Class getQueryDefinitionClass()
+            {
+                return OrganizationSearchQueryDefinition.class;
+            }
+
+            public List<QueryDefinitionSearchCondition> getConditionFieldList()
+            {
+                return null;
+            }
+
+            public List<String> getDisplayFields()
+            {
+                List<String> fields = new ArrayList<String>();
+                fields.add(OrganizationSearchQueryDefinition.ORG_ID_FIELD);
+                fields.add(OrganizationSearchQueryDefinition.ORG_NAME_FIELD);
+                return fields;
+            }
+
+            public List<String> getSortByFields()
+            {
+                return null;
+            }
+
+            public ServiceVersion getServiceVersion()
+            {
+                return null;
+            }
+        };
+
+    }
 }

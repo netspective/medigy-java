@@ -50,4 +50,9 @@ public class Insurance extends AbstractSearchPage
     {
         return new InsuranceCriteriaPanel(id);
     }
+
+    public Panel getSearchResultPanel(final String id)
+    {
+        return null;
+    }
 }

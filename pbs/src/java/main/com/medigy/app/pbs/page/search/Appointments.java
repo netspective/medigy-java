@@ -51,4 +51,9 @@ public class Appointments extends AbstractSearchPage
     {
         return new AppointmentsCriteriaPanel(id);
     }
+
+    public Panel getSearchResultPanel(final String id)
+    {
+        return null;
+    }
 }

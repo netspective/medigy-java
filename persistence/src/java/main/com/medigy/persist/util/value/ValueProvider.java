@@ -35,25 +35,12 @@
  * CAUSED AND REGARDLESS OF THE THEORY OF LIABILITY, ARISING OUT OF THE USE OF OR INABILITY TO USE THE SOFTWARE, EVEN
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
- * @author Shahid N. Shah
  */
+package com.medigy.persist.util.value;
 
-/*
- * Copyright (c) 2005 Your Corporation. All Rights Reserved.
- */
-package com.medigy.app.pbs.page.search;
+import com.medigy.persist.util.query.QueryDefnCondition;
 
-import wicket.markup.html.panel.Panel;
-
-public class Gpci extends AbstractSearchPage
+public interface ValueProvider
 {
-    public Panel getSearchCriteriaPanel(final String id)
-    {
-        return new GpciCriteriaPanel(id);
-    }
-
-    public Panel getSearchResultPanel(final String id)
-    {
-        return null;
-    }
+    public Object getValue();
 }

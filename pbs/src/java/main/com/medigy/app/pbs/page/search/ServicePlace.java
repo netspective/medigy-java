@@ -50,4 +50,9 @@ public class ServicePlace extends AbstractSearchPage
     {
         return new ServicePlaceCriteriaPanel(id);
     }
+
+    public Panel getSearchResultPanel(final String id)
+    {
+        return null;
+    }
 }

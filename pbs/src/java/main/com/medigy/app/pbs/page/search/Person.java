@@ -51,6 +51,11 @@ public class Person extends AbstractSearchPage
         return new PersonCriteriaPanel(id);
     }
 
+    public Panel getSearchResultPanel(final String id)
+    {
+        return new PersonSearchResultPanel(id);
+    }
+
     public Panel getOnSelectPanel(final String id)
     {
         return new PersonOnSelectPanel(id);

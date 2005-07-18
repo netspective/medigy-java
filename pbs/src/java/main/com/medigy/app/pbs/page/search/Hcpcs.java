@@ -50,4 +50,9 @@ public class Hcpcs extends AbstractSearchPage
     {
         return new HcpcsCriteriaPanel(id);
     }
+
+    public Panel getSearchResultPanel(final String id)
+    {
+        return null;
+    }
 }

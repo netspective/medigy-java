@@ -50,4 +50,9 @@ public class FeeProcedure extends AbstractSearchPage
     {
         return new FeeProcedureCriteriaPanel(id);
     }
+
+    public Panel getSearchResultPanel(final String id)
+    {
+        return null;
+    }
 }

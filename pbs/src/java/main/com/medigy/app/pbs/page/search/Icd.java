@@ -50,4 +50,9 @@ public class Icd extends AbstractSearchPage
     {
         return new IcdCriteriaPanel(id);
     }
+
+    public Panel getSearchResultPanel(final String id)
+    {
+        return null;
+    }
 }

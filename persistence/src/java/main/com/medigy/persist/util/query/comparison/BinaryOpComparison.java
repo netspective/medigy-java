@@ -35,7 +35,7 @@ public abstract class BinaryOpComparison implements SqlComparison
                                    final QueryDefnCondition cond, final ValueContext valueContext) throws QueryDefinitionException
     {
         String retString = "";
-        statement.addBindParam(cond.getValueLocator().getValue(valueContext));
+        statement.addBindParam(cond.getValueProvider().getValue());
         String bindExpression = cond.getBindExpr();
 
         if(bindExpression != null && bindExpression.length() > 0)

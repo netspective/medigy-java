@@ -45,6 +45,7 @@ package com.medigy.app.pbs.page.search;
 
 import com.medigy.wicket.border.DefaultPageBodyBorder.NavigationPanelProvider;
 import com.medigy.wicket.page.AuthenticatedWebPage;
+import com.medigy.presentation.form.common.SearchResultPanel;
 import wicket.Component;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.panel.Panel;
@@ -54,6 +55,7 @@ public abstract class AbstractSearchPage extends AuthenticatedWebPage implements
     private final Panel criteriaPanel;
     private final Component onSelectPanel;
     private final SearchBorder searchBorder;
+    private final Panel searchResultPanel;
 
     public AbstractSearchPage()
     {
@@ -63,9 +65,12 @@ public abstract class AbstractSearchPage extends AuthenticatedWebPage implements
         final Panel customSelectPanel = getOnSelectPanel("onSelectPanel");
         searchBorder.add(onSelectPanel = customSelectPanel != null ? customSelectPanel : new WebMarkupContainer("onSelectPanel"));
         onSelectPanel.setVisible(customSelectPanel != null);
+
+        searchBorder.add(searchResultPanel = getSearchResultPanel("searchResultsPanel"));
     }
 
     public abstract Panel getSearchCriteriaPanel(final String id);
+    public abstract Panel getSearchResultPanel(final String id);
 
     public Panel getOnSelectPanel(final String id)
     {

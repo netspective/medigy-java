@@ -1,0 +1,24 @@
+<html xmlns:wicket="http://wicket.sourceforge.net/">
+    <head>
+        <title>Person Search Result Panel</title>
+        <link rel="stylesheet" type="text/css" href="../../../../../../../../../resources/theme/default/css/theme.css"/>
+    </head>
+    <body>
+        <wicket:panel>
+            <div>
+                <table id="resultsTable" class="report">
+                        <tr class="heading">
+                            <th wicket:id="resultsHeader"><span wicket:id="resultColumnName"></span></th>
+                        </tr>
+                        <tr wicket:id="results">
+                        </tr>
+                </table>
+            </div>
+            <div id="resultsNavigation">
+                <table>
+                    <tr wicket:id="navigation-panel"/>
+                </table>
+            </div>
+        </wicket:panel>
+    </body>
+</html>

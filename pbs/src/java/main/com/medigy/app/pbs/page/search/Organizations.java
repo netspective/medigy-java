@@ -52,6 +52,11 @@ public class Organizations extends AbstractSearchPage
         return new OrganizationsCriteriaPanel(id);
     }
 
+    public Panel getSearchResultPanel(final String id)
+    {
+        return null;
+    }
+
     public Panel getOnSelectPanel(final String id)
     {
         return new OrganizationsOnSelectPanel(id);

@@ -50,4 +50,9 @@ public class Epayer extends AbstractSearchPage
     {
         return new EpayerCriteriaPanel(id);
     }
+
+    public Panel getSearchResultPanel(final String id)
+    {
+        return null;
+    }
 }

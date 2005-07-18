@@ -5,7 +5,7 @@ package com.medigy.persist.util.query.comparison;
 
 public class EqualsComparison extends BinaryOpComparison
 {
-    private static final String COMPARISON_NAME = "Equals";
+    public static final String COMPARISON_NAME = "Equals";
 
     public EqualsComparison()
     {

@@ -50,4 +50,9 @@ public class Modifier extends AbstractSearchPage
     {
         return new ModifierCriteriaPanel(id);
     }
+
+    public Panel getSearchResultPanel(final String id)
+    {
+        return null;
+    }
 }

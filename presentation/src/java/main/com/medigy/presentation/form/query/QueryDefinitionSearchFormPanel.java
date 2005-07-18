@@ -12,6 +12,11 @@ import com.medigy.wicket.form.FormMode;
 import com.medigy.wicket.DefaultApplication;
 import com.medigy.wicket.border.StandardPanelBorder;
 import com.medigy.wicket.panel.DefaultPanel;
+import com.medigy.presentation.model.common.ServiceSearchResultModel;
+import com.medigy.presentation.model.common.ServiceCountAndListAction;
+import com.medigy.presentation.model.query.QueryDefSearchResultModel;
+import com.medigy.presentation.model.query.QueryDefServiceCountAndListAction;
+import com.medigy.presentation.form.common.SearchForm;
 
 import java.util.List;
 import java.util.Collection;
@@ -19,15 +24,11 @@ import java.util.Map;
 import java.util.ArrayList;
 import java.io.Serializable;
 
-import wicket.markup.html.form.Form;
 import wicket.markup.html.form.ListMultipleChoice;
 import wicket.markup.html.form.DropDownChoice;
 import wicket.markup.html.form.TextField;
 import wicket.markup.html.list.ListView;
 import wicket.markup.html.list.ListItem;
-import wicket.markup.html.list.PageableListViewNavigation;
-import wicket.markup.html.list.PageableListView;
-import wicket.markup.html.list.PageableListViewNavigationLink;
 import wicket.markup.html.list.PageableListViewNavigator;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.panel.FeedbackPanel;
@@ -39,9 +40,9 @@ import wicket.model.Model;
 
 public class QueryDefinitionSearchFormPanel extends DefaultPanel
 {
-    private QueryDefinitionSearchResultsListView resultsListView;
+    private SearchResultsListView resultsListView;
     private SearchResultsHeaderView resultsHeaderView;
-    private QueryDefinitionSearchModel searchModel;
+    private ServiceSearchResultModel searchResultModel;
     private QueryDefinitionSearchService service;
     private PageableListViewNavigator navPanel;
     private Class queryDefinitionClass;
@@ -50,20 +51,21 @@ public class QueryDefinitionSearchFormPanel extends DefaultPanel
     {
         super(componentName);
         this.queryDefinitionClass = queryDefinitionClass;
-        service = (QueryDefinitionSearchService) ((DefaultApplication) getApplication()).getService(QueryDefinitionSearchService.class);
+        this.service = (QueryDefinitionSearchService) ((DefaultApplication) getApplication()).getService(QueryDefinitionSearchService.class);
+        // The service was looked up inside createForm which gets called in the super constructor.
+        this.searchResultModel = createSearchResultModel(service, createCountAndListAction());
+
         final StandardPanelBorder border = new StandardPanelBorder("panel_border");
         add(border);
 
         // Create feedback panel and add to page
         final FeedbackPanel feedback = new FeedbackPanel("feedback");
         border.add(feedback);
-        border.add(createForm("form", feedback, formMode));
+        final SearchForm form = createForm("form", feedback, formMode);
+        border.add(form);
 
         final int rowsPerPage = 10;
-
-        // The service was looked up inside createForm which gets called in the super constructor.
-        searchModel = new QueryDefinitionSearchModel(service, queryDefinitionClass);
-        resultsListView = createSearchResultsListView(searchModel, rowsPerPage);
+        resultsListView = createSearchResultsListView(searchResultModel, rowsPerPage);
         add(resultsListView);
 
         resultsHeaderView = new SearchResultsHeaderView("resultsHeader");
@@ -75,15 +77,33 @@ public class QueryDefinitionSearchFormPanel extends DefaultPanel
         add(navPanel);
     }
 
+    public ServiceCountAndListAction createCountAndListAction()
+    {
+        return new QueryDefServiceCountAndListAction(service, queryDefinitionClass);
+    }
+
+
+    /**
+     * Override this method if you have your own model
+     * @param service
+     * @param action
+     * @return
+     */
+    protected ServiceSearchResultModel createSearchResultModel(final QueryDefinitionSearchService service,
+                                                               final ServiceCountAndListAction action)
+    {
+        return new QueryDefSearchResultModel(service, action);
+    }
+
     /**
      * Override this method if you have your own custom list view to display the search results
-     * @param searchModel
+     * @param searchResultModel
      * @param rowsPerPage
      * @return
      */
-    protected QueryDefinitionSearchResultsListView createSearchResultsListView(final QueryDefinitionSearchModel searchModel, final int rowsPerPage)
+    protected SearchResultsListView createSearchResultsListView(final ServiceSearchResultModel searchResultModel, final int rowsPerPage)
     {
-        return new QueryDefinitionSearchResultsListView("results", searchModel, rowsPerPage);
+        return new SearchResultsListView("results", searchResultModel, rowsPerPage);
     }
 
     public void setCurrentResultPageToFirst()
@@ -96,34 +116,33 @@ public class QueryDefinitionSearchFormPanel extends DefaultPanel
         return ((List)resultsListView.getModelObject()).size();
     }
 
-    protected Form createForm(final String componentName, final IFeedback feedback, final FormMode formMode)
+    protected SearchForm createForm(final String componentName, final IFeedback feedback, final FormMode formMode)
     {
         final QueryDefinitionSearchFormPopulateValues defaultValues = service.getAvailableSearchParameters(queryDefinitionClass);
-        final QueryDefinitionSearchModelObject modelObject = new QueryDefinitionSearchModelObject();
+        final QueryDefSearchFormModelObject formModelObject = new QueryDefSearchFormModelObject();
+        formModelObject.setDefaultValues(defaultValues);
 
         final Collection<QueryDefinitionField> displayFields = defaultValues.getDisplayFields().values();
         for (QueryDefinitionField field : displayFields)
         {
-            modelObject.addConditionFieldList(new QueryDefinitionSearchCondition() {
+            formModelObject.addConditionFieldList(new QueryDefinitionSearchCondition() {
 
             });
         }
-
-        return new QueryDefinitionSearchForm(componentName, new CompoundPropertyModel(modelObject),
-                feedback, defaultValues);
+        return new QueryDefinitionSearchForm(componentName, new CompoundPropertyModel(formModelObject),
+                feedback);
     }
 
 
-    protected class QueryDefinitionSearchForm extends Form
+    protected class QueryDefinitionSearchForm extends SearchForm
     {
-        private QueryDefinitionSearchFormPopulateValues defaultValues;
-
-        public QueryDefinitionSearchForm(final String id, IModel model, final IFeedback feedback, final QueryDefinitionSearchFormPopulateValues values)
+        public QueryDefinitionSearchForm(final String id, IModel model, final IFeedback feedback)
         {
             super(id, model, feedback);
-            this.defaultValues = values;
 
-            add(new ConditionFieldListView("conditionFieldList", ((QueryDefinitionSearchModelObject) getModelObject()).getConditionFieldList(),
+            final QueryDefSearchFormModelObject searchFormModelObject = (QueryDefSearchFormModelObject) getModelObject();
+            final QueryDefinitionSearchFormPopulateValues defaultValues = searchFormModelObject.getDefaultValues();
+            add(new ConditionFieldListView("conditionFieldList", searchFormModelObject.getConditionFieldList(),
                     defaultValues));
             add(new ListMultipleChoice("displayFields", new QueryDefinitionFieldChoiceList(defaultValues.getDisplayFields().values())));
             add(new ListMultipleChoice("sortByFields", new QueryDefinitionFieldChoiceList(defaultValues.getSortByFields().values())));
@@ -131,15 +150,17 @@ public class QueryDefinitionSearchFormPanel extends DefaultPanel
 
         public final void onSubmit()
         {
+            super.onSubmit();
+            final QueryDefSearchFormModelObject formModelObject = (QueryDefSearchFormModelObject) getModelObject();
+            searchResultModel.setSearchParameters(formModelObject);
             this.getParent().setVisible(false);
-            final QueryDefinitionSearchModelObject modelObject = (QueryDefinitionSearchModelObject) getModelObject();
-            if (modelObject.getDisplayFields().size() == 0)
+            final QueryDefinitionSearchFormPopulateValues defaultValues = formModelObject.getDefaultValues();
+            if (formModelObject.getDisplayFields().size() == 0)
             {
-                modelObject.setDisplayFields(new ArrayList<String>(defaultValues.getDisplayFields().keySet()));
+                formModelObject.setDisplayFields(new ArrayList<String>(defaultValues.getDisplayFields().keySet()));
             }
             navPanel.setVisible(true);
-            searchModel.setSearchParameters(modelObject);
-            resultsHeaderView.setModel(new Model((Serializable)modelObject.getDisplayFields()));
+            resultsHeaderView.setModel(new Model((Serializable)formModelObject.getDisplayFields()));
             setCurrentResultPageToFirst();
             info(getNumberOfResults() + " results found.");
         }
@@ -185,87 +206,6 @@ public class QueryDefinitionSearchFormPanel extends DefaultPanel
 
             System.out.println("CONNECTORS: " + defaultValues.getConnectors());
             item.add(new DropDownChoice("connector", defaultValues.getConnectors()));
-        }
-    }
-
-    public class QueryDefinitionSearchModelObject
-    {
-
-        private List<QueryDefinitionSearchCondition> conditionFieldList = new ArrayList<QueryDefinitionSearchCondition>();
-
-        private List<String> displayFields = new ArrayList<String>();
-        private List<String> sortByFields = new ArrayList<String>();
-
-        public List<QueryDefinitionSearchCondition> getConditionFieldList()
-        {
-            return conditionFieldList;
-        }
-
-        public void setConditionFieldList(final List<QueryDefinitionSearchCondition> conditionFieldList)
-        {
-            this.conditionFieldList = conditionFieldList;
-        }
-
-        public void addConditionFieldList(final QueryDefinitionSearchCondition condition)
-        {
-            this.conditionFieldList.add(condition);
-        }
-
-        public List<String> getDisplayFields()
-        {
-            return displayFields;
-        }
-
-        public void setDisplayFields(final List<String> displayFields)
-        {
-            this.displayFields = displayFields;
-        }
-
-        public List<String> getSortByFields()
-        {
-            return sortByFields;
-        }
-
-        public void setSortByFields(final List<String> sortByFields)
-        {
-            this.sortByFields = sortByFields;
-        }
-    }
-
-    private static class SearchResultTableNavigation extends PageableListViewNavigation
-    {
-        /**
-         * Construct.
-         *
-         * @param id
-         *            the name of the component
-         * @param table
-         *            the table
-         */
-        public SearchResultTableNavigation(String id, PageableListView table)
-        {
-            super(id, table);
-        }
-
-        /**
-         * @see wicket.markup.html.list.Loop#populateItem(wicket.markup.html.list.Loop.LoopItem)
-         */
-        protected void populateItem(final LoopItem iteration)
-        {
-            final PageableListViewNavigationLink link = new PageableListViewNavigationLink(
-                    "pageLink", pageableListView, iteration.getIteration());
-
-            if (iteration.getIteration() > 0)
-            {
-                iteration.add(new Label("separator", "|"));
-            }
-            else
-            {
-                iteration.add(new Label("separator", ""));
-            }
-            link.add(new Label("pageNumber", String.valueOf(iteration.getIteration() + 1)));
-            link.add(new Label("pageLabel", "page"));
-            iteration.add(link);
         }
     }
 

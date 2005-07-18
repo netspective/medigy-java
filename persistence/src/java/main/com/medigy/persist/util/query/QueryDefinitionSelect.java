@@ -13,8 +13,8 @@ public interface QueryDefinitionSelect
     public QueryDefinition getQueryDefinition();
     public boolean isDistinctRows();
     public void setDistinctRows(final boolean distinctRows);
-    public Map<String, QueryDefinitionField> getDisplayFields();
-    public void setDisplayFields(final Map<String, QueryDefinitionField> displayFields);
+    public List<QueryDefinitionField> getDisplayFields();
+    public void setDisplayFields(final List<QueryDefinitionField> displayFields);
     public void addDisplayField(final QueryDefinitionField field);
     public Map<String, QueryDefinitionField> getGroupByFields();
     public void setGroupByFields(final Map<String, QueryDefinitionField> groupByFields);

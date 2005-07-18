@@ -50,4 +50,9 @@ public class Cpt extends AbstractSearchPage
     {
         return new CptCriteriaPanel(id);
     }
+
+    public Panel getSearchResultPanel(final String id)
+    {
+        return null;
+    }
 }

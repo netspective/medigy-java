@@ -56,7 +56,8 @@ public class QueryDefinitionSelectImpl implements QueryDefinitionSelect
     private QueryDefinition queryDefinition;
     private boolean distinctRows;
 
-    private Map<String, QueryDefinitionField> displayFields = new HashMap<String, QueryDefinitionField>();
+    private List<QueryDefinitionField> displayFields = new ArrayList<QueryDefinitionField>();
+
     private List<QueryDefinitionSortBy> orderBys = new ArrayList<QueryDefinitionSortBy>();
     private Map<String, QueryDefinitionField> groupByFields = new HashMap<String, QueryDefinitionField>();
     private QueryDefinitionConditions conditions = new QueryDefinitionConditions();
@@ -93,19 +94,19 @@ public class QueryDefinitionSelectImpl implements QueryDefinitionSelect
         this.distinctRows = distinctRows;
     }
 
-    public Map<String, QueryDefinitionField> getDisplayFields()
+    public List<QueryDefinitionField> getDisplayFields()
     {
         return displayFields;
     }
 
-    public void setDisplayFields(final Map<String, QueryDefinitionField> displayFields)
+    public void setDisplayFields(final List<QueryDefinitionField> displayFields)
     {
         this.displayFields = displayFields;
     }
 
     public void addDisplayField(final QueryDefinitionField field)
     {
-        this.displayFields.put(field.getName(), field);
+        this.displayFields.add(field);
     }
 
     public Map<String, QueryDefinitionField> getGroupByFields()
@@ -136,6 +137,7 @@ public class QueryDefinitionSelectImpl implements QueryDefinitionSelect
 
     public void addCondition(final QueryDefnCondition condition)
     {
+        condition.setQueryDefinitionSelect(this);
         this.conditions.add(condition);
     }
 

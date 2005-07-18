@@ -21,7 +21,7 @@ public class StartsWithComparisonIgnoreCase extends BinaryOpComparison
     public String getWhereCondExpr(QueryDefinitionSelect select, QueryDefnStatementGenerator statement,
                                    QueryDefnCondition cond, final ValueContext valueContext) throws QueryDefinitionException
     {
-        statement.addBindParam(cond.getValueLocator().getValue(valueContext) + "%");
+        statement.addBindParam(cond.getValueProvider().getValue() + "%");
         String retString = "";
         String bindExpression = cond.getBindExpr();
         if(bindExpression != null && bindExpression.length() > 0)
