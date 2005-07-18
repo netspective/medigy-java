@@ -42,6 +42,7 @@ import com.medigy.persist.model.common.AbstractDateDurationEntity;
 import com.medigy.persist.model.party.Facility;
 import com.medigy.persist.model.person.Person;
 import com.medigy.persist.reference.custom.health.HealthCareVisitRoleType;
+import com.medigy.persist.reference.custom.health.HealthCareVisitStatusType;
 import com.medigy.persist.reference.custom.person.PatientType;
 
 import javax.persistence.CascadeType;
@@ -170,6 +171,16 @@ public class HealthCareVisit  extends AbstractDateDurationEntity
     @Transient
     public void addStatus(final HealthCareVisitStatus status)
     {
+        this.statuses.add(status);
+    }
+
+    @Transient
+    public void addStatus(final HealthCareVisitStatusType type)
+    {
+        HealthCareVisitStatus status = new HealthCareVisitStatus();
+        status.setType(type);
+        status.setVisit(this);
+        status.setStatusDate(new Date());
         this.statuses.add(status);
     }
 
