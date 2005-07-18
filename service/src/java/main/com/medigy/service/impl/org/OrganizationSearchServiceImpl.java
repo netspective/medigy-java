@@ -42,57 +42,36 @@ import com.medigy.service.org.OrganizationSearchService;
 import com.medigy.service.org.OrganizationSearchQueryDefinition;
 import com.medigy.service.dto.query.QueryDefinitionSearchParameters;
 import com.medigy.service.dto.query.QueryDefinitionSearchCondition;
+import com.medigy.service.dto.ServiceParameters;
+import com.medigy.service.dto.ServiceReturnValues;
 import com.medigy.service.query.QueryDefinitionSearchService;
 import com.medigy.service.ServiceVersion;
+import com.medigy.service.AbstractSearchServiceImpl;
 
 import java.util.List;
 import java.util.ArrayList;
 
-public class OrganizationSearchServiceImpl implements OrganizationSearchService
-{
-    private QueryDefinitionSearchService qdService;
+import org.hibernate.SessionFactory;
 
-    public OrganizationSearchServiceImpl(final QueryDefinitionSearchService qdService)
+public class OrganizationSearchServiceImpl extends AbstractSearchServiceImpl implements OrganizationSearchService
+{
+    public OrganizationSearchServiceImpl(final SessionFactory sessionFactory)
     {
-        this.qdService = qdService;
+        super(sessionFactory, OrganizationSearchQueryDefinition.class);
     }
 
-    public void search(final String params)
+    public ServiceVersion[] getSupportedServiceVersions()
     {
-        new QueryDefinitionSearchParameters() {
-            public int getStartFromRow()
-            {
-                return 0;
-            }
+        return new ServiceVersion[0];
+    }
 
-            public Class getQueryDefinitionClass()
-            {
-                return OrganizationSearchQueryDefinition.class;
-            }
+    public String[] isValid(ServiceParameters parameters)
+    {
+        return new String[0];
+    }
 
-            public List<QueryDefinitionSearchCondition> getConditionFieldList()
-            {
-                return null;
-            }
-
-            public List<String> getDisplayFields()
-            {
-                List<String> fields = new ArrayList<String>();
-                fields.add(OrganizationSearchQueryDefinition.ORG_ID_FIELD);
-                fields.add(OrganizationSearchQueryDefinition.ORG_NAME_FIELD);
-                return fields;
-            }
-
-            public List<String> getSortByFields()
-            {
-                return null;
-            }
-
-            public ServiceVersion getServiceVersion()
-            {
-                return null;
-            }
-        };
-
+    public ServiceReturnValues createErrorResponse(final ServiceParameters params, final String errorMessage)
+    {
+        return null;
     }
 }

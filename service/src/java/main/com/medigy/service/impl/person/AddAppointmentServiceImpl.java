@@ -38,18 +38,18 @@
  */
 package com.medigy.service.impl.person;
 
-import com.medigy.service.person.AddAppointmentService;
-import com.medigy.service.dto.person.NewAppointmentValues;
-import com.medigy.service.dto.person.AddAppointmentParameters;
-import com.medigy.service.dto.ServiceParameters;
-import com.medigy.service.dto.ServiceReturnValues;
-import com.medigy.service.ServiceVersion;
-import com.medigy.service.util.ReferenceEntityFacade;
-import com.medigy.persist.util.HibernateUtil;
-import com.medigy.persist.model.person.Person;
 import com.medigy.persist.model.health.HealthCareVisit;
 import com.medigy.persist.model.party.Facility;
+import com.medigy.persist.model.person.Person;
 import com.medigy.persist.reference.custom.person.PatientType;
+import com.medigy.persist.util.HibernateUtil;
+import com.medigy.service.ServiceVersion;
+import com.medigy.service.dto.ServiceParameters;
+import com.medigy.service.dto.ServiceReturnValues;
+import com.medigy.service.dto.person.AddAppointmentParameters;
+import com.medigy.service.dto.person.NewAppointmentValues;
+import com.medigy.service.person.AddAppointmentService;
+import com.medigy.service.util.ReferenceEntityFacade;
 
 import java.io.Serializable;
 

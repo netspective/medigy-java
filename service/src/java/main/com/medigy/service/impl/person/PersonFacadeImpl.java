@@ -42,7 +42,6 @@ import com.medigy.persist.model.contact.State;
 import com.medigy.persist.model.health.HealthCareLicense;
 import com.medigy.persist.model.party.PartyContactMechanism;
 import com.medigy.persist.model.party.PartyContactMechanismPurpose;
-import com.medigy.persist.model.party.PartyRole;
 import com.medigy.persist.model.party.PostalAddress;
 import com.medigy.persist.model.person.Person;
 import com.medigy.persist.model.person.PersonRole;

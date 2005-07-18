@@ -3,9 +3,9 @@
  */
 package com.medigy.service.org;
 
-public interface OrganizationSearchService
+import com.medigy.service.SearchService;
+
+public interface OrganizationSearchService extends SearchService
 {
-    public void search(final String params);
-    
 
 }
