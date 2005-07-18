@@ -4,6 +4,7 @@
 package com.medigy.service.org;
 
 import com.medigy.persist.util.query.impl.BasicQueryDefinition;
+import com.medigy.persist.util.query.impl.QueryDefinitionJoinImpl;
 import com.medigy.persist.util.query.QueryDefinitionJoin;
 import com.medigy.persist.util.query.QueryDefinition;
 import com.medigy.persist.model.org.Organization;
@@ -25,47 +26,8 @@ public class OrganizationSearchQueryDefinition extends BasicQueryDefinition
 
     protected void register()
     {
-        final QueryDefinitionJoin orgJoin = new QueryDefinitionJoin() {
-            public QueryDefinition getOwner()
-            {
-                return null;
-            }
-
-            public String getName()
-            {
-                return "org";
-            }
-
-            public String getFromExpr()
-            {
-                return getTable() + " " + getName();
-            }
-
-            public String getCondition()
-            {
-                return null;
-            }
-
-            public boolean isAutoInclude()
-            {
-                return false;
-            }
-
-            public String getImplyJoinsStr()
-            {
-                return null;
-            }
-
-            public List<QueryDefinitionJoin> getImpliedJoins()
-            {
-                return null;
-            }
-
-            public String getTable()
-            {
-                return Organization.class.getSimpleName();
-            }
-        };
+        final QueryDefinitionJoin orgJoin = new QueryDefinitionJoinImpl("org", Organization.class, this);
+        orgJoin.setAutoInclude(true);
 
         this.addJoin(orgJoin);
 

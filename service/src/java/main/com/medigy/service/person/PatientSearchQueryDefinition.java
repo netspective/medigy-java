@@ -16,9 +16,11 @@ import com.medigy.persist.util.query.exception.QueryDefinitionException;
 import com.medigy.persist.util.query.impl.BasicQueryDefinition;
 import com.medigy.persist.util.query.impl.QueryDefinitionSelectImpl;
 import com.medigy.persist.util.query.impl.QueryDefinitionConditionImpl;
+import com.medigy.persist.util.query.impl.QueryDefinitionJoinImpl;
 import com.medigy.persist.model.party.PartyIdentifier;
 import com.medigy.persist.model.org.Organization;
 import com.medigy.persist.model.person.PersonRole;
+import com.medigy.persist.model.person.Person;
 import com.medigy.persist.reference.custom.person.PersonIdentifierType;
 import com.medigy.persist.reference.custom.person.PersonRoleType;
 
@@ -37,184 +39,19 @@ public class PatientSearchQueryDefinition extends BasicQueryDefinition implement
 
     protected void register()
     {
-        final QueryDefinitionJoin personJoin = new QueryDefinitionJoin() {
-            public QueryDefinition getOwner()
-            {
-                return null;
-            }
+        final QueryDefinitionJoin personJoin = new QueryDefinitionJoinImpl("person", Person.class, this);
+        personJoin.setAutoInclude(true);
 
-            public String getName()
-            {
-                return "person";
-            }
+        final QueryDefinitionJoin personIdentifierJoin =  new QueryDefinitionJoinImpl("personIdent", PartyIdentifier.class, this);
+        personIdentifierJoin.setCondition("personIdent.party.id = person.id and personIdent.type.id = " + PersonIdentifierType.Cache.SSN.getEntity().getSystemId());
 
-            public String getFromExpr()
-            {
-                return getTable() + " " + getName();
-            }
+        final QueryDefinitionJoin orgJoin =  new QueryDefinitionJoinImpl("org", Organization.class, this);
 
-            public String getCondition()
-            {
-                return null;
-            }
-
-            public boolean isAutoInclude()
-            {
-                return true;
-            }
-
-            public String getImplyJoinsStr()
-            {
-                return "";
-            }
-
-            public List<QueryDefinitionJoin> getImpliedJoins()
-            {
-                return null;
-            }
-
-            public String getTable()
-            {
-                return "Person";
-            }
-        };
-
-        final QueryDefinitionJoin personIdentifierJoin = new QueryDefinitionJoin() {
-            public QueryDefinition getOwner()
-            {
-                return null;
-            }
-
-            public String getName()
-            {
-                return "personIdent";
-            }
-
-            public String getFromExpr()
-            {
-                return getTable() + " " + getName();
-            }
-
-            public String getCondition()
-            {
-                return "personIdent.party.id = person.id and personIdent.type.id = " + PersonIdentifierType.Cache.SSN.getEntity().getSystemId();
-            }
-
-            public boolean isAutoInclude()
-            {
-                return false;
-            }
-
-            public String getImplyJoinsStr()
-            {
-                return null;
-            }
-
-            public List<QueryDefinitionJoin> getImpliedJoins()
-            {
-                return null;
-            }
-
-            public String getTable()
-            {
-                return PartyIdentifier.class.getSimpleName();
-            }
-        };
-
-        final QueryDefinitionJoin orgJoin = new QueryDefinitionJoin() {
-            public QueryDefinition getOwner()
-            {
-                return null;
-            }
-
-            public String getName()
-            {
-                return "org";
-            }
-
-            public String getFromExpr()
-            {
-                return getTable() + " " + getName();
-            }
-
-            public String getCondition()
-            {
-                return null;
-            }
-
-            public boolean isAutoInclude()
-            {
-                return false;
-            }
-
-            public String getImplyJoinsStr()
-            {
-                return null;
-            }
-
-            public List<QueryDefinitionJoin> getImpliedJoins()
-            {
-                return null;
-            }
-
-            public String getTable()
-            {
-                return Organization.class.getSimpleName();
-            }
-        };
-
-
-
-        final QueryDefinitionJoin personRoleJoin = new QueryDefinitionJoin() {
-            public QueryDefinition getOwner()
-            {
-                return null;
-            }
-
-            public String getName()
-            {
-                return "personRole";
-            }
-
-            public String getFromClauseExpr()
-            {
-                return getTable() + " " + getName();
-            }
-
-            public String getCondition()
-            {
-                return "personRole.party.id = person.id";
-            }
-
-            public boolean isAutoInclude()
-            {
-                return false;
-            }
-
-            public String getImplyJoinsStr()
-            {
-                return null;
-            }
-
-            public List<QueryDefinitionJoin> getImpliedJoins()
-            {
-                return null;
-            }
-
-            public String getFromExpr()
-            {
-                return null;
-            }
-
-            public String getTable()
-            {
-                return PersonRole.class.getSimpleName();
-            }
-        };
+        final QueryDefinitionJoin personRoleJoin = new QueryDefinitionJoinImpl("personRole", PersonRole.class, this);
+        personRoleJoin.setCondition("personRole.party.id = person.id");
 
         this.addJoin(personJoin);
         this.addJoin(orgJoin);
-        //this.addJoin(partyRelationshipJoin);
         this.addJoin(personIdentifierJoin);
         this.addJoin(personRoleJoin);
 
@@ -272,17 +109,21 @@ public class PatientSearchQueryDefinition extends BasicQueryDefinition implement
         select.addDisplayField(getField(Field.FIRST_NAME.getName()));
         select.addDisplayField(getField(Field.LAST_NAME.getName()));
         select.addDisplayField(getField(Field.GENDER.getName()));
+        select.addDisplayField(getField(Field.DOB.getName()));
 
         final QueryDefnCondition lastNameCondition = new QueryDefinitionConditionImpl(getField(Field.LAST_NAME.getName()),
                 SqlComparisonFactory.getInstance().getComparison(StartsWithComparisonIgnoreCase.COMPARISON_NAME));
+        lastNameCondition.setConnector("and");
         select.addCondition(lastNameCondition);
 
         final QueryDefnCondition idCondition = new QueryDefinitionConditionImpl(getField(Field.PATIENT_ID.getName()),
                 SqlComparisonFactory.getInstance().getComparison(EqualsComparison.COMPARISON_NAME));
+        idCondition.setConnector("and");
         select.addCondition(idCondition);
 
         final QueryDefnCondition dobCondition = new QueryDefinitionConditionImpl(getField(Field.DOB.getName()),
                 SqlComparisonFactory.getInstance().getComparison(EqualsComparison.COMPARISON_NAME));
+        dobCondition.setConnector("and");
         select.addCondition(dobCondition);
 
 

@@ -59,10 +59,11 @@ public class BasicQueryDefinition implements QueryDefinition
         return new QueryDefinitionFieldImpl(fieldName, columnName, join, this);
     }
 
-    public QueryDefinitionField addField(final String fieldName, final String columnName, final String caption,
+    public QueryDefinitionField addField(final String fieldName, final String propertyName,
+                                         final String caption,
                                          final QueryDefinitionJoin join)
     {
-        final QueryDefinitionField field = new QueryDefinitionFieldImpl(fieldName, columnName, join, this);
+        final QueryDefinitionField field = new QueryDefinitionFieldImpl(fieldName, propertyName, join, this);
         field.setCaption(caption);
         this.fields.put(field.getName(), field);
         return field;

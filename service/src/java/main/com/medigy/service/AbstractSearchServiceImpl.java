@@ -19,6 +19,7 @@ import java.util.Map;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.text.SimpleDateFormat;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.Query;
@@ -47,21 +48,51 @@ public abstract class AbstractSearchServiceImpl extends AbstractService implemen
         final QueryDefinitionSelect select = queryDefinition.getSelects().get("criteriaSearch");
         // all display fields in the query def will be used
         final List<QueryDefnCondition> conditionList = select.getConditions().getList();
-        for (QueryDefnCondition cond : conditionList)
-        {
-            if (searchParams.getSearchCriteria().getName().equals(cond.getName()))
-            {
-                cond.setValueProvider(new ValueProvider() {
-                    public Object getValue()
-                    {
-                        return searchParams.getSearchCriteriaValue();
-                    }
-                });
-            }
-        }
 
         try
         {
+            for (QueryDefnCondition cond : conditionList)
+            {
+                if (searchParams.getSearchCriteria().getName().equals(cond.getName()))
+                {
+                    final Class entityPropertyType = cond.getField().getEntityPropertyType();
+                    final String searchCriteriaValue = searchParams.getSearchCriteriaValue();
+                    if (Date.class.isAssignableFrom(entityPropertyType))
+                    {
+                        SimpleDateFormat format = new SimpleDateFormat();
+                        format.applyPattern("MM/dd/yyyy");
+                        final Date date = format.parse(searchCriteriaValue);
+                        System.out.println(">>>>> " + date);
+                        cond.setValueProvider(new ValueProvider() {
+                            public Object getValue()
+                            {
+                                return date;
+                            }
+                        });
+
+                    }
+                    else if (Float.class.isAssignableFrom(entityPropertyType))
+                    {
+                        cond.setValueProvider(new ValueProvider() {
+                            public Object getValue()
+                            {
+                                return new Float(searchCriteriaValue);
+                            }
+                        });
+
+                    }
+                    else
+                    {
+                        cond.setValueProvider(new ValueProvider() {
+                            public Object getValue()
+                            {
+                                return searchCriteriaValue;
+                            }
+                        });
+                    }
+                }
+            }
+
             // construct the HQL generator
             QueryDefnStatementGenerator generator = new QueryDefnStatementGenerator(select);
             // pass the condition field values and create the HQL
@@ -72,7 +103,7 @@ public abstract class AbstractSearchServiceImpl extends AbstractService implemen
             final List<QueryDefinitionField> displayFields = generator.getQuerySelect().getDisplayFields();
             for (int i=0; i < displayFields.size(); i++)
             {
-                columnNames.add(i, displayFields.get(i).getColumnName());
+                columnNames.add(i, displayFields.get(i).getEntityPropertyName());
             }
             final Query query = getSession().createQuery(sql);
             query.setFirstResult(params.getStartFromRow());

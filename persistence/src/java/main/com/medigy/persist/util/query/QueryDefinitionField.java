@@ -12,13 +12,14 @@ public interface QueryDefinitionField
     public String getName();
     public String getCaption();
     public void setCaption(final String caption);
-    public String getColumnName();
+    public String getEntityPropertyName();
+    public Class getEntityPropertyType() throws QueryDefinitionException;
 
     public String getColumnLabel();
     public String getColumnExpr() throws QueryDefinitionException;
 
     public String getQualifiedColName();
-    public String getTableName() throws QueryDefinitionException;
+    public String getTableName();
     public String getTableAlias();
     public String getSelectClauseExpr();
     public void setSelectClauseExpr(final String selectClauseExpr);
