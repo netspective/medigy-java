@@ -47,6 +47,8 @@ import java.text.MessageFormat;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Date;
+import java.util.List;
+import java.util.ArrayList;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
@@ -63,13 +65,20 @@ import org.sns.tool.data.RandomUtils;
 import org.sns.tool.data.USAddressDataGenerator;
 
 import com.medigy.persist.model.org.Organization;
+import com.medigy.persist.model.org.OrganizationsRelationship;
 import com.medigy.persist.model.person.Ethnicity;
 import com.medigy.persist.model.person.Person;
 import com.medigy.persist.model.person.PersonAndOrgRelationship;
+import com.medigy.persist.model.health.HealthCareVisit;
+import com.medigy.persist.model.party.Facility;
 import com.medigy.persist.reference.custom.person.EthnicityType.Cache;
 import com.medigy.persist.reference.custom.person.PersonRoleType;
+import com.medigy.persist.reference.custom.person.PatientType;
 import com.medigy.persist.reference.custom.party.OrganizationRoleType;
 import com.medigy.persist.reference.custom.party.PersonOrgRelationshipType;
+import com.medigy.persist.reference.custom.party.OrganizationsRelationshipType;
+import com.medigy.persist.reference.custom.party.FacilityType;
+import com.medigy.persist.reference.custom.health.HealthCareVisitStatusType;
 import com.medigy.persist.reference.type.GenderType;
 import com.medigy.persist.util.ModelInitializer;
 import com.medigy.persist.util.ModelInitializer.SeedDataPopulationType;
@@ -84,9 +93,9 @@ public class DataPopulatorTask extends Task
     private String userid;
     private String password;
     private boolean showSql;
-    private String billingOrgNameTemplate = "Medigy Demo Billing Service {1}";
-    private String clinicOrgNameTemplate = "Medigy Demo Clinic {1}";
-    private String carrierOrgNameTemplate = "Medigy Demo Insurance Carrier {1}";
+    private String billingOrgNameTemplate = "Medigy Demo Billing Service {0}";
+    private String clinicOrgNameTemplate = "Medigy Demo Clinic {0}";
+    private String carrierOrgNameTemplate = "Medigy Demo Insurance Carrier {0}";
 
     private int generateCarrierOrgsCount = 5;
     private int generateClinicOrgsCount = 10;
@@ -200,7 +209,7 @@ public class DataPopulatorTask extends Task
         }
     }
 
-    protected void populateClinic(final Session session, final int number)
+    protected void populateClinic(final Session session, final Organization billingServiceOrg, final int number)
     {
         final Transaction tx = session.beginTransaction();
         try
@@ -211,8 +220,28 @@ public class DataPopulatorTask extends Task
             org.addRole(OrganizationRoleType.Cache.CLINIC.getEntity());
             session.save(org);
 
+            final Facility orgFacility = new Facility();
+            orgFacility.setOrganization(org);
+            orgFacility.setType(FacilityType.Cache.CLINIC.getEntity());
+            session.save(orgFacility);
+
+            final OrganizationsRelationship rel = new OrganizationsRelationship();
+            rel.setPrimaryOrgRole(billingServiceOrg.getRole(OrganizationRoleType.Cache.BILLING_PROVIDER.getEntity()));
+            rel.setSecondaryOrgRole(org.getRole(OrganizationRoleType.Cache.CLINIC.getEntity()));
+            rel.setType(OrganizationsRelationshipType.Cache.CUSTOMER.getEntity());
+            session.save(rel);
+
+            // create physicians for the clinic
+            List<Person> physicians = new ArrayList<Person>();
             for(int i = 1; i <= generatePatientsPerOrgCount; i++)
-                populatePatient(session, org, i);
+                physicians.add(populatePhysician(session, org, i));
+
+            for(int i = 1; i <= generatePatientsPerOrgCount; i++)
+            {
+                final Person physician = physicians.get(RandomUtils.generateRandomNumberBetween(0, physicians.size()));
+                final Person patient = populatePatient(session, org, i);
+                populatePatientAppointment(session, patient, physician, org, orgFacility, i);
+            }
 
             log("Created " + generatePatientsPerOrgCount + " patients in clinic: " + organizationName);
             tx.commit();
@@ -240,7 +269,7 @@ public class DataPopulatorTask extends Task
 
             // for each billing service, create client clinics/hospitals and their corresponding patients
             for (int i = 1; i < generateClinicOrgsCount; i++)
-                populateClinic(session, i);
+                populateClinic(session, org, i);
 
             log("Created " + generateEmployeesPerClinicCount + " employees in org " + organizationName);
             tx.commit();
@@ -275,7 +304,32 @@ public class DataPopulatorTask extends Task
         session.save(rel);
     }
 
-    protected void populatePatient(final Session session, final Organization org, final int number)
+    protected Person populatePhysician(final Session session, final Organization org, final int number)
+    {
+        final PersonDataGenerator personDataGenerator = new PersonDataGenerator(dataGeneratorSources);
+        final Gender gender = personDataGenerator.getRandomGender();
+        final Person physician = new Person();
+        if(gender == Gender.MALE)
+            physician.addGender(GenderType.Cache.MALE.getEntity());
+        else
+            physician.addGender(GenderType.Cache.FEMALE.getEntity());
+        physician.setFirstName(personDataGenerator.getRandomFirstName(gender));
+        physician.setLastName(personDataGenerator.getRandomSurname());
+        physician.addRole(PersonRoleType.Cache.INDIVIDUAL_HEALTH_CARE_PRACTITIONER.getEntity());
+        session.save(physician);
+
+        // now create the link between the patient and the clinic through their roles
+        PersonAndOrgRelationship rel = new PersonAndOrgRelationship();
+        rel.setOrganizationRole(org.getRole(OrganizationRoleType.Cache.CLINIC.getEntity()));
+        rel.setPersonRole(physician.getRole(PersonRoleType.Cache.INDIVIDUAL_HEALTH_CARE_PRACTITIONER.getEntity()));
+        rel.setType(PersonOrgRelationshipType.Cache.EMPLOYER.getEntity());
+        rel.setFromDate(new Date());
+        session.save(rel);
+
+        return physician;
+    }
+
+    protected Person populatePatient(final Session session, final Organization org, final int number)
     {
         final PersonDataGenerator personDataGenerator = new PersonDataGenerator(dataGeneratorSources);
         final USAddressDataGenerator usAddressDataGenerator = new USAddressDataGenerator(dataGeneratorSources);
@@ -324,6 +378,22 @@ public class DataPopulatorTask extends Task
         rel.setType(PersonOrgRelationshipType.Cache.PATIENT_CLINIC.getEntity());
         rel.setFromDate(new Date());
         session.save(rel);
+
+        return patient;
+    }
+
+    protected void  populatePatientAppointment(final Session session, final Person patient, final Person physician,
+                                                final Organization org, final Facility facility, final int number)
+    {
+        final PatientType.Cache[] patientTypeCaches = PatientType.Cache.values();
+        final PatientType patientType = patientTypeCaches[RandomUtils.generateRandomNumberBetween(0, patientTypeCaches.length)].getEntity();
+        HealthCareVisit visit = new HealthCareVisit();
+        visit.setPatient(patient);
+        visit.setRequestedPhysician(physician);
+        visit.setPatientType(patientType);
+        visit.addStatus(HealthCareVisitStatusType.Cache.SCHEDULED.getEntity());
+        visit.setFacility(facility);
+        session.save(visit);
     }
 
     public void setHibernateConfigClass(final String cls) throws ClassNotFoundException
