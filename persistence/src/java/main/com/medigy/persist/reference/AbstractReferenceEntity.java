@@ -48,6 +48,7 @@ import org.apache.commons.logging.LogFactory;
 
 import javax.persistence.Id;
 import javax.persistence.EmbeddableSuperclass;
+import javax.persistence.Column;
 import java.io.Serializable;
 
 @EmbeddableSuperclass
@@ -55,11 +56,14 @@ public abstract class AbstractReferenceEntity implements ReferenceEntity, Serial
 {
     private static final Log log = LogFactory.getLog(AbstractReferenceEntity.class);
 
+    public static final String PK_COLUMN_NAME = "code";
+
     private String code;
     private String label;
     private String description;
 
     @Id
+    @Column(name = PK_COLUMN_NAME)
     public String getCode()
     {
         return code;

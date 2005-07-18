@@ -84,6 +84,8 @@ public class Icd  extends AbstractReferenceEntity
     private Boolean nonCoveredProcedure;
     private String cptsAllowed;
 
+    public static final String PK_COLUMN_NAME = AbstractReferenceEntity.PK_COLUMN_NAME;
+
     public String getShortDescr()
     {
         return shortDescr;

@@ -61,6 +61,8 @@
         <mapping class="com.medigy.persist.reference.custom.health.HealthCareReferralType"/>
         <mapping class="com.medigy.persist.reference.custom.health.HealthCareDeliveryType"/>
         <mapping class="com.medigy.persist.reference.custom.health.VisitDuration"/>
+        <mapping class="com.medigy.persist.reference.custom.health.LabOrderPriorityType"/>
+        <mapping class="com.medigy.persist.reference.custom.health.LabOrderStatusType"/>
 
         <!--mapping package="com.medigy.persist.reference.custom.product"/-->
         <mapping class="com.medigy.persist.reference.custom.product.ProductType"/>
@@ -203,6 +205,9 @@
         <mapping class="com.medigy.persist.model.health.HealthCareReferral"/>
         <mapping class="com.medigy.persist.model.health.VisitType"/>
         <mapping class="com.medigy.persist.model.health.PersonVisitType"/>
+
+        <mapping class="com.medigy.persist.model.health.lab.LabOrder"/>
+        <mapping class="com.medigy.persist.model.health.lab.LabOrderEntry"/>
 
         <!--mapping package="com.medigy.persist.model.product"/-->
         <!--mapping class="com.medigy.persist.model.product.Product"/>
