@@ -6,7 +6,6 @@ package com.medigy.persist.util.query.impl;
 import com.medigy.persist.util.query.QueryDefinitionJoin;
 import com.medigy.persist.util.query.QueryDefinition;
 
-import javax.persistence.Table;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -100,16 +99,6 @@ public class QueryDefinitionJoinImpl implements QueryDefinitionJoin
      */
     public String getTable()
     {
-        final Table annotation = (Table) entityClass.getAnnotation(Table.class);
-        if (annotation != null)
-        {
-            final String tableName = annotation.name();
-            if (tableName != null && tableName.length() > 0)
-                return tableName;
-            else
-                return entityClass.getSimpleName();
-        }
-        else
-            return entityClass.getSimpleName();
+        return entityClass.getSimpleName();
     }
 }
