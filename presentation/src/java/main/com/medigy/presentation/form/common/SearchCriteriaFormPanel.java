@@ -42,6 +42,7 @@ public class SearchCriteriaFormPanel extends Panel
         final FeedbackPanel feedback = new FeedbackPanel("feedback");
         add(feedback);
         add(createForm("form", feedback, formMode));
+        //TODO: Add the record ADD panel 
     }
 
     protected Form createForm(final String componentName, final IFeedback feedback, final FormMode formMode)

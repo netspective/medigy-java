@@ -32,7 +32,7 @@ public class QueryDefinitionFieldChoiceList implements IChoiceList
 
         public String getId()
         {
-            return field.getColumnName();
+            return field.getEntityPropertyName();
         }
 
         public Object getObject()
