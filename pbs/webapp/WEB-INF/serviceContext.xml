@@ -217,4 +217,32 @@
             </props>
         </property>
     </bean>
+
+    <bean id="personSearchService"  class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean" lazy-init="true">
+        <property name="transactionManager"> <ref bean="hibernateTransactionManager"/> </property>
+        <property name="target">
+                <bean class="com.medigy.service.impl.person.PersonSearchServiceImpl">
+				    <constructor-arg type="org.hibernate.SessionFactory"> <ref bean="hibernateSessionFactory"/> </constructor-arg>
+            </bean>
+		</property>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="search*">PROPAGATION_REQUIRED</prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="orgSearchService"  class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean" lazy-init="true">
+        <property name="transactionManager"> <ref bean="hibernateTransactionManager"/> </property>
+        <property name="target">
+                <bean class="com.medigy.service.impl.org.OrganizationSearchServiceImpl">
+				    <constructor-arg type="org.hibernate.SessionFactory"> <ref bean="hibernateSessionFactory"/> </constructor-arg>
+            </bean>
+		</property>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="search*">PROPAGATION_REQUIRED</prop>
+            </props>
+        </property>
+    </bean>
 </beans>

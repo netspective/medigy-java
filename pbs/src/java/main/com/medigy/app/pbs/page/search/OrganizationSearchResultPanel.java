@@ -36,27 +36,15 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-
-/*
- * Copyright (c) 2005 Your Corporation. All Rights Reserved.
- */
 package com.medigy.app.pbs.page.search;
 
-import wicket.markup.html.panel.Panel;
-import wicket.markup.html.form.Form;
-import wicket.markup.html.form.ListMultipleChoice;
-import wicket.markup.html.form.TextField;
-import wicket.IFeedback;
-import wicket.model.IModel;
-import wicket.model.CompoundPropertyModel;
-import com.medigy.wicket.form.FormMode;
-import com.medigy.presentation.form.common.SearchCriteriaFormPanel;
+import com.medigy.presentation.form.common.SearchResultPanel;
 import com.medigy.service.org.OrganizationSearchService;
 
-public class OrganizationsCriteriaPanel extends SearchCriteriaFormPanel
+public class OrganizationSearchResultPanel extends SearchResultPanel
 {
-    public OrganizationsCriteriaPanel(final String id)
+    public OrganizationSearchResultPanel(final String id)
     {
-        super(id, FormMode.NONE, OrganizationSearchService.class);
+        super(id, OrganizationSearchService.class);
     }
 }

@@ -5,16 +5,17 @@
     </head>
     <body>
         <wicket:panel>
-            <form method="post">
+            <div wicket:id="feedback" class="form-feedback"/>
+            <form wicket:id="form" method="post">
 		        Find By:
-		        <select name="search_type" class="record-type">
+		        <select wicket:id="searchCriterias" name="search_type" class="record-type">
 			        <option value="id">Org ID</option>
 			        <option value="primname" selected>Primary Name</option>
 			        <option value="category">Type of Org</option>
 		        </select>
-                <input name='org' size=17 maxlength=64 value="x,y,z" title='Org'>
+                <input wicket:id="searchCriteriaValue"  name='org' type="text" size=17 maxlength=64 value="x,y,z" title='Org'>
                 <input type=submit name="execute" value="Go">
-                <wicket:component name="orgs" class="com.medigy.app.pbs.component.record.add.AddOrgRecordSelect"/>
+                <!--wicket:component name="orgs" class="com.medigy.app.pbs.component.record.add.AddOrgRecordSelect"/-->
              </form>
         </wicket:panel>
     </body>
