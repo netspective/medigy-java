@@ -39,7 +39,6 @@ public class QueryDefServiceCountAndListAction extends ServiceCountAndListAction
             final SearchReturnValues values = ((QueryDefinitionSearchService) getService()).search(new QueryDefinitionSearchParameters() {
                 public Class getQueryDefinitionClass()
                 {
-                    System.out.println(">>>>>>>>>>>>>" + queryDefinitionClass);
                     return queryDefinitionClass;
                 }
 

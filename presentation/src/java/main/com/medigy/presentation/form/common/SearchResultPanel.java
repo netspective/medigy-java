@@ -135,7 +135,7 @@ public class SearchResultPanel extends Panel
 
             }
 
-            public List execute(Object queryObject, int startFromRow, int numberOfRows)
+            public List execute(Object queryObject, final int startFromRow, int numberOfRows)
             {
                 final CriteriaSearchFormModelObject formModelObject = (CriteriaSearchFormModelObject) queryObject;
 
@@ -152,7 +152,7 @@ public class SearchResultPanel extends Panel
 
                     public int getStartFromRow()
                     {
-                        return 0;
+                        return startFromRow;
                     }
 
                     public ServiceVersion getServiceVersion()
