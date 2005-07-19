@@ -3,9 +3,6 @@
  */
 package com.medigy.service.dto.query;
 
-import com.medigy.persist.util.query.QueryDefnCondition;
-import com.medigy.persist.util.query.QueryDefinitionConditionValue;
-
 public class QueryDefinitionSearchCondition
 {
     private String field;
