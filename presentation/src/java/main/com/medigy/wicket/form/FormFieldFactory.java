@@ -43,28 +43,21 @@
  */
 package com.medigy.wicket.form;
 
-import java.io.Serializable;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.regex.Pattern;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import com.medigy.presentation.model.ChoicesFactory;
 import com.medigy.service.validator.ValidEntity;
-import wicket.markup.html.form.DropDownChoice;
-import wicket.markup.html.form.FormComponent;
-import wicket.markup.html.form.ListMultipleChoice;
-import wicket.markup.html.form.RadioChoice;
-import wicket.markup.html.form.TextArea;
-import wicket.markup.html.form.TextField;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import wicket.markup.html.form.*;
 import wicket.markup.html.form.model.IChoiceList;
+import wicket.markup.html.form.upload.FileUploadField;
 import wicket.markup.html.form.validation.EmailAddressPatternValidator;
 import wicket.markup.html.form.validation.TypeValidator;
+import wicket.util.string.Strings;
+
+import java.io.Serializable;
+import java.text.NumberFormat;
+import java.util.*;
+import java.util.regex.Pattern;
 
 public class FormFieldFactory
 {
@@ -91,6 +84,8 @@ public class FormFieldFactory
         addFieldCreator(ZipCodeFieldCreator.class, new ZipCodeFieldCreator());
         addFieldCreator(MemoFieldCreator.class, new MemoFieldCreator());
         addFieldCreator(EmailFieldCreator.class, new EmailFieldCreator());
+        addFieldCreator(PasswordFieldCreator.class, new PasswordFieldCreator());
+        addFieldCreator(FileUploadFieldCreator.class, new FileUploadFieldCreator());
     }
 
     public void addFieldCreator(final Class dataType, final FieldCreator creator)
@@ -258,15 +253,29 @@ public class FormFieldFactory
     {
         public FormComponent createField(final BaseForm form, final String controlId, final ReflectedFormFieldDefn reflectedFormFieldDefn)
         {
-            final TextField result = new TextField(controlId);
+            final PasswordTextField result = new PasswordTextField(controlId);
             reflectedFormFieldDefn.initializeField(form, reflectedFormFieldDefn, result);
-            // TODO: need to add wicket validator class
             return result;
         }
 
         public String getJavaScriptFieldTypeId(FormJavaScriptGenerator generator)
         {
             return "text";
+        }
+    }
+
+    public class FileUploadFieldCreator implements FieldCreator, FormJavaScriptGenerator.FieldTypeNameContributor
+    {
+        public FormComponent createField(final BaseForm form, final String controlId, final ReflectedFormFieldDefn reflectedFormFieldDefn)
+        {
+            final FileUploadField result = new FileUploadField(controlId);
+            reflectedFormFieldDefn.initializeField(form, reflectedFormFieldDefn, result);
+            return result;
+        }
+
+        public String getJavaScriptFieldTypeId(FormJavaScriptGenerator generator)
+        {
+            return "file";
         }
     }
 
@@ -321,6 +330,21 @@ public class FormFieldFactory
         }
     }
 
+    public class CurrencyFieldCreator implements FieldCreator, FormJavaScriptGenerator.FieldTypeNameContributor
+    {
+        public FormComponent createField(final BaseForm form, final String controlId, final ReflectedFormFieldDefn reflectedFormFieldDefn)
+        {
+            final CurrencyField result = new CurrencyField(controlId);
+            reflectedFormFieldDefn.initializeField(form, reflectedFormFieldDefn, result);
+            return result;
+        }
+
+        public String getJavaScriptFieldTypeId(FormJavaScriptGenerator generator)
+        {
+            return "currency";
+        }
+    }
+
     public class ZipCodeFieldCreator implements FieldCreator, FormJavaScriptGenerator.FieldTypeNameContributor
     {
         public static final String VALIDATE_PATTERN = "^([\\d]{5})([-][\\d]{4})?$";
@@ -336,6 +360,35 @@ public class FormFieldFactory
         public String getJavaScriptFieldTypeId(FormJavaScriptGenerator generator)
         {
             return "text"; // TODO: need to supply special client side validation for zip fields, too
+        }
+    }
+
+    protected class CurrencyField extends TextField
+    {
+        private Currency currency;
+        private Locale locale = Locale.getDefault() != null ? Locale.getDefault() : Locale.US;
+
+        public CurrencyField(final String componentId)
+        {
+            super(componentId);
+        }
+
+        protected void updateModel()
+        {
+            String input = getInput();
+
+            NumberFormat nf = NumberFormat.getCurrencyInstance(locale);
+            currency = Currency.getInstance(locale);
+            nf.setCurrency(currency);
+
+            if(input != null && getConvertEmptyInputStringToNull() && Strings.isEmpty(input))
+            {
+                input = null;
+            }
+            else
+                input = nf.format(Double.parseDouble(input));
+
+            setModelObject(input);
         }
     }
 
