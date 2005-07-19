@@ -5,6 +5,7 @@ package com.medigy.service.query;
 
 import com.medigy.persist.util.query.QueryDefinition;
 import com.medigy.service.person.PatientSearchQueryDefinition;
+import com.medigy.service.org.OrganizationSearchQueryDefinition;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,6 +18,7 @@ public class QueryDefinitionFactory
     private QueryDefinitionFactory()
     {
         addQueryDefinition(new PatientSearchQueryDefinition());
+        addQueryDefinition(new OrganizationSearchQueryDefinition());
     }
 
     public static QueryDefinitionFactory getInstance()

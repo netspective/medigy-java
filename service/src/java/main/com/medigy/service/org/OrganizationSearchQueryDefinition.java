@@ -5,18 +5,40 @@ package com.medigy.service.org;
 
 import com.medigy.persist.util.query.impl.BasicQueryDefinition;
 import com.medigy.persist.util.query.impl.QueryDefinitionJoinImpl;
+import com.medigy.persist.util.query.impl.QueryDefinitionSelectImpl;
+import com.medigy.persist.util.query.impl.QueryDefinitionConditionImpl;
 import com.medigy.persist.util.query.QueryDefinitionJoin;
+import com.medigy.persist.util.query.QueryDefinitionSelect;
+import com.medigy.persist.util.query.QueryDefnCondition;
+import com.medigy.persist.util.query.SqlComparisonFactory;
+import com.medigy.persist.util.query.QueryDefinitionField;
+import com.medigy.persist.util.query.QueryDefinitionSortBy;
 import com.medigy.persist.util.query.QueryDefinition;
+import com.medigy.persist.util.query.comparison.StartsWithComparisonIgnoreCase;
+import com.medigy.persist.util.query.comparison.EqualsComparison;
+import com.medigy.persist.util.query.exception.QueryDefinitionException;
 import com.medigy.persist.model.org.Organization;
 
-import java.util.List;
-
-public class OrganizationSearchQueryDefinition extends BasicQueryDefinition
+public class OrganizationSearchQueryDefinition extends BasicQueryDefinition implements QueryDefinition
 {
     public static final String QUERY_DEFINITION_NAME = "organizationSearch";
 
-    public static final String ORG_NAME_FIELD = "orgName";
-    public static final String ORG_ID_FIELD = "orgId";
+    public enum Field
+    {
+        ORG_NAME("orgName"),
+        ORG_ID("orgId");
+
+        private String name;
+        Field(final String name)
+        {
+            this.name = name;
+        }
+
+        public String getName()
+        {
+            return name;
+        }
+    }
 
     public OrganizationSearchQueryDefinition()
     {
@@ -31,7 +53,54 @@ public class OrganizationSearchQueryDefinition extends BasicQueryDefinition
 
         this.addJoin(orgJoin);
 
-        addField(ORG_NAME_FIELD, "partyName", "Primary Name", orgJoin);
-        addField(ORG_ID_FIELD, "organizationId","Organization ID", orgJoin);
+        addField("orgName", "partyName", "Primary Name", orgJoin);
+        addField("orgId", "partyId","Organization ID", orgJoin);
+
+        try
+        {
+            addSelect(registerCriteriaSearch());
+        }
+        catch (QueryDefinitionException e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
+    protected QueryDefinitionSelect registerCriteriaSearch() throws QueryDefinitionException
+    {
+        final QueryDefinitionSelect select = new QueryDefinitionSelectImpl("criteriaSearch", this);
+
+        select.addDisplayField(getField(Field.ORG_NAME.getName()));
+        select.addDisplayField(getField(Field.ORG_ID.getName()));
+        // TODO: Add org type criteria
+
+        final QueryDefnCondition orgNameCondition = new QueryDefinitionConditionImpl(getField(Field.ORG_NAME.getName()),
+                SqlComparisonFactory.getInstance().getComparison(StartsWithComparisonIgnoreCase.COMPARISON_NAME));
+        orgNameCondition.setConnector("and");
+        select.addCondition(orgNameCondition);
+
+        final QueryDefnCondition idCondition = new QueryDefinitionConditionImpl(getField(Field.ORG_ID.getName()),
+                SqlComparisonFactory.getInstance().getComparison(EqualsComparison.COMPARISON_NAME));
+        idCondition.setConnector("and");
+        select.addCondition(idCondition);
+
+        final QueryDefinitionField idField = getField(Field.ORG_NAME.getName());
+        select.addOrderBy(new QueryDefinitionSortBy() {
+            public boolean isDescending()
+            {
+                return false;
+            }
+
+            public QueryDefinitionField getField()
+            {
+                return idField;
+            }
+
+            public String getExplicitOrderByClause()
+            {
+                return null;
+            }
+        });
+        return select;
     }
 }

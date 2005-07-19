@@ -70,6 +70,8 @@ public class PatientSearchQueryDefinition extends BasicQueryDefinition implement
         orgField.setWhereClauseExpr("org.id");
         orgField.setDisplayAllowed(false);
 
+        // TODO: displayAllowed = NONE, ALWAYS, ON_CRITERIA
+
 
         try
         {

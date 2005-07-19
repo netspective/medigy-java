@@ -62,7 +62,6 @@ public abstract class AbstractSearchServiceImpl extends AbstractService implemen
                         SimpleDateFormat format = new SimpleDateFormat();
                         format.applyPattern("MM/dd/yyyy");
                         final Date date = format.parse(searchCriteriaValue);
-                        System.out.println(">>>>> " + date);
                         cond.setValueProvider(new ValueProvider() {
                             public Object getValue()
                             {
