@@ -55,6 +55,7 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
 import javax.persistence.JoinColumn;
+import javax.persistence.Table;
 import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
@@ -63,6 +64,7 @@ import org.hibernate.validator.NotNull;
 
 @Entity
 @Inheritance(discriminatorValue = "Order", strategy = InheritanceType.SINGLE_TABLE)
+@Table(name = "Product_Order")
 public class Order extends AbstractTopLevelEntity
 {
     public static final String PK_COLUMN_NAME = "order_id";
