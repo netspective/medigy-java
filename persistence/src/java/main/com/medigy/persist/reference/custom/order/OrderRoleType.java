@@ -36,49 +36,62 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.persist.reference.custom.party;
+package com.medigy.persist.reference.custom.order;
 
-import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
-import com.medigy.persist.model.party.ValidResponsiblePartyRole;
+import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
+import com.medigy.persist.reference.custom.CustomReferenceEntity;
+import com.medigy.persist.reference.custom.party.PartyRoleType;
 
-import javax.persistence.DiscriminatorColumn;
-import javax.persistence.DiscriminatorType;
 import javax.persistence.Entity;
-import javax.persistence.GeneratorType;
-import javax.persistence.Id;
 import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.Table;
-import javax.persistence.Column;
-import javax.persistence.OneToMany;
-import java.util.Set;
-import java.util.HashSet;
 
 @Entity
-@Table(name = "Party_Role_Type")
-@Inheritance(
-    strategy=InheritanceType.SINGLE_TABLE,
-    discriminatorType=DiscriminatorType.STRING,
-    discriminatorValue="Party"        
-)
-@DiscriminatorColumn(name="role_type")
-public class PartyRoleType extends AbstractCustomReferenceEntity
+@Inheritance(discriminatorValue = "Order")
+public class OrderRoleType  extends PartyRoleType
 {
-    public static final String PK_COLUMN_NAME = "party_role_type_id";
+    public static final String PK_COLUMN_NAME = PartyRoleType.PK_COLUMN_NAME;
 
-    public PartyRoleType()
+     public enum Cache implements CachedCustomReferenceEntity
     {
+        PLACING_PARTY("PLACE", "Placing Party", "Party placing the order"),
+        FILLING_PARTY("FILL", "Filling Party", "Party fulfilling the order");
+
+        private final String code;
+        private final String label;
+        private final String description;
+        private OrderRoleType entity;
+
+        private Cache(final String code, final String label, final String description)
+        {
+            this.code = code;
+            this.label = label;
+            this.description = description;
+        }
+
+        public String getCode()
+        {
+            return code;
+        }
+
+        public String getLabel()
+        {
+            return label;
+        }
+
+        public String getDescription()
+        {
+            return description;
+        }
+
+        public OrderRoleType getEntity()
+        {
+            return entity;
+        }
+
+        public void setEntity(final CustomReferenceEntity entity)
+        {
+            this.entity = (OrderRoleType) entity;
+        }
     }
 
-    @Id(generate = GeneratorType.AUTO)
-    @Column(name = PK_COLUMN_NAME)
-    public Long getPartyRoleTypeId()
-    {
-        return super.getSystemId();
-    }
-
-    protected void setPartyRoleTypeId(final Long id)
-    {
-        super.setSystemId(id);
-    }
 }

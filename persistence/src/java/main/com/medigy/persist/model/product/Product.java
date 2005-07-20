@@ -7,7 +7,9 @@ import com.medigy.persist.model.common.AbstractDateDurationEntity;
 import com.medigy.persist.model.common.EffectiveDates;
 import com.medigy.persist.model.common.AbstractTopLevelEntity;
 import com.medigy.persist.model.org.Organization;
+import com.medigy.persist.model.party.Party;
 import com.medigy.persist.reference.custom.product.ProductType;
+import com.medigy.persist.reference.custom.CustomReferenceEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -19,22 +21,29 @@ import javax.persistence.Basic;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.persistence.EmbeddableSuperclass;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 
 import org.hibernate.validator.NotNull;
 
 import java.util.Date;
 
-@EmbeddableSuperclass
-public class Product extends AbstractTopLevelEntity
+//@EmbeddableSuperclass
+@Entity
+@Inheritance(strategy = InheritanceType.JOINED)
+public class Product implements CustomReferenceEntity
 {
     public static final String PK_COLUMN_NAME = "product_id";
 
     private Long productId;
-    private String name;
+    private String productName;
     private Organization organization;
+    private String code;
+
     private EffectiveDates effectiveDates = new EffectiveDates();
 
-    @Transient
+    @Id(generate = GeneratorType.AUTO)
+    @Column(name = PK_COLUMN_NAME)
     public Long getProductId()
     {
         return productId;
@@ -45,16 +54,49 @@ public class Product extends AbstractTopLevelEntity
         this.productId = productId;
     }
 
-    @Column(length = 512, nullable = false)
-    @NotNull
-    public String getName()
+    @Transient
+    public Long getSystemId()
     {
-        return name;
+        return productId;
     }
 
-    public void setName(final String name)
+    protected void setSystemId(final Long id)
     {
-        this.name = name;
+        productId = id;
+    }
+
+    public String getCode()
+    {
+        return code;
+    }
+
+    public void setCode(final String code)
+    {
+        this.code = code;
+    }
+
+    @Transient
+    public String getLabel()
+    {
+        return productName;
+    }
+
+    @Transient
+    public Organization getParty()
+    {
+        return organization;
+    }
+
+    @Column(length = 512, nullable = false)
+    @NotNull
+    public String getProductName()
+    {
+        return productName;
+    }
+
+    public void setProductName(final String name)
+    {
+        this.productName = name;
     }
 
     @ManyToOne

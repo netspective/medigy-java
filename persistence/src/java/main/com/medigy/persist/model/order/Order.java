@@ -50,11 +50,14 @@ import javax.persistence.CascadeType;
 import javax.persistence.Transient;
 import javax.persistence.Entity;
 import javax.persistence.EmbeddableSuperclass;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
 
-@EmbeddableSuperclass
+@Entity
+@Inheritance(discriminatorValue = "Order", strategy = InheritanceType.SINGLE_TABLE)
 public class Order extends AbstractTopLevelEntity
 {
     public static final String PK_COLUMN_NAME = "order_id";
@@ -64,6 +67,8 @@ public class Order extends AbstractTopLevelEntity
     private Date orderDate;
     private Date entryDate;
     private Date filledDate;
+
+    private List<OrderRole> roles = new ArrayList<OrderRole>();
     private List<OrderItem> items = new ArrayList<OrderItem>();
 
     @Id(generate = GeneratorType.AUTO)
@@ -150,5 +155,16 @@ public class Order extends AbstractTopLevelEntity
     {
         item.setOrder(this);
         items.add(item);
+    }
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    public List<OrderRole> getRoles()
+    {
+        return roles;
+    }
+
+    public void setRoles(final List<OrderRole> roles)
+    {
+        this.roles = roles;
     }
 }

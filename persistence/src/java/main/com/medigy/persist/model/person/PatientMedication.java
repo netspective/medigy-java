@@ -39,9 +39,7 @@
 package com.medigy.persist.model.person;
 
 import com.medigy.persist.model.common.AbstractTopLevelEntity;
-import com.medigy.persist.model.person.Person;
-import com.medigy.persist.model.product.Medication;
-import com.medigy.persist.model.health.HealthCareVisit;
+import com.medigy.persist.reference.custom.health.MedicationType;
 import com.medigy.persist.reference.type.UnitOfMeasureType;
 import com.medigy.persist.reference.custom.health.MedicationDurationType;
 
@@ -52,15 +50,20 @@ import javax.persistence.Id;
 import javax.persistence.GeneratorType;
 import javax.persistence.ManyToOne;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.CascadeType;
 
 import org.hibernate.validator.NotNull;
+
+import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Represents what the patient is taking
  */
 @Entity
-@Table(name = "Person_Medication")
-public class PersonMedication extends AbstractTopLevelEntity
+@Table(name = "Patient_Medication")
+public class PatientMedication extends AbstractTopLevelEntity
 {
     public static final String PK_COLUMN_NAME = "per_medication_id";
 
@@ -68,9 +71,8 @@ public class PersonMedication extends AbstractTopLevelEntity
     private Person patient;
     private Person prescribedBy;
     private Person approvedBy;
-    private HealthCareVisit visit;
 
-    private Medication medication;
+    private MedicationType medicationType;
     private String dosageForm;
     private Float dose;
     private UnitOfMeasureType doseUnits;
@@ -81,6 +83,7 @@ public class PersonMedication extends AbstractTopLevelEntity
     private Long numberOfRefills;
     private Long duration;
     private MedicationDurationType durationType;
+    private List<PatientMedicationRefill> refills = new ArrayList<PatientMedicationRefill>();
 
     @Id(generate = GeneratorType.AUTO)
     @Column(name = PK_COLUMN_NAME)
@@ -136,16 +139,6 @@ public class PersonMedication extends AbstractTopLevelEntity
     public void setPatient(final Person patient)
     {
         this.patient = patient;
-    }
-
-    public HealthCareVisit getVisit()
-    {
-        return visit;
-    }
-
-    public void setVisit(final HealthCareVisit visit)
-    {
-        this.visit = visit;
     }
 
     /**
@@ -242,16 +235,16 @@ public class PersonMedication extends AbstractTopLevelEntity
     }
 
     @ManyToOne
-    @JoinColumn(name = Medication.PK_COLUMN_NAME, nullable = false)
+    @JoinColumn(name = MedicationType.PK_COLUMN_NAME, nullable = false)
     @NotNull
-    public Medication getMedication()
+    public MedicationType getMedication()
     {
-        return medication;
+        return medicationType;
     }
 
-    public void setMedication(final Medication medication)
+    public void setMedication(final MedicationType medicationType)
     {
-        this.medication = medication;
+        this.medicationType = medicationType;
     }
 
     /**
@@ -303,5 +296,16 @@ public class PersonMedication extends AbstractTopLevelEntity
     public void setFrequency(final String frequency)
     {
         this.frequency = frequency;
+    }
+
+    @OneToMany(mappedBy = "patientMedication", cascade = CascadeType.ALL)
+    public List<PatientMedicationRefill> getRefills()
+    {
+        return refills;
+    }
+
+    public void setRefills(final List<PatientMedicationRefill> refills)
+    {
+        this.refills = refills;
     }
 }

@@ -38,157 +38,150 @@
  */
 package com.medigy.persist.model.order;
 
-import com.medigy.persist.model.common.AbstractEntity;
-import com.medigy.persist.model.product.Product;
+import com.medigy.persist.reference.custom.health.MedicationType;
+import com.medigy.persist.reference.custom.health.MedicationDurationType;
+import com.medigy.persist.reference.type.UnitOfMeasureType;
 
-import javax.persistence.Id;
-import javax.persistence.GeneratorType;
-import javax.persistence.Column;
 import javax.persistence.ManyToOne;
 import javax.persistence.JoinColumn;
+import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import javax.persistence.CascadeType;
-import javax.persistence.Transient;
 import javax.persistence.EmbeddableSuperclass;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import java.util.List;
-import java.util.ArrayList;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-public class OrderItem extends AbstractEntity
+public class PerscriptionItem extends OrderItem
 {
-    public static final String PK_COLUMN_NAME = "order_item_id";
+    public static final String PK_COLUMN_NAME = "perscription_item_id";
 
-    private Long orderItemId;
-    private Long orderItemSeqId;
-    private String itemDescription;
-    private String shippingInstructions;
-    private String comment;
-    private Product product;
-    private Long quantity;
+    private MedicationType medicationType;
+    private String dosageForm;
+    private Float dose;
+    private UnitOfMeasureType doseUnits;
+    private boolean allowGeneric;
+    private String frequency;
+    private String directions;
+    private String notes;
+    private Long numberOfRefills;
+    private Long duration;
+    private MedicationDurationType durationType;
 
-    private OrderItem parentItem;
-    private Order order;
-    private List<OrderItem> childItems = new ArrayList<OrderItem>();
-
-    @Id(generate = GeneratorType.AUTO)
-    public Long getOrderItemId()
+    @ManyToOne
+    @JoinColumn(name = MedicationType.PK_COLUMN_NAME)
+    public MedicationType getMedicationType()
     {
-        return orderItemId;
+        return medicationType;
     }
 
-    protected void setOrderItemId(final Long orderItemId)
+    public void setMedicationType(final MedicationType medicationType)
     {
-        this.orderItemId = orderItemId;
+        this.medicationType = medicationType;
     }
 
-    public Long getOrderItemSeqId()
+    @Column(length = 128)
+    public String getDosageForm()
     {
-        return orderItemSeqId;
+        return dosageForm;
     }
 
-    public void setOrderItemSeqId(final Long orderItemSeqId)
+    public void setDosageForm(final String dosageForm)
     {
-        this.orderItemSeqId = orderItemSeqId;
+        this.dosageForm = dosageForm;
     }
 
-    @Column(length = 512)
-    public String getItemDescription()
+    public Float getDose()
     {
-        return itemDescription;
+        return dose;
     }
 
-    public void setItemDescription(final String itemDescription)
+    public void setDose(final Float dose)
     {
-        this.itemDescription = itemDescription;
-    }
-
-    @Column(length = 512)
-    public String getComment()
-    {
-        return comment;
-    }
-
-    public void setComment(final String comment)
-    {
-        this.comment = comment;
+        this.dose = dose;
     }
 
     @ManyToOne
-    @JoinColumn(name = Order.PK_COLUMN_NAME)
-    public Order getOrder()
+    @JoinColumn(name = UnitOfMeasureType.PK_COLUMN_NAME)
+    public UnitOfMeasureType getDoseUnits()
     {
-        return order;
+        return doseUnits;
     }
 
-    public void setOrder(final Order order)
+    public void setDoseUnits(final UnitOfMeasureType doseUnits)
     {
-        this.order = order;
+        this.doseUnits = doseUnits;
+    }
+
+    public boolean isAllowGeneric()
+    {
+        return allowGeneric;
+    }
+
+    public void setAllowGeneric(final boolean allowGeneric)
+    {
+        this.allowGeneric = allowGeneric;
+    }
+
+    public String getFrequency()
+    {
+        return frequency;
+    }
+
+    public void setFrequency(final String frequency)
+    {
+        this.frequency = frequency;
+    }
+
+    public String getDirections()
+    {
+        return directions;
+    }
+
+    public void setDirections(final String directions)
+    {
+        this.directions = directions;
+    }
+
+    public String getNotes()
+    {
+        return notes;
+    }
+
+    public void setNotes(final String notes)
+    {
+        this.notes = notes;
+    }
+
+    public Long getNumberOfRefills()
+    {
+        return numberOfRefills;
+    }
+
+    public void setNumberOfRefills(final Long numberOfRefills)
+    {
+        this.numberOfRefills = numberOfRefills;
+    }
+
+    public Long getDuration()
+    {
+        return duration;
+    }
+
+    public void setDuration(final Long duration)
+    {
+        this.duration = duration;
     }
 
     @ManyToOne
-    @JoinColumn(name = Product.PK_COLUMN_NAME)
-    public Product getProduct()
+    @JoinColumn(name = MedicationDurationType.PK_COLUMN_NAME)
+    public MedicationDurationType getDurationType()
     {
-        return product;
+        return durationType;
     }
 
-    public void setProduct(final Product product)
+    public void setDurationType(final MedicationDurationType durationType)
     {
-        this.product = product;
-    }
-
-    @Column(length = 512)
-    public String getShippingInstructions()
-    {
-        return shippingInstructions;
-    }
-
-    public void setShippingInstructions(final String shippingInstructions)
-    {
-        this.shippingInstructions = shippingInstructions;
-    }
-
-    @ManyToOne
-    @JoinColumn(referencedColumnName = PK_COLUMN_NAME, name = "parent_item_id")
-    public OrderItem getParentItem()
-    {
-        return parentItem;
-    }
-
-    public void setParentItem(final OrderItem parentItem)
-    {
-        this.parentItem = parentItem;
-    }
-
-    @OneToMany(mappedBy = "parentItem", cascade = CascadeType.ALL)
-    public List<OrderItem> getChildItems()
-    {
-        return childItems;
-    }
-
-    public void setChildItems(final List<OrderItem> childItems)
-    {
-        this.childItems = childItems;
-    }
-
-    @Transient
-    public void addChildItem(final OrderItem item)
-    {
-        item.setParentItem(this);
-        childItems.add(item);
-    }
-
-    public Long getQuantity()
-    {
-        return quantity;
-    }
-
-    public void setQuantity(final Long quantity)
-    {
-        this.quantity = quantity;
+        this.durationType = durationType;
     }
 }

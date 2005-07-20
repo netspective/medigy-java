@@ -36,95 +36,74 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.persist.model.product;
+package com.medigy.persist.model.order;
 
-import com.medigy.persist.model.person.PersonMedication;
+import com.medigy.persist.model.common.AbstractEntity;
+import com.medigy.persist.model.party.Party;
+import com.medigy.persist.reference.custom.order.OrderRoleType;
 
-import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.GeneratorType;
 import javax.persistence.Column;
-import javax.persistence.OneToMany;
-import java.util.List;
-import java.util.ArrayList;
+import javax.persistence.ManyToOne;
+import javax.persistence.JoinColumn;
+import javax.persistence.Entity;
 
 @Entity
-public class Medication extends Product
+public class OrderRole extends AbstractEntity
 {
-    public static final String PK_COLUMN_NAME = "medication_id";
-    private String genericName;
-    private boolean isControlledRelease;
-    private String atcCode;
+    public static final String PK_COLUMN_NAME  = "order_role_id";
 
-    private List<PersonMedication> personMedications = new ArrayList<PersonMedication>();
+    private Long orderRoleId;
+    private Order order;
+    private Party party;
+    private OrderRoleType type;
 
     @Id(generate = GeneratorType.AUTO)
     @Column(name = PK_COLUMN_NAME)
-    public Long getDrugId()
+    public Long getOrderRoleId()
     {
-        return super.getProductId();
+        return orderRoleId;
     }
 
-    protected void setDrugId(final Long id)
+    public void setOrderRoleId(final Long orderRoleId)
     {
-        super.setProductId(id);
+        this.orderRoleId = orderRoleId;
     }
 
-    /**
-     * the generic name of the active substance
-     * @return
-     */
-    @Column(length = 128)
-    public String getGenericName()
+    @ManyToOne
+    @JoinColumn(name = Order.PK_COLUMN_NAME)
+    public Order getOrder()
     {
-        return genericName;
+        return order;
     }
 
-    public void setGenericName(final String genericName)
+    public void setOrder(final Order order)
     {
-        this.genericName = genericName;
+        this.order = order;
     }
 
-    /**
-     *  Some drugs are marketed under the same name although one is slow release while the other is normal release.
-     * @return
-     */
-    public boolean isControlledRelease()
+    @ManyToOne
+    @JoinColumn(name = Party.PK_COLUMN_NAME)
+    public Party getParty()
     {
-        return isControlledRelease;
+        return party;
     }
 
-    public void setControlledRelease(final boolean controlledRelease)
+    public void setParty(final Party party)
     {
-        isControlledRelease = controlledRelease;
+        this.party = party;
     }
 
-    /**
-     * the Anatomic Therapeutic Chemical code for this drug, Used for classification
-     * of drugs. There's five levels.
-     *
-     * @return
-     */
-    @Column(length = 7)
-    public String getAtcCode()
+    @ManyToOne
+    @JoinColumn(name = OrderRoleType.PK_COLUMN_NAME)
+    public OrderRoleType getType()
     {
-        return atcCode;
+        return type;
     }
 
-    public void setAtcCode(final String atcCode)
+    public void setType(final OrderRoleType type)
     {
-        this.atcCode = atcCode;
+        this.type = type;
     }
-
-    @OneToMany(mappedBy = "medication")
-    public List<PersonMedication> getPersonMedications()
-    {
-        return personMedications;
-    }
-
-    public void setPersonMedications(final List<PersonMedication> personMedications)
-    {
-        this.personMedications = personMedications;
-    }
-
 }

@@ -36,49 +36,69 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.persist.reference.custom.party;
+package com.medigy.persist.reference.custom.health;
 
-import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
-import com.medigy.persist.model.party.ValidResponsiblePartyRole;
+import com.medigy.persist.model.product.Product;
 
-import javax.persistence.DiscriminatorColumn;
-import javax.persistence.DiscriminatorType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratorType;
-import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import javax.persistence.Table;
-import javax.persistence.Column;
-import javax.persistence.OneToMany;
-import java.util.Set;
-import java.util.HashSet;
 
 @Entity
-@Table(name = "Party_Role_Type")
-@Inheritance(
-    strategy=InheritanceType.SINGLE_TABLE,
-    discriminatorType=DiscriminatorType.STRING,
-    discriminatorValue="Party"        
-)
-@DiscriminatorColumn(name="role_type")
-public class PartyRoleType extends AbstractCustomReferenceEntity
+@Inheritance(strategy = InheritanceType.JOINED)
+public class MedicationType extends Product
 {
-    public static final String PK_COLUMN_NAME = "party_role_type_id";
+    public static final String PK_COLUMN_NAME = "medication_type_id";
 
-    public PartyRoleType()
+    private String genericName;
+    private boolean isControlledRelease;
+    private String atcCode;
+
+    /**
+     * the generic name of the active substance
+     * @return
+     */
+    @Column(length = 128)
+    public String getGenericName()
     {
+        return genericName;
     }
 
-    @Id(generate = GeneratorType.AUTO)
-    @Column(name = PK_COLUMN_NAME)
-    public Long getPartyRoleTypeId()
+    public void setGenericName(final String genericName)
     {
-        return super.getSystemId();
+        this.genericName = genericName;
     }
 
-    protected void setPartyRoleTypeId(final Long id)
+    /**
+     *  Some drugs are marketed under the same name although one is slow release while the other is normal release.
+     * @return
+     */
+    public boolean isControlledRelease()
     {
-        super.setSystemId(id);
+        return isControlledRelease;
     }
+
+    public void setControlledRelease(final boolean controlledRelease)
+    {
+        isControlledRelease = controlledRelease;
+    }
+
+    /**
+     * the Anatomic Therapeutic Chemical code for this drug, Used for classification
+     * of drugs. There's five levels.
+     *
+     * @return
+     */
+    @Column(length = 7)
+    public String getAtcCode()
+    {
+        return atcCode;
+    }
+
+    public void setAtcCode(final String atcCode)
+    {
+        this.atcCode = atcCode;
+    }
+
 }

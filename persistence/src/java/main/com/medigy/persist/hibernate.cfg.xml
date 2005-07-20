@@ -120,12 +120,15 @@
         <mapping class="com.medigy.persist.reference.custom.person.PersonClassificationType"/>
         <mapping class="com.medigy.persist.reference.custom.person.PatientType"/>
 
+        <mapping class="com.medigy.persist.reference.custom.order.OrderRoleType"/>
+
         <!--mapping package="com.medigy.persist.reference.custom.org"/-->
         <mapping class="com.medigy.persist.reference.custom.org.OrganizationClassificationType"/>
         
         <!--mapping package="com.medigy.persist.model.party"/-->
         <!--mapping class="com.medigy.persist.model.party.Case"/
  -->
+        <mapping class="com.medigy.persist.model.common.attribute.EntityAttribute"/>
         <mapping class="com.medigy.persist.model.invoice.attribute.InvoiceAttribute"/>
         <mapping class="com.medigy.persist.model.invoice.attribute.InvoiceStringAttribute"/>
         <mapping class="com.medigy.persist.model.invoice.attribute.InvoiceLongAttribute"/>
@@ -210,10 +213,13 @@
         <mapping class="com.medigy.persist.model.health.lab.LabOrderEntry"/>
 
         <mapping class="com.medigy.persist.model.product.Product"/>
-        <mapping class="com.medigy.persist.model.product.Medication"/>
+        <mapping class="com.medigy.persist.reference.custom.health.MedicationType"/>
 
         <mapping class="com.medigy.persist.model.order.Order"/>
         <mapping class="com.medigy.persist.model.order.OrderItem"/>
+        <mapping class="com.medigy.persist.model.order.OrderRole"/>
+        <!--mapping class="com.medigy.persist.model.order.Perscription"/-->
+        <mapping class="com.medigy.persist.model.order.PerscriptionItem"/>
 
         <!--mapping class="com.medigy.persist.model.product.Product"/>
        <mapping class="com.medigy.persist.model.product.ProductCategory"/>
@@ -255,7 +261,8 @@
         <mapping class="com.medigy.persist.model.person.MaritalStatus"/>
         <mapping class="com.medigy.persist.model.person.PatientMedicalCondition"/>
         <mapping class="com.medigy.persist.model.person.PhysicalCharacteristic"/>
-        <mapping class="com.medigy.persist.model.person.PersonMedication"/>
+        <mapping class="com.medigy.persist.model.person.PatientMedication"/>
+        <mapping class="com.medigy.persist.model.person.PatientMedicationRefill"/>
 
         <!--mapping package="com.medigy.persist.model.insurance"/-->
         <mapping class="com.medigy.persist.model.insurance.CareProviderSelection"/>

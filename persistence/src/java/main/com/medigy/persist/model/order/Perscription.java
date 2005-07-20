@@ -36,49 +36,36 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.persist.reference.custom.party;
+package com.medigy.persist.model.order;
 
-import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
-import com.medigy.persist.model.party.ValidResponsiblePartyRole;
+import com.medigy.persist.model.health.HealthCareVisit;
 
-import javax.persistence.DiscriminatorColumn;
-import javax.persistence.DiscriminatorType;
 import javax.persistence.Entity;
-import javax.persistence.GeneratorType;
-import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.Table;
-import javax.persistence.Column;
+import javax.persistence.ManyToOne;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
-import java.util.Set;
-import java.util.HashSet;
+import javax.persistence.CascadeType;
+import javax.persistence.Inheritance;
+import java.util.List;
 
-@Entity
-@Table(name = "Party_Role_Type")
-@Inheritance(
-    strategy=InheritanceType.SINGLE_TABLE,
-    discriminatorType=DiscriminatorType.STRING,
-    discriminatorValue="Party"        
-)
-@DiscriminatorColumn(name="role_type")
-public class PartyRoleType extends AbstractCustomReferenceEntity
+//@Entity
+//@Inheritance(discriminatorValue = "Perscription")
+public class Perscription extends Order
 {
-    public static final String PK_COLUMN_NAME = "party_role_type_id";
 
-    public PartyRoleType()
+    private HealthCareVisit healthCareVisit;
+
+    //@ManyToOne
+    //@JoinColumn(name = HealthCareVisit.PK_COLUMN_NAME)
+    public HealthCareVisit getHealthCareVisit()
     {
+        return healthCareVisit;
     }
 
-    @Id(generate = GeneratorType.AUTO)
-    @Column(name = PK_COLUMN_NAME)
-    public Long getPartyRoleTypeId()
+    public void setHealthCareVisit(final HealthCareVisit healthCareVisit)
     {
-        return super.getSystemId();
+        this.healthCareVisit = healthCareVisit;
     }
 
-    protected void setPartyRoleTypeId(final Long id)
-    {
-        super.setSystemId(id);
-    }
+
 }

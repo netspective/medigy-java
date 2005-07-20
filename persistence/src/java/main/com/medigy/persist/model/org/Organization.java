@@ -52,7 +52,7 @@ import com.medigy.persist.model.org.attribute.*;
 import com.medigy.persist.model.party.Facility;
 import com.medigy.persist.model.party.Party;
 import com.medigy.persist.model.person.User;
-import com.medigy.persist.model.product.Medication;
+import com.medigy.persist.reference.custom.health.MedicationType;
 import com.medigy.persist.reference.custom.insurance.InsuranceProductType;
 import com.medigy.persist.reference.custom.org.OrganizationClassificationType;
 import com.medigy.persist.reference.custom.party.FacilityType;
@@ -86,7 +86,7 @@ public class Organization extends Party
     private Set<User> users = new HashSet<User>();
 
     private List<OrganizationRole> roles = new ArrayList<OrganizationRole>();
-    private List<Medication> medications = new ArrayList<Medication>();
+    private List<MedicationType> medications = new ArrayList<MedicationType>();
 
     private String tradeName;
 
@@ -385,12 +385,12 @@ public class Organization extends Party
     }
 
     @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL)
-    public List<Medication> getMedications()
+    public List<MedicationType> getMedications()
     {
         return medications;
     }
 
-    public void setMedications(final List<Medication> medications)
+    public void setMedications(final List<MedicationType> medications)
     {
         this.medications = medications;
     }

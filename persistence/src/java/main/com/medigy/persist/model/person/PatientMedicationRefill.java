@@ -36,49 +36,66 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.persist.reference.custom.party;
+package com.medigy.persist.model.person;
 
-import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
-import com.medigy.persist.model.party.ValidResponsiblePartyRole;
+import com.medigy.persist.model.common.AbstractEntity;
 
-import javax.persistence.DiscriminatorColumn;
-import javax.persistence.DiscriminatorType;
 import javax.persistence.Entity;
-import javax.persistence.GeneratorType;
-import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
 import javax.persistence.Table;
+import javax.persistence.Id;
+import javax.persistence.GeneratorType;
 import javax.persistence.Column;
-import javax.persistence.OneToMany;
-import java.util.Set;
-import java.util.HashSet;
+import javax.persistence.ManyToOne;
+import javax.persistence.JoinColumn;
+import javax.persistence.Basic;
+import javax.persistence.TemporalType;
+import java.util.Date;
+
+import org.hibernate.validator.NotNull;
 
 @Entity
-@Table(name = "Party_Role_Type")
-@Inheritance(
-    strategy=InheritanceType.SINGLE_TABLE,
-    discriminatorType=DiscriminatorType.STRING,
-    discriminatorValue="Party"        
-)
-@DiscriminatorColumn(name="role_type")
-public class PartyRoleType extends AbstractCustomReferenceEntity
+@Table(name = "Patient_Medication_Refill")
+public class PatientMedicationRefill extends AbstractEntity
 {
-    public static final String PK_COLUMN_NAME = "party_role_type_id";
-
-    public PartyRoleType()
-    {
-    }
+    public static final String PK_COLUMN_NAME = "refill_id";
+    private Long refillId;
+    private PatientMedication patientMedication;
+    private Date refillDate;
 
     @Id(generate = GeneratorType.AUTO)
     @Column(name = PK_COLUMN_NAME)
-    public Long getPartyRoleTypeId()
+    public Long getRefillId()
     {
-        return super.getSystemId();
+        return refillId;
     }
 
-    protected void setPartyRoleTypeId(final Long id)
+    public void setRefillId(final Long refillId)
     {
-        super.setSystemId(id);
+        this.refillId = refillId;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = PatientMedication.PK_COLUMN_NAME)
+    public PatientMedication getPatientMedication()
+    {
+        return patientMedication;
+    }
+
+    public void setPatientMedication(final PatientMedication patientMedication)
+    {
+        this.patientMedication = patientMedication;
+    }
+
+    @Basic(temporalType = TemporalType.DATE)
+    @Column(nullable = false)
+    @NotNull
+    public Date getRefillDate()
+    {
+        return refillDate;
+    }
+
+    public void setRefillDate(final Date refillDate)
+    {
+        this.refillDate = refillDate;
     }
 }

@@ -52,7 +52,9 @@ import javax.persistence.Column;
 import javax.persistence.ManyToOne;
 import javax.persistence.JoinColumn;
 import javax.persistence.Transient;
+import javax.persistence.EmbeddableSuperclass;
 
+@EmbeddableSuperclass
 public abstract class EntityAttribute extends AbstractTopLevelEntity
 {
     private Long attributeId;

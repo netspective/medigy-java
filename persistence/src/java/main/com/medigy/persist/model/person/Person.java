@@ -46,6 +46,7 @@ package com.medigy.persist.model.person;
 import com.medigy.persist.model.health.HealthCareEpisode;
 import com.medigy.persist.model.health.HealthCareLicense;
 import com.medigy.persist.model.health.HealthCareVisit;
+import com.medigy.persist.model.health.lab.LabOrder;
 import com.medigy.persist.model.insurance.InsurancePolicy;
 import com.medigy.persist.model.insurance.FeeSchedule;
 import com.medigy.persist.model.party.Party;
@@ -125,6 +126,7 @@ public class Person extends Party
     private Set<User> users = new HashSet<User>();
 
     private List<PersonRole> roles = new ArrayList<PersonRole>();
+    private List<LabOrder> labOrders = new ArrayList<LabOrder>();
 
     public Person()
     {
@@ -788,5 +790,16 @@ public class Person extends Party
                 return true;
         }
         return false;
+    }
+
+    @OneToMany(mappedBy = "patient")
+    public List<LabOrder> getLabOrders()
+    {
+        return labOrders;
+    }
+
+    public void setLabOrders(final List<LabOrder> labOrders)
+    {
+        this.labOrders = labOrders;
     }
 }
