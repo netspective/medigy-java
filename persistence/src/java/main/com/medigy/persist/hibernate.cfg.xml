@@ -63,6 +63,7 @@
         <mapping class="com.medigy.persist.reference.custom.health.VisitDuration"/>
         <mapping class="com.medigy.persist.reference.custom.health.LabOrderPriorityType"/>
         <mapping class="com.medigy.persist.reference.custom.health.LabOrderStatusType"/>
+        <mapping class="com.medigy.persist.reference.custom.health.MedicationDurationType"/>
 
         <!--mapping package="com.medigy.persist.reference.custom.product"/-->
         <mapping class="com.medigy.persist.reference.custom.product.ProductType"/>
@@ -205,14 +206,18 @@
         <mapping class="com.medigy.persist.model.health.HealthCareReferral"/>
         <mapping class="com.medigy.persist.model.health.VisitType"/>
         <mapping class="com.medigy.persist.model.health.PersonVisitType"/>
-
         <mapping class="com.medigy.persist.model.health.lab.LabOrder"/>
         <mapping class="com.medigy.persist.model.health.lab.LabOrderEntry"/>
 
-        <!--mapping package="com.medigy.persist.model.product"/-->
+        <mapping class="com.medigy.persist.model.product.Product"/>
+        <mapping class="com.medigy.persist.model.product.Medication"/>
+
+        <mapping class="com.medigy.persist.model.order.Order"/>
+        <mapping class="com.medigy.persist.model.order.OrderItem"/>
+
         <!--mapping class="com.medigy.persist.model.product.Product"/>
-        <mapping class="com.medigy.persist.model.product.ProductCategory"/>
-        <mapping class="com.medigy.persist.model.product.ProductFeature"/-->
+       <mapping class="com.medigy.persist.model.product.ProductCategory"/>
+       <mapping class="com.medigy.persist.model.product.ProductFeature"/-->
 
         <!--mapping package="com.medigy.persist.model.invoice"/-->
         <mapping class="com.medigy.persist.model.invoice.BillingAccount"/>
@@ -250,6 +255,7 @@
         <mapping class="com.medigy.persist.model.person.MaritalStatus"/>
         <mapping class="com.medigy.persist.model.person.PatientMedicalCondition"/>
         <mapping class="com.medigy.persist.model.person.PhysicalCharacteristic"/>
+        <mapping class="com.medigy.persist.model.person.PersonMedication"/>
 
         <!--mapping package="com.medigy.persist.model.insurance"/-->
         <mapping class="com.medigy.persist.model.insurance.CareProviderSelection"/>

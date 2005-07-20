@@ -4,22 +4,37 @@
 package com.medigy.persist.model.product;
 
 import com.medigy.persist.model.common.AbstractDateDurationEntity;
+import com.medigy.persist.model.common.EffectiveDates;
+import com.medigy.persist.model.common.AbstractTopLevelEntity;
 import com.medigy.persist.model.org.Organization;
 import com.medigy.persist.reference.custom.product.ProductType;
 
-public class Product extends AbstractDateDurationEntity
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.GeneratorType;
+import javax.persistence.Column;
+import javax.persistence.ManyToOne;
+import javax.persistence.JoinColumn;
+import javax.persistence.Basic;
+import javax.persistence.TemporalType;
+import javax.persistence.Transient;
+import javax.persistence.EmbeddableSuperclass;
+
+import org.hibernate.validator.NotNull;
+
+import java.util.Date;
+
+@EmbeddableSuperclass
+public class Product extends AbstractTopLevelEntity
 {
     public static final String PK_COLUMN_NAME = "product_id";
 
     private Long productId;
     private String name;
-    private String comment;
     private Organization organization;
-    private ProductType type;
+    private EffectiveDates effectiveDates = new EffectiveDates();
 
-    private ProductCategory productCategory;
-    //private Set<InvoiceItem> invoiceItems = new HashSet<InvoiceItem>();
-
+    @Transient
     public Long getProductId()
     {
         return productId;
@@ -30,6 +45,8 @@ public class Product extends AbstractDateDurationEntity
         this.productId = productId;
     }
 
+    @Column(length = 512, nullable = false)
+    @NotNull
     public String getName()
     {
         return name;
@@ -40,16 +57,8 @@ public class Product extends AbstractDateDurationEntity
         this.name = name;
     }
 
-    public String getComment()
-    {
-        return comment;
-    }
-
-    public void setComment(final String comment)
-    {
-        this.comment = comment;
-    }
-
+    @ManyToOne
+    @JoinColumn(name = Organization.PK_COLUMN_NAME)
     public Organization getOrganization()
     {
         return organization;
@@ -60,37 +69,26 @@ public class Product extends AbstractDateDurationEntity
         this.organization = party;
     }
 
-    public ProductCategory getProductCategory()
+
+    @Basic(temporalType = TemporalType.DATE)
+    public Date getIntroductionDate()
     {
-        return productCategory;
+        return effectiveDates.getFromDate();
     }
 
-    public void setProductCategory(ProductCategory productCategory)
+    public void setIntroductionDate(final Date introductionDate)
     {
-        this.productCategory = productCategory;
+        this.effectiveDates.setFromDate(introductionDate);
     }
 
-    public ProductType getType()
+    @Basic(temporalType = TemporalType.DATE)
+    public Date getDiscontinuedDate()
     {
-        return type;
+        return effectiveDates.getThroughDate();
     }
 
-    public void setType(final ProductType type)
+    public void setDiscontinuedDate(final Date discontinuedDate)
     {
-        this.type = type;
+        this.effectiveDates.setThroughDate(discontinuedDate);
     }
-
-    /*
-    @OneToMany(mappedBy = "product")
-    public Set<InvoiceItem> getInvoiceItems()
-    {
-        return invoiceItems;
-    }
-
-    public void setInvoiceItems(final Set<InvoiceItem> invoiceItems)
-    {
-        this.invoiceItems = invoiceItems;
-    }
-    */
-
 }
