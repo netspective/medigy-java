@@ -1,0 +1,66 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.sourceforge.net/">
+    <head>
+        <title>Welcome to Medigy</title>
+        <link rel="stylesheet" type="text/css" href="/medigy/resources/theme/default/css/theme.css"></link>
+    </head>
+
+    <body wicket:id="border" class="page">
+        <form wicket-id="mainForm">
+                <div class="form-body">
+                    <fieldset class="top-level">
+	                    <legend _wicket:id="loginGroup_label">Login</legend>
+	                    <table class="vertical-fields">
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="loginId_label">Login ID</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" _wicket:id="loginId" value=""/>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="organizationId_label">Organization ID</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" _wicket:id="organizationId" value=""/>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="password_label">Password</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" _wicket:id="password" value=""/>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="startPage_label">Start Page</label>
+	                            </td>
+	                            <td class="control">
+	                                <select _wicket:id="startPage">
+                                        <option selected="selected" value="0">Schedule</option>
+                                        <option value="1">Worklist</option>
+                                        <option value="2">Search</option>
+                                        <option value="3">Home</option>
+                                    </select>
+	                            </td>
+	                        </tr>
+	                    </table>
+	                </fieldset>
+                    <div class="director">
+                    <table class="vertical-fields">
+                        <tr class="field">
+                            <td class="control">
+                                <input class="button" _wicket:id="formSubmit" type="submit" value="OK"/>
+                                <input class="button" _wicket:id="formReset" type="reset" value="Cancel"/>
+                            </td>
+                        </tr>
+                    </table>
+                    </div>
+                </div>
+            </form>
+    </body>
+</html>

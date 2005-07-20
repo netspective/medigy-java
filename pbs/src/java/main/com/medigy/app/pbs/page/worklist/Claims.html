@@ -9,13 +9,13 @@
         <script>
             function addActions(index, patientId)
             {
-                document.write("<SELECT onChange=''>");
+                document.write("<SELECT onChange=\"if(this.selectedIndex > 0) window.location.href = '?bookmarkablePage=' + this.options[this.selectedIndex].value; \">");
                 document.write("    <option value=''>Choose Action</option>");
-                document.write("    <option value=''>Add Claim Notes</option>");
-                document.write("    <option value=''>Transfer Invoice</option>");
-                document.write("    <option value=''>Add Reck Date</option>");
-                document.write("    <option value=''>Re-Submit Claim</option>");
-                document.write("    <option value=''>Close Invoice</option>");
+                document.write("    <option value='com.medigy.app.pbs.page.NotImplemented'>Add Claim Notes</option>");
+                document.write("    <option value='com.medigy.app.pbs.page.NotImplemented'>Transfer Invoice</option>");
+                document.write("    <option value='com.medigy.app.pbs.page.NotImplemented'>Add Reck Date</option>");
+                document.write("    <option value='com.medigy.app.pbs.page.NotImplemented'>Re-Submit Claim</option>");
+                document.write("    <option value='com.medigy.app.pbs.page.NotImplemented'>Close Invoice</option>");
                 document.write("</SELECT>");
             }
         </script>
