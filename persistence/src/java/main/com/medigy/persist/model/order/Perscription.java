@@ -39,6 +39,7 @@
 package com.medigy.persist.model.order;
 
 import com.medigy.persist.model.health.HealthCareVisit;
+import com.medigy.persist.reference.custom.order.OrderType;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
@@ -47,16 +48,23 @@ import javax.persistence.OneToMany;
 import javax.persistence.CascadeType;
 import javax.persistence.Inheritance;
 import java.util.List;
+import java.util.ArrayList;
 
-//@Entity
-//@Inheritance(discriminatorValue = "Perscription")
+@Entity
+@Inheritance(discriminatorValue = "Perscription")
 public class Perscription extends Order
 {
-
     private HealthCareVisit healthCareVisit;
+    private List<PerscriptionItem> perscriptionItems = new ArrayList<PerscriptionItem>();
 
-    //@ManyToOne
-    //@JoinColumn(name = HealthCareVisit.PK_COLUMN_NAME)
+
+    public Perscription()
+    {
+        setType(OrderType.Cache.PERSCRIPTION.getEntity());
+    }
+
+    @ManyToOne
+    @JoinColumn(name = HealthCareVisit.PK_COLUMN_NAME)
     public HealthCareVisit getHealthCareVisit()
     {
         return healthCareVisit;
@@ -67,5 +75,14 @@ public class Perscription extends Order
         this.healthCareVisit = healthCareVisit;
     }
 
+    @OneToMany(mappedBy = "perscription", cascade = CascadeType.ALL)    
+    public List<PerscriptionItem> getPerscriptionItems()
+    {
+        return perscriptionItems;
+    }
 
+    public void setPerscriptionItems(final List<PerscriptionItem> perscriptionItems)
+    {
+        this.perscriptionItems = perscriptionItems;
+    }
 }

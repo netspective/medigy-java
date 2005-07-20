@@ -43,6 +43,9 @@ import com.medigy.persist.model.common.attribute.EntityAttribute;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.Column;
+
+import org.hibernate.validator.NotNull;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -50,6 +53,8 @@ public class InvoiceBooleanAttribute extends InvoiceAttribute
 {
     private Boolean value;
 
+    @Column(nullable = false)
+    @NotNull
     public Boolean getValue()
     {
         return value;

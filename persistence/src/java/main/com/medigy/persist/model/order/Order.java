@@ -39,6 +39,7 @@
 package com.medigy.persist.model.order;
 
 import com.medigy.persist.model.common.AbstractTopLevelEntity;
+import com.medigy.persist.reference.custom.order.OrderType;
 
 import javax.persistence.Basic;
 import javax.persistence.TemporalType;
@@ -52,9 +53,13 @@ import javax.persistence.Entity;
 import javax.persistence.EmbeddableSuperclass;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.ManyToOne;
+import javax.persistence.JoinColumn;
 import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
+
+import org.hibernate.validator.NotNull;
 
 @Entity
 @Inheritance(discriminatorValue = "Order", strategy = InheritanceType.SINGLE_TABLE)
@@ -67,6 +72,7 @@ public class Order extends AbstractTopLevelEntity
     private Date orderDate;
     private Date entryDate;
     private Date filledDate;
+    private OrderType type;
 
     private List<OrderRole> roles = new ArrayList<OrderRole>();
     private List<OrderItem> items = new ArrayList<OrderItem>();
@@ -81,6 +87,19 @@ public class Order extends AbstractTopLevelEntity
     public void setOrderId(final Long orderId)
     {
         this.orderId = orderId;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = OrderType.PK_COLUMN_NAME, nullable = false)
+    @NotNull
+    public OrderType getType()
+    {
+        return type;
+    }
+
+    public void setType(final OrderType type)
+    {
+        this.type = type;
     }
 
     /**

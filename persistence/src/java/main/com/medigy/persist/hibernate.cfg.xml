@@ -121,6 +121,7 @@
         <mapping class="com.medigy.persist.reference.custom.person.PatientType"/>
 
         <mapping class="com.medigy.persist.reference.custom.order.OrderRoleType"/>
+        <mapping class="com.medigy.persist.reference.custom.order.OrderType"/>
 
         <!--mapping package="com.medigy.persist.reference.custom.org"/-->
         <mapping class="com.medigy.persist.reference.custom.org.OrganizationClassificationType"/>

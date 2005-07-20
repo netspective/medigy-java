@@ -36,49 +36,75 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.persist.model.invoice.attribute;
+package com.medigy.persist.reference.custom.order;
 
-import com.medigy.persist.model.common.attribute.EntityAttribute;
-import com.medigy.persist.model.invoice.Invoice;
+import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
+import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
+import com.medigy.persist.reference.custom.CustomReferenceEntity;
 
+import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.GeneratorType;
 import javax.persistence.Column;
-import javax.persistence.ManyToOne;
-import javax.persistence.JoinColumn;
-import javax.persistence.Entity;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
 
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED)
-public class InvoiceAttribute extends EntityAttribute
+public class OrderType extends AbstractCustomReferenceEntity
 {
-    public static final String PK_COLUMN_NAME = "inv_attr_id";
+    public static final String PK_COLUMN_NAME = "order_type_id";
 
-    private Invoice invoice;        
+    public enum Cache implements CachedCustomReferenceEntity
+    {
+        PERSCRIPTION("PERSCRIPTION", "Perscription", "Perscription"),
+        OTHER("OTHER", "Other", "Other");
+
+        private final String code;
+        private final String label;
+        private final String description;
+        private OrderType entity;
+
+        private Cache(final String code, final String label, final String description)
+        {
+            this.code = code;
+            this.label = label;
+            this.description = description;
+        }
+
+        public String getCode()
+        {
+            return code;
+        }
+
+        public String getLabel()
+        {
+            return label;
+        }
+
+        public String getDescription()
+        {
+            return description;
+        }
+
+        public OrderType getEntity()
+        {
+            return entity;
+        }
+
+        public void setEntity(final CustomReferenceEntity entity)
+        {
+            this.entity = (OrderType) entity;
+        }
+    }
+
 
     @Id(generate = GeneratorType.AUTO)
     @Column(name = PK_COLUMN_NAME)
-    public Long getInvoiceAttributeId()
+    public Long getOrderTypeId()
     {
-        return getAttributeId();
+        return super.getSystemId();
     }
 
-    protected void setInvoiceAttributeId(final Long id)
+    protected void setOrderTypeId(final Long id)
     {
-        setAttributeId(id);
-    }
-
-    @ManyToOne
-    @JoinColumn(name = Invoice.PK_COLUMN_NAME, nullable = false)
-    public Invoice getInvoice()
-    {
-        return invoice;
-    }
-
-    public void setInvoice(final Invoice invoice)
-    {
-        this.invoice = invoice;
+        super.setSystemId(id);
     }
 }
