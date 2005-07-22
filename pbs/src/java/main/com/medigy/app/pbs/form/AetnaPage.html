@@ -1,0 +1,79 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.sourceforge.net/">
+    <head>
+        <title>Add Aetna</title>
+        <link rel="stylesheet" type="text/css" href="/medigy/resources/theme/default/css/theme.css"></link>
+    </head>
+
+    <body wicket:id="border" class="page">
+        <form wicket-id="mainForm">
+                <div class="form-body">
+                    <fieldset class="top-level">
+	                    <legend _wicket:id="carrierDetailsGroup_label">Carrier Details Information</legend>
+	                    <table class="vertical-fields">
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="aetna_label">AETNA</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" _wicket:id="aetna" value=""/>
+	                            </td>
+	                        </tr>
+                        </table>
+                    </fieldset>
+                    <fieldset class="top-level">
+                        <legend _wicket:id="patientDetails_label">Patient Details</legend>
+                        <table class="vertical-fields">
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="lastName_label">Last Name</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" _wicket:id="lastName" value=""/>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="firstName_label">First Name</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" _wicket:id="firstName" value=""/>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="dateOfBirth_label">Date of Birth</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" _wicket:id="dateOfBirth" value=""/>
+	                            </td>
+	                        </tr>
+	                    </table>
+                    </fieldset>
+                    <fieldset class="top-level">
+                        <legend _wicket:id="otherDetails_label">Other Details</legend>
+                        <table class="vertical-fields">
+                             <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="dateOfBirth_label">Date to Check Eligibility</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" _wicket:id="dateToCheckEligibility" value=""/>
+	                            </td>
+	                        </tr>
+                        </table>
+                    </fieldset>
+                    <div class="director">
+                        <table class="vertical-fields">
+                            <tr class="field">
+                                <td class="control">
+                                    <input class="button" _wicket:id="formSubmit" type="submit" value="OK"/>
+                                    <input class="button" _wicket:id="formReset" type="reset" value="Reset"/>
+                                </td>
+                            </tr>
+                         </table>
+                    </div>
+                </div>
+            </form>
+    </body>
+</html>

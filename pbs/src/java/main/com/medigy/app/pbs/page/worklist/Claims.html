@@ -11,11 +11,11 @@
             {
                 document.write("<SELECT onChange=\"if(this.selectedIndex > 0) window.location.href = '?bookmarkablePage=' + this.options[this.selectedIndex].value; \">");
                 document.write("    <option value=''>Choose Action</option>");
-                document.write("    <option value='com.medigy.app.pbs.page.NotImplemented'>Add Claim Notes</option>");
-                document.write("    <option value='com.medigy.app.pbs.page.NotImplemented'>Transfer Invoice</option>");
-                document.write("    <option value='com.medigy.app.pbs.page.NotImplemented'>Add Reck Date</option>");
-                document.write("    <option value='com.medigy.app.pbs.page.NotImplemented'>Re-Submit Claim</option>");
-                document.write("    <option value='com.medigy.app.pbs.page.NotImplemented'>Close Invoice</option>");
+                document.write("    <option value='com.medigy.app.pbs.form.ClaimNotesPage'>Add Claim Notes</option>");
+                document.write("    <option value='com.medigy.app.pbs.form.TransferInvoicePage'>Transfer Invoice</option>");
+                document.write("    <option value='com.medigy.app.pbs.form.ReckDatePage'>Add Reck Date</option>");
+                document.write("    <option value='com.medigy.app.pbs.form.InsuranceClaimPage'>Re-Submit Claim</option>");
+                document.write("    <option value='com.medigy.app.pbs.form.CloseInvoicePage'>Close Invoice</option>");
                 document.write("</SELECT>");
             }
         </script>
@@ -41,8 +41,8 @@
                     <td>1</td>
                     <td><script>addActions(0, 'x', 'y')</script></td>
                     <td><a href="#">Shah, Shahid N.</a></td>
-                    <td><a href="#">1287-A</a></td>
-                    <td><a href="#">Aetna</a></td>
+                    <td><a href="?bookmarkablePage=com.medigy.app.pbs.form.InsuranceClaimPage">1287-A</a></td>
+                    <td><a href="?bookmarkablePage=com.medigy.app.pbs.form.AetnaPage">Aetna</a></td>
                     <td>800-440-1234</td>
                     <td><a href="#">891156-AA00</a></td>
                     <td>Declined</td>
