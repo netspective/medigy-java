@@ -130,7 +130,7 @@ public class SearchResultPanel extends Panel
                         return null;
                     }
                 });
-                columnNames = values.getSearchResults() != null && values.getSearchResults().size() > 0 ? new ArrayList<String>(values.getSearchResults().get(0).keySet()) : null;
+                //columnNames = values.getSearchResults() != null && values.getSearchResults().size() > 0 ? new ArrayList<String>(values.getSearchResults().get(0).keySet()) : null;
                 return values.getSearchResults().size();
 
             }
@@ -160,7 +160,7 @@ public class SearchResultPanel extends Panel
                         return null;
                     }
                 });
-                columnNames = values.getSearchResults() != null && values.getSearchResults().size() > 0 ? new ArrayList<String>(values.getSearchResults().get(0).keySet()) : null;
+                //columnNames = values.getSearchResults() != null && values.getSearchResults().size() > 0 ? new ArrayList<String>(values.getSearchResults().get(0).keySet()) : null;
                 return values.getSearchResults();
             }
         };

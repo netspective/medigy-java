@@ -4,13 +4,24 @@
 package com.medigy.persist.util.query;
 
 import com.medigy.persist.util.query.exception.QueryDefinitionException;
+import com.medigy.persist.util.query.comparison.StartsWithComparisonIgnoreCase;
+import com.medigy.persist.util.query.comparison.EqualsComparison;
 import com.medigy.persist.util.value.ValueContext;
+import com.medigy.persist.model.person.Person;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.HashMap;
+
+import org.hibernate.Criteria;
+import org.hibernate.FetchMode;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.MatchMode;
 
 public class QueryDefnStatementGenerator
 {
@@ -20,6 +31,7 @@ public class QueryDefnStatementGenerator
     private List<String> selectClause = new ArrayList<String>();
     private List<String> fromClause = new ArrayList<String>();
     private List<String> fromClauseComments = new ArrayList<String>();
+
     private List<String> whereJoinClause = new ArrayList<String>();
     private Set<QueryDefinitionJoin> joins = new HashSet<QueryDefinitionJoin>();
 
@@ -50,15 +62,20 @@ public class QueryDefnStatementGenerator
         // HQL Rules: OUTER JOINS and INNER JOINS can be defined so at the FROM clause there could be some more HQL
         // text appended after the table name. There might be limitations on this!
         String fromExpr = join.getFromExpr();
+        Set<String> joinList = new HashSet<String>();
         for (QueryDefinitionField field : select.getDisplayFields())
         {
             if (field.getHqlJoinExpr() != null && field.getJoin().equals(join))
-                fromExpr = fromExpr + " " + field.getHqlJoinExpr();
+                joinList.add(field.getHqlJoinExpr());
         }
         for (QueryDefnCondition cond : select.getConditions().getList())
         {
             if (cond.getField().getHqlJoinExpr() != null && cond.getField().getJoin().equals(join))
-                fromExpr = fromExpr + " " + cond.getField().getHqlJoinExpr();
+                joinList.add(cond.getField().getHqlJoinExpr());
+        }
+        for (String joinExpr : joinList)
+        {
+            fromExpr = fromExpr + " " + joinExpr;
         }
         fromClause.add(fromExpr);
 
@@ -91,17 +108,65 @@ public class QueryDefnStatementGenerator
         }
     }
 
-    public String generateQuery(final ValueContext valueContext)  throws QueryDefinitionException
+    public DetachedCriteria generateCriteria(final ValueContext valueContext) throws QueryDefinitionException
     {
+        DetachedCriteria criteria = DetachedCriteria.forClass(Person.class);
+
+        Map<String, Criteria> queryCriterias = new HashMap<String, Criteria>();
 
         final List<QueryDefinitionField> showFields = select.getDisplayFields();
         if (showFields.size() > 0)
         {
             for (final QueryDefinitionField queryDefinitionField : showFields)
             {
+                if (queryDefinitionField.isAssociationProperty())
+                {
+                    criteria.setFetchMode(queryDefinitionField.getEntityPropertyName(), FetchMode.JOIN);
+                }
                 String selClauseAndLabel = queryDefinitionField.getSelectClauseExprAndLabel();
                 if (selClauseAndLabel != null)
                     selectClause.add(selClauseAndLabel);
+                addJoin(queryDefinitionField);
+            }
+        }
+        QueryDefinitionConditions allSelectConditions = select.getConditions();
+        QueryDefinitionConditions usedSelectConditions = allSelectConditions.getUsedConditions(this, valueContext);
+        for (QueryDefnCondition cond : usedSelectConditions.getList())
+        {
+            final QueryDefinitionField field = cond.getField();
+            final SqlComparison comparison = cond.getComparison();
+
+            if (field.isAssociationProperty())
+            {
+                Criterion criterion = null;
+                if (comparison.getClass().equals(StartsWithComparisonIgnoreCase.class))
+                    criterion = Restrictions.like(field.getEntityPropertyName(),
+                            cond.getValueProvider().getValue().toString(), MatchMode.START).ignoreCase();
+                else if (comparison.getClass().equals(EqualsComparison.class))
+                    criterion = Restrictions.eq(field.getEntityPropertyName(), cond.getValueProvider().getValue());
+                else
+                    throw new QueryDefinitionException("Unknown comparison");
+                criteria.createCriteria(field.getEntityPropertyName()).add(criterion);
+            }
+        }
+
+        return criteria;
+    }
+
+
+    public String generateQuery(final ValueContext valueContext)  throws QueryDefinitionException
+    {
+        final List<QueryDefinitionField> showFields = select.getDisplayFields();
+        if (showFields.size() > 0)
+        {
+            for (final QueryDefinitionField queryDefinitionField : showFields)
+            {
+                if (!queryDefinitionField.isTransientProperty())
+                {
+                    String selClauseAndLabel = queryDefinitionField.getSelectClauseExprAndLabel();
+                    if (selClauseAndLabel != null)
+                        selectClause.add(selClauseAndLabel);
+                }
                 addJoin(queryDefinitionField);
             }
         }
@@ -122,6 +187,7 @@ public class QueryDefnStatementGenerator
 
         StringBuffer sql = new StringBuffer();
 
+        /*
         int selectCount = selectClause.size();
         int selectLast = selectCount - 1;
         sql.append("select ");
@@ -138,7 +204,7 @@ public class QueryDefnStatementGenerator
                 sql.append(", ");
             sql.append("\n");
         }
-
+        */
         int fromCount = fromClause.size();
         int fromLast = fromCount - 1;
         sql.append("from \n");

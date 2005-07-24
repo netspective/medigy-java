@@ -64,6 +64,7 @@ import com.medigy.persist.reference.type.party.PartyType;
 import org.apache.commons.codec.language.Soundex;
 import org.hibernate.validator.Past;
 import org.hibernate.validator.Size;
+import org.hibernate.annotations.Formula;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -108,6 +109,7 @@ public class Person extends Party
 
     private GenderType currentGenderType;
 
+    private List<PersonIdentifier> personIdentifiers = new ArrayList<PersonIdentifier>();
     //private Set<CareProviderSelection> careProviderSelections = new HashSet<CareProviderSelection>();
 
     private Set<Ethnicity> ethnicities = new HashSet<Ethnicity>();
@@ -515,10 +517,10 @@ public class Person extends Party
     }
 
     @Transient
-    protected String getPartyIdentifierValue(final PartyIdentifierType type)
+    protected String getPersonIdentifierValue(final PersonIdentifierType type)
     {
         // this assumes that there is only one type of identifier each
-        for (PartyIdentifier pi: partyIdentifiers)
+        for (PersonIdentifier pi: personIdentifiers)
         {
             if (pi.getType().equals(type))
             {
@@ -529,9 +531,9 @@ public class Person extends Party
     }
 
     @Transient
-    public boolean hasPartyIdentifier(final PartyIdentifierType type)
+    public boolean hasPersonIdentifier(final PersonIdentifierType type)
     {
-        for (PartyIdentifier pi: partyIdentifiers)
+        for (PersonIdentifier pi: personIdentifiers)
         {
             if (pi.getType().equals(type))
             {
@@ -544,33 +546,33 @@ public class Person extends Party
     @Transient
     public String getSsn()
     {
-        return getPartyIdentifierValue(PersonIdentifierType.Cache.SSN.getEntity());
+        return getPersonIdentifierValue(PersonIdentifierType.Cache.SSN.getEntity());
     }
 
     @Transient
     public void setSsn(final String ssn)
     {
-        final PartyIdentifier identifier = new PartyIdentifier();
+        final PersonIdentifier identifier = new PersonIdentifier();
         identifier.setType(PersonIdentifierType.Cache.SSN.getEntity());
         identifier.setIdentifierValue(ssn);
         identifier.setParty(this);
-        partyIdentifiers.add(identifier);
+        personIdentifiers.add(identifier);
     }
 
     @Transient
     public String getDriversLicenseNumber()
     {
-        return getPartyIdentifierValue(PersonIdentifierType.Cache.DRIVERS_LICENSE.getEntity());
+        return getPersonIdentifierValue(PersonIdentifierType.Cache.DRIVERS_LICENSE.getEntity());
     }
 
     @Transient
     public void setDriversLicenseNumber(final String number)
     {
-        final PartyIdentifier identifier = new PartyIdentifier();
+        final PersonIdentifier identifier = new PersonIdentifier();
         identifier.setType(PersonIdentifierType.Cache.DRIVERS_LICENSE.getEntity());
         identifier.setIdentifierValue(number);
         identifier.setParty(this);
-        partyIdentifiers.add(identifier);
+        personIdentifiers.add(identifier);
     }
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "person", fetch = FetchType.LAZY)
@@ -801,5 +803,22 @@ public class Person extends Party
     public void setLabOrders(final List<LabOrder> labOrders)
     {
         this.labOrders = labOrders;
+    }
+
+    @OneToMany(mappedBy = "party", cascade = CascadeType.ALL)
+    public List<PersonIdentifier> getPersonIdentifiers()
+    {
+        return personIdentifiers;
+    }
+
+    public void setPersonIdentifiers(final List<PersonIdentifier> personIdentifiers)
+    {
+        this.personIdentifiers = personIdentifiers;
+    }
+
+    @Transient
+    public void addPersonIdentifier(final PersonIdentifier ident)
+    {
+        this.personIdentifiers.add(ident);
     }
 }

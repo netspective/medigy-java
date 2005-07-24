@@ -50,6 +50,8 @@ import javax.persistence.Inheritance;
 @Inheritance(discriminatorValue="Person" )
 public class PersonIdentifierType extends PartyIdentifierType
 {
+    public static final String PK_COLUMN_NAME = PartyIdentifierType.PK_COLUMN_NAME;
+
     public enum Cache implements CachedCustomReferenceEntity
     {
         DRIVERS_LICENSE("DVR_LIC", "Driver's License"),

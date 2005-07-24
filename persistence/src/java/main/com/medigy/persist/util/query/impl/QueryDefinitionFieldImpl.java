@@ -11,13 +11,17 @@ import com.medigy.persist.util.query.exception.QueryDefinitionException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.lang.reflect.InvocationTargetException;
-import java.beans.Introspector;
-import java.beans.BeanInfo;
+import java.lang.reflect.Method;
+import java.lang.annotation.Annotation;
 import java.beans.PropertyDescriptor;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.PropertyUtilsBean;
+import org.apache.commons.beanutils.PropertyUtils;
+
+import javax.persistence.OneToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.ManyToMany;
+import javax.persistence.Transient;
 
 public class QueryDefinitionFieldImpl implements QueryDefinitionField
 {
@@ -35,15 +39,49 @@ public class QueryDefinitionFieldImpl implements QueryDefinitionField
     private QueryDefinitionJoin join;
     private QueryDefinition parentQueryDefinition;
     private boolean displayAllowed = true;
+    private boolean transientProperty = false;
+    private boolean associationProperty = false;
+    private Class propertyType;
     private List<SqlComparison> validSqlComparisons = new ArrayList<SqlComparison>();
 
-    public QueryDefinitionFieldImpl(final String name, final String propertyName, 
+    public QueryDefinitionFieldImpl(final String name, final String propertyName,
                                     final QueryDefinitionJoin join,  final QueryDefinition queryDefn)
     {
         this.name = name;
         this.entityPropertyName = propertyName;
         this.join = join;
         this.parentQueryDefinition = queryDefn;
+        checkPropertyAnnotations();
+    }
+
+    protected void checkPropertyAnnotations()
+    {
+        try
+        {
+            final Class entityClass = getJoin().getEntityClass();
+            final PropertyDescriptor propertyDescriptor = PropertyUtils.getPropertyDescriptor(entityClass.newInstance(),
+                    entityPropertyName);
+            if (propertyDescriptor == null)
+                throw new RuntimeException("Failed to lookup entity property in " + entityClass + ": " + entityPropertyName);   
+            propertyType = propertyDescriptor.getPropertyType();
+            final Method readMethod = propertyDescriptor.getReadMethod();
+
+            if (readMethod.isAnnotationPresent(OneToMany.class) || readMethod.isAnnotationPresent(ManyToOne.class) ||
+                readMethod.isAnnotationPresent(ManyToMany.class))
+            {
+                // be default all  the association fetches are LAZY so we need to make them EAGER
+                associationProperty = true;
+            }
+            else if (readMethod.isAnnotationPresent(Transient.class))
+            {
+                transientProperty = true;
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
     }
 
     public String getName()
@@ -62,6 +100,17 @@ public class QueryDefinitionFieldImpl implements QueryDefinitionField
     }
 
     /**
+     * Checks to see if the requested property is a transient property. If it is a transient property, it cannot be
+     * added in the SELECT clause of the generated HQL but the JOIN expression still needs to be added.
+     *
+     * @return   True if the property denoted as a transient method
+     */
+    public boolean isTransientProperty()
+    {
+        return transientProperty;
+    }
+
+    /**
      * Gets the property of the entity. THIS CAN BE A NESTED STRING. (e.g. address.stree1)
      * @return the nested property name
      */
@@ -72,17 +121,19 @@ public class QueryDefinitionFieldImpl implements QueryDefinitionField
 
     public Class getEntityPropertyType() throws QueryDefinitionException
     {
-        PropertyUtilsBean util = new PropertyUtilsBean();
-        try
-        {
-            final PropertyDescriptor propertyDescriptor = util.getPropertyDescriptor(getJoin().getEntityClass().newInstance(), entityPropertyName);
-            return propertyDescriptor.getPropertyType();
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-            throw new QueryDefinitionException(e);
-        }
+        return propertyType;
+    }
+
+    /**
+     * Checks to see if the requested property is an association relationship if so
+     * then an EXPLICIT FECTH must be issued so that the associated collection or entity is
+     * also automatically retrieved.
+     * @return
+     * @throws QueryDefinitionException
+     */
+    public boolean isAssociationProperty() throws QueryDefinitionException
+    {
+        return associationProperty;
     }
 
     public String getColumnLabel()

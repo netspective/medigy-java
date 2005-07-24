@@ -68,4 +68,5 @@ public interface QueryDefnCondition
 
     public ValueProvider getValueProvider();
     public void setValueProvider(ValueProvider provider);
+
 }

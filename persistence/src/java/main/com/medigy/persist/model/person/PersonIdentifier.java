@@ -35,81 +35,88 @@
  * CAUSED AND REGARDLESS OF THE THEORY OF LIABILITY, ARISING OUT OF THE USE OF OR INABILITY TO USE THE SOFTWARE, EVEN
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
- * @author Shahid N. Shah
  */
+package com.medigy.persist.model.person;
 
-/*
- * Copyright (c) 2005 Your Corporation. All Rights Reserved.
- */
-package com.medigy.persist.reference.custom.party;
+import com.medigy.persist.model.party.PartyIdentifier;
+import com.medigy.persist.model.contact.GeographicBoundary;
+import com.medigy.persist.model.common.AbstractEntity;
+import com.medigy.persist.reference.custom.person.PersonIdentifierType;
 
-import javax.persistence.Column;
-import javax.persistence.DiscriminatorColumn;
-import javax.persistence.DiscriminatorType;
 import javax.persistence.Entity;
-import javax.persistence.GeneratorType;
-import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-
-import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
-import com.medigy.persist.reference.type.DataEncryptionType;
+import javax.persistence.JoinColumn;
+import javax.persistence.Id;
+import javax.persistence.GeneratorType;
+import javax.persistence.Column;
 
 @Entity
-@Table(name = "Party_Identifier_Type")
-@Inheritance(
-    strategy=InheritanceType.SINGLE_TABLE,
-    discriminatorType=DiscriminatorType.STRING,
-    discriminatorValue="Party"
-)
-@DiscriminatorColumn(name="partyType")
-public class PartyIdentifierType extends AbstractCustomReferenceEntity
+public class PersonIdentifier extends AbstractEntity implements PartyIdentifier 
 {
-    public static final String PK_COLUMN_NAME = "identifier_type_id";
+    public static final String PK_COLUMN_NAME = "identifier_id";
 
-    private DataEncryptionType encryptionType;
-    private int maxAllowed = 1;
+    private Long identifierId;
+    private Person person;
+    private PersonIdentifierType type;
+    private GeographicBoundary geographicBoundary;
+    private String identifierValue;
 
-    public PartyIdentifierType()
+    @Column(nullable = false, length = 32)
+    public String getIdentifierValue()
     {
+        return identifierValue;
+    }
+
+    public void setIdentifierValue(final String identifierValue)
+    {
+        this.identifierValue = identifierValue;
     }
 
     @ManyToOne
-    @JoinColumn(name = "encryption_type_id", nullable = false)
-    public DataEncryptionType getEncryptionType()
+    @JoinColumn(name = GeographicBoundary.PK_COLUMN_NAME)
+    public GeographicBoundary getGeographicBoundary()
     {
-        return encryptionType;
+        return geographicBoundary;
     }
 
-    public void setEncryptionType(final DataEncryptionType encryptionType)
+    public void setGeographicBoundary(final GeographicBoundary geographicBoundary)
     {
-        this.encryptionType = encryptionType;
+        this.geographicBoundary = geographicBoundary;
     }
 
-    @Column(nullable = false)
-    public int getMaxAllowed()
-    {
-        return maxAllowed;
-    }
-
-    public void setMaxAllowed(int maxAllowed)
-    {
-        this.maxAllowed = maxAllowed;
-    }
-
-    @Id(generate=GeneratorType.AUTO)
+    @Id(generate = GeneratorType.AUTO)
     @Column(name = PK_COLUMN_NAME)
-    public Long getIdentifierTypeId()
+    public Long getIdentifierId()
     {
-        return super.getSystemId();
+        return identifierId;
     }
 
-    protected void setIdentifierTypeId(final Long identifierTypeId)
+    public void setIdentifierId(final Long identifierId)
     {
-        super.setSystemId(identifierTypeId);
+        this.identifierId = identifierId;
     }
 
+    @ManyToOne
+    @JoinColumn(name = Person.PK_COLUMN_NAME)
+    public Person getParty()
+    {
+        return person;
+    }
+
+    public void setParty(final Person person)
+    {
+        this.person = person;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = PersonIdentifierType.PK_COLUMN_NAME)
+    public PersonIdentifierType getType()
+    {
+        return type;
+    }
+
+    public void setType(final PersonIdentifierType type)
+    {
+        this.type = type;
+    }
 }

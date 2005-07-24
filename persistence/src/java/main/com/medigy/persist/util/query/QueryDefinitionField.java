@@ -14,6 +14,7 @@ public interface QueryDefinitionField
     public void setCaption(final String caption);
     public String getEntityPropertyName();
     public Class getEntityPropertyType() throws QueryDefinitionException;
+    public boolean isAssociationProperty() throws QueryDefinitionException;
 
     public String getColumnLabel();
     public String getColumnExpr() throws QueryDefinitionException;
@@ -59,4 +60,5 @@ public interface QueryDefinitionField
      */
     public boolean isDisplayAllowed();
     public void setDisplayAllowed(final boolean display);
+    public boolean isTransientProperty();
 }

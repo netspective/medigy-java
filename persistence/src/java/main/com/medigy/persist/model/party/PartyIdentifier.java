@@ -49,81 +49,13 @@ import javax.persistence.GeneratorType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.EmbeddableSuperclass;
 
-@Entity
-public class PartyIdentifier extends AbstractEntity
+public interface PartyIdentifier
 {
-    private Long identifierId;
-    private Party party;
-    private PartyIdentifierType type;
-    private String identifierValue;
-
-    private GeographicBoundary geographicBoundary;
-
-    public PartyIdentifier()
-    {
-
-    }
-
-    @Id(generate = GeneratorType.AUTO)
-    public Long getIdentifierId()
-    {
-        return identifierId;
-    }
-
-    protected void setIdentifierId(final Long identifierId)
-    {
-        this.identifierId = identifierId;
-    }
-
-    @ManyToOne
-    @JoinColumn(name = "party_id", nullable = false)
-    public Party getParty()
-    {
-        return party;
-    }
-
-    public void setParty(final Party party)
-    {
-        this.party = party;
-    }
-
-    @ManyToOne
-    @JoinColumn(name = "identifier_type_id", nullable = false)
-    public PartyIdentifierType getType()
-    {
-        return type;
-    }
-
-    public void setType(final PartyIdentifierType type)
-    {
-        this.type = type;
-    }
-
-    @Column(length = 100, nullable = false)
-    public String getIdentifierValue()
-    {
-        return identifierValue;
-    }
-
-    public void setIdentifierValue(final String identifierValue)
-    {
-        this.identifierValue = identifierValue;
-    }
-
-    /**
-     * Gets the geographic boundary this identifier is associated with
-     * @return
-     */
-    @ManyToOne
-    @JoinColumn(name = "geo_id")
-    public GeographicBoundary getGeographicBoundary()
-    {
-        return geographicBoundary;
-    }
-
-    public void setGeographicBoundary(final GeographicBoundary geographicBoundary)
-    {
-        this.geographicBoundary = geographicBoundary;
-    }
+    public Long getIdentifierId();
+    public Party getParty();
+    public PartyIdentifierType getType();
+    public String getIdentifierValue();
+    public GeographicBoundary getGeographicBoundary();
 }

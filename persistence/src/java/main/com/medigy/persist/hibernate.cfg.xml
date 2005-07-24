@@ -152,8 +152,7 @@
         <mapping class="com.medigy.persist.model.party.PartyClassification"/>
         <mapping class="com.medigy.persist.model.party.PartyContactMechanism"/>
         <mapping class="com.medigy.persist.model.party.PartyContactMechanismPurpose"/>
-        <mapping class="com.medigy.persist.model.party.PartyFacilityRole"/>
-        <mapping class="com.medigy.persist.model.party.PartyIdentifier"/>
+        <mapping class="com.medigy.persist.model.party.PartyFacilityRole"/>        
         <mapping class="com.medigy.persist.model.party.PartyQualification"/>
         <!--mapping class="com.medigy.persist.model.party.PartyRelationshipStatus"/-->
         <mapping class="com.medigy.persist.model.party.PartyRole"/>
@@ -250,6 +249,7 @@
 
         <!--mapping package="com.medigy.persist.model.person"/-->
         <mapping class="com.medigy.persist.model.person.Person"/>
+        <mapping class="com.medigy.persist.model.person.PersonIdentifier"/>
         <mapping class="com.medigy.persist.model.person.PersonRole"/>
         <mapping class="com.medigy.persist.model.person.PersonAndOrgRelationship"/>
         <mapping class="com.medigy.persist.model.person.PeopleRelationship"/>

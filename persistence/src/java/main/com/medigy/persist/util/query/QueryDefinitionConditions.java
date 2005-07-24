@@ -187,6 +187,7 @@ public class QueryDefinitionConditions
                 QueryDefnCondition cond = usedConditions.list.get(c);
                 if(!cond.isJoinOnly())
                 {
+                    
                     sb.append(" (" + cond.getComparison().getWhereCondExpr(select, stmtGen, cond, valueContext) + ")");
                     conditionAdded = true;
                 }

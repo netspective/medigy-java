@@ -10,6 +10,7 @@ import com.medigy.persist.util.query.QueryDefnStatementGenerator;
 import com.medigy.persist.util.query.QueryDefinitionField;
 import com.medigy.persist.util.value.ValueProvider;
 import com.medigy.persist.util.value.ValueContext;
+import com.medigy.persist.model.person.Person;
 import com.medigy.service.dto.CriteriaSearchParameters;
 import com.medigy.service.dto.ServiceParameters;
 import com.medigy.service.query.QueryDefinitionFactory;
@@ -25,6 +26,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Query;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.commons.beanutils.PropertyUtils;
 
 public abstract class AbstractSearchServiceImpl extends AbstractService implements SearchService
 {
@@ -98,12 +100,14 @@ public abstract class AbstractSearchServiceImpl extends AbstractService implemen
             String sql = generator.generateQuery(new ValueContext() {
                 // for now the value context is empty
             });
-            final List<String> columnNames = new ArrayList<String>();
+            final List<String> displayPropertyNames = new ArrayList<String>();
             final List<QueryDefinitionField> displayFields = generator.getQuerySelect().getDisplayFields();
+
             for (int i=0; i < displayFields.size(); i++)
             {
-                columnNames.add(i, displayFields.get(i).getEntityPropertyName());
+                displayPropertyNames.add(i, displayFields.get(i).getEntityPropertyName());
             }
+
             final Query query = getSession().createQuery(sql);
             query.setFirstResult(params.getStartFromRow());
             final List bindParams = generator.getBindParams();
@@ -126,12 +130,19 @@ public abstract class AbstractSearchServiceImpl extends AbstractService implemen
             }
 
             final List list = query.list();
-            log.info("Query Definition search query returned: " + list.size() + " row(s).");
+            if (log.isInfoEnabled())
+                log.info("Query Definition search query returned: " + list.size() + " row(s).");
             for (int k=0; k < list.size(); k++)
             {
-                final Map<String, Object> map = new HashMap<String, Object>();
                 final Object rowObject = list.get(k);
+                final Map<String, Object> map = new HashMap<String, Object>();
 
+                for (QueryDefinitionField field : displayFields)
+                {
+                     map.put(field.getCaption(), PropertyUtils.getNestedProperty(rowObject, field.getEntityPropertyName()));
+                }
+
+                /*
                 Object[] columns = null;
                 if (rowObject instanceof Object[])
                     columns = (Object[]) rowObject;
@@ -141,8 +152,9 @@ public abstract class AbstractSearchServiceImpl extends AbstractService implemen
                 for (int j=0; j < columns.length; j++)
                 {
                     Object fieldValue = columns[j];
-                    map.put(columnNames.get(j), fieldValue);
+                    map.put(displayPropertyNames.get(j), fieldValue);
                 }
+                */
                 searchResult.add(map);
             }
 
@@ -150,7 +162,7 @@ public abstract class AbstractSearchServiceImpl extends AbstractService implemen
             {
                 public List<String> getColumnNames()
                 {
-                    return columnNames;
+                    return displayPropertyNames;
                 }
 
                 public List<Map<String, Object>> getSearchResults()

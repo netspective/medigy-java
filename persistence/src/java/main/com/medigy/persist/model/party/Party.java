@@ -103,7 +103,6 @@ public class Party extends AbstractTopLevelEntity
     private Set<PartyClassification> partyClassifications = new HashSet<PartyClassification>();
     private Set<PartyQualification> partyQualifications = new HashSet<PartyQualification>();
 
-    protected Set<PartyIdentifier> partyIdentifiers = new HashSet<PartyIdentifier>();
     protected Set<PartyContactMechanism> partyContactMechanisms = new HashSet<PartyContactMechanism>();
     private Set<PartyFacilityRole> partyFacilityRoles = new HashSet<PartyFacilityRole>();
     private Set<CommunicationEventRole> communicationEventRoles = new HashSet<CommunicationEventRole>();
@@ -200,19 +199,6 @@ public class Party extends AbstractTopLevelEntity
         }
         return null;
     }
-
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "party_id")
-    public Set<PartyIdentifier> getPartyIdentifiers()
-    {
-        return partyIdentifiers;
-    }
-
-    public void setPartyIdentifiers(final Set<PartyIdentifier> partyIdentifiers)
-    {
-        this.partyIdentifiers = partyIdentifiers;
-    }
-
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "party")
     public Set<PartyContactMechanism> getPartyContactMechanisms()
