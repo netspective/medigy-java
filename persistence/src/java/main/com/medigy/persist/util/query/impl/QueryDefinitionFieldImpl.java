@@ -12,10 +12,8 @@ import com.medigy.persist.util.query.exception.QueryDefinitionException;
 import java.util.ArrayList;
 import java.util.List;
 import java.lang.reflect.Method;
-import java.lang.annotation.Annotation;
 import java.beans.PropertyDescriptor;
 
-import org.apache.commons.beanutils.PropertyUtilsBean;
 import org.apache.commons.beanutils.PropertyUtils;
 
 import javax.persistence.OneToMany;
@@ -158,12 +156,12 @@ public class QueryDefinitionFieldImpl implements QueryDefinitionField
     public String getTableName()
     {
         QueryDefinitionJoin join = getJoin();
-        return join != null ? join.getTable() : null;
+        return join != null ? join.getEntityName() : null;
     }
 
     public String getTableAlias()
     {
-        return join != null ? join.getName() : null;
+        return join != null ? join.getEntityAlias() : null;
     }
 
     public String getSelectClauseExpr()

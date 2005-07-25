@@ -33,7 +33,8 @@ public class QueryDefnStatementGenerator
     private List<String> fromClauseComments = new ArrayList<String>();
 
     private List<String> whereJoinClause = new ArrayList<String>();
-    private Set<QueryDefinitionJoin> joins = new HashSet<QueryDefinitionJoin>();
+    private List<QueryDefinitionJoin> joins = new ArrayList<QueryDefinitionJoin>();
+    private Map<QueryDefinitionJoin, String> associatedJoins = new HashMap<QueryDefinitionJoin, String>();
 
     private List bindParams = new ArrayList();
 
@@ -59,45 +60,26 @@ public class QueryDefnStatementGenerator
         if(join == null || joins.contains(join))
             return;
 
-        // HQL Rules: OUTER JOINS and INNER JOINS can be defined so at the FROM clause there could be some more HQL
-        // text appended after the table name. There might be limitations on this!
-        String fromExpr = join.getFromExpr();
-        Set<String> joinList = new HashSet<String>();
-        for (QueryDefinitionField field : select.getDisplayFields())
-        {
-            if (field.getHqlJoinExpr() != null && field.getJoin().equals(join))
-                joinList.add(field.getHqlJoinExpr());
-        }
-        for (QueryDefnCondition cond : select.getConditions().getList())
-        {
-            if (cond.getField().getHqlJoinExpr() != null && cond.getField().getJoin().equals(join))
-                joinList.add(cond.getField().getHqlJoinExpr());
-        }
-        for (String joinExpr : joinList)
-        {
-            fromExpr = fromExpr + " " + joinExpr;
-        }
-        fromClause.add(fromExpr);
-
-        if(autoInc || impliedBy != null)
-        {
-            StringBuffer comments = new StringBuffer();
-            comments.append("/* ");
-            if(autoInc) comments.append("auto-included for join definition '").append(join.getName()).append("'");
-            if(impliedBy != null)
-            {
-                if(autoInc) comments.append(", ");
-                comments.append("implied by join definition '").append(impliedBy.getName()).append("'");
-            }
-            comments.append(" */");
-            fromClauseComments.add(comments.toString());
-        }
-        else
-            fromClauseComments.add(null);
-
         String whereCriteria = join.getCondition();
         if(whereCriteria != null)
             whereJoinClause.add(whereCriteria);
+
+        if (join.isAssociatedJoinOnly())
+        {
+            final QueryDefinitionJoin associatedJoin = join.getAssociatedJoin();
+            String joinExpr = null;
+            if (associatedJoins.containsKey(associatedJoin))
+            {
+                joinExpr = associatedJoins.get(associatedJoin);
+                joinExpr = joinExpr + " \n" + join.getAssociatedJoinExpression();
+            }
+            else
+            {
+                joinExpr = join.getAssociatedJoinExpression();
+            }
+            associatedJoins.put(associatedJoin, joinExpr);
+            return;
+        }
         joins.add(join);
 
         final List<QueryDefinitionJoin> impliedJoins = join.getImpliedJoins();
@@ -187,7 +169,7 @@ public class QueryDefnStatementGenerator
 
         StringBuffer sql = new StringBuffer();
 
-        /*
+
         int selectCount = selectClause.size();
         int selectLast = selectCount - 1;
         sql.append("select ");
@@ -204,13 +186,18 @@ public class QueryDefnStatementGenerator
                 sql.append(", ");
             sql.append("\n");
         }
-        */
-        int fromCount = fromClause.size();
+
+        int fromCount = joins.size();
         int fromLast = fromCount - 1;
         sql.append("from \n");
         for(int fc = 0; fc < fromCount; fc++)
         {
-            sql.append("  " + fromClause.get(fc));
+            final QueryDefinitionJoin join = joins.get(fc);
+            sql.append("  " + join.getFromExpr());
+            if (associatedJoins.containsKey(join))
+            {
+                sql.append("\n" + associatedJoins.get(join));
+            }
             if(fc != fromLast)
                 sql.append(",");
             sql.append("\n");

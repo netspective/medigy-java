@@ -637,9 +637,6 @@ public class Person extends Party
                 ", suffix=" + suffix + "'" +
                 ", birthdate= '" + birthDate + "'" +
                 ", deathdate= '" + deathDate + "'" +
-                //", gender='" + getCurrentGenderType().getLabel() + "'" +
-                ", maritalStatuses=" + maritalStatuses +
-                //", contactMechanisms=" + getPartyContactMechanisms() +
                 "}";
     }
 

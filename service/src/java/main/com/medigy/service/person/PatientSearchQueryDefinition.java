@@ -17,8 +17,6 @@ import com.medigy.persist.util.query.impl.BasicQueryDefinition;
 import com.medigy.persist.util.query.impl.QueryDefinitionSelectImpl;
 import com.medigy.persist.util.query.impl.QueryDefinitionConditionImpl;
 import com.medigy.persist.util.query.impl.QueryDefinitionJoinImpl;
-import com.medigy.persist.util.query.impl.QueryDefinitionFieldImpl;
-import com.medigy.persist.model.party.PartyIdentifier;
 import com.medigy.persist.model.org.Organization;
 import com.medigy.persist.model.person.PersonRole;
 import com.medigy.persist.model.person.Person;
@@ -48,19 +46,28 @@ public class PatientSearchQueryDefinition extends BasicQueryDefinition implement
         final QueryDefinitionJoin personJoin = new QueryDefinitionJoinImpl("person", Person.class, this);
         personJoin.setAutoInclude(true);
 
-        final QueryDefinitionJoin personIdentifierJoin =  new QueryDefinitionJoinImpl("personIdent", PersonIdentifier.class, this);
-        personIdentifierJoin.setCondition("personIdent.party.id = person.id");
-        // "and personIdent.type.id = " + PersonIdentifierType.Cache.SSN.getEntity().getSystemId());
+        final QueryDefinitionJoin ssnJoin =  new QueryDefinitionJoinImpl("pi", PersonIdentifier.class, this);
+        ssnJoin.setAssociatedJoin(personJoin);
+        ssnJoin.setAssociatedJoinExpression("left join fetch " + personJoin.getEntityAlias() + ".personIdentifiers as " +
+                ssnJoin.getEntityAlias());
+        ssnJoin.setCondition("pi.type.code = '" + PersonIdentifierType.Cache.SSN.getCode() + "'");
+
+        final QueryDefinitionJoin driversLicenseJoin =  new QueryDefinitionJoinImpl("pi2", PersonIdentifier.class, this);
+        ssnJoin.setAssociatedJoin(personJoin);
+        driversLicenseJoin.setAssociatedJoinExpression("left join fetch " + personJoin.getEntityAlias() + ".personIdentifiers as " +
+                driversLicenseJoin.getEntityAlias());
+        driversLicenseJoin.setCondition("pi2.type.code = '" + PersonIdentifierType.Cache.DRIVERS_LICENSE.getCode() + "'");
+
 
         final QueryDefinitionJoin orgJoin =  new QueryDefinitionJoinImpl("org", Organization.class, this);
 
         final QueryDefinitionJoin personRoleJoin = new QueryDefinitionJoinImpl("personRole", PersonRole.class, this);
         personRoleJoin.setCondition("personRole.party.id = person.id");
 
-
         this.addJoin(personJoin);
         this.addJoin(orgJoin);
-        this.addJoin(personIdentifierJoin);
+        this.addJoin(ssnJoin);
+        this.addJoin(driversLicenseJoin);
         this.addJoin(personRoleJoin);
 
         addField("personId", "partyId", "Patient ID", personJoin);
@@ -70,44 +77,14 @@ public class PatientSearchQueryDefinition extends BasicQueryDefinition implement
         //addField("gender", "currentGenderType.label", "Gender", personJoin);
         //addField("ssn", "currentGenderType.label", "Gender", personJoin);
 
-
-        /*
-        final QueryDefinitionField optionalOrgField = addField("organizationId", "org.id", "Organization ID", personJoin);
-        optionalOrgField.setHqlJoinExpr("left outer join person.roles as personRoles " +
-                "left outer join personRoles.personOrgRelationships as rel " +
-                "left outer join rel.organizationRole as orgRole " +
-                "left outer join orgRole.organization as org ");
-        optionalOrgField.setSelectClauseExpr("org.id");
-        optionalOrgField.setWhereClauseExpr("org.id");
-        optionalOrgField.setDisplayAllowed(false);
-
-        // this should only be available for CONDITION.
-        final QueryDefinitionField orgIdField = addField("orgId", "partyId", "Organization ID", personJoin);
-        orgIdField.setHqlJoinExpr("left join person.roles as personRoles " +
-                "left join personRoles.personOrgRelationships as rel " +
-                "left join rel.organizationRole as orgRole " +
-                "left join orgRole.organization as org ");
-
-        // this should only be available for display if the ORG ID was provided as a condition
-        final QueryDefinitionField orgNameField = addField("orgName", "partyName", "Organization Name",
-                personJoin);
-        orgNameField.setHqlJoinExpr("left join person.roles as personRoles " +
-                "left join personRoles.personOrgRelationships as rel " +
-                "left join rel.organizationRole as orgRole " +
-                "left join orgRole.organization as org ");
-        */
-
         // use this for display of SSN in result but it shouldn't be part of the SELECT clause!
-        final QueryDefinitionField ssnPropertyField = addField("ssnProperty", "ssn", "SSN", personJoin);
-        ssnPropertyField.setHqlJoinExpr("left join fetch " + personJoin.getName() + ".personIdentifiers as pi");
-        ssnPropertyField.setWhereClauseExpr("pi.type.code = " + PersonIdentifierType.Cache.SSN.getCode()  +
-            " AND pi.identifierValue ");
+        final QueryDefinitionField ssnPropertyField = addField("ssnProperty", "identifierValue", "SSN", ssnJoin);
 
-        /*
-        final QueryDefinitionField driversLicensePropertyField = addField("driversLicProperty", "driversLicenseNumber",
-                "Driver's License", personJoin);
-        driversLicensePropertyField.setHqlJoinExpr("left join fetch " + personJoin.getName() + ".personIdentifiers as pi");
-        */
+        final QueryDefinitionField driversLicensePropertyField = addField("driversLicProperty", "identifierValue",
+                "Driver's License", driversLicenseJoin);
+        //driversLicensePropertyField.setWhereClauseExpr("pi2.type.code = " + PersonIdentifierType.Cache.DRIVERS_LICENSE.getCode() +
+        //    " AND pi2.identifierValue ");
+
         try
         {
             addSelect(registerCriteriaSearch());
@@ -145,7 +122,7 @@ public class PatientSearchQueryDefinition extends BasicQueryDefinition implement
         select.addDisplayField(getField(Field.PATIENT_ID.getName()));
         select.addDisplayField(getField(Field.FIRST_NAME.getName()));
         select.addDisplayField(getField(Field.LAST_NAME.getName()));
-        //select.addDisplayField(getField(Field.GENDER.getName()));
+        //select.addDisplayField(getField(Field.GENDER.getEntityAlias()));
         select.addDisplayField(getField(Field.DOB.getName()));
         select.addDisplayField(getField("ssnProperty"));
 

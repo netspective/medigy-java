@@ -12,6 +12,7 @@ import com.medigy.persist.util.query.exception.QueryDefinitionException;
 import com.medigy.persist.util.value.ValueProvider;
 import com.medigy.persist.util.value.ValueContext;
 import com.medigy.persist.model.person.Person;
+import com.medigy.persist.model.common.Entity;
 import com.medigy.service.dto.CriteriaSearchParameters;
 import com.medigy.service.dto.ServiceParameters;
 import com.medigy.service.query.QueryDefinitionFactory;
@@ -151,24 +152,21 @@ public abstract class AbstractSearchServiceImpl extends AbstractService implemen
             final Object rowObject = list.get(k);
             final Map<String, Object> map = new HashMap<String, Object>();
 
-            for (QueryDefinitionField field : displayFields)
+            if (rowObject instanceof Entity)
             {
-                 map.put(field.getCaption(), PropertyUtils.getNestedProperty(rowObject, field.getEntityPropertyName()));
+                for (QueryDefinitionField field : displayFields)
+                {
+                     map.put(field.getCaption(), PropertyUtils.getNestedProperty(rowObject, field.getEntityPropertyName()));
+                }
             }
-
-            /*
-            Object[] columns = null;
-            if (rowObject instanceof Object[])
-                columns = (Object[]) rowObject;
-            else
-                columns = new Object[] { rowObject };
-
-            for (int j=0; j < columns.length; j++)
+            else if (rowObject instanceof Object[])
             {
-                Object fieldValue = columns[j];
-                map.put(displayPropertyNames.get(j), fieldValue);
+                for (int fieldIndex=0; fieldIndex < displayFields.size(); fieldIndex++)
+                {
+                    map.put(displayFields.get(fieldIndex).getCaption(), ((Object[])rowObject)[fieldIndex]);
+                }
             }
-            */
+            
             searchResult.add(map);
         }
 

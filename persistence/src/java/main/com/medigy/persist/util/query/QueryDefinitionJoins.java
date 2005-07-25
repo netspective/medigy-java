@@ -17,7 +17,7 @@ public class QueryDefinitionJoins
     public void add(QueryDefinitionJoin join)
     {
         joins.add(join);
-        joinsByName.put(join.getName(), join);
+        joinsByName.put(join.getEntityAlias(), join);
     }
 
     public QueryDefinitionJoin get(int i)
