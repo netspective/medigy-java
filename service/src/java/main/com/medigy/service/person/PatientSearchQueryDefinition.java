@@ -100,7 +100,7 @@ public class PatientSearchQueryDefinition extends BasicQueryDefinition implement
         // use this for display of SSN in result but it shouldn't be part of the SELECT clause!
         final QueryDefinitionField ssnPropertyField = addField("ssnProperty", "ssn", "SSN", personJoin);
         ssnPropertyField.setHqlJoinExpr("left join fetch " + personJoin.getName() + ".personIdentifiers as pi");
-        ssnPropertyField.setWhereClauseExpr("pi.type.id = " + PersonIdentifierType.Cache.SSN.getEntity().getSystemId()  +
+        ssnPropertyField.setWhereClauseExpr("pi.type.code = " + PersonIdentifierType.Cache.SSN.getCode()  +
             " AND pi.identifierValue ");
 
         /*
