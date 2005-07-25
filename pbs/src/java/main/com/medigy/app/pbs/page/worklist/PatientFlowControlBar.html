@@ -26,23 +26,11 @@
                 <input type="text" _wicket:id="selectedDate" />
                 <input type="button" name="right" value=">" onclick=""/>
 
-                <label _wicket:id="time">Time:</label>
-                <select >
-                    <option value=0>Minutes before/after</option>
-                    <option value=1>Range from/to</option>
-                </select>
-                <input type="text" size=8/>
                 <input type="text" size=8/>
 
                 <input type="submit" value="Go"/>
             </div>
             </form>
-
-            <wicket:link>
-            <a href="/com/medigy/app/pbs/page/RegisterPatient.html" class="action">Add Patient</a>
-            <a href="" class="action">Add Walk-In</a>
-            <a href="" class="action">Add Appointment</a>
-            </wicket:link>
 
             &nbsp;
             <SELECT onChange="if(this.selectedIndex > 0) window.location.href = '?bookmarkablePage=' + this.options[this.selectedIndex].value">
