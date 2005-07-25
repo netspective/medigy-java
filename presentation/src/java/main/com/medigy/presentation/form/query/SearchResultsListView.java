@@ -12,9 +12,16 @@ import wicket.model.IModel;
 import java.util.Map;
 import java.util.Iterator;
 import java.util.Collection;
+import java.util.List;
+import java.util.Date;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.text.SimpleDateFormat;
+import java.text.DateFormat;
 
 public class SearchResultsListView  extends PageableListView
 {
+    private List<String> columnNames;
     /**
      * Construct.
      *
@@ -38,6 +45,17 @@ public class SearchResultsListView  extends PageableListView
         return true;
     }
 
+    public void setColumnNames(final List<String> names)
+    {
+        this.columnNames = names;
+    }
+
+    public DateFormat getDateFormat()
+    {
+        // TODO : retrieve date format from a centralized place common across the application
+        return new SimpleDateFormat("MM/dd/yyyy");
+    }
+
     protected ListItem newItem(final int index)
     {
         return new ListItem(index, getListItemModel(getModel(), index))
@@ -47,19 +65,18 @@ public class SearchResultsListView  extends PageableListView
             {
                 StringBuffer buffer = new StringBuffer();
                 final Map<String, Object> map = (Map<String, Object>) getModelObject();
-                final Iterator<String> strings = map.keySet().iterator();
-                while (strings.hasNext())
+
+                if (columnNames == null)
+                    columnNames =  new ArrayList<String>(map.keySet());
+                for (String column : columnNames)
                 {
-                    final String label = strings.next();
-                    final Object value = map.get(label);
-                    if (value instanceof Collection)
-                    {
-                        // TODO: support this???
-                    }
-                    else
-                    {
+                    final Object value = map.get(column);
+                    if (value != null && value instanceof Date)
+                         buffer.append("<td>" + getDateFormat().format((Date)value) +"</td>");
+                    else if (value != null)
                         buffer.append("<td>" + value +"</td>");
-                    }
+                    else
+                        buffer.append("<td>&nbsp;</td>");
                 }
 
                 replaceComponentTagBody(markupStream, openTag, buffer.toString());
