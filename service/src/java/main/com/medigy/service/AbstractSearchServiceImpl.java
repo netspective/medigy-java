@@ -94,6 +94,10 @@ public abstract class AbstractSearchServiceImpl extends AbstractService implemen
                         });
                     }
                 }
+                else
+                {
+                    cond.setValueProvider(null);                   
+                }
             }
             return executeQuery(params, select);
         }
@@ -166,7 +170,7 @@ public abstract class AbstractSearchServiceImpl extends AbstractService implemen
                     map.put(displayFields.get(fieldIndex).getCaption(), ((Object[])rowObject)[fieldIndex]);
                 }
             }
-            
+
             searchResult.add(map);
         }
 
