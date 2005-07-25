@@ -72,20 +72,17 @@ public class PatientSearchQueryDefinition extends BasicQueryDefinition implement
 
 
         /*
-        final QueryDefinitionField orgField = addField("organizationId", "org.id", "Organization ID", personJoin);
-        orgField.setHqlJoinExpr("left outer join person.roles as personRoles " +
+        final QueryDefinitionField optionalOrgField = addField("organizationId", "org.id", "Organization ID", personJoin);
+        optionalOrgField.setHqlJoinExpr("left outer join person.roles as personRoles " +
                 "left outer join personRoles.personOrgRelationships as rel " +
                 "left outer join rel.organizationRole as orgRole " +
                 "left outer join orgRole.organization as org ");
-        orgField.setSelectClauseExpr("org.id");
-        orgField.setWhereClauseExpr("org.id");
-        orgField.setDisplayAllowed(false);
-        */
-
-
+        optionalOrgField.setSelectClauseExpr("org.id");
+        optionalOrgField.setWhereClauseExpr("org.id");
+        optionalOrgField.setDisplayAllowed(false);
 
         // this should only be available for CONDITION.
-        final QueryDefinitionField orgIdField = addField("orgId", "partyId", "Organization ID", orgJoin);
+        final QueryDefinitionField orgIdField = addField("orgId", "partyId", "Organization ID", personJoin);
         orgIdField.setHqlJoinExpr("left join person.roles as personRoles " +
                 "left join personRoles.personOrgRelationships as rel " +
                 "left join rel.organizationRole as orgRole " +
@@ -93,29 +90,24 @@ public class PatientSearchQueryDefinition extends BasicQueryDefinition implement
 
         // this should only be available for display if the ORG ID was provided as a condition
         final QueryDefinitionField orgNameField = addField("orgName", "partyName", "Organization Name",
-                orgJoin);
+                personJoin);
+        orgNameField.setHqlJoinExpr("left join person.roles as personRoles " +
+                "left join personRoles.personOrgRelationships as rel " +
+                "left join rel.organizationRole as orgRole " +
+                "left join orgRole.organization as org ");
+        */
 
         // use this for display of SSN in result but it shouldn't be part of the SELECT clause!
         final QueryDefinitionField ssnPropertyField = addField("ssnProperty", "ssn", "SSN", personJoin);
-        ssnPropertyField.setHqlJoinExpr("left join fetch " + personJoin.getName() + ".personIdentifiers");
-
-        final QueryDefinitionField driversLicensePropertyField = addField("driversLicProperty", "driversLicenseNumber",
-                "Driver's License", personJoin);
-        driversLicensePropertyField.setHqlJoinExpr("left join fetch " + personJoin.getName() + ".personIdentifiers");
-
-
-        final QueryDefinitionField ssnField = addField("ssn", "ssn", "SSN", personJoin);
-        //ssnField.setHqlJoinExpr("left outer join person.personIdentifiers as pi");
-        ssnField.setWhereClauseExpr("pi.type.id = " + PersonIdentifierType.Cache.SSN.getEntity().getSystemId()  +
+        ssnPropertyField.setHqlJoinExpr("left join fetch " + personJoin.getName() + ".personIdentifiers as pi");
+        ssnPropertyField.setWhereClauseExpr("pi.type.id = " + PersonIdentifierType.Cache.SSN.getEntity().getSystemId()  +
             " AND pi.identifierValue ");
 
-        //this.addField("identifiers", "personIdentifiers", "Identifiers", personJoin);
-        final QueryDefinitionField ethnicitiesField = this.addField("ethnicities", "ethnicities", "Ethnicities", personJoin);
-        ethnicitiesField.setHqlJoinExpr("left join fetch " + personJoin.getName() + ".ethnicities");
-
-        // TODO: displayAllowed = NONE, ALWAYS, ON_CRITERIA
-
-
+        /*
+        final QueryDefinitionField driversLicensePropertyField = addField("driversLicProperty", "driversLicenseNumber",
+                "Driver's License", personJoin);
+        driversLicensePropertyField.setHqlJoinExpr("left join fetch " + personJoin.getName() + ".personIdentifiers as pi");
+        */
         try
         {
             addSelect(registerCriteriaSearch());
@@ -172,18 +164,19 @@ public class PatientSearchQueryDefinition extends BasicQueryDefinition implement
         dobCondition.setConnector("and");
         select.addCondition(dobCondition);
 
-        final QueryDefnCondition ssnCondition = new QueryDefinitionConditionImpl(getField("ssn"),
+        final QueryDefnCondition ssnCondition = new QueryDefinitionConditionImpl(getField("ssnProperty"),
                 SqlComparisonFactory.getInstance().getComparison(EqualsComparison.COMPARISON_NAME));
         ssnCondition.setConnector("and");
         select.addCondition(ssnCondition);
 
 
+        /*
         final QueryDefnCondition orgIdCondition = new QueryDefinitionConditionImpl(getField("orgId"),
                 SqlComparisonFactory.getInstance().getComparison(EqualsComparison.COMPARISON_NAME));
         orgIdCondition.setConnector("and");
         select.addCondition(orgIdCondition);
 
-        // personIdentifiers[]
+        */
 
 
         final QueryDefinitionField idField = getField(Field.PATIENT_ID.getName());

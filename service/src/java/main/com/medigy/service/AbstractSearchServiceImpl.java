@@ -8,6 +8,7 @@ import com.medigy.persist.util.query.QueryDefinition;
 import com.medigy.persist.util.query.QueryDefinitionSelect;
 import com.medigy.persist.util.query.QueryDefnStatementGenerator;
 import com.medigy.persist.util.query.QueryDefinitionField;
+import com.medigy.persist.util.query.exception.QueryDefinitionException;
 import com.medigy.persist.util.value.ValueProvider;
 import com.medigy.persist.util.value.ValueContext;
 import com.medigy.persist.model.person.Person;
@@ -21,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.text.SimpleDateFormat;
+import java.lang.reflect.InvocationTargetException;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.Query;
@@ -42,7 +44,6 @@ public abstract class AbstractSearchServiceImpl extends AbstractService implemen
 
     public SearchReturnValues search(final SearchParameters params)
     {
-        final List<Map<String, Object>> searchResult = new ArrayList<Map<String, Object>>();
         final CriteriaSearchParameters searchParams = (CriteriaSearchParameters) params;
         final int rowStart = params.getStartFromRow();
 
@@ -93,93 +94,7 @@ public abstract class AbstractSearchServiceImpl extends AbstractService implemen
                     }
                 }
             }
-
-            // construct the HQL generator
-            QueryDefnStatementGenerator generator = new QueryDefnStatementGenerator(select);
-            // pass the condition field values and create the HQL
-            String sql = generator.generateQuery(new ValueContext() {
-                // for now the value context is empty
-            });
-            final List<String> displayPropertyNames = new ArrayList<String>();
-            final List<QueryDefinitionField> displayFields = generator.getQuerySelect().getDisplayFields();
-
-            for (int i=0; i < displayFields.size(); i++)
-            {
-                displayPropertyNames.add(i, displayFields.get(i).getCaption());
-            }
-
-            final Query query = getSession().createQuery(sql);
-            query.setFirstResult(params.getStartFromRow());
-            final List bindParams = generator.getBindParams();
-            System.out.println(sql + "\n" + bindParams.size());
-
-            int i=0;
-            for (Object param : bindParams)
-            {
-                if (param instanceof String)
-                    query.setString(i, (String) param);
-                else if (param instanceof Long)
-                    query.setLong(i, (Long) param);
-                else if (param instanceof Integer)
-                    query.setInteger(i, (Integer) param);
-                else if (param instanceof Date)
-                    query.setDate(i, (Date) param);
-                else
-                    throw new RuntimeException("Unsupported bind parameter type: " + param.getClass());
-                i++;
-            }
-
-            final List list = query.list();
-            if (log.isInfoEnabled())
-                log.info("Query Definition search query returned: " + list.size() + " row(s).");
-            for (int k=0; k < list.size(); k++)
-            {
-                final Object rowObject = list.get(k);
-                final Map<String, Object> map = new HashMap<String, Object>();
-
-                for (QueryDefinitionField field : displayFields)
-                {
-                     map.put(field.getCaption(), PropertyUtils.getNestedProperty(rowObject, field.getEntityPropertyName()));
-                }
-
-                /*
-                Object[] columns = null;
-                if (rowObject instanceof Object[])
-                    columns = (Object[]) rowObject;
-                else
-                    columns = new Object[] { rowObject };
-
-                for (int j=0; j < columns.length; j++)
-                {
-                    Object fieldValue = columns[j];
-                    map.put(displayPropertyNames.get(j), fieldValue);
-                }
-                */
-                searchResult.add(map);
-            }
-
-            return new SearchReturnValues()
-            {
-                public List<String> getColumnNames()
-                {
-                    return displayPropertyNames;
-                }
-
-                public List<Map<String, Object>> getSearchResults()
-                {
-                    return searchResult;
-                }
-
-                public ServiceParameters getParameters()
-                {
-                    return params;
-                }
-
-                public String getErrorMessage()
-                {
-                    return null;
-                }
-            };
+            return executeQuery(params, select);
         }
         catch (final Exception e)
         {
@@ -187,6 +102,98 @@ public abstract class AbstractSearchServiceImpl extends AbstractService implemen
             e.printStackTrace();
             return (SearchReturnValues) createErrorResponse(params, e.getMessage());
         }
+    }
+
+    protected SearchReturnValues executeQuery(final SearchParameters params, final QueryDefinitionSelect select)
+            throws QueryDefinitionException, IllegalAccessException, InvocationTargetException, NoSuchMethodException
+    {
+        final List<Map<String, Object>> searchResult = new ArrayList<Map<String, Object>>();
+        // construct the HQL generator
+        QueryDefnStatementGenerator generator = new QueryDefnStatementGenerator(select);
+        // pass the condition field values and create the HQL
+        String sql = generator.generateQuery(new ValueContext() {
+            // for now the value context is empty
+        });
+        final List<String> displayPropertyNames = new ArrayList<String>();
+        final List<QueryDefinitionField> displayFields = generator.getQuerySelect().getDisplayFields();
+
+        for (int i=0; i < displayFields.size(); i++)
+        {
+            displayPropertyNames.add(i, displayFields.get(i).getCaption());
+        }
+
+        final Query query = getSession().createQuery(sql);
+        query.setFirstResult(params.getStartFromRow());
+        final List bindParams = generator.getBindParams();
+        System.out.println(sql + "\n" + bindParams.size());
+
+        int i=0;
+        for (Object param : bindParams)
+        {
+            if (param instanceof String)
+                query.setString(i, (String) param);
+            else if (param instanceof Long)
+                query.setLong(i, (Long) param);
+            else if (param instanceof Integer)
+                query.setInteger(i, (Integer) param);
+            else if (param instanceof Date)
+                query.setDate(i, (Date) param);
+            else
+                throw new RuntimeException("Unsupported bind parameter type: " + param.getClass());
+            i++;
+        }
+
+        final List list = query.list();
+        if (log.isInfoEnabled())
+            log.info("Query Definition search query returned: " + list.size() + " row(s).");
+        for (int k=0; k < list.size(); k++)
+        {
+            final Object rowObject = list.get(k);
+            final Map<String, Object> map = new HashMap<String, Object>();
+
+            for (QueryDefinitionField field : displayFields)
+            {
+                 map.put(field.getCaption(), PropertyUtils.getNestedProperty(rowObject, field.getEntityPropertyName()));
+            }
+
+            /*
+            Object[] columns = null;
+            if (rowObject instanceof Object[])
+                columns = (Object[]) rowObject;
+            else
+                columns = new Object[] { rowObject };
+
+            for (int j=0; j < columns.length; j++)
+            {
+                Object fieldValue = columns[j];
+                map.put(displayPropertyNames.get(j), fieldValue);
+            }
+            */
+            searchResult.add(map);
+        }
+
+        return new SearchReturnValues()
+        {
+            public List<String> getColumnNames()
+            {
+                return displayPropertyNames;
+            }
+
+            public List<Map<String, Object>> getSearchResults()
+            {
+                return searchResult;
+            }
+
+            public ServiceParameters getParameters()
+            {
+                return params;
+            }
+
+            public String getErrorMessage()
+            {
+                return null;
+            }
+        };
     }
 
     public List<QueryDefnCondition> getCriteriaList()

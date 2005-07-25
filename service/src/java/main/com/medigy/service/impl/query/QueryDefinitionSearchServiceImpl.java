@@ -41,6 +41,7 @@ package com.medigy.service.impl.query;
 import com.medigy.service.AbstractService;
 import com.medigy.service.ServiceVersion;
 import com.medigy.service.SearchReturnValues;
+import com.medigy.service.AbstractSearchServiceImpl;
 import com.medigy.service.dto.ServiceParameters;
 import com.medigy.service.dto.query.QueryDefinitionSearchCondition;
 import com.medigy.service.dto.query.QueryDefinitionSearchParameters;
@@ -72,13 +73,13 @@ import java.util.Map;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class QueryDefinitionSearchServiceImpl extends AbstractService implements QueryDefinitionSearchService
+public class QueryDefinitionSearchServiceImpl extends AbstractSearchServiceImpl implements QueryDefinitionSearchService
 {
     private final Log log = LogFactory.getLog(QueryDefinitionSearchServiceImpl.class);
 
     public QueryDefinitionSearchServiceImpl(final SessionFactory sessionFactory)
     {
-        super(sessionFactory);
+        super(sessionFactory, null);
     }
 
     public QueryDefinition getQueryDefinition(final Class queryDefClass)
@@ -145,82 +146,9 @@ public class QueryDefinitionSearchServiceImpl extends AbstractService implements
                     }
                 });
             }
-
-            // construct the HQL generator
-            QueryDefnStatementGenerator generator = new QueryDefnStatementGenerator(select);
-            // pass the condition field values and create the HQL
-            String sql = generator.generateQuery(new ValueContext() {
-                // for now the value context is empty
-            });
-            final Query query = getSession().createQuery(sql);
-
-            query.setFirstResult(params.getStartFromRow());
-
-            final List bindParams = generator.getBindParams();
-            System.out.println(sql + "\n" + bindParams.size());
-
-            int i=0;
-            for (Object param : bindParams)
-            {
-                if (param instanceof String)
-                    query.setString(i, (String) param);
-                else if (param instanceof Long)
-                    query.setLong(i, (Long) param);
-                else if (param instanceof Integer)
-                    query.setInteger(i, (Integer) param);
-                else if (param instanceof Date)
-                    query.setDate(i, (Date) param);
-                else
-                    throw new RuntimeException("Unsupported bind parameter type: " + param.getClass());
-                i++;
-            }
-
-            final List list = query.list();
-            log.info("Query Definition search query returned: " + list.size() + " row(s).");
-            for (int k=0; k < list.size(); k++)
-            {
-                final Map<String, Object> map = new HashMap<String, Object>();
-                final Object rowObject = list.get(k);
-
-                Object[] columns = null;
-                if (rowObject instanceof Object[])
-                    columns = (Object[]) rowObject;
-                else
-                    columns = new Object[] { rowObject };
-
-                for (int j=0; j < columns.length; j++)
-                {
-                    String displayFieldName = displayFields.get(j);
-                    Object fieldValue = columns[j];
-                    map.put(queryDefiniton.getField(displayFieldName).getCaption(), fieldValue);
-                }
-                searchResult.add(map);
-            }
-
-            return new SearchReturnValues()
-            {
-                public List<String> getColumnNames()
-                {
-                    return Arrays.asList(query.getReturnAliases());
-                }
-
-                public List<Map<String, Object>> getSearchResults()
-                {
-                    return searchResult;
-                }
-
-                public ServiceParameters getParameters()
-                {
-                    return params;
-                }
-
-                public String getErrorMessage()
-                {
-                    return null;
-                }
-            };
+            return executeQuery(params, select);
         }
-        catch (QueryDefinitionException e)
+        catch (Exception e)
         {
             log.error(ExceptionUtils.getStackTrace(e));
             return createErrorResponse(params, e.getMessage());

@@ -250,7 +250,10 @@ public class QueryDefinitionFieldImpl implements QueryDefinitionField
 
     public boolean isDisplayAllowed()
     {
-        return displayAllowed;
+        if (associationProperty)
+            return false;
+        else
+            return displayAllowed;
     }
 
     public void setDisplayAllowed(final boolean displayAllowed)
