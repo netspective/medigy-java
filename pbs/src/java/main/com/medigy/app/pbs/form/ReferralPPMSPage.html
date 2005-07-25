@@ -1,0 +1,222 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.sourceforge.net/">
+    <head>
+        <title>Referral</title>
+        <link rel="stylesheet" type="text/css" href="/medigy/resources/theme/default/css/theme.css"></link>
+    </head>
+
+    <body wicket:id="border" class="page">
+        <form wicket-id="mainForm">
+                <div class="form-body">
+                    <fieldset class="top-level">
+	                    <legend _wicket:id="referralGroup_label">Referral Information</legend>
+	                    <table class="vertical-fields">
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="requestDate_label">Date of Request</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" _wicket:id="requestDate" value=""/>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+                                <td class="label">
+                                    <label _wicket:id="referralUrgency_label">Referral Urgency</label>
+                                </td>
+                                <td class="control">
+                                    <input type="radio" _wicket:id="yes" value="">Yes</input>
+                                    <input type="radio" _wicket:id="no" value="">No</input>
+                                </td>
+                            </tr>
+                            <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="userId_label">User ID</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" _wicket:id="userId" value=""/>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="patient_label">Patient</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" _wicket:id="patientId" value=""/>
+	                            </td>
+	                        </tr>
+	                        <!-- TODO: add hidden field old_person_id -->
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="primaryPayer_label">Primary Payer</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" _wicket:id="pimaryPayer" value=""/>
+	                            </td>
+	                        </tr>
+                        </table>
+                    </fieldset>
+                    <fieldset class="top-level">
+                        <legend _wicket:id="icdInformation_label">ICD Information</legend>
+                        <table class="vertical-fields">
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="icdCode_label">ICD Code</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" _wicket:id="icdCode" value=""/>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="icdDescription_label">ICD Description</label>
+	                            </td>
+	                            <td class="control">
+	                                <textarea></textarea>
+	                            </td>
+	                        </tr>
+	                    </table>
+                    </fieldset>
+                    <fieldset class="top-level">
+                        <legend _wicket:id="reason_label">Reason</legend>
+                        <table class="vertical-fields">
+                             <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="reasonForReferral_label">Reason for Referral</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" _wicket:id="reasonForReferral" value=""/>
+	                            </td>
+	                        </tr>
+                        </table>
+                    </fieldset>
+                    <fieldset class="top-level">
+                        <legend _wicket:id="serviceRequested_label">Service Requested</legend>
+                        <table class="vertical-fields">
+                             <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="reasonForReferral_label">Code</label> /
+	                                <label _wicket:id="reasonForReferral_label">Modf</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" _wicket:id="code" value=""/>
+	                                <input type="text" _wicket:id="modf" value=""/>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="description_label">Description</label>
+	                            </td>
+	                            <td class="control">
+	                                <textarea></textarea>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="requestingPhysician_label">Requesting Physician</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" _wicket:id="requestingPhysician" value=""/>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="referringTo_label">Referring to</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" _wicket:id="referringTo" value=""/>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="specialty_label">Specialty</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" _wicket:id="specialty" value=""/>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="referralType_label">Referral Type</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" _wicket:id="referralType" value=""/>
+	                                <!-- TODO: should be a select field -->
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="numberOfVisits_label">Number of Visits Allowed</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" _wicket:id="numberOfVisitsAllowed" value=""/>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="authorizationNumber_label">Authorization Number</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" _wicket:id="authorizationNumber" value=""/>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="referralBeginEndDate_label">Referral Begin/End Date</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" _wicket:id="beginDate" value=""/>
+	                                <input type="text" _wicket:id="endDate" value=""/>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="referralComunicate_label">Referral Communicate</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" _wicket:id="referralCommunicate" value=""/>
+	                                <!-- TODO: should be a radio field -->
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="dateOfCompletion_label">Date of Completion</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" _wicket:id="dateOfCompletion" value=""/>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+                                <td class="label">
+                                    <label _wicket:id="referralStatus_label">Referral Status</label> /
+                                    <label _wicket:id="referralStatus_label">Date</label>
+                                </td>
+                                <td class="control">
+                                    <input type="radio" _wicket:id="yes" value="">Active</input>
+                                    <input type="radio" _wicket:id="no" value="">Inactive</input>
+                                    <input type="text" _wicket:id="date" value=""/>
+                                </td>
+                            </tr>
+                            <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="comments_label">Comments</label>
+	                            </td>
+	                            <td class="control">
+	                                <textarea></textarea>
+	                            </td>
+	                        </tr>
+                        </table>
+                    </fieldset>
+                    <div class="director">
+                        <table class="vertical-fields">
+                            <tr class="field">
+                                <td class="control">
+                                    <input class="button" _wicket:id="formSubmit" type="submit" value="OK"/>
+                                    <input class="button" _wicket:id="formReset" type="reset" value="Reset"/>
+                                </td>
+                            </tr>
+                         </table>
+                    </div>
+                </div>
+            </form>
+    </body>
+</html>
