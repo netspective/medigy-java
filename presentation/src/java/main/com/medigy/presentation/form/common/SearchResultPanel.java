@@ -38,7 +38,8 @@ public class SearchResultPanel extends Panel
     public SearchResultPanel(final String id, final Class searchServiceClass)
     {
         super(id);
-        this.service = (SearchService) ((DefaultApplication) getApplication()).getService(searchServiceClass);
+        if (searchServiceClass != null)
+            service = (SearchService) ((DefaultApplication) getApplication()).getService(searchServiceClass);
 
         searchResultModel = createSearchResultModel();
         resultsListView = createSearchResultsListView(searchResultModel, rowsPerPage);
