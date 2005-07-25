@@ -45,14 +45,10 @@ package com.medigy.app.pbs.page.worklist;
 
 import wicket.markup.html.panel.Panel;
 
-public class PatientActivity extends AbstractWorklistPage
+public class PatientActivityControlBar extends Panel
 {
-    public PatientActivity()
+    public PatientActivityControlBar(final String id)
     {
-    }
-
-    public Panel getWorklistControlBarPanel(final String id)
-    {
-        return new PatientActivityControlBar(id);
+        super(id);
     }
 }
