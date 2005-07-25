@@ -105,7 +105,7 @@ public abstract class AbstractSearchServiceImpl extends AbstractService implemen
 
             for (int i=0; i < displayFields.size(); i++)
             {
-                displayPropertyNames.add(i, displayFields.get(i).getEntityPropertyName());
+                displayPropertyNames.add(i, displayFields.get(i).getCaption());
             }
 
             final Query query = getSession().createQuery(sql);
