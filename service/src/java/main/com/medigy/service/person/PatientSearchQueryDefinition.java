@@ -53,7 +53,7 @@ public class PatientSearchQueryDefinition extends BasicQueryDefinition implement
         ssnJoin.setCondition("pi.type.code = '" + PersonIdentifierType.Cache.SSN.getCode() + "'");
 
         final QueryDefinitionJoin driversLicenseJoin =  new QueryDefinitionJoinImpl("pi2", PersonIdentifier.class, this);
-        ssnJoin.setAssociatedJoin(personJoin);
+        driversLicenseJoin.setAssociatedJoin(personJoin);
         driversLicenseJoin.setAssociatedJoinExpression("left join fetch " + personJoin.getEntityAlias() + ".personIdentifiers as " +
                 driversLicenseJoin.getEntityAlias());
         driversLicenseJoin.setCondition("pi2.type.code = '" + PersonIdentifierType.Cache.DRIVERS_LICENSE.getCode() + "'");
