@@ -39,45 +39,25 @@
 package com.medigy.persist.reference.custom.party;
 
 import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
-import com.medigy.persist.model.party.ValidResponsiblePartyRole;
 
-import javax.persistence.DiscriminatorColumn;
-import javax.persistence.DiscriminatorType;
-import javax.persistence.Entity;
+import javax.persistence.Column;
+import javax.persistence.EmbeddableSuperclass;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.Table;
-import javax.persistence.Column;
-import javax.persistence.OneToMany;
-import java.util.Set;
-import java.util.HashSet;
 
-@Entity
-@Table(name = "Party_Role_Type")
-@Inheritance(
-    strategy=InheritanceType.SINGLE_TABLE,
-    discriminatorType=DiscriminatorType.STRING,
-    discriminatorValue="Party"        
-)
-@DiscriminatorColumn(name="role_type")
+@EmbeddableSuperclass
 public class PartyRoleType extends AbstractCustomReferenceEntity
 {
-    public static final String PK_COLUMN_NAME = "party_role_type_id";
-
-    public PartyRoleType()
-    {
-    }
+    public static final String PK_COLUMN_NAME = "role_type_id";
 
     @Id(generate = GeneratorType.AUTO)
     @Column(name = PK_COLUMN_NAME)
-    public Long getPartyRoleTypeId()
+    public Long getRoleTypeId()
     {
         return super.getSystemId();
     }
 
-    protected void setPartyRoleTypeId(final Long id)
+    protected void setRoleTypeId(final Long id)
     {
         super.setSystemId(id);
     }

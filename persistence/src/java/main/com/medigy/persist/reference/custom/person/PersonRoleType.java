@@ -40,13 +40,18 @@ package com.medigy.persist.reference.custom.person;
 
 import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
 import com.medigy.persist.reference.custom.CustomReferenceEntity;
+import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
 import com.medigy.persist.reference.custom.party.PartyRoleType;
 
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
+import javax.persistence.Table;
+import javax.persistence.Id;
+import javax.persistence.GeneratorType;
+import javax.persistence.Column;
 
 @Entity
-@Inheritance(discriminatorValue="Person" )
+@Table(name ="Person_Role_Type")
 public class PersonRoleType extends PartyRoleType
 {
     public static final String PK_COLUMN_NAME = PartyRoleType.PK_COLUMN_NAME;
@@ -143,5 +148,4 @@ public class PersonRoleType extends PartyRoleType
             return null;
         }
    }
-
 }

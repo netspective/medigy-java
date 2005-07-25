@@ -46,7 +46,6 @@ import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 
 @Entity
-@Inheritance(discriminatorValue = "Order")
 public class OrderRoleType  extends PartyRoleType
 {
     public static final String PK_COLUMN_NAME = PartyRoleType.PK_COLUMN_NAME;

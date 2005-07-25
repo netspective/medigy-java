@@ -55,7 +55,7 @@ import javax.persistence.Column;
 public class PeopleRelationshipType extends AbstractCustomReferenceEntity
 {
     public static final String RELATIONSHIP_TYPE_NAME = "person-to-person";
-    public static final String PK_COLUMN_NAME = "rel_type_id";
+    public static final String PK_COLUMN_NAME = "rel_type_id";                        
 
     public enum Cache implements CachedCustomReferenceEntity
     {

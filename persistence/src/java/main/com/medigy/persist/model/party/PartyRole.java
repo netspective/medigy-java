@@ -79,7 +79,5 @@ public abstract class PartyRole extends AbstractEntity
      */
     @Transient
     public abstract Party getParty();
-
     
-
 }

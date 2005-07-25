@@ -43,20 +43,25 @@ import javax.persistence.GeneratorType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Column;
 
 import com.medigy.persist.model.common.AbstractTopLevelEntity;
 import com.medigy.persist.model.person.Person;
 import com.medigy.persist.reference.custom.party.PartyRoleType;
+import com.medigy.persist.reference.custom.person.PersonRoleType;
 
 @Entity
 public class PractitionerDiagnosis extends AbstractTopLevelEntity
 {
+    public static final String PK_COLUMN_NAME = "prac_diagnosis_id";
+
     private Long practitionerDiagnosisId;
     private Person practitioner;
-    private PartyRoleType practitionerRole;
+    private PersonRoleType practitionerRole;
     private Diagnosis diagnosis;
 
     @Id(generate = GeneratorType.AUTO)
+    @Column(name = PK_COLUMN_NAME)
     public Long getPractitionerDiagnosisId()
     {
         return practitionerDiagnosisId;
@@ -68,7 +73,7 @@ public class PractitionerDiagnosis extends AbstractTopLevelEntity
     }
 
     @ManyToOne
-    @JoinColumn(name = "party_id")
+    @JoinColumn(name = Person.PK_COLUMN_NAME)
     public Person getPractitioner()
     {
         return practitioner;
@@ -80,19 +85,19 @@ public class PractitionerDiagnosis extends AbstractTopLevelEntity
     }
 
     @ManyToOne
-    @JoinColumn(name = "party_role_type_id")
-    public PartyRoleType getPractitionerRole()
+    @JoinColumn(name = PersonRoleType.PK_COLUMN_NAME)
+    public PersonRoleType getPractitionerRole()
     {
         return practitionerRole;
     }
 
-    public void setPractitionerRole(final PartyRoleType practitionerRole)
+    public void setPractitionerRole(final PersonRoleType practitionerRole)
     {
         this.practitionerRole = practitionerRole;
     }
 
     @ManyToOne
-    @JoinColumn(name = "diagnosis_id")
+    @JoinColumn(name = Diagnosis.PK_COLUMN_NAME)
     public Diagnosis getDiagnosis()
     {
         return diagnosis;

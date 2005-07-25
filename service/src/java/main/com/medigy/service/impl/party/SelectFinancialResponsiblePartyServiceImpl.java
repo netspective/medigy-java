@@ -38,22 +38,19 @@
  */
 package com.medigy.service.impl.party;
 
-import com.medigy.persist.model.party.ValidResponsiblePartyRole;
-import com.medigy.persist.model.person.Person;
 import com.medigy.persist.model.org.Organization;
+import com.medigy.persist.model.person.Person;
 import com.medigy.persist.reference.custom.party.OrganizationRoleType;
 import com.medigy.persist.reference.custom.person.PersonRoleType;
-import com.medigy.service.ServiceVersion;
 import com.medigy.service.AbstractService;
+import com.medigy.service.ServiceVersion;
 import com.medigy.service.dto.ServiceParameters;
 import com.medigy.service.dto.ServiceReturnValues;
 import com.medigy.service.dto.person.SelectFinancialResponsiblePartyParameters;
 import com.medigy.service.party.PartyRelationshipFacade;
 import com.medigy.service.party.SelectFinancialResponsiblePartyService;
 import com.medigy.service.util.ReferenceEntityFacade;
-import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Restrictions;
 
 import java.io.Serializable;
 

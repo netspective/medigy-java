@@ -160,8 +160,6 @@
         <mapping class="com.medigy.persist.model.party.PostalAddress"/>
         <mapping class="com.medigy.persist.model.party.PostalAddressBoundary"/>
         <mapping class="com.medigy.persist.model.party.ValidContactMechanismRole"/>
-        <mapping class="com.medigy.persist.model.party.ValidPartyRelationshipRole"/>
-        <mapping class="com.medigy.persist.model.party.ValidResponsiblePartyRole"/>
 
         <!--mapping package="com.medigy.persist.model.claim"/-->
         <mapping class="com.medigy.persist.model.claim.Claim"/>

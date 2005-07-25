@@ -112,7 +112,6 @@ public class Party extends AbstractTopLevelEntity
 
     // All the custom reference entity types
     private Set<PartyIdentifierType> partyIdentifierTypes = new HashSet<PartyIdentifierType>();
-    private Set<PartyRoleType> partyRoleTypes = new HashSet<PartyRoleType>();
     private Set<FacilityType> facilityTypes = new HashSet<FacilityType>();
     private Set<PartyRelationshipType> partyRelationshipTypes = new HashSet<PartyRelationshipType>();
     private Set<CommunicationEventPurposeType> communicationEventPurposeTypes = new HashSet<CommunicationEventPurposeType>();
@@ -231,17 +230,6 @@ public class Party extends AbstractTopLevelEntity
     public void setPartyIdentifierTypes(final Set<PartyIdentifierType> partyIdentifierTypes)
     {
         this.partyIdentifierTypes = partyIdentifierTypes;
-    }
-
-    @OneToMany(cascade =  CascadeType.ALL, mappedBy = "party")
-    public Set<PartyRoleType> getPartyRoleTypes()
-    {
-        return partyRoleTypes;
-    }
-
-    public void setPartyRoleTypes(final Set<PartyRoleType> partyRoleTypes)
-    {
-        this.partyRoleTypes = partyRoleTypes;
     }
 
     @OneToMany(cascade =  CascadeType.ALL, mappedBy = "party")
