@@ -64,7 +64,6 @@ public class TestHealthCareReferral extends TestCase
         patient.addGender(GenderType.Cache.MALE.getEntity());
         patient.addLanguage(LanguageType.Cache.ENGLISH.getEntity());
 
-
         final PersonRole patientRole = new PersonRole();
         patientRole.setType(PersonRoleType.Cache.PATIENT.getEntity());
         patientRole.setPerson(patient);
@@ -107,7 +106,6 @@ public class TestHealthCareReferral extends TestCase
         referral.setReferralDate(time);
         referral.setType(HealthCareReferralType.Cache.CONSULTATION.getEntity());
         HibernateUtil.getSession().save(referral);
-        HibernateUtil.closeSession();
 
         final HealthCareReferral newReferral = (HealthCareReferral) HibernateUtil.getSession().load(HealthCareReferral.class, referral.getHealthCareReferralId());
         cal.setTime(newReferral.getReferralDate());
