@@ -60,7 +60,7 @@ public class HealthCareReferralFacadeImpl extends AbstractFacade implements Heal
     public List listReferralsByPatient(final Serializable patientId)
     {
         return getSession().createQuery("from HealthCareReferral  hcr " +
-                " where hcr.patientRole.party.partyId = "  + patientId).list();
+                " where hcr.patientRole.person.partyId = "  + patientId).list();
     }
 
     /**
@@ -72,6 +72,6 @@ public class HealthCareReferralFacadeImpl extends AbstractFacade implements Heal
     public List listReferralsByRequestor(final Serializable physicianId)
     {
         return getSession().createQuery("from HealthCareReferral  hcr " +
-                " where hcr.requesterRole.party.partyId = "  + physicianId).list();
+                " where hcr.requesterRole.person.partyId = "  + physicianId).list();
     }
 }
