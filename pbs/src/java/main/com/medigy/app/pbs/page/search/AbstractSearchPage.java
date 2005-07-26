@@ -46,7 +46,6 @@ package com.medigy.app.pbs.page.search;
 import com.medigy.wicket.border.DefaultPageBodyBorder.NavigationPanelProvider;
 import com.medigy.wicket.page.AuthenticatedWebPage;
 import com.medigy.presentation.form.common.SearchResultPanel;
-import com.medigy.service.impl.person.PersonSearchServiceImpl;
 import wicket.Component;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.panel.Panel;
@@ -56,7 +55,7 @@ public abstract class AbstractSearchPage extends AuthenticatedWebPage implements
     private final Panel criteriaPanel;
     private final Component onSelectPanel;
     private final SearchBorder searchBorder;
-    private /*final*/ Panel searchResultPanel;  // TODO: remove commented out code when we have search panels defined
+    private Panel searchResultPanel;
 
     public AbstractSearchPage()
     {
@@ -67,12 +66,11 @@ public abstract class AbstractSearchPage extends AuthenticatedWebPage implements
         searchBorder.add(onSelectPanel = customSelectPanel != null ? customSelectPanel : new WebMarkupContainer("onSelectPanel"));
         onSelectPanel.setVisible(customSelectPanel != null);
 
-        // TODO: remove the following three lines of code when we have search panels defined
         searchResultPanel = getSearchResultPanel("searchResultsPanel");
         if(searchResultPanel == null)
-            searchResultPanel = new SearchResultPanel("searchResultsPanel", PersonSearchServiceImpl.class);
+            searchResultPanel = new SearchResultPanel("searchResultsPanel", null);
 
-        searchBorder.add(searchResultPanel /* = getSearchResultPanel("searchResultsPanel") */ );    // TODO: remove commented out code when we have search panels defined
+        searchBorder.add(searchResultPanel);
     }
 
     public abstract Panel getSearchCriteriaPanel(final String id);
