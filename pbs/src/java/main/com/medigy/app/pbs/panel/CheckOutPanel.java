@@ -41,19 +41,14 @@
 /*
  * Copyright (c) 2005 Your Corporation. All Rights Reserved.
  */
-package com.medigy.app.pbs.form;
+package com.medigy.app.pbs.panel;
 
 import wicket.markup.html.panel.Panel;
-import com.medigy.app.pbs.panel.CheckInPanel;
 
-public class CheckInPage extends AbstractFormPage
+public class CheckOutPanel extends Panel
 {
-    public CheckInPage()
+    public CheckOutPanel(final String id)
     {
-    }
-
-    public Panel getFormPanel(final String id)
-    {
-        return new CheckInPanel(id);
+        super(id);
     }
 }

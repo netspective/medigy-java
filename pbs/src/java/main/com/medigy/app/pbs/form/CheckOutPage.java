@@ -43,9 +43,17 @@
  */
 package com.medigy.app.pbs.form;
 
-import com.medigy.wicket.page.AuthenticatedWebPage;
+import wicket.markup.html.panel.Panel;
+import com.medigy.app.pbs.panel.CheckOutPanel;
 
-public class CheckOutPage extends AuthenticatedWebPage
+public class CheckOutPage extends AbstractFormPage
 {
+    public CheckOutPage()
+    {
+    }
 
+    public Panel getFormPanel(final String id)
+    {
+        return new CheckOutPanel(id);
+    }
 }

@@ -53,7 +53,7 @@ public abstract class AbstractFormPage extends AuthenticatedWebPage
     public AbstractFormPage()
     {
         add(formBorder = new FormBorder("formBorder", this));
-        formBorder.add(controlBar = getFormPanel("controlBar"));
+        formBorder.add(controlBar = getFormPanel("panel"));
     }
 
     public abstract Panel getFormPanel(final String id);
