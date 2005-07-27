@@ -35,7 +35,6 @@
  * CAUSED AND REGARDLESS OF THE THEORY OF LIABILITY, ARISING OUT OF THE USE OF OR INABILITY TO USE THE SOFTWARE, EVEN
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
- * @author Jeremy D. Hulick
  */
 
 /*
@@ -43,16 +42,19 @@
  */
 package com.medigy.app.pbs.form;
 
+import com.medigy.wicket.page.AuthenticatedWebPage;
 import wicket.markup.html.panel.Panel;
 
-public class CheckInPage extends AbstractFormPage
+public abstract class AbstractFormPage extends AuthenticatedWebPage
 {
-    public CheckInPage()
+    private final Panel controlBar;
+    private final FormBorder formBorder;
+
+    public AbstractFormPage()
     {
+        add(formBorder = new FormBorder("formBorder", this));
+        formBorder.add(controlBar = getFormPanel("controlBar"));
     }
 
-    public Panel getFormPanel(final String id)
-    {
-        return new CheckInPanel("panel");
-    }
+    public abstract Panel getFormPanel(final String id);
 }

@@ -45,14 +45,10 @@ package com.medigy.app.pbs.form;
 
 import wicket.markup.html.panel.Panel;
 
-public class CheckInPage extends AbstractFormPage
+public class CheckInPanel extends Panel
 {
-    public CheckInPage()
+    public CheckInPanel(final String id)
     {
-    }
-
-    public Panel getFormPanel(final String id)
-    {
-        return new CheckInPanel("panel");
+        super(id);
     }
 }
