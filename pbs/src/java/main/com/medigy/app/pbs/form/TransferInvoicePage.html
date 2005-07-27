@@ -6,64 +6,9 @@
     </head>
 
     <body wicket:id="border" class="page">
-        <form wicket-id="mainForm">
-                <div class="form-body">
-                    <fieldset class="top-level">
-	                    <legend _wicket:id="transferInvoiceGroup_label">Transfer Invoice Information</legend>
-	                    <table class="vertical-fields">
-	                        <tr class="field">
-	                            <td class="label">
-	                                <label _wicket:id="date_label">Date</label>
-	                            </td>
-	                            <td class="control">
-	                                <input type="text" _wicket:id="date" value=""/>
-	                            </td>
-	                        </tr>
-	                        <tr class="field">
-	                            <td class="label">
-	                                <label _wicket:id="invoiceId_label">Invoice ID</label>
-	                            </td>
-	                            <td class="control">
-	                                <input type="text" _wicket:id="invoiceId" value=""/>
-	                            </td>
-	                        </tr>
-	                        <tr class="field">
-	                            <td class="label">
-	                                <label _wicket:id="transferFrom_label">Transfer From</label>
-	                            </td>
-	                            <td class="control">
-	                                <input type="text" _wicket:id="transferFrom" value=""/>
-	                            </td>
-	                        </tr>
-                            <tr class="field">
-	                            <td class="label">
-	                                <label _wicket:id="transferTo_label">Transfer To</label>
-	                            </td>
-	                            <td class="control">
-	                                <input type="text" _wicket:id="transferTo" value=""/>
-	                            </td>
-	                        </tr>
-	                        <tr class="field">
-	                            <td class="label">
-	                                <label _wicket:id="reason_label">Reason For Transfer</label>
-	                            </td>
-	                            <td class="reason">
-	                                <textarea></textarea>
-	                            </td>
-	                        </tr>
-                        </table>
-                    </fieldset>
-                    <div class="director">
-                        <table class="vertical-fields">
-                            <tr class="field">
-                                <td class="control">
-                                    <input class="button" _wicket:id="formSubmit" type="submit" value="OK"/>
-                                    <input class="button" _wicket:id="formReset" type="reset" value="Reset"/>
-                                </td>
-                            </tr>
-                         </table>
-                    </div>
-                </div>
-            </form>
+        <div wicket:id="formBorder">
+            <span wicket:id="panel"></span>
+        </div>
     </body>
+    
 </html>

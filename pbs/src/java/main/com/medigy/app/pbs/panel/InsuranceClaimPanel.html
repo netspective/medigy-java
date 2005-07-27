@@ -1,0 +1,417 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.sourceforge.net/">
+    <body>
+        <wicket:panel>
+            <form wicket-id="mainForm">
+                <div class="form-body">
+                    <fieldset class="top-level">
+	                    <legend _wicket:id="nurseIdGroup_label">Section I</legend>
+	                    <table class="vertical-fields">
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="batchId_label">Batch ID</label> /
+	                                <label _wicket:id="date_label">Date</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" _wicket:id="batchId" value=""/>
+	                                <input type="text" _wicket:id="date" value=""/>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="patientId_label">Patient ID</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" _wicket:id="patientId" value=""/>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="visitType_label">Type of Visit</label>
+	                            </td>
+	                            <td class="control">
+	                                <select _wicket:id="visitType">
+	                                    <option selected="selected" value="0">Office</option>
+	                                    <option value="1">Home</option>
+	                                    <option value="2">Mrs.</option>
+	                                </select>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="accident_label">Accident?</label>
+	                            </td>
+	                            <td class="control">
+	                                <select _wicket:id="accident">
+	                                    <option selected="selected" value="0">None</option>
+	                                </select>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="accidentState_label">Place of Auto Accident (State)</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" _wicket:id="accidentState" value=""/>
+	                            </td>
+	                        </tr>
+                            <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="providerService_label">Provider Service</label> /
+	                                <label _wicket:id="billing_label">Billing</label>
+	                            </td>
+	                            <td class="control">
+	                                <select _wicket:id="providerService">
+	                                    <option selected="selected" value="0">AQUINNMD</option>
+	                                </select>
+	                                <select _wicket:id="billing">
+	                                    <option selected="selected" value="0">AQUINNMD</option>
+	                                </select>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="orgService_label">Org Service</label> /
+	                                <label _wicket:id="billing_label">Billing</label> /
+	                                <label _wicket:id="payTo_label">Pay To</label>
+	                            </td>
+	                            <td class="control">
+	                                <select _wicket:id="orgService">
+	                                    <option selected="selected" value="0">Clark Medical Center, Greenspoint</option>
+	                                </select>
+	                                <select _wicket:id="billing">
+	                                    <option selected="selected" value="0">Clark Medical Center, Greenspoint</option>
+	                                </select>
+	                                <select _wicket:id="payTo">
+	                                    <option selected="selected" value="0">Clark Medical Center, Greenspoint</option>
+	                                </select>
+	                            </td>
+	                        </tr>
+	                    </table>
+	                </fieldset>
+                    <fieldset class="top-level">
+	                    <legend _wicket:id="section2Group_label">Section II</legend>
+	                    <table class="vertical-fields">
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="referringPhysicianId_label">Referring Physician ID</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" _wicket:id="referringPhysicianId" value=""/>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="similarDate_label">Similar</label> /
+	                                <label _wicket:id="currentIllnessDate_label">Current Illness Dates</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" _wicket:id="similarDate" value=""/>
+	                                <input type="text" _wicket:id="currentIllnessDate" value=""/>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="beginDate_label">Begin</label> /
+	                                <label _wicket:id="endDate_label">End Disability Dates</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" _wicket:id="beginDate" value=""/>
+	                                <input type="text" _wicket:id="endDate" value=""/>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="administrationDate_label">Adminstration</label> /
+	                                <label _wicket:id="dischargeDate_label">Discharge Hospitalization Dates</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" _wicket:id="administrationDate" value=""/>
+	                                <input type="text" _wicket:id="dischargeDate" value=""/>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="priorAuthorizationNumber_label">Prior Authorization Number</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" _wicket:id="priorAuthorizationNumber" value=""/>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="comments_label">Comments</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="memo" _wicket:id="comments" value=""/>
+	                            </td>
+	                        </tr>
+	                    </table>
+	                </fieldset>
+
+                    <fieldset class="top-level">
+                        <legend _wicket:id="procedureEntry_label">Procedure Entry</legend>
+                        <table class="vertical-fields">
+                            <tr>
+                                <td class="label-top">
+                                    <label _wicket:id="dates_label">Dates</label>
+                                </td>
+                                <td class="label-top">
+                                    <label _wicket:id="cptModf_label">CPT/Modf</label>
+                                </td>
+                                <td class="label-top">
+                                    <label _wicket:id="diagnoses_label">Diagnoses</label>
+                                </td>
+							    <td class="label-top">
+                                   <label _wicket:id="units_label">Units</label>
+                                </td>
+                                <td class="label-top">
+                                   <label _wicket:id="charge_label">Charge</label>
+                                </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="control">
+                                    <input type="text" _wicket:id="fromDate" value="From"/>
+                                </td>
+                                <td class="control">
+                                    <input type="text" _wicket:id="procedure" value="Procedure"/>
+                                </td>
+                                <td class="control">
+                                    <input type="text" _wicket:id="diagnosis" value=""/>
+                                </td>
+                                <td class="control">
+                                    <input type="text" _wicket:id="units" value=""/>
+                                </td>
+                                <td class="control">
+                                    <input type="text" _wicket:id="charge" value=""/>
+                                </td>
+                                <td class="control">
+	                                <input type="checkbox" _wicket:id="emergencyCheckbox"/>
+	                                <label _wicket:id="emergency_label">Emergency</label>
+	                            </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="control">
+                                    <input type="text" _wicket:id="toDate" value="To"/>
+                                </td>
+                                <td class="control">
+                                    <input type="text" _wicket:id="cptModf" value=""/>
+                                </td>
+                                <td class="control">
+                                </td>
+                                <td class="control">
+                                </td>
+                                <td class="control">
+                                </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="label" colspan="2">
+                                    <label _wicket:id="comments_label">Comments</label>
+                                </td>
+                                <td class="control" colspan="3">
+                                    <input type="text" _wicket:id="comments" value=""/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="label-top">
+                                    <label _wicket:id="dates2_label">Dates</label>
+                                </td>
+                                <td class="label-top">
+                                    <label _wicket:id="cptModf2_label">CPT/Modf</label>
+                                </td>
+                                <td class="label-top">
+                                    <label _wicket:id="diagnoses2_label">Diagnoses</label>
+                                </td>
+							    <td class="label-top">
+                                   <label _wicket:id="units2_label">Units</label>
+                                </td>
+                                <td class="label-top">
+                                   <label _wicket:id="charge2_label">Charge</label>
+                                </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="control">
+                                    <input type="text" _wicket:id="fromDate2" value="From"/>
+                                </td>
+                                <td class="control">
+                                    <input type="text" _wicket:id="procedure2" value="Procedure"/>
+                                </td>
+                                <td class="control">
+                                    <input type="text" _wicket:id="diagnosis2" value=""/>
+                                </td>
+                                <td class="control">
+                                    <input type="text" _wicket:id="units2" value=""/>
+                                </td>
+                                <td class="control">
+                                    <input type="text" _wicket:id="charge2" value=""/>
+                                </td>
+                                <td class="control">
+	                                <input type="checkbox" _wicket:id="emergencyCheckbox2"/>
+	                                <label _wicket:id="emergency2_label">Emergency</label>
+	                            </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="control">
+                                    <input type="text" _wicket:id="toDate2" value="To"/>
+                                </td>
+                                <td class="control">
+                                    <input type="text" _wicket:id="cptModf2" value=""/>
+                                </td>
+                                <td class="control">
+                                </td>
+                                <td class="control">
+                                </td>
+                                <td class="control">
+                                </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="label" colspan="2">
+                                    <label _wicket:id="comments2_label">Comments</label>
+                                </td>
+                                <td class="control" colspan="3">
+                                    <input type="text" _wicket:id="comments2" value=""/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="label-top">
+                                    <label _wicket:id="dates3_label">Dates</label>
+                                </td>
+                                <td class="label-top">
+                                    <label _wicket:id="cptModf3_label">CPT/Modf</label>
+                                </td>
+                                <td class="label-top">
+                                    <label _wicket:id="diagnoses3_label">Diagnoses</label>
+                                </td>
+							    <td class="label-top">
+                                   <label _wicket:id="units3_label">Units</label>
+                                </td>
+                                <td class="label-top">
+                                   <label _wicket:id="charge3_label">Charge</label>
+                                </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="control">
+                                    <input type="text" _wicket:id="fromDate3" value="From"/>
+                                </td>
+                                <td class="control">
+                                    <input type="text" _wicket:id="procedure3" value="Procedure"/>
+                                </td>
+                                <td class="control">
+                                    <input type="text" _wicket:id="diagnosis3" value=""/>
+                                </td>
+                                <td class="control">
+                                    <input type="text" _wicket:id="units3" value=""/>
+                                </td>
+                                <td class="control">
+                                    <input type="text" _wicket:id="charge3" value=""/>
+                                </td>
+                                <td class="control">
+	                                <input type="checkbox" _wicket:id="emergencyCheckbox3"/>
+	                                <label _wicket:id="emergency3_label">Emergency</label>
+	                            </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="control">
+                                    <input type="text" _wicket:id="toDate3" value="To"/>
+                                </td>
+                                <td class="control">
+                                    <input type="text" _wicket:id="cptModf3" value=""/>
+                                </td>
+                                <td class="control">
+                                </td>
+                                <td class="control">
+                                </td>
+                                <td class="control">
+                                </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="label" colspan="2">
+                                    <label _wicket:id="comments3_label">Comments</label>
+                                </td>
+                                <td class="control" colspan="3">
+                                    <input type="text" _wicket:id="comments3" value=""/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="label-top">
+                                    <label _wicket:id="dates4_label">Dates</label>
+                                </td>
+                                <td class="label-top">
+                                    <label _wicket:id="cptModf4_label">CPT/Modf</label>
+                                </td>
+                                <td class="label-top">
+                                    <label _wicket:id="diagnoses4_label">Diagnoses</label>
+                                </td>
+							    <td class="label-top">
+                                   <label _wicket:id="units4_label">Units</label>
+                                </td>
+                                <td class="label-top">
+                                   <label _wicket:id="charge4_label">Charge</label>
+                                </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="control">
+                                    <input type="text" _wicket:id="fromDate4" value="From"/>
+                                </td>
+                                <td class="control">
+                                    <input type="text" _wicket:id="procedure4" value="Procedure"/>
+                                </td>
+                                <td class="control">
+                                    <input type="text" _wicket:id="diagnosis4" value=""/>
+                                </td>
+                                <td class="control">
+                                    <input type="text" _wicket:id="units4" value=""/>
+                                </td>
+                                <td class="control">
+                                    <input type="text" _wicket:id="charge4" value=""/>
+                                </td>
+                                <td class="control">
+	                                <input type="checkbox" _wicket:id="emergencyCheckbox4"/>
+	                                <label _wicket:id="emergency4_label">Emergency</label>
+	                            </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="control">
+                                    <input type="text" _wicket:id="toDate4" value="To"/>
+                                </td>
+                                <td class="control">
+                                    <input type="text" _wicket:id="cptModf4" value=""/>
+                                </td>
+                                <td class="control">
+                                </td>
+                                <td class="control">
+                                </td>
+                                <td class="control">
+                                </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="label" colspan="2">
+                                    <label _wicket:id="comments4_label">Comments</label>
+                                </td>
+                                <td class="control" colspan="3">
+                                    <input type="text" _wicket:id="comments4" value=""/>
+                                </td>
+                            </tr>
+                        </table>
+                    </fieldset>
+                    <div class="director">
+                        <table class="vertical-fields">
+                            <tr class="field">
+                                <td class="label">
+                                    <label _wicket:id="nextAction_label">Next Action</label>
+                                </td>
+                                <td class="control">
+                                    <select _wicket:id="nextAction">
+                                        <option>Go to Claim Summary</option>
+                                    </select>
+                                    <input class="button" _wicket:id="formSubmit" type="submit" value="OK"/>
+                                    <input class="button" _wicket:id="formReset" type="reset" value="Reset"/>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </form>
+        </wicket:panel>
+    </body>
+</html>

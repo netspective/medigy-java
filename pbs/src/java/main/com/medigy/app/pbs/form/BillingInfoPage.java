@@ -43,9 +43,13 @@
  */
 package com.medigy.app.pbs.form;
 
-import com.medigy.wicket.page.AuthenticatedWebPage;
+import wicket.markup.html.panel.Panel;
+import com.medigy.app.pbs.panel.BillingInfoPanel;
 
-public class BillingInfoPage extends AuthenticatedWebPage
+public class BillingInfoPage extends AbstractFormPage
 {
-
+     public Panel getFormPanel(final String id)
+    {
+        return new BillingInfoPanel(id);
+    }
 }

@@ -43,9 +43,17 @@
  */
 package com.medigy.app.pbs.form;
 
-import com.medigy.wicket.page.AuthenticatedWebPage;
+import com.medigy.app.pbs.panel.AetnaPanel;
+import wicket.markup.html.panel.Panel;
 
-public class AetnaPage extends AuthenticatedWebPage
+public class AetnaPage extends AbstractFormPage
 {
+    public AetnaPage()
+    {
+    }
 
+    public Panel getFormPanel(final String id)
+    {
+        return new AetnaPanel(id);
+    }
 }

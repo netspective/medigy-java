@@ -43,9 +43,13 @@
  */
 package com.medigy.app.pbs.form;
 
-import com.medigy.wicket.page.AuthenticatedWebPage;
+import com.medigy.app.pbs.panel.DepartmentOrganizationPanel;
+import wicket.markup.html.panel.Panel;
 
-public class DepartmentOrganizationPage extends AuthenticatedWebPage
+public class DepartmentOrganizationPage extends AbstractFormPage
 {
-
+    public Panel getFormPanel(final String id)
+    {
+        return new DepartmentOrganizationPanel(id);
+    }
 }

@@ -6,78 +6,9 @@
     </head>
 
     <body wicket:id="border" class="page">
-        <form wicket-id="mainForm">
-            <div class="form-body">
-                <fieldset class="top-level">
-	                <legend _wicket:id="billingGroup_label">Clearing House Billing Information</legend>
-	                <table class="vertical-fields">
-	                    <tr class="field">
-	                        <td class="label">
-	                            <label _wicket:id="physicianId_label">Physician ID</label>
-	                        </td>
-	                        <td class="control">
-	                            <input type="text" _wicket:id="physicianId" value=""/>
-	                        </td>
-	                    </tr>
-	                    <tr class="field">
-	                        <td class="label">
-	                            <label _wicket:id="organizationId_label">Organization ID</label>
-	                        </td>
-	                        <td class="control">
-	                            <input type="text" _wicket:id="organizationId" value=""/>
-	                        </td>
-	                    </tr>
-	                    <tr class="field">
-	                        <td class="label">
-	                            <label for="clearingHouse_label">Clearing House</label>
-	                        </td>
-	                        <td class="control">
-	                             <select _wicket:id="clearingHouse">
-                                     <option>Per-se</option>
-                                     <option>THINet</option>
-                                     <option>Other</option>
-                                 </select>
-                             </td>
-	                    </tr>
-	                    <tr class="field">
-	                        <td class="label">
-	                            <label _wicket:id="billingId_label">Billing ID</label>
-	                        </td>
-	                        <td class="control">
-	                            <input type="text" _wicket:id="billingId" value=""/>
-	                        </td>
-	                    </tr>
-	                    <tr class="field">
-	                        <td class="label">
-	                            <label _wicket:id="effectiveDate_label">Effective Date</label>
-	                        </td>
-	                        <td class="control">
-	                            <input type="text" _wicket:id="effectiveDate" value=""/>
-	                        </td>
-	                    </tr>
-	                    <tr class="field">
-	                        <td class="label">
-	                            <label _wicket:id="processLiveClaims_label"></label>
-	                        </td>
-	                        <td class="control">
-                                <span _wicket:id="processLiveClaims">
-                                    <input type="checkbox">Process Live Claims
-                                </span>
-                            </td>
-	                    </tr>
-                    </table>
-                </fieldset>
-                <div class="director">
-                    <table class="vertical-fields">
-                        <tr class="field">
-                            <td class="control">
-                                <input class="button" _wicket:id="formSubmit" type="submit" value="OK"/>
-                                <input class="button" _wicket:id="formReset" type="reset" value="Reset"/>
-                            </td>
-                        </tr>
-                     </table>
-                </div>
-            </div>
-        </form>
+        <div wicket:id="formBorder">
+            <span wicket:id="panel"></span>
+        </div>
     </body>
+    
 </html>

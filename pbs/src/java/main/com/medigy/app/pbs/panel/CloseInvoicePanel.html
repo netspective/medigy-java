@@ -1,0 +1,58 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.sourceforge.net/">
+    <body>
+        <wicket:panel>
+            <form wicket-id="mainForm">
+                <div class="form-body">
+                    <fieldset class="top-level">
+	                    <legend _wicket:id="closeInvoiceGroup_label">Close Invoice Information</legend>
+	                    <table class="vertical-fields">
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="date_label">Date</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" _wicket:id="date" value=""/>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="invoiceId_label">Invoice ID</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" _wicket:id="invoiceId" value=""/>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="userId_label">User ID</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" _wicket:id="userId" value=""/>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="comments_label">Comments</label>
+	                            </td>
+	                            <td class="comments">
+	                                <textarea></textarea>
+	                            </td>
+	                        </tr>
+                        </table>
+                    </fieldset>
+                    <div class="director">
+                        <table class="vertical-fields">
+                            <tr class="field">
+                                <td class="control">
+                                    <input class="button" _wicket:id="formSubmit" type="submit" value="OK"/>
+                                    <input class="button" _wicket:id="formReset" type="reset" value="Reset"/>
+                                </td>
+                            </tr>
+                         </table>
+                    </div>
+                </div>
+            </form>
+        </wicket:panel>
+    </body>
+</html>

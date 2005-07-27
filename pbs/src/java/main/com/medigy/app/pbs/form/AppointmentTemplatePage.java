@@ -43,9 +43,17 @@
  */
 package com.medigy.app.pbs.form;
 
-import com.medigy.wicket.page.AuthenticatedWebPage;
+import wicket.markup.html.panel.Panel;
+import com.medigy.app.pbs.panel.AppointmentTemplatePanel;
 
-public class AppointmentTemplatePage extends AuthenticatedWebPage
+public class AppointmentTemplatePage extends AbstractFormPage
 {
+    public AppointmentTemplatePage()
+    {
+    }
 
+    public Panel getFormPanel(final String id)
+    {
+        return new AppointmentTemplatePanel(id);
+    }
 }

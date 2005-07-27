@@ -43,9 +43,13 @@
  */
 package com.medigy.app.pbs.form;
 
-import com.medigy.wicket.page.AuthenticatedWebPage;
+import wicket.markup.html.panel.Panel;
+import com.medigy.app.pbs.panel.InsuranceProductPanel;
 
-public class InsuranceProductPage extends AuthenticatedWebPage
+public class InsuranceProductPage extends AbstractFormPage
 {
-
+    public Panel getFormPanel(final String id)
+    {
+        return new InsuranceProductPanel(id);
+    }
 }

@@ -1,0 +1,318 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.sourceforge.net/">
+    <body>
+        <wicket:panel>
+            <form wicket-id="mainForm">
+                <div class="form-body">
+                    <fieldset class="top-level">
+                        <legend _wicket:id="orgProfile_label">Profile Information</legend>
+                        <table class="vertical-fields">
+                            <tr class="field">
+                                <td class="label">
+                                    <label _wicket:id="parentOrganizationId_label">Parent Organization ID</label>
+                                </td>
+                                <td class="control">
+                                    <input type="text" _wicket:id="parentOrganizationId" size="36"/>
+                                </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="label">
+                                    <label _wicket:id="organizationId_label">Organization ID</label>
+                                </td>
+                                <td class="control">
+                                    <input type="text" _wicket:id="organizationId" size="36"/>
+                                </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="label">
+                                    <label _wicket:id="organizationName_label">Organization Name</label>
+                                </td>
+                                <td class="control">
+                                    <textarea></textarea>
+                                </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="label">
+                                    <label _wicket:id="tradeName_label">Doing Business As</label>
+                                </td>
+                                <td class="control">
+                                    <textarea></textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="label">
+                                    <label _wicket:id="patientTypes_label">Organization Type(s)</label>
+                                </td>
+                                 <td>
+							     <table class="vertical-form">
+	                                <tr class="field">
+	                                    <td class="control">
+	                                        <input type="checkbox" _wicket:id="Practice"/>
+	                                        <label _wicket:id="Practice_label">Practice</label>
+	                                    </td>
+								        <td class="control">
+	                                        <input type="checkbox" _wicket:id="Clinic"/>
+	                                        <label _wicket:id="Clinic_label">Clinic</label>
+	                                    </td>
+	                                    <td class="control">
+	                                        <input type="checkbox" _wicket:id="FacilitySite"/>
+	                                        <label _wicket:id="FacilitySite_label">Facility/Site</label>
+	                                    </td>
+	                                    <td class="control">
+	                                        <input type="checkbox" _wicket:id="Services"/>
+	                                        <label _wicket:id="Services_label">Diagnostic Services</label>
+	                                    </td>
+	                                    <td class="control">
+	                                        <input type="checkbox" _wicket:id="Hospital"/>
+	                                        <label _wicket:id="Hospital_label">Hospital</label>
+	                                    </td>
+	                                    <td class="control">
+	                                        <input type="checkbox" _wicket:id="Theraputic"/>
+	                                        <label _wicket:id="Theraputic_label">Theraputic Services</label>
+	                                    </td>
+	                                    <td class="control">
+	                                        <input type="checkbox" _wicket:id="Insurance"/>
+	                                        <label _wicket:id="Insurance_label">Insurance</label>
+	                                    </td>
+	                                    <td class="control">
+	                                        <input type="checkbox" _wicket:id="Employer"/>
+	                                        <label _wicket:id="Employer_label">Employer</label>
+	                                    </td>
+	                                    <td class="control">
+	                                        <input type="checkbox" _wicket:id="IPA"/>
+	                                        <label _wicket:id="IPA_label">IPA</label>
+	                                    </td>
+	                                    <td class="control">
+	                                        <input type="checkbox" _wicket:id="Other"/>
+	                                        <label _wicket:id="Other_label">Other</label>
+	                                    </td>
+	                                 </tr>
+	                             </table>
+	                            </td>
+                            </tr>
+                        </table>
+                    </fieldset>
+                    <fieldset class="top-level">
+                        <legend _wicket:id="contactInformation_label">Contact Information</legend>
+                        <table class="vertical-fields">
+                            <tr class="field">
+                                <td class="label">
+                                    <label _wicket:id="website_label">Hours of Operation</label> /
+                                    <label _wicket:id="website_label">Timezone</label>
+                                </td>
+                                <td class="control">
+                                    <input type="text" _wicket:id="hours_label" value="8:00 AM to 5:00 PM"/>
+                                    <select _wicket:id="timezone_label">
+                                        <option>EST</option>
+                                        <option>CST</option>
+                                        <option>PST</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="label">
+                                    <label _wicket:id="phone_label">Phone</label> /
+                                    <label _wicket:id="fax_label">Fax</label>
+                                </td>
+
+                                <td class="control">
+                                    <input type="text" _wicket:id="phone" value=""/>
+                                    <input type="text" _wicket:id="fax" value=""/>
+                                </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="label">
+                                    <label _wicket:id="address_label">Mailing Address</label>
+                                </td>
+                                <td class="control">
+                                    <input type="text" _wicket:id="street1" size="50"/><br/>
+                                    <input type="text" _wicket:id="street2" size="50"/>
+                                </td>
+                            </tr>
+                            <tr  class="field">
+                                <td class="label">
+                                    <label _wicket:id="city_label">City</label> /
+                                    <label _wicket:id="state_label">State</label> /
+                                    <label _wicket:id="zip_label">Zip</label>
+                                </td>
+                                <td class="control">
+                                    <input type="text" _wicket:id="city" size="25"/>
+                                    <select _wicket:id="state">
+                                        <option />
+                                        <option>Virginia</option>
+                                    </select>
+                                    <input type="text" _wicket:id="zip" size="5" value="00000"/>-
+                                    <input type="text" _wicket:id="zipExt" size="4" value="0000"/>
+                                </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="label">
+                                    <label _wicket:id="email_label">Email</label>
+                                </td>
+                                <td class="control">
+                                    <input type="text" _wicket:id="email" size="50" value="info@medigy.com"/>
+                                </td>
+                            </tr>
+                            <tr class="field">
+                                <td class="label">
+                                    <label _wicket:id="website_label">Website</label>
+                                </td>
+                                <td class="control">
+                                    <input type="text" _wicket:id="website" size="50" value="http://www.yahoo.com"/>
+                                </td>
+                            </tr>
+
+                            <tr class="field">
+                                <td class="label">
+                                    <label _wicket:id="billingContact_label">Billing Contact</label>/
+                                    <label _wicket:id="billingPhone_label">Phone</label>
+                                </td>
+                                <td class="control">
+                                    <input type="text" _wicket:id="billingContact" value="John Doe"/>
+                                    <input type="text" _wicket:id="billingPhone"  value="800-123-4567"/>
+                                </td>
+                            </tr>
+                        </table>
+                    </fieldset>
+                    <table class="container" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td>
+                                <fieldset class="group">
+                                    <legend _wicket:id="idList_label">Identification List</legend>
+                                    <table class="vertical-fields">
+                                        <tr class="field">
+                                            <td class="label">
+                                                <label _wicket:id="taxId_label">Tax ID</label>
+                                            </td>
+                                            <td class="control">
+                                                <input type="text" _wicket:id="taxId" value=""/>
+                                            </td>
+                                        </tr>
+                                        <tr class="field">
+                                            <td class="label">
+                                                <label _wicket:id="employerId_label">Employer ID</label>
+                                            </td>
+                                            <td class="control">
+                                                <input type="text" _wicket:id="employerId" value=""/>
+                                            </td>
+                                        </tr>
+                                        <tr class="field">
+                                            <td class="label">
+                                                <label _wicket:id="stateId_label">State ID</label>
+                                            </td>
+                                            <td class="control">
+                                                <input type="text" _wicket:id="stateId" value=""/>
+                                            </td>
+                                        </tr>
+                                        <tr class="field">
+                                            <td class="label">
+                                                <label _wicket:id="medicaidId_label">Medicaid ID</label>
+                                            </td>
+                                            <td class="control">
+                                                <input type="text" _wicket:id="medicaidId" value=""/>
+                                            </td>
+                                        </tr>
+                                        <tr class="field">
+                                            <td class="label">
+                                                <label _wicket:id="workersCompId_label">Worker's Comp ID</label>
+                                            </td>
+                                            <td class="control">
+                                                <input type="text" _wicket:id="workersCompId" value=""/>
+                                            </td>
+                                        </tr>
+                                        <tr class="field">
+                                            <td class="label">
+                                                <label _wicket:id="bcbsId_label">Blue Cross Blue Shield ID</label>
+                                            </td>
+                                            <td class="control">
+                                                <input type="text" _wicket:id="bcbsId" value=""/>
+                                            </td>
+                                        </tr>
+                                        <tr class="field">
+                                            <td class="label">
+                                                <label _wicket:id="medicareId_label">Medicare ID</label>
+                                            </td>
+                                            <td class="control">
+                                                <input type="text" _wicket:id="medicareId" value=""/>
+                                            </td>
+                                        </tr>
+                                        <tr class="field">
+                                            <td class="label">
+                                                <label _wicket:id="cliaId_label">CLIA ID</label>
+                                            </td>
+                                            <td class="control">
+                                                <input type="text" _wicket:id="cliaId" value=""/>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </fieldset>
+                            </td>
+                            <td class="container-separator">&nbsp;</td>
+                            <td>
+                            <fieldset class="group">
+                                <legend _wicket:id="service_label">Service Information</legend>
+                                <table class="vertical-fields">
+                                    <tr class="field">
+                                        <td class="label">
+                                            <label _wicket:id="hcfaServicePlace_label">HCFA Service Place</label>
+                                        </td>
+                                        <td class="control">
+                                            <input type="text" _wicket:id="hcfaServicePlace" value=""/>
+                                        </td>
+                                    </tr>
+                                    <tr class="field">
+                                        <td class="label">
+                                            <label _wicket:id="medicareGpciLocation_label">Medicare GPCI Location</label>
+                                        </td>
+                                        <td class="control">
+                                            <input type="text" _wicket:id="medicareGpciLocation" value=""/>
+                                        </td>
+                                    </tr>
+                                    <tr class="field">
+                                        <td class="label">
+                                            <label _wicket:id="medicareFacilityPricing_label">Medicare Facility Pricing</label>
+                                        </td>
+                                        <td class="control">
+                                            <input type="radio" _wicket:id="medicareFacilityPricing" value=""> Non-Facility</input>
+                                            <input type="radio" _wicket:id="medicareFacilityPricing" value=""> Facility</input>
+                                        </td>
+                                    </tr>
+                                    <tr class="field">
+                                        <td class="label">
+                                            <label _wicket:id="serviceArea_label">Area Served</label>
+                                        </td>
+                                        <td class="control">
+                                            <select _wicket:id="serviceArea">
+                                                <option/>
+                                                <option>National</option>
+                                                <option>State</option>
+                                                <option>Regional</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </fieldset>
+                            </td>
+                        </tr>
+                    </table>
+                    <div class="director">
+                    <table class="vertical-fields">
+                        <tr class="field">
+                            <td class="label">
+                                <label _wicket:id="nextAction_label">Next Action</label>
+                            </td>
+                            <td class="control">
+                                <select _wicket:id="nextAction">
+                                    <option>View Org Summary</option>
+                                </select>
+                                <input class="button" _wicket:id="formSubmit" type="submit" value="OK"/>
+                                <input class="button" _wicket:id="formReset" type="reset" value="Reset"/>
+                            </td>
+                        </tr>
+                    </table>
+                    </div>
+                </div>
+            </form>
+        </wicket:panel>
+    </body>
+</html>

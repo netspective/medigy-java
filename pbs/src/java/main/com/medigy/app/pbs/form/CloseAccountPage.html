@@ -6,51 +6,9 @@
     </head>
 
     <body wicket:id="border" class="page">
-        <form wicket-id="mainForm">
-            <div class="form-body">
-                <fieldset class="top-level">
-	                <legend _wicket:id="closeAccountGroup_label">Close Account Information</legend>
-	                <table class="vertical-fields">
-	                    <tr class="field">
-	                        <td class="label">
-	                            <label _wicket:id="personId_label">Person ID</label>
-	                        </td>
-	                        <td class="control">
-	                            <input type="text" _wicket:id="personId" value=""/>
-	                        </td>
-	                    </tr>
-                        <tr class="field">
-	                        <td class="label">
-	                            <label for="notesRadioChoice"></label>
-	                        </td>
-	                        <td class="control">
-	                            <span valign="top" _wicket:id="notesRadioChoice">
-	                                <input type="radio">Retain Notes</input>
-		                            <input type="radio">Delete Notes</input>
-		                        </span>
-	                        </td>
-	                    </tr>
-	                    <tr class="field">
-	                        <td class="label">
-	                            <label _wicket:id="notes_label">Notes</label>
-	                        </td>
-	                        <td class="control">
-	                            <textarea></textarea>
-	                        </td>
-	                    </tr>
-                    </table>
-                </fieldset>
-                <div class="director">
-                    <table class="vertical-fields">
-                        <tr class="field">
-                            <td class="control">
-                                <input class="button" _wicket:id="formSubmit" type="submit" value="OK"/>
-                                <input class="button" _wicket:id="formReset" type="reset" value="Reset"/>
-                            </td>
-                        </tr>
-                     </table>
-                </div>
-            </div>
-        </form>
+        <div wicket:id="formBorder">
+            <span wicket:id="panel"></span>
+        </div>
     </body>
+
 </html>
