@@ -41,21 +41,15 @@
 /*
  * Copyright (c) 2005 Your Corporation. All Rights Reserved.
  */
-package com.medigy.app.pbs.page.worklist;
+package com.medigy.app.pbs.page;
 
+import com.medigy.app.pbs.page.worklist.WorklistNavigator;
 import com.medigy.wicket.page.AuthenticatedWebPage;
-import wicket.markup.html.panel.Panel;
 
-public abstract class AbstractWorklistPage extends AuthenticatedWebPage 
+public class Worklists extends AuthenticatedWebPage
 {
-    private final Panel controlBar;
-    private final WorklistBorder worklistBorder;
-
-    public AbstractWorklistPage()
+    public Worklists()
     {
-        add(worklistBorder = new WorklistBorder("worklistBorder", this));
-        worklistBorder.add(controlBar = getWorklistControlBarPanel("controlBar"));
+        add(new WorklistNavigator("worklistNavigator"));
     }
-
-    public abstract Panel getWorklistControlBarPanel(final String id);
 }
