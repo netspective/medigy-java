@@ -9,23 +9,22 @@ import com.medigy.service.AbstractSpringTestCase;
 import com.medigy.service.ServiceVersion;
 import com.medigy.service.dto.query.QueryDefinitionSearchParameters;
 import com.medigy.service.dto.query.SearchCondition;
-import com.medigy.service.query.QueryDefinitionSearchService;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class TestPersonSearchService  extends AbstractSpringTestCase
 {
-    private QueryDefinitionSearchService queryDefinitionSearchService;
+    private PatientSearchService patientSearchService;
 
-    public void setPersonSearchService(final QueryDefinitionSearchService queryDefinitionSearchService)
+    public void setPersonSearchService(final PatientSearchService queryDefinitionSearchService)
     {
-        this.queryDefinitionSearchService = queryDefinitionSearchService;
+        this.patientSearchService = queryDefinitionSearchService;
     }
 
     public void testSearch()
     {
-        queryDefinitionSearchService.search(new QueryDefinitionSearchParameters() {
+        patientSearchService.search(new QueryDefinitionSearchParameters() {
 
             public List<SearchCondition> getConditions()
             {
