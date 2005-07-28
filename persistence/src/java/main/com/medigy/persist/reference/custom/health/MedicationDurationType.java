@@ -66,7 +66,6 @@ public class MedicationDurationType extends AbstractCustomReferenceEntity
         {
             this.code = code;
             this.label = label;
-            System.out.println("<< MEdication Duration Type >>");
         }
 
         public String getCode()
@@ -77,6 +76,7 @@ public class MedicationDurationType extends AbstractCustomReferenceEntity
         public MedicationDurationType getEntity()
         {
             return entity;
+
         }
 
         public void setEntity(final CustomReferenceEntity entity)

@@ -44,10 +44,10 @@ import com.medigy.persist.model.party.Party;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.EmbeddableSuperclass;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
-import javax.persistence.EmbeddableSuperclass;
 
 @EmbeddableSuperclass
 public abstract class AbstractCustomReferenceEntity extends AbstractEntity implements CustomReferenceEntity, Comparable
@@ -61,6 +61,12 @@ public abstract class AbstractCustomReferenceEntity extends AbstractEntity imple
 
     public AbstractCustomReferenceEntity()
     {
+    }
+
+    public AbstractCustomReferenceEntity(final String code, final String label)
+    {
+        this.code = code;
+        this.label = label;
     }
 
     @Transient

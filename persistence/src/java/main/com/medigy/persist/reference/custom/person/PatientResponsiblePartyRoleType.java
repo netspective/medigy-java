@@ -41,16 +41,11 @@ package com.medigy.persist.reference.custom.person;
 import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
 import com.medigy.persist.reference.custom.CustomReferenceEntity;
 
-import javax.persistence.Entity;
-import javax.persistence.Inheritance;
-
 /**
  * When a patient is registered, a responsible party is recorded. This responsible party could be "self" or
  * another person who is related to the patient in some way. This type class is for describing the role
  * of this responsible person who is not the patient.
  */
-@Entity
-@Inheritance(discriminatorValue="PatientResponsibleParty")
 public class PatientResponsiblePartyRoleType extends PersonRoleType
 {
     public enum Cache implements CachedCustomReferenceEntity

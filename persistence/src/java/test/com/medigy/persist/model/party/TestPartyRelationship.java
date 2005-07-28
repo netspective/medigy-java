@@ -9,7 +9,6 @@ import com.medigy.persist.model.person.PersonRole;
 import com.medigy.persist.reference.custom.party.OrganizationRoleType;
 import com.medigy.persist.reference.custom.party.OrganizationsRelationshipType;
 import com.medigy.persist.reference.custom.party.PeopleRelationshipType;
-import com.medigy.persist.reference.custom.person.PatientResponsiblePartyRoleType;
 import com.medigy.persist.reference.custom.person.PersonRoleType;
 import com.medigy.persist.util.HibernateUtil;
 
@@ -26,8 +25,8 @@ public final class TestPartyRelationship extends TestCase
 
         patientA.addRole(PersonRoleType.Cache.PATIENT.getEntity());
         patientB.addRole(PersonRoleType.Cache.PATIENT.getEntity());
-        mom.addRole(PatientResponsiblePartyRoleType.Cache.PARENT.getEntity());
-        dad.addRole(PatientResponsiblePartyRoleType.Cache.PARENT.getEntity());
+        mom.addRole(PersonRoleType.Cache.PARENT.getEntity());
+        dad.addRole(PersonRoleType.Cache.PARENT.getEntity());
 
         HibernateUtil.getSession().save(patientA);
         HibernateUtil.getSession().save(patientB);
