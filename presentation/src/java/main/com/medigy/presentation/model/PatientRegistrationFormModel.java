@@ -26,6 +26,8 @@ import java.util.List;
 public final class PatientRegistrationFormModel implements RegisterPatientParameters
 {
 	private String patientId;
+	private String emergencyContact;
+	private String emergencyPhone;
 	private String firstName;
     private String lastName;
 	private String middleName;
@@ -44,7 +46,6 @@ public final class PatientRegistrationFormModel implements RegisterPatientParame
     private List<String> languageCodes;
 	private String personId;
 	private String account;
-	private String chartNumber;
 	private String responsiblePartyId;
 	private String responsiblePartyRole;
 	private String miscNotes;
@@ -118,6 +119,26 @@ public final class PatientRegistrationFormModel implements RegisterPatientParame
         this.patientId = id;
     }
 
+    public String getEmergencyContact()
+    {
+        return emergencyContact;
+    }
+
+    public void setEmergencyContact(String emergencyContact)
+    {
+        this.emergencyContact = emergencyContact;
+    }
+
+    public String getEmergencyPhone()
+    {
+        return emergencyPhone;
+    }
+
+    public void setEmergencyPhone(String emergencyPhone)
+    {
+        this.emergencyPhone = emergencyPhone;
+    }
+
     @InvisibleWhen(mode = FormMode.INSERT)
     @NotNull @Past public Date getDeathDate()
     {
@@ -157,16 +178,6 @@ public final class PatientRegistrationFormModel implements RegisterPatientParame
 	public void setAccount(String account)
 	{
 		this.account = account;
-	}
-
-	public String getChartNumber()
-	{
-		return chartNumber;
-	}
-
-	public void setChartNumber(String chartNumber)
-	{
-		this.chartNumber = chartNumber;
 	}
 
     @NotNull
@@ -770,7 +781,7 @@ public final class PatientRegistrationFormModel implements RegisterPatientParame
 
     @NotNull
     @ValidEntity(entity = EthnicityType.class)
-    @SelectFieldStyle(style = SelectFieldStyle.Style.MULTICHECK)
+    @SelectFieldStyle(style = SelectFieldStyle.Style.MULTILIST)
     public List getEthnicityCodes()
     {
         return ethnicityCodes;
@@ -783,7 +794,7 @@ public final class PatientRegistrationFormModel implements RegisterPatientParame
 
     @NotNull
     @ValidEntity(entity = LanguageType.class)
-    @SelectFieldStyle(style = SelectFieldStyle.Style.MULTICHECK)
+    @SelectFieldStyle(style = SelectFieldStyle.Style.MULTILIST)
     public List getLanguageCodes()
     {
         return languageCodes;
@@ -818,8 +829,9 @@ public final class PatientRegistrationFormModel implements RegisterPatientParame
 	{
 		StringBuffer b = new StringBuffer();
 		b.append("[TestInputObject personId = '").append(personId)
+		 .append("', emegencyContact = ").append(emergencyContact)
+		 .append("', emergencyPhone = ").append(emergencyPhone)
 		 .append("', account = ").append(account)
-		 .append(", chartNumber = ").append(chartNumber)
 		 .append(", lastName = ").append(lastName)
 		 .append(", firstName = ").append(firstName)
 		 .append(", middleName = ").append(middleName)
