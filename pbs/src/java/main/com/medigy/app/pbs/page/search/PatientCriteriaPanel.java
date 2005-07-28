@@ -39,8 +39,8 @@
 package com.medigy.app.pbs.page.search;
 
 import com.medigy.presentation.form.query.QueryDefinitionSearchFormPanel;
-import com.medigy.wicket.form.FormMode;
 import com.medigy.service.person.PatientSearchQueryDefinition;
+import com.medigy.wicket.form.FormMode;
 
 public class PatientCriteriaPanel extends QueryDefinitionSearchFormPanel
 {

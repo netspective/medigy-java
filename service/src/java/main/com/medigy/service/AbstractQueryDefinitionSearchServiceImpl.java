@@ -47,7 +47,7 @@ public abstract class AbstractQueryDefinitionSearchServiceImpl extends AbstractS
     private final String querySelectName;
 
     public AbstractQueryDefinitionSearchServiceImpl(final SessionFactory sessionFactory,
-                                                    final Class searchClass,
+                                                    final Class<? extends QueryDefinition> searchClass,
                                                     final String querySelectName)
     {
         super(sessionFactory);
@@ -91,7 +91,6 @@ public abstract class AbstractQueryDefinitionSearchServiceImpl extends AbstractS
      */
     protected void useExistingQuerySelect(final QueryDefinitionSelect select, final SearchServiceParameters params) throws QueryDefinitionException, ParseException
     {
-        System.out.println(">>>>>>>>>>>>> AGGG ");
         // loop through all the DEFINED CONDITIONS of the SELECT and apply the values for them from the
         // passed in search parameters
         final List<SearchCondition> searchConditionList = params.getConditions();

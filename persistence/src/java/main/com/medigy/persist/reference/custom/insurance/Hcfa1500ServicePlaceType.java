@@ -14,7 +14,7 @@ import javax.persistence.InheritanceType;
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE, discriminatorValue = "HCFA 1500 Service Place")
 public class Hcfa1500ServicePlaceType extends FacilityType
-{
+{   
     public enum Cache implements CachedCustomReferenceEntity
     {
         OFFICE("OFFICE", "Office"),

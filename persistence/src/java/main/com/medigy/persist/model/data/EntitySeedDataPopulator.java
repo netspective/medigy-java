@@ -54,8 +54,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
-import org.hibernate.cfg.Environment;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.cfg.Environment;
 import org.hibernate.mapping.PersistentClass;
 
 import java.beans.BeanInfo;
@@ -236,8 +236,8 @@ public class EntitySeedDataPopulator
         globalParty = new Party(Party.SYS_GLOBAL_PARTY_NAME);
         session.save(globalParty);
 
-        final Map<Class, Class> referenceEntitiesAndCachesMap = HibernateUtil.getReferenceEntitiesAndRespectiveEnums(configuration);
-        for(final Map.Entry<Class, Class> entry : referenceEntitiesAndCachesMap.entrySet())
+        final Map<Class,Class<? extends CachedReferenceEntity>> referenceEntitiesAndCachesMap = HibernateUtil.getReferenceEntitiesAndRespectiveEnums(configuration);
+        for(final Map.Entry<Class,Class<? extends CachedReferenceEntity>> entry : referenceEntitiesAndCachesMap.entrySet())
         {
             final Class aClass = entry.getKey();
             CachedReferenceEntity[] cachedEntities = (CachedReferenceEntity[]) entry.getValue().getEnumConstants();
@@ -254,8 +254,8 @@ public class EntitySeedDataPopulator
             populateCachedReferenceEntities(session, aClass, cachedEntities, new String[] {"code", "label"}, data);
         }
 
-        final Map<Class, Class> customReferenceEntitiesAndCachesMap = HibernateUtil.getCustomReferenceEntitiesAndRespectiveEnums(configuration);
-        for(final Map.Entry<Class, Class> entry :customReferenceEntitiesAndCachesMap.entrySet())
+        final Map<Class,Class<? extends CachedCustomReferenceEntity>> customReferenceEntitiesAndCachesMap = HibernateUtil.getCustomReferenceEntitiesAndRespectiveEnums(configuration);
+        for(final Map.Entry<Class,Class<? extends CachedCustomReferenceEntity>> entry :customReferenceEntitiesAndCachesMap.entrySet())
         {
             final Class aClass = entry.getKey();
             CachedCustomReferenceEntity[] cachedEntities = (CachedCustomReferenceEntity[]) entry.getValue().getEnumConstants();

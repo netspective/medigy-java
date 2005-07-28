@@ -26,7 +26,7 @@ public class SearchCriteriaFormPanel extends Panel
     protected SearchService service;
     protected SearchForm searchForm;
 
-    public SearchCriteriaFormPanel(final String id, final FormMode formMode, final Class serviceClass)
+    public SearchCriteriaFormPanel(final String id, final FormMode formMode, final Class<? extends SearchService> serviceClass)
     {
         super(id);
         this.service = (SearchService) ((DefaultApplication) getApplication()).getService(serviceClass);

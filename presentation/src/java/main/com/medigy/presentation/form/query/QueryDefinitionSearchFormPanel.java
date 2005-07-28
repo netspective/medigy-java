@@ -3,6 +3,7 @@
  */
 package com.medigy.presentation.form.query;
 
+import com.medigy.persist.util.query.QueryDefinition;
 import com.medigy.persist.util.query.QueryDefinitionField;
 import com.medigy.persist.util.query.SqlComparisonFactory;
 import com.medigy.presentation.form.common.SearchCriteriaFormPanel;
@@ -37,7 +38,7 @@ public class QueryDefinitionSearchFormPanel extends SearchCriteriaFormPanel
     private Class queryDefinitionClass;
 
     public QueryDefinitionSearchFormPanel(final String componentName, final FormMode formMode,
-                                          final Class queryDefinitionClass)
+                                          final Class<? extends QueryDefinition> queryDefinitionClass)
     {
         super(componentName, formMode, PatientSearchService.class);
         this.queryDefinitionClass = queryDefinitionClass;

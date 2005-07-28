@@ -251,9 +251,9 @@ public class HibernateUtil
      * @param hibernateConfiguration    the hibernate configuration
      * @return
      */
-    public static Map<Class, Class> getReferenceEntitiesAndRespectiveEnums(final Configuration hibernateConfiguration)
+    public static Map<Class, Class<? extends CachedReferenceEntity>> getReferenceEntitiesAndRespectiveEnums(final Configuration hibernateConfiguration)
     {
-        Map<Class, Class> referenceEntitiesAndCachesMap = new HashMap<Class, Class>();
+        Map<Class, Class<? extends CachedReferenceEntity>> referenceEntitiesAndCachesMap = new HashMap<Class, Class<? extends CachedReferenceEntity>>();
         final Iterator classMappings = hibernateConfiguration.getClassMappings();
         while (classMappings.hasNext())
         {
@@ -295,9 +295,9 @@ public class HibernateUtil
      * @param hibernateConfiguration   the hibernate configuration
      * @return
      */
-    public static Map<Class, Class> getCustomReferenceEntitiesAndRespectiveEnums(final Configuration hibernateConfiguration)
+    public static Map<Class, Class<? extends CachedCustomReferenceEntity>> getCustomReferenceEntitiesAndRespectiveEnums(final Configuration hibernateConfiguration)
     {
-        final Map<Class, Class> customReferenceEntitiesAndCachesMap = new HashMap<Class, Class>();
+        final Map<Class, Class<? extends CachedCustomReferenceEntity>> customReferenceEntitiesAndCachesMap = new HashMap<Class, Class<? extends CachedCustomReferenceEntity>>();
         final Iterator classMappings = hibernateConfiguration.getClassMappings();
         while (classMappings.hasNext())
         {

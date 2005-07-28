@@ -167,15 +167,15 @@ public class ModelInitializer
 
     protected void initReferenceEntityCaches()
     {
-        final Map<Class, Class> referenceEntitiesAndCachesMap = HibernateUtil.getReferenceEntitiesAndRespectiveEnums(hibernateConfiguration);
-        for(final Map.Entry<Class, Class> entry : referenceEntitiesAndCachesMap.entrySet())
+        final Map<Class,Class<? extends CachedReferenceEntity>> referenceEntitiesAndCachesMap = HibernateUtil.getReferenceEntitiesAndRespectiveEnums(hibernateConfiguration);
+        for(final Map.Entry<Class,Class<? extends CachedReferenceEntity>> entry : referenceEntitiesAndCachesMap.entrySet())
             initReferenceEntityCache(entry.getKey(), (CachedReferenceEntity[]) entry.getValue().getEnumConstants());
     }
 
     protected void initCustomReferenceEntityCaches()
     {
-        final Map<Class, Class> customReferenceEntitiesAndCachesMap = HibernateUtil.getCustomReferenceEntitiesAndRespectiveEnums(hibernateConfiguration);
-        for(final Map.Entry<Class, Class> entry : customReferenceEntitiesAndCachesMap.entrySet())
+        final Map<Class,Class<? extends CachedCustomReferenceEntity>> customReferenceEntitiesAndCachesMap = HibernateUtil.getCustomReferenceEntitiesAndRespectiveEnums(hibernateConfiguration);
+        for(final Map.Entry<Class,Class<? extends CachedCustomReferenceEntity>> entry : customReferenceEntitiesAndCachesMap.entrySet())
             initCustomReferenceEntityCache(entry.getKey(), (CachedCustomReferenceEntity[]) entry.getValue().getEnumConstants());
     }
 
