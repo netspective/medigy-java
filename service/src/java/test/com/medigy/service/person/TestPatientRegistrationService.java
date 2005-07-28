@@ -48,7 +48,7 @@ import com.medigy.persist.model.insurance.InsurancePlan;
 import com.medigy.persist.reference.custom.insurance.InsurancePolicyType;
 import com.medigy.persist.reference.custom.insurance.InsuranceProductType;
 import com.medigy.persist.reference.custom.party.ContactMechanismPurposeType;
-import com.medigy.persist.reference.custom.party.PartyRelationshipType;
+import com.medigy.persist.reference.custom.party.PeopleRelationshipType;
 import com.medigy.persist.reference.custom.person.EthnicityType;
 import com.medigy.persist.reference.custom.org.OrganizationClassificationType;
 import com.medigy.persist.reference.type.GenderType;
@@ -214,7 +214,7 @@ public class TestPatientRegistrationService extends AbstractSpringTestCase
 
                         public String getResponsiblePartyRole()
                         {
-                            return PartyRelationshipType.Cache.PATIENT_RESPONSIBLE_PARTY.getCode();
+                            return PeopleRelationshipType.Cache.FINANCIAL_RESP_PARTY.getCode();
                         }
 
                         public String getHomePhone()

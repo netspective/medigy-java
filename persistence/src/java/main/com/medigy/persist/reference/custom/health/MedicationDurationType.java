@@ -42,10 +42,10 @@ import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
 import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
 import com.medigy.persist.reference.custom.CustomReferenceEntity;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.GeneratorType;
 import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratorType;
+import javax.persistence.Id;
 
 @Entity
 public class MedicationDurationType extends AbstractCustomReferenceEntity
@@ -66,6 +66,7 @@ public class MedicationDurationType extends AbstractCustomReferenceEntity
         {
             this.code = code;
             this.label = label;
+            System.out.println("<< MEdication Duration Type >>");
         }
 
         public String getCode()

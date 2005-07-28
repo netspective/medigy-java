@@ -42,6 +42,7 @@ import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
 import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
 import com.medigy.persist.reference.custom.CustomReferenceEntity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
@@ -49,29 +50,11 @@ import javax.persistence.Id;
 @Entity
 public class InvoiceStatusType extends AbstractCustomReferenceEntity
 {
+    public static final String PK_COLUMN_NAME = "inv_status_type_id";
+
     public enum Cache implements CachedCustomReferenceEntity
     {
-        /**
-         * <enum>Created</enum>
-		<enum>Incomplete</enum>
-		<enum>Pending</enum>
-		<enum>On Hold</enum>
-		<enum>Submitted</enum>
-		<enum>Transferred</enum>
-		<enum>Approved Internal</enum>
-		<enum>Rejected Internal</enum>
-		<enum>Electronically Transmitted to Carrier</enum>
-		<enum>Transmitted to Carrier via Paper</enum>
-		<enum>Approved External</enum>
-		<enum>Rejected External</enum>
-		<enum>Awaiting Insurance Payment</enum>
-		<enum>Payments Applied</enum>
-		<enum>Appealed</enum>
-		<enum>Closed</enum>
-		<enum>Void</enum>
-		<enum>Paper Claim Printed</enum>
-		<enum>Awaiting Client Payment</enum>
-         */
+
         CREATED("CREATED", "Created"),
         INCOMPLETE("INCOMPLETE", "Incomplete"),
         PENDING("PENDING", "Pending"),
@@ -81,7 +64,7 @@ public class InvoiceStatusType extends AbstractCustomReferenceEntity
         APPROVED_INTERNAL("APPROVED_INT", "Approved Internal"),
         REJECTED_INTERNAL("REJECTED_INT", "Rejected Internal"),
         ELECTRONIC_TRANSMITTED("ELECTRONIC", "Electronically Transmitted to Carrier"),
-        TRANSMITTED_VIA_PAPER("TRANSMITTED_PAPER", "Transmitted to Carrier via Paper"),
+        TRANSMITTED_VIA_PAPER("XMIT_PAPER", "Transmitted to Carrier via Paper"),
         APPROVED_EXTERNAL("APPROVED_EXT", "Approved External"),
         REJECTED_EXTERNAL("REJECTED_EXT", "Rejected External"),
         AWAITING_INSURANCE("AWAIT_INS", "Awaiting Insurance Payment"),
@@ -124,6 +107,7 @@ public class InvoiceStatusType extends AbstractCustomReferenceEntity
     }
 
     @Id(generate = GeneratorType.AUTO)
+    @Column(name = PK_COLUMN_NAME)
     public Long getInvoiceStatusTypeId()
     {
         return super.getSystemId();

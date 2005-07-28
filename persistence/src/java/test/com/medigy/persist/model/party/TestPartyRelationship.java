@@ -2,20 +2,16 @@ package com.medigy.persist.model.party;
 
 import com.medigy.persist.TestCase;
 import com.medigy.persist.model.org.Organization;
-import com.medigy.persist.model.org.OrganizationRole;
 import com.medigy.persist.model.org.OrganizationsRelationship;
+import com.medigy.persist.model.person.PeopleRelationship;
 import com.medigy.persist.model.person.Person;
 import com.medigy.persist.model.person.PersonRole;
-import com.medigy.persist.model.person.PeopleRelationship;
-import com.medigy.persist.reference.custom.party.PartyRelationshipType;
-import com.medigy.persist.reference.custom.party.PeopleRelationshipType;
 import com.medigy.persist.reference.custom.party.OrganizationRoleType;
 import com.medigy.persist.reference.custom.party.OrganizationsRelationshipType;
+import com.medigy.persist.reference.custom.party.PeopleRelationshipType;
 import com.medigy.persist.reference.custom.person.PatientResponsiblePartyRoleType;
 import com.medigy.persist.reference.custom.person.PersonRoleType;
 import com.medigy.persist.util.HibernateUtil;
-
-import java.util.List;
 
 public final class TestPartyRelationship extends TestCase
 {
@@ -75,17 +71,17 @@ public final class TestPartyRelationship extends TestCase
         assertEquals(savedPatientAMomRel.getSecondaryPersonRole().getPerson(), mom);
 
         final PeopleRelationship savedPatientBMomRel = (PeopleRelationship) HibernateUtil.getSession().load(PeopleRelationship.class, patientBMomRel.getRelationshipId());
-        assertEquals(savedPatientBMomRel.getType(), PartyRelationshipType.Cache.PATIENT_RESPONSIBLE_PARTY.getEntity());
+        assertEquals(savedPatientBMomRel.getType(), PeopleRelationshipType.Cache.FINANCIAL_RESP_PARTY.getEntity());
         assertEquals(savedPatientBMomRel.getPrimaryPersonRole().getPerson(), patientB);
         assertEquals(savedPatientBMomRel.getSecondaryPersonRole().getPerson(), mom);
 
         final PeopleRelationship savedPatientADadRel = (PeopleRelationship) HibernateUtil.getSession().load(PeopleRelationship.class, patientADadRel.getRelationshipId());
-        assertEquals(savedPatientADadRel.getType(), PartyRelationshipType.Cache.PATIENT_RESPONSIBLE_PARTY.getEntity());
+        assertEquals(savedPatientADadRel.getType(), PeopleRelationshipType.Cache.FINANCIAL_RESP_PARTY.getEntity());
         assertEquals(savedPatientADadRel.getPrimaryPersonRole().getPerson(), patientA);
         assertEquals(savedPatientADadRel.getSecondaryPersonRole().getPerson(), dad);
 
         final PeopleRelationship savedPatientBDadRel = (PeopleRelationship) HibernateUtil.getSession().load(PeopleRelationship.class, patientBDadRel.getRelationshipId());
-        assertEquals(savedPatientBDadRel.getType(), PartyRelationshipType.Cache.PATIENT_RESPONSIBLE_PARTY.getEntity());
+        assertEquals(savedPatientBDadRel.getType(), PeopleRelationshipType.Cache.FINANCIAL_RESP_PARTY.getEntity());
         assertEquals(savedPatientBDadRel.getPrimaryPersonRole().getPerson(), patientB);
         assertEquals(savedPatientBDadRel.getSecondaryPersonRole().getPerson(), dad);
 
@@ -108,15 +104,15 @@ public final class TestPartyRelationship extends TestCase
         final Organization childOrg = (Organization) HibernateUtil.getSession().load(Organization.class, secondaryOrg.getOrgId());
         assertNotNull(parentOrg);
         assertNotNull(childOrg);
-        
+
         final OrganizationsRelationship rel = new OrganizationsRelationship();
         rel.setPrimaryOrgRole(parentOrg.getRole(OrganizationRoleType.Cache.PARENT_ORG.getEntity()));
         rel.setSecondaryOrgRole(childOrg.getRole(OrganizationRoleType.Cache.OTHER_ORG_UNIT.getEntity()));
         rel.setType(OrganizationsRelationshipType.Cache.ORGANIZATION_ROLLUP.getEntity());
-        
+
         HibernateUtil.getSession().save(rel);
         HibernateUtil.closeSession();
-        
+
         OrganizationsRelationship newRelation = (OrganizationsRelationship) HibernateUtil.getSession().load(OrganizationsRelationship.class, rel.getRelationshipId());
         assertNotNull(newRelation);
         assertEquals(childOrg.getPartyId(), newRelation.getSecondaryOrgRole().getOrganization().getPartyId());
@@ -124,7 +120,7 @@ public final class TestPartyRelationship extends TestCase
     }
 
     public String getDataSetFile()
-    {        
+    {
         return "/com/medigy/persist/model/party/TestPartyRelationship.xml";
     }
 }

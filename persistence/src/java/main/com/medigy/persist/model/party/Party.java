@@ -43,14 +43,12 @@ package com.medigy.persist.model.party;
 import com.medigy.persist.model.common.AbstractTopLevelEntity;
 import com.medigy.persist.model.invoice.BillingAccountRole;
 import com.medigy.persist.model.invoice.InvoiceRole;
+import com.medigy.persist.reference.custom.GeographicBoundaryType;
 import com.medigy.persist.reference.custom.party.CommunicationEventPurposeType;
 import com.medigy.persist.reference.custom.party.CommunicationEventRoleType;
 import com.medigy.persist.reference.custom.party.FacilityType;
 import com.medigy.persist.reference.custom.party.PartyClassificationType;
 import com.medigy.persist.reference.custom.party.PartyIdentifierType;
-import com.medigy.persist.reference.custom.party.PartyRelationshipType;
-import com.medigy.persist.reference.custom.party.PartyRoleType;
-import com.medigy.persist.reference.custom.GeographicBoundaryType;
 import com.medigy.persist.reference.type.party.PartyType;
 
 import javax.persistence.CascadeType;
@@ -113,7 +111,6 @@ public class Party extends AbstractTopLevelEntity
     // All the custom reference entity types
     private Set<PartyIdentifierType> partyIdentifierTypes = new HashSet<PartyIdentifierType>();
     private Set<FacilityType> facilityTypes = new HashSet<FacilityType>();
-    private Set<PartyRelationshipType> partyRelationshipTypes = new HashSet<PartyRelationshipType>();
     private Set<CommunicationEventPurposeType> communicationEventPurposeTypes = new HashSet<CommunicationEventPurposeType>();
     private Set<CommunicationEventRoleType> communicationEventRoleTypes = new HashSet<CommunicationEventRoleType>();
     private Set<GeographicBoundaryType> geographicBoundaryTypes = new HashSet<GeographicBoundaryType>();
@@ -241,17 +238,6 @@ public class Party extends AbstractTopLevelEntity
     public void setFacilityTypes(final Set<FacilityType> facilityTypes)
     {
         this.facilityTypes = facilityTypes;
-    }
-
-    @OneToMany(cascade =  CascadeType.ALL, mappedBy = "party")
-    public Set<PartyRelationshipType> getPartyRelationshipTypes()
-    {
-        return partyRelationshipTypes;
-    }
-
-    public void setPartyRelationshipTypes(final Set<PartyRelationshipType> partyRelationshipTypes)
-    {
-        this.partyRelationshipTypes = partyRelationshipTypes;
     }
 
     @OneToMany(cascade =  CascadeType.ALL, mappedBy = "party")

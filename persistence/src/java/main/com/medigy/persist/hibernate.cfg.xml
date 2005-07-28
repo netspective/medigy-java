@@ -103,7 +103,6 @@
         <mapping class="com.medigy.persist.reference.custom.party.OrganizationRoleType"/>
         <mapping class="com.medigy.persist.reference.custom.party.PartyIdentifierType"/>
         <mapping class="com.medigy.persist.reference.custom.party.PartyQualificationType"/>
-        <mapping class="com.medigy.persist.reference.custom.party.PartyRelationshipType"/>
         <mapping class="com.medigy.persist.reference.custom.party.PartyClassificationType"/>
         <mapping class="com.medigy.persist.reference.custom.party.PersonOrgRelationshipType"/>
         <mapping class="com.medigy.persist.reference.custom.party.OrganizationsRelationshipType"/>
@@ -125,6 +124,7 @@
 
         <!--mapping package="com.medigy.persist.reference.custom.org"/-->
         <mapping class="com.medigy.persist.reference.custom.org.OrganizationClassificationType"/>
+        <mapping class="com.medigy.persist.reference.custom.insurance.Hcfa1500ServicePlaceType"/>
         
         <!--mapping package="com.medigy.persist.model.party"/-->
         <!--mapping class="com.medigy.persist.model.party.Case"/
