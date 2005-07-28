@@ -3,13 +3,31 @@
  */
 package com.medigy.service.dto.query;
 
-public class QueryDefinitionSearchCondition
+import com.medigy.persist.util.query.QueryDefnCondition;
+
+/**
+ * DTO to contain the search criteria. You can either specify the condition specifically using
+ * {@link #setCondition} or create a completely new condition using the {@link #setField}, {@link #setFieldComparison(String)}
+ * , and {@link #setConnector(String)} .
+ */
+public class SearchCondition
 {
     private String field;
     private String fieldComparison;
     private String fieldValue;
     private String connector;
 
+    private QueryDefnCondition condition;
+
+    public QueryDefnCondition getCondition()
+    {
+        return condition;
+    }
+
+    public void setCondition(final QueryDefnCondition condition)
+    {
+        this.condition = condition;
+    }
 
     public String getField()
     {

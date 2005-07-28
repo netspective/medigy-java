@@ -3,27 +3,25 @@
  */
 package com.medigy.presentation.form.common;
 
-import wicket.markup.html.panel.Panel;
-import wicket.markup.html.list.PageableListViewNavigator;
-import wicket.markup.html.list.ListView;
-import wicket.markup.html.list.ListItem;
-import wicket.markup.html.basic.Label;
-import wicket.model.Model;
 import com.medigy.presentation.form.query.SearchResultsListView;
-import com.medigy.presentation.model.common.ServiceSearchResultModel;
-import com.medigy.presentation.model.common.ServiceCountAndListAction;
 import com.medigy.presentation.model.common.SearchFormModelObject;
+import com.medigy.presentation.model.common.ServiceCountAndListAction;
+import com.medigy.presentation.model.common.ServiceSearchResultModel;
 import com.medigy.service.SearchService;
-import com.medigy.service.SearchReturnValues;
+import com.medigy.service.SearchServiceParameters;
 import com.medigy.service.ServiceVersion;
-import com.medigy.service.dto.CriteriaSearchParameters;
-import com.medigy.persist.util.query.QueryDefnCondition;
+import com.medigy.service.dto.query.SearchCondition;
 import com.medigy.wicket.DefaultApplication;
+import wicket.markup.html.basic.Label;
+import wicket.markup.html.list.ListItem;
+import wicket.markup.html.list.ListView;
+import wicket.markup.html.list.PageableListViewNavigator;
+import wicket.markup.html.panel.Panel;
+import wicket.model.Model;
 
-import java.util.List;
-import java.util.Arrays;
-import java.util.ArrayList;
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.List;
 
 public class SearchResultPanel extends Panel
 {
@@ -57,7 +55,8 @@ public class SearchResultPanel extends Panel
         searchResultModel.setSearchParameters(formModelObject);
         navPanel.setVisible(true);
         setCurrentResultPageToFirst();
-        resultsHeaderView.setModel(new Model((Serializable) countAndListAction.getColumnNames()));
+        System.out.println(" >>>>>>>>>>>>"  + searchResultModel.getResultColumnNames());
+        resultsHeaderView.setModel(new Model((Serializable) searchResultModel.getResultColumnNames()));
         info(getNumberOfResults() + " results found.");
     }
 
@@ -68,19 +67,80 @@ public class SearchResultPanel extends Panel
 
     protected ServiceSearchResultModel createSearchResultModel()
     {
-        countAndListAction = createCountAndListAction();
-        return new ServiceSearchResultModel(service, countAndListAction) {
-            private CriteriaSearchFormModelObject formModelObject;
-
-            public void setSearchParameters(final SearchFormModelObject params)
+        return new ServiceSearchResultModel(service)
+        {
+            public ServiceCountAndListAction createCountAndListAction()
             {
-                detach();
-                this.formModelObject = (CriteriaSearchFormModelObject) params;
-            }
+                return new ServiceCountAndListAction(service) {
 
-            public SearchFormModelObject getSearchParameters()
-            {
-                return formModelObject;
+                    public SearchServiceParameters createSearchServiceParameters(final Object queryObject)
+                    {
+                        final CriteriaSearchFormModelObject formModelObject = (CriteriaSearchFormModelObject) queryObject;
+                        return new SearchServiceParameters()  {
+                            public List<SearchCondition> getConditions()
+                            {
+                                final SearchCondition searchCondition = new SearchCondition();
+                                searchCondition.setCondition(formModelObject.getSearchCriterias());
+                                searchCondition.setFieldValue(formModelObject.getSearchCriteriaValue());
+                                return Arrays.asList(searchCondition);
+                            }
+
+                            public List<String> getOrderBys()
+                            {
+                                return null;
+                            }
+
+                            public List<String> getDisplayFields()
+                            {
+                                return null;
+                            }
+
+                            public int getStartFromRow()
+                            {
+                                return 0;
+                            }
+
+                            public ServiceVersion getServiceVersion()
+                            {
+                                return null;
+                            };
+                        };
+                    }
+
+                    public SearchServiceParameters createSearchServiceParameters(final Object queryObject, final int startFromRow, int numberOfRows)
+                    {
+                        final CriteriaSearchFormModelObject formModelObject = (CriteriaSearchFormModelObject) queryObject;
+                        return new SearchServiceParameters()  {
+                            public List<SearchCondition> getConditions()
+                            {
+                                final SearchCondition searchCondition = new SearchCondition();
+                                searchCondition.setCondition(formModelObject.getSearchCriterias());
+                                searchCondition.setFieldValue(formModelObject.getSearchCriteriaValue());
+                                return Arrays.asList(searchCondition);
+                            }
+
+                            public List<String> getDisplayFields()
+                            {
+                                return null;
+                            }
+
+                            public List<String> getOrderBys()
+                            {
+                                return null;
+                            }
+
+                            public int getStartFromRow()
+                            {
+                                return startFromRow;
+                            }
+
+                            public ServiceVersion getServiceVersion()
+                            {
+                                return null;
+                            }
+                        };
+                    }
+                };
             }
         };
     }
@@ -94,82 +154,6 @@ public class SearchResultPanel extends Panel
     {
         return ((List)resultsListView.getModelObject()).size();
     }
-
-    public ServiceCountAndListAction createCountAndListAction()
-    {
-        return new ServiceCountAndListAction(service) {
-            private List<String> columnNames;
-
-            public List<String> getColumnNames()
-            {
-                return columnNames;
-            }
-
-            public Object execute(Object queryObject)
-            {
-                if (queryObject == null)
-                    return 0;
-                final CriteriaSearchFormModelObject formModelObject = (CriteriaSearchFormModelObject) queryObject;
-                SearchReturnValues values = service.search(new CriteriaSearchParameters()  {
-                    public QueryDefnCondition getSearchCriteria()
-                    {
-                        return formModelObject.getSearchCriterias();
-                    }
-
-                    public String getSearchCriteriaValue()
-                    {
-                        return formModelObject.getSearchCriteriaValue();
-                    }
-
-                    public int getStartFromRow()
-                    {
-                        return 0;
-                    }
-
-                    public ServiceVersion getServiceVersion()
-                    {
-                        return null;
-                    }
-                });
-                columnNames = values.getSearchResults() != null ? values.getColumnNames() : null;
-                return values.getSearchResults().size();
-
-            }
-
-            public List execute(Object queryObject, final int startFromRow, int numberOfRows)
-            {
-                final CriteriaSearchFormModelObject formModelObject = (CriteriaSearchFormModelObject) queryObject;
-
-                SearchReturnValues values = service.search(new CriteriaSearchParameters()  {
-                    public QueryDefnCondition getSearchCriteria()
-                    {
-                        return formModelObject.getSearchCriterias();
-                    }
-
-                    public String getSearchCriteriaValue()
-                    {
-                        return formModelObject.getSearchCriteriaValue();
-                    }
-
-                    public int getStartFromRow()
-                    {
-                        return startFromRow;
-                    }
-
-                    public ServiceVersion getServiceVersion()
-                    {
-                        return null;
-                    }
-                });
-                columnNames = values.getSearchResults() != null ? values.getColumnNames() : null;
-                resultsListView.setColumnNames(columnNames);
-                //columnNames = values.getSearchResults() != null && values.getSearchResults().size() > 0 ? new ArrayList<String>(values.getSearchResults().get(0).keySet()) : null;
-                return values.getSearchResults();
-            }
-        };
-    }
-
-
 
     private class SearchResultsHeaderView extends ListView
     {

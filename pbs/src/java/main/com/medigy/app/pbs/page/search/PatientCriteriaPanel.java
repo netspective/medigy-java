@@ -36,37 +36,16 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.service;
+package com.medigy.app.pbs.page.search;
 
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.springframework.orm.hibernate3.SessionFactoryUtils;
+import com.medigy.presentation.form.query.QueryDefinitionSearchFormPanel;
+import com.medigy.wicket.form.FormMode;
+import com.medigy.service.person.PatientSearchQueryDefinition;
 
-/**
- * Abstract class that is "aware" of a hibernate session factory.
- *
- */
-public abstract class AbstractService implements Service
+public class PatientCriteriaPanel extends QueryDefinitionSearchFormPanel
 {
-    private SessionFactory sessionFactory;
-
-    public AbstractService(final SessionFactory sessionFactory)
+    public PatientCriteriaPanel(final String componentName, final FormMode formMode)
     {
-        this.sessionFactory = sessionFactory;
-    }
-
-    public SessionFactory getSessionFactory()
-    {
-        return sessionFactory;
-    }
-
-    public void setSessionFactory(final SessionFactory sessionFactory)
-    {
-        this.sessionFactory = sessionFactory;
-    }
-
-    public Session getSession()
-    {
-        return SessionFactoryUtils.getSession(sessionFactory, false);
+        super(componentName, formMode, PatientSearchQueryDefinition.class);
     }
 }

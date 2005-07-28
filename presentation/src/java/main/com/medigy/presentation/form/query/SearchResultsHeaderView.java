@@ -36,37 +36,21 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.service;
+package com.medigy.presentation.form.query;
 
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.springframework.orm.hibernate3.SessionFactoryUtils;
+import wicket.markup.html.basic.Label;
+import wicket.markup.html.list.ListItem;
+import wicket.markup.html.list.ListView;
 
-/**
- * Abstract class that is "aware" of a hibernate session factory.
- *
- */
-public abstract class AbstractService implements Service
+public class SearchResultsHeaderView extends ListView
 {
-    private SessionFactory sessionFactory;
-
-    public AbstractService(final SessionFactory sessionFactory)
+    public SearchResultsHeaderView(final String id)
     {
-        this.sessionFactory = sessionFactory;
+        super(id);
     }
 
-    public SessionFactory getSessionFactory()
+    protected void populateItem(final ListItem item)
     {
-        return sessionFactory;
-    }
-
-    public void setSessionFactory(final SessionFactory sessionFactory)
-    {
-        this.sessionFactory = sessionFactory;
-    }
-
-    public Session getSession()
-    {
-        return SessionFactoryUtils.getSession(sessionFactory, false);
+        item.add(new Label("resultColumnName", item.getModelObjectAsString()));
     }
 }

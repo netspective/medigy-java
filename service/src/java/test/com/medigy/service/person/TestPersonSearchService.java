@@ -3,16 +3,16 @@
  */
 package com.medigy.service.person;
 
-import com.medigy.service.AbstractSpringTestCase;
-import com.medigy.service.ServiceVersion;
-import com.medigy.service.query.QueryDefinitionSearchService;
 import com.medigy.persist.util.query.QueryDefinition;
 import com.medigy.persist.util.query.comparison.StartsWithComparisonIgnoreCase;
+import com.medigy.service.AbstractSpringTestCase;
+import com.medigy.service.ServiceVersion;
 import com.medigy.service.dto.query.QueryDefinitionSearchParameters;
-import com.medigy.service.dto.query.QueryDefinitionSearchCondition;
+import com.medigy.service.dto.query.SearchCondition;
+import com.medigy.service.query.QueryDefinitionSearchService;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 public class TestPersonSearchService  extends AbstractSpringTestCase
 {
@@ -26,6 +26,17 @@ public class TestPersonSearchService  extends AbstractSpringTestCase
     public void testSearch()
     {
         queryDefinitionSearchService.search(new QueryDefinitionSearchParameters() {
+
+            public List<SearchCondition> getConditions()
+            {
+                return null;
+            }
+
+            public List<String> getOrderBys()
+            {
+                return null;
+            }
+
             public QueryDefinition getQueryDefinition()
             {
                 return null;
@@ -41,14 +52,14 @@ public class TestPersonSearchService  extends AbstractSpringTestCase
                 return PatientSearchQueryDefinition.class;
             }
 
-            public List<QueryDefinitionSearchCondition> getConditionFieldList()
+            public List<SearchCondition> getConditionFieldList()
             {
-                QueryDefinitionSearchCondition condition = new QueryDefinitionSearchCondition();
+                SearchCondition condition = new SearchCondition();
                 condition.setField("lastName");
                 condition.setFieldValue("s");
                 condition.setFieldComparison(StartsWithComparisonIgnoreCase.COMPARISON_NAME);
 
-                final ArrayList<QueryDefinitionSearchCondition> conditions = new ArrayList<QueryDefinitionSearchCondition>();
+                final ArrayList<SearchCondition> conditions = new ArrayList<SearchCondition>();
                 //conditions.add(condition);
                 return conditions;
             }

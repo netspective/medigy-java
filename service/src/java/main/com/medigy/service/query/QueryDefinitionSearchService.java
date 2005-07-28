@@ -4,15 +4,12 @@
 package com.medigy.service.query;
 
 import com.medigy.persist.util.query.QueryDefinition;
-import com.medigy.service.dto.query.QueryDefinitionSearchParameters;
-import com.medigy.service.SearchReturnValues;
+import com.medigy.service.SearchService;
 import com.medigy.service.dto.query.QueryDefinitionSearchFormPopulateValues;
-import com.medigy.service.Service;
 
-public interface QueryDefinitionSearchService extends Service
+public interface QueryDefinitionSearchService extends SearchService
 {
     public QueryDefinition getQueryDefinition(final Class queryDefClass);
-    public SearchReturnValues search(final QueryDefinitionSearchParameters params);
 
     /**
      * Gets all the available choices for the query definition search form such as all display fields, condition fields,

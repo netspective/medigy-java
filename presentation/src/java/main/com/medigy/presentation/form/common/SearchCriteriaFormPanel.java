@@ -3,36 +3,28 @@
  */
 package com.medigy.presentation.form.common;
 
-import wicket.markup.html.form.TextField;
-import wicket.markup.html.form.DropDownChoice;
-import wicket.markup.html.form.Form;
-import wicket.markup.html.form.model.IChoiceList;
-import wicket.markup.html.form.model.IChoice;
-import wicket.markup.html.panel.Panel;
-import wicket.markup.html.panel.FeedbackPanel;
-import wicket.markup.html.list.PageableListViewNavigator;
-import wicket.IFeedback;
-import wicket.model.CompoundPropertyModel;
-import wicket.model.IModel;
-import wicket.model.Model;
-import com.medigy.wicket.form.FormMode;
-import com.medigy.wicket.border.StandardPanelBorder;
-import com.medigy.wicket.DefaultApplication;
 import com.medigy.persist.util.query.QueryDefnCondition;
-import com.medigy.presentation.form.common.SearchForm;
-import com.medigy.presentation.form.query.SearchResultsListView;
-import com.medigy.presentation.model.common.ServiceSearchResultModel;
-import com.medigy.presentation.model.common.ServiceCountAndListAction;
 import com.medigy.presentation.model.common.SearchFormModelObject;
 import com.medigy.service.SearchService;
+import com.medigy.wicket.DefaultApplication;
+import com.medigy.wicket.form.FormMode;
+import wicket.IFeedback;
+import wicket.markup.html.form.DropDownChoice;
+import wicket.markup.html.form.TextField;
+import wicket.markup.html.form.model.IChoice;
+import wicket.markup.html.form.model.IChoiceList;
+import wicket.markup.html.panel.FeedbackPanel;
+import wicket.markup.html.panel.Panel;
+import wicket.model.CompoundPropertyModel;
+import wicket.model.IModel;
 
-import java.util.List;
 import java.util.ArrayList;
-import java.io.Serializable;
+import java.util.List;
 
 public class SearchCriteriaFormPanel extends Panel
 {
     protected SearchService service;
+    protected SearchForm searchForm;
 
     public SearchCriteriaFormPanel(final String id, final FormMode formMode, final Class serviceClass)
     {
@@ -41,11 +33,11 @@ public class SearchCriteriaFormPanel extends Panel
         // Create feedback panel and add to page
         final FeedbackPanel feedback = new FeedbackPanel("feedback");
         add(feedback);
-        add(createForm("form", feedback, formMode));
+        add(searchForm = createForm("form", feedback, formMode));
         //TODO: Add the record ADD panel 
     }
 
-    protected Form createForm(final String componentName, final IFeedback feedback, final FormMode formMode)
+    protected SearchForm createForm(final String componentName, final IFeedback feedback, final FormMode formMode)
     {
         final Object modelObject = new CriteriaSearchFormModelObject();
         return new CriteriaSearchForm(componentName, new CompoundPropertyModel(modelObject), feedback);
@@ -56,12 +48,15 @@ public class SearchCriteriaFormPanel extends Panel
         public CriteriaSearchForm(final String componentName, final IModel iModel, final IFeedback iFeedback)
         {
             super(componentName, iModel, iFeedback);
-            final List<QueryDefnCondition> conditionList= service.getCriteriaList();
+            initializeForm();
+        }
 
+        public void initializeForm()
+        {
+            final List<QueryDefnCondition> conditionList= service.getCriteriaList();
             add(new DropDownChoice("searchCriterias", new CriteriaFieldChoiceList(conditionList)));
             add(new TextField("searchCriteriaValue"));
-            //add(new ListMultipleChoice("onSelectActions"));
-            //add(new ListMultipleChoice("onSelectActionLocation"));
+
         }
 
         public void onSubmit()

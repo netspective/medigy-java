@@ -3,29 +3,32 @@
  */
 package com.medigy.service.person;
 
+import com.medigy.persist.model.org.Organization;
+import com.medigy.persist.model.person.Person;
+import com.medigy.persist.model.person.PersonIdentifier;
+import com.medigy.persist.model.person.PersonRole;
+import com.medigy.persist.reference.custom.person.PersonIdentifierType;
 import com.medigy.persist.util.query.QueryDefinition;
 import com.medigy.persist.util.query.QueryDefinitionField;
 import com.medigy.persist.util.query.QueryDefinitionJoin;
-import com.medigy.persist.util.query.QueryDefnCondition;
 import com.medigy.persist.util.query.QueryDefinitionSelect;
 import com.medigy.persist.util.query.QueryDefinitionSortBy;
+import com.medigy.persist.util.query.QueryDefnCondition;
 import com.medigy.persist.util.query.SqlComparisonFactory;
-import com.medigy.persist.util.query.comparison.StartsWithComparisonIgnoreCase;
 import com.medigy.persist.util.query.comparison.EqualsComparison;
+import com.medigy.persist.util.query.comparison.StartsWithComparisonIgnoreCase;
 import com.medigy.persist.util.query.exception.QueryDefinitionException;
 import com.medigy.persist.util.query.impl.BasicQueryDefinition;
-import com.medigy.persist.util.query.impl.QueryDefinitionSelectImpl;
 import com.medigy.persist.util.query.impl.QueryDefinitionConditionImpl;
 import com.medigy.persist.util.query.impl.QueryDefinitionJoinImpl;
-import com.medigy.persist.model.org.Organization;
-import com.medigy.persist.model.person.PersonRole;
-import com.medigy.persist.model.person.Person;
-import com.medigy.persist.model.person.PersonIdentifier;
-import com.medigy.persist.reference.custom.person.PersonIdentifierType;
+import com.medigy.persist.util.query.impl.QueryDefinitionSelectImpl;
 
 public class PatientSearchQueryDefinition extends BasicQueryDefinition implements QueryDefinition
 {
     public static final String QUERY_DEFINITION_NAME = "patientSearch";
+
+    // anytime you add a new SELECT, add the name here
+    public static final String CRITERIA_SEARCH_SELECT = "criteriaSearch";
 
     public PatientSearchQueryDefinition()
     {
@@ -118,7 +121,7 @@ public class PatientSearchQueryDefinition extends BasicQueryDefinition implement
 
     protected QueryDefinitionSelect registerCriteriaSearch() throws QueryDefinitionException
     {
-        final QueryDefinitionSelect select = new QueryDefinitionSelectImpl("criteriaSearch", this);
+        final QueryDefinitionSelect select = new QueryDefinitionSelectImpl(CRITERIA_SEARCH_SELECT, this);
         select.addDisplayField(getField(Field.PATIENT_ID.getName()));
         select.addDisplayField(getField(Field.FIRST_NAME.getName()));
         select.addDisplayField(getField(Field.LAST_NAME.getName()));
@@ -154,8 +157,6 @@ public class PatientSearchQueryDefinition extends BasicQueryDefinition implement
         select.addCondition(orgIdCondition);
 
         */
-
-
         final QueryDefinitionField idField = getField(Field.PATIENT_ID.getName());
         select.addOrderBy(new QueryDefinitionSortBy() {
             public boolean isDescending()

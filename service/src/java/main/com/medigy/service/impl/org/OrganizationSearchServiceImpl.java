@@ -38,26 +38,19 @@
  */
 package com.medigy.service.impl.org;
 
-import com.medigy.service.org.OrganizationSearchService;
-import com.medigy.service.org.OrganizationSearchQueryDefinition;
-import com.medigy.service.dto.query.QueryDefinitionSearchParameters;
-import com.medigy.service.dto.query.QueryDefinitionSearchCondition;
+import com.medigy.service.AbstractQueryDefinitionSearchServiceImpl;
+import com.medigy.service.ServiceVersion;
 import com.medigy.service.dto.ServiceParameters;
 import com.medigy.service.dto.ServiceReturnValues;
-import com.medigy.service.query.QueryDefinitionSearchService;
-import com.medigy.service.ServiceVersion;
-import com.medigy.service.AbstractSearchServiceImpl;
-
-import java.util.List;
-import java.util.ArrayList;
-
+import com.medigy.service.org.OrganizationSearchQueryDefinition;
+import com.medigy.service.org.OrganizationSearchService;
 import org.hibernate.SessionFactory;
 
-public class OrganizationSearchServiceImpl extends AbstractSearchServiceImpl implements OrganizationSearchService
+public class OrganizationSearchServiceImpl extends AbstractQueryDefinitionSearchServiceImpl implements OrganizationSearchService
 {
     public OrganizationSearchServiceImpl(final SessionFactory sessionFactory)
     {
-        super(sessionFactory, OrganizationSearchQueryDefinition.class);
+        super(sessionFactory, OrganizationSearchQueryDefinition.class, OrganizationSearchQueryDefinition.CRITERIA_SEARCH_SELECT);
     }
 
     public ServiceVersion[] getSupportedServiceVersions()
@@ -72,6 +65,16 @@ public class OrganizationSearchServiceImpl extends AbstractSearchServiceImpl imp
 
     public ServiceReturnValues createErrorResponse(final ServiceParameters params, final String errorMessage)
     {
-        return null;
+        return new ServiceReturnValues() {
+            public ServiceParameters getParameters()
+            {
+                return params;
+            }
+
+            public String getErrorMessage()
+            {
+                return errorMessage;
+            }
+        };
     }
 }

@@ -10,11 +10,13 @@ import com.medigy.persist.util.value.ValueContext;
 import com.medigy.persist.model.person.Person;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.HashMap;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.Arrays;
+import java.util.Iterator;
 
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
@@ -32,9 +34,12 @@ public class QueryDefnStatementGenerator
     private List<String> fromClause = new ArrayList<String>();
     private List<String> fromClauseComments = new ArrayList<String>();
 
-    private List<String> whereJoinClause = new ArrayList<String>();
+    private Set<String> whereJoinClause = new HashSet<String>();
     private List<QueryDefinitionJoin> joins = new ArrayList<QueryDefinitionJoin>();
     private Map<QueryDefinitionJoin, String> associatedJoins = new HashMap<QueryDefinitionJoin, String>();
+
+    private Map<QueryDefinitionJoin, Set<String>> associatedJoinByMainEntity =
+            new HashMap<QueryDefinitionJoin, Set<String>>();
 
     private List bindParams = new ArrayList();
 
@@ -61,23 +66,29 @@ public class QueryDefnStatementGenerator
             return;
 
         String whereCriteria = join.getCondition();
-        if(whereCriteria != null)
+        if(whereCriteria != null && !whereJoinClause.contains(whereCriteria))
             whereJoinClause.add(whereCriteria);
 
         if (join.isAssociatedJoinOnly())
         {
-            final QueryDefinitionJoin associatedJoin = join.getAssociatedJoin();
+            final QueryDefinitionJoin mainEntity = join.getAssociatedJoin();
             String joinExpr = null;
-            if (associatedJoins.containsKey(associatedJoin))
+            if (associatedJoinByMainEntity.containsKey(mainEntity))
             {
-                joinExpr = associatedJoins.get(associatedJoin);
-                joinExpr = joinExpr + " \n" + join.getAssociatedJoinExpression();
+                final Set<String> joinEntities = associatedJoinByMainEntity.get(mainEntity);
+                if (!joinEntities.contains(join.getAssociatedJoinExpression()))
+                    joinEntities.add(join.getAssociatedJoinExpression());
+                //joinExpr = associatedJoins.get(mainEntity);
+                //joinExpr = joinExpr + " \n" + join.getAssociatedJoinExpression();
             }
             else
             {
-                joinExpr = join.getAssociatedJoinExpression();
+                Set<String> joinEntities = new HashSet<String>();
+                joinEntities.add(join.getAssociatedJoinExpression());
+                associatedJoinByMainEntity.put(mainEntity, joinEntities);
+                //joinExpr = join.getAssociatedJoinExpression();
             }
-            associatedJoins.put(associatedJoin, joinExpr);
+            //associatedJoins.put(mainEntity, joinExpr);
             return;
         }
         joins.add(join);
@@ -194,9 +205,13 @@ public class QueryDefnStatementGenerator
         {
             final QueryDefinitionJoin join = joins.get(fc);
             sql.append("  " + join.getFromExpr());
-            if (associatedJoins.containsKey(join))
+            if (associatedJoinByMainEntity.containsKey(join))
             {
-                sql.append("\n" + associatedJoins.get(join));
+                final Set<String> asscList = associatedJoinByMainEntity.get(join);
+                for (String asscJoinExpr : asscList)
+                {
+                    sql.append("\n" + asscJoinExpr);
+                }
             }
             if(fc != fromLast)
                 sql.append(",");
@@ -210,13 +225,16 @@ public class QueryDefnStatementGenerator
         int whereLast = whereCount - 1;
         if(whereCount > 0)
         {
+            int wc = 0;
+            final Iterator<String> iterator = whereJoinClause.iterator();
             whereClauseSql.append("where\n  (\n");
-            for(int wc = 0; wc < whereCount; wc++)
+            while (iterator.hasNext())
             {
-                whereClauseSql.append("  " + whereJoinClause.get(wc));
+                whereClauseSql.append("  " + iterator.next());
                 if(wc != whereLast)
                     whereClauseSql.append(" and ");
                 whereClauseSql.append("\n");
+                wc++;
             }
             whereClauseSql.append("  )");
             haveJoinWheres = true;

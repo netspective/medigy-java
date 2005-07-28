@@ -1,3 +1,6 @@
+package com.medigy.service.person;
+
+import com.medigy.service.SearchService;
 /*
  * Copyright (c) 2000-2003 Netspective Communications LLC. All rights reserved.
  *
@@ -36,37 +39,7 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.service;
 
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.springframework.orm.hibernate3.SessionFactoryUtils;
-
-/**
- * Abstract class that is "aware" of a hibernate session factory.
- *
- */
-public abstract class AbstractService implements Service
+public interface PatientSearchService extends SearchService
 {
-    private SessionFactory sessionFactory;
-
-    public AbstractService(final SessionFactory sessionFactory)
-    {
-        this.sessionFactory = sessionFactory;
-    }
-
-    public SessionFactory getSessionFactory()
-    {
-        return sessionFactory;
-    }
-
-    public void setSessionFactory(final SessionFactory sessionFactory)
-    {
-        this.sessionFactory = sessionFactory;
-    }
-
-    public Session getSession()
-    {
-        return SessionFactoryUtils.getSession(sessionFactory, false);
-    }
 }

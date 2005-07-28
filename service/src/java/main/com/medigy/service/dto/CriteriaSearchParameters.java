@@ -3,10 +3,10 @@
  */
 package com.medigy.service.dto;
 
-import com.medigy.service.SearchParameters;
 import com.medigy.persist.util.query.QueryDefnCondition;
+import com.medigy.service.SearchServiceParameters;
 
-public interface CriteriaSearchParameters extends SearchParameters
+public interface CriteriaSearchParameters extends SearchServiceParameters
 {
     public QueryDefnCondition getSearchCriteria();
 

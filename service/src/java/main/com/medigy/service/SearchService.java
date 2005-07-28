@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface SearchService extends Service
 {
-    public SearchReturnValues search(final SearchParameters params);
+    public SearchReturnValues search(final SearchServiceParameters params);
 
     public List<QueryDefnCondition> getCriteriaList();
 }

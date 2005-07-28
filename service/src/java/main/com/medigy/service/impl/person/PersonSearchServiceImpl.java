@@ -3,7 +3,7 @@
  */
 package com.medigy.service.impl.person;
 
-import com.medigy.service.AbstractSearchServiceImpl;
+import com.medigy.service.AbstractQueryDefinitionSearchServiceImpl;
 import com.medigy.service.ServiceVersion;
 import com.medigy.service.dto.ServiceParameters;
 import com.medigy.service.dto.ServiceReturnValues;
@@ -13,13 +13,13 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.SessionFactory;
 
-public class PersonSearchServiceImpl extends AbstractSearchServiceImpl implements PersonSearchService
+public class PersonSearchServiceImpl extends AbstractQueryDefinitionSearchServiceImpl implements PersonSearchService
 {
     private final Log log = LogFactory.getLog(PersonSearchServiceImpl.class);
 
     public PersonSearchServiceImpl(final SessionFactory sessionFactory)
     {
-        super(sessionFactory, PatientSearchQueryDefinition.class);
+        super(sessionFactory, PatientSearchQueryDefinition.class, PatientSearchQueryDefinition.CRITERIA_SEARCH_SELECT);
     }
 
     public ServiceVersion[] getSupportedServiceVersions()

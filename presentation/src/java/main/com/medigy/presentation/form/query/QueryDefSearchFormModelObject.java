@@ -3,12 +3,12 @@
  */
 package com.medigy.presentation.form.query;
 
-import com.medigy.service.dto.query.QueryDefinitionSearchCondition;
-import com.medigy.service.dto.query.QueryDefinitionSearchFormPopulateValues;
 import com.medigy.presentation.model.common.SearchFormModelObject;
+import com.medigy.service.dto.query.QueryDefinitionSearchFormPopulateValues;
+import com.medigy.service.dto.query.SearchCondition;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -19,7 +19,7 @@ public class QueryDefSearchFormModelObject implements SearchFormModelObject
     private QueryDefinitionSearchFormPopulateValues defaultValues;
 
     // These fields are actually the values enetered by the user
-    private List<QueryDefinitionSearchCondition> conditionFieldList = new ArrayList<QueryDefinitionSearchCondition>();
+    private List<SearchCondition> conditionFieldList = new ArrayList<SearchCondition>();
     private List<String> displayFields = new ArrayList<String>();
     private List<String> sortByFields = new ArrayList<String>();
 
@@ -33,17 +33,17 @@ public class QueryDefSearchFormModelObject implements SearchFormModelObject
         this.defaultValues = defaultValues;
     }
 
-    public List<QueryDefinitionSearchCondition> getConditionFieldList()
+    public List<SearchCondition> getConditionFieldList()
     {
         return conditionFieldList;
     }
 
-    public void setConditionFieldList(final List<QueryDefinitionSearchCondition> conditionFieldList)
+    public void setConditionFieldList(final List<SearchCondition> conditionFieldList)
     {
         this.conditionFieldList = conditionFieldList;
     }
 
-    public void addConditionFieldList(final QueryDefinitionSearchCondition condition)
+    public void addConditionFieldList(final SearchCondition condition)
     {
         this.conditionFieldList.add(condition);
     }

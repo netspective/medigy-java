@@ -38,48 +38,31 @@
  */
 package com.medigy.service.impl.query;
 
-import com.medigy.service.AbstractService;
-import com.medigy.service.ServiceVersion;
-import com.medigy.service.SearchReturnValues;
-import com.medigy.service.AbstractSearchServiceImpl;
-import com.medigy.service.dto.ServiceParameters;
-import com.medigy.service.dto.query.QueryDefinitionSearchCondition;
-import com.medigy.service.dto.query.QueryDefinitionSearchParameters;
-import com.medigy.service.dto.query.QueryDefinitionSearchFormPopulateValues;
-import com.medigy.persist.util.query.QueryDefinitionSortBy;
-import com.medigy.service.query.QueryDefinitionSearchService;
-import com.medigy.service.query.QueryDefinitionFactory;
 import com.medigy.persist.util.query.QueryDefinition;
-import com.medigy.persist.util.query.QueryDefinitionSelect;
-import com.medigy.persist.util.query.QueryDefnStatementGenerator;
-import com.medigy.persist.util.query.SqlComparisonFactory;
 import com.medigy.persist.util.query.QueryDefinitionField;
-import com.medigy.persist.util.query.QueryDefnCondition;
-import com.medigy.persist.util.query.SqlComparison;
-import com.medigy.persist.util.query.impl.QueryDefinitionConditionImpl;
-import com.medigy.persist.util.value.ValueProvider;
-import com.medigy.persist.util.value.ValueContext;
-import com.medigy.persist.util.query.exception.QueryDefinitionException;
-import org.apache.commons.lang.exception.ExceptionUtils;
+import com.medigy.service.AbstractQueryDefinitionSearchServiceImpl;
+import com.medigy.service.SearchReturnValues;
+import com.medigy.service.ServiceVersion;
+import com.medigy.service.dto.ServiceParameters;
+import com.medigy.service.dto.query.QueryDefinitionSearchFormPopulateValues;
+import com.medigy.service.query.QueryDefinitionFactory;
+import com.medigy.service.query.QueryDefinitionSearchService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.ArrayList;
-import java.util.Arrays;
 
-public class QueryDefinitionSearchServiceImpl extends AbstractSearchServiceImpl implements QueryDefinitionSearchService
+public class QueryDefinitionSearchServiceImpl extends AbstractQueryDefinitionSearchServiceImpl implements QueryDefinitionSearchService
 {
     private final Log log = LogFactory.getLog(QueryDefinitionSearchServiceImpl.class);
 
-    public QueryDefinitionSearchServiceImpl(final SessionFactory sessionFactory)
+    public QueryDefinitionSearchServiceImpl(final SessionFactory sessionFactory, final Class searchClass, final String querySelectName)
     {
-        super(sessionFactory, null);
+        super(sessionFactory, searchClass, querySelectName);
     }
 
     public QueryDefinition getQueryDefinition(final Class queryDefClass)
@@ -87,78 +70,11 @@ public class QueryDefinitionSearchServiceImpl extends AbstractSearchServiceImpl 
         return QueryDefinitionFactory.getInstance().getQueryDefinition(queryDefClass);
     }
 
-    public SearchReturnValues search(final QueryDefinitionSearchParameters params)
-    {
-        final List<Map<String, Object>> searchResult = new ArrayList<Map<String, Object>>();
-        final QueryDefinition queryDefiniton = QueryDefinitionFactory.getInstance().getQueryDefinition(params.getQueryDefinitionClass());
-
-        // create a new select object on the fly
-        final QueryDefinitionSelect select = queryDefiniton.createSelect("searchPerson");
-        final List<String> displayFields = params.getDisplayFields();
-        try
-        {
-            if (displayFields != null)
-            {
-                for (String field: displayFields)
-                {
-                    // add the fields to be displayed in the report
-                    select.addDisplayField(queryDefiniton.getField(field));
-                }
-            }
-            final List<QueryDefinitionSearchCondition> conditionFieldList = params.getConditionFieldList();
-            for (QueryDefinitionSearchCondition condition : conditionFieldList)
-            {
-                if (condition.getField() == null)
-                    continue;
-                final QueryDefinitionField field = queryDefiniton.getField(condition.getField());
-                final SqlComparison comparison = SqlComparisonFactory.getInstance().getComparison(condition.getFieldComparison());
-                final String connector = condition.getConnector();
-                final String value = condition.getFieldValue();
-
-                final QueryDefnCondition cond = new QueryDefinitionConditionImpl(field, comparison);
-                cond.setConnector(connector);
-                cond.setValueProvider(new ValueProvider() {
-                    public Object getValue()
-                    {
-                        return value;
-                    }
-                });
-                select.addCondition(cond);
-            }
-
-            for (String orderByField : params.getSortByFields())
-            {
-                final QueryDefinitionField field = queryDefiniton.getField(orderByField);
-                select.addOrderBy(new QueryDefinitionSortBy() {
-                    public boolean isDescending()
-                    {
-                        return false;
-                    }
-
-                    public QueryDefinitionField getField()
-                    {
-                        return field;
-                    }
-
-                    public String getExplicitOrderByClause()
-                    {
-                        return null;
-                    }
-                });
-            }
-            return executeQuery(params, select);
-        }
-        catch (Exception e)
-        {
-            log.error(ExceptionUtils.getStackTrace(e));
-            return createErrorResponse(params, e.getMessage());
-        }
-    }
-
     public QueryDefinitionSearchFormPopulateValues getAvailableSearchParameters(final Class queryDefinitionClass)
     {
         final QueryDefinition queryDefinition = QueryDefinitionFactory.getInstance().getQueryDefinition(queryDefinitionClass);
-
+        if (queryDefinition == null)
+            throw new RuntimeException("Unknown query definition: " + queryDefinitionClass);
         return new QueryDefinitionSearchFormPopulateValues() {
 
             public Map<String, QueryDefinitionField> getSortByFields()

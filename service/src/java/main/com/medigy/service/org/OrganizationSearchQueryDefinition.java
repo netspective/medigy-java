@@ -3,25 +3,26 @@
  */
 package com.medigy.service.org;
 
-import com.medigy.persist.util.query.impl.BasicQueryDefinition;
-import com.medigy.persist.util.query.impl.QueryDefinitionJoinImpl;
-import com.medigy.persist.util.query.impl.QueryDefinitionSelectImpl;
-import com.medigy.persist.util.query.impl.QueryDefinitionConditionImpl;
+import com.medigy.persist.model.org.Organization;
+import com.medigy.persist.util.query.QueryDefinition;
+import com.medigy.persist.util.query.QueryDefinitionField;
 import com.medigy.persist.util.query.QueryDefinitionJoin;
 import com.medigy.persist.util.query.QueryDefinitionSelect;
+import com.medigy.persist.util.query.QueryDefinitionSortBy;
 import com.medigy.persist.util.query.QueryDefnCondition;
 import com.medigy.persist.util.query.SqlComparisonFactory;
-import com.medigy.persist.util.query.QueryDefinitionField;
-import com.medigy.persist.util.query.QueryDefinitionSortBy;
-import com.medigy.persist.util.query.QueryDefinition;
-import com.medigy.persist.util.query.comparison.StartsWithComparisonIgnoreCase;
 import com.medigy.persist.util.query.comparison.EqualsComparison;
+import com.medigy.persist.util.query.comparison.StartsWithComparisonIgnoreCase;
 import com.medigy.persist.util.query.exception.QueryDefinitionException;
-import com.medigy.persist.model.org.Organization;
+import com.medigy.persist.util.query.impl.BasicQueryDefinition;
+import com.medigy.persist.util.query.impl.QueryDefinitionConditionImpl;
+import com.medigy.persist.util.query.impl.QueryDefinitionJoinImpl;
+import com.medigy.persist.util.query.impl.QueryDefinitionSelectImpl;
 
 public class OrganizationSearchQueryDefinition extends BasicQueryDefinition implements QueryDefinition
 {
     public static final String QUERY_DEFINITION_NAME = "organizationSearch";
+    public static final String CRITERIA_SEARCH_SELECT = "criteriaSearch";
 
     public enum Field
     {
@@ -68,7 +69,7 @@ public class OrganizationSearchQueryDefinition extends BasicQueryDefinition impl
 
     protected QueryDefinitionSelect registerCriteriaSearch() throws QueryDefinitionException
     {
-        final QueryDefinitionSelect select = new QueryDefinitionSelectImpl("criteriaSearch", this);
+        final QueryDefinitionSelect select = new QueryDefinitionSelectImpl(CRITERIA_SEARCH_SELECT, this);
 
         select.addDisplayField(getField(Field.ORG_NAME.getName()));
         select.addDisplayField(getField(Field.ORG_ID.getName()));
