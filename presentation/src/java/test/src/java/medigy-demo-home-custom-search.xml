@@ -1,0 +1,82 @@
+<qa:testcase xmlns:qa="jelly:jameleon">
+    <qa:test-case-summary>
+        Starts the session at Medigy's demo home page, searches for
+        Claim and then clicks on the link that represents Claim's page.
+    </qa:test-case-summary>
+
+    <qa:test-case-author>Jeremy Hulick</qa:test-case-author>
+    <qa:test-case-level>ACCEPTANCE</qa:test-case-level>
+
+    <qa:hu-session baseUrl="http://demo.medigy.com/medigy-pbs/app" beginSession="true">
+        <qa:hu-page-validation functionId="Successful arrival at Medigy's demo home page" title="Welcome to Medigy" textPresent="Welcome to Medigy"/>
+        
+        <!-- TEST SEARCH PAGE LINKS -->
+        <qa:hu-click-link functionId="Click on the 'Person' link" link="Person"/>
+        <qa:hu-page-validation functionId="Validate that we made it to the Person page" title="Search Person" textPresent="Search Person"/>
+
+        <qa:hu-click-link functionId="Click on the 'Patients' link" link="Patients"/>
+        <qa:hu-page-validation functionId="Validate that we made it to the Patients page" title="Search Patient(s)" textPresent="Search Patient(s)"/>
+
+        <qa:hu-click-link functionId="Click on the 'Organizations' link" link="Organizations"/>
+        <qa:hu-page-validation functionId="Validate that we made it to the Organizations page" title="Search Organizations" textPresent="Search Organizations"/>
+
+        <qa:hu-click-link functionId="Click on the 'Claim' link" link="Claim"/>
+        <qa:hu-page-validation functionId="Validate that we made it to the Claim page" title="Search Claim" textPresent="Search Claim"/>
+
+        <qa:hu-click-link functionId="Click on the 'Fee Procedure' link" link="Fee Procedure"/>
+        <qa:hu-page-validation functionId="Validate that we made it to the Fee Procedure page" title="Search Fee Procedure" textPresent="Search Fee Procedure"/>
+
+        <qa:hu-click-link functionId="Click on the 'Misc Procedure' link" link="Misc Procedure"/>
+        <qa:hu-page-validation functionId="Validate that we made it to the Misc Procedure page" title="Search Misc Procedure" textPresent="Search Misc Procedure"/>
+
+        <qa:hu-click-link functionId="Click on the 'Envoy Payer' link" link="Envoy Payer"/>
+        <qa:hu-page-validation functionId="Validate that we made it to the Envoy Payer page" title="Search Envoy Payer" textPresent="Search Envoy Payer"/>
+
+        <qa:hu-click-link functionId="Click on the 'Epayer' link" link="Epayer"/>
+        <qa:hu-page-validation functionId="Validate that we made it to the Epayer page" title="Search Epayer" textPresent="Search Epayer"/>
+
+        <qa:hu-click-link functionId="Click on the 'Insurance' link" link="Insurance"/>
+        <qa:hu-page-validation functionId="Validate that we made it to the Insurance page" title="Search Insurance" textPresent="Search Insurance"/>
+
+        <qa:hu-click-link functionId="Click on the 'Medicare GPCI Location' link" link="Medicare GPCI Location"/>
+        <qa:hu-page-validation functionId="Validate that we made it to the Medicare GPCI Location page" title="Search Medicare GPCI Location" textPresent="Search Medicare GPCI Location"/>
+
+        <qa:hu-click-link functionId="Click on the 'Modifier' link" link="Modifier"/>
+        <qa:hu-page-validation functionId="Validate that we made it to the Modifier page" title="Search Modifier Code/Name" textPresent="Search Modifier Code/Name"/>
+
+        <qa:hu-click-link functionId="Click on the 'Drug' link" link="Drug"/>
+        <qa:hu-page-validation functionId="Validate that we made it to the Drug page" title="Search Drug" textPresent="Search Drug"/>
+
+        <qa:hu-click-link functionId="Click on the 'Service Place' link" link="Service Place"/>
+        <qa:hu-page-validation functionId="Validate that we made it to the Service Place page" title="Search Service Place" textPresent="Search Service Place"/>
+
+        <qa:hu-click-link functionId="Click on the 'Service Type' link" link="Service Type"/>
+        <qa:hu-page-validation functionId="Validate that we made it to the Service Type page" title="Search Service Type" textPresent="Search Service Type"/>
+
+        <qa:hu-click-link functionId="Click on the 'Other Service' link" link="Other Service"/>
+        <qa:hu-page-validation functionId="Validate that we made it to the Other Service page" title="Search Other Service" textPresent="Search Other Service"/>
+
+        <qa:hu-click-link functionId="Click on the 'Appointments' link" link="Appointments"/>
+        <qa:hu-page-validation functionId="Validate that we made it to the Appointments page" title="Search Appointments" textPresent="Search Appointments"/>
+
+        <qa:hu-click-link functionId="Click on the 'Session' link" link="Session"/>
+        <qa:hu-page-validation functionId="Validate that we made it to the Sessions page" title="Search Sessions" textPresent="Search Sessions"/>
+
+        <qa:hu-click-link functionId="Click on the 'CPT' link" link="CPT"/>
+        <qa:hu-page-validation functionId="Validate that we made it to the CPT page" title="Search CPT" textPresent="Search CPT"/>
+
+        <qa:hu-click-link functionId="Click on the 'ICD' link" link="ICD"/>
+        <qa:hu-page-validation functionId="Validate that we made it to the ICD page" title="Search ICD" textPresent="Search ICD"/>
+
+        <qa:hu-click-link functionId="Click on the 'HCPCS' link" link="HCPCS"/>
+        <qa:hu-page-validation functionId="Validate that we made it to the HCPCS page" title="Search HCPCS" textPresent="Search HCPCS"/>
+
+        <qa:hu-click-link functionId="Click on the 'EPSDT' link" link="EPSDT"/>
+        <qa:hu-page-validation functionId="Validate that we made it to the EPSDT page" title="Search EPSDT" textPresent="Search EPSDT"/>
+
+        <qa:hu-click-link functionId="Click on the 'Catalog' link" link="Catalog"/>
+        <qa:hu-page-validation functionId="Validate that we made it to the Catalog page" title="Search Catalog" textPresent="Search Catalog"/>
+
+    </qa:hu-session>
+
+</qa:testcase>
