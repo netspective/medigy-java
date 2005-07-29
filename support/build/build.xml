@@ -65,6 +65,8 @@
         <ant dir="${repository.home}/persistence-tools/support/build" target="db.generate-ddl" inheritall="false" inheritrefs="false"/>
     </target>
 
+    
+
     <target name="test" depends="init.define-properties">
         <ant dir="${repository.home}/persistence/support/build" target="test" inheritall="false" inheritrefs="false"/>
         <ant dir="${repository.home}/scheduler/support/build" target="test" inheritall="false" inheritrefs="false"/>
@@ -218,8 +220,8 @@
         <ant dir="${repository.home}/persistence-tools/support/build" target="doc.generate-dbdd-html" inheritall="false" inheritrefs="false"/>
     </target>
 
-    <target name="db.create-demo-instance" depends="init.define-properties">
-        <ant dir="${repository.home}/persistence-tools/support/build" target="db.create-demo-instance" inheritall="false" inheritrefs="false"/>
+    <target name="db.create-devl-instance" depends="init.define-properties">
+        <ant dir="${repository.home}/persistence-tools/support/build" target="db.create-devl-instance" inheritall="false" inheritrefs="false"/>
     </target>
 
     <target name="publish" depends="init.define-properties" if="build.publish.latest.home">

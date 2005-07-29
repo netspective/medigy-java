@@ -11,17 +11,17 @@
             <value>com.mysql.jdbc.Driver</value>
         </property>
         <property name="url">
-            <value>jdbc:mysql://localhost:3306/medigy_demo</value>
+            <value>jdbc:mysql://localhost:3306/medigy_devl</value>
         </property>
         <property name="username">
-            <value>medigy_demo</value>
+            <value>medigy_devl</value>
         </property>
         <property name="password">
-            <value>medigy_demo</value>
+            <value>medigy_devl</value>
         </property>
     </bean>
 
-    <bean id="hibernateSessionFactory" class="com.medigy.service.util.ModelSessionFactoryBean" lazy-init="false">
+    <bean id="hibernateSessionFactory" class="com.medigy.service.util.ModelSessionFactoryBean" lazy-init="true">
         <property name="configLocation"> <value>classpath:com/medigy/persist/hibernate.cfg.xml</value> </property>
         <property name="configurationClass"><value>com.medigy.persist.util.HibernateConfiguration</value></property>
         <property name="dataSource"> <ref bean="testDataSource"/> </property>

@@ -79,7 +79,7 @@ PBS Demo DB Builder
 Builder type 	Ant builder
 Command to run Ant 	/home/s-build/tools/apache-ant-1.6.5/bin/ant
 Build script path 	persistence-tools/support/build/build.xml
-Build targets 	db.create-demo-instance
+Build targets 	db.create-devl-instance
 Build properties:
 
 build.version="${build.version}"
@@ -88,12 +88,12 @@ build.date="${build.startDate}"
 repository.artifacts.home="${build.artifactsDir}"
 module.artifacts.test.junit.home="${build.junitHtmlReportDir}"
 
-db.create-demo-instance.database.name=medigy_demo
-db.create-demo-instance.database.dialectClass=org.hibernate.dialect.MySQLInnoDBDialect
-db.create-demo-instance.database.driverClass=com.mysql.jdbc.Driver
-db.create-demo-instance.database.url=jdbc:mysql://localhost:3306/medigy_demo
-db.create-demo-instance.database.userid=medigy_demo
-db.create-demo-instance.database.password=medigy_demo
+db.create-devl-instance.database.name=medigy_demo
+db.create-devl-instance.database.dialectClass=org.hibernate.dialect.MySQLInnoDBDialect
+db.create-devl-instance.database.driverClass=com.mysql.jdbc.Driver
+db.create-devl-instance.database.url=jdbc:mysql://localhost:3306/medigy_devl
+db.create-devl-instance.database.userid=medigy_devl
+db.create-devl-instance.database.password=medigy_devl
 
 
 
