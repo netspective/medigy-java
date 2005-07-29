@@ -781,7 +781,7 @@ public final class PatientRegistrationFormModel implements RegisterPatientParame
 
     @NotNull
     @ValidEntity(entity = EthnicityType.class)
-    @SelectFieldStyle(style = SelectFieldStyle.Style.MULTILIST)
+    @SelectFieldStyle(style = SelectFieldStyle.Style.COMBO)
     public List getEthnicityCodes()
     {
         return ethnicityCodes;
@@ -794,7 +794,7 @@ public final class PatientRegistrationFormModel implements RegisterPatientParame
 
     @NotNull
     @ValidEntity(entity = LanguageType.class)
-    @SelectFieldStyle(style = SelectFieldStyle.Style.MULTILIST)
+    @SelectFieldStyle(style = SelectFieldStyle.Style.COMBO)
     public List getLanguageCodes()
     {
         return languageCodes;
