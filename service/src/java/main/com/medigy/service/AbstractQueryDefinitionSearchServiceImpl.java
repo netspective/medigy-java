@@ -169,7 +169,6 @@ public abstract class AbstractQueryDefinitionSearchServiceImpl extends AbstractS
             select.addCondition(cond);
         }
         final List<String> displayFields = params.getDisplayFields();
-        System.out.println(">>>>>>>>>>>>> "+ displayFields.size());
         for (String displayField: displayFields)
         {
             select.addDisplayField(select.getQueryDefinition().getField(displayField));
@@ -251,6 +250,7 @@ public abstract class AbstractQueryDefinitionSearchServiceImpl extends AbstractS
 
         final Query query = getSession().createQuery(sql);
         query.setFirstResult(params.getStartFromRow());
+        query.setFetchSize(50);
         final List bindParams = generator.getBindParams();
         System.out.println(sql + "\n" + bindParams.size());
 
