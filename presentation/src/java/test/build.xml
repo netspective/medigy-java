@@ -1,0 +1,163 @@
+<?xml version="1.0"?>
+
+
+<project name="test" default="main" basedir=".">
+
+    <property name="build.dir" value="Build"/><!--Compiled files and files in the res.dir folder get copied here-->
+    <property name="res.dir" value="res"/><!--This is where all resource files or basically, properties files go-->
+    <property name="lib.dir" value="lib"/><!--This is where all jar file go-->
+    <property name="src.dir" value="src/java"/><!--This is where custom tag java files go-->
+    <property name="scripts.dir" value="src/java"/><!--This is where Jameleon test case scripts go-->
+    <property name="javadocs.dir" value="docs"/><!--This is where the javadocs for custom tags will end up-->
+
+    <path id="base.classpath">
+        <fileset dir="lib">
+         <include name="*.jar"/>
+        </fileset>
+        <pathelement location="lib"/>
+    </path>
+
+    <path id="classpath">
+        <path refid="base.classpath"/>
+        <pathelement location="${build.dir}"/>
+        <pathelement location="${res.dir}"/>
+    </path>
+
+    <target name="test.smoke" description="Tests all test cases with their test-case-level set to SMOKE">
+        <run-test contains="test-case-level>SMOKE" script="**/*.xml"/>
+    </target>
+
+    <target name="test.script" description="tests the file named ${script}. i.e. build test.script -Dscript=**/somescript.xml">
+        <run-test contains="" script="${script}"/>
+    </target>
+
+    <target name="test.all" description="tests all files in the script dir that end in xml!">
+        <run-test contains="" script="**/*.xml"/>
+    </target>
+
+    <target name="main" depends="clean, build, register.tags"/>
+
+    <target name="clean" depends="cleanJavadocs, cleanBuild"/>
+
+    <target name="cleanBuild">
+        <delete dir="${build.dir}" quiet="true"/>
+    </target>
+
+    <target name="cleanJavadocs">
+        <delete dir="${javadocs.dir}" quiet="true"/>
+    </target>
+
+    <target name="cleanLogs" description="cleans logs generated from the executions of test scripts">
+        <delete dir="${jameleon.results.dir}" quiet="true"/>
+        <delete quiet="true">
+            <fileset dir=".">
+                <include name="TestResults.*ml"/>
+                <include name="*.log"/>
+            </fileset>
+        </delete>
+    </target>
+
+    <target name="init" description="creates all required directories">
+        <mkdir dir="${build.dir}"/>
+    </target>
+
+    <target name="run.gui" description="Runs the GUI">
+        <java classname="net.sf.jameleon.ui.JameleonUI" classpathref="base.classpath" fork="true" spawn="false"/>
+    </target>
+
+    <target name="build" depends="init"
+        description="Compiles java src files">
+        <build source.dir="${src.dir}" dest.dir="${build.dir}" cpath="classpath"/>
+    </target>
+
+    <target name="register.tags" description="Registers all custom tags in Jameleon">
+        <register-tags/>
+    </target>
+
+    <target name="javadocs" depends="main"
+            description="Creates JavaDocs for this project">
+        <delete dir="${javadocs.dir}"/>
+        <mkdir dir="${javadocs.dir}"/>
+        <property name="jameleon-core" value="${lib.dir}/jameleon-core.jar"/>
+        <javadoc packagenames="*"
+                 sourcepath="${src.dir}"
+                 destdir="docs/javadocs"
+                 author="true"
+                 version="true"
+                 use="true"
+                 windowtitle="Jameleon Tag Documentation"
+                 doctitle="Jameleon Tag Documentation"
+                 access="protected"
+                 classpathref="classpath">
+            <taglet name="net.sf.jameleon.taglet.JameleonFunctionTaglet" path="${jameleon-core}"/>
+            <taglet name="net.sf.jameleon.taglet.JameleonStepTaglet" path="${jameleon-core}"/>
+            <taglet name="net.sf.jameleon.taglet.JameleonAttributeTaglet" path="${jameleon-core}"/>
+            <taglet name="net.sf.jameleon.taglet.JameleonApplicationTaglet" path="${jameleon-core}"/>
+        </javadoc>
+    </target>
+
+    <!--
+        These macros are to be reused in several targets
+    -->
+
+    <!--
+        This is used to compile java files existing in one directory (source.dir) into another (dest,dir)
+    -->
+    <macrodef name="build">
+        <attribute name="source.dir"/>
+        <attribute name="dest.dir"/>
+        <attribute name="cpath"/>
+        <sequential>
+            <javac srcdir="@{source.dir}"
+                   destdir="@{dest.dir}"
+                   debug="on"
+                   deprecation="on"
+                   optimize="on"
+                   classpathref="@{cpath}"/>
+
+        </sequential>
+    </macrodef>
+
+    <!--
+        This is used to execute jameleon test cases that exist in the script.dir defined in build.properties.
+        The parameters are:
+
+        cpath - the classpath to use when executing the tests
+        contains - The text that should exist in the test cases
+        script - a wild card or the script name itself
+    -->
+    <macrodef name="run-test">
+        <attribute name="contains"/>
+        <attribute name="script"/>
+
+        <sequential>
+            <taskdef name="jmln-test" classname="net.sf.jameleon.ant.ExecuteTestCaseSeparateVMTask" classpathref="classpath"/>
+            <echo>executing tests in ${scripts.dir}/@{script} with text @{contains}</echo>
+            <jmln-test classpathref="classpath" fork="true">
+                <fileset dir="${scripts.dir}">
+                    <include name="@{script}"/>
+                    <contains text="@{contains}"/>
+                </fileset>
+            </jmln-test>
+        </sequential>
+    </macrodef>
+
+    <!--
+        This is used to register all tags in the Jameleon engine.
+
+        cpath - the classpath to use when executing the tests
+        contains - The text that should exist in the test cases
+        script - a wild card or the script name itself
+    -->
+    <macrodef name="register-tags">
+        <sequential>
+            <taskdef name="jmln-register" classname="net.sf.jameleon.ant.JameleonXDoclet" classpathref="classpath"/>
+            <jmln-register outputdir="${build.dir}" quiet="true" isA="org.apache.commons.jelly.TagSupport">
+                <fileset dir="${src.dir}">
+                    <include name="**/*Tag.java"/>
+                </fileset>
+            </jmln-register>
+        </sequential>
+    </macrodef>
+
+</project>
