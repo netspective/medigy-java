@@ -6,7 +6,7 @@
     <qa:test-case-author>Jeremy Hulick</qa:test-case-author>
     <qa:test-case-level>ACCEPTANCE</qa:test-case-level>
 
-    <qa:hu-session baseUrl="http://demo.medigy.com/medigy-pbs/app" beginSession="true">
+    <qa:hu-session application="pbs" beginSession="true">
         <qa:hu-page-validation functionId="Successful arrival at Medigy's demo home page" title="Welcome to Medigy" textPresent="Welcome to Medigy"/>
         
         <qa:hu-click-link functionId="Click on the 'Insurance Verification Worklist' link" link="Insurance Verification Worklist"/>
