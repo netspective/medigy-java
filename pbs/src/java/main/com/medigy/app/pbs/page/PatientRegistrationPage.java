@@ -43,24 +43,18 @@
  */
 package com.medigy.app.pbs.page;
 
-import com.medigy.presentation.form.person.patient.PatientRegistrationFormPanel;
 import com.medigy.wicket.form.FormMode;
-import com.medigy.wicket.page.DefaultFormPage;
+import com.medigy.app.pbs.form.AbstractFormPage;
+import wicket.markup.html.panel.Panel;
 
-public class PatientRegistrationPage extends DefaultFormPage
+public class PatientRegistrationPage extends AbstractFormPage
 {
-    public PatientRegistrationPage(final FormMode mode)
-    {
-        super(PatientRegistrationFormPanel.class, mode);
-    }
-
     public PatientRegistrationPage()
     {
-        super(PatientRegistrationFormPanel.class, FormMode.INSERT);
     }
 
-    public PatientRegistrationPage createPageInstance()
+   public Panel getFormPanel(final String id)
     {
-        return new PatientRegistrationPage();
+        return new com.medigy.app.pbs.panel.PatientRegistrationFormPanel(id, FormMode.INSERT);
     }
 }
