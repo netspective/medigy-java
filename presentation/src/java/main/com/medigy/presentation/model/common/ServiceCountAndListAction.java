@@ -43,6 +43,10 @@ public abstract class ServiceCountAndListAction implements ISelectCountAndListAc
             return 0;
 
         SearchReturnValues values = service.search(createSearchServiceParameters(queryObject));
+        if (values.getErrorMessage() != null)
+        {
+            return 0;
+        }
         columnNames = values.getSearchResults() != null ? values.getColumnNames() : null;
         return values.getSearchResults().size();
 
