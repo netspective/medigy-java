@@ -1,0 +1,17 @@
+<qa:testcase xmlns:qa="jelly:jameleon">
+    <qa:test-case-summary>
+        Starts the session at Medigy's demo home page, searches worlist links.
+    </qa:test-case-summary>
+
+    <qa:test-case-author>Jeremy Hulick</qa:test-case-author>
+    <qa:test-case-level>ACCEPTANCE</qa:test-case-level>
+
+    <qa:hu-session baseUrl="http://demo.medigy.com/medigy-pbs/app" beginSession="true">
+        <qa:hu-page-validation functionId="Successful arrival at Medigy's demo home page" title="Welcome to Medigy" textPresent="Welcome to Medigy"/>
+
+        <qa:hu-click-link functionId="Click on the 'Patient Activity Worklist' link" link="Patient Activity Worklist"/>
+        <qa:hu-page-validation functionId="Validate that we made it to the Patient Activity Worklist page" title="Patient Activity Worklist" textPresent="Patient Activity Worklist"/>
+
+    </qa:hu-session>
+
+</qa:testcase>

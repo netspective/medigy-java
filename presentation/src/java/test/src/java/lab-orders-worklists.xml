@@ -9,11 +9,8 @@
     <qa:hu-session baseUrl="http://demo.medigy.com/medigy-pbs/app" beginSession="true">
         <qa:hu-page-validation functionId="Successful arrival at Medigy's demo home page" title="Welcome to Medigy" textPresent="Welcome to Medigy"/>
         
-        <!-- TEST WORKLIST PAGE LINKS -->
-        <qa:hu-click-link functionId="Click on the 'Patient Flow Worklist' link" link="Patient Flow Worklist"/>
-        <qa:hu-page-validation functionId="Validate that we made it to the Patient Flow Worklist page" title="Patient Flow Worklist" textPresent="Patient Flow Worklist"/>
-        <qa:hu-click-link functionId="Click on the 'Patient' link" link="Shah, S"/>
-        <qa:hu-page-validation functionId="Validate that we made it to the Add Patient page" title="Add Patient" textPresent="Add Patient"/>
+        <qa:hu-click-link functionId="Click on the 'Lab Orders Worklist' link" link="Lab Orders Worklist"/>
+        <qa:hu-page-validation functionId="Validate that we made it to the Lab Orders Worklist page" title="Lab Orders Worklist" textPresent="Lab Orders Worklist"/>
 
     </qa:hu-session>
 
