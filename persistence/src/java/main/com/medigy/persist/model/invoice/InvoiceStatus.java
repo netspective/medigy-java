@@ -82,7 +82,7 @@ public class InvoiceStatus extends AbstractTopLevelEntity implements Comparable
     }
 
     @ManyToOne
-    @JoinColumn(name = "invoice_id")
+    @JoinColumn(name = Invoice.PK_COLUMN_NAME)
     public Invoice getInvoice()
     {
         return invoice;
@@ -94,7 +94,7 @@ public class InvoiceStatus extends AbstractTopLevelEntity implements Comparable
     }
 
     @ManyToOne
-    @JoinColumn(name = "invoice_status_type_id")
+    @JoinColumn(name = InvoiceStatusType.PK_COLUMN_NAME)
     public InvoiceStatusType getType()
     {
         return type;
