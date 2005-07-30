@@ -54,7 +54,7 @@ public class HealthCareVisitStatus extends AbstractTopLevelEntity
 {
     private Long visitStatusId;
     private Date statusDate;
-    private HealthCareVisit visit;
+    private HealthCareEncounter encounter;
     private HealthCareVisitStatusType type;
 
     @Id(generate = GeneratorType.AUTO)
@@ -81,14 +81,14 @@ public class HealthCareVisitStatus extends AbstractTopLevelEntity
 
     @ManyToOne
     @JoinColumn(name = "visit_id")
-    public HealthCareVisit getVisit()
+    public HealthCareEncounter getVisit()
     {
-        return visit;
+        return encounter;
     }
 
-    public void setVisit(final HealthCareVisit visit)
+    public void setVisit(final HealthCareEncounter encounter)
     {
-        this.visit = visit;
+        this.encounter = encounter;
     }
 
     @ManyToOne

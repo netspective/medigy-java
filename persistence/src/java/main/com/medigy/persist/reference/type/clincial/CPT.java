@@ -38,13 +38,13 @@
  */
 package com.medigy.persist.reference.type.clincial;
 
+import com.medigy.persist.reference.AbstractReferenceEntity;
+import com.medigy.persist.reference.type.GenderType;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-
-import com.medigy.persist.reference.AbstractReferenceEntity;
-import com.medigy.persist.reference.type.GenderType;
 
 @Entity
 public class CPT extends AbstractReferenceEntity
@@ -104,7 +104,7 @@ public class CPT extends AbstractReferenceEntity
     }
 
     @ManyToOne
-    @JoinColumn(name = GenderType.PK_COLUMN_NAME)
+    @JoinColumn(name = "gender_type_id", referencedColumnName = GenderType.PK_COLUMN_NAME)
     public GenderType getGender()
     {
         return gender;

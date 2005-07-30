@@ -54,7 +54,7 @@ import javax.persistence.Table;
 @Table(name = "Gender_Type")
 public class GenderType extends AbstractReferenceEntity
 {
-    public static final String PK_COLUMN_NAME = "gender_type_id";
+    public static final String PK_COLUMN_NAME = AbstractReferenceEntity.PK_COLUMN_NAME;
 
     public enum Cache implements CachedReferenceEntity
     {

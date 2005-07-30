@@ -121,7 +121,7 @@ public abstract class TestCase extends MockObjectTestCase
         hibProperties.setProperty(Environment.CONNECTION_PREFIX + ".url", url);
         hibProperties.setProperty(Environment.CONNECTION_PREFIX + ".username", userName);
         hibProperties.setProperty(Environment.CONNECTION_PREFIX + ".password", password);
-        hibProperties.setProperty(Environment.HBM2DDL_AUTO, "create-drop");
+        //hibProperties.setProperty(Environment.HBM2DDL_AUTO, "create-drop");
         hibProperties.setProperty(Environment.SHOW_SQL, "true");
         return hibProperties;
     }
@@ -200,7 +200,7 @@ public abstract class TestCase extends MockObjectTestCase
         final HibernateConfiguration hibernateConfiguration = getHibernateConfiguration();
         HibernateUtil.setConfiguration(hibernateConfiguration);
         setupModelInitializer(hibernateConfiguration);
-        generateSchemaDdl(hibernateConfiguration);
+        //generateSchemaDdl(hibernateConfiguration);
         setupSession();
         HibernateUtil.enableStatistics();
     }
@@ -237,6 +237,8 @@ public abstract class TestCase extends MockObjectTestCase
 
     protected IDataSet getDataSet() throws Exception
     {
+        if (getDataSetFile() == null)
+            return null;
         InputStream stream = Environment.class.getResourceAsStream(getDataSetFile());
 		if (stream == null)
             stream = Thread.currentThread().getContextClassLoader().getResourceAsStream( getDataSetFile() );
@@ -248,7 +250,8 @@ public abstract class TestCase extends MockObjectTestCase
 
     protected void setupModelInitializer(final HibernateConfiguration hibernateConfiguration) throws Exception
     {
-        if (useExternalModelData)
+        /*
+        if (useExternalModelData && getDataSetFile() != null)
         {
             IDatabaseConnection dbUnitConn = getDbUnitConnection();
             //DatabaseOperation.REFRESH.execute(dbUnitConn, getDataSet());
@@ -265,6 +268,10 @@ public abstract class TestCase extends MockObjectTestCase
             new ModelInitializer(HibernateUtil.getSession(),
                              ModelInitializer.SeedDataPopulationType.NO,
                              hibernateConfiguration).initialize();
+                             */
+        new ModelInitializer(HibernateUtil.getSession(),
+                             ModelInitializer.SeedDataPopulationType.NO,
+                             hibernateConfiguration).initialize();
     }
 
     protected void setupSession() throws Exception
@@ -279,7 +286,7 @@ public abstract class TestCase extends MockObjectTestCase
     protected void tearDown() throws Exception
     {
         HibernateUtil.logStatistics();
-        if (useExternalModelData)
+        if (useExternalModelData && getDataSetFile() != null)
             DatabaseOperation.NONE.execute(getDbUnitConnection(), getDataSet());
         super.tearDown();
 

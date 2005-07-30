@@ -9,9 +9,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 
 public class QueryDefinitionConditions
 {
@@ -192,7 +192,7 @@ public class QueryDefinitionConditions
                     conditionAdded = true;
                 }
                 if(c != condsUsedLast && !((QueryDefnCondition) usedConditions.list.get(c + 1)).isJoinOnly())
-                    sb.append(" " + cond.getConnector() + " ");
+                    sb.append(" " + (cond.getConnector() != null ? cond.getConnector() : "AND") + " ");
             }
             if(conditionAdded)
                 sb.append("\n");

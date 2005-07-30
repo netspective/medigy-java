@@ -38,8 +38,8 @@
  */
 package com.medigy.persist.model.health;
 
-import com.medigy.persist.model.common.AbstractDateDurationEntity;
 import com.medigy.persist.model.claim.Claim;
+import com.medigy.persist.model.common.AbstractDateDurationEntity;
 import com.medigy.persist.reference.custom.health.HealthCareDeliveryType;
 
 import javax.persistence.CascadeType;
@@ -62,7 +62,7 @@ public class HealthCareDelivery extends AbstractDateDurationEntity
     private String deliveryNotes;
     private HealthCareOffering healthCareOffering;
     private HealthCareEpisode healthCareEpisode;
-    private HealthCareVisit healthCareVisit;
+    private HealthCareEncounter healthCareEncounter;
     private Claim claim;
     private HealthCareDeliveryType type;
 
@@ -184,14 +184,14 @@ public class HealthCareDelivery extends AbstractDateDurationEntity
     }
 
     @ManyToOne
-    @JoinColumn(name = HealthCareVisit.PK_COLUMN_NAME)
-    public HealthCareVisit getHealthCareVisit()
+    @JoinColumn(name = HealthCareEncounter.PK_COLUMN_NAME)
+    public HealthCareEncounter getHealthCareVisit()
     {
-        return healthCareVisit;
+        return healthCareEncounter;
     }
 
-    public void setHealthCareVisit(final HealthCareVisit healthCareVisit)
+    public void setHealthCareVisit(final HealthCareEncounter healthCareEncounter)
     {
-        this.healthCareVisit = healthCareVisit;
+        this.healthCareEncounter = healthCareEncounter;
     }
 }

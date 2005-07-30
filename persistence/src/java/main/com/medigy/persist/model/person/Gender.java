@@ -40,6 +40,9 @@
 
 package com.medigy.persist.model.person;
 
+import com.medigy.persist.model.common.AbstractDateDurationEntity;
+import com.medigy.persist.reference.type.GenderType;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -48,9 +51,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-
-import com.medigy.persist.model.common.AbstractDateDurationEntity;
-import com.medigy.persist.reference.type.GenderType;
 
 @Entity
 @Table(name = "Person_Gender")
@@ -93,7 +93,7 @@ public class Gender extends AbstractDateDurationEntity implements Comparable
     }
 
     @ManyToOne
-    @JoinColumn(name = "gender_type_id")
+    @JoinColumn(name = "gender_type_id", referencedColumnName = GenderType.PK_COLUMN_NAME)
     public GenderType getType()
     {
         return type;

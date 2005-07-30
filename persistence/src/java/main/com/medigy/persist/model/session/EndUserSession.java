@@ -43,12 +43,14 @@
  */
 package com.medigy.persist.model.session;
 
+import javax.persistence.DiscriminatorType;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.Transient;
 
 @Entity
-@Inheritance(discriminatorValue = "U")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE, discriminatorType = DiscriminatorType.CHAR, discriminatorValue = "U")
 public class EndUserSession extends Session
 {
     @Transient

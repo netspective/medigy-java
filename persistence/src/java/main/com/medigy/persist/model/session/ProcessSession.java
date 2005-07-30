@@ -43,11 +43,13 @@
  */
 package com.medigy.persist.model.session;
 
+import javax.persistence.DiscriminatorType;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 
 @Entity
-@Inheritance(discriminatorValue = "P")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE, discriminatorType = DiscriminatorType.CHAR, discriminatorValue = "P")
 public class ProcessSession extends Session
 {
     public ProcessSession()

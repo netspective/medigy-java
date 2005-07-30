@@ -43,9 +43,7 @@
  */
 package com.medigy.persist.model.session;
 
-import java.io.Serializable;
-
-import javax.persistence.DiscriminatorColumn;
+import javax.persistence.Column;
 import javax.persistence.DiscriminatorType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
@@ -53,13 +51,16 @@ import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.Table;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "Work_Session")
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE, discriminatorType = DiscriminatorType.CHAR, discriminatorValue = "?")
-@DiscriminatorColumn(name = "session_type")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE, discriminatorType = DiscriminatorType.CHAR, discriminatorValue = "X")
+//@DiscriminatorColumn(name = "session_type")
 public abstract class Session implements Serializable
 {
+    public static final String PK_COLUMN_NAME = "session_id";
+
     private Long sessionId;
     private String processName;
 
@@ -68,6 +69,7 @@ public abstract class Session implements Serializable
     }
 
     @Id(generate=GeneratorType.AUTO)
+    @Column(name = PK_COLUMN_NAME)
     public Long getSessionId()
     {
         return sessionId;

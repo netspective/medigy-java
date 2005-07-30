@@ -44,7 +44,7 @@ public class TestHealthCareVisit extends TestCase
 {
     public void testHealthCareVisit()
     {
-        final HealthCareVisit visit = new HealthCareVisit();
+        final HealthCareEncounter encounter = new HealthCareEncounter();
 
         VisitReason reason = new VisitReason();
         //reason.setDescription();

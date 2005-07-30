@@ -38,23 +38,23 @@
  */
 package com.medigy.persist.model.order;
 
-import com.medigy.persist.model.health.HealthCareVisit;
+import com.medigy.persist.model.health.HealthCareEncounter;
 import com.medigy.persist.reference.custom.order.OrderType;
 
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
 import javax.persistence.CascadeType;
+import javax.persistence.Entity;
 import javax.persistence.Inheritance;
-import java.util.List;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Inheritance(discriminatorValue = "Perscription")
 public class Perscription extends Order
 {
-    private HealthCareVisit healthCareVisit;
+    private HealthCareEncounter healthCareEncounter;
     private List<PerscriptionItem> perscriptionItems = new ArrayList<PerscriptionItem>();
 
 
@@ -64,15 +64,15 @@ public class Perscription extends Order
     }
 
     @ManyToOne
-    @JoinColumn(name = HealthCareVisit.PK_COLUMN_NAME)
-    public HealthCareVisit getHealthCareVisit()
+    @JoinColumn(name = HealthCareEncounter.PK_COLUMN_NAME)
+    public HealthCareEncounter getHealthCareVisit()
     {
-        return healthCareVisit;
+        return healthCareEncounter;
     }
 
-    public void setHealthCareVisit(final HealthCareVisit healthCareVisit)
+    public void setHealthCareVisit(final HealthCareEncounter healthCareEncounter)
     {
-        this.healthCareVisit = healthCareVisit;
+        this.healthCareEncounter = healthCareEncounter;
     }
 
     @OneToMany(mappedBy = "perscription", cascade = CascadeType.ALL)    

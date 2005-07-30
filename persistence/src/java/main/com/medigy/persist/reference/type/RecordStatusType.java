@@ -41,26 +41,73 @@
 /*
  * Copyright (c) 2005 Your Corporation. All Rights Reserved.
  */
-package com.medigy.persist.model.common;
+package com.medigy.persist.reference.type;
 
-import com.medigy.persist.model.common.penum.PersistentIntegerEnum;
+import com.medigy.persist.reference.AbstractReferenceEntity;
+import com.medigy.persist.reference.CachedReferenceEntity;
+import com.medigy.persist.reference.ReferenceEntity;
 
-public class RecordStatusType extends PersistentIntegerEnum
+import javax.persistence.Entity;
+
+@Entity
+public class RecordStatusType extends AbstractReferenceEntity
 {
-    public static final RecordStatusType INACTIVE = new RecordStatusType("Inactive", 0);
-    public static final RecordStatusType ACTIVE = new RecordStatusType("Active", 1);
+    public static final String PK_COLUMN_NAME = AbstractReferenceEntity.PK_COLUMN_NAME;
 
-    public RecordStatusType()
+    public enum Cache implements CachedReferenceEntity
     {
+        MALE("I", "Inactive", ""),
+        FEMALE("A", "Active", "");
+
+        private final String code;
+        private final String label;
+        private final String description;
+        private RecordStatusType entity;
+
+        private Cache(final String code, final String label, final String description)
+        {
+            this.code = code;
+            this.label = label;
+            this.description = description;
+        }
+
+        public String getCode()
+        {
+            return code;
+        }
+
+        public String getLabel()
+        {
+            return label;
+        }
+
+        public String getDescription()
+        {
+            return description;
+        }
+
+        public RecordStatusType getEntity()
+        {
+            return entity;
+        }
+
+        public void setEntity(final ReferenceEntity entity)
+        {
+            this.entity = (RecordStatusType) entity;
+        }
+
+        public static RecordStatusType getEntity(String code)
+        {
+            for (RecordStatusType.Cache cache : RecordStatusType.Cache.values())
+            {
+                if (cache.getCode().equals(code))
+                    return cache.getEntity();
+            }
+            return null;
+        }
     }
 
-    public RecordStatusType(String name, int persistentInteger)
-    {
-        super(name, persistentInteger);
-    }
 
-    public String getTableName()
-    {
-        return "Record_Status_Type";
-    }
+
+
 }

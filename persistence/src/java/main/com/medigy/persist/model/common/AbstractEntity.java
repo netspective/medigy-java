@@ -46,18 +46,21 @@ package com.medigy.persist.model.common;
 import com.medigy.persist.model.session.Session;
 import com.medigy.persist.model.session.SessionManager;
 import com.medigy.persist.reference.ModelVersion;
+import com.medigy.persist.reference.type.RecordStatusType;
 
+import javax.persistence.Basic;
+import javax.persistence.EmbeddableSuperclass;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.TemporalType;
 import javax.persistence.Version;
-import javax.persistence.EmbeddableSuperclass;
 import java.io.Serializable;
 import java.util.Date;
 
 @EmbeddableSuperclass
 public abstract class AbstractEntity implements Serializable
 {
-    private RecordStatusType recordStatus = RecordStatusType.ACTIVE;
+    private RecordStatusType recordStatus;
     private int lockVersion = 0;
     private ModelVersion createVersion;
     private ModelVersion updateVersion;
@@ -66,6 +69,9 @@ public abstract class AbstractEntity implements Serializable
     private Session createSession = SessionManager.getInstance().getActiveSession();
     private Session updateSession;
 
+
+    @ManyToOne
+    @JoinColumn(name = "rec_status_id", referencedColumnName =  RecordStatusType.PK_COLUMN_NAME)
     public RecordStatusType getRecordStatus()
     {
         return recordStatus;
@@ -87,6 +93,7 @@ public abstract class AbstractEntity implements Serializable
         this.lockVersion = lockVersion;
     }
 
+    @Basic(temporalType = TemporalType.TIMESTAMP)
     public Date getCreateTimestamp()
     {
         return createTimestamp;
@@ -98,7 +105,7 @@ public abstract class AbstractEntity implements Serializable
     }
 
     @ManyToOne
-    @JoinColumn(name = "create_session_id")
+    @JoinColumn(name = "create_session_id", referencedColumnName = Session.PK_COLUMN_NAME)
     public Session getCreateSession()
     {
         return createSession;
@@ -120,7 +127,7 @@ public abstract class AbstractEntity implements Serializable
     }
 
     @ManyToOne
-    @JoinColumn(name = "update_session_id")        
+    @JoinColumn(name = "update_session_id", referencedColumnName = Session.PK_COLUMN_NAME)
     public Session getUpdateSession()
     {
         return updateSession;
@@ -132,7 +139,7 @@ public abstract class AbstractEntity implements Serializable
     }
 
     @ManyToOne
-    @JoinColumn(referencedColumnName = "type_id", name = "create_version_id")
+    @JoinColumn(referencedColumnName = ModelVersion.PK_COLUMN_NAME, name = "create_version_id")
     public ModelVersion getCreateVersion()
     {
         return createVersion;
@@ -144,7 +151,7 @@ public abstract class AbstractEntity implements Serializable
     }
 
     @ManyToOne
-    @JoinColumn(referencedColumnName = "type_id", name = "update_version_id")        
+    @JoinColumn(referencedColumnName = ModelVersion.PK_COLUMN_NAME, name = "update_version_id")
     public ModelVersion getUpdateVersion()
     {
         return updateVersion;

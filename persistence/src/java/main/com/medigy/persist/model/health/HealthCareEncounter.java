@@ -39,10 +39,9 @@
 package com.medigy.persist.model.health;
 
 import com.medigy.persist.model.common.AbstractDateDurationEntity;
+import com.medigy.persist.model.order.Perscription;
 import com.medigy.persist.model.party.Facility;
 import com.medigy.persist.model.person.Person;
-import com.medigy.persist.model.person.PatientMedication;
-import com.medigy.persist.model.order.Perscription;
 import com.medigy.persist.reference.custom.health.HealthCareVisitRoleType;
 import com.medigy.persist.reference.custom.health.HealthCareVisitStatusType;
 import com.medigy.persist.reference.custom.person.PatientType;
@@ -56,11 +55,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Set;
 import java.util.List;
-import java.util.ArrayList;
+import java.util.Set;
 
 /**
  * A health care visit (also known as Appointment) may have been scheduled for several visit reasons: because of a
@@ -68,7 +67,7 @@ import java.util.ArrayList;
  *
  */
 @Entity
-public class HealthCareVisit  extends AbstractDateDurationEntity
+public class HealthCareEncounter  extends AbstractDateDurationEntity
 {
     public static final String PK_COLUMN_NAME = "visit_id";
 
@@ -87,7 +86,7 @@ public class HealthCareVisit  extends AbstractDateDurationEntity
 
     private List<Perscription> perscription = new ArrayList<Perscription>();
 
-    public HealthCareVisit()
+    public HealthCareEncounter()
     {
     }
 

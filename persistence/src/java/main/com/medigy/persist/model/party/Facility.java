@@ -40,9 +40,9 @@
 package com.medigy.persist.model.party;
 
 import com.medigy.persist.model.common.AbstractTopLevelEntity;
-import com.medigy.persist.model.health.HealthCareVisit;
-import com.medigy.persist.model.org.Organization;
+import com.medigy.persist.model.health.HealthCareEncounter;
 import com.medigy.persist.model.insurance.FeeSchedule;
+import com.medigy.persist.model.org.Organization;
 import com.medigy.persist.reference.custom.party.FacilityType;
 
 import javax.persistence.CascadeType;
@@ -72,7 +72,7 @@ public class Facility extends AbstractTopLevelEntity
     private Set<Facility> childFacilities = new HashSet<Facility>();
     private Set<PartyFacilityRole> facilityRole = new HashSet<PartyFacilityRole>();
 
-    private Set<HealthCareVisit> visits = new HashSet<HealthCareVisit>();
+    private Set<HealthCareEncounter> visits = new HashSet<HealthCareEncounter>();
     private Set<FeeSchedule> feeSchedules = new HashSet<FeeSchedule>();
     /**
      * Facilities are not children of any table and they are related to Parties only through the
@@ -167,12 +167,12 @@ public class Facility extends AbstractTopLevelEntity
      * @return
      */
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "facility")
-    public Set<HealthCareVisit> getVisits()
+    public Set<HealthCareEncounter> getVisits()
     {
         return visits;
     }
 
-    public void setVisits(final Set<HealthCareVisit> visits)
+    public void setVisits(final Set<HealthCareEncounter> visits)
     {
         this.visits = visits;
     }

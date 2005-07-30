@@ -38,6 +38,8 @@
  */
 package com.medigy.persist.model.health;
 
+import com.medigy.persist.model.common.AbstractTopLevelEntity;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
@@ -45,13 +47,11 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import com.medigy.persist.model.common.AbstractTopLevelEntity;
-
 @Entity
 public class VisitReason  extends AbstractTopLevelEntity
 {
     private Long visitReasonId;
-    private HealthCareVisit visit;
+    private HealthCareEncounter encounter;
     private String description;
     private HealthCareEpisode healthCareEpisode;
 
@@ -68,14 +68,14 @@ public class VisitReason  extends AbstractTopLevelEntity
 
     @ManyToOne
     @JoinColumn(name = "visit_id")
-    public HealthCareVisit getVisit()
+    public HealthCareEncounter getVisit()
     {
-        return visit;
+        return encounter;
     }
 
-    public void setVisit(final HealthCareVisit visit)
+    public void setVisit(final HealthCareEncounter encounter)
     {
-        this.visit = visit;
+        this.encounter = encounter;
     }
 
     @Column(length = 100, nullable = false)

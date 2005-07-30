@@ -45,6 +45,7 @@ import javax.persistence.Table;
 @Table(name = "Model_Metadata")
 public class ModelVersion extends AbstractReferenceEntity
 {
+    public static final String PK_COLUMN_NAME = AbstractReferenceEntity.PK_COLUMN_NAME;
     public enum Cache implements CachedReferenceEntity
     {
         VER_1_0_0("1.0.0", "", "");

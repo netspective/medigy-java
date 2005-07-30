@@ -40,12 +40,12 @@ package com.medigy.persist.model.invoice;
 
 import com.medigy.persist.model.claim.Claim;
 import com.medigy.persist.model.common.AbstractTopLevelEntity;
-import com.medigy.persist.model.invoice.attribute.InvoiceLongAttribute;
-import com.medigy.persist.model.invoice.attribute.InvoiceDateAttribute;
-import com.medigy.persist.model.invoice.attribute.InvoiceBooleanAttribute;
+import com.medigy.persist.model.health.HealthCareEncounter;
 import com.medigy.persist.model.invoice.attribute.InvoiceAttribute;
+import com.medigy.persist.model.invoice.attribute.InvoiceBooleanAttribute;
+import com.medigy.persist.model.invoice.attribute.InvoiceDateAttribute;
+import com.medigy.persist.model.invoice.attribute.InvoiceLongAttribute;
 import com.medigy.persist.model.invoice.attribute.InvoiceStringAttribute;
-import com.medigy.persist.model.health.HealthCareVisit;
 import com.medigy.persist.model.org.Organization;
 import com.medigy.persist.model.party.Party;
 import com.medigy.persist.reference.custom.invoice.InvoiceRoleType;
@@ -67,8 +67,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.List;
-import java.util.ArrayList;
 
 @Entity
 public class Invoice  extends AbstractTopLevelEntity
@@ -88,7 +86,7 @@ public class Invoice  extends AbstractTopLevelEntity
     private Float totalAdjustments;;    // trigger
 
     private BillingAccount billingAccount;
-    private HealthCareVisit visit;
+    private HealthCareEncounter encounter;
 
     private Set<InvoiceItem> items = new HashSet<InvoiceItem>();
     private Set<InvoiceRole> invoiceRoles = new HashSet<InvoiceRole>();
@@ -357,15 +355,15 @@ public class Invoice  extends AbstractTopLevelEntity
     }
 
     @OneToOne
-    @JoinColumn(name = HealthCareVisit.PK_COLUMN_NAME)
-    public HealthCareVisit getVisit()
+    @JoinColumn(name = HealthCareEncounter.PK_COLUMN_NAME)
+    public HealthCareEncounter getVisit()
     {
-        return visit;
+        return encounter;
     }
 
-    public void setVisit(final HealthCareVisit visit)
+    public void setVisit(final HealthCareEncounter encounter)
     {
-        this.visit = visit;
+        this.encounter = encounter;
     }
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "invoice")

@@ -38,7 +38,7 @@
  */
 package com.medigy.service.impl.person;
 
-import com.medigy.persist.model.health.HealthCareVisit;
+import com.medigy.persist.model.health.HealthCareEncounter;
 import com.medigy.persist.model.party.Facility;
 import com.medigy.persist.model.person.Person;
 import com.medigy.persist.reference.custom.person.PatientType;
@@ -85,18 +85,18 @@ public class AddAppointmentServiceImpl implements AddAppointmentService
         if (patientType == null)
             return (NewAppointmentValues) createErrorResponse(parameters, "Unknown patient type code");
 
-        final HealthCareVisit visit = new HealthCareVisit();
-        visit.setPatient(patient);
-        visit.setScheduledTime(parameters.getAppointmentDateAndTime());
-        visit.setFacility(facility);
-        visit.setRequestedPhysician(physician);
-        visit.setPatientType(patientType);
+        final HealthCareEncounter encounter = new HealthCareEncounter();
+        encounter.setPatient(patient);
+        encounter.setScheduledTime(parameters.getAppointmentDateAndTime());
+        encounter.setFacility(facility);
+        encounter.setRequestedPhysician(physician);
+        encounter.setPatientType(patientType);
 
         final String[] visitReasons = parameters.getVisitReasons();
         final int reasonLength = visitReasons != null ? visitReasons.length : 0;
         for (int i= 0; i < reasonLength; i++)
         {
-            visit.addReason(visitReasons[i]);
+            encounter.addReason(visitReasons[i]);
         }
 
         if (parameters.getAppointmentTakerId() != null)
@@ -104,14 +104,14 @@ public class AddAppointmentServiceImpl implements AddAppointmentService
             final Person apptTaker = (Person) HibernateUtil.getSession().load(Person.class, parameters.getAppointmentTakerId());
             if (apptTaker == null)
                 return (NewAppointmentValues) createErrorResponse(parameters, "Unknown Appointment taker person ID");
-            visit.setAppointmentTaker(apptTaker);
+            encounter.setAppointmentTaker(apptTaker);
         }
-        HibernateUtil.getSession().save(visit);
+        HibernateUtil.getSession().save(encounter);
 
         return new NewAppointmentValues() {
             public Serializable getNewAppointmentId()
             {
-                return visit.getHealthCareVisitId();
+                return encounter.getHealthCareVisitId();
             }
 
             public AddAppointmentParameters getParameters()

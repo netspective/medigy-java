@@ -42,12 +42,12 @@ import com.medigy.persist.model.common.AbstractEntity;
 import com.medigy.persist.model.party.Party;
 import com.medigy.persist.reference.custom.order.OrderRoleType;
 
-import javax.persistence.Id;
-import javax.persistence.GeneratorType;
 import javax.persistence.Column;
-import javax.persistence.ManyToOne;
-import javax.persistence.JoinColumn;
 import javax.persistence.Entity;
+import javax.persistence.GeneratorType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class OrderRole extends AbstractEntity
@@ -96,7 +96,7 @@ public class OrderRole extends AbstractEntity
     }
 
     @ManyToOne
-    @JoinColumn(name = OrderRoleType.PK_COLUMN_NAME)
+    @JoinColumn(name = "order_role_type_id", referencedColumnName = OrderRoleType.PK_COLUMN_NAME)
     public OrderRoleType getType()
     {
         return type;

@@ -38,21 +38,21 @@
  */
 package com.medigy.persist.model.health;
 
+import com.medigy.persist.model.common.AbstractTopLevelEntity;
+import com.medigy.persist.model.person.Person;
+import com.medigy.persist.reference.custom.health.HealthCareVisitRoleType;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import com.medigy.persist.model.common.AbstractTopLevelEntity;
-import com.medigy.persist.model.person.Person;
-import com.medigy.persist.reference.custom.health.HealthCareVisitRoleType;
-
 @Entity
 public class HealthCareVisitRole extends AbstractTopLevelEntity
 {
     private Long visitRoleId;
-    private HealthCareVisit visit;
+    private HealthCareEncounter encounter;
     private Person person;
     private HealthCareVisitRoleType type;
 
@@ -69,14 +69,14 @@ public class HealthCareVisitRole extends AbstractTopLevelEntity
 
     @ManyToOne
     @JoinColumn(name = "visit_id")
-    public HealthCareVisit getVisit()
+    public HealthCareEncounter getVisit()
     {
-        return visit;
+        return encounter;
     }
 
-    public void setVisit(final HealthCareVisit visit)
+    public void setVisit(final HealthCareEncounter encounter)
     {
-        this.visit = visit;
+        this.encounter = encounter;
     }
 
     @ManyToOne

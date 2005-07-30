@@ -13,11 +13,12 @@
         <mapping class="com.medigy.persist.model.party.TestPersonRoleType"/>
         <mapping class="com.medigy.persist.model.party.TestPersonRole"/>
         <mapping class="com.medigy.persist.model.party.TestPersonOrgRelationship"/-->
+        <mapping class="com.medigy.persist.reference.AbstractReferenceEntity"/>
+        <mapping class="com.medigy.persist.reference.type.RecordStatusType"/>
 
         <mapping class="com.medigy.persist.model.common.AbstractEntity"/>
         <mapping class="com.medigy.persist.model.common.AbstractTopLevelEntity"/>
         <mapping class="com.medigy.persist.model.common.AbstractDateDurationEntity"/>
-        <mapping class="com.medigy.persist.reference.AbstractReferenceEntity"/>
         <mapping class="com.medigy.persist.reference.custom.AbstractCustomReferenceEntity"/>
         <mapping class="com.medigy.persist.reference.custom.AbstractCustomHierarchyReferenceEntity"/>
         <mapping class="com.medigy.persist.reference.ModelVersion"/>
@@ -196,7 +197,7 @@
         <mapping class="com.medigy.persist.model.health.HealthCareDeliveryRole"/>
         <mapping class="com.medigy.persist.model.health.HealthCareEpisode"/>
         <mapping class="com.medigy.persist.model.health.HealthCareOffering"/>
-        <mapping class="com.medigy.persist.model.health.HealthCareVisit"/>
+        <mapping class="com.medigy.persist.model.health.HealthCareEncounter"/>
         <mapping class="com.medigy.persist.model.health.HealthCareVisitRole"/>
         <mapping class="com.medigy.persist.model.health.HealthCareVisitStatus"/>
         <mapping class="com.medigy.persist.model.health.PractitionerDiagnosis"/>

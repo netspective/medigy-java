@@ -51,15 +51,13 @@ public class PatientSearchQueryDefinition extends BasicQueryDefinition implement
 
         final QueryDefinitionJoin ssnJoin =  new QueryDefinitionJoinImpl("pi", PersonIdentifier.class, this);
         ssnJoin.setAssociatedJoin(personJoin);
-        ssnJoin.setAssociatedJoinExpression("left join fetch " + personJoin.getEntityAlias() + ".personIdentifiers as " +
-                ssnJoin.getEntityAlias());
-        ssnJoin.setCondition("pi.type.code = '" + PersonIdentifierType.Cache.SSN.getCode() + "'");
+        ssnJoin.setAssociatedJoinExpression("left outer join " + personJoin.getEntityAlias() + ".personIdentifiers as " +
+                ssnJoin.getEntityAlias() + " with pi.type.id = '" + PersonIdentifierType.Cache.SSN.getEntity().getSystemId() + "'");
 
         final QueryDefinitionJoin driversLicenseJoin =  new QueryDefinitionJoinImpl("pi2", PersonIdentifier.class, this);
         driversLicenseJoin.setAssociatedJoin(personJoin);
-        driversLicenseJoin.setAssociatedJoinExpression("left join fetch " + personJoin.getEntityAlias() + ".personIdentifiers as " +
-                driversLicenseJoin.getEntityAlias());
-        driversLicenseJoin.setCondition("pi2.type.code = '" + PersonIdentifierType.Cache.DRIVERS_LICENSE.getCode() + "'");
+        driversLicenseJoin.setAssociatedJoinExpression("left outer join " + personJoin.getEntityAlias() + ".personIdentifiers as " +
+                driversLicenseJoin.getEntityAlias() + " with pi2.type.id = '" + PersonIdentifierType.Cache.DRIVERS_LICENSE.getEntity().getSystemId() + "'");
 
 
         final QueryDefinitionJoin orgJoin =  new QueryDefinitionJoinImpl("org", Organization.class, this);

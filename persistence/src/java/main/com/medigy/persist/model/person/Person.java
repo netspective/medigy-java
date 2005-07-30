@@ -43,16 +43,14 @@
  */
 package com.medigy.persist.model.person;
 
+import com.medigy.persist.model.health.HealthCareEncounter;
 import com.medigy.persist.model.health.HealthCareEpisode;
 import com.medigy.persist.model.health.HealthCareLicense;
-import com.medigy.persist.model.health.HealthCareVisit;
 import com.medigy.persist.model.health.lab.LabOrder;
-import com.medigy.persist.model.insurance.InsurancePolicy;
 import com.medigy.persist.model.insurance.FeeSchedule;
+import com.medigy.persist.model.insurance.InsurancePolicy;
 import com.medigy.persist.model.party.Party;
-import com.medigy.persist.model.party.PartyIdentifier;
 import com.medigy.persist.reference.custom.health.HealthCareLicenseType;
-import com.medigy.persist.reference.custom.party.PartyIdentifierType;
 import com.medigy.persist.reference.custom.person.EthnicityType;
 import com.medigy.persist.reference.custom.person.PersonIdentifierType;
 import com.medigy.persist.reference.custom.person.PersonRoleType;
@@ -64,34 +62,31 @@ import com.medigy.persist.reference.type.party.PartyType;
 import org.apache.commons.codec.language.Soundex;
 import org.hibernate.validator.Past;
 import org.hibernate.validator.Size;
-import org.hibernate.annotations.Formula;
 
+import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import javax.persistence.OneToMany;
-import javax.persistence.Transient;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
-import javax.persistence.OrderBy;
-import javax.persistence.ManyToOne;
 import javax.persistence.JoinColumn;
-import javax.persistence.Basic;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.List;
-import java.util.ArrayList;
 
 @Entity
 @Inheritance(strategy=InheritanceType.JOINED)
-@Table(uniqueConstraints = {@UniqueConstraint(columnNames={"firstName", "lastName", "birthDate"})})
+//@Table(uniqueConstraints = {@UniqueConstraint(columnNames={"firstName", "lastName", "birthDate"})})
 public class Person extends Party
 {
     public static final String PK_COLUMN_NAME = Party.PK_COLUMN_NAME;
@@ -116,7 +111,7 @@ public class Person extends Party
     private List<Gender> genders = new ArrayList<Gender>();
     private List<MaritalStatus> maritalStatuses = new ArrayList<MaritalStatus>();
     private Set<PhysicalCharacteristic> physicalCharacteristics = new HashSet<PhysicalCharacteristic>();
-    private Set<HealthCareVisit> healthCareVisits = new HashSet<HealthCareVisit>();
+    private Set<HealthCareEncounter> healthCareVisits = new HashSet<HealthCareEncounter>();
     private Set<HealthCareEpisode> healthCareEpisodes = new HashSet<HealthCareEpisode>();
     private Set<Language> languages = new HashSet<Language>();
     private Set<HealthCareLicense> licenses = new HashSet<HealthCareLicense>();
@@ -390,12 +385,12 @@ public class Person extends Party
     }
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "patient", fetch = FetchType.LAZY)
-    public Set<HealthCareVisit> getHealthCareVisits()
+    public Set<HealthCareEncounter> getHealthCareVisits()
     {
         return healthCareVisits;
     }
 
-    public void setHealthCareVisits(final Set<HealthCareVisit> healthCareVisits)
+    public void setHealthCareVisits(final Set<HealthCareEncounter> healthCareVisits)
     {
         this.healthCareVisits = healthCareVisits;
     }
