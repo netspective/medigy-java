@@ -59,7 +59,7 @@ module.test.database.password=medigy
 Platform JUnit Report Mailer
 ----------------------------------------------------------------------------
 Builder type 	 Command builder
-Build command 	mail-latest-junit-report.sh ${build.version}
+Build command 	/home/s-tomcat/luntbuild-artifacts/publish/medigy-platform/auto/mail-latest-junit-report.sh ${build.version}
 Run command in directory 	/home/s-tomcat/luntbuild-artifacts/publish/medigy-platform/auto
 Environment variables
 Build success condition 	result==0
