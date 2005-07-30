@@ -56,6 +56,17 @@ module.test.database.password=medigy
 
 
 
+Platform JUnit Report Mailer
+----------------------------------------------------------------------------
+Builder type: Command Builder
+Build Command: mail -a "Content-Type: text/html" -s "[luntbuild] Medigy Platform ${build.version} JUnit Report" shahid.shah@netspective.com aye.thu@netspective.com jeremy.hulick@netspective.com < junit-noframes.html
+Run command in directory: ${build.junitHtmlReportDir}
+Environment Variables:
+Build success condition: result==0
+
+
+
+
 PBS App Builder
 ----------------------------------------------------------------------------
 Builder type 	Ant builder
@@ -74,7 +85,7 @@ app.war.dest=/home/s-resin/devl/webapps/medigy-pbs.war
 
 
 
-PBS Demo DB Builder
+PBS Development DB Builder
 ----------------------------------------------------------------------------
 Builder type 	Ant builder
 Command to run Ant 	/home/s-build/tools/apache-ant-1.6.5/bin/ant
@@ -97,3 +108,10 @@ db.create-devl-instance.database.password=medigy_devl
 
 
 
+PBS Development App Installer
+----------------------------------------------------------------------------
+Builder type: Command Builder
+Build Command: sudo -u s-resin /home/s-resin/devl/get-latest-medigy-pbs.sh
+Run command in directory:
+Environment Variables:
+Build success condition: result==0
