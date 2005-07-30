@@ -49,13 +49,6 @@
       <maximumHeapSize value="128" />
       <properties />
     </buildFile>
-    <buildFile url="file://$PROJECT_DIR$/../../../presentation/support/build/build.xml">
-      <additionalClassPath />
-      <antReference projectDefault="true" />
-      <customJdkName value="" />
-      <maximumHeapSize value="128" />
-      <properties />
-    </buildFile>
   </component>
   <component name="CodeStyleSettingsManager">
     <option name="PER_PROJECT_SETTINGS" />
@@ -84,6 +77,9 @@
     </wildcardResourcePatterns>
   </component>
   <component name="DataSourceManagerImpl" />
+  <component name="DependenciesAnalyzeManager">
+    <option name="myForwardDirection" value="false" />
+  </component>
   <component name="DependencyValidationManager" />
   <component name="EntryPointsManager">
     <entry_points />
@@ -100,7 +96,6 @@
     <option name="DEPRECATION" value="true" />
     <option name="ADDITIONAL_OPTIONS_STRING" value="" />
     <option name="MAXIMUM_HEAP_SIZE" value="128" />
-    <option name="USE_GENERICS_COMPILER" value="false" />
   </component>
   <component name="JavadocGenerationManager">
     <option name="OUTPUT_DIRECTORY" />
@@ -239,7 +234,6 @@
       <module fileurl="file://$PROJECT_DIR$/../../../pbs/support/pbs.iml" filepath="$PROJECT_DIR$/../../../pbs/support/pbs.iml" />
       <module fileurl="file://$PROJECT_DIR$/../../../persistence/support/persistence.iml" filepath="$PROJECT_DIR$/../../../persistence/support/persistence.iml" />
       <module fileurl="file://$PROJECT_DIR$/../../../persistence-tools/support/persistence-tools.iml" filepath="$PROJECT_DIR$/../../../persistence-tools/support/persistence-tools.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../../../../Physia/physia.iml" filepath="$PROJECT_DIR$/../../../../Physia/physia.iml" />
       <module fileurl="file://$PROJECT_DIR$/../../../presentation/support/presentation.iml" filepath="$PROJECT_DIR$/../../../presentation/support/presentation.iml" />
       <module fileurl="file://$PROJECT_DIR$/../../../scheduler/support/scheduler.iml" filepath="$PROJECT_DIR$/../../../scheduler/support/scheduler.iml" />
       <module fileurl="file://$PROJECT_DIR$/../../../service/support/service.iml" filepath="$PROJECT_DIR$/../../../service/support/service.iml" />
@@ -285,9 +279,9 @@
         <root url="jar://$PROJECT_DIR$/../../../persistence/depend/lib/main/jta.jar!/" />
         <root url="jar://$PROJECT_DIR$/../../../persistence/depend/lib/main/log4j-1.2.9.jar!/" />
         <root url="jar://$PROJECT_DIR$/../../../persistence/depend/lib/main/commons-codec-1.3.jar!/" />
-        <root url="jar://$PROJECT_DIR$/../../../persistence/depend/lib/main/hibernate-3.0.5.jar!/" />
         <root url="jar://$PROJECT_DIR$/../../../persistence/depend/lib/main/ejb3-persistence.jar!/" />
-        <root url="jar://$PROJECT_DIR$/../../../persistence/depend/lib/main/hibernate-annotations-3.0beta3.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../../../persistence/depend/lib/main/hibernate-3.1beta1.jar!/" />
+        <root url="jar://$PROJECT_DIR$/../../../persistence/depend/lib/main/hibernate-annotations-3.0beta4.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
@@ -361,5 +355,6 @@
     <option name="INSTRUMENT_CLASSES" value="true" />
     <option name="COPY_FORMS_RUNTIME_TO_OUTPUT" value="true" />
   </component>
+  <UsedPathMacros />
 </project>
 
