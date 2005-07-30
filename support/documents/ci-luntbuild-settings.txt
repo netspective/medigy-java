@@ -58,11 +58,17 @@ module.test.database.password=medigy
 
 Platform JUnit Report Mailer
 ----------------------------------------------------------------------------
-Builder type: Command Builder
-Build Command: mail -a "Content-Type: text/html" -s "[luntbuild] Medigy Platform ${build.version} JUnit Report" shahid.shah@netspective.com aye.thu@netspective.com jeremy.hulick@netspective.com < junit-noframes.html
-Run command in directory: ${build.junitHtmlReportDir}
-Environment Variables:
-Build success condition: result==0
+Builder type 	 Command builder
+Build command 	mail-latest-junit-report.sh ${build.version}
+Run command in directory 	${build.publishDir}/..
+Environment variables
+Build success condition 	result==0
+
+NOTE: this command requires the following mail-latest-junit-report.sh script in same parent as 'latest' publish dir:
+
+#!/bin/sh
+mail -a "Content-Type: text/html" -s "[luntbuild] Medigy Platform $1 JUnit Report" shahid.shah@netspective.com aye.thu@netspective.com jeremy.hulick@netspective.com < latest/junit/junit-noframes.html
+
 
 
 
