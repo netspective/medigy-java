@@ -99,7 +99,7 @@ build.date="${build.startDate}"
 repository.artifacts.home="${build.artifactsDir}"
 module.artifacts.test.junit.home="${build.junitHtmlReportDir}"
 
-db.create-devl-instance.database.name=medigy_demo
+db.create-devl-instance.database.name=medigy_devl
 db.create-devl-instance.database.dialectClass=org.hibernate.dialect.MySQLInnoDBDialect
 db.create-devl-instance.database.driverClass=com.mysql.jdbc.Driver
 db.create-devl-instance.database.url=jdbc:mysql://localhost:3306/medigy_devl
