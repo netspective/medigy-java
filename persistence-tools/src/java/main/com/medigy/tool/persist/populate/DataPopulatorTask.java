@@ -43,13 +43,24 @@
  */
 package com.medigy.tool.persist.populate;
 
-import java.text.MessageFormat;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.Date;
-import java.util.List;
-import java.util.ArrayList;
-
+import com.medigy.persist.model.health.HealthCareEncounter;
+import com.medigy.persist.model.org.Organization;
+import com.medigy.persist.model.org.OrganizationsRelationship;
+import com.medigy.persist.model.party.Facility;
+import com.medigy.persist.model.person.Ethnicity;
+import com.medigy.persist.model.person.Person;
+import com.medigy.persist.model.person.PersonAndOrgRelationship;
+import com.medigy.persist.reference.custom.health.HealthCareVisitStatusType;
+import com.medigy.persist.reference.custom.party.FacilityType;
+import com.medigy.persist.reference.custom.party.OrganizationRoleType;
+import com.medigy.persist.reference.custom.party.OrganizationsRelationshipType;
+import com.medigy.persist.reference.custom.party.PersonOrgRelationshipType;
+import com.medigy.persist.reference.custom.person.EthnicityType.Cache;
+import com.medigy.persist.reference.custom.person.PatientType;
+import com.medigy.persist.reference.custom.person.PersonRoleType;
+import com.medigy.persist.reference.type.GenderType;
+import com.medigy.persist.util.ModelInitializer;
+import com.medigy.persist.util.ModelInitializer.SeedDataPopulationType;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 import org.hibernate.Session;
@@ -64,24 +75,12 @@ import org.sns.tool.data.PersonDataGenerator.Gender;
 import org.sns.tool.data.RandomUtils;
 import org.sns.tool.data.USAddressDataGenerator;
 
-import com.medigy.persist.model.org.Organization;
-import com.medigy.persist.model.org.OrganizationsRelationship;
-import com.medigy.persist.model.person.Ethnicity;
-import com.medigy.persist.model.person.Person;
-import com.medigy.persist.model.person.PersonAndOrgRelationship;
-import com.medigy.persist.model.health.HealthCareVisit;
-import com.medigy.persist.model.party.Facility;
-import com.medigy.persist.reference.custom.person.EthnicityType.Cache;
-import com.medigy.persist.reference.custom.person.PersonRoleType;
-import com.medigy.persist.reference.custom.person.PatientType;
-import com.medigy.persist.reference.custom.party.OrganizationRoleType;
-import com.medigy.persist.reference.custom.party.PersonOrgRelationshipType;
-import com.medigy.persist.reference.custom.party.OrganizationsRelationshipType;
-import com.medigy.persist.reference.custom.party.FacilityType;
-import com.medigy.persist.reference.custom.health.HealthCareVisitStatusType;
-import com.medigy.persist.reference.type.GenderType;
-import com.medigy.persist.util.ModelInitializer;
-import com.medigy.persist.util.ModelInitializer.SeedDataPopulationType;
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class DataPopulatorTask extends Task
 {
@@ -387,13 +386,13 @@ public class DataPopulatorTask extends Task
     {
         final PatientType.Cache[] patientTypeCaches = PatientType.Cache.values();
         final PatientType patientType = patientTypeCaches[RandomUtils.generateRandomNumberBetween(0, patientTypeCaches.length)].getEntity();
-        HealthCareVisit visit = new HealthCareVisit();
-        visit.setPatient(patient);
-        visit.setRequestedPhysician(physician);
-        visit.setPatientType(patientType);
-        visit.addStatus(HealthCareVisitStatusType.Cache.SCHEDULED.getEntity());
-        visit.setFacility(facility);
-        session.save(visit);
+        HealthCareEncounter encounter = new HealthCareEncounter();
+        encounter.setPatient(patient);
+        encounter.setRequestedPhysician(physician);
+        encounter.setPatientType(patientType);
+        encounter.addStatus(HealthCareVisitStatusType.Cache.SCHEDULED.getEntity());
+        encounter.setFacility(facility);
+        session.save(encounter);
     }
 
     public void setHibernateConfigClass(final String cls) throws ClassNotFoundException

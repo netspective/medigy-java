@@ -68,7 +68,6 @@ public class HibernateDialectsCatalog
         org.hibernate.dialect.PostgreSQLDialect.class,
         org.hibernate.dialect.ProgressDialect.class,
         org.hibernate.dialect.SAPDBDialect.class,
-        org.hibernate.dialect.SQLServer7Dialect.class,
         org.hibernate.dialect.SQLServerDialect.class,
         org.hibernate.dialect.Sybase11Dialect.class,
         org.hibernate.dialect.SybaseAnywhereDialect.class,

@@ -43,13 +43,6 @@
  */
 package org.sns.tool.hibernate.struct.impl;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.TreeSet;
-
 import org.hibernate.MappingException;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.Environment;
@@ -64,6 +57,13 @@ import org.sns.tool.hibernate.struct.TableCategory;
 import org.sns.tool.hibernate.struct.TableStructure;
 import org.sns.tool.hibernate.struct.TableStructureNode;
 import org.sns.tool.hibernate.struct.TableStructureRules;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 public class DefaultTableStructure implements TableStructure
 {
@@ -150,6 +150,11 @@ public class DefaultTableStructure implements TableStructure
         // the following was copied from org.hibernate.cfg.Configuration.buildMapping() because buildMapping() was private
         this.mapping = new Mapping()
         {
+            public Type getReferencedPropertyType(String string, String string1) throws MappingException
+            {
+                return null;
+            }
+
             /**
              * Returns the identifier type of a mapped class
              */
