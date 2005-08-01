@@ -1,0 +1,416 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.sourceforge.net/">
+    <body>
+        <wicket:panel>
+            <form wicket-id="mainForm">
+                <div class="form-body">
+                    <fieldset class="top-level">
+	                    <legend _wicket:id="referralGroup_label">Referral Information</legend>
+	                    <table class="vertical-fields">
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="dateFrom_label">Date From</label> /
+	                                <label _wicket:id="dateTo_label">To</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" _wicket:id="dateFrom" value=""/>
+	                                <input type="text" _wicket:id="dateTo" value=""/>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+                                <td class="label">
+                                    <label _wicket:id="code_label">Code</label> /
+                                    <label _wicket:id="modf_label">Modf</label>
+                                </td>
+                                <td class="control">
+                                    <input type="text" _wicket:id="code" value=""/>
+	                                <input type="text" _wicket:id="modf" value=""/>
+                                </td>
+                            </tr>
+                            <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="description_label">Description</label>
+	                            </td>
+	                            <td class="control">
+	                                <textarea></textarea>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+                                <td class="label">
+                                    <label _wicket:id="units_label">Units</label> /
+                                    <label _wicket:id="charge_label">Charge</label>
+                                </td>
+                                <td class="control">
+                                    <input type="text" _wicket:id="units" value=""/>
+	                                <input type="text" _wicket:id="charge" value=""/>
+                                </td>
+                            </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="referralType_label">Referral Type</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" _wicket:id="referralType" value=""/>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="followUpStatus_label">Follow up Status</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" _wicket:id="followUpStatus" value=""/>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="comments_label">Comments</label>
+	                            </td>
+	                            <td class="control">
+	                                <textarea></textarea>
+	                            </td>
+	                        </tr>
+	                        <!-- add hidden field skip_field -->
+	                        <!-- add hidden field procedure_id -->
+	                        <!-- add hidden field add_item_id -->
+	                        <!-- add hidden field work_item_id -->
+	                        <!-- add hidden field ins_item_id -->
+	                        <!-- add hidden field parent_referral_id -->
+	                        <!-- add hidden field case_item_id -->
+	                        <!-- add hidden field ins_type_item_id -->
+	                        <!-- add hidden field adjust_item_id -->
+	                        <!-- add hidden field group_item_id -->
+	                        <!-- add hidden field custom_item_id -->
+                        </table>
+                    </fieldset>
+                    <fieldset class="top-level">
+                        <legend _wicket:id="patientInformation_label">Patient Information</legend>
+                        <table class="vertical-fields">
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="patientId_label">Person/Patient ID</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" _wicket:id="patientId" value=""/>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+                                <td class="label">
+                                    <label _wicket:id="insuranceInformation_label">Insurance Information</label>
+                                </td>
+                                <td class="control">
+                                    <select _wicket:id="insuranceInformation">
+                                        <option>Workers Comp</option>
+                                        <option>Group Health</option>
+                                    </select>
+                                 </td>
+                            </tr>
+                            <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="client_label">Client</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" _wicket:id="client" value=""/>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="plan_label">Plan</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" _wicket:id="plan" value=""/>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="employer_label">Employer</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" _wicket:id="employer" value=""/>
+	                            </td>
+	                        </tr>
+	                    </table>
+                    </fieldset>
+                    <fieldset class="top-level">
+                        <legend _wicket:id="workersCompInsuranceInfo_label">Workers Comp Insurance Info</legend>
+                        <table class="vertical-fields">
+                             <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="claimNumber_label">Claim Number</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" _wicket:id="claimNumber" value=""/>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="caseManagerClaimNumber_label">Case Manager Claim Number</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" _wicket:id="caseManagerClaimNumber" value=""/>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="caseManagerName_label">Case Manager Name</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" _wicket:id="caseManagerName" value=""/>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="caseManagerPhone_label">Case Mgr Phone</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" _wicket:id="caseManagerPhone" value=""/>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="adjusterName_label">Adjuster Name</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" _wicket:id="adjusterName" value=""/>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="adjusterPhone_label">Adjuster Phone</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" _wicket:id="adjusterPhone" value=""/>
+	                            </td>
+	                        </tr>
+                        </table>
+                    </fieldset>
+                    <fieldset class="top-level">
+                        <legend _wicket:id="groupHmoPpoInfo_label">Group/HMO/PPO Info</legend>
+                        <table class="vertical-fields">
+                             <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="memberId_label">Member ID</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" _wicket:id="memberId" value=""/>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="groupNo_label">Group No</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" _wicket:id="groupNo" value=""/>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="policyNo_label">Policy No</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" _wicket:id="policyNo" value=""/>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="customerServicePhone_label">Customer Service Phone</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" _wicket:id="customerServicePhone" value=""/>
+	                            </td>
+	                        </tr>
+                        </table>
+                    </fieldset>
+                    <fieldset class="top-level">
+                        <legend _wicket:id="problemInformation_label">Problem Information</legend>
+                        <table class="vertical-fields">
+                             <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="icdCode_label">ICD Code</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" _wicket:id="icdCode" value=""/> <!-- TODO: make it a lookup field -->
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="icdDescription_label">ICD Description</label>
+	                            </td>
+	                            <td class="control">
+	                                <textarea></textarea>
+	                            </td>
+	                        </tr>
+
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="icdCode2_label">ICD Code 2</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" _wicket:id="icdCode2" value=""/> <!-- TODO: make it a lookup field -->
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="icdDescription2_label">ICD Description 2</label>
+	                            </td>
+	                            <td class="control">
+	                                <textarea></textarea>
+	                            </td>
+	                        </tr>
+
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="icdCode3_label">ICD Code 3</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" _wicket:id="icdCode3" value=""/> <!-- TODO: make it a lookup field -->
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="icdDescription3_label">ICD Description 3</label>
+	                            </td>
+	                            <td class="control">
+	                                <textarea></textarea>
+	                            </td>
+	                        </tr>
+
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="icdCode4_label">ICD Code 4</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" _wicket:id="icdCode4" value=""/> <!-- TODO: make it a lookup field -->
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="icdDescription4_label">ICD Description 4</label>
+	                            </td>
+	                            <td class="control">
+	                                <textarea></textarea>
+	                            </td>
+	                        </tr>
+
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="dateOfInjury_label">Date of Injury</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" _wicket:id="dateOfInjury" value=""/>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="comments_label">Comments</label>
+	                            </td>
+	                            <td class="control">
+	                                <textarea></textarea>
+	                            </td>
+	                        </tr>
+                        </table>
+                    </fieldset>
+                    <fieldset class="top-level">
+                        <legend _wicket:id="submitterInformation_label">Submitter Information</legend>
+                        <table class="vertical-fields">
+                             <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="contact_label">Contact</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" _wicket:id="contact" value=""/>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="organization_label">Organization</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" _wicket:id="organization" value=""/>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="orgAddress_label">Org Address</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" _wicket:id="orgAddress" value=""/>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+                                <td class="label">
+                                    <label _wicket:id="phone_label">Phone</label> /
+                                    <label _wicket:id="extension_label">Ext</label>
+                                </td>
+                                <td class="control">
+                                    <input type="text" _wicket:id="phone" value=""/>
+	                                <input type="text" _wicket:id="extension" value=""/>
+                                </td>
+                            </tr>
+                        </table>
+                    </fieldset>
+                    <fieldset class="top-level">
+                        <legend _wicket:id="procedureInformation_label">Procedure Information</legend>
+                        <table class="vertical-fields">
+                            <tr class="field">
+                                <td class="label">
+                                    <label _wicket:id="mdFirstName_label">MD First Name</label> /
+                                    <label _wicket:id="lastName_label">Last Name</label>
+                                </td>
+                                <td class="control">
+                                    <input type="text" _wicket:id="mdFirstName" value=""/>
+	                                <input type="text" _wicket:id="mdLastName" value=""/>
+                                </td>
+                            </tr>
+                            <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="source_label">Source of Service Request</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" _wicket:id="source" value=""/>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="dateOfRequest_label">Date of Request</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" _wicket:id="dateOfRequest" value=""/>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+	                            <td class="label">
+	                                <label _wicket:id="coordinator_label">Intake Coordinator</label>
+	                            </td>
+	                            <td class="control">
+	                                <input type="text" _wicket:id="coordinator" value=""/>
+	                            </td>
+	                        </tr>
+	                        <tr class="field">
+                                <td class="label">
+                                    <label _wicket:id="status_label">Status</label>
+                                </td>
+                                <td class="control">
+                                    <select _wicket:id="status">
+                                        <option>Assigned</option>
+                                        <option>Unassigned</option>
+                                        <option>Done</option>
+                                    </select>
+                                 </td>
+                            </tr>
+                        </table>
+                    </fieldset>
+                    <div class="director">
+                        <table class="vertical-fields">
+                            <tr class="field">
+                                <td class="control">
+                                    <input class="button" _wicket:id="formSubmit" type="submit" value="OK"/>
+                                    <input class="button" _wicket:id="formReset" type="reset" value="Reset"/>
+                                </td>
+                            </tr>
+                         </table>
+                    </div>
+                </div>
+            </form>
+        </wicket:panel>
+    </body>
+</html>
