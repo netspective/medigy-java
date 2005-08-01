@@ -21,7 +21,7 @@
         </property>
     </bean>
 
-    <bean id="hibernateSessionFactory" class="com.medigy.service.util.ModelSessionFactoryBean" lazy-init="true">
+    <bean id="hibernateSessionFactory" class="com.medigy.service.util.ModelSessionFactoryBean" lazy-init="false">
         <property name="configLocation"> <value>classpath:com/medigy/persist/hibernate.cfg.xml</value> </property>
         <property name="configurationClass"><value>com.medigy.persist.util.HibernateConfiguration</value></property>
         <property name="dataSource"> <ref bean="testDataSource"/> </property>
@@ -33,11 +33,11 @@
         </property>
     </bean>
 
-    <bean id="hibernateTransactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager" lazy-init="true">
+    <bean id="hibernateTransactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager" lazy-init="false">
         <property name="sessionFactory"> <ref bean="hibernateSessionFactory"/> </property>
     </bean>
 
-    <bean id="facadeHibernateInterceptor" class="org.springframework.orm.hibernate3.HibernateInterceptor" lazy-init="true">
+    <bean id="facadeHibernateInterceptor" class="org.springframework.orm.hibernate3.HibernateInterceptor" lazy-init="false">
         <property name="sessionFactory"> <ref bean="hibernateSessionFactory"/> </property>
     </bean>
 
