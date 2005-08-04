@@ -82,7 +82,7 @@ public class PatientFlow extends AbstractWorklistPage
             PatientWorklistParameters serviceParams = null;
             if  (time1String != null && time1String.contains(":"))
             {
-                SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm Z");
+                SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm aaa");
                 final Date time1 = timeFormat.parse(time1String);
                 final Date time2 = timeFormat.parse(time2String);
                 serviceParams = new PatientWorklistParameters() {

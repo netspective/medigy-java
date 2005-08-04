@@ -50,6 +50,7 @@ import com.medigy.service.dto.person.PatientWorklistReturnValues;
 import com.medigy.service.person.PatientWorklistService;
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
+import org.apache.commons.lang.time.DateUtils;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -72,9 +73,6 @@ public class PatientWorklistServiceImpl extends AbstractService implements Patie
         // if for some reason no date is supplied, use todays date
         final Date selectedDate = parameters.getSelectedDate() != null ? parameters.getSelectedDate() : new Date();
 
-        // the time format could be numbers (before or after minutes with respect to current time) or a range (e.g. 8:00 AM to 9:00 AM).
-        final int beforeMinutes = parameters.getBeforeMinutes();
-        final int afterMinutes = parameters.getAfterMinutes();
         final Date startingTime = parameters.getStartingTime();
         final Date endingTime = parameters.getEndingTime();
 
@@ -87,20 +85,20 @@ public class PatientWorklistServiceImpl extends AbstractService implements Patie
 
         // now set the calendar to the selected date and the current hour/minute
         cal.setTime(selectedDate);
-        cal.set(Calendar.HOUR_OF_DAY, currentHour);
-        cal.set(Calendar.MINUTE, currentMinute);
-        // save this date!
-        final Date baseComparisonTime = cal.getTime();
-
-        cal.add(Calendar.MINUTE, 0 - beforeMinutes);
-        final Date beforeTime = cal.getTime();
-
-        cal.setTime(baseComparisonTime);
-        cal.add(Calendar.MINUTE, afterMinutes);
-        final Date afterTime = cal.getTime();
-
         if (startingTime == null)
         {
+            cal.set(Calendar.HOUR_OF_DAY, currentHour);
+            cal.set(Calendar.MINUTE, currentMinute);
+            // save this date!
+            final Date baseComparisonTime = cal.getTime();
+            final int beforeMinutes = parameters.getBeforeMinutes();
+            final int afterMinutes = parameters.getAfterMinutes();
+            cal.add(Calendar.MINUTE, 0 - beforeMinutes);
+            final Date beforeTime = cal.getTime();
+
+            cal.setTime(baseComparisonTime);
+            cal.add(Calendar.MINUTE, afterMinutes);
+            final Date afterTime = cal.getTime();
 
             patientWorkListQuery = getSession().createQuery("SELECT \n" +
                     "patient.id, \n" +
@@ -128,19 +126,43 @@ public class PatientWorklistServiceImpl extends AbstractService implements Patie
         }
         else
         {
-            patientWorkListQuery = getSession().createQuery("select patient.id, patient.lastName, patient.firstName, roles.person.id, roles.person.lastName,  roles.person.firstName, " +
-                " appt.scheduledTime, appt.startTime, appt.checkoutTime, appt.id from HealthCareEncounter appt " +
-                " join appt.patient as patient " +
-                " left join appt.roles as roles " +
-                " with roles.type.id = "  + HealthCareVisitRoleType.Cache.REQ_PHYSICIAN.getEntity().getSystemId() + " " +
-                "WHERE " +
-                "   day(appt.scheduledTime) = day(:selectedDate) and " +
-                "   month(appt.scheduledTime) = month(:selectedDate) and " +
-                "   year(appt.scheduledTime) = year(:selectedDate) and ");
+            final Calendar startCal = new GregorianCalendar();
+            startCal.setTime(startingTime);
 
-                // TODO: Writing time comparison
-                //"   (hour(appt.scheduledTime) = hour(:startTime) and minute(appt.scheduledTime) >= minute(:startTime)) or" +
-                //"   minute(appt.scheduledTime) < (minute(:endTime)) ");
+            final Calendar endCal = new GregorianCalendar();
+            endCal.setTime(endingTime);
+
+            cal.set(Calendar.HOUR_OF_DAY, startCal.get(Calendar.HOUR_OF_DAY));
+            cal.set(Calendar.MINUTE, startCal.get(Calendar.MINUTE));
+            final Date beforeTime = cal.getTime();
+
+            cal.set(Calendar.HOUR_OF_DAY, endCal.get(Calendar.HOUR_OF_DAY));
+            cal.set(Calendar.MINUTE, endCal.get(Calendar.MINUTE));
+            final Date afterTime = cal.getTime();
+
+            patientWorkListQuery = getSession().createQuery("SELECT \n" +
+                    "patient.id, \n" +
+                    "patient.lastName, \n" +
+                    "patient.firstName, \n" +
+                    "roles.person.id, \n" +
+                    "roles.person.lastName, \n " +
+                    "roles.person.firstName, \n" +
+                    "appt.scheduledTime, \n" +
+                    "appt.startTime, \n" +
+                    "appt.checkoutTime, \n" +
+                    "appt.id \n" +
+                "FROM HealthCareEncounter appt \n" +
+                " join appt.patient as patient \n" +
+                " left join appt.roles as roles \n" +
+                " with roles.type.id = "  + HealthCareVisitRoleType.Cache.REQ_PHYSICIAN.getEntity().getSystemId() + " \n" +
+                "WHERE \n" +
+                "   appt.scheduledTime >= :beforeTime and \n" +
+                "   appt.scheduledTime < :afterTime " +
+                "ORDER BY \n" +
+                "   appt.scheduledTime, patient.lastName, patient.firstName");
+
+                patientWorkListQuery.setTimestamp("beforeTime", beforeTime);
+                patientWorkListQuery.setTimestamp("afterTime", afterTime);
         }
         final List list = patientWorkListQuery.list();
         System.out.println(patientWorkListQuery.getQueryString() + " \n" + list.size());
