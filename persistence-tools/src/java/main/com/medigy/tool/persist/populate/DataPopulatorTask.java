@@ -77,6 +77,7 @@ import org.sns.tool.data.USAddressDataGenerator;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -381,14 +382,28 @@ public class DataPopulatorTask extends Task
         return patient;
     }
 
-    protected void  populatePatientAppointment(final Session session, final Person patient, final Person physician,
-                                                final Organization org, final Facility facility, final int number)
+    protected void  populatePatientAppointment(final Session session, final Person patient, final Person randomPhysician,
+                                               final Organization org, final Facility facility, final int number)
     {
+        // TODO:  1 and 5 appts between each hour from 8 to 5 for each randomPhysician
         final PatientType.Cache[] patientTypeCaches = PatientType.Cache.values();
         final PatientType patientType = patientTypeCaches[RandomUtils.generateRandomNumberBetween(0, patientTypeCaches.length)].getEntity();
+
+        Date apptTime = new Date();
+        final int date = RandomUtils.generateRandomNumberBetween(0, 3);
+        final Calendar instance = Calendar.getInstance();
+        instance.setTime(apptTime);
+        instance.add(Calendar.DAY_OF_MONTH, date);
+
+        final int hr = RandomUtils.generateRandomNumberBetween(8, 17);
+        instance.set(Calendar.HOUR_OF_DAY, hr);
+        final int minute = RandomUtils.generateRandomMintutes(); // in 15 increments
+        instance.set(Calendar.MINUTE, minute);
+
         HealthCareEncounter encounter = new HealthCareEncounter();
+        encounter.setScheduledTime(instance.getTime());
         encounter.setPatient(patient);
-        encounter.setRequestedPhysician(physician);
+        encounter.setRequestedPhysician(randomPhysician);
         encounter.setPatientType(patientType);
         encounter.addStatus(HealthCareVisitStatusType.Cache.SCHEDULED.getEntity());
         encounter.setFacility(facility);
