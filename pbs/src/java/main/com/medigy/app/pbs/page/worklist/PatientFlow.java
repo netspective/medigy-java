@@ -202,7 +202,8 @@ public class PatientFlow extends AbstractWorklistPage
 
         protected ListItem newItem(final int index)
         {
-            final SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm");
+            final SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+            final SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm aaa");
             return new ListItem(index, getListItemModel(getModel(), index))
             {
                 protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
@@ -222,7 +223,8 @@ public class PatientFlow extends AbstractWorklistPage
 
                     buffer.append("<td>" + patientHtml + "</td>");
                     final Date appointmentTimestamp = item.getAppointmentTimestamp();
-                    buffer.append("<td>" + (appointmentTimestamp != null ? sdf.format(appointmentTimestamp) : "&nbsp;") + "</td>");
+                    buffer.append("<td>" + (appointmentTimestamp != null ? timeFormat.format(appointmentTimestamp) + "<br/>(" + item.getPatientType() + ")": "&nbsp;") + "</td>");
+
                     buffer.append("<td>" + (item.getCheckinTimestamp() != null ? item.getCheckinTimestamp() : checkinHtml) + "</td>");
                     buffer.append("<td>" + (item.getCheckoutTimestamp() != null ? item.getCheckoutTimestamp() : checkoutHtml) + "</td>");
                     buffer.append("<td>" + (item.getInvoiceNumber() != null ? item.getInvoiceNumber() : "&nbsp;") + "</td>");
