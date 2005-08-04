@@ -55,4 +55,9 @@ public class Collections extends AbstractWorklistPage
     {
         return new CollectionsControlBar(id);
     }
+
+    public Panel getWorklistReportPanel(final String id)
+    {
+        return null;
+    }
 }

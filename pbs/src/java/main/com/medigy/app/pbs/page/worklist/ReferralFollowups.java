@@ -55,4 +55,9 @@ public class ReferralFollowups extends AbstractWorklistPage
     {
         return new ReferralsControlBar(id);
     }
+
+    public Panel getWorklistReportPanel(final String id)
+    {
+        return null;
+    }
 }

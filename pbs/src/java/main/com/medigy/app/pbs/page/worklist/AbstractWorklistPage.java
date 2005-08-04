@@ -44,18 +44,35 @@
 package com.medigy.app.pbs.page.worklist;
 
 import com.medigy.wicket.page.AuthenticatedWebPage;
+import wicket.PageParameters;
 import wicket.markup.html.panel.Panel;
 
-public abstract class AbstractWorklistPage extends AuthenticatedWebPage 
+public abstract class AbstractWorklistPage extends AuthenticatedWebPage
 {
-    private final Panel controlBar;
-    private final WorklistBorder worklistBorder;
+    protected final Panel controlBar;
+    private final Panel worklistReport;
+    protected final WorklistBorder worklistBorder;
+    private PageParameters pageParameters;
 
     public AbstractWorklistPage()
     {
+        this(null);
+    }
+
+    public AbstractWorklistPage(final PageParameters pageParameters)
+    {
+        this.pageParameters = pageParameters;
         add(worklistBorder = new WorklistBorder("worklistBorder", this));
         worklistBorder.add(controlBar = getWorklistControlBarPanel("controlBar"));
+        if ((worklistReport = getWorklistReportPanel("workListReport")) != null)
+            worklistBorder.add(worklistReport);
+    }
+
+    public PageParameters getPageParameters()
+    {
+        return pageParameters;
     }
 
     public abstract Panel getWorklistControlBarPanel(final String id);
+    public abstract Panel getWorklistReportPanel(final String id);
 }

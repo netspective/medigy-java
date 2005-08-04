@@ -55,4 +55,9 @@ public class PatientActivity extends AbstractWorklistPage
     {
         return new PatientActivityControlBar(id);
     }
+
+    public Panel getWorklistReportPanel(final String id)
+    {
+        return null;
+    }
 }

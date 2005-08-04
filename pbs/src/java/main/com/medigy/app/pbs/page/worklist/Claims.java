@@ -55,4 +55,9 @@ public class Claims extends AbstractWorklistPage
     {
         return new ReferralsControlBar(id);
     }
+
+    public Panel getWorklistReportPanel(final String id)
+    {
+        return null;
+    }
 }

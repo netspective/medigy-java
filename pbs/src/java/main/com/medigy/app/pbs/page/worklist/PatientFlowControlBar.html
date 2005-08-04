@@ -5,37 +5,38 @@
     </head>
     <body>
         <wicket:panel>
-            <form _wicket:id="form">
-            <div class="form-body">
-                <select _wicket:id="chooseDay" >
-                    <option>Choose Day</option>
-                    <option>Today</option>
-                    <option>Previous Day</option>
-                    <option>Previous Week</option>
-                    <option>Previous Month</option>
-                    <option>Previous Year</option>
-                    <option>Next Day</option>
-                    <option>Next Week</option>
-                    <option>Next Month</option>
-                    <option>Next Year</option>
-                    <option>Tomorrow</option>
-                    <option>Day After Tomorrow</option>
-                    <option>1 Week from Today</option>
-                </select>
-                <input type="button" name="left" value="<"  onclick=""/>
-                <input type="text" _wicket:id="selectedDate" />
-                <input type="button" name="right" value=">" onclick=""/>
+            <form name="form" method="GET" >
+                <input type="hidden" name="bookmarkablePage" value="com.medigy.app.pbs.page.worklist.PatientFlow"/>
+                <div class="form-body">
+                    <select name="chooseDay" >
+                        <option>Choose Day</option>
+                        <option>Today</option>
+                        <option>Previous Day</option>
+                        <option>Previous Week</option>
+                        <option>Previous Month</option>
+                        <option>Previous Year</option>
+                        <option>Next Day</option>
+                        <option>Next Week</option>
+                        <option>Next Month</option>
+                        <option>Next Year</option>
+                        <option>Tomorrow</option>
+                        <option>Day After Tomorrow</option>
+                        <option>1 Week from Today</option>
+                    </select>
+                    <input type="button" name="left" value="<"  onclick=""/>
+                    <input type="text" name="selectedDate" />
+                    <input type="button" name="right" value=">" onclick=""/>
 
-                <label _wicket:id="time">Time:</label>
-                <select >
-                    <option value=0>Minutes before/after</option>
-                    <option value=1>Range from/to</option>
-                </select>
-                <input type="text" size=8/>
-                <input type="text" size=8/>
+                    <label>Time:</label>
+                    <select name="time">
+                        <option value=0>Minutes before/after</option>
+                        <option value=1>Range from/to</option>
+                    </select>
+                    <input type="text" name="time1" size=8/>
+                    <input type="text" name="time2" size=8/>
 
-                <input type="submit" value="Go"/>
-            </div>
+                    <input type="submit" value="Go"/>
+                </div>
             </form>
 
             <wicket:link>
