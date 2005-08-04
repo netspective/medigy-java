@@ -47,6 +47,7 @@ public class PatientWorkListItemImpl implements PatientWorkListItem
     private Long physicianId;
     private String patientLastName;
     private String patientFirstName;
+    private String patientType;
     private String physicianLastName;
     private String physicianFirstName;
     private Date appointmentTimestamp;
@@ -103,6 +104,11 @@ public class PatientWorkListItemImpl implements PatientWorkListItem
         this.encounterId = encounterId;
     }
 
+    public void setPatientType(final String patientType)
+    {
+        this.patientType = patientType;
+    }
+
     public Long getEncounterId()
     {
         return encounterId;
@@ -121,6 +127,11 @@ public class PatientWorkListItemImpl implements PatientWorkListItem
     public String getPatientFirstName()
     {
         return patientFirstName;
+    }
+
+    public String getPatientType()
+    {
+        return patientType;
     }
 
     public Long getPhysicianId()

@@ -47,6 +47,7 @@ public interface PatientWorkListItem
     public Long getPatientId();
     public String getPatientLastName();
     public String getPatientFirstName();
+    public String getPatientType();
 
     public Long getPhysicianId();
     public String getPhysicianLastName();

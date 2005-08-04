@@ -50,7 +50,6 @@ import com.medigy.service.dto.person.PatientWorklistReturnValues;
 import com.medigy.service.person.PatientWorklistService;
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
-import org.apache.commons.lang.time.DateUtils;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -83,6 +82,28 @@ public class PatientWorklistServiceImpl extends AbstractService implements Patie
         final int currentHour = cal.get(Calendar.HOUR_OF_DAY);
         final int currentMinute = cal.get(Calendar.MINUTE);
 
+        final String queryString = "SELECT \n" +
+                    "patient.id, \n" +
+                    "patient.lastName, \n" +
+                    "patient.firstName, \n" +
+                    "roles.person.id, \n" +
+                    "roles.person.lastName, \n " +
+                    "roles.person.firstName, \n" +
+                    "appt.scheduledTime, \n" +
+                    "appt.startTime, \n" +
+                    "appt.checkoutTime, \n" +
+                    "appt.id, \n" +
+                    "appt.patientType.label \n" +
+                    "FROM HealthCareEncounter appt \n" +
+                    " join appt.patient as patient \n" +
+                    " left join appt.roles as roles \n" +
+                    " with roles.type.id = " + HealthCareVisitRoleType.Cache.REQ_PHYSICIAN.getEntity().getSystemId() + " \n" +
+                    "WHERE \n" +
+                    "   appt.scheduledTime >= :beforeTime and \n" +
+                    "   appt.scheduledTime < :afterTime " +
+                    "ORDER BY \n" +
+                    "   appt.scheduledTime, patient.lastName, patient.firstName";
+
         // now set the calendar to the selected date and the current hour/minute
         cal.setTime(selectedDate);
         if (startingTime == null)
@@ -100,29 +121,9 @@ public class PatientWorklistServiceImpl extends AbstractService implements Patie
             cal.add(Calendar.MINUTE, afterMinutes);
             final Date afterTime = cal.getTime();
 
-            patientWorkListQuery = getSession().createQuery("SELECT \n" +
-                    "patient.id, \n" +
-                    "patient.lastName, \n" +
-                    "patient.firstName, \n" +
-                    "roles.person.id, \n" +
-                    "roles.person.lastName, \n " +
-                    "roles.person.firstName, \n" +
-                    "appt.scheduledTime, \n" +
-                    "appt.startTime, \n" +
-                    "appt.checkoutTime, \n" +
-                    "appt.id \n" +
-                "FROM HealthCareEncounter appt \n" +
-                " join appt.patient as patient \n" +
-                " left join appt.roles as roles \n" +
-                " with roles.type.id = "  + HealthCareVisitRoleType.Cache.REQ_PHYSICIAN.getEntity().getSystemId() + " \n" +
-                "WHERE \n" +
-                "   appt.scheduledTime >= :beforeTime and \n" +
-                "   appt.scheduledTime < :afterTime " +
-                "ORDER BY \n" +
-                "   appt.scheduledTime, patient.lastName, patient.firstName");
+            patientWorkListQuery = getSession().createQuery(queryString);
             patientWorkListQuery.setTimestamp("beforeTime", beforeTime);
             patientWorkListQuery.setTimestamp("afterTime", afterTime);
-            System.out.println(beforeTime + " " + afterTime);
         }
         else
         {
@@ -140,36 +141,15 @@ public class PatientWorklistServiceImpl extends AbstractService implements Patie
             cal.set(Calendar.MINUTE, endCal.get(Calendar.MINUTE));
             final Date afterTime = cal.getTime();
 
-            patientWorkListQuery = getSession().createQuery("SELECT \n" +
-                    "patient.id, \n" +
-                    "patient.lastName, \n" +
-                    "patient.firstName, \n" +
-                    "roles.person.id, \n" +
-                    "roles.person.lastName, \n " +
-                    "roles.person.firstName, \n" +
-                    "appt.scheduledTime, \n" +
-                    "appt.startTime, \n" +
-                    "appt.checkoutTime, \n" +
-                    "appt.id \n" +
-                "FROM HealthCareEncounter appt \n" +
-                " join appt.patient as patient \n" +
-                " left join appt.roles as roles \n" +
-                " with roles.type.id = "  + HealthCareVisitRoleType.Cache.REQ_PHYSICIAN.getEntity().getSystemId() + " \n" +
-                "WHERE \n" +
-                "   appt.scheduledTime >= :beforeTime and \n" +
-                "   appt.scheduledTime < :afterTime " +
-                "ORDER BY \n" +
-                "   appt.scheduledTime, patient.lastName, patient.firstName");
-
-                patientWorkListQuery.setTimestamp("beforeTime", beforeTime);
-                patientWorkListQuery.setTimestamp("afterTime", afterTime);
+            patientWorkListQuery = getSession().createQuery(queryString);
+            patientWorkListQuery.setTimestamp("beforeTime", beforeTime);
+            patientWorkListQuery.setTimestamp("afterTime", afterTime);
         }
         final List list = patientWorkListQuery.list();
         System.out.println(patientWorkListQuery.getQueryString() + " \n" + list.size());
         for (int i=0; i < list.size(); i++)
         {
             final Object rowObject = list.get(i);
-            System.out.println(rowObject);
             if (rowObject instanceof Object[])
             {
                 final PatientWorkListItemImpl item = new PatientWorkListItemImpl();
@@ -184,6 +164,7 @@ public class PatientWorklistServiceImpl extends AbstractService implements Patie
                 item.setCheckinTimestamp((Date) columnValues[7]);
                 item.setCheckoutTimestamp((Date) columnValues[8]);
                 item.setEncounterId((Long) columnValues[9]);
+                item.setPatientType((String) columnValues[10]);
                 itemList.add(item);
             }
         }
