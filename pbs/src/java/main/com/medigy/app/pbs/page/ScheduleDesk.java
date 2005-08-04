@@ -43,19 +43,13 @@
  */
 package com.medigy.app.pbs.page;
 
-import com.medigy.wicket.form.FormMode;
-import com.medigy.app.pbs.form.AbstractFormPage;
-import com.medigy.app.pbs.panel.PatientRegistrationFormPanel;
-import wicket.markup.html.panel.Panel;
+import com.medigy.wicket.page.AuthenticatedWebPage;
+import com.medigy.app.pbs.page.worklist.ScheduleDeskNavigator;
 
-public class PatientRegistrationPage extends AbstractFormPage
+public class ScheduleDesk extends AuthenticatedWebPage
 {
-    public PatientRegistrationPage()
+    public ScheduleDesk()
     {
-    }
-
-   public Panel getFormPanel(final String id)
-    {
-        return new PatientRegistrationFormPanel(id, FormMode.INSERT);
+        add(new ScheduleDeskNavigator("scheduleDeskNavigator"));
     }
 }

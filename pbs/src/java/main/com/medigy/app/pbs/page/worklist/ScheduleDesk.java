@@ -41,21 +41,18 @@
 /*
  * Copyright (c) 2005 Your Corporation. All Rights Reserved.
  */
-package com.medigy.app.pbs.page;
+package com.medigy.app.pbs.page.worklist;
 
-import com.medigy.wicket.form.FormMode;
-import com.medigy.app.pbs.form.AbstractFormPage;
-import com.medigy.app.pbs.panel.PatientRegistrationFormPanel;
 import wicket.markup.html.panel.Panel;
 
-public class PatientRegistrationPage extends AbstractFormPage
+public class ScheduleDesk extends AbstractWorklistPage
 {
-    public PatientRegistrationPage()
+    public ScheduleDesk()
     {
     }
 
-   public Panel getFormPanel(final String id)
+    public Panel getWorklistControlBarPanel(final String id)
     {
-        return new PatientRegistrationFormPanel(id, FormMode.INSERT);
+        return new ScheduleDeskControlBar(id);
     }
 }
