@@ -68,61 +68,116 @@ public class PatientFlow extends AbstractWorklistPage
     public PatientFlow(final PageParameters parameters)
     {
         super(parameters);
-
         final PageParameters pageParameters = getPageParameters();
 
         try
         {
-            final int time1 = pageParameters.containsKey("time1") ? pageParameters.getInt("time1") : 60;
-            final int time2 = pageParameters.containsKey("time2") ? pageParameters.getInt("time2") : 60;
-
+            final String timeType = pageParameters.containsKey("time") ? pageParameters.getString("time") : null;
+            final String time1String =   pageParameters.getString("time1");
+            final String time2String =   pageParameters.getString("time2");
             SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+            // default to today if no date is found
             final Date selectedDate = pageParameters.containsKey("selectedDate") && pageParameters.getString("selectedDate").length() > 0 ? sdf.parse(pageParameters.getString("selectedDate")) : new Date();
+
+            PatientWorklistParameters serviceParams = null;
+            if  (time1String != null && time1String.contains(":"))
+            {
+                SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm Z");
+                final Date time1 = timeFormat.parse(time1String);
+                final Date time2 = timeFormat.parse(time2String);
+                serviceParams = new PatientWorklistParameters() {
+                    public Integer getUserId()
+                    {
+                        return null;
+                    }
+
+                    public Integer getOrganizationId()
+                    {
+                        return null;
+                    }
+
+                    public Date getSelectedDate()
+                    {
+                        return selectedDate;
+                    }
+
+                    public int getBeforeMinutes()
+                    {
+                        return 0;
+                    }
+
+                    public int getAfterMinutes()
+                    {
+                        return 0;
+                    }
+
+                    public Date getStartingTime()
+                    {
+                        return time1;
+                    }
+
+                    public Date getEndingTime()
+                    {
+                        return time2;
+                    }
+
+                    public ServiceVersion getServiceVersion()
+                    {
+                        return null;
+                    }
+                };
+            }
+            else
+            {
+                // DEFAULT if no value is given: 60 minutes before and 60 minutes after
+                final int time1 = (time1String != null && time1String.length() > 0) ? Integer.parseInt(time1String) : 60;
+                final int time2 = (time2String != null && time2String.length() > 0) ? Integer.parseInt(time2String) : 60;
+                serviceParams = new PatientWorklistParameters() {
+                    public Integer getUserId()
+                    {
+                        return null;
+                    }
+
+                    public Integer getOrganizationId()
+                    {
+                        return null;
+                    }
+
+                    public Date getSelectedDate()
+                    {
+                        return selectedDate;
+                    }
+
+                    public int getBeforeMinutes()
+                    {
+                        return time1;
+                    }
+
+                    public int getAfterMinutes()
+                    {
+                        return time2;
+                    }
+
+                    public Date getStartingTime()
+                    {
+                        return null;
+                    }
+
+                    public Date getEndingTime()
+                    {
+                        return null;
+                    }
+
+                    public ServiceVersion getServiceVersion()
+                    {
+                        return null;
+                    }
+                };
+            }
+
             final PatientWorklistService service = (PatientWorklistService) ((DefaultApplication) getApplication()).getService(PatientWorklistService.class);
             // execute the query
-
-            final PatientWorklistReturnValues worklist = service.getWorkList(new PatientWorklistParameters()
-            {
-                public Integer getUserId()
-                {
-                    return null;
-                }
-
-                public Integer getOrganizationId()
-                {
-                    return null;
-                }
-
-                public Date getSelectedDate()
-                {
-                    return selectedDate;
-                }
-
-                public int getBeforeMinutes()
-                {
-                    return time1;
-                }
-
-                public int getAfterMinutes()
-                {
-                    return time2;
-                }
-
-                public Date getStartingTime()
-                {
-                    return null;
-                }
-
-                public Date getEndingTime()
-                {
-                    return null;
-                }
-
-                public ServiceVersion getServiceVersion()
-                {
-                    return null;
-                }
-            });
+            final PatientWorklistReturnValues worklist = service.getWorkList(serviceParams);
             List<PatientWorkListItem> itemList = worklist.getItems();
             PatientWorkListView listView = new PatientWorkListView("workListView", itemList);
             worklistBorder.add(listView);
@@ -136,11 +191,6 @@ public class PatientFlow extends AbstractWorklistPage
     public Panel getWorklistControlBarPanel(final String id)
     {
         return new PatientFlowControlBar(id);
-    }
-
-    public Panel getWorklistReportPanel(final String id)
-    {
-        return null;
     }
 
     public class PatientWorkListView extends ListView

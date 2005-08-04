@@ -56,8 +56,4 @@ public class InsuranceVerification extends AbstractWorklistPage
         return new InsuranceVerficationControlBar(id);
     }
 
-    public Panel getWorklistReportPanel(final String id)
-    {
-        return null;
-    }
 }

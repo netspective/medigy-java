@@ -50,7 +50,6 @@ import wicket.markup.html.panel.Panel;
 public abstract class AbstractWorklistPage extends AuthenticatedWebPage
 {
     protected final Panel controlBar;
-    private final Panel worklistReport;
     protected final WorklistBorder worklistBorder;
     private PageParameters pageParameters;
 
@@ -64,8 +63,6 @@ public abstract class AbstractWorklistPage extends AuthenticatedWebPage
         this.pageParameters = pageParameters;
         add(worklistBorder = new WorklistBorder("worklistBorder", this));
         worklistBorder.add(controlBar = getWorklistControlBarPanel("controlBar"));
-        if ((worklistReport = getWorklistReportPanel("workListReport")) != null)
-            worklistBorder.add(worklistReport);
     }
 
     public PageParameters getPageParameters()
@@ -74,5 +71,4 @@ public abstract class AbstractWorklistPage extends AuthenticatedWebPage
     }
 
     public abstract Panel getWorklistControlBarPanel(final String id);
-    public abstract Panel getWorklistReportPanel(final String id);
 }
