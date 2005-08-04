@@ -46,6 +46,7 @@ import com.medigy.persist.reference.custom.health.HealthCareVisitRoleType;
 import com.medigy.persist.reference.custom.health.HealthCareVisitStatusType;
 import com.medigy.persist.reference.custom.person.PatientType;
 
+import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -54,6 +55,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import java.util.ArrayList;
 import java.util.Date;
@@ -78,6 +80,7 @@ public class HealthCareEncounter  extends AbstractDateDurationEntity
 
     private Date scheduledTime;
     private Date startTime;
+    private Date checkoutTime;
 
     private Set<HealthCareVisitStatus> statuses = new HashSet<HealthCareVisitStatus>();
     private Set<HealthCareVisitRole> roles = new HashSet<HealthCareVisitRole>();    // scheduler, patient, doctor
@@ -102,10 +105,22 @@ public class HealthCareEncounter  extends AbstractDateDurationEntity
         this.healthCareVisitId = healthCareVisitId;
     }
 
+    @Basic(temporalType = TemporalType.TIMESTAMP)
+    public Date getCheckoutTime()
+    {
+        return checkoutTime;
+    }
+
+    public void setCheckoutTime(final Date checkoutTime)
+    {
+        this.checkoutTime = checkoutTime;
+    }
+
     /**
      * Gets the start time of the visit
      * @return
      */
+    @Basic(temporalType = TemporalType.TIMESTAMP)
     public Date getStartTime()
     {
         return startTime;
@@ -120,6 +135,7 @@ public class HealthCareEncounter  extends AbstractDateDurationEntity
      * Gets the time the appointment was made
      * @return
      */
+    @Basic(temporalType = TemporalType.TIMESTAMP)
     public Date getScheduledTime()
     {
         return scheduledTime;
