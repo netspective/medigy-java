@@ -5,10 +5,10 @@
     </head>
     <body>
         <wicket:panel>
-            <form name="form" method="GET" >
+            <form name="controlBarForm" method="GET" >
                 <input type="hidden" name="bookmarkablePage" value="com.medigy.app.pbs.page.worklist.PatientFlow"/>
                 <div class="form-body">
-                    <select name="chooseDay" >
+                    <select name="chooseDay" onchange="populateDate()">
                         <option>Choose Day</option>
                         <option>Today</option>
                         <option>Previous Day</option>
@@ -37,6 +37,20 @@
 
                     <input type="submit" value="Go"/>
                 </div>
+
+                <script>
+                    // TODO: Refactor!!
+                    // get the latest params, and setup the control initial values
+                    var selectedDate = location.getParameter("selectedDate");
+                    document.controlBarForm.selectedDate.value = unescape(selectedDate.replace(/\+/g, " "));
+
+                    var time = location.getParameter("time");
+                    var time1 = location.getParameter("time1");
+                    var time2 = location.getParameter("time2");
+                    
+                    document.controlBarForm.time1.value = unescape(time1.replace(/\+/g, " "));
+                    document.controlBarForm.time2.value = unescape(time2.replace(/\+/g, " "));
+                </script>
             </form>
 
             <wicket:link>
