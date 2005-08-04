@@ -54,6 +54,13 @@ public class RandomUtils
         return low + new Random().nextInt(high - low);
     }
 
+    public static int generateRandomMintutes()
+    {
+        int low = 0;
+        int high = 3;
+        return (generateRandomNumberBetween(low, high) * 15);
+    }
+
     public static Date generateRandomDateBetweenYearsAgo(int lowYearsAgo, int highYearsAgo)
     {
         // change the year to be a random number between lowAge and highAge
