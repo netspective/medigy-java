@@ -26,10 +26,16 @@ public class SearchCriteriaFormPanel extends Panel
     protected SearchService service;
     protected SearchForm searchForm;
 
+    public SearchCriteriaFormPanel(final String id, final Class<? extends SearchService> serviceClass)
+    {
+        this(id, FormMode.NONE, serviceClass);
+    }
+
     public SearchCriteriaFormPanel(final String id, final FormMode formMode, final Class<? extends SearchService> serviceClass)
     {
         super(id);
-        this.service = (SearchService) ((DefaultApplication) getApplication()).getService(serviceClass);
+        if (serviceClass != null)
+            this.service = (SearchService) ((DefaultApplication) getApplication()).getService(serviceClass);
         // Create feedback panel and add to page
         final FeedbackPanel feedback = new FeedbackPanel("feedback");
         add(feedback);

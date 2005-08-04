@@ -3,21 +3,19 @@
  */
 package com.medigy.presentation.form.query;
 
-import wicket.markup.html.list.PageableListView;
-import wicket.markup.html.list.ListItem;
-import wicket.markup.MarkupStream;
 import wicket.markup.ComponentTag;
+import wicket.markup.MarkupStream;
+import wicket.markup.html.list.ListItem;
+import wicket.markup.html.list.PageableListView;
 import wicket.model.IModel;
 
-import java.util.Map;
-import java.util.Iterator;
-import java.util.Collection;
-import java.util.List;
-import java.util.Date;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.text.SimpleDateFormat;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 public class SearchResultsListView  extends PageableListView
 {
@@ -35,6 +33,11 @@ public class SearchResultsListView  extends PageableListView
     public SearchResultsListView(String id, IModel model, int pageSizeInCells)
     {
         super(id, model, pageSizeInCells);
+    }
+
+    public SearchResultsListView(String id, List list, int pageSizeInCells)
+    {
+        super(id, list, pageSizeInCells);
     }
 
     /**
@@ -93,22 +96,5 @@ public class SearchResultsListView  extends PageableListView
     {
         final Map<String, Object> map = (Map<String, Object>) item.getModelObject();
         final Iterator<String> strings = map.keySet().iterator();
-
-        /*
-        final CD cd = (CD) item.getModelObject();
-        final Long id = cd.getId();
-
-        // add links to the details
-        item.add(new DetailLink("title", id).add(new Label("title", cd.getTitle())));
-        item.add(new DetailLink("performers", id).add(new Label("performers", cd
-                .getPerformers())));
-        item.add(new DetailLink("label", id).add(new Label("label", cd.getLabel())));
-        item.add(new DetailLink("year", id).add(new Label("year", (cd.getYear() != null) ? cd
-                .getYear().toString() : "")));
-
-        // add a delete link for each found record
-        DeleteLink deleteLink = new DeleteLink("delete", cd);
-        item.add(deleteLink);
-        */
     }
 }

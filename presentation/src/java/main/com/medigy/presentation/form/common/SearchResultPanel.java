@@ -55,7 +55,6 @@ public class SearchResultPanel extends Panel
         searchResultModel.setSearchParameters(formModelObject);
         navPanel.setVisible(true);
         setCurrentResultPageToFirst();
-        System.out.println(" >>>>>>>>>>>>"  + searchResultModel.getResultColumnNames());
         resultsHeaderView.setModel(new Model((Serializable) searchResultModel.getResultColumnNames()));
         info(getNumberOfResults() + " results found.");
     }

@@ -47,7 +47,13 @@ import com.medigy.presentation.model.ChoicesFactory;
 import com.medigy.service.validator.ValidEntity;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import wicket.markup.html.form.*;
+import wicket.markup.html.form.DropDownChoice;
+import wicket.markup.html.form.FormComponent;
+import wicket.markup.html.form.ListMultipleChoice;
+import wicket.markup.html.form.PasswordTextField;
+import wicket.markup.html.form.RadioChoice;
+import wicket.markup.html.form.TextArea;
+import wicket.markup.html.form.TextField;
 import wicket.markup.html.form.model.IChoiceList;
 import wicket.markup.html.form.upload.FileUploadField;
 import wicket.markup.html.form.validation.EmailAddressPatternValidator;
@@ -56,7 +62,13 @@ import wicket.util.string.Strings;
 
 import java.io.Serializable;
 import java.text.NumberFormat;
-import java.util.*;
+import java.util.Collections;
+import java.util.Currency;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.regex.Pattern;
 
 public class FormFieldFactory
@@ -86,6 +98,7 @@ public class FormFieldFactory
         addFieldCreator(EmailFieldCreator.class, new EmailFieldCreator());
         addFieldCreator(PasswordFieldCreator.class, new PasswordFieldCreator());
         addFieldCreator(FileUploadFieldCreator.class, new FileUploadFieldCreator());
+        addFieldCreator(Integer.class, new IntegerFieldCreator());
     }
 
     public void addFieldCreator(final Class dataType, final FieldCreator creator)

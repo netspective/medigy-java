@@ -4,11 +4,12 @@
 package com.medigy.presentation.form.common;
 
 import com.medigy.presentation.model.common.ServiceSearchResultModel;
+import com.medigy.wicket.form.BaseForm;
+import com.medigy.wicket.form.FormMode;
 import wicket.IFeedback;
-import wicket.markup.html.form.Form;
 import wicket.model.IModel;
 
-public abstract class SearchForm extends Form
+public abstract class SearchForm extends BaseForm
 {
     private ServiceSearchResultModel resultModel;
 
@@ -19,7 +20,7 @@ public abstract class SearchForm extends Form
 
     public SearchForm(final String id, IModel model, final IFeedback feedback)
     {
-        super(id, model, feedback);
+        super(id, model, feedback, null, FormMode.NONE);
     }
 
     /**

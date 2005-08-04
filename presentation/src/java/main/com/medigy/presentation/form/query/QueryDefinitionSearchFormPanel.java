@@ -67,11 +67,6 @@ public class QueryDefinitionSearchFormPanel extends SearchCriteriaFormPanel
             super(id, feedback);
         }
 
-        public QueryDefinitionSearchForm(final String id, IModel model, final IFeedback feedback)
-        {
-            super(id, model, feedback);
-        }
-
         public void initializeForm()
         {
             final QueryDefinitionSearchService queryDefinitionSearchService = ((QueryDefinitionSearchService) service);
@@ -99,7 +94,6 @@ public class QueryDefinitionSearchFormPanel extends SearchCriteriaFormPanel
         {
             final QueryDefSearchFormModelObject formModelObject = (QueryDefSearchFormModelObject) getModelObject();
             final List<String> displayFields = formModelObject.getDisplayFields();
-            System.out.println(" =============== " + displayFields.size());
             if (displayFields.size() == 0)
             {
                 final IChoiceList choices = displayFieldsSelectList.getChoices();
