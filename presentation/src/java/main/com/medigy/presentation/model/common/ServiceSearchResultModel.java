@@ -3,6 +3,7 @@
  */
 package com.medigy.presentation.model.common;
 
+import com.medigy.presentation.form.common.SearchResultPanel;
 import com.medigy.service.Service;
 import wicket.Component;
 import wicket.contrib.data.model.ISelectCountAndListAction;
@@ -22,11 +23,18 @@ public abstract class ServiceSearchResultModel extends AbstractReadOnlyDetachabl
     private ServiceCountAndListAction countAndListAction;
     private Service service;
     private SearchFormModelObject formModelObject;
+    private SearchResultPanel parent;
 
-    public  ServiceSearchResultModel(final Service service)
+    public  ServiceSearchResultModel(final SearchResultPanel panel, final Service service)
     {
+        this.parent = panel;
         this.service = service;
         this.countAndListAction = createCountAndListAction();
+    }
+
+    public SearchResultPanel getParent()
+    {
+        return parent;
     }
 
     protected Service getService()
@@ -46,7 +54,8 @@ public abstract class ServiceSearchResultModel extends AbstractReadOnlyDetachabl
 
     protected void onAttach()
     {
-        list = new SearchResultPageableList(getRowsPerPage(), countAndListAction);
+        list = new SearchResultPageableList(this, getRowsPerPage(), countAndListAction);
+
     }
 
     protected void onDetach()
@@ -94,17 +103,18 @@ public abstract class ServiceSearchResultModel extends AbstractReadOnlyDetachabl
      */
     public abstract ServiceCountAndListAction createCountAndListAction();
 
-
     /**
      * @see PageableList
      */
     public class SearchResultPageableList extends PageableList
     {
         protected List<String> resultColumnNames;
+        private ServiceSearchResultModel searchResultModel;
 
-        public SearchResultPageableList(int pageSize, ISelectCountAndListAction countAndListAction)
+        public SearchResultPageableList(final ServiceSearchResultModel searchResultModel, int pageSize, ISelectCountAndListAction countAndListAction)
         {
             super(pageSize, countAndListAction);
+            this.searchResultModel = searchResultModel;
         }
 
         /**
@@ -121,7 +131,6 @@ public abstract class ServiceSearchResultModel extends AbstractReadOnlyDetachabl
             final List list = super.load(startFromIndex, numberOfElements);
             // the result column names are not a part of the list
             resultColumnNames = ((ServiceCountAndListAction) getCountAndListAction()).getColumnNames();
-            System.out.println("xxxxxxxxxx " + resultColumnNames);
             return list;
         }
 

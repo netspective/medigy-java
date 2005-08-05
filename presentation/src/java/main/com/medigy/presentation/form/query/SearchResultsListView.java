@@ -3,6 +3,7 @@
  */
 package com.medigy.presentation.form.query;
 
+import com.medigy.presentation.model.common.ServiceSearchResultModel;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.list.ListItem;
@@ -48,11 +49,6 @@ public class SearchResultsListView  extends PageableListView
         return true;
     }
 
-    public void setColumnNames(final List<String> names)
-    {
-        this.columnNames = names;
-    }
-
     public DateFormat getDateFormat()
     {
         // TODO : retrieve date format from a centralized place common across the application
@@ -61,6 +57,7 @@ public class SearchResultsListView  extends PageableListView
 
     protected ListItem newItem(final int index)
     {
+        columnNames = ((ServiceSearchResultModel) getModel()).getResultColumnNames();
         return new ListItem(index, getListItemModel(getModel(), index))
         {
 

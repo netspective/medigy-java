@@ -61,7 +61,7 @@ public class QueryDefinitionSearchResultPanel extends SearchResultPanel
 
     protected ServiceSearchResultModel createSearchResultModel()
     {
-        return new ServiceSearchResultModel(service) {
+        return new ServiceSearchResultModel(this, service) {
             public ServiceCountAndListAction createCountAndListAction()
             {
                 return new ServiceCountAndListAction(service) {

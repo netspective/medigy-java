@@ -12,14 +12,15 @@ import com.medigy.service.SearchServiceParameters;
 import com.medigy.service.ServiceVersion;
 import com.medigy.service.dto.query.SearchCondition;
 import com.medigy.wicket.DefaultApplication;
+import wicket.markup.ComponentTag;
+import wicket.markup.MarkupStream;
+import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
 import wicket.markup.html.list.PageableListViewNavigator;
 import wicket.markup.html.panel.Panel;
-import wicket.model.Model;
 
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 
@@ -28,7 +29,7 @@ public class SearchResultPanel extends Panel
     private int rowsPerPage = 10;
     protected SearchResultsListView resultsListView;
     protected ServiceSearchResultModel searchResultModel;
-    protected SearchResultsHeaderView resultsHeaderView;
+    //protected SearchResultsHeaderView resultsHeaderView;
     protected SearchService service;
     protected PageableListViewNavigator navPanel;
     protected ServiceCountAndListAction countAndListAction;
@@ -39,12 +40,36 @@ public class SearchResultPanel extends Panel
         if (searchServiceClass != null)
             service = (SearchService) ((DefaultApplication) getApplication()).getService(searchServiceClass);
 
+        //resultsHeaderView = new SearchResultsHeaderView("resultsHeader", new ArrayList<String>());
         searchResultModel = createSearchResultModel();
         resultsListView = createSearchResultsListView(searchResultModel, rowsPerPage);
         add(resultsListView);
 
-        resultsHeaderView = new SearchResultsHeaderView("resultsHeader");
-        add(resultsHeaderView);
+        WebMarkupContainer resultsTableHeader = new WebMarkupContainer("resultsHeader")
+		{
+			public boolean isVisible()
+			{
+				return searchResultModel.hasResults();
+			}
+
+            protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
+            {
+                final StringBuffer buffer = new StringBuffer();
+                final List<String> resultColumnNames = searchResultModel.getResultColumnNames();
+                if (resultColumnNames != null)
+                {
+                    for (String colName : resultColumnNames)
+                    {
+                        buffer.append("<td> " + colName +"</td>");
+                    }
+                    replaceComponentTagBody(markupStream, openTag, buffer.toString());
+                }
+                super.onComponentTagBody(markupStream, openTag);
+            }
+        };
+
+
+        add(resultsTableHeader);
         navPanel = new PageableListViewNavigator("navigation-panel", resultsListView);
         navPanel.setVisible(false);
         add(navPanel);
@@ -55,8 +80,13 @@ public class SearchResultPanel extends Panel
         searchResultModel.setSearchParameters(formModelObject);
         navPanel.setVisible(true);
         setCurrentResultPageToFirst();
-        resultsHeaderView.setModel(new Model((Serializable) searchResultModel.getResultColumnNames()));
-        info(getNumberOfResults() + " results found.");
+        //resultsHeaderView.setModel(new Model((Serializable) searchResultModel.getResultColumnNames()));
+        //info(getNumberOfResults() + " results found.");
+    }
+
+    protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
+    {
+        super.onComponentTagBody(markupStream, openTag);
     }
 
     protected SearchResultsListView createSearchResultsListView(final ServiceSearchResultModel searchResultModel, final int rowsPerPage)
@@ -66,7 +96,7 @@ public class SearchResultPanel extends Panel
 
     protected ServiceSearchResultModel createSearchResultModel()
     {
-        return new ServiceSearchResultModel(service)
+        return new ServiceSearchResultModel(this, service)
         {
             public ServiceCountAndListAction createCountAndListAction()
             {
@@ -154,11 +184,16 @@ public class SearchResultPanel extends Panel
         return ((List)resultsListView.getModelObject()).size();
     }
 
-    private class SearchResultsHeaderView extends ListView
+    public class SearchResultsHeaderView extends ListView
     {
         public SearchResultsHeaderView(final String id)
         {
             super(id);
+        }
+
+        public SearchResultsHeaderView(final String id, final List list)
+        {
+            super(id, list);
         }
 
         protected void populateItem(final ListItem item)
