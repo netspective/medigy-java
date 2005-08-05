@@ -17,6 +17,7 @@ import com.medigy.persist.util.query.impl.QueryDefinitionConditionImpl;
 import com.medigy.persist.util.value.ValueContext;
 import com.medigy.persist.util.value.ValueProvider;
 import com.medigy.service.dto.ServiceParameters;
+import com.medigy.service.dto.ServiceReturnValues;
 import com.medigy.service.dto.query.SearchCondition;
 import com.medigy.service.query.QueryDefinitionFactory;
 import org.apache.commons.beanutils.PropertyUtils;
@@ -200,7 +201,7 @@ public abstract class AbstractQueryDefinitionSearchServiceImpl extends AbstractS
         }
     }
 
-    public SearchReturnValues search(final SearchServiceParameters params)
+    public ServiceReturnValues search(final SearchServiceParameters params)
     {
         final QueryDefinition queryDefinition =
                 QueryDefinitionFactory.getInstance().getQueryDefinition(getQueryDefinitionClass());
@@ -226,7 +227,7 @@ public abstract class AbstractQueryDefinitionSearchServiceImpl extends AbstractS
         {
             log.error(e);
             e.printStackTrace();
-            return (SearchReturnValues) createErrorResponse(params, e.getMessage());
+            return (ServiceReturnValues) createErrorResponse(params, e.getMessage());
         }
     }
 

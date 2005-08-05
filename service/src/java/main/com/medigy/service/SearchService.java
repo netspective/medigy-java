@@ -4,13 +4,14 @@
 package com.medigy.service;
 
 import com.medigy.persist.util.query.QueryDefnCondition;
+import com.medigy.service.dto.ServiceReturnValues;
 
 import java.util.List;
 
 
 public interface SearchService extends Service
 {
-    public SearchReturnValues search(final SearchServiceParameters params);
+    public ServiceReturnValues search(final SearchServiceParameters params);
 
     public List<QueryDefnCondition> getCriteriaList();
 }

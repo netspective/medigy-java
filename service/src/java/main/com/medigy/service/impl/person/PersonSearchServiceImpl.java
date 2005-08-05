@@ -34,6 +34,16 @@ public class PersonSearchServiceImpl extends AbstractQueryDefinitionSearchServic
 
     public ServiceReturnValues createErrorResponse(final ServiceParameters params, final String errorMessage)
     {
-        return null;
+        return new ServiceReturnValues() {
+             public String getErrorMessage()
+             {
+                 return errorMessage;
+             }
+
+            public ServiceParameters getParameters()
+            {
+                return params;
+            }
+        };
     }
 }
