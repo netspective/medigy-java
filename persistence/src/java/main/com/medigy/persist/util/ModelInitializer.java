@@ -216,9 +216,14 @@ public class ModelInitializer
     protected void initCustomReferenceEntityCache(final Class aClass, final CachedCustomReferenceEntity[] cache)
     {
         final Criteria criteria = session.createCriteria(aClass);
-        criteria.add(Expression.eq("party", Party.Cache.SYS_GLOBAL_PARTY.getEntity()));
+        criteria.add(Restrictions.eq("party.id", Party.Cache.SYS_GLOBAL_PARTY.getEntity().getPartyId()));
 
         final List list = criteria.list();
+        if (list == null || list.size() == 0)
+        {
+            log.error("Failed to initialize CustomReferenceEntity caches. There were NO records of CustomReferenceEntity type.");
+            return;
+        }
         for(final Object i : list)
         {
             final CustomReferenceEntity entity = (CustomReferenceEntity) i;
