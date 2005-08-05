@@ -7,6 +7,7 @@ import com.medigy.service.SearchReturnValues;
 import com.medigy.service.SearchService;
 import com.medigy.service.SearchServiceParameters;
 import com.medigy.service.Service;
+import com.medigy.service.dto.ServiceReturnValues;
 import wicket.contrib.data.model.ISelectCountAndListAction;
 
 import java.util.List;
@@ -42,13 +43,15 @@ public abstract class ServiceCountAndListAction implements ISelectCountAndListAc
         if (queryObject == null)
             return 0;
 
-        SearchReturnValues values = service.search(createSearchServiceParameters(queryObject));
-        if (values.getErrorMessage() != null)
+        ServiceReturnValues values = service.search(createSearchServiceParameters(queryObject));
+        if(values.getErrorMessage() != null)
         {
             return 0;
         }
-        columnNames = values.getSearchResults() != null ? values.getColumnNames() : null;
-        return values.getSearchResults().size();
+
+        SearchReturnValues srv = (SearchReturnValues) values;
+        columnNames = srv.getSearchResults() != null ? srv.getColumnNames() : null;
+        return srv.getSearchResults().size();
 
     }
 
@@ -58,9 +61,16 @@ public abstract class ServiceCountAndListAction implements ISelectCountAndListAc
 
     public List execute(Object queryObject, final int startFromRow, int numberOfRows)
     {
-        SearchReturnValues values = service.search(createSearchServiceParameters(queryObject, startFromRow, numberOfRows));
-        columnNames = values.getSearchResults() != null ? values.getColumnNames() : null;
+        ServiceReturnValues values = service.search(createSearchServiceParameters(queryObject, startFromRow, numberOfRows));
+        if(values.getErrorMessage() != null)
+        {
+            return null;
+        }
+        
+        SearchReturnValues srv = (SearchReturnValues) values;
+
+        columnNames = srv.getSearchResults() != null ? srv.getColumnNames() : null;
         //columnNames = values.getSearchResults() != null && values.getSearchResults().size() > 0 ? new ArrayList<String>(values.getSearchResults().get(0).keySet()) : null;
-        return values.getSearchResults();
+        return srv.getSearchResults();
     }
 }
