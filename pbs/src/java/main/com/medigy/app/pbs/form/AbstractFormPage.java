@@ -48,12 +48,10 @@ import wicket.markup.html.panel.Panel;
 public abstract class AbstractFormPage extends AuthenticatedWebPage
 {
     private final Panel controlBar;
-    private final FormBorder formBorder;
 
     public AbstractFormPage()
     {
-        add(formBorder = new FormBorder("formBorder", this));
-        formBorder.add(controlBar = getFormPanel("panel"));
+        add(controlBar = getFormPanel("panel"));
     }
 
     public abstract Panel getFormPanel(final String id);
