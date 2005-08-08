@@ -135,6 +135,8 @@ public class SetupTestConfiguration
         if  (recreateSchema())
             hibProperties.setProperty(Environment.HBM2DDL_AUTO, "create-drop");
         hibProperties.setProperty(Environment.SHOW_SQL, "true");
+        hibProperties.setProperty(Environment.AUTOCOMMIT, "false");
+
         return hibProperties;
     }
 
@@ -155,6 +157,7 @@ public class SetupTestConfiguration
         if (recreateSchema())
             hibProperties.setProperty(Environment.HBM2DDL_AUTO, "create-drop");
         hibProperties.setProperty(Environment.SHOW_SQL, "false");
+        hibProperties.setProperty(Environment.AUTOCOMMIT, "false");
         return hibProperties;
     }
 
