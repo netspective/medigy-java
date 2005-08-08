@@ -69,7 +69,6 @@ public class TestHealthCareLicense extends TestCase
         doctor.addGender(GenderType.Cache.MALE.getEntity());
         doctor.addLanguage(LanguageType.Cache.ENGLISH.getEntity());
         session.save(doctor);
-        session.flush();
 
         final Country country = new Country();
         country.setCountryName("USA");
@@ -83,7 +82,7 @@ public class TestHealthCareLicense extends TestCase
 
         session = openSession();
         transaction = session.beginTransaction();
-        doctor = (Person) session.createCriteria(Person.class).add(Restrictions.eq("partyId", doctor.getPartyId())).uniqueResult();
+        final Person doctor2 = (Person) session.createCriteria(Person.class).add(Restrictions.eq("partyId", doctor.getPartyId())).uniqueResult();
         final Calendar calendar = Calendar.getInstance();
         final HealthCareLicense license = new HealthCareLicense();
         final HealthCareLicense license2 = new HealthCareLicense();
@@ -94,7 +93,7 @@ public class TestHealthCareLicense extends TestCase
         calendar.set(3000, 5, 1);
         license.setThroughDate(calendar.getTime());
         license.setState(state);
-        doctor.addLicense(license);
+        doctor2.addLicense(license);
         session.save(license);
 
         calendar.set(2000, 5, 1);
@@ -102,7 +101,7 @@ public class TestHealthCareLicense extends TestCase
         license2.setDescription("Voodoo License");
         license2.setLicenseNumber("XXX");
         license2.setThroughDate(calendar.getTime());
-        doctor.addLicense(license2);
+        doctor2.addLicense(license2);
         session.save(license2);
         transaction.commit();
         session.close();
