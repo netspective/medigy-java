@@ -48,7 +48,11 @@ import com.medigy.persist.model.health.VisitType;
 import com.medigy.persist.model.insurance.Enrollment;
 import com.medigy.persist.model.insurance.InsurancePlan;
 import com.medigy.persist.model.insurance.InsuranceProduct;
-import com.medigy.persist.model.org.attribute.*;
+import com.medigy.persist.model.org.attribute.OrganizationAttribute;
+import com.medigy.persist.model.org.attribute.OrganizationBooleanAttribute;
+import com.medigy.persist.model.org.attribute.OrganizationDateAttribute;
+import com.medigy.persist.model.org.attribute.OrganizationLongAttribute;
+import com.medigy.persist.model.org.attribute.OrganizationStringAttribute;
 import com.medigy.persist.model.party.Facility;
 import com.medigy.persist.model.party.Party;
 import com.medigy.persist.model.person.User;
@@ -59,12 +63,20 @@ import com.medigy.persist.reference.custom.party.FacilityType;
 import com.medigy.persist.reference.custom.party.OrganizationRoleType;
 import com.medigy.persist.reference.type.party.PartyType;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Set;
 import java.util.List;
-import java.util.ArrayList;
+import java.util.Set;
 
 /**
  * Specialized party for organizations.
@@ -119,12 +131,12 @@ public class Organization extends Party
     @Transient
     public Long getOrgId()
     {
-        return super.getPartyId();
+        return getPartyId();
     }
 
     public void setOrgId(final Long orgId)
     {
-        super.setPartyId(orgId);
+        setPartyId(orgId);
     }
 
     /**

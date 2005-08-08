@@ -40,9 +40,9 @@ package com.medigy.persist.model.insurance;
 
 import com.medigy.persist.TestCase;
 import com.medigy.persist.model.org.Organization;
+import com.medigy.persist.model.person.PeopleRelationship;
 import com.medigy.persist.model.person.Person;
 import com.medigy.persist.model.person.PersonRole;
-import com.medigy.persist.model.person.PeopleRelationship;
 import com.medigy.persist.reference.custom.insurance.InsurancePolicyType;
 import com.medigy.persist.reference.custom.insurance.InsuranceProductType;
 import com.medigy.persist.reference.custom.org.OrganizationClassificationType;
@@ -50,7 +50,8 @@ import com.medigy.persist.reference.custom.party.PeopleRelationshipType;
 import com.medigy.persist.reference.custom.person.PersonRoleType;
 import com.medigy.persist.reference.type.GenderType;
 import com.medigy.persist.reference.type.LanguageType;
-import com.medigy.persist.util.HibernateUtil;
+import org.hibernate.Transaction;
+import org.hibernate.classic.Session;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -60,6 +61,9 @@ public class TestInsurance extends TestCase
 {
     public void testInsurance()
     {
+        Session session = openSession();
+        Transaction transaction = session.beginTransaction();
+
         // create the insurance company
         final Organization blueCross = new Organization();
         blueCross.setOrganizationName("Blue Cross Blue Shield");
@@ -84,9 +88,12 @@ public class TestInsurance extends TestCase
         blueCross.addInsurancePlan(plan2);
 
         blueCross.getInsuranceProducts().add(ppoProduct);
-        HibernateUtil.getSession().save(blueCross);
+        session.save(blueCross);
+        transaction.commit();
+        session.close();
 
-        final Organization carrier = (Organization) HibernateUtil.getSession().load(Organization.class, blueCross.getOrgId());
+        session = openSession();
+        final Organization carrier = (Organization) session.load(Organization.class, blueCross.getOrgId());
         final Set<InsuranceProduct> insuranceProducts = carrier.getInsuranceProducts();
         assertThat(insuranceProducts.size(), eq(1));
         final InsuranceProduct product = (InsuranceProduct) carrier.getInsuranceProducts().toArray()[0];
@@ -94,6 +101,7 @@ public class TestInsurance extends TestCase
         assertThat(product.getInsurancePlan("Super Plan 1").getName(), eq("Super Plan 1"));
         assertThat(product.getInsurancePlan("Super Plan 2").getName(), eq("Super Plan 2"));
 
+        transaction = session.beginTransaction();
         Calendar cal = Calendar.getInstance();
         cal.set(1965, 1, 1);
         final Person johnDoe = new Person();
@@ -121,17 +129,16 @@ public class TestInsurance extends TestCase
         childRole.setPerson(patient);
         patient.addRole(childRole);
 
-        HibernateUtil.getSession().save(patient);
-        HibernateUtil.getSession().save(johnDoe);
+        session.save(patient);
+        session.save(johnDoe);
 
         final PeopleRelationship relationship = new PeopleRelationship();
         relationship.setPrimaryPersonRole(childRole);
         relationship.setSecondaryPersonRole(parentRole);
         relationship.setFromDate(new Date());
         relationship.setType(PeopleRelationshipType.Cache.PARENT_CHILD.getEntity());
-        HibernateUtil.getSession().save(relationship);
+        session.save(relationship);
 
-        HibernateUtil.beginTransaction();
         InsurancePolicy johnDoePolicy = new InsurancePolicy();
         johnDoePolicy.setInsurancePlan(plan1);
         johnDoePolicy.setInsuredPerson(johnDoe);
@@ -154,11 +161,13 @@ public class TestInsurance extends TestCase
         patient.addInsurancePolicy(patientPolicy);
         johnDoe.addResponsibleInsurancePolicy(patientPolicy);
 
-        HibernateUtil.getSession().save(johnDoePolicy);
-        HibernateUtil.getSession().save(patientPolicy);
-        HibernateUtil.commitTransaction();
+        session.save(johnDoePolicy);
+        session.save(patientPolicy);
+        transaction.commit();
+        session.close();
 
-        final Person mainPerson = (Person) HibernateUtil.getSession().load(Person.class, johnDoe.getPartyId());
+        session = openSession();
+        final Person mainPerson = (Person) session.load(Person.class, johnDoe.getPartyId());
         final Set<InsurancePolicy> mainPersonInsurancePolicies = mainPerson.getInsurancePolicies();
         assertThat(mainPersonInsurancePolicies.size(), eq(1));
         final Set<InsurancePolicy> mainPersonResponsibleInsurancePolicies = mainPerson.getResponsibleInsurancePolicies();
@@ -175,7 +184,7 @@ public class TestInsurance extends TestCase
         assertThat(jdPolicy.getInsurancePlan().getInsuranceProduct().getInsuranceProductId(), eq(product.getInsuranceProductId()));
         assertThat(jdPolicy.getInsurancePlan().getInsuranceProduct().getType(), eq(InsuranceProductType.Cache.MEDICAID.getEntity()));
 
-        final Person secondPerson = (Person) HibernateUtil.getSession().load(Person.class, patient.getPartyId());
+        final Person secondPerson = (Person) session.load(Person.class, patient.getPartyId());
         final Set<InsurancePolicy> insurancePolicies = secondPerson.getInsurancePolicies();
         assertThat(insurancePolicies.size(), eq(1));
         final Set<InsurancePolicy> responsibleInsurancePolicies = secondPerson.getResponsibleInsurancePolicies();
@@ -191,7 +200,6 @@ public class TestInsurance extends TestCase
         assertThat(secondPolicy.getInsurancePlan().getName(), eq("Super Plan 1"));
         assertThat(secondPolicy.getInsurancePlan().getInsuranceProduct().getInsuranceProductId(), eq(product.getInsuranceProductId()));
         assertThat(secondPolicy.getInsurancePlan().getInsuranceProduct().getType(), eq(InsuranceProductType.Cache.MEDICAID.getEntity()));
-
-
+        session.close();
     }
 }

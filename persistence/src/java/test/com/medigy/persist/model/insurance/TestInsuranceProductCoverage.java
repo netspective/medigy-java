@@ -10,12 +10,15 @@ import com.medigy.persist.reference.custom.insurance.CoverageLevelType;
 import com.medigy.persist.reference.custom.insurance.CoverageType;
 import com.medigy.persist.reference.custom.insurance.InsuranceProductType;
 import com.medigy.persist.reference.custom.org.OrganizationClassificationType;
-import com.medigy.persist.util.HibernateUtil;
+import org.hibernate.Transaction;
+import org.hibernate.classic.Session;
 
 public class TestInsuranceProductCoverage extends TestCase
 {
     public void testInsuranceProductCoverage()
     {
+        Session session = openSession();
+        Transaction transaction = session.beginTransaction();
         // create the insurance company
         final Organization blueCross = new Organization();
         blueCross.setOrganizationName("Blue Cross Blue Shield");
@@ -27,7 +30,7 @@ public class TestInsuranceProductCoverage extends TestCase
         ppoProduct.setOrganization(blueCross);
         blueCross.addInsuranceProduct(ppoProduct);
 
-        HibernateUtil.getSession().save(blueCross);
+        session.save(blueCross);
 
         final Coverage coverage = new Coverage();
         coverage.setType(CoverageType.Cache.MAJOR_MEDICAL.getEntity());
@@ -54,17 +57,17 @@ public class TestInsuranceProductCoverage extends TestCase
         coverage.addCoverageLevel(copay);
         coverage.addCoverageLevel(coins);
 
-        HibernateUtil.getSession().save(coverage);
+        session.save(coverage);
+        transaction.commit();
+        session.close();
 
-        HibernateUtil.getSession().flush();
-        HibernateUtil.closeSession();
-
-        final InsuranceProduct product = (InsuranceProduct) HibernateUtil.getSession().load(InsuranceProduct.class, ppoProduct.getInsuranceProductId());
+        session = openSession();
+        final InsuranceProduct product = (InsuranceProduct) session.load(InsuranceProduct.class, ppoProduct.getInsuranceProductId());
         assertThat(product.getInsuranceProductCoverages().size(), eq(1));
         final InsuranceProductCoverage productCoverage = (InsuranceProductCoverage) product.getInsuranceProductCoverages().toArray()[0];
         assertThat(productCoverage.getInsuranceProductCoverageId(), eq(ipc.getInsuranceProductCoverageId()));
         assertThat(productCoverage.getCoverage().getCoverageId(), eq(coverage.getCoverageId()));
-
+        session.close();
     }
 
 }

@@ -39,14 +39,14 @@
 package com.medigy.persist.model.health;
 
 import com.medigy.persist.TestCase;
-import com.medigy.persist.model.party.PartyRole;
 import com.medigy.persist.model.person.Person;
 import com.medigy.persist.model.person.PersonRole;
 import com.medigy.persist.reference.custom.health.HealthCareReferralType;
 import com.medigy.persist.reference.custom.person.PersonRoleType;
 import com.medigy.persist.reference.type.GenderType;
 import com.medigy.persist.reference.type.LanguageType;
-import com.medigy.persist.util.HibernateUtil;
+import org.hibernate.Transaction;
+import org.hibernate.classic.Session;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -55,6 +55,8 @@ public class TestHealthCareReferral extends TestCase
 {
     public void testHealthCareReferral()
     {
+        Session session = openSession();
+        Transaction transaction = session.beginTransaction();
         Calendar cal = Calendar.getInstance();
         cal.set(1965, 1, 1);
         final Person patient = Person.createNewPatient();
@@ -93,9 +95,9 @@ public class TestHealthCareReferral extends TestCase
         providerRole.setPerson(provider);
         provider.addRole(providerRole);
 
-        HibernateUtil.getSession().save(patient);
-        HibernateUtil.getSession().save(requestorDoctor);
-        HibernateUtil.getSession().save(provider);
+        session.save(patient);
+        session.save(requestorDoctor);
+        session.save(provider);
 
         cal.set(2005, 5, 16);
         final HealthCareReferral referral = new HealthCareReferral();
@@ -105,16 +107,19 @@ public class TestHealthCareReferral extends TestCase
         final Date time = cal.getTime();
         referral.setReferralDate(time);
         referral.setType(HealthCareReferralType.Cache.CONSULTATION.getEntity());
-        HibernateUtil.getSession().save(referral);
+        session.save(referral);
+        transaction.commit();
+        session.close();
 
-        final HealthCareReferral newReferral = (HealthCareReferral) HibernateUtil.getSession().load(HealthCareReferral.class, referral.getHealthCareReferralId());
+        session = openSession();
+        final HealthCareReferral newReferral = (HealthCareReferral) session.load(HealthCareReferral.class, referral.getHealthCareReferralId());
         cal.setTime(newReferral.getReferralDate());
         assertThat(cal.get(Calendar.YEAR), eq(2005));
         assertThat(cal.get(Calendar.MONTH), eq(5));
         assertThat(cal.get(Calendar.DATE), eq(16));
-        assertThat(newReferral.getPatientRole(), eq(patientRole));
-        assertThat(newReferral.getRequesterRole(), eq(requestorRole));
-        assertThat(newReferral.getProviderRole(), eq(providerRole));
-
+        assertThat(newReferral.getPatientRole().getRoleId(), eq(patientRole.getRoleId()));
+        assertThat(newReferral.getRequesterRole().getRoleId(), eq(requestorRole.getRoleId()));
+        assertThat(newReferral.getProviderRole().getRoleId(), eq(providerRole.getRoleId()));
+        session.close();
     }
 }
