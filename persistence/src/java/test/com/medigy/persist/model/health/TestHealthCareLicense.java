@@ -65,9 +65,6 @@ public class TestHealthCareLicense extends TestCase
         Session session = openSession();
         Transaction transaction = session.beginTransaction();
         final Person doctor = new Person();
-        final HealthCareLicense license = new HealthCareLicense();
-        final HealthCareLicense license2 = new HealthCareLicense();
-
         Calendar cal = Calendar.getInstance();
         cal.set(1965, 1, 1);
 
@@ -76,6 +73,8 @@ public class TestHealthCareLicense extends TestCase
         doctor.setBirthDate(cal.getTime());
         doctor.addGender(GenderType.Cache.MALE.getEntity());
         doctor.addLanguage(LanguageType.Cache.ENGLISH.getEntity());
+        session.save(doctor);
+        session.flush();
 
         final Country country = new Country();
         country.setCountryName("USA");
@@ -84,9 +83,14 @@ public class TestHealthCareLicense extends TestCase
         final State state = new State("Virginia", "VA");
         country.addState(state);
         session.save(state);
-        session.save(doctor);
+        transaction.commit();
+        session.close();
 
+        session = openSession();
+        transaction = session.beginTransaction();
         final Calendar calendar = Calendar.getInstance();
+        final HealthCareLicense license = new HealthCareLicense();
+        final HealthCareLicense license2 = new HealthCareLicense();
 
         license.setType(HealthCareLicenseType.Cache.BOARD_CERTIFICATION.getEntity());
         license.setLicenseNumber("007");
