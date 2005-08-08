@@ -46,6 +46,7 @@ import com.medigy.persist.reference.custom.health.HealthCareLicenseType;
 import com.medigy.persist.reference.type.GenderType;
 import com.medigy.persist.reference.type.LanguageType;
 import org.hibernate.Transaction;
+import org.hibernate.criterion.Restrictions;
 import org.hibernate.classic.Session;
 
 import java.util.Calendar;
@@ -54,17 +55,11 @@ import java.util.Set;
 public class TestHealthCareLicense extends TestCase
 {
 
-    protected void tearDown() throws Exception
-    {
-        super.tearDown();
-
-    }
-
     public void testHealthCareLicense()
     {
         Session session = openSession();
         Transaction transaction = session.beginTransaction();
-        final Person doctor = new Person();
+        Person doctor = new Person();
         Calendar cal = Calendar.getInstance();
         cal.set(1965, 1, 1);
 
@@ -88,6 +83,7 @@ public class TestHealthCareLicense extends TestCase
 
         session = openSession();
         transaction = session.beginTransaction();
+        doctor = (Person) session.get(Person.class, doctor.getPartyId());
         final Calendar calendar = Calendar.getInstance();
         final HealthCareLicense license = new HealthCareLicense();
         final HealthCareLicense license2 = new HealthCareLicense();
@@ -112,7 +108,7 @@ public class TestHealthCareLicense extends TestCase
         session.close();
 
         session = openSession();
-        final Person savedDoctor = (Person) session.get(Person.class, doctor.getPartyId());
+        final Person savedDoctor = (Person) session.createCriteria(Person.class).add(Restrictions.eq("partyId", doctor.getPartyId())).uniqueResult();
         assertThat(savedDoctor, NOT_NULL);
         final Set<HealthCareLicense> licenses = savedDoctor.getLicenses();
         assertThat(licenses.size(), eq(2));
