@@ -93,12 +93,13 @@ public class TestInsurance extends TestCase
 
         session.save(plan2);
         blueCross.getInsuranceProducts().add(ppoProduct);
-
         transaction.commit();
+        final Long orgId = blueCross.getOrgId();
         session.close();
 
         session = openSession();
-        final Organization carrier = (Organization) session.createCriteria(Organization.class).add(Restrictions.eq("partyId", blueCross.getOrgId())).uniqueResult();
+        assertThat(orgId, NOT_NULL);
+        final Organization carrier = (Organization) session.createCriteria(Organization.class).add(Restrictions.eq("partyId", orgId)).uniqueResult();
         assertNotNull(carrier);
         final Set<InsuranceProduct> insuranceProducts = carrier.getInsuranceProducts();
         assertThat(insuranceProducts.size(), eq(1));
