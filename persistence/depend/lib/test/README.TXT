@@ -4,3 +4,4 @@ Library                             Required By
 ----------------------------------  ------------------------
 hsqldb-1.7.3.2.jar                  Medigy test cases
 dbunit-2.1.jar                      Medigy test cases
+mysql-connector-java-3.1.10-bin.jar 
