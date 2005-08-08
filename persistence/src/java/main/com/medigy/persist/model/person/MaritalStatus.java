@@ -87,8 +87,8 @@ public class MaritalStatus extends AbstractEntity implements Comparable
         this.identifier = identifier;
     }
 
-    @ManyToOne(cascade={CascadeType.ALL})
-    @JoinColumn(name = "partyId", nullable = false)
+    @ManyToOne
+    @JoinColumn(name =Person.PK_COLUMN_NAME, nullable = false)
     public Person getPerson()
     {
         return person;

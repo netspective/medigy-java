@@ -80,8 +80,8 @@ public class Gender extends AbstractDateDurationEntity implements Comparable
         this.identifier = identifier;
     }
 
-    @ManyToOne(cascade={CascadeType.ALL})
-    @JoinColumn(name = "party_id", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = Person.PK_COLUMN_NAME, nullable = false)
     public Person getPerson()
     {
         return person;
