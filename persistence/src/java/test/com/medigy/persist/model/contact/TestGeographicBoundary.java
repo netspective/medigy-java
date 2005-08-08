@@ -77,28 +77,29 @@ public class TestGeographicBoundary extends TestCase
     {
         Session session = openSession();
         Transaction transaction = session.beginTransaction();
-        final PostalAddress address = new PostalAddress();
-        address.setAddress1("123 Acme Street");
-        address.setAddress2("Suite 100");
-
         final Country country = new Country();
         country.setCountryName("United States of America");
         country.setCountryAbbreviation("USA");
+        session.save(country);
 
         final State virginia = new State();
         virginia.setStateName("Virginia");
         virginia.setStateAbbreviation("VA");
         country.addState(virginia);
+        session.save(virginia);
 
         final County county = new County();
         county.setCountyName("Fairfax County");
         virginia.addCounty(county);
+        session.save(county);        
 
+        final PostalAddress address = new PostalAddress();
+        address.setAddress1("123 Acme Street");
+        address.setAddress2("Suite 100");
         address.setCountry(country);
         address.setState(virginia);
         address.setCounty(county);
 
-        session.save(country);
         session.save(address);
         transaction.commit();
         session.close();
@@ -201,7 +202,7 @@ public class TestGeographicBoundary extends TestCase
         final State ohio = new State("Ohio", "OH");
         ohio.setParentCountry(usa);
         usa.addState(ohio);
-        session.update(usa);
+        session.save(ohio);
         transaction.commit();
         session.close();
 

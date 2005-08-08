@@ -65,11 +65,13 @@ public class TestHealthCareReferral extends TestCase
         patient.setBirthDate(cal.getTime());
         patient.addGender(GenderType.Cache.MALE.getEntity());
         patient.addLanguage(LanguageType.Cache.ENGLISH.getEntity());
+        session.save(patient);
 
         final PersonRole patientRole = new PersonRole();
         patientRole.setType(PersonRoleType.Cache.PATIENT.getEntity());
         patientRole.setPerson(patient);
         patient.addRole(patientRole);
+        session.save(patientRole);
 
         final Person requestorDoctor = Person.createNewPhysician();
         requestorDoctor.setLastName("Doctor");
@@ -77,11 +79,13 @@ public class TestHealthCareReferral extends TestCase
         requestorDoctor.setBirthDate(cal.getTime());
         requestorDoctor.addGender(GenderType.Cache.MALE.getEntity());
         requestorDoctor.addLanguage(LanguageType.Cache.ENGLISH.getEntity());
+        session.save(requestorDoctor);
 
         final PersonRole requestorRole = new PersonRole();
         requestorRole.setType(PersonRoleType.Cache.INDIVIDUAL_HEALTH_CARE_PRACTITIONER.getEntity());
         requestorRole.setPerson(requestorDoctor);
         requestorDoctor.addRole(requestorRole);
+        session.save(requestorRole);
 
         final Person provider = Person.createNewPhysician();
         provider.setLastName("Doctor");
@@ -89,15 +93,13 @@ public class TestHealthCareReferral extends TestCase
         provider.setBirthDate(cal.getTime());
         provider.addGender(GenderType.Cache.MALE.getEntity());
         provider.addLanguage(LanguageType.Cache.ENGLISH.getEntity());
+        session.save(provider);
 
         final PersonRole providerRole = new PersonRole();
         providerRole.setType(PersonRoleType.Cache.INDIVIDUAL_HEALTH_CARE_PRACTITIONER.getEntity());
         providerRole.setPerson(provider);
         provider.addRole(providerRole);
-
-        session.save(patient);
-        session.save(requestorDoctor);
-        session.save(provider);
+        session.save(providerRole);
 
         cal.set(2005, 5, 16);
         final HealthCareReferral referral = new HealthCareReferral();

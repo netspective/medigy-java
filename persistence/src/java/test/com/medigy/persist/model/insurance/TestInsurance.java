@@ -68,10 +68,12 @@ public class TestInsurance extends TestCase
         final Organization blueCross = new Organization();
         blueCross.setOrganizationName("Blue Cross Blue Shield");
         blueCross.addPartyClassification(OrganizationClassificationType.Cache.INSURANCE.getEntity());
+        session.save(blueCross);
 
         final InsuranceProduct ppoProduct = new InsuranceProduct();
         ppoProduct.setType(InsuranceProductType.Cache.MEDICAID.getEntity());
         ppoProduct.setOrganization(blueCross);
+        session.save(ppoProduct);
 
         final InsurancePlan plan1 =  new InsurancePlan();
         plan1.setInsuranceProduct(ppoProduct);
@@ -79,6 +81,7 @@ public class TestInsurance extends TestCase
         plan1.setOrganization(blueCross);
         ppoProduct.addInsurancePlan(plan1);
         blueCross.addInsurancePlan(plan1);
+        session.save(plan1);
 
         final InsurancePlan plan2 =  new InsurancePlan();
         plan2.setInsuranceProduct(ppoProduct);
@@ -87,8 +90,9 @@ public class TestInsurance extends TestCase
         ppoProduct.addInsurancePlan(plan2);
         blueCross.addInsurancePlan(plan2);
 
+        session.save(plan2);
         blueCross.getInsuranceProducts().add(ppoProduct);
-        session.save(blueCross);
+        
         transaction.commit();
         session.close();
 

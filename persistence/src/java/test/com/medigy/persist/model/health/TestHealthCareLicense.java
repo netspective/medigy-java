@@ -94,6 +94,7 @@ public class TestHealthCareLicense extends TestCase
         license.setThroughDate(calendar.getTime());
         license.setState(state);
         doctor.addLicense(license);
+        session.save(license);
 
         calendar.set(2000, 5, 1);
         license2.setType(HealthCareLicenseType.Cache.OTHER.getEntity());
@@ -101,7 +102,7 @@ public class TestHealthCareLicense extends TestCase
         license2.setLicenseNumber("XXX");
         license2.setThroughDate(calendar.getTime());
         doctor.addLicense(license2);
-
+        session.save(license2);
         transaction.commit();
         session.close();
 
