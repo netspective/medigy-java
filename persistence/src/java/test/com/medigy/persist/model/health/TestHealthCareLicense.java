@@ -51,6 +51,7 @@ import org.hibernate.classic.Session;
 
 import java.util.Calendar;
 import java.util.Set;
+import java.util.GregorianCalendar;
 
 public class TestHealthCareLicense extends TestCase
 {
@@ -60,7 +61,7 @@ public class TestHealthCareLicense extends TestCase
         Session session = openSession();
         Transaction transaction = session.beginTransaction();
         Person doctor = new Person();
-        Calendar cal = Calendar.getInstance();
+        Calendar cal = new GregorianCalendar();
         cal.set(1965, 1, 1);
 
         doctor.setLastName("Bond");
@@ -69,7 +70,13 @@ public class TestHealthCareLicense extends TestCase
         doctor.addGender(GenderType.Cache.MALE.getEntity());
         doctor.addLanguage(LanguageType.Cache.ENGLISH.getEntity());
         session.save(doctor);
+        transaction.commit();
+        session.close();
 
+        session = openSession();
+        transaction = session.beginTransaction();
+
+        final Calendar calendar = Calendar.getInstance();
         final Country country = new Country();
         country.setCountryName("USA");
         session.save(country);
@@ -77,19 +84,12 @@ public class TestHealthCareLicense extends TestCase
         final State state = new State("Virginia", "VA");
         country.addState(state);
         session.save(state);
-        transaction.commit();
-        session.close();
 
-        session = openSession();
-        transaction = session.beginTransaction();
-        final Person doctor2 = (Person) session.createCriteria(Person.class).add(Restrictions.eq("partyId", doctor.getPartyId())).uniqueResult();
-        final Calendar calendar = Calendar.getInstance();
+        final Person doctor2 = (Person) session.createCriteria(Person.class).uniqueResult();
         final HealthCareLicense license = new HealthCareLicense();
         final HealthCareLicense license2 = new HealthCareLicense();
-
         license.setType(HealthCareLicenseType.Cache.BOARD_CERTIFICATION.getEntity());
         license.setLicenseNumber("007");
-
         calendar.set(3000, 5, 1);
         license.setThroughDate(calendar.getTime());
         license.setState(state);
