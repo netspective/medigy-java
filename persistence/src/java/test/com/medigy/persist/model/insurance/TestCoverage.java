@@ -42,7 +42,7 @@ import com.medigy.persist.TestCase;
 import com.medigy.persist.reference.custom.insurance.CoverageLevelBasisType;
 import com.medigy.persist.reference.custom.insurance.CoverageLevelType;
 import com.medigy.persist.reference.custom.insurance.CoverageType;
-import com.medigy.persist.util.HibernateUtil;
+import org.hibernate.classic.Session;
 
 /**
  * Test case for testing coverage related classes
@@ -55,6 +55,7 @@ public class TestCoverage extends TestCase
 {
     public void testCoverage() throws Exception
     {
+        Session session = openSession();
         final Coverage coverage = new Coverage();
         coverage.setType(CoverageType.Cache.MAJOR_MEDICAL.getEntity());
 
@@ -74,12 +75,14 @@ public class TestCoverage extends TestCase
         coverage.addCoverageLevel(copay);
         coverage.addCoverageLevel(coins);
 
-        HibernateUtil.getSession().save(coverage);
-        HibernateUtil.closeSession();
+        session.save(coverage);
+        session.close();
 
-        final Coverage medicalCoverage = (Coverage) HibernateUtil.getSession().load(Coverage.class, coverage.getCoverageId());
+        session  = openSession();
+        final Coverage medicalCoverage = (Coverage) session.load(Coverage.class, coverage.getCoverageId());
         assertThat(medicalCoverage.getCoverageLevels().size(), eq(2));
         assertThat(medicalCoverage.getCoverageLevel(CoverageLevelType.Cache.COPAY.getEntity()).getValue(), eq(new Float(10)));
         assertThat(medicalCoverage.getCoverageLevel(CoverageLevelType.Cache.CONINSURANCE.getEntity()).getValue(), eq(new Float(80)));
+        session.close();
     }
 }

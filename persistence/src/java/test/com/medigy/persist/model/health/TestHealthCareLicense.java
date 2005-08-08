@@ -45,15 +45,25 @@ import com.medigy.persist.model.person.Person;
 import com.medigy.persist.reference.custom.health.HealthCareLicenseType;
 import com.medigy.persist.reference.type.GenderType;
 import com.medigy.persist.reference.type.LanguageType;
-import com.medigy.persist.util.HibernateUtil;
+import org.hibernate.Transaction;
+import org.hibernate.classic.Session;
 
 import java.util.Calendar;
 import java.util.Set;
 
 public class TestHealthCareLicense extends TestCase
 {
+
+    protected void tearDown() throws Exception
+    {
+        super.tearDown();
+
+    }
+
     public void testHealthCareLicense()
     {
+        Session session = openSession();
+        Transaction transaction = session.beginTransaction();
         final Person doctor = new Person();
         final HealthCareLicense license = new HealthCareLicense();
         final HealthCareLicense license2 = new HealthCareLicense();
@@ -72,8 +82,8 @@ public class TestHealthCareLicense extends TestCase
         final State state = new State("Virginia", "VA");
         country.addState(state);
 
-        HibernateUtil.getSession().save(country);
-        HibernateUtil.getSession().save(doctor);
+        session.save(country);
+        session.save(doctor);
 
         final Calendar calendar = Calendar.getInstance();
 
@@ -92,7 +102,11 @@ public class TestHealthCareLicense extends TestCase
         license2.setThroughDate(calendar.getTime());
         doctor.addLicense(license2);
 
-        final Person savedDoctor = (Person) getSession().load(Person.class, doctor.getPartyId());
+        transaction.commit();
+        session.close();
+
+        session = openSession();
+        final Person savedDoctor = (Person) session.load(Person.class, doctor.getPartyId());
         assertThat(savedDoctor, NOT_NULL);
         final Set<HealthCareLicense> licenses = savedDoctor.getLicenses();
         assertThat(licenses.size(), eq(2));
@@ -106,6 +120,7 @@ public class TestHealthCareLicense extends TestCase
         assertThat(otherLicense.getDescription(), eq("Voodoo License"));
         assertThat(otherLicense.getLicenseNumber(), eq("XXX"));
         assertThat(otherLicense.isExpired(), eq(true));
+        session.close();
 
     }
 }

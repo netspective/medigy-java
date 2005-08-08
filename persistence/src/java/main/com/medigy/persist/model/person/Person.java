@@ -111,7 +111,7 @@ public class Person extends Party
     private List<Gender> genders = new ArrayList<Gender>();
     private List<MaritalStatus> maritalStatuses = new ArrayList<MaritalStatus>();
     private Set<PhysicalCharacteristic> physicalCharacteristics = new HashSet<PhysicalCharacteristic>();
-    private Set<HealthCareEncounter> healthCareVisits = new HashSet<HealthCareEncounter>();
+    private Set<HealthCareEncounter> healthCareEncounters = new HashSet<HealthCareEncounter>();
     private Set<HealthCareEpisode> healthCareEpisodes = new HashSet<HealthCareEpisode>();
     private Set<Language> languages = new HashSet<Language>();
     private Set<HealthCareLicense> licenses = new HashSet<HealthCareLicense>();
@@ -385,14 +385,14 @@ public class Person extends Party
     }
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "patient", fetch = FetchType.LAZY)
-    public Set<HealthCareEncounter> getHealthCareVisits()
+    public Set<HealthCareEncounter> getHealthCareEncounters()
     {
-        return healthCareVisits;
+        return healthCareEncounters;
     }
 
-    public void setHealthCareVisits(final Set<HealthCareEncounter> healthCareVisits)
+    public void setHealthCareEncounters(final Set<HealthCareEncounter> healthCareEncounters)
     {
-        this.healthCareVisits = healthCareVisits;
+        this.healthCareEncounters = healthCareEncounters;
     }
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "person")

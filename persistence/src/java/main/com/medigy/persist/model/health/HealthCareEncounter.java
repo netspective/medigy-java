@@ -73,7 +73,7 @@ public class HealthCareEncounter  extends AbstractDateDurationEntity
 {
     public static final String PK_COLUMN_NAME = "visit_id";
 
-    private Long healthCareVisitId;
+    private Long healthCareEncounterId;
     private Facility facility;
     private Person patient;
     private PatientType patientType;
@@ -95,14 +95,14 @@ public class HealthCareEncounter  extends AbstractDateDurationEntity
 
     @Id(generate = GeneratorType.AUTO)
     @Column(name = PK_COLUMN_NAME)
-    public Long getHealthCareVisitId()
+    public Long getHealthCareEncounterId()
     {
-        return healthCareVisitId;
+        return healthCareEncounterId;
     }
 
-    protected void setHealthCareVisitId(final Long healthCareVisitId)
+    protected void setHealthCareEncounterId(final Long healthCareEncounterId)
     {
-        this.healthCareVisitId = healthCareVisitId;
+        this.healthCareEncounterId = healthCareEncounterId;
     }
 
     @Basic(temporalType = TemporalType.TIMESTAMP)
@@ -284,7 +284,7 @@ public class HealthCareEncounter  extends AbstractDateDurationEntity
      * Gets all the halth care deliveries (services) performed during the visit
      * @return
      */
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "healthCareVisit")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "healthCareEncounter")
     public Set<HealthCareDelivery> getHealthCareDeliveries()
     {
         return healthCareDeliveries;
@@ -308,7 +308,7 @@ public class HealthCareEncounter  extends AbstractDateDurationEntity
     }
 
     /*
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "healthCareVisit")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "healthCareEncounter")
     public List<Perscription> getPerscription()
     {
         return perscription;

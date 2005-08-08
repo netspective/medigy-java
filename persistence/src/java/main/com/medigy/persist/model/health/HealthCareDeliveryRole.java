@@ -38,16 +38,15 @@
  */
 package com.medigy.persist.model.health;
 
-import javax.persistence.CascadeType;
+import com.medigy.persist.model.common.AbstractDateDurationEntity;
+import com.medigy.persist.model.party.Party;
+import com.medigy.persist.reference.custom.health.HealthCareDeliveryRoleType;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-
-import com.medigy.persist.model.common.AbstractDateDurationEntity;
-import com.medigy.persist.model.party.Party;
-import com.medigy.persist.reference.custom.health.HealthCareDeliveryRoleType;
 
 @Entity
 public class HealthCareDeliveryRole extends AbstractDateDurationEntity
@@ -72,7 +71,7 @@ public class HealthCareDeliveryRole extends AbstractDateDurationEntity
         this.healthCareDeliveryRoleId = healthCareDeliveryRoleId;
     }
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "health_care_delivery_id", nullable = false)
     public HealthCareDelivery getHealthCareDelivery()
     {
@@ -84,7 +83,7 @@ public class HealthCareDeliveryRole extends AbstractDateDurationEntity
         this.healthCareDelivery = healthCareDelivery;
     }
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "party_id")
     public Party getParty()
     {

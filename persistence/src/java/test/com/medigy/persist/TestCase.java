@@ -35,20 +35,14 @@
  * CAUSED AND REGARDLESS OF THE THEORY OF LIABILITY, ARISING OUT OF THE USE OF OR INABILITY TO USE THE SOFTWARE, EVEN
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
- * @author Shahid N. Shah
  */
 
-/*
- * Copyright (c) 2005 Your Corporation. All Rights Reserved.
- */
 package com.medigy.persist;
 
 import com.medigy.persist.model.session.ProcessSession;
 import com.medigy.persist.model.session.Session;
 import com.medigy.persist.model.session.SessionManager;
-import com.medigy.persist.util.HibernateConfiguration;
 import com.medigy.persist.util.HibernateUtil;
-import com.medigy.persist.util.ModelInitializer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.dbunit.Assertion;
@@ -58,39 +52,39 @@ import org.dbunit.dataset.CompositeTable;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.ITable;
 import org.dbunit.dataset.xml.FlatXmlDataSet;
-import org.dbunit.operation.DatabaseOperation;
 import org.hibernate.HibernateException;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.cfg.Environment;
-import org.hibernate.dialect.HSQLDialect;
-import org.hibernate.tool.hbm2ddl.SchemaExport;
 import org.jmock.MockObjectTestCase;
 import org.jmock.core.Constraint;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.util.Properties;
-import java.util.logging.LogManager;
 
+/**
+ * Test case based on hibernate test case
+ */
 public abstract class TestCase extends MockObjectTestCase
 {
     private static final Log log = LogFactory.getLog(TestCase.class);
 
-    public static final String BUILD_PROPERTY_PREFIX = "ant.build.";
-
-    public static final String TEST_DB_PROPERTY_PREFIX = "module.test.database";
-    public static final String TEST_DB_DIALECT_PROPERTY = TEST_DB_PROPERTY_PREFIX + ".dialectClass";
-    public static final String TEST_DB_DRIVER_PROPERTY = TEST_DB_PROPERTY_PREFIX + ".driverClass";
-    public static final String TEST_DB_URL_PROPERTY = TEST_DB_PROPERTY_PREFIX + ".url";
-    public static final String TEST_DB_USER_PROPERTY = TEST_DB_PROPERTY_PREFIX + ".user";
-    public static final String TEST_DB_PASSWD_PROPERTY = TEST_DB_PROPERTY_PREFIX + ".password";
-
-    protected File databaseDirectory;
     protected boolean useExternalModelData = false;
+
+    // this is only used to keep track of currently open/used hibernate session
+    private org.hibernate.classic.Session session;
+    private SessionFactory sessionFactory;
+
+    public org.hibernate.classic.Session openSession() throws HibernateException
+    {
+        session = sessionFactory.openSession();
+        return session;
+    }
+
+    protected boolean dropAfterFailure()
+    {
+        return true;
+    }
 
     protected void assertThat(Object something, Constraint matches)
     {
@@ -103,127 +97,79 @@ public abstract class TestCase extends MockObjectTestCase
         }
     }
 
-    protected String getClassNameWithoutPackage()
+    /*
+    protected void runTest() throws Throwable
     {
-        final String pkgAndClassName = getClass().getName();
-        final int classNameDelimPos = pkgAndClassName.lastIndexOf('.');
-        return classNameDelimPos != -1 ? pkgAndClassName.substring(classNameDelimPos + 1) : pkgAndClassName;
-    }
-
-    protected Properties setupDatabaseProperties(final String dialectClassName,
-                                                 final String jdbcDriverClassName,
-                                                 final String url, final String userName,
-                                                 final String password)
-    {
-        final Properties hibProperties = new Properties();
-        hibProperties.setProperty(Environment.DIALECT, dialectClassName);
-        hibProperties.setProperty(Environment.CONNECTION_PREFIX + ".driver_class", jdbcDriverClassName);
-        hibProperties.setProperty(Environment.CONNECTION_PREFIX + ".url", url);
-        hibProperties.setProperty(Environment.CONNECTION_PREFIX + ".username", userName);
-        hibProperties.setProperty(Environment.CONNECTION_PREFIX + ".password", password);
-        hibProperties.setProperty(Environment.HBM2DDL_AUTO, "create-drop");
-        hibProperties.setProperty(Environment.SHOW_SQL, "true");
-        return hibProperties;
-    }
-
-    protected Properties setupHsqldb()
-    {
-        final Properties hibProperties = new Properties();
-        hibProperties.setProperty(Environment.DIALECT, HSQLDialect.class.getName());
-        hibProperties.setProperty(Environment.CONNECTION_PREFIX + ".driver_class", "org.hsqldb.jdbcDriver");
-        hibProperties.setProperty(Environment.CONNECTION_PREFIX + ".url", "jdbc:hsqldb:" + databaseDirectory + "/db");
-        hibProperties.setProperty(Environment.CONNECTION_PREFIX + ".username", "sa");
-        hibProperties.setProperty(Environment.CONNECTION_PREFIX + ".password", "");
-        hibProperties.setProperty(Environment.HBM2DDL_AUTO, "create-drop");
-        hibProperties.setProperty(Environment.SHOW_SQL, "false");
-        return hibProperties;
-    }
-
-    protected HibernateConfiguration getHibernateConfiguration() throws HibernateException, FileNotFoundException, IOException
-    {
-        final ByteArrayOutputStream out = new ByteArrayOutputStream();
-        final Properties logProperties = new Properties();
-        logProperties.setProperty("handlers", "java.util.logging.ConsoleHandler");
-        logProperties.setProperty("java.util.logging.ConsoleHandler.formatter", "java.util.logging.SimpleFormatter");
-        logProperties.setProperty("org.hibernate.level", "WARNING");
-        logProperties.store(out, "Generated by " + TestCase.class.getName());
-        LogManager.getLogManager().readConfiguration(new ByteArrayInputStream(out.toByteArray()));
-
-        setupDatabaseDirectory();
-        final HibernateConfiguration config = new HibernateConfiguration();
-
-        if (System.getProperty(TEST_DB_DIALECT_PROPERTY) != null)
-        {
-            final String dialectName = System.getProperty(TEST_DB_DIALECT_PROPERTY);
-            final String databaseUrl = System.getProperty(TEST_DB_URL_PROPERTY);
-            final String databaseUserName = System.getProperty(TEST_DB_USER_PROPERTY);
-            final String databasePassword = System.getProperty(TEST_DB_PASSWD_PROPERTY);
-            final String databaseDriver = System.getProperty(TEST_DB_DRIVER_PROPERTY);
-            config.addProperties(setupDatabaseProperties(dialectName, databaseDriver, databaseUrl, databaseUserName,
-                databasePassword));
-        }
-        else if (System.getProperty(BUILD_PROPERTY_PREFIX + TEST_DB_DIALECT_PROPERTY) != null)
-        {
-            final String dialectName = System.getProperty(BUILD_PROPERTY_PREFIX + TEST_DB_DIALECT_PROPERTY);
-            final String databaseUrl = System.getProperty(BUILD_PROPERTY_PREFIX + TEST_DB_URL_PROPERTY);
-            final String databaseUserName = System.getProperty(BUILD_PROPERTY_PREFIX + TEST_DB_USER_PROPERTY);
-            final String databasePassword = System.getProperty(BUILD_PROPERTY_PREFIX + TEST_DB_PASSWD_PROPERTY);
-            final String databaseDriver = System.getProperty(BUILD_PROPERTY_PREFIX + TEST_DB_DRIVER_PROPERTY);
-            config.addProperties(setupDatabaseProperties(dialectName, databaseDriver, databaseUrl, databaseUserName,
-                databasePassword));
-        }
-        else
-        {
-            // assume HSQLDB
-            config.addProperties(setupHsqldb());
-        }
-
-
+        final boolean stats = ((SessionFactoryImplementor) sessionFactory).getStatistics().isStatisticsEnabled();
         try
         {
-            config.configure("com/medigy/persist/hibernate.cfg.xml");
-            config.buildMappings();
+            if (stats) sessionFactory.getStatistics().clear();
+
+            super.runTest();
+
+            if (stats) sessionFactory.getStatistics().logSummary();
+
+            org.hibernate.Session session = openSession();
+            Transaction t = session.beginTransaction();
+            final List entityList = SetupTestConfiguration.getInstance().getPostInsertEventListener().getEntityList();
+            for (Object entity : entityList)
+            {
+                System.out.println("Deleteing: " + entity.getClass().getName());
+                session.refresh(entity);
+                session.delete(entity);
+            }
+            t.commit();
+            session.close();
+            SessionManager.getInstance().popActiveSession();
+
+            if (session != null && session.isOpen())
+            {
+                if (session.isConnected()) session.connection().rollback();
+                session.close();
+                session = null;
+                fail("unclosed session");
+            }
+            else
+            {
+                session = null;
+            }
         }
-        catch (HibernateException e)
+        catch (Throwable e)
         {
-            log.error(e);
-            throw new RuntimeException(e);
+            try
+            {
+                if (session != null && session.isOpen())
+                {
+                    if (session.isConnected()) session.connection().rollback();
+                    session.close();
+                }
+            }
+            catch (Exception ignore)
+            {
+            }
+            try
+            {
+                if (dropAfterFailure() && sessionFactory != null)
+                {
+                    sessionFactory.close();
+                    sessionFactory = null;
+                }
+            }
+            catch (Exception ignore)
+            {
+            }
+            throw e;
         }
-        return config;
     }
+    */
 
     protected void setUp() throws Exception
     {
-        super.setUp();
-        if (getDataSetFile() != null)
-            useExternalModelData = true;
-        final HibernateConfiguration hibernateConfiguration = getHibernateConfiguration();
-        HibernateUtil.setConfiguration(hibernateConfiguration);
-        setupModelInitializer(hibernateConfiguration);
-        generateSchemaDdl(hibernateConfiguration);
-        setupSession();
-        HibernateUtil.enableStatistics();
+        sessionFactory = SetupTestConfiguration.getInstance().getSessionFactory();
+        //setupApplicationSession();
+        SetupTestConfiguration.getInstance().getPostInsertEventListener().newEntityList();
     }
 
-    protected void setupDatabaseDirectory()
-    {
-        final String systemTempDir = System.getProperty("java.io.tmpdir");
-        final String systemFileSep = System.getProperty("file.separator");
-        final String testDbDir = System.getProperty("ant.build.module.artifacts.test.db.home", systemTempDir);
-        databaseDirectory = new File(testDbDir + systemFileSep + getClassNameWithoutPackage());
-        log.info("Test database directory: " + databaseDirectory.getAbsolutePath());
-    }
-
-    protected void generateSchemaDdl(final HibernateConfiguration hibernateConfiguration)
-    {
-        final String systemFileSep = System.getProperty("file.separator");
-        // Generate the DDL into a file so we can review it
-        SchemaExport se = new SchemaExport(hibernateConfiguration);
-        final String dialectName = hibernateConfiguration.getProperties().getProperty(Environment.DIALECT);
-        final String dialectShortName = dialectName.substring(dialectName.lastIndexOf('.') + 1);
-        se.setOutputFile(databaseDirectory.getAbsolutePath() + systemFileSep + "medigy-" + dialectShortName + ".ddl");
-        se.create(false, false);
-    }
 
      /**
      * This method returns a DbUnit database connection
@@ -238,70 +184,35 @@ public abstract class TestCase extends MockObjectTestCase
     protected IDataSet getDataSet() throws Exception
     {
         InputStream stream = Environment.class.getResourceAsStream(getDataSetFile());
-		if (stream == null)
+        if (stream == null)
             stream = Thread.currentThread().getContextClassLoader().getResourceAsStream( getDataSetFile() );
-		if (stream == null)
-			throw new RuntimeException(getDataSetFile() + " not found");
+        if (stream == null)
+            throw new RuntimeException(getDataSetFile() + " not found");
 
         return new FlatXmlDataSet(stream);
     }
 
-    protected void setupModelInitializer(final HibernateConfiguration hibernateConfiguration) throws Exception
-    {
-        if (useExternalModelData)
-        {
-            IDatabaseConnection dbUnitConn = getDbUnitConnection();
-            //DatabaseOperation.REFRESH.execute(dbUnitConn, getDataSet());
-            DatabaseOperation.CLEAN_INSERT.execute(dbUnitConn, getDataSet());
-            dbUnitConn.getConnection().commit();
-            dbUnitConn.getConnection().close();
-            dbUnitConn.close();
-        }
-        if (!useExternalModelData)
-            new ModelInitializer(HibernateUtil.getSession(),
-                             ModelInitializer.SeedDataPopulationType.AUTO,
-                             hibernateConfiguration).initialize();
-        else
-            new ModelInitializer(HibernateUtil.getSession(),
-                             ModelInitializer.SeedDataPopulationType.NO,
-                             hibernateConfiguration).initialize();
-    }
-
-    protected void setupSession() throws Exception
+    protected void setupApplicationSession() throws Exception
     {
         // setup a person here so that we can add a contact information for him/her
-        Session session = new ProcessSession();
-        session.setProcessName(getClass().getName() + "." + getName());
-        SessionManager.getInstance().pushActiveSession(session);
-        HibernateUtil.getSession().save(session);
+        Session processSession = new ProcessSession();
+        processSession.setProcessName(getClass().getName() + "." + getName());
+        SessionManager.getInstance().pushActiveSession(processSession);
+
+        // TODO: Need a commit?
+        final org.hibernate.classic.Session session = openSession();
+        session.save(processSession);
+        session.close();
     }
 
     protected void tearDown() throws Exception
     {
-        HibernateUtil.logStatistics();
-        if (useExternalModelData)
-            DatabaseOperation.NONE.execute(getDbUnitConnection(), getDataSet());
-        super.tearDown();
-
+        org.hibernate.Session session = openSession();
+        Transaction t = session.beginTransaction();
+        SetupTestConfiguration.getInstance().getPostInsertEventListener().deleteEntityList(session);
+        t.commit();
+        session.close();
         SessionManager.getInstance().popActiveSession();
-        HibernateUtil.closeSession();
-
-        /*
-        if (databaseDirectory != null)
-        {
-            try
-            {
-
-                final File[] dbFiles = databaseDirectory.listFiles();
-                for (File file : dbFiles)
-                    file.delete();
-            }
-            catch (Exception e)
-            {
-                log.error(ExceptionUtils.getStackTrace(e));
-            }
-        }
-        */
     }
 
     /**
@@ -366,13 +277,4 @@ public abstract class TestCase extends MockObjectTestCase
         IDataSet fullDataSet = connection.createDataSet();
         FlatXmlDataSet.write(fullDataSet, new FileOutputStream(datasetFileName));
    }
-
-    /**
-     * Gets the hibernate session
-     * @return
-     */
-    protected org.hibernate.Session getSession()
-    {
-        return HibernateUtil.getSession();
-    }
 }

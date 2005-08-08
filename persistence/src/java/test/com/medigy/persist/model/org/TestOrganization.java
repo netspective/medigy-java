@@ -43,9 +43,10 @@ package com.medigy.persist.model.org;
 import com.medigy.persist.TestCase;
 import com.medigy.persist.model.party.Party;
 import com.medigy.persist.reference.type.party.PartyType;
-import com.medigy.persist.util.HibernateUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.Transaction;
+import org.hibernate.classic.Session;
 
 /**
  * Test class to test the Organization data model class. This should only test that the
@@ -62,29 +63,35 @@ public class TestOrganization  extends TestCase
      */
     public void testOrganization()
     {
-        HibernateUtil.beginTransaction();
+        Session session = openSession();
+        Transaction transaction = session.beginTransaction();
         Organization org = new Organization();
         org.setOrganizationName("Netspective");
-        HibernateUtil.getSession().save(org);
-        HibernateUtil.commitTransaction();
+        session.save(org);
+        transaction.commit();
+        session.close();
 
+        session = openSession();
         // check to make sure the org was saved successfully
-        Organization netspective = (Organization) getSession().load(Organization.class, org.getOrgId());
+        Organization netspective = (Organization) session.load(Organization.class, org.getOrgId());
         assertNotNull(netspective);
         assertEquals(org.getOrgId(), netspective.getOrgId());
         // make sure there is a PARTY entry also
-        Party netspectiveParty = (Party) getSession().load(Party.class, org.getOrgId());
+        Party netspectiveParty = (Party) session.load(Party.class, org.getOrgId());
         assertNotNull(netspectiveParty);
         assertEquals("Netspective", netspective.getOrganizationName());
         assertEquals(org.getOrgId(), netspectiveParty.getPartyId());
         assertEquals(PartyType.Cache.ORGANIZATION.getEntity(), netspectiveParty.getPartyType());
-        
+
         // update the org
-        HibernateUtil.beginTransaction();
+        transaction = session.beginTransaction();
         netspective.setOrganizationName("Acme");
-        HibernateUtil.commitTransaction();
-        
-        Organization acme = (Organization) getSession().load(Organization.class, netspective.getOrgId());
+        transaction.commit();
+        session.close();
+
+        session = openSession();
+        Organization acme = (Organization) session.load(Organization.class, netspective.getOrgId());
         assertEquals("Acme", acme.getOrganizationName());
+        session.close();
     }
 }

@@ -42,9 +42,10 @@ import com.medigy.persist.TestCase;
 import com.medigy.persist.model.party.Party;
 import com.medigy.persist.reference.custom.invoice.InvoiceStatusType;
 import com.medigy.persist.reference.custom.invoice.InvoiceTermType;
-import com.medigy.persist.util.HibernateUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.Transaction;
+import org.hibernate.classic.Session;
 
 import java.util.Calendar;
 
@@ -54,6 +55,8 @@ public class TestInvoice  extends TestCase
 
     public void testInvoice()
     {
+        Session session = openSession();
+        final Transaction transaction = session.beginTransaction();
         final Invoice invoice = new Invoice();
         invoice.setDescription("New invoice");
 
@@ -64,14 +67,14 @@ public class TestInvoice  extends TestCase
         termType.setCode("PAYMENT");
         termType.setLabel("Payment - net days");
         termType.setParty(Party.Cache.SYS_GLOBAL_PARTY.getEntity());
-        HibernateUtil.getSession().save(termType);
+        session.save(termType);
 
         final InvoiceTerm term = new InvoiceTerm();
         term.setInvoice(invoice);
         term.setType(termType);
         term.setTermValue(new Long(30));
         invoice.getInvoiceTerms().add(term);
-        HibernateUtil.getSession().save(invoice);
+        session.save(invoice);
 
         Calendar cal = Calendar.getInstance();
         cal.set(2005, 1, 10);
@@ -93,12 +96,14 @@ public class TestInvoice  extends TestCase
         final InvoiceItem item2 = new InvoiceItem();
         item2.setAmount(new Float(200.00));
         invoice.addInvoiceItem(item2);
- 
-        HibernateUtil.getSession().flush();
-        HibernateUtil.closeSession();
 
+        session.update(invoice);
+        transaction.commit();
+        session.close();
+
+        session = openSession();
         final Long invoiceId = invoice.getInvoiceId();
-        Invoice savedInvoice = (Invoice) HibernateUtil.getSession().load(Invoice.class, invoiceId);
+        Invoice savedInvoice = (Invoice) session.load(Invoice.class, invoiceId);
         assertEquals(1, savedInvoice.getInvoiceTerms().size());
         InvoiceTerm savedInvoiceTerm = (InvoiceTerm) savedInvoice.getInvoiceTerms().toArray()[0];
         assertEquals(savedInvoiceTerm.getTermValue(), new Long(30));
@@ -114,7 +119,7 @@ public class TestInvoice  extends TestCase
         log.info("VALID: Invoice term count");
         assertEquals(((InvoiceTerm) savedInvoice.getInvoiceTerms().toArray()[0]).getType(), termType);
         log.info("VALID: Invoice term type");
-        HibernateUtil.closeSession();
+        session.close();
     }
 
     

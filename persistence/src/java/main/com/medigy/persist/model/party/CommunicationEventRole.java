@@ -38,7 +38,9 @@
  */
 package com.medigy.persist.model.party;
 
-import javax.persistence.CascadeType;
+import com.medigy.persist.model.common.AbstractTopLevelEntity;
+import com.medigy.persist.reference.custom.party.CommunicationEventRoleType;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
@@ -46,9 +48,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-
-import com.medigy.persist.model.common.AbstractTopLevelEntity;
-import com.medigy.persist.reference.custom.party.CommunicationEventRoleType;
 
 @Entity
 @Table(name = "Comm_Event_Role")
@@ -95,8 +94,8 @@ public class CommunicationEventRole extends AbstractTopLevelEntity
         this.event = event;
     }
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "party_id")
+    @ManyToOne
+    @JoinColumn(name = Party.PK_COLUMN_NAME)
     public Party getParty()
     {
         return party;

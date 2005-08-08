@@ -44,27 +44,21 @@
 package com.medigy.persist.model.person;
 
 import com.medigy.persist.TestCase;
-import com.medigy.persist.model.org.Organization;
 import com.medigy.persist.reference.custom.person.EthnicityType;
-import com.medigy.persist.reference.custom.person.PersonIdentifierType;
-import com.medigy.persist.reference.custom.person.PersonRoleType;
-import com.medigy.persist.reference.custom.party.OrganizationRoleType;
-import com.medigy.persist.reference.custom.party.PersonOrgRelationshipType;
 import com.medigy.persist.reference.type.GenderType;
 import com.medigy.persist.reference.type.LanguageType;
 import com.medigy.persist.reference.type.MaritalStatusType;
-import com.medigy.persist.util.HibernateUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.Transaction;
+import org.hibernate.classic.Session;
 import org.hibernate.validator.InvalidStateException;
 import org.hibernate.validator.InvalidValue;
-import org.hibernate.Query;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Map;
 import java.util.HashMap;
-import java.util.List;
+import java.util.Map;
 
 public class TestPerson extends TestCase
 {
@@ -73,14 +67,17 @@ public class TestPerson extends TestCase
     public void testPerson()
     {
         final Calendar calendar = Calendar.getInstance();
+
         calendar.set(3000, 1, 1);
         Person invalidPerson = new Person();
         invalidPerson.setFirstName("Ryan");
         invalidPerson.setLastName("Hackett");
         invalidPerson.setBirthDate(calendar.getTime());
+
+        Session session = openSession();
         try
         {
-            getSession().save(invalidPerson);
+            session.save(invalidPerson);
         }
         catch (InvalidStateException e)
         {
@@ -91,13 +88,15 @@ public class TestPerson extends TestCase
             {
                 map.put(val.getPropertyName(), val);
             }
-
+            System.out.println("Verified invalid Person");
             assertTrue(map.containsKey("birthDate"));
             assertTrue(map.containsKey("genders"));
-            getSession().clear();
+            session.clear();
+            session.close();
         }
 
-        HibernateUtil.beginTransaction();
+        session = openSession();
+        Transaction transaction = session.beginTransaction();
 
         Calendar cal = Calendar.getInstance();
         cal.set(1975, 1, 1);
@@ -127,18 +126,20 @@ public class TestPerson extends TestCase
         newPerson.addLanguage(LanguageType.Cache.SPANISH.getEntity(), false);
         newPerson.setSsn("000-00-0000");
 
-        getSession().save(newPerson);
-        HibernateUtil.commitTransaction();
+        session.save(newPerson);
+        transaction.commit();
+        session.close();
 
-        HibernateUtil.beginTransaction();
+        session = openSession();
         //final Person persistedPerson = (Person) getSession().get(Person.class, newPerson.getPersonId());
-        final Person persistedPerson = (Person) getSession().createQuery("from Person where id = " + newPerson.getPersonId()).uniqueResult();
+        final Person persistedPerson = (Person) session.createQuery("from Person where id = " + newPerson.getPersonId()).uniqueResult();
         assertThat(persistedPerson, NOT_NULL);
         assertThat(persistedPerson.getFirstName(), eq("Ryan"));
         assertThat(persistedPerson.getMiddleName(), eq("Bluegrass"));
         assertThat(persistedPerson.getLastName(), eq("Hackett"));
         assertThat(persistedPerson.getPartyName(), eq("Ryan Bluegrass Hackett"));
 
+        assertThat(persistedPerson.getMaritalStatuses().size(), eq(2));
         // verify the ethnicites
         assertThat(persistedPerson.getEthnicities().size(), eq(2));
         assertThat(persistedPerson.hasEthnicity(EthnicityType.Cache.CAUCASIAN.getEntity()), eq(true));
@@ -156,6 +157,6 @@ public class TestPerson extends TestCase
             System.out.println(maritalStatus.getType().getLabel() + " " + maritalStatus.getFromDate());
         }
         assertEquals(GenderType.Cache.FEMALE.getEntity().getCode(), persistedPerson.getCurrentGenderType().getCode());
-        HibernateUtil.commitTransaction();
+        session.close();
     }
 }

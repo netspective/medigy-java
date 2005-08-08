@@ -39,12 +39,11 @@
  */
 package com.medigy.persist.model.party;
 
-import javax.persistence.CascadeType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-
 import com.medigy.persist.model.common.AbstractTopLevelEntity;
 import com.medigy.persist.reference.custom.party.CaseRoleType;
+
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 public class CaseRole extends AbstractTopLevelEntity
 {
@@ -64,7 +63,7 @@ public class CaseRole extends AbstractTopLevelEntity
         this.party = party;
     }
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "case_id")
     public Case getCase()
     {

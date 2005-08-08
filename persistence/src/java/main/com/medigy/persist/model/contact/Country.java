@@ -265,4 +265,9 @@ public class Country extends GeographicBoundary
         }
         return null;
     }
+
+    public String toString()
+    {
+        return super.toString() + "[name=" + getCountryName() + "]";
+    }
 }

@@ -39,16 +39,13 @@
 package com.medigy.persist;
 
 import com.medigy.persist.model.contact.TestGeographicBoundary;
-import com.medigy.persist.model.health.TestHealthCareLicense;
-import com.medigy.persist.model.health.TestHealthCareReferral;
 import com.medigy.persist.model.insurance.TestCoverage;
-import com.medigy.persist.model.insurance.TestInsurance;
-import com.medigy.persist.model.insurance.TestInsurancePlanCoverage;
-import com.medigy.persist.model.insurance.TestInsuranceProductCoverage;
 import com.medigy.persist.model.invoice.TestInvoice;
 import com.medigy.persist.model.org.TestOrganization;
 import com.medigy.persist.model.person.TestPerson;
+import junit.extensions.TestSetup;
 import junit.framework.Test;
+import junit.framework.TestResult;
 
 /**
  * JUnit test suite for tesing data model related classes
@@ -58,13 +55,15 @@ public class TestSuite extends junit.framework.TestSuite
     public static Test suite()
     {
         TestSuite suite= new TestSuite();
-        
+
         // test the model classes
+        /*
         suite.addTest(new junit.framework.TestSuite(TestHealthCareLicense.class));
         suite.addTest(new junit.framework.TestSuite(TestInsurance.class));
         suite.addTest(new junit.framework.TestSuite(TestInsuranceProductCoverage.class));
         suite.addTest(new junit.framework.TestSuite(TestInsurancePlanCoverage.class));
         suite.addTest(new junit.framework.TestSuite(TestHealthCareReferral.class));
+        */
         //suite.addTest(new junit.framework.TestSuite(TestPartyRelationship.class));
         // TODO: There's a possible  dbunit dependency or PK generation problem with TestCareProviderSelection
         //suite.addTest(new junit.framework.TestSuite(TestCareProviderSelection.class));
@@ -73,6 +72,29 @@ public class TestSuite extends junit.framework.TestSuite
         suite.addTest(new junit.framework.TestSuite(TestOrganization.class));
         suite.addTest(new junit.framework.TestSuite(TestInvoice.class));
         suite.addTest(new junit.framework.TestSuite(TestCoverage.class));
-        return suite;
+
+        TestSetup wrapper = new TestSetup(suite)
+        {
+            public void run(TestResult testResult)
+            {
+                super.run(testResult);
+            }
+
+            protected void tearDown() throws Exception
+            {
+                super.tearDown();
+            }
+        } ;
+        return wrapper;
+    }
+
+    public static void oneTimeSetUp()
+    {
+        // one-time initialization code
+    }
+
+    public static void oneTimeTearDown()
+    {
+        // one-time cleanup code
     }
 }

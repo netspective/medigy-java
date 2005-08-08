@@ -88,7 +88,6 @@ import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.cfg.Configuration;
-import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.Restrictions;
 
 import java.util.List;
@@ -102,20 +101,47 @@ public class ModelInitializer
     }
 
     private final Log log = LogFactory.getLog(ModelInitializer.class);
-    private final SeedDataPopulationType seedDataPopulationType;
-    private final Session session;
-    private final Configuration hibernateConfiguration;
+    private SeedDataPopulationType seedDataPopulationType;
+    private Session session;
+    private Configuration hibernateConfiguration;
+    private boolean isInitialized = false;
 
+    private Map<Class,Class<? extends CachedReferenceEntity>> referenceEntitiesAndCachesMap;
+    private Map<Class,Class<? extends CachedCustomReferenceEntity>> customReferenceEntitiesAndCachesMap;
 
-    public ModelInitializer(final Session session, final SeedDataPopulationType seedDataPopulationType, final Configuration hibernateConfiguration)
+    private static ModelInitializer initializer = new ModelInitializer();
+
+    public static final ModelInitializer getInstance()
+    {
+        return initializer;
+    }
+
+    public boolean isInitialized()
+    {
+        return isInitialized;
+    }
+
+    private ModelInitializer()
+    {
+
+    }
+
+    /**
+     * There are two ways to initialize the data model: one is to use the hibernate data model to create/insert reference entities
+     * and then cache these values and the other is to only read from the data model and cache the reference entities.
+     * If you already know that the database instance is "clean", then you should use the latter method and if not, you should use
+     * the former method.
+     *
+     * @param session
+     * @param seedDataPopulationType
+     * @param hibernateConfiguration
+     */
+    public void initialize(final Session session, final SeedDataPopulationType seedDataPopulationType, final Configuration hibernateConfiguration)
     {
         this.session = session;
         this.seedDataPopulationType = seedDataPopulationType;
         this.hibernateConfiguration = hibernateConfiguration;
-    }
 
-    public void initialize()
-    {
         boolean populate = false;
         log.info("Initialize model setting: " + seedDataPopulationType);
         switch(seedDataPopulationType)
@@ -140,22 +166,23 @@ public class ModelInitializer
             initReferenceEntityCaches();
             initCustomReferenceEntityCaches();
         }
+        isInitialized = true;
     }
 
-    public void populateSeedData()
+    private void populateSeedData()
     {
         EntitySeedDataPopulator populator = new EntitySeedDataPopulator(session, hibernateConfiguration);
         populator.populateSeedData();
     }
 
-    public Party readSystemGlobalPropertyEntity()
+    private Party readSystemGlobalPropertyEntity()
     {
         final Criteria criteria = session.createCriteria(Party.class);
         criteria.add(Restrictions.eq("partyName", Party.SYS_GLOBAL_PARTY_NAME));
         return (Party) criteria.uniqueResult();
     }
 
-    public void initSystemGlobalPartyEntity()
+    private void initSystemGlobalPartyEntity()
     {
         final Party entity = readSystemGlobalPropertyEntity();
         if (entity == null)
@@ -167,14 +194,14 @@ public class ModelInitializer
 
     protected void initReferenceEntityCaches()
     {
-        final Map<Class,Class<? extends CachedReferenceEntity>> referenceEntitiesAndCachesMap = HibernateUtil.getReferenceEntitiesAndRespectiveEnums(hibernateConfiguration);
+        referenceEntitiesAndCachesMap = HibernateUtil.getReferenceEntitiesAndRespectiveEnums(hibernateConfiguration);
         for(final Map.Entry<Class,Class<? extends CachedReferenceEntity>> entry : referenceEntitiesAndCachesMap.entrySet())
             initReferenceEntityCache(entry.getKey(), (CachedReferenceEntity[]) entry.getValue().getEnumConstants());
     }
 
     protected void initCustomReferenceEntityCaches()
     {
-        final Map<Class,Class<? extends CachedCustomReferenceEntity>> customReferenceEntitiesAndCachesMap = HibernateUtil.getCustomReferenceEntitiesAndRespectiveEnums(hibernateConfiguration);
+        customReferenceEntitiesAndCachesMap = HibernateUtil.getCustomReferenceEntitiesAndRespectiveEnums(hibernateConfiguration);
         for(final Map.Entry<Class,Class<? extends CachedCustomReferenceEntity>> entry : customReferenceEntitiesAndCachesMap.entrySet())
             initCustomReferenceEntityCache(entry.getKey(), (CachedCustomReferenceEntity[]) entry.getValue().getEnumConstants());
     }
@@ -222,7 +249,7 @@ public class ModelInitializer
         if (list == null || list.size() == 0)
         {
             log.error("Failed to initialize CustomReferenceEntity caches. There were NO records of CustomReferenceEntity type.");
-            return;
+            throw new RuntimeException("There were NO records of CustomReferenceEntity type.");
         }
         for(final Object i : list)
         {

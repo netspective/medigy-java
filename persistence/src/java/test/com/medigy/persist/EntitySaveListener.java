@@ -36,73 +36,79 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.persist.model.invoice;
+package com.medigy.persist;
 
-import com.medigy.persist.model.common.AbstractDateDurationEntity;
-import com.medigy.persist.model.party.Party;
-import com.medigy.persist.reference.custom.invoice.BillingAccountRoleType;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.hibernate.Session;
+import org.hibernate.event.PostInsertEvent;
+import org.hibernate.event.def.DefaultPostInsertEventListener;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratorType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import java.io.Serializable;
+import java.util.Stack;
 
-@Entity
-@Table(name = "Bill_Acct_Role", uniqueConstraints = {@UniqueConstraint(columnNames = {"bill_acct_id", "party_id", "bill_acct_role_type_id"})})
-public class BillingAccountRole extends AbstractDateDurationEntity
+public class EntitySaveListener  extends DefaultPostInsertEventListener
 {
-    private Long billingAccountRoleId;
-    private Party party;
-    private BillingAccount billingAccount;
-    private BillingAccountRoleType roleType;
+    private static final Log log = LogFactory.getLog(EntitySaveListener.class);
 
-    @Id(generate = GeneratorType.AUTO)
-    public Long getBillingAccountRoleId()
+    private Stack entityList = new Stack();
+
+    public void onPostInsert(PostInsertEvent event)
     {
-        return billingAccountRoleId;
+        final Serializable id = event.getId();
+        final Class<? extends Object> entityClass = event.getEntity().getClass();
+
+        // Unable to use the entity object itself because if an update was done to that entity in another session,
+        // this instance was no longer valid to be reconnected to the session and I don't know how to get around it. AT
+        //final Object entity = event.getEntity();
+        entityList.push(new EntityInfo(entityClass, id));
+        if (log.isInfoEnabled())
+            log.info("Registering... " + entityClass + " - " + id);
     }
 
-    protected void setBillingAccountRoleId(final Long billingAccountRoleId)
+    public Stack getEntityList()
     {
-        this.billingAccountRoleId = billingAccountRoleId;
+        return entityList;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "bill_acct_role_type_id")
-    public BillingAccountRoleType getRoleType()
+    public void newEntityList()
     {
-        return roleType;
+        entityList = new Stack();
     }
 
-    public void setRoleType(final BillingAccountRoleType roleType)
+    public void deleteEntityList(final Session session)
     {
-        this.roleType = roleType;
+        while (!entityList.empty())
+        {
+            final EntityInfo obj = (EntityInfo) entityList.pop();
+            if (log.isInfoEnabled())
+                log.info("Deleteing... " + obj.getEntityClass() + ". (id = " + obj.getId() + ")\n");
+            final Object entity = session.get(obj.getEntityClass(), obj.getId());
+            if (entity != null)
+                session.delete(entity);
+        }
     }
 
-    @ManyToOne
-    @JoinColumn(name = Party.PK_COLUMN_NAME)
-    public Party getParty()
+    public class EntityInfo
     {
-        return party;
+        private Serializable id;
+        private Class entityClass;
+
+        public EntityInfo(final Class entityClass, final Serializable id)
+        {
+            this.entityClass = entityClass;
+            this.id = id;
+        }
+
+        public Class getEntityClass()
+        {
+            return entityClass;
+        }
+
+        public Serializable getId()
+        {
+            return id;
+        }
     }
 
-    public void setParty(final Party party)
-    {
-        this.party = party;
-    }
-
-    @ManyToOne
-    @JoinColumn(name = "bill_acct_id")
-    public BillingAccount getBillingAccount()
-    {
-        return billingAccount;
-    }
-
-    public void setBillingAccount(final BillingAccount billingAccount)
-    {
-        this.billingAccount = billingAccount;
-    }
 }

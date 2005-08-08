@@ -185,12 +185,12 @@ public class HealthCareDelivery extends AbstractDateDurationEntity
 
     @ManyToOne
     @JoinColumn(name = HealthCareEncounter.PK_COLUMN_NAME)
-    public HealthCareEncounter getHealthCareVisit()
+    public HealthCareEncounter getHealthCareEncounter()
     {
         return healthCareEncounter;
     }
 
-    public void setHealthCareVisit(final HealthCareEncounter healthCareEncounter)
+    public void setHealthCareEncounter(final HealthCareEncounter healthCareEncounter)
     {
         this.healthCareEncounter = healthCareEncounter;
     }
