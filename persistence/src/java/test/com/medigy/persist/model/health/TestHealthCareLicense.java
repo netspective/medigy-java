@@ -79,10 +79,11 @@ public class TestHealthCareLicense extends TestCase
 
         final Country country = new Country();
         country.setCountryName("USA");
+        session.save(country);
+
         final State state = new State("Virginia", "VA");
         country.addState(state);
-
-        session.save(country);
+        session.save(state);
         session.save(doctor);
 
         final Calendar calendar = Calendar.getInstance();
@@ -107,7 +108,7 @@ public class TestHealthCareLicense extends TestCase
         session.close();
 
         session = openSession();
-        final Person savedDoctor = (Person) session.load(Person.class, doctor.getPartyId());
+        final Person savedDoctor = (Person) session.get(Person.class, doctor.getPartyId());
         assertThat(savedDoctor, NOT_NULL);
         final Set<HealthCareLicense> licenses = savedDoctor.getLicenses();
         assertThat(licenses.size(), eq(2));
