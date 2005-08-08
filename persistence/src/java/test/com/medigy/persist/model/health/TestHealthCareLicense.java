@@ -75,7 +75,6 @@ public class TestHealthCareLicense extends TestCase
 
         session = openSession();
         transaction = session.beginTransaction();
-
         final Calendar calendar = Calendar.getInstance();
         final Country country = new Country();
         country.setCountryName("USA");
@@ -107,7 +106,7 @@ public class TestHealthCareLicense extends TestCase
         session.close();
 
         session = openSession();
-        final Person savedDoctor = (Person) session.createCriteria(Person.class).add(Restrictions.eq("partyId", doctor.getPartyId())).uniqueResult();
+        final Person savedDoctor = (Person) session.createCriteria(Person.class).uniqueResult();
         assertThat(savedDoctor, NOT_NULL);
         final Set<HealthCareLicense> licenses = savedDoctor.getLicenses();
         assertThat(licenses.size(), eq(2));
