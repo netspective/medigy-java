@@ -55,6 +55,7 @@ public class ModelSessionFactoryBean extends org.springframework.orm.hibernate3.
         final SessionFactory factory = (SessionFactory) getObject();
         final Session session = SessionFactoryUtils.getNewSession(factory);
 
-        new ModelInitializer(session, ModelInitializer.SeedDataPopulationType.AUTO, getConfiguration()).initialize();
+        if (!ModelInitializer.getInstance().isInitialized())
+            ModelInitializer.getInstance().initialize(session,ModelInitializer.SeedDataPopulationType.AUTO, getConfiguration());
     }
 }

@@ -111,7 +111,7 @@ public class AddAppointmentServiceImpl implements AddAppointmentService
         return new NewAppointmentValues() {
             public Serializable getNewAppointmentId()
             {
-                return encounter.getHealthCareVisitId();
+                return encounter.getHealthCareEncounterId();
             }
 
             public AddAppointmentParameters getParameters()

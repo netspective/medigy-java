@@ -151,8 +151,7 @@ public class DataPopulatorTask extends Task
             final Transaction tx = session.beginTransaction();
             try
             {
-                final ModelInitializer mi = new ModelInitializer(session, SeedDataPopulationType.AUTO, configuration);
-                mi.initialize();
+                ModelInitializer.getInstance().initialize(session, SeedDataPopulationType.AUTO, configuration);
                 tx.commit();
                 log("Committed model initialization (seed data).");
             }
