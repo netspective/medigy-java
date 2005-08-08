@@ -83,7 +83,7 @@ public class TestHealthCareLicense extends TestCase
 
         session = openSession();
         transaction = session.beginTransaction();
-        doctor = (Person) session.get(Person.class, doctor.getPartyId());
+        doctor = (Person) session.createCriteria(Person.class).add(Restrictions.eq("partyId", doctor.getPartyId())).uniqueResult();
         final Calendar calendar = Calendar.getInstance();
         final HealthCareLicense license = new HealthCareLicense();
         final HealthCareLicense license2 = new HealthCareLicense();
