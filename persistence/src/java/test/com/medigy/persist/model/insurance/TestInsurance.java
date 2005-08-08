@@ -51,6 +51,7 @@ import com.medigy.persist.reference.custom.person.PersonRoleType;
 import com.medigy.persist.reference.type.GenderType;
 import com.medigy.persist.reference.type.LanguageType;
 import org.hibernate.Transaction;
+import org.hibernate.criterion.Restrictions;
 import org.hibernate.classic.Session;
 
 import java.util.Calendar;
@@ -92,12 +93,13 @@ public class TestInsurance extends TestCase
 
         session.save(plan2);
         blueCross.getInsuranceProducts().add(ppoProduct);
-        
+
         transaction.commit();
         session.close();
 
         session = openSession();
-        final Organization carrier = (Organization) session.load(Organization.class, blueCross.getOrgId());
+        final Organization carrier = (Organization) session.createCriteria(Organization.class).add(Restrictions.eq("partyId", blueCross.getOrgId())).uniqueResult();
+        assertNotNull(carrier);
         final Set<InsuranceProduct> insuranceProducts = carrier.getInsuranceProducts();
         assertThat(insuranceProducts.size(), eq(1));
         final InsuranceProduct product = (InsuranceProduct) carrier.getInsuranceProducts().toArray()[0];
