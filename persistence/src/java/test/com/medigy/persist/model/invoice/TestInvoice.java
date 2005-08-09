@@ -46,8 +46,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Transaction;
 import org.hibernate.classic.Session;
+import org.hibernate.criterion.Restrictions;
 
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 public class TestInvoice  extends TestCase
 {
@@ -76,12 +78,18 @@ public class TestInvoice  extends TestCase
         invoice.getInvoiceTerms().add(term);
         session.save(invoice);
 
-        Calendar cal = Calendar.getInstance();
-        cal.set(2005, 1, 10);
+        Calendar cal = new GregorianCalendar();
+        cal.set(2005, 1, 5);
         final InvoiceStatus status = new InvoiceStatus();
         status.setType(InvoiceStatusType.Cache.ON_HOLD.getEntity());
         status.setInvoiceStatusDate(cal.getTime());
         invoice.addInvoiceStatus(status);
+
+        cal.set(2005, 1, 1);
+        final InvoiceStatus newStatus = new InvoiceStatus();
+        newStatus.setType(InvoiceStatusType.Cache.CREATED.getEntity());
+        newStatus.setInvoiceStatusDate(cal.getTime());
+        invoice.addInvoiceStatus(newStatus);
 
         cal.set(2005, 1, 11);
         final InvoiceStatus voidStatus = new InvoiceStatus();
@@ -103,15 +111,18 @@ public class TestInvoice  extends TestCase
 
         session = openSession();
         final Long invoiceId = invoice.getInvoiceId();
-        Invoice savedInvoice = (Invoice) session.load(Invoice.class, invoiceId);
+        Invoice savedInvoice = (Invoice) session.createCriteria(Invoice.class).add(Restrictions.eq("invoiceId", invoiceId)).uniqueResult();
+
         assertEquals(1, savedInvoice.getInvoiceTerms().size());
         InvoiceTerm savedInvoiceTerm = (InvoiceTerm) savedInvoice.getInvoiceTerms().toArray()[0];
         assertEquals(savedInvoiceTerm.getTermValue(), new Long(30));
 
         assertEquals("New invoice", savedInvoice.getDescription());
         log.info("VALID: Invoice");
-        assertEquals(2, savedInvoice.getInvoiceStatuses().size());
+        assertEquals(3, savedInvoice.getInvoiceStatuses().size());
         log.info("VALID: Invoice status count");
+        assertEquals(savedInvoice.getInvoiceStatuses().get(0).getType().getInvoiceStatusTypeId(), InvoiceStatusType.Cache.VOID.getEntity().getInvoiceStatusTypeId());
+        assertEquals(savedInvoice.getInvoiceStatuses().get(2).getType().getInvoiceStatusTypeId(), InvoiceStatusType.Cache.CREATED.getEntity().getInvoiceStatusTypeId());
         assertEquals(voidStatus.getInvoiceStatusId(), savedInvoice.getCurrentInvoiceStatus().getInvoiceStatusId());
         assertEquals(savedInvoice.getCurrentInvoiceStatus().getType(), InvoiceStatusType.Cache.VOID.getEntity());
         log.info("VALID: Current Invoice status type");
@@ -122,5 +133,5 @@ public class TestInvoice  extends TestCase
         session.close();
     }
 
-    
+
 }

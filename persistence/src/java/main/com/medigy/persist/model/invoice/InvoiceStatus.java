@@ -40,12 +40,16 @@ package com.medigy.persist.model.invoice;
 
 import com.medigy.persist.model.common.AbstractTopLevelEntity;
 import com.medigy.persist.reference.custom.invoice.InvoiceStatusType;
+import org.hibernate.validator.NotNull;
 
+import javax.persistence.Basic;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.TemporalType;
 import java.util.Date;
 
 @Entity
@@ -71,6 +75,9 @@ public class InvoiceStatus extends AbstractTopLevelEntity implements Comparable
         this.invoiceStatusId = invoiceStatusId;
     }
 
+    @Basic(temporalType = TemporalType.TIMESTAMP)
+    @Column(nullable = false)
+    @NotNull
     public Date getInvoiceStatusDate()
     {
         return invoiceStatusDate;
@@ -110,7 +117,7 @@ public class InvoiceStatus extends AbstractTopLevelEntity implements Comparable
         if(o == this)
             return 0;
 
-        final InvoiceStatus otherStatus = (InvoiceStatus) o;        
+        final InvoiceStatus otherStatus = (InvoiceStatus) o;
         return  getInvoiceStatusDate().compareTo(otherStatus.getInvoiceStatusDate());
     }
 }

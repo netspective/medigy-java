@@ -249,7 +249,7 @@ public class ModelInitializer
         if (list == null || list.size() == 0)
         {
             log.error("Failed to initialize CustomReferenceEntity caches. There were NO records of CustomReferenceEntity type.");
-            throw new RuntimeException("There were NO records of CustomReferenceEntity type.");
+            throw new RuntimeException("There were NO records of CustomReferenceEntity type: " + aClass.getName());
         }
         for(final Object i : list)
         {

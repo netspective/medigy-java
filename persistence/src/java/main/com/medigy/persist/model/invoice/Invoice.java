@@ -52,6 +52,7 @@ import com.medigy.persist.reference.custom.invoice.InvoiceRoleType;
 import com.medigy.persist.reference.custom.invoice.InvoiceStatusType;
 import com.medigy.persist.reference.custom.invoice.InvoiceType;
 
+import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -61,12 +62,14 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
+import javax.persistence.TemporalType;
 import javax.persistence.Transient;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
-import java.util.TreeSet;
 
 @Entity
 public class Invoice  extends AbstractTopLevelEntity
@@ -82,15 +85,16 @@ public class Invoice  extends AbstractTopLevelEntity
     private InvoiceType type;
     private Invoice parentInvoice;
 
-    private Float totalCost;            // trigger
-    private Float totalAdjustments;;    // trigger
+    private Float totalCost = new Float(0);            // trigger
+    private Float totalAdjustments = new Float(0);    // trigger
+    private Float balance = new Float(0);
 
     private BillingAccount billingAccount;
     private HealthCareEncounter encounter;
 
     private Set<InvoiceItem> items = new HashSet<InvoiceItem>();
     private Set<InvoiceRole> invoiceRoles = new HashSet<InvoiceRole>();
-    private Set<InvoiceStatus> invoiceStatuses = new HashSet<InvoiceStatus>();
+    private List<InvoiceStatus> invoiceStatuses = new ArrayList<InvoiceStatus>();
     private Set<InvoiceTerm> invoiceTerms = new HashSet<InvoiceTerm>();
     private Set<InvoiceAttribute> attributes = new HashSet<InvoiceAttribute>();
 
@@ -107,6 +111,20 @@ public class Invoice  extends AbstractTopLevelEntity
     protected void setInvoiceId(final Long invoiceId)
     {
         this.invoiceId = invoiceId;
+    }
+
+    /**
+     * Total cose minus the total asjustment
+     * @return
+     */
+    public Float getBalance()
+    {
+        return balance;
+    }
+
+    public void setBalance(final Float balance)
+    {
+        this.balance = balance;
     }
 
     @ManyToOne
@@ -136,6 +154,7 @@ public class Invoice  extends AbstractTopLevelEntity
      * Gets the date the invoice was submitted
      * @return
      */
+    @Basic(temporalType = TemporalType.DATE)
     public Date getSubmitDate()
     {
         return submitDate;
@@ -165,6 +184,7 @@ public class Invoice  extends AbstractTopLevelEntity
      * The Invoice date.  This could be different from the date it was created.
      * @return
      */
+    @Basic(temporalType = TemporalType.DATE)
     public Date getInvoiceDate()
     {
         return invoiceDate;
@@ -175,6 +195,7 @@ public class Invoice  extends AbstractTopLevelEntity
         this.invoiceDate = invoiceDate;
     }
 
+    @Column(length = 256)
     public String getDescription()
     {
         return description;
@@ -293,12 +314,13 @@ public class Invoice  extends AbstractTopLevelEntity
     }
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "invoice")
-    public Set<InvoiceStatus> getInvoiceStatuses()
+    @OrderBy("invoiceStatusDate desc")
+    public List<InvoiceStatus> getInvoiceStatuses()
     {
         return invoiceStatuses;
     }
 
-    public void setInvoiceStatuses(final Set<InvoiceStatus> invoiceStatuses)
+    public void setInvoiceStatuses(final List<InvoiceStatus> invoiceStatuses)
     {
         this.invoiceStatuses = invoiceStatuses;
     }
@@ -322,13 +344,10 @@ public class Invoice  extends AbstractTopLevelEntity
     @Transient
     public InvoiceStatus getCurrentInvoiceStatus()
     {
-        final Set<InvoiceStatus> invoiceStatuses = getInvoiceStatuses();
+        final List<InvoiceStatus> invoiceStatuses = getInvoiceStatuses();
         if(invoiceStatuses.size() == 0)
             return null;
-
-        TreeSet<InvoiceStatus> inverseSorted = new TreeSet<InvoiceStatus>(Collections.reverseOrder());
-        inverseSorted.addAll(invoiceStatuses);
-        return inverseSorted.first();
+        return invoiceStatuses.get(0);
     }
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "invoice")
@@ -404,6 +423,8 @@ public class Invoice  extends AbstractTopLevelEntity
     public void setTotalCost(final Float totalCost)
     {
         this.totalCost = totalCost;
+        // recalculate the total
+        this.balance = new Float(totalCost - totalAdjustments);
     }
 
     public Float getTotalAdjustments()
@@ -414,6 +435,7 @@ public class Invoice  extends AbstractTopLevelEntity
     public void setTotalAdjustments(final Float totalAdjustments)
     {
         this.totalAdjustments = totalAdjustments;
+        this.balance = new Float(totalCost - totalAdjustments);
     }
 
     @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL)

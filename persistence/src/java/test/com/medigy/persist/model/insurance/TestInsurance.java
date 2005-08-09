@@ -40,23 +40,10 @@ package com.medigy.persist.model.insurance;
 
 import com.medigy.persist.TestCase;
 import com.medigy.persist.model.org.Organization;
-import com.medigy.persist.model.person.PeopleRelationship;
-import com.medigy.persist.model.person.Person;
-import com.medigy.persist.model.person.PersonRole;
-import com.medigy.persist.reference.custom.insurance.InsurancePolicyType;
-import com.medigy.persist.reference.custom.insurance.InsuranceProductType;
 import com.medigy.persist.reference.custom.org.OrganizationClassificationType;
-import com.medigy.persist.reference.custom.party.PeopleRelationshipType;
-import com.medigy.persist.reference.custom.person.PersonRoleType;
-import com.medigy.persist.reference.type.GenderType;
-import com.medigy.persist.reference.type.LanguageType;
 import org.hibernate.Transaction;
-import org.hibernate.criterion.Restrictions;
 import org.hibernate.classic.Session;
-
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Set;
+import org.hibernate.criterion.Restrictions;
 
 public class TestInsurance extends TestCase
 {
