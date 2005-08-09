@@ -41,43 +41,15 @@
 /*
  * Copyright (c) 2005 Your Corporation. All Rights Reserved.
  */
-package com.medigy.app.pbs.page.search;
+package com.medigy.app.pbs.page;
 
-import com.medigy.wicket.border.DefaultPageBodyBorder.NavigationPanelProvider;
+import com.medigy.app.pbs.page.search.SearchNavigator;
 import com.medigy.wicket.page.AuthenticatedWebPage;
-import com.medigy.presentation.form.common.SearchResultPanel;
-import wicket.Component;
-import wicket.markup.html.WebMarkupContainer;
-import wicket.markup.html.panel.Panel;
 
-public abstract class AbstractSearchPage extends AuthenticatedWebPage
+public class Search extends AuthenticatedWebPage
 {
-    private final Panel criteriaPanel;
-    private final Component onSelectPanel;
-    private final SearchBorder searchBorder;
-    private Panel searchResultPanel;
-
-    public AbstractSearchPage()
+    public Search()
     {
-        add(searchBorder = new SearchBorder("searchBorder", this));
-        searchBorder.add(criteriaPanel = getSearchCriteriaPanel("criteriaPanel"));
-
-        final Panel customSelectPanel = getOnSelectPanel("onSelectPanel");
-        searchBorder.add(onSelectPanel = customSelectPanel != null ? customSelectPanel : new WebMarkupContainer("onSelectPanel"));
-        onSelectPanel.setVisible(customSelectPanel != null);
-
-        searchResultPanel = getSearchResultPanel("searchResultsPanel");
-        if(searchResultPanel == null)
-            searchResultPanel = new SearchResultPanel("searchResultsPanel", null);
-
-        searchBorder.add(searchResultPanel);
-    }
-
-    public abstract Panel getSearchCriteriaPanel(final String id);
-    public abstract Panel getSearchResultPanel(final String id);
-
-    public Panel getOnSelectPanel(final String id)
-    {
-        return null;
+        add(new SearchNavigator("searchNavigator"));
     }
 }
