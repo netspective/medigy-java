@@ -57,6 +57,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
+import javax.persistence.OrderBy;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -82,7 +83,7 @@ public class HealthCareEncounter  extends AbstractDateDurationEntity
     private Date startTime;
     private Date checkoutTime;
 
-    private Set<HealthCareVisitStatus> statuses = new HashSet<HealthCareVisitStatus>();
+    private List<HealthCareVisitStatus> statuses = new ArrayList<HealthCareVisitStatus>();
     private Set<HealthCareVisitRole> roles = new HashSet<HealthCareVisitRole>();    // scheduler, patient, doctor
     private Set<VisitReason> reasons = new HashSet<VisitReason>();
     private Set<HealthCareDelivery> healthCareDeliveries = new HashSet<HealthCareDelivery>();
@@ -175,16 +176,17 @@ public class HealthCareEncounter  extends AbstractDateDurationEntity
     }
 
     /**
-     * Gets all the statuses associated with the visit
+     * Gets all the statuses associated with the visit. The list is sorted in descending order by date.
      * @return
      */
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "visit")
-    public Set<HealthCareVisitStatus> getStatuses()
+    @OrderBy("statusDate desc")
+    public List<HealthCareVisitStatus> getStatuses()
     {
         return statuses;
     }
 
-    public void setStatuses(final Set<HealthCareVisitStatus> statuses)
+    public void setStatuses(final List<HealthCareVisitStatus> statuses)
     {
         this.statuses = statuses;
     }
@@ -202,6 +204,16 @@ public class HealthCareEncounter  extends AbstractDateDurationEntity
         status.setType(type);
         status.setVisit(this);
         status.setStatusDate(new Date());
+        this.statuses.add(status);
+    }
+
+    @Transient
+    public void addStatus(final HealthCareVisitStatusType type, final Date date)
+    {
+        HealthCareVisitStatus status = new HealthCareVisitStatus();
+        status.setType(type);
+        status.setVisit(this);
+        status.setStatusDate(date);
         this.statuses.add(status);
     }
 
