@@ -48,6 +48,7 @@ import com.medigy.persist.model.invoice.attribute.InvoiceLongAttribute;
 import com.medigy.persist.model.invoice.attribute.InvoiceStringAttribute;
 import com.medigy.persist.model.org.Organization;
 import com.medigy.persist.model.party.Party;
+import com.medigy.persist.model.person.Person;
 import com.medigy.persist.reference.custom.invoice.InvoiceRoleType;
 import com.medigy.persist.reference.custom.invoice.InvoiceStatusType;
 import com.medigy.persist.reference.custom.invoice.InvoiceType;
@@ -328,9 +329,15 @@ public class Invoice  extends AbstractTopLevelEntity
     @Transient
     public void addInvoiceStatus(final InvoiceStatusType type)
     {
+        addInvoiceStatus(type, new Date());
+    }
+
+    @Transient
+    public void addInvoiceStatus(final InvoiceStatusType type, final Date date)
+    {
         final InvoiceStatus status = new InvoiceStatus();
         status.setType(type);
-        status.setInvoiceStatusDate(new Date());
+        status.setInvoiceStatusDate(date);
         addInvoiceStatus(status);
     }
 
