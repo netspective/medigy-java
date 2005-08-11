@@ -50,6 +50,8 @@ import com.medigy.persist.model.party.Facility;
 import com.medigy.persist.model.person.Ethnicity;
 import com.medigy.persist.model.person.Person;
 import com.medigy.persist.model.person.PersonAndOrgRelationship;
+import com.medigy.persist.model.invoice.Invoice;
+import com.medigy.persist.model.invoice.InvoiceStatus;
 import com.medigy.persist.reference.custom.health.HealthCareVisitStatusType;
 import com.medigy.persist.reference.custom.party.FacilityType;
 import com.medigy.persist.reference.custom.party.OrganizationRoleType;
@@ -58,6 +60,8 @@ import com.medigy.persist.reference.custom.party.PersonOrgRelationshipType;
 import com.medigy.persist.reference.custom.person.EthnicityType.Cache;
 import com.medigy.persist.reference.custom.person.PatientType;
 import com.medigy.persist.reference.custom.person.PersonRoleType;
+import com.medigy.persist.reference.custom.invoice.InvoiceType;
+import com.medigy.persist.reference.custom.invoice.InvoiceStatusType;
 import com.medigy.persist.reference.type.GenderType;
 import com.medigy.persist.util.ModelInitializer;
 import com.medigy.persist.util.ModelInitializer.SeedDataPopulationType;
@@ -82,6 +86,8 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.GregorianCalendar;
+import java.util.Random;
 
 public class DataPopulatorTask extends Task
 {
@@ -381,12 +387,68 @@ public class DataPopulatorTask extends Task
         return patient;
     }
 
+    protected void populateInvoicePerEncounter(final Session session, Person patient, final HealthCareEncounter encounter)
+    {
+        final Invoice invoice = new Invoice();
+        invoice.setVisit(encounter);
+        invoice.setType(InvoiceType.Cache.SERVICES.getEntity());
+        invoice.setDescription("Medigy DEMO invoice description");
+        invoice.setInvoiceDate(encounter.getCheckoutTime());
+        invoice.setTotalCost(new Float(RandomUtils.generateRandomNumberBetween(1, 1000)));
+        invoice.setTotalAdjustments(new Float(RandomUtils.generateRandomNumberBetween(1, 1000)));
+        invoice.addInvoiceStatus(InvoiceStatusType.Cache.CREATED.getEntity(), encounter.getCheckoutTime());
+
+        final Calendar instance = Calendar.getInstance();
+        instance.setTime(encounter.getCheckoutTime());
+        instance.add(Calendar.DAY_OF_MONTH, 14);
+        invoice.addInvoiceStatus(InvoiceStatusType.Cache.SUBMITTED.getEntity(), instance.getTime());
+
+        if ((new Random()).nextBoolean())
+        {
+            instance.add(Calendar.DAY_OF_MONTH, 5);
+            invoice.addInvoiceStatus(InvoiceStatusType.Cache.CLOSED.getEntity(), instance.getTime());
+        }
+        session.save(invoice);
+    }
+
     protected void  populatePatientAppointment(final Session session, final Person patient, final Person randomPhysician,
                                                final Organization org, final Facility facility, final int number)
     {
         // TODO:  1 and 5 appts between each hour from 8 to 5 for each randomPhysician
         final PatientType.Cache[] patientTypeCaches = PatientType.Cache.values();
         final PatientType patientType = patientTypeCaches[RandomUtils.generateRandomNumberBetween(0, patientTypeCaches.length)].getEntity();
+
+        if (patientType.getPatientTypeId().equals(PatientType.Cache.ESTABLISHED.getEntity().getPatientTypeId()))
+        {
+            // create old appointments for these patients
+            Calendar cal = new GregorianCalendar();
+            int month = RandomUtils.generateRandomNumberBetween(1, 6);
+            int day = RandomUtils.generateRandomNumberBetween(1, 10);
+            int hour = RandomUtils.generateRandomNumberBetween(8, 18);
+            // schedule the appointment 1 to 6 months before
+            cal.add(Calendar.MONTH, 0 - month);
+            cal.add(Calendar.DAY_OF_MONTH, day);
+            cal.set(Calendar.HOUR_OF_DAY, hour);
+            final Date scheduledTimestamp = cal.getTime();
+            HealthCareEncounter encounter = new HealthCareEncounter();
+            encounter.setScheduledTime(scheduledTimestamp);
+            encounter.setStartTime(scheduledTimestamp);
+            cal.add(Calendar.HOUR_OF_DAY, 2);
+            final Date checkoutTime = cal.getTime();
+            encounter.setCheckoutTime(checkoutTime);
+            encounter.setPatient(patient);
+            encounter.setRequestedPhysician(randomPhysician);
+            encounter.setPatientType(patientType);
+            // change the day so that the appointment was scheduled 3 days before
+            cal.add(Calendar.DAY_OF_MONTH, -3);
+            encounter.addStatus(HealthCareVisitStatusType.Cache.SCHEDULED.getEntity(), cal.getTime());
+            encounter.addStatus(HealthCareVisitStatusType.Cache.INPROGRESS.getEntity(), scheduledTimestamp);
+            encounter.addStatus(HealthCareVisitStatusType.Cache.COMPLETE.getEntity(), checkoutTime);
+            encounter.setFacility(facility);
+            session.save(encounter);
+
+            populateInvoicePerEncounter(session, patient, encounter);
+        }
 
         Date apptTime = new Date();
         final int date = RandomUtils.generateRandomNumberBetween(0, 3);
