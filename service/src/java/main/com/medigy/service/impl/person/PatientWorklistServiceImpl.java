@@ -39,6 +39,7 @@
 package com.medigy.service.impl.person;
 
 import com.medigy.persist.reference.custom.health.HealthCareVisitRoleType;
+import com.medigy.persist.reference.custom.invoice.InvoiceStatusType;
 import com.medigy.service.AbstractService;
 import com.medigy.service.ServiceVersion;
 import com.medigy.service.dto.ServiceParameters;
@@ -48,20 +49,63 @@ import com.medigy.service.dto.person.PatientWorkListItemImpl;
 import com.medigy.service.dto.person.PatientWorklistParameters;
 import com.medigy.service.dto.person.PatientWorklistReturnValues;
 import com.medigy.service.person.PatientWorklistService;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class PatientWorklistServiceImpl extends AbstractService implements PatientWorklistService
 {
+    private static final Log log = LogFactory.getLog(PatientWorklistServiceImpl.class);
+
+    private static final List<InvoiceStatusType.Cache> excludeStatusList = Arrays.asList(new InvoiceStatusType.Cache[] {
+            InvoiceStatusType.Cache.INCOMPLETE, InvoiceStatusType.Cache.PENDING,
+            InvoiceStatusType.Cache.ON_HOLD, InvoiceStatusType.Cache.CLOSED, InvoiceStatusType.Cache.VOID
+            });
+
+    public static final String ACCOUNT_BALANCE_HQL =
+            "SELECT visit.patient.id, sum(invoice.balance) " +
+            "FROM Invoice as invoice " +
+            "JOIN invoice.visit as visit " +
+            "JOIN  invoice.invoiceStatuses as statuses WITH " +
+            "       statuses.invoiceStatusDate = (select max(status.invoiceStatusDate) from InvoiceStatus status where invoice = status.invoice GROUP BY invoice) AND " +
+            "       statuses.type.id NOT IN (:excludeStatusList) " +
+            "GROUP BY visit.patient " +
+            "ORDER BY visit.patient.id";
+
     public PatientWorklistServiceImpl(final SessionFactory sessionFactory)
     {
         super(sessionFactory);
+    }
+
+    private Map<Long, Float> getAccountBalance(final PatientWorklistParameters parameters)
+    {
+        final Query query = getSession().createQuery(ACCOUNT_BALANCE_HQL);
+        final List<Long> idList = new ArrayList<Long>();
+        for (InvoiceStatusType.Cache cache : excludeStatusList)
+            idList.add(cache.getEntity().getSystemId());
+        query.setParameterList("excludeStatusList", idList);
+
+        final Map<Long, Float> balanceMap = new HashMap<Long, Float>();
+        final List list = query.list();
+        for (Object rowObject : list)
+        {
+            if (rowObject instanceof Object[])
+            {
+                final Object[] columnValues = (Object[]) rowObject;
+                balanceMap.put((Long) columnValues[0], (Float) columnValues[1]);
+            }
+        }
+        return balanceMap;
     }
 
     public PatientWorklistReturnValues getWorkList(final PatientWorklistParameters parameters)
@@ -146,7 +190,10 @@ public class PatientWorklistServiceImpl extends AbstractService implements Patie
             patientWorkListQuery.setTimestamp("afterTime", afterTime);
         }
         final List list = patientWorkListQuery.list();
-        System.out.println(patientWorkListQuery.getQueryString() + " \n" + list.size());
+        if (log.isInfoEnabled())
+            log.info(patientWorkListQuery.getQueryString() + " \n" + list.size());
+
+        final Map<Long, Float> accountBalance = getAccountBalance(parameters);
         for (int i=0; i < list.size(); i++)
         {
             final Object rowObject = list.get(i);
@@ -155,6 +202,7 @@ public class PatientWorklistServiceImpl extends AbstractService implements Patie
                 final PatientWorkListItemImpl item = new PatientWorkListItemImpl();
                 final Object[] columnValues = (Object[]) rowObject;
                 item.setPatientId((Long) columnValues[0]);
+                item.setAccountBalance(accountBalance.get(item.getPatientId()));
                 item.setPatientLastName((String) columnValues[1]);
                 item.setPatientFirstName((String) columnValues[2]);
                 item.setPhysicianId((Long) columnValues[3]);

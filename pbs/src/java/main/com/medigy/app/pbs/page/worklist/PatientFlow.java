@@ -229,8 +229,8 @@ public class PatientFlow extends AbstractWorklistPage
                     buffer.append("<td>" + (item.getCheckoutTimestamp() != null ? item.getCheckoutTimestamp() : checkoutHtml) + "</td>");
                     buffer.append("<td>" + (item.getInvoiceNumber() != null ? item.getInvoiceNumber() : "&nbsp;") + "</td>");
                     buffer.append("<td>" + (item.getCopay() != null ? item.getCopay() : "&nbsp;") + "</td>");
-                    buffer.append("<td>" + (item.getAccountBalance() != null ? item.getAccountBalance() : "&nbsp;") + "</td>");
-                    buffer.append("<td>" + (item.getPatientBalance() != null ? item.getPatientBalance() : "&nbsp;") + "</td>");
+                    buffer.append("<td>" + (item.getAccountBalance() != null ? "$" + item.getAccountBalance() : "&nbsp;") + "</td>");
+                    buffer.append("<td>" + (item.getPatientBalance() != null ? "$" + item.getPatientBalance() : "&nbsp;") + "</td>");
 
                     buffer.append("<td>\n" +
                             "                        <a class=\"action\" href=\"?bookmarkablePage=com.medigy.app.pbs.form.AppointmentPage\">A</a>\n" +
