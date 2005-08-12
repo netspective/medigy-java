@@ -38,13 +38,13 @@
  */
 package com.medigy.persist.reference.type.clincial;
 
+import com.medigy.persist.reference.AbstractReferenceEntity;
+import com.medigy.persist.reference.type.GenderType;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-
-import com.medigy.persist.reference.AbstractReferenceEntity;
-import com.medigy.persist.reference.type.GenderType;
 
 @Entity
 @Table(name = "ICD")

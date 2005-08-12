@@ -51,6 +51,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -58,6 +59,8 @@ import java.util.Set;
 @Entity
 public class Payment extends AbstractTopLevelEntity
 {
+    public static final String PK_COLUMN_NAME = "payment_id";
+
     private Long paymentId;
     private Date effectiveDate;
     private Float amount;
@@ -77,6 +80,7 @@ public class Payment extends AbstractTopLevelEntity
     }
 
     @Id(generate = GeneratorType.AUTO)
+    @Column(name = Payment.PK_COLUMN_NAME)
     public Long getPaymentId()
     {
         return paymentId;
@@ -176,6 +180,28 @@ public class Payment extends AbstractTopLevelEntity
     public void setPaymentMethodType(final PaymentMethodType paymentMethodType)
     {
         this.paymentMethodType = paymentMethodType;
+    }
+
+    @Transient
+    public void setPersonalCheckPayment(final Float amount, final String checkNumber)
+    {
+        setPaymentMethodType(PaymentMethodType.Cache.PERSONAL_CHECK.getEntity());
+        setPaymentRefNumber(checkNumber);
+        setAmount(amount);
+    }
+
+    @Transient
+    public void setCreditCardPayment(final Float amount)
+    {
+        setPaymentMethodType(PaymentMethodType.Cache.CREDIT_CARD.getEntity());
+        setAmount(amount);
+    }
+
+    @Transient
+    public void setCashPayment(final Float amount)
+    {
+        setPaymentMethodType(PaymentMethodType.Cache.CASH.getEntity());
+        setAmount(amount);
     }
 
     @OneToMany(mappedBy = "payment")

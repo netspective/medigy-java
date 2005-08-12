@@ -40,6 +40,7 @@ package com.medigy.persist.model.claim;
 
 import com.medigy.persist.model.common.AbstractTopLevelEntity;
 import com.medigy.persist.model.invoice.Payment;
+import org.hibernate.exception.NestableRuntimeException;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -54,12 +55,15 @@ import javax.persistence.ManyToOne;
 @Entity
 public class ClaimSettlementAmount extends AbstractTopLevelEntity
 {
+    public static final String PK_COLUMN_NAME = "claim_settlement_amt_id";
+
     private Long claimSettlementAmountId;
     private ClaimSettlement claimSettlement;
     private Payment payment;
     private Float amount;
 
     @Id(generate = GeneratorType.AUTO)
+    @Column(name = PK_COLUMN_NAME)
     public Long getClaimSettlementAmountId()
     {
         return claimSettlementAmountId;
@@ -71,7 +75,7 @@ public class ClaimSettlementAmount extends AbstractTopLevelEntity
     }
 
     @ManyToOne
-    @JoinColumn(name = "claim_settlement_id", nullable = false)
+    @JoinColumn(name = ClaimSettlement.PK_COLUMN_NAME, nullable = false)
     public ClaimSettlement getClaimSettlement()
     {
         return claimSettlement;
@@ -88,7 +92,7 @@ public class ClaimSettlementAmount extends AbstractTopLevelEntity
      * @return
      */
     @ManyToOne
-    @JoinColumn(name = "payment_id")
+    @JoinColumn(name = Payment.PK_COLUMN_NAME)
     public Payment getPayment()
     {
         return payment;
@@ -99,6 +103,10 @@ public class ClaimSettlementAmount extends AbstractTopLevelEntity
         this.payment = payment;
     }
 
+    /**
+     * Gets the amount out of the payment amount applied to this particular claim settlement
+     * @return
+     */
     @Column(nullable = false)
     public Float getAmount()
     {
@@ -108,5 +116,7 @@ public class ClaimSettlementAmount extends AbstractTopLevelEntity
     public void setAmount(final Float amount)
     {
         this.amount = amount;
+        if (payment != null && payment.getAmount() < amount)
+            throw new NestableRuntimeException("Claim settlement amount CANNOT be larger than the amount of the associated Payment entity.");
     }
 }

@@ -38,23 +38,30 @@
  */
 package com.medigy.persist.model.claim;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import com.medigy.persist.model.common.AbstractTopLevelEntity;
+import com.medigy.persist.model.invoice.Payment;
+import org.hibernate.exception.NestableRuntimeException;
 
+import javax.persistence.Basic;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-
-import com.medigy.persist.model.common.AbstractTopLevelEntity;
+import javax.persistence.TemporalType;
+import javax.persistence.Transient;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class ClaimSettlement extends AbstractTopLevelEntity
 {
+    public static final String PK_COLUMN_NAME = "claim_settlement_id";
+
     private Long claimSettlementId;
     private Date settledDate;
     private ClaimItem claimItem;
@@ -62,6 +69,7 @@ public class ClaimSettlement extends AbstractTopLevelEntity
     private Set<ClaimSettlementAmount> settlementAmounts = new HashSet<ClaimSettlementAmount>();
 
     @Id(generate = GeneratorType.AUTO)
+    @Column(name = PK_COLUMN_NAME)
     public Long getClaimSettlementId()
     {
         return claimSettlementId;
@@ -72,6 +80,7 @@ public class ClaimSettlement extends AbstractTopLevelEntity
         this.claimSettlementId = claimSettlementId;
     }
 
+    @Basic(temporalType = TemporalType.DATE)
     public Date getSettledDate()
     {
         return settledDate;
@@ -83,7 +92,7 @@ public class ClaimSettlement extends AbstractTopLevelEntity
     }
 
     @ManyToOne
-    @JoinColumn(name = "claim_item_id", nullable = false)
+    @JoinColumn(name = ClaimItem.PK_COLUMN_NAME, nullable = false)
     public ClaimItem getClaimItem()
     {
         return claimItem;
@@ -94,7 +103,7 @@ public class ClaimSettlement extends AbstractTopLevelEntity
         this.claimItem = claimItem;
     }
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "claimSettlement")            
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "claimSettlement")
     public Set<ClaimSettlementAmount> getSettlementAmounts()
     {
         return settlementAmounts;
@@ -103,5 +112,36 @@ public class ClaimSettlement extends AbstractTopLevelEntity
     public void setSettlementAmounts(final Set<ClaimSettlementAmount> settlementAmounts)
     {
         this.settlementAmounts = settlementAmounts;
+    }
+
+    /**
+     * Apply a certain amount of the payment amount towards this claim item
+     * @param payment   Payment object representing one physical payment like a check or cash
+     * @param value     the amount to use from the Payment towards this claim item
+     */
+    @Transient
+    public void addSettlementAmount(final Payment payment, final Float value)
+    {
+        if (value > payment.getAmount())
+            throw new NestableRuntimeException("A Claim settlement amount CANNOT be larger than the amount of the associated Payment entity.");
+        final ClaimSettlementAmount amount = new ClaimSettlementAmount();
+        amount.setPayment(payment);
+        amount.setAmount(value);
+        amount.setClaimSettlement(this);
+        this.settlementAmounts.add(amount);
+    }
+
+    /**
+     * Apply all the amount of the payment towards this claim item
+     * @param payment
+     */
+    @Transient
+    public void addSettlementAmount(final Payment payment)
+    {
+        final ClaimSettlementAmount amount = new ClaimSettlementAmount();
+        amount.setPayment(payment);
+        amount.setAmount(payment.getAmount());
+        amount.setClaimSettlement(this);
+        this.settlementAmounts.add(amount);
     }
 }

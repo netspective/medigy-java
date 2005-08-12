@@ -38,75 +38,76 @@
  */
 package com.medigy.persist.model.claim;
 
-import com.medigy.persist.model.common.AbstractTopLevelEntity;
+import com.medigy.persist.TestCase;
+import com.medigy.persist.model.invoice.Invoice;
+import com.medigy.persist.model.invoice.Payment;
+import com.medigy.persist.reference.custom.claim.ClaimType;
 import com.medigy.persist.reference.custom.health.DiagnosisType;
-import com.medigy.persist.reference.type.clincial.Icd;
+import com.medigy.persist.reference.custom.invoice.InvoiceStatusType;
+import org.hibernate.Transaction;
+import org.hibernate.classic.Session;
+import org.hibernate.criterion.Restrictions;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratorType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import java.util.Date;
+import java.util.List;
 
-@Entity
-@Table(name = "Claim_Item_Diag_Code", uniqueConstraints={@UniqueConstraint(columnNames={"claim_item_id", "icd_code"})})
-public class ClaimItemDiagnosisCode extends AbstractTopLevelEntity
+public class TestClaim extends TestCase
 {
-    private Long claimItemDiagnosisCode;
-    private ClaimItem claimItem;
-    private DiagnosisType diagnosisType;
-    private Icd icd;
 
-    public ClaimItemDiagnosisCode()
+    public void testClaim()
     {
-    }
+        Session session = openSession();
+        Transaction transaction = session.beginTransaction();
 
-    @Id(generate = GeneratorType.AUTO)
-    public Long getClaimItemDiagnosisCode()
-    {
-        return claimItemDiagnosisCode;
-    }
+        final Invoice invoice = new Invoice();
+        invoice.addInvoiceStatus(InvoiceStatusType.Cache.CREATED.getEntity());
+        invoice.setInvoiceDate(new Date());
 
-    public void setClaimItemDiagnosisCode(final Long claimItemDiagnosisCode)
-    {
-        this.claimItemDiagnosisCode = claimItemDiagnosisCode;
-    }
+        session.save(invoice);
 
-    @ManyToOne
-    @JoinColumn(name = "claim_item_id", nullable = false)
-    public ClaimItem getClaimItem()
-    {
-        return claimItem;
-    }
+        final Claim claim = new Claim();
+        claim.setInvoice(invoice);
+        claim.setType(ClaimType.Cache.SELFPAY.getEntity());
 
-    public void setClaimItem(final ClaimItem claimItem)
-    {
-        this.claimItem = claimItem;
-    }
+        final ClaimItem item1 = new ClaimItem();
+        item1.setClaim(claim);
+        item1.addDiagnosticCode(DiagnosisType.Cache.ICD9_CODE.getEntity(), null);
+        item1.addDiagnosticCode(DiagnosisType.Cache.ICD9_CODE.getEntity(), null);
 
-    @ManyToOne
-    @JoinColumn(name = "diagnosis_type_id", nullable = false)
-    public DiagnosisType getDiagnosisType()
-    {
-        return diagnosisType;
-    }
+        final ClaimItem item2 = new ClaimItem();
+        item2.setClaim(claim);
+        item2.addDiagnosticCode(DiagnosisType.Cache.ICD9_CODE.getEntity(), null);
 
-    public void setDiagnosisType(final DiagnosisType diagnosisType)
-    {
-        this.diagnosisType = diagnosisType;
-    }
+        claim.addClaimItem(item1);
+        claim.addClaimItem(item2);
 
-    @ManyToOne
-    @JoinColumn(name = "icd_code", referencedColumnName = Icd.PK_COLUMN_NAME)
-    public Icd getIcd()
-    {
-        return icd;
-    }
+        transaction.commit();
+        session.close();
 
-    public void setIcd(final Icd icd)
-    {
-        this.icd = icd;
+        session = openSession();
+        transaction = session.beginTransaction();
+        Claim savedClaim = (Claim) session.createCriteria(Claim.class).add(Restrictions.eq("claimId", claim.getClaimId())).uniqueResult();
+        assertEquals(savedClaim.getType().getClaimTypeId(), ClaimType.Cache.SELFPAY.getEntity());
+        assertEquals(2, claim.getClaimItems().size());
+        final ClaimItem savedClaimItem1 = claim.getClaimItems().get(0);
+        final List<ClaimItemDiagnosisCode> diagnosticCodes = savedClaimItem1.getDiagnosticCodes();
+        assertEquals(2, diagnosticCodes.size());
+
+        final ClaimSettlement item1settlementA = new ClaimSettlement();
+        item1settlementA.setSettledDate(new Date());
+
+        final ClaimSettlement item1settlementB = new ClaimSettlement();
+        item1settlementB.setSettledDate(new Date());
+
+        final  Payment checkPayment = new Payment();
+        checkPayment.setPersonalCheckPayment(new Float(1000), "123");
+
+        final  Payment cashPayment = new Payment();
+        cashPayment.setCashPayment(new Float(100));
+
+        // $600 applied towards one settlement
+        item1settlementA.addSettlementAmount(checkPayment, new Float(500));
+        item1settlementA.addSettlementAmount(cashPayment, new Float(100));
+        savedClaimItem1.addClaimSettlement(item1settlementA);
     }
 }

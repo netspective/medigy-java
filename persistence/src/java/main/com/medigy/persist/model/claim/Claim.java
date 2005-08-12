@@ -45,15 +45,18 @@ import com.medigy.persist.model.invoice.Invoice;
 import com.medigy.persist.reference.custom.claim.ClaimType;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.Column;
+import javax.persistence.Transient;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -68,7 +71,7 @@ public class Claim extends AbstractTopLevelEntity
     private InsurancePolicy insurancePolicy;
     private Invoice  invoice;
 
-    private Set<ClaimItem> claimItems = new HashSet<ClaimItem>();
+    private List<ClaimItem> claimItems = new ArrayList<ClaimItem>();
     private Set<ClaimStatus> claimStatuses = new HashSet<ClaimStatus>();
 
     private Set<ClaimResubmission> resubmittedFor = new HashSet<ClaimResubmission>();
@@ -163,14 +166,21 @@ public class Claim extends AbstractTopLevelEntity
     }
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "claim")
-    public Set<ClaimItem> getClaimItems()
+    public List<ClaimItem> getClaimItems()
     {
         return claimItems;
     }
 
-    public void setClaimItems(final Set<ClaimItem> claimItems)
+    public void setClaimItems(final List<ClaimItem> claimItems)
     {
         this.claimItems = claimItems;
+    }
+
+    @Transient
+    public void addClaimItem(final ClaimItem item)
+    {
+        item.setClaim(this);
+        this.claimItems.add(item);
     }
 
 
@@ -208,7 +218,7 @@ public class Claim extends AbstractTopLevelEntity
     }
 
     @ManyToOne
-    @JoinColumn(name = Invoice.PK_COLUMN_NAME)
+    @JoinColumn(name = Invoice.PK_COLUMN_NAME, nullable = false)
     public Invoice getInvoice()
     {
         return invoice;

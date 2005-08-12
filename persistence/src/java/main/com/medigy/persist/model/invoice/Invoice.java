@@ -48,7 +48,6 @@ import com.medigy.persist.model.invoice.attribute.InvoiceLongAttribute;
 import com.medigy.persist.model.invoice.attribute.InvoiceStringAttribute;
 import com.medigy.persist.model.org.Organization;
 import com.medigy.persist.model.party.Party;
-import com.medigy.persist.model.person.Person;
 import com.medigy.persist.reference.custom.invoice.InvoiceRoleType;
 import com.medigy.persist.reference.custom.invoice.InvoiceStatusType;
 import com.medigy.persist.reference.custom.invoice.InvoiceType;
@@ -99,8 +98,8 @@ public class Invoice  extends AbstractTopLevelEntity
     private Set<InvoiceTerm> invoiceTerms = new HashSet<InvoiceTerm>();
     private Set<InvoiceAttribute> attributes = new HashSet<InvoiceAttribute>();
 
-    private Set<Claim> claims = new HashSet<Claim>();
     private Set<Invoice> childInvoices = new HashSet<Invoice>();
+    private List<Claim> claims = new ArrayList<Claim>();
 
     @Id(generate = GeneratorType.AUTO)
     @Column(name = PK_COLUMN_NAME)
@@ -112,6 +111,18 @@ public class Invoice  extends AbstractTopLevelEntity
     protected void setInvoiceId(final Long invoiceId)
     {
         this.invoiceId = invoiceId;
+    }
+
+    @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL)
+    @OrderBy("claimId")
+    public List<Claim> getClaims()
+    {
+        return claims;
+    }
+
+    public void setClaims(final List<Claim> claims)
+    {
+        this.claims = claims;
     }
 
     /**
@@ -390,17 +401,6 @@ public class Invoice  extends AbstractTopLevelEntity
     public void setVisit(final HealthCareEncounter encounter)
     {
         this.encounter = encounter;
-    }
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "invoice")
-    public Set<Claim> getClaims()
-    {
-        return claims;
-    }
-
-    public void setClaims(final Set<Claim> claims)
-    {
-        this.claims = claims;
     }
 
     @Transient

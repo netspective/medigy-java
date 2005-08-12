@@ -38,8 +38,10 @@
  */
 package com.medigy.persist.model.claim;
 
-import java.util.HashSet;
-import java.util.Set;
+import com.medigy.persist.model.common.AbstractTopLevelEntity;
+import com.medigy.persist.reference.custom.health.DiagnosisType;
+import com.medigy.persist.reference.type.UnitOfMeasureType;
+import com.medigy.persist.reference.type.clincial.Icd;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -49,25 +51,30 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-
-import com.medigy.persist.model.common.AbstractTopLevelEntity;
-import com.medigy.persist.reference.type.UnitOfMeasureType;
+import javax.persistence.OrderBy;
+import javax.persistence.Transient;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class ClaimItem extends AbstractTopLevelEntity
 {
+    public static final String PK_COLUMN_NAME = "claim_item_id";
+
     private Long claimItemId;
     private Long claimItemSeqId;
     private Claim claim;
     private Float claimAmount;
     private Float quantity;
     private UnitOfMeasureType unitOfMeasureType;
-    private ClaimServiceCode claimServiceCode;
 
-    private Set<ClaimSettlement> claimSettlements = new HashSet<ClaimSettlement>();
-    private Set<ClaimItemDiagnosisCode> diagnosisCodes = new HashSet<ClaimItemDiagnosisCode>();
+    private ClaimServiceCode claimServiceCode; // ??????
+
+    private List<ClaimSettlement> claimSettlements = new ArrayList<ClaimSettlement>();
+    private List<ClaimItemDiagnosisCode> diagnosticCodes = new ArrayList<ClaimItemDiagnosisCode>();
 
     @Id(generate = GeneratorType.AUTO)
+    @Column(name = PK_COLUMN_NAME)
     public Long getClaimItemId()
     {
         return claimItemId;
@@ -134,12 +141,12 @@ public class ClaimItem extends AbstractTopLevelEntity
     }
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "claimItem")
-    public Set<ClaimSettlement> getClaimSettlements()
+    public List<ClaimSettlement> getClaimSettlements()
     {
         return claimSettlements;
     }
 
-    public void setClaimSettlements(final Set<ClaimSettlement> claimSettlements)
+    public void setClaimSettlements(final List<ClaimSettlement> claimSettlements)
     {
         this.claimSettlements = claimSettlements;
     }
@@ -156,14 +163,39 @@ public class ClaimItem extends AbstractTopLevelEntity
         this.claimServiceCode = claimServiceCode;
     }
 
-    @OneToMany(mappedBy = "claimItem")
-    public Set<ClaimItemDiagnosisCode> getDiagnosisCodes()
+    @OneToMany(mappedBy = "claimItem", cascade = CascadeType.ALL)
+    @OrderBy("icd")
+    public List<ClaimItemDiagnosisCode> getDiagnosticCodes()
     {
-        return diagnosisCodes;
+        return diagnosticCodes;
     }
 
-    public void setDiagnosisCodes(final Set<ClaimItemDiagnosisCode> diagnosisCodes)
+    public void setDiagnosticCodes(final List<ClaimItemDiagnosisCode> diagnosticCodes)
     {
-        this.diagnosisCodes = diagnosisCodes;
+        this.diagnosticCodes = diagnosticCodes;
+    }
+
+    @Transient
+    public void addDiagnosticCode(final ClaimItemDiagnosisCode code)
+    {
+        code.setClaimItem(this);
+        this.diagnosticCodes.add(code);
+    }
+
+    @Transient
+    public void addDiagnosticCode(final DiagnosisType type, final Icd icd)
+    {
+        final ClaimItemDiagnosisCode code = new ClaimItemDiagnosisCode();
+        code.setDiagnosisType(type);
+        code.setIcd(icd);
+        code.setClaimItem(this);
+        this.diagnosticCodes.add(code);
+    }
+
+    @Transient
+    public void addClaimSettlement(final ClaimSettlement settlement)
+    {
+        settlement.setClaimItem(this);
+        claimSettlements.add(settlement);
     }
 }
