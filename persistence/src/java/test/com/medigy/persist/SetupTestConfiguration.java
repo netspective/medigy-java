@@ -65,6 +65,7 @@ public class SetupTestConfiguration
 
     public static final String BUILD_PROPERTY_PREFIX = "ant.build.";
     public static final String TEST_DB_PROPERTY_PREFIX = "module.test.database";
+    public static final String TEST_DB_RECREATE_SCHEMA_PROPERTY = TEST_DB_PROPERTY_PREFIX + ".recreateSchema";
     public static final String TEST_DB_DIALECT_PROPERTY = TEST_DB_PROPERTY_PREFIX + ".dialectClass";
     public static final String TEST_DB_DRIVER_PROPERTY = TEST_DB_PROPERTY_PREFIX + ".driverClass";
     public static final String TEST_DB_URL_PROPERTY = TEST_DB_PROPERTY_PREFIX + ".url";
@@ -100,8 +101,17 @@ public class SetupTestConfiguration
 
     protected boolean recreateSchema()
     {
-		return true;
-	}
+        if (System.getProperty(TEST_DB_RECREATE_SCHEMA_PROPERTY) != null)
+        {
+            return Boolean.parseBoolean(System.getProperty(TEST_DB_RECREATE_SCHEMA_PROPERTY));
+        }
+        else if (System.getProperty(BUILD_PROPERTY_PREFIX + TEST_DB_RECREATE_SCHEMA_PROPERTY) != null)
+        {
+            return Boolean.parseBoolean(System.getProperty(BUILD_PROPERTY_PREFIX + TEST_DB_RECREATE_SCHEMA_PROPERTY));
+        }
+        else
+            return true;
+    }
 
     protected String getClassNameWithoutPackage()
     {
@@ -269,7 +279,12 @@ public class SetupTestConfiguration
         try
         {
             if (!ModelInitializer.getInstance().isInitialized())
-                ModelInitializer.getInstance().initialize(session, ModelInitializer.SeedDataPopulationType.AUTO, hibernateConfiguration);
+            {
+                if (recreateSchema())
+                    ModelInitializer.getInstance().initialize(session, ModelInitializer.SeedDataPopulationType.AUTO, hibernateConfiguration);
+                else
+                    ModelInitializer.getInstance().initialize(session, ModelInitializer.SeedDataPopulationType.NO, hibernateConfiguration);
+            }
             transaction.commit();
         }
         catch (Exception e)
