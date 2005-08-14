@@ -48,9 +48,9 @@ import javax.persistence.GeneratorType;
 import javax.persistence.Id;
 
 @Entity
-public class HealthCareVisitStatusType  extends AbstractCustomReferenceEntity
+public class HealthCareEncounterStatusType  extends AbstractCustomReferenceEntity
 {
-    public static final String PK_COLUMN_NAME = "visit_status_type_id";
+    public static final String PK_COLUMN_NAME = "encounter_status_type_id";
     public enum Cache implements CachedCustomReferenceEntity
     {
         SCHEDULED("SCH", "Scheduled"),
@@ -60,7 +60,7 @@ public class HealthCareVisitStatusType  extends AbstractCustomReferenceEntity
 
         private final String label;
         private final String code;
-        private HealthCareVisitStatusType entity;
+        private HealthCareEncounterStatusType entity;
 
         Cache(final String code, final String label)
         {
@@ -73,14 +73,14 @@ public class HealthCareVisitStatusType  extends AbstractCustomReferenceEntity
             return code;
         }
 
-        public HealthCareVisitStatusType getEntity()
+        public HealthCareEncounterStatusType getEntity()
         {
             return entity;
         }
 
         public void setEntity(final CustomReferenceEntity entity)
         {
-            this.entity = (HealthCareVisitStatusType) entity;
+            this.entity = (HealthCareEncounterStatusType) entity;
         }
 
         public String getLabel()
@@ -91,12 +91,12 @@ public class HealthCareVisitStatusType  extends AbstractCustomReferenceEntity
 
     @Id(generate = GeneratorType.AUTO)
     @Column(name = PK_COLUMN_NAME)        
-    public Long getHealthCareVisitStatusTypeId()
+    public Long getHealthCareEncounterStatusTypeId()
     {
         return super.getSystemId();
     }
 
-    public void setHealthCareVisitStatusTypeId(final Long id)
+    public void setHealthCareEncounterStatusTypeId(final Long id)
     {
         super.setSystemId(id);
     }

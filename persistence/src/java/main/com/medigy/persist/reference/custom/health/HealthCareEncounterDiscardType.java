@@ -36,70 +36,68 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.persist.model.health;
+package com.medigy.persist.reference.custom.health;
 
-import com.medigy.persist.model.common.AbstractTopLevelEntity;
-import com.medigy.persist.reference.custom.health.HealthCareEncounterStatusType;
+import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
+import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
+import com.medigy.persist.reference.custom.CustomReferenceEntity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import java.util.Date;
 
 @Entity
-public class HealthCareVisitStatus extends AbstractTopLevelEntity
+public class HealthCareEncounterDiscardType extends AbstractCustomReferenceEntity
 {
-    private Long visitStatusId;
-    private Date statusDate;
-    private HealthCareEncounter encounter;
-    private HealthCareEncounterStatusType type;
+    public static final String PK_COLUMN_NAME = "encounter_discard_type_id";
+    public enum Cache implements CachedCustomReferenceEntity
+    {
+        CANCEL("CANCEL", "Cancelled"),
+        NOSHOW("NOSHOW", "No Show"),
+        PATIENT_RECHEDULED("PAT_RESCH", "Patient Rescheduled"),
+        ORG_RESCHEDULED("ORG_RESCH", "Organization Rescheduled");
+
+        private final String label;
+        private final String code;
+        private HealthCareEncounterStatusType entity;
+
+        Cache(final String code, final String label)
+        {
+            this.code = code;
+            this.label = label;
+        }
+
+        public String getCode()
+        {
+            return code;
+        }
+
+        public HealthCareEncounterStatusType getEntity()
+        {
+            return entity;
+        }
+
+        public void setEntity(final CustomReferenceEntity entity)
+        {
+            this.entity = (HealthCareEncounterStatusType) entity;
+        }
+
+        public String getLabel()
+        {
+            return label;
+        }
+    }
 
     @Id(generate = GeneratorType.AUTO)
-    public Long getVisitStatusId()
+    @Column(name = PK_COLUMN_NAME)
+    public Long getHealthCareEncounterDiscardTypeId()
     {
-        return visitStatusId;
+        return super.getSystemId();
     }
 
-    protected void setVisitStatusId(final Long visitStatusId)
+    public void setHealthCareEncounterDiscardTypeId(final Long id)
     {
-        this.visitStatusId = visitStatusId;
-    }
-
-    @Column(nullable = false)
-    public Date getStatusDate()
-    {
-        return statusDate;
-    }
-
-    public void setStatusDate(final Date statusDate)
-    {
-        this.statusDate = statusDate;
-    }
-
-    @ManyToOne
-    @JoinColumn(name = "visit_id")
-    public HealthCareEncounter getVisit()
-    {
-        return encounter;
-    }
-
-    public void setVisit(final HealthCareEncounter encounter)
-    {
-        this.encounter = encounter;
-    }
-
-    @ManyToOne
-    @JoinColumn(name = "visit_status_type_id")
-    public HealthCareEncounterStatusType getType()
-    {
-        return type;
-    }
-
-    public void setType(final HealthCareEncounterStatusType type)
-    {
-        this.type = type;
+        super.setSystemId(id);
     }
 }

@@ -42,8 +42,9 @@ import com.medigy.persist.model.common.AbstractDateDurationEntity;
 import com.medigy.persist.model.order.Perscription;
 import com.medigy.persist.model.party.Facility;
 import com.medigy.persist.model.person.Person;
+import com.medigy.persist.reference.custom.health.HealthCareEncounterDiscardType;
+import com.medigy.persist.reference.custom.health.HealthCareEncounterStatusType;
 import com.medigy.persist.reference.custom.health.HealthCareVisitRoleType;
-import com.medigy.persist.reference.custom.health.HealthCareVisitStatusType;
 import com.medigy.persist.reference.custom.person.PatientType;
 
 import javax.persistence.Basic;
@@ -55,9 +56,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
-import javax.persistence.OrderBy;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -82,6 +83,10 @@ public class HealthCareEncounter  extends AbstractDateDurationEntity
     private Date scheduledTime;
     private Date startTime;
     private Date checkoutTime;
+    private Date discardTime;
+
+    private String discardRemarks;
+    private HealthCareEncounterDiscardType  discardType;
 
     private List<HealthCareVisitStatus> statuses = new ArrayList<HealthCareVisitStatus>();
     private Set<HealthCareVisitRole> roles = new HashSet<HealthCareVisitRole>();    // scheduler, patient, doctor
@@ -104,6 +109,44 @@ public class HealthCareEncounter  extends AbstractDateDurationEntity
     protected void setHealthCareEncounterId(final Long healthCareEncounterId)
     {
         this.healthCareEncounterId = healthCareEncounterId;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = HealthCareEncounterDiscardType.PK_COLUMN_NAME)
+    public HealthCareEncounterDiscardType getDiscardType()
+    {
+        return discardType;
+    }
+
+    public void setDiscardType(final HealthCareEncounterDiscardType discardType)
+    {
+        this.discardType = discardType;
+    }
+
+    @Column(length = 512)
+    public String getDiscardRemarks()
+    {
+        return discardRemarks;
+    }
+
+    public void setDiscardRemarks(final String discardRemarks)
+    {
+        this.discardRemarks = discardRemarks;
+    }
+
+    /**
+     * The date/time when the appointment was cancelled/no-showed/re-scheduled
+     * @return
+     */
+    @Basic(temporalType = TemporalType.TIMESTAMP)
+    public Date getDiscardTime()
+    {
+        return discardTime;
+    }
+
+    public void setDiscardTime(final Date discardTime)
+    {
+        this.discardTime = discardTime;
     }
 
     @Basic(temporalType = TemporalType.TIMESTAMP)
@@ -195,26 +238,24 @@ public class HealthCareEncounter  extends AbstractDateDurationEntity
     public void addStatus(final HealthCareVisitStatus status)
     {
         this.statuses.add(status);
+        if (status.getType().getHealthCareEncounterStatusTypeId().equals(HealthCareEncounterStatusType.Cache.DISCARD.getEntity().getHealthCareEncounterStatusTypeId()))
+            setDiscardTime(new Date());
     }
 
     @Transient
-    public void addStatus(final HealthCareVisitStatusType type)
+    public void addStatus(final HealthCareEncounterStatusType type)
     {
-        HealthCareVisitStatus status = new HealthCareVisitStatus();
-        status.setType(type);
-        status.setVisit(this);
-        status.setStatusDate(new Date());
-        this.statuses.add(status);
+        addStatus(type, new Date());
     }
 
     @Transient
-    public void addStatus(final HealthCareVisitStatusType type, final Date date)
+    public void addStatus(final HealthCareEncounterStatusType type, final Date date)
     {
         HealthCareVisitStatus status = new HealthCareVisitStatus();
         status.setType(type);
         status.setVisit(this);
         status.setStatusDate(date);
-        this.statuses.add(status);
+        addStatus(status);
     }
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "visit")

@@ -55,7 +55,8 @@
         <mapping class="com.medigy.persist.reference.custom.health.HealthCareDeliveryRoleType"/>
         <mapping class="com.medigy.persist.reference.custom.health.HealthCareOfferingType"/>
         <mapping class="com.medigy.persist.reference.custom.health.HealthCareVisitRoleType"/>
-        <mapping class="com.medigy.persist.reference.custom.health.HealthCareVisitStatusType"/>
+        <mapping class="com.medigy.persist.reference.custom.health.HealthCareEncounterStatusType"/>
+        <mapping class="com.medigy.persist.reference.custom.health.HealthCareEncounterDiscardType"/>
         <mapping class="com.medigy.persist.reference.custom.health.OutcomeType"/>
         <mapping class="com.medigy.persist.reference.custom.health.SymptomType"/>
         <mapping class="com.medigy.persist.reference.custom.health.HealthCareLicenseType"/>
