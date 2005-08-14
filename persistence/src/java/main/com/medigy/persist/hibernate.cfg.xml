@@ -22,6 +22,8 @@
         <mapping class="com.medigy.persist.reference.custom.AbstractCustomReferenceEntity"/>
         <mapping class="com.medigy.persist.reference.custom.AbstractCustomHierarchyReferenceEntity"/>
         <mapping class="com.medigy.persist.reference.ModelVersion"/>
+        <mapping class="com.medigy.persist.model.health.form.Form"/>
+
 
         <!--mapping package="com.medigy.persist.reference.type"/-->
         <mapping class="com.medigy.persist.reference.type.ContactMechanismType"/>
@@ -66,6 +68,8 @@
         <mapping class="com.medigy.persist.reference.custom.health.LabOrderPriorityType"/>
         <mapping class="com.medigy.persist.reference.custom.health.LabOrderStatusType"/>
         <mapping class="com.medigy.persist.reference.custom.health.MedicationDurationType"/>
+
+        <mapping class="com.medigy.persist.reference.custom.health.form.QuestionType"/>
 
         <!--mapping package="com.medigy.persist.reference.custom.product"/-->
         <mapping class="com.medigy.persist.reference.custom.product.ProductType"/>
@@ -211,6 +215,9 @@
         <mapping class="com.medigy.persist.model.health.PersonVisitType"/>
         <mapping class="com.medigy.persist.model.health.lab.LabOrder"/>
         <mapping class="com.medigy.persist.model.health.lab.LabOrderEntry"/>
+        <mapping class="com.medigy.persist.model.health.form.MultipleChoiceItem"/>
+        <mapping class="com.medigy.persist.model.health.form.Question"/>
+        <mapping class="com.medigy.persist.model.health.form.SF36Form"/>
 
         <mapping class="com.medigy.persist.model.product.Product"/>
         <mapping class="com.medigy.persist.reference.custom.health.MedicationType"/>

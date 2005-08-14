@@ -36,70 +36,125 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.persist.reference.custom.health;
+package com.medigy.persist.model.health.form;
 
-import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
-import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
-import com.medigy.persist.reference.custom.CustomReferenceEntity;
+import com.medigy.persist.model.common.AbstractTopLevelEntity;
+import com.medigy.persist.reference.custom.health.form.QuestionType;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
-@Table(name = "Encounter_Discard_Type")
-public class HealthCareEncounterDiscardType extends AbstractCustomReferenceEntity
+public class Question extends AbstractTopLevelEntity
 {
-    public static final String PK_COLUMN_NAME = "discard_type_id";
-    public enum Cache implements CachedCustomReferenceEntity
+    public static final String PK_COLUMN_NAME = "question_id";
+
+    private Long questionId;
+    private String question;
+    private Question parentQuestion;
+    private QuestionType type;
+    private String answer;
+
+    private Form parentForm;
+    private List<MultipleChoiceItem> choices = new ArrayList<MultipleChoiceItem>();
+    private List<Question> childQuestions = new ArrayList<Question>();
+
+    @Column(length = 1024)
+    public String getAnswer()
     {
-        CANCEL("CANCEL", "Cancelled"),
-        NOSHOW("NOSHOW", "No Show"),
-        PATIENT_RECHEDULED("PAT_RESCH", "Patient Rescheduled"),
-        ORG_RESCHEDULED("ORG_RESCH", "Organization Rescheduled");
+        return answer;
+    }
 
-        private final String label;
-        private final String code;
-        private HealthCareEncounterDiscardType entity;
+    public void setAnswer(final String answer)
+    {
+        this.answer = answer;
+    }
 
-        Cache(final String code, final String label)
-        {
-            this.code = code;
-            this.label = label;
-        }
+    @ManyToOne
+    @JoinColumn(referencedColumnName = Form.PK_COLUMN_NAME, name = "parentForm")
+    public Form getParentForm()
+    {
+        return parentForm;
+    }
 
-        public String getCode()
-        {
-            return code;
-        }
+    public void setParentForm(final Form parentForm)
+    {
+        this.parentForm = parentForm;
+    }
 
-        public HealthCareEncounterDiscardType getEntity()
-        {
-            return entity;
-        }
+    @ManyToOne
+    @JoinColumn(name = QuestionType.PK_COLUMN_NAME, nullable = false)
+    public QuestionType getType()
+    {
+        return type;
+    }
 
-        public void setEntity(final CustomReferenceEntity entity)
-        {
-            this.entity = (HealthCareEncounterDiscardType) entity;
-        }
+    public void setType(final QuestionType type)
+    {
+        this.type = type;
+    }
 
-        public String getLabel()
-        {
-            return label;
-        }
+    @OneToMany(mappedBy = "parentQuestion", cascade = CascadeType.ALL)
+    public List<Question> getChildQuestions()
+    {
+        return childQuestions;
+    }
+
+    public void setChildQuestions(final List<Question> childQuestions)
+    {
+        this.childQuestions = childQuestions;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "parent_question_id", referencedColumnName = PK_COLUMN_NAME)
+    public Question getParentQuestion()
+    {
+        return parentQuestion;
+    }
+
+    public void setParentQuestion(final Question parentQuestion)
+    {
+        this.parentQuestion = parentQuestion;
+    }
+
+    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
+    public List<MultipleChoiceItem> getChoices()
+    {
+        return choices;
+    }
+
+    public void setChoices(final List<MultipleChoiceItem> choices)
+    {
+        this.choices = choices;
     }
 
     @Id(generate = GeneratorType.AUTO)
-    @Column(name = PK_COLUMN_NAME)
-    public Long getHealthCareEncounterDiscardTypeId()
+    public Long getQuestionId()
     {
-        return super.getSystemId();
+        return questionId;
     }
 
-    public void setHealthCareEncounterDiscardTypeId(final Long id)
+    public void setQuestionId(final Long questionId)
     {
-        super.setSystemId(id);
+        this.questionId = questionId;
+    }
+
+    @Column(length = 512, nullable = false)
+    public String getQuestion()
+    {
+        return question;
+    }
+
+    public void setQuestion(final String question)
+    {
+        this.question = question;
     }
 }

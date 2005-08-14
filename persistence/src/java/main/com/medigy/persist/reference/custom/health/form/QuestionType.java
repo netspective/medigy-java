@@ -36,7 +36,7 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.persist.reference.custom.health;
+package com.medigy.persist.reference.custom.health.form;
 
 import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
 import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
@@ -46,28 +46,25 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
-import javax.persistence.Table;
 
 @Entity
-@Table(name = "Encounter_Discard_Type")
-public class HealthCareEncounterDiscardType extends AbstractCustomReferenceEntity
+public class QuestionType extends AbstractCustomReferenceEntity
 {
-    public static final String PK_COLUMN_NAME = "discard_type_id";
+    public static final String PK_COLUMN_NAME = "question_type_id";
+
     public enum Cache implements CachedCustomReferenceEntity
     {
-        CANCEL("CANCEL", "Cancelled"),
-        NOSHOW("NOSHOW", "No Show"),
-        PATIENT_RECHEDULED("PAT_RESCH", "Patient Rescheduled"),
-        ORG_RESCHEDULED("ORG_RESCH", "Organization Rescheduled");
+        MULTIPLE_CHOICE("MULT"),
+        TEXT("TXT");
 
         private final String label;
         private final String code;
-        private HealthCareEncounterDiscardType entity;
+        private QuestionType entity;
 
-        Cache(final String code, final String label)
+        private Cache(final String code)
         {
             this.code = code;
-            this.label = label;
+            this.label = code;
         }
 
         public String getCode()
@@ -75,14 +72,15 @@ public class HealthCareEncounterDiscardType extends AbstractCustomReferenceEntit
             return code;
         }
 
-        public HealthCareEncounterDiscardType getEntity()
+
+        public QuestionType getEntity()
         {
             return entity;
         }
 
         public void setEntity(final CustomReferenceEntity entity)
         {
-            this.entity = (HealthCareEncounterDiscardType) entity;
+            this.entity = (QuestionType) entity;
         }
 
         public String getLabel()
@@ -93,12 +91,12 @@ public class HealthCareEncounterDiscardType extends AbstractCustomReferenceEntit
 
     @Id(generate = GeneratorType.AUTO)
     @Column(name = PK_COLUMN_NAME)
-    public Long getHealthCareEncounterDiscardTypeId()
+    public Long getQuestionTypeId()
     {
         return super.getSystemId();
     }
 
-    public void setHealthCareEncounterDiscardTypeId(final Long id)
+    protected void setQuestionTypeId(final Long id)
     {
         super.setSystemId(id);
     }

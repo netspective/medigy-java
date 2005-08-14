@@ -36,70 +36,76 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.persist.reference.custom.health;
+package com.medigy.persist.model.health.form;
 
-import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
-import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
-import com.medigy.persist.reference.custom.CustomReferenceEntity;
+import com.medigy.persist.model.common.AbstractEntity;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.OneToMany;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
-@Table(name = "Encounter_Discard_Type")
-public class HealthCareEncounterDiscardType extends AbstractCustomReferenceEntity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE, discriminatorValue = Form.DISCRIMINATOR_VALUE)
+public abstract class Form extends AbstractEntity
 {
-    public static final String PK_COLUMN_NAME = "discard_type_id";
-    public enum Cache implements CachedCustomReferenceEntity
+    public static final String PK_COLUMN_NAME = "form_id";
+    public static final String DISCRIMINATOR_VALUE = "Form";
+
+    private Long formId;
+    private String name;
+    private String description;
+
+    private List<Question> questions = new ArrayList<Question>();
+
+    @Column(length = 512)
+    public String getDescription()
     {
-        CANCEL("CANCEL", "Cancelled"),
-        NOSHOW("NOSHOW", "No Show"),
-        PATIENT_RECHEDULED("PAT_RESCH", "Patient Rescheduled"),
-        ORG_RESCHEDULED("ORG_RESCH", "Organization Rescheduled");
+        return description;
+    }
 
-        private final String label;
-        private final String code;
-        private HealthCareEncounterDiscardType entity;
-
-        Cache(final String code, final String label)
-        {
-            this.code = code;
-            this.label = label;
-        }
-
-        public String getCode()
-        {
-            return code;
-        }
-
-        public HealthCareEncounterDiscardType getEntity()
-        {
-            return entity;
-        }
-
-        public void setEntity(final CustomReferenceEntity entity)
-        {
-            this.entity = (HealthCareEncounterDiscardType) entity;
-        }
-
-        public String getLabel()
-        {
-            return label;
-        }
+    public void setDescription(final String description)
+    {
+        this.description = description;
     }
 
     @Id(generate = GeneratorType.AUTO)
     @Column(name = PK_COLUMN_NAME)
-    public Long getHealthCareEncounterDiscardTypeId()
+    public Long getFormId()
     {
-        return super.getSystemId();
+        return formId;
     }
 
-    public void setHealthCareEncounterDiscardTypeId(final Long id)
+    public void setFormId(final Long formId)
     {
-        super.setSystemId(id);
+        this.formId = formId;
+    }
+
+    @Column(length = 256, nullable = false)
+    public String getName()
+    {
+        return name;
+    }
+
+    public void setName(final String name)
+    {
+        this.name = name;
+    }
+
+    @OneToMany(cascade  = CascadeType.ALL, mappedBy = "parentForm")
+    public List<Question> getQuestions()
+    {
+        return questions;
+    }
+
+    public void setQuestions(final List<Question> questions)
+    {
+        this.questions = questions;
     }
 }

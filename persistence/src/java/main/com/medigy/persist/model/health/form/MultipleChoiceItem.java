@@ -36,70 +36,69 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.persist.reference.custom.health;
+package com.medigy.persist.model.health.form;
 
-import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
-import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
-import com.medigy.persist.reference.custom.CustomReferenceEntity;
+import com.medigy.persist.model.common.AbstractEntity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 @Entity
-@Table(name = "Encounter_Discard_Type")
-public class HealthCareEncounterDiscardType extends AbstractCustomReferenceEntity
+public class MultipleChoiceItem extends AbstractEntity
 {
-    public static final String PK_COLUMN_NAME = "discard_type_id";
-    public enum Cache implements CachedCustomReferenceEntity
+    public static final String PK_COLUMN_NAME = "mult_item_id";
+
+    private Long itemId;
+    private String description;
+    private boolean isSelected;
+    private Question question;
+
+    @ManyToOne
+    @JoinColumn(name = Question.PK_COLUMN_NAME)
+    public Question getQuestion()
     {
-        CANCEL("CANCEL", "Cancelled"),
-        NOSHOW("NOSHOW", "No Show"),
-        PATIENT_RECHEDULED("PAT_RESCH", "Patient Rescheduled"),
-        ORG_RESCHEDULED("ORG_RESCH", "Organization Rescheduled");
+        return question;
+    }
 
-        private final String label;
-        private final String code;
-        private HealthCareEncounterDiscardType entity;
+    public void setQuestion(final Question question)
+    {
+        this.question = question;
+    }
 
-        Cache(final String code, final String label)
-        {
-            this.code = code;
-            this.label = label;
-        }
+    @Column(length = 128)
+    public String getDescription()
+    {
+        return description;
+    }
 
-        public String getCode()
-        {
-            return code;
-        }
+    public void setDescription(final String description)
+    {
+        this.description = description;
+    }
 
-        public HealthCareEncounterDiscardType getEntity()
-        {
-            return entity;
-        }
+    public boolean isSelected()
+    {
+        return isSelected;
+    }
 
-        public void setEntity(final CustomReferenceEntity entity)
-        {
-            this.entity = (HealthCareEncounterDiscardType) entity;
-        }
-
-        public String getLabel()
-        {
-            return label;
-        }
+    public void setSelected(final boolean selected)
+    {
+        isSelected = selected;
     }
 
     @Id(generate = GeneratorType.AUTO)
     @Column(name = PK_COLUMN_NAME)
-    public Long getHealthCareEncounterDiscardTypeId()
+    public Long getItemId()
     {
-        return super.getSystemId();
+        return itemId;
     }
 
-    public void setHealthCareEncounterDiscardTypeId(final Long id)
+    public void setItemId(final Long itemId)
     {
-        super.setSystemId(id);
+        this.itemId = itemId;
     }
 }

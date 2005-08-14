@@ -36,70 +36,17 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.persist.reference.custom.health;
+package com.medigy.persist.model.health.form;
 
-import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
-import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
-import com.medigy.persist.reference.custom.CustomReferenceEntity;
-
-import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratorType;
-import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "Encounter_Discard_Type")
-public class HealthCareEncounterDiscardType extends AbstractCustomReferenceEntity
+@Table(name = "SF36_Form")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE, discriminatorValue = SF36Form.DISCRIMINATOR_VALUE)
+public class SF36Form extends Form
 {
-    public static final String PK_COLUMN_NAME = "discard_type_id";
-    public enum Cache implements CachedCustomReferenceEntity
-    {
-        CANCEL("CANCEL", "Cancelled"),
-        NOSHOW("NOSHOW", "No Show"),
-        PATIENT_RECHEDULED("PAT_RESCH", "Patient Rescheduled"),
-        ORG_RESCHEDULED("ORG_RESCH", "Organization Rescheduled");
-
-        private final String label;
-        private final String code;
-        private HealthCareEncounterDiscardType entity;
-
-        Cache(final String code, final String label)
-        {
-            this.code = code;
-            this.label = label;
-        }
-
-        public String getCode()
-        {
-            return code;
-        }
-
-        public HealthCareEncounterDiscardType getEntity()
-        {
-            return entity;
-        }
-
-        public void setEntity(final CustomReferenceEntity entity)
-        {
-            this.entity = (HealthCareEncounterDiscardType) entity;
-        }
-
-        public String getLabel()
-        {
-            return label;
-        }
-    }
-
-    @Id(generate = GeneratorType.AUTO)
-    @Column(name = PK_COLUMN_NAME)
-    public Long getHealthCareEncounterDiscardTypeId()
-    {
-        return super.getSystemId();
-    }
-
-    public void setHealthCareEncounterDiscardTypeId(final Long id)
-    {
-        super.setSystemId(id);
-    }
+    public static final String DISCRIMINATOR_VALUE = "SF36";
 }

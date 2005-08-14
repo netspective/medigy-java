@@ -42,15 +42,15 @@ import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
 import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
 import com.medigy.persist.reference.custom.CustomReferenceEntity;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.GeneratorType;
 import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratorType;
+import javax.persistence.Id;
 
 @Entity
 public class HealthCareDeliveryType extends AbstractCustomReferenceEntity
 {
-    public static final String PK_COLUMN_NAME = "health_care_delivery_type_id";
+    public static final String PK_COLUMN_NAME = "delivery_type_id";
 
     public enum Cache implements CachedCustomReferenceEntity
     {
