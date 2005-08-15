@@ -34,6 +34,7 @@
         <mapping class="com.medigy.persist.reference.type.MaritalStatusType"/>
         <mapping class="com.medigy.persist.reference.type.PriorityType"/>
         <mapping class="com.medigy.persist.reference.type.UnitOfMeasureType"/>
+        <mapping class="com.medigy.persist.reference.type.CurrencyType"/>
         <mapping class="com.medigy.persist.reference.type.clincial.CPT"/>
         <mapping class="com.medigy.persist.reference.type.clincial.HCPCS"/>
         <mapping class="com.medigy.persist.reference.type.clincial.IcdAge"/>

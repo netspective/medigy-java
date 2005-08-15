@@ -40,6 +40,7 @@ package com.medigy.persist.model.claim;
 
 import com.medigy.persist.model.common.AbstractTopLevelEntity;
 import com.medigy.persist.reference.custom.health.DiagnosisType;
+import com.medigy.persist.reference.type.CurrencyType;
 import com.medigy.persist.reference.type.UnitOfMeasureType;
 import com.medigy.persist.reference.type.clincial.Icd;
 
@@ -56,6 +57,7 @@ import javax.persistence.Transient;
 import java.util.ArrayList;
 import java.util.List;
 
+
 @Entity
 public class ClaimItem extends AbstractTopLevelEntity
 {
@@ -67,6 +69,7 @@ public class ClaimItem extends AbstractTopLevelEntity
     private Float claimAmount;
     private Float quantity;
     private UnitOfMeasureType unitOfMeasureType;
+    private CurrencyType currencyType;
 
     private ClaimServiceCode claimServiceCode; // ??????
 
@@ -113,7 +116,7 @@ public class ClaimItem extends AbstractTopLevelEntity
         return claimAmount;
     }
 
-    public void setClaimAmount(final float claimAmount)
+    public void setClaimAmount(final Float claimAmount)
     {
         this.claimAmount = claimAmount;
     }
@@ -197,5 +200,17 @@ public class ClaimItem extends AbstractTopLevelEntity
     {
         settlement.setClaimItem(this);
         claimSettlements.add(settlement);
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "curr_type_id", referencedColumnName = CurrencyType.PK_COLUMN_NAME)
+    public CurrencyType getCurrencyType()
+    {
+        return currencyType;
+    }
+
+    public void setCurrencyType(final CurrencyType currencyType)
+    {
+        this.currencyType = currencyType;
     }
 }

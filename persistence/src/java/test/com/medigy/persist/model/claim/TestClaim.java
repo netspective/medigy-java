@@ -41,14 +41,19 @@ package com.medigy.persist.model.claim;
 import com.medigy.persist.TestCase;
 import com.medigy.persist.model.invoice.Invoice;
 import com.medigy.persist.model.invoice.Payment;
+import com.medigy.persist.model.org.Organization;
+import com.medigy.persist.model.person.Person;
 import com.medigy.persist.reference.custom.claim.ClaimType;
 import com.medigy.persist.reference.custom.health.DiagnosisType;
 import com.medigy.persist.reference.custom.invoice.InvoiceStatusType;
+import com.medigy.persist.reference.type.GenderType;
 import org.hibernate.Transaction;
 import org.hibernate.classic.Session;
 import org.hibernate.criterion.Restrictions;
 
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 public class TestClaim extends TestCase
@@ -70,44 +75,86 @@ public class TestClaim extends TestCase
         claim.setType(ClaimType.Cache.SELFPAY.getEntity());
 
         final ClaimItem item1 = new ClaimItem();
+        item1.setClaimAmount(new Float(1000));
         item1.setClaim(claim);
         item1.addDiagnosticCode(DiagnosisType.Cache.ICD9_CODE.getEntity(), null);
         item1.addDiagnosticCode(DiagnosisType.Cache.ICD9_CODE.getEntity(), null);
 
         final ClaimItem item2 = new ClaimItem();
+        item2.setClaimAmount(new Float(500));
         item2.setClaim(claim);
         item2.addDiagnosticCode(DiagnosisType.Cache.ICD9_CODE.getEntity(), null);
 
         claim.addClaimItem(item1);
         claim.addClaimItem(item2);
-
+        session.save(claim);
         transaction.commit();
         session.close();
 
         session = openSession();
         transaction = session.beginTransaction();
         Claim savedClaim = (Claim) session.createCriteria(Claim.class).add(Restrictions.eq("claimId", claim.getClaimId())).uniqueResult();
-        assertEquals(savedClaim.getType().getClaimTypeId(), ClaimType.Cache.SELFPAY.getEntity());
+        assertEquals(savedClaim.getType().getClaimTypeId(), ClaimType.Cache.SELFPAY.getEntity().getClaimTypeId());
         assertEquals(2, claim.getClaimItems().size());
-        final ClaimItem savedClaimItem1 = claim.getClaimItems().get(0);
+        final ClaimItem savedClaimItem1 = savedClaim.getClaimItems().get(0);
+        final ClaimItem savedClaimItem2 = savedClaim.getClaimItems().get(0);
         final List<ClaimItemDiagnosisCode> diagnosticCodes = savedClaimItem1.getDiagnosticCodes();
         assertEquals(2, diagnosticCodes.size());
 
         final ClaimSettlement item1settlementA = new ClaimSettlement();
-        item1settlementA.setSettledDate(new Date());
+        final Date settledDate = new Date();
+        item1settlementA.setSettledDate(settledDate);
 
         final ClaimSettlement item1settlementB = new ClaimSettlement();
-        item1settlementB.setSettledDate(new Date());
+        item1settlementB.setSettledDate(settledDate);
 
+        final Person payer = new Person();
+        payer.setLastName("Hackett");
+        payer.setFirstName("Ryan");
+        payer.addGender(GenderType.Cache.MALE.getEntity());
+        final Calendar instance = Calendar.getInstance();
+        instance.set(1980, 1 , 1);
+        payer.setBirthDate(instance.getTime());
+        session.save(payer);
+
+        final Organization  payee = new Organization();
+        payee.setOrganizationName("Acme Billing service");
+        session.save(payee);
+
+        Calendar cal = new GregorianCalendar();
+        cal.setTime(settledDate);
+        cal.add(Calendar.DAY_OF_MONTH, -5);
+        final Date paymentDate = cal.getTime();
         final  Payment checkPayment = new Payment();
         checkPayment.setPersonalCheckPayment(new Float(1000), "123");
-
+        checkPayment.setEffectiveDate(paymentDate);
+        checkPayment.setPayer(payer);
+        checkPayment.setPayee(payee);
+        session.save(checkPayment);
         final  Payment cashPayment = new Payment();
         cashPayment.setCashPayment(new Float(100));
+        cashPayment.setEffectiveDate(paymentDate);
+        cashPayment.setPayer(payer);
+        cashPayment.setPayee(payee);
+        session.save(cashPayment);
 
-        // $600 applied towards one settlement
+        // $500 applied towards one settlement and $500 towards another
         item1settlementA.addSettlementAmount(checkPayment, new Float(500));
-        item1settlementA.addSettlementAmount(cashPayment, new Float(100));
+        item1settlementB.addSettlementAmount(checkPayment, new Float(500));
+        item1settlementB.addSettlementAmount(cashPayment);
+
         savedClaimItem1.addClaimSettlement(item1settlementA);
+        savedClaimItem2.addClaimSettlement(item1settlementB);
+        session.save(savedClaimItem1);
+        session.save(savedClaimItem2);
+        transaction.commit();
+        session.close();
+
+        session = openSession();
+        savedClaim = (Claim) session.createCriteria(Claim.class).add(Restrictions.eq("claimId", claim.getClaimId())).uniqueResult();
+        final List<ClaimItem> claimItems = savedClaim.getClaimItems();
+        assertEquals(2, claimItems.get(0).getClaimSettlements().size());
+        assertEquals(1, claimItems.get(1).getClaimSettlements().size());
+        assertEquals(2, claimItems.get(1).getClaimSettlements().get(0).getSettlementAmounts().size());
     }
 }

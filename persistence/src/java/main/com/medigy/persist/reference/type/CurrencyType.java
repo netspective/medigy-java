@@ -36,39 +36,35 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.persist.reference.custom.invoice;
+package com.medigy.persist.reference.type;
 
-import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
-import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
-import com.medigy.persist.reference.custom.CustomReferenceEntity;
+import com.medigy.persist.reference.AbstractReferenceEntity;
+import com.medigy.persist.reference.CachedReferenceEntity;
+import com.medigy.persist.reference.ReferenceEntity;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratorType;
-import javax.persistence.Id;
+import java.util.Currency;
+import java.util.Locale;
 
 @Entity
-public class PaymentMethodType  extends AbstractCustomReferenceEntity
+public class CurrencyType extends AbstractReferenceEntity
 {
-    public static final String PK_COLUMN_NAME = "payment_method_type_id";
-
-    public enum Cache implements CachedCustomReferenceEntity
+    public static final String PK_COLUMN_NAME = AbstractReferenceEntity.PK_COLUMN_NAME;
+    public enum Cache implements CachedReferenceEntity
     {
-        ELECTRONIC("ELECTRONIC", "Electronic"),
-        CASH("CASH", "Cash"),
-        CERTIFIED_CHECK("CERT_CHECK", "Certified Check"),
-        PERSONAL_CHECK("PER_CHECK", "Personal Check"),
-        CREDIT_CARD("CREDIT", "Credit Card"),
-        OTHER("OTHER", "Other");
+        US(Currency.getInstance(Locale.US).getCurrencyCode(), Currency.getInstance(Locale.US).getSymbol(), "US Dollars"),
+        CANADIAN(Currency.getInstance(Locale.CANADA).getCurrencyCode(), Currency.getInstance(Locale.CANADA).getSymbol(), "Canadian Dollars");
 
-        private final String label;
         private final String code;
-        private PaymentMethodType entity;
+        private final String label;
+        private final String description;
+        private CurrencyType entity;
 
-        Cache(final String code, final String label)
+        private Cache(final String code, final String label, final String description)
         {
             this.code = code;
             this.label = label;
+            this.description = description;
         }
 
         public String getCode()
@@ -76,36 +72,24 @@ public class PaymentMethodType  extends AbstractCustomReferenceEntity
             return code;
         }
 
-        public PaymentMethodType getEntity()
-        {
-            return entity;
-        }
-
-        public void setEntity(final CustomReferenceEntity entity)
-        {
-            this.entity = (PaymentMethodType) entity;
-        }
-
         public String getLabel()
         {
             return label;
         }
-    }
 
+        public String getDescription()
+        {
+            return description;
+        }
 
-    public PaymentMethodType()
-    {
-    }
+        public CurrencyType getEntity()
+        {
+            return entity;
+        }
 
-    @Id(generate = GeneratorType.AUTO)
-    @Column(name = PK_COLUMN_NAME)
-    public Long getPaymentMethodTypeId()
-    {
-        return super.getSystemId();
-    }
-
-    protected void setPaymentMethodTypeId(final Long id)
-    {
-        super.setSystemId(id);
+        public void setEntity(final ReferenceEntity entity)
+        {
+            this.entity = (CurrencyType) entity;
+        }
     }
 }

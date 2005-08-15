@@ -36,36 +36,33 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.persist.reference.custom.invoice;
+package com.medigy.persist.reference.custom.health;
 
 import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
 import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
 import com.medigy.persist.reference.custom.CustomReferenceEntity;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
 
 @Entity
-public class PaymentMethodType  extends AbstractCustomReferenceEntity
+public class PregnancyStandpointType extends AbstractCustomReferenceEntity
 {
-    public static final String PK_COLUMN_NAME = "payment_method_type_id";
+    public static final String PK_COLUMN_NAME = "preg_standpt_type_id";
 
     public enum Cache implements CachedCustomReferenceEntity
     {
-        ELECTRONIC("ELECTRONIC", "Electronic"),
-        CASH("CASH", "Cash"),
-        CERTIFIED_CHECK("CERT_CHECK", "Certified Check"),
-        PERSONAL_CHECK("PER_CHECK", "Personal Check"),
-        CREDIT_CARD("CREDIT", "Credit Card"),
-        OTHER("OTHER", "Other");
+        DESIRES("DESIRE", "Desires Pregnancy in future"),      // remember that ICD9 or ICD10 has their own list of CODES
+        NO_DESIRE("NODESIRE", "No desire for pregnancy"),
+        TRYING("TRYING", "Trying to become pregnant"),
+        UNABLE("UNABLE", "Unable to become pregnant");
 
         private final String label;
         private final String code;
-        private PaymentMethodType entity;
+        private PregnancyStandpointType entity;
 
-        Cache(final String code, final String label)
+        private Cache(final String code, final String label)
         {
             this.code = code;
             this.label = label;
@@ -76,14 +73,15 @@ public class PaymentMethodType  extends AbstractCustomReferenceEntity
             return code;
         }
 
-        public PaymentMethodType getEntity()
+
+        public PregnancyStandpointType getEntity()
         {
             return entity;
         }
 
         public void setEntity(final CustomReferenceEntity entity)
         {
-            this.entity = (PaymentMethodType) entity;
+            this.entity = (PregnancyStandpointType) entity;
         }
 
         public String getLabel()
@@ -92,20 +90,15 @@ public class PaymentMethodType  extends AbstractCustomReferenceEntity
         }
     }
 
-
-    public PaymentMethodType()
-    {
-    }
-
     @Id(generate = GeneratorType.AUTO)
-    @Column(name = PK_COLUMN_NAME)
-    public Long getPaymentMethodTypeId()
+    public Long getPregnancyStandpointTypeId()
     {
         return super.getSystemId();
     }
 
-    protected void setPaymentMethodTypeId(final Long id)
+    protected void setPregnancyStandpointTypeId(final Long id)
     {
         super.setSystemId(id);
     }
 }
+

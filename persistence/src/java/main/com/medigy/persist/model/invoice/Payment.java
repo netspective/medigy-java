@@ -42,7 +42,7 @@ import com.medigy.persist.model.claim.ClaimSettlementAmount;
 import com.medigy.persist.model.common.AbstractTopLevelEntity;
 import com.medigy.persist.model.party.Party;
 import com.medigy.persist.reference.custom.invoice.PaymentMethodType;
-import com.medigy.persist.reference.custom.invoice.PaymentType;
+import com.medigy.persist.reference.type.CurrencyType;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -67,11 +67,11 @@ public class Payment extends AbstractTopLevelEntity
     private String notes;
     private String paymentRefNumber; // e.g paychecks, e-transfer ID
 
-    private Party toParty;
-    private Party fromParty;
-    private PaymentType type;
+    private Party payee;
+    private Party payer;
     private PaymentMethodType paymentMethodType;
     private String paymentMethodDescription;
+    private CurrencyType currencyType;
 
     private Set<ClaimSettlementAmount> settlementAmounts = new HashSet<ClaimSettlementAmount>();
 
@@ -135,43 +135,31 @@ public class Payment extends AbstractTopLevelEntity
 
 
     @ManyToOne
-    @JoinColumn(name = "to_party_id", referencedColumnName = "party_id", nullable = false)
-    public Party getToParty()
+    @JoinColumn(name = "payee_party_id", referencedColumnName = Party.PK_COLUMN_NAME, nullable = false)
+    public Party getPayee()
     {
-        return toParty;
+        return payee;
     }
 
-    public void setToParty(final Party toParty)
+    public void setPayee(final Party payee)
     {
-        this.toParty = toParty;
+        this.payee = payee;
     }
 
     @ManyToOne
-    @JoinColumn(name = "from_party_id", referencedColumnName = "party_id", nullable = false)
-    public Party getFromParty()
+    @JoinColumn(name = "payer_party_id", referencedColumnName = Party.PK_COLUMN_NAME, nullable = false)
+    public Party getPayer()
     {
-        return fromParty;
+        return payer;
     }
 
-    public void setFromParty(final Party fromParty)
+    public void setPayer(final Party payer)
     {
-        this.fromParty = fromParty;
+        this.payer = payer;
     }
     
     @ManyToOne
-    @JoinColumn(name = "payment_type_id", nullable = false)
-    public PaymentType getType()
-    {
-        return type;
-    }
-
-    public void setType(final PaymentType type)
-    {
-        this.type = type;
-    }
-
-    @ManyToOne
-    @JoinColumn(name = "payment_method_type_id")
+    @JoinColumn(name = PaymentMethodType.PK_COLUMN_NAME, nullable = false)
     public PaymentMethodType getPaymentMethodType()
     {
         return paymentMethodType;
@@ -227,5 +215,17 @@ public class Payment extends AbstractTopLevelEntity
     public void setPaymentMethodDescription(final String paymentMethodDescription)
     {
         this.paymentMethodDescription = paymentMethodDescription;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "curr_type_id", referencedColumnName = CurrencyType.PK_COLUMN_NAME)
+    public CurrencyType getCurrencyType()
+    {
+        return currencyType;
+    }
+
+    public void setCurrencyType(final CurrencyType currencyType)
+    {
+        this.currencyType = currencyType;
     }
 }

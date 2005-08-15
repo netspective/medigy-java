@@ -51,11 +51,12 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 public class ClaimSettlement extends AbstractTopLevelEntity
@@ -66,7 +67,7 @@ public class ClaimSettlement extends AbstractTopLevelEntity
     private Date settledDate;
     private ClaimItem claimItem;
 
-    private Set<ClaimSettlementAmount> settlementAmounts = new HashSet<ClaimSettlementAmount>();
+    private List<ClaimSettlementAmount> settlementAmounts = new ArrayList<ClaimSettlementAmount>();
 
     @Id(generate = GeneratorType.AUTO)
     @Column(name = PK_COLUMN_NAME)
@@ -104,12 +105,13 @@ public class ClaimSettlement extends AbstractTopLevelEntity
     }
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "claimSettlement")
-    public Set<ClaimSettlementAmount> getSettlementAmounts()
+    @OrderBy("")
+    public List<ClaimSettlementAmount> getSettlementAmounts()
     {
         return settlementAmounts;
     }
 
-    public void setSettlementAmounts(final Set<ClaimSettlementAmount> settlementAmounts)
+    public void setSettlementAmounts(final List<ClaimSettlementAmount> settlementAmounts)
     {
         this.settlementAmounts = settlementAmounts;
     }
