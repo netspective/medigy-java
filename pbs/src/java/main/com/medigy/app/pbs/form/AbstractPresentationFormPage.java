@@ -45,15 +45,19 @@ package com.medigy.app.pbs.form;
 import com.medigy.wicket.page.AuthenticatedWebPage;
 import wicket.markup.html.panel.Panel;
 
-public abstract class AbstractFormPage extends AuthenticatedWebPage
+/*
+ * This class was created specifically for the com.medigy.app.pbs.page.PatientRegistrationPage class and is similar to
+ * the AbstractFormPage class. The difference is that this one does not add a FormBoarder component because it already
+ * inherits one from its dependent form member, DefaultFormPanel. This class should be removed once the presentation
+ * form classes have been moved to the pbs module, and the DefaultFormPanel has been refactored.
+*/
+public abstract class AbstractPresentationFormPage extends AuthenticatedWebPage
 {
     private final Panel controlBar;
-    private final FormBorder formBorder;
 
-    public AbstractFormPage()
+    public AbstractPresentationFormPage()
     {
-        add(formBorder = new FormBorder("formBorder", this));
-        formBorder.add(controlBar = getFormPanel("panel"));
+        add(controlBar = getFormPanel("panel"));
     }
 
     public abstract Panel getFormPanel(final String id);

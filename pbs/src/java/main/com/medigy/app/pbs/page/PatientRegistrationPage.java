@@ -44,11 +44,11 @@
 package com.medigy.app.pbs.page;
 
 import com.medigy.wicket.form.FormMode;
-import com.medigy.app.pbs.form.AbstractFormPage;
+import com.medigy.app.pbs.form.AbstractPresentationFormPage;
 import com.medigy.app.pbs.panel.PatientRegistrationFormPanel;
 import wicket.markup.html.panel.Panel;
 
-public class PatientRegistrationPage extends AbstractFormPage
+public class PatientRegistrationPage extends AbstractPresentationFormPage
 {
     public PatientRegistrationPage()
     {
