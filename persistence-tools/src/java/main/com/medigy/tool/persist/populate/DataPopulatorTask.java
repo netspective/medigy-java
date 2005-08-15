@@ -51,8 +51,7 @@ import com.medigy.persist.model.person.Ethnicity;
 import com.medigy.persist.model.person.Person;
 import com.medigy.persist.model.person.PersonAndOrgRelationship;
 import com.medigy.persist.model.invoice.Invoice;
-import com.medigy.persist.model.invoice.InvoiceStatus;
-import com.medigy.persist.reference.custom.health.HealthCareVisitStatusType;
+import com.medigy.persist.reference.custom.health.HealthCareEncounterStatusType;
 import com.medigy.persist.reference.custom.party.FacilityType;
 import com.medigy.persist.reference.custom.party.OrganizationRoleType;
 import com.medigy.persist.reference.custom.party.OrganizationsRelationshipType;
@@ -387,6 +386,12 @@ public class DataPopulatorTask extends Task
         return patient;
     }
 
+    /**
+     * Populate invoice information
+     * @param session
+     * @param patient
+     * @param encounter
+     */
     protected void populateInvoicePerEncounter(final Session session, Person patient, final HealthCareEncounter encounter)
     {
         final Invoice invoice = new Invoice();
@@ -441,9 +446,9 @@ public class DataPopulatorTask extends Task
             encounter.setPatientType(patientType);
             // change the day so that the appointment was scheduled 3 days before
             cal.add(Calendar.DAY_OF_MONTH, -3);
-            encounter.addStatus(HealthCareVisitStatusType.Cache.SCHEDULED.getEntity(), cal.getTime());
-            encounter.addStatus(HealthCareVisitStatusType.Cache.INPROGRESS.getEntity(), scheduledTimestamp);
-            encounter.addStatus(HealthCareVisitStatusType.Cache.COMPLETE.getEntity(), checkoutTime);
+            encounter.addStatus(HealthCareEncounterStatusType.Cache.SCHEDULED.getEntity(), cal.getTime());
+            encounter.addStatus(HealthCareEncounterStatusType.Cache.INPROGRESS.getEntity(), scheduledTimestamp);
+            encounter.addStatus(HealthCareEncounterStatusType.Cache.COMPLETE.getEntity(), checkoutTime);
             encounter.setFacility(facility);
             session.save(encounter);
 
@@ -466,7 +471,7 @@ public class DataPopulatorTask extends Task
         encounter.setPatient(patient);
         encounter.setRequestedPhysician(randomPhysician);
         encounter.setPatientType(patientType);
-        encounter.addStatus(HealthCareVisitStatusType.Cache.SCHEDULED.getEntity());
+        encounter.addStatus(HealthCareEncounterStatusType.Cache.SCHEDULED.getEntity());
         encounter.setFacility(facility);
         session.save(encounter);
     }
