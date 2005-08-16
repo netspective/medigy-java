@@ -149,8 +149,10 @@ public class GeographicBoundaryFacadeImpl extends AbstractFacade implements Geog
 
     public List<State> listStates()
     {
-        final Country usa = Country.Cache.USA.getEntity();
-        return listStates(usa);
+        List stateList = getSession().createQuery("from State state where state.parentCountry.isoTwoLetterCode = ?").setString(0, Country.USA_ISO_TWO_LETTER_CODE).list();
+        List<State> newList = new ArrayList<State>();
+        convert(State.class, stateList, newList);
+        return newList;
     }
 
     public List<State> listStates(Country country)
