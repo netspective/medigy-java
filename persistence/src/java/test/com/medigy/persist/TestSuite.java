@@ -38,6 +38,7 @@
  */
 package com.medigy.persist;
 
+import com.medigy.persist.model.claim.TestClaim;
 import com.medigy.persist.model.contact.TestGeographicBoundary;
 import com.medigy.persist.model.health.TestHealthCareLicense;
 import com.medigy.persist.model.health.TestHealthCareReferral;
@@ -77,7 +78,7 @@ public class TestSuite extends junit.framework.TestSuite
         suite.addTest(new junit.framework.TestSuite(TestOrganization.class));
         suite.addTest(new junit.framework.TestSuite(TestInvoice.class));
         suite.addTest(new junit.framework.TestSuite(TestCoverage.class));
-
+        suite.addTest(new junit.framework.TestSuite(TestClaim.class));
         TestSetup wrapper = new TestSetup(suite)
         {
             public void run(TestResult testResult)

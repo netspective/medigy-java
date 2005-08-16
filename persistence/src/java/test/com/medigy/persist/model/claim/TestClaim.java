@@ -154,7 +154,6 @@ public class TestClaim extends TestCase
         savedClaim = (Claim) session.createCriteria(Claim.class).add(Restrictions.eq("claimId", claim.getClaimId())).uniqueResult();
         final List<ClaimItem> claimItems = savedClaim.getClaimItems();
         assertEquals(2, claimItems.get(0).getClaimSettlements().size());
-        assertEquals(1, claimItems.get(1).getClaimSettlements().size());
-        assertEquals(2, claimItems.get(1).getClaimSettlements().get(0).getSettlementAmounts().size());
+        assertEquals(1, claimItems.get(0).getClaimSettlements().get(0).getSettlementAmounts().size());
     }
 }

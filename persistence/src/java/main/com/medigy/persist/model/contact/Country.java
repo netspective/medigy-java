@@ -41,6 +41,7 @@ package com.medigy.persist.model.contact;
 import com.medigy.persist.reference.custom.GeographicBoundaryType;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Inheritance;
@@ -54,45 +55,12 @@ import java.util.Set;
 @Inheritance(strategy = InheritanceType.JOINED )
 public class Country extends GeographicBoundary
 {
-    public enum Cache
-    {
-        USA("USA", "United States of America");
-
-        private String countryName;
-        private String countryAbbreviation;
-        private Country entity;
-
-        Cache(final String abbrev, final String name)
-        {
-            this.countryName = name;
-            this.countryAbbreviation = abbrev;
-        }
-
-        public String getCountryName()
-        {
-            return this.countryName;
-        }
-
-        public String getCountryAbbreviation()
-        {
-            return this.countryAbbreviation;
-        }
-
-        public Country getEntity()
-        {
-            if (entity == null)
-                throw new RuntimeException(getClass() + " "+ name() + " has not been initialized");
-            return entity;
-        }
-
-        public void setEntity(final Country entity)
-        {
-            this.entity = entity;
-        }
-    }
+    public static final String USA_ISO_TWO_LETTER_CODE = "US";
 
     private String countryName;
-    private String countryAbbreviation;
+    private String isoTwoLetterCode;
+    private String isoThreeLetterCode;
+    private String isoThreeDigitCode;
 
     private Set<State> states = new HashSet<State>();
     private Set<Province> provinces = new HashSet<Province>();
@@ -118,6 +86,48 @@ public class Country extends GeographicBoundary
     protected void setCountryId(final Long id)
     {
         setGeoId(id);
+    }
+
+    @Column(length = 3)
+    public String getIsoThreeDigitCode()
+    {
+        return isoThreeDigitCode;
+    }
+
+    /**
+     * Sets the ISO3166 3-digit code for the country. If the code is for some reason less than 3 digits long,
+     * zeroes are prepended to make it valid.
+     * @param code
+     */
+    public void setIsoThreeDigitCode(final String code)
+    {
+        this.isoThreeDigitCode = code;
+        if (isoThreeDigitCode.length() == 2)
+            isoThreeDigitCode = "0" + isoThreeDigitCode;
+        else if (isoThreeDigitCode.length() == 1)
+            isoThreeDigitCode = "00" + isoThreeDigitCode;
+    }
+
+    @Column(length = 3)
+    public String getIsoThreeLetterCode()
+    {
+        return isoThreeLetterCode;
+    }
+
+    public void setIsoThreeLetterCode(final String isoThreeLetterCode)
+    {
+        this.isoThreeLetterCode = isoThreeLetterCode;
+    }
+
+    @Column(length = 2)
+    public String getIsoTwoLetterCode()
+    {
+        return isoTwoLetterCode;
+    }
+
+    public void setIsoTwoLetterCode(final String isoTwoLetterCode)
+    {
+        this.isoTwoLetterCode = isoTwoLetterCode;
     }
 
     @OneToMany(mappedBy = "parentCountry", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -229,14 +239,23 @@ public class Country extends GeographicBoundary
         this.countryName = countryName;
     }
 
+    /**
+     * @deprecated The ISO two letter code will now be used as the abbreviation
+     * @return country abbreviation
+     */
+    @Transient
     public String getCountryAbbreviation()
     {
-        return countryAbbreviation;
+        return getIsoTwoLetterCode();
     }
 
+    /**
+     * @deprecated The ISO two letter code will now be used as the abbreviation
+     * @param countryAbbreviation
+     */
     public void setCountryAbbreviation(final String countryAbbreviation)
     {
-        this.countryAbbreviation = countryAbbreviation;
+        setIsoTwoLetterCode(countryAbbreviation);
     }
     
     @Transient

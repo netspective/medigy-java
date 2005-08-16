@@ -38,18 +38,19 @@
  */
 package com.medigy.persist.model.contact;
 
-import com.medigy.persist.reference.custom.GeographicBoundaryType;
 import com.medigy.persist.model.health.HealthCareLicense;
+import com.medigy.persist.reference.custom.GeographicBoundaryType;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
-import javax.persistence.FetchType;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -152,7 +153,7 @@ public class State extends GeographicBoundary
         }
     }
 
-
+    private String fips;
     private String stateName;
     private String stateAbbreviation;
 
@@ -184,6 +185,17 @@ public class State extends GeographicBoundary
     public void setStateId(final Long id)
     {
         setGeoId(id);
+    }
+
+    @Column(length = 5)
+    public String getFips()
+    {
+        return fips;
+    }
+
+    public void setFips(final String fips)
+    {
+        this.fips = fips;
     }
 
     @OneToMany(mappedBy = "parentState", cascade = CascadeType.ALL)
