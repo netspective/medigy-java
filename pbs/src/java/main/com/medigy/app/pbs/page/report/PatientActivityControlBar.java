@@ -41,7 +41,7 @@
 /*
  * Copyright (c) 2005 Your Corporation. All Rights Reserved.
  */
-package com.medigy.app.pbs.page.worklist;
+package com.medigy.app.pbs.page.report;
 
 import wicket.markup.html.panel.Panel;
 

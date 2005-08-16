@@ -35,25 +35,39 @@
  * CAUSED AND REGARDLESS OF THE THEORY OF LIABILITY, ARISING OUT OF THE USE OF OR INABILITY TO USE THE SOFTWARE, EVEN
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
- * @author Shahid N. Shah
  */
 
 /*
  * Copyright (c) 2005 Your Corporation. All Rights Reserved.
  */
-package com.medigy.app.pbs.page.worklist;
+package com.medigy.app.pbs.page.report;
 
+import com.medigy.wicket.page.AuthenticatedWebPage;
+import wicket.PageParameters;
 import wicket.markup.html.panel.Panel;
 
-public class PatientActivity extends AbstractWorklistPage
+public abstract class AbstractReportPage extends AuthenticatedWebPage
 {
-    public PatientActivity()
+    protected final Panel controlBar;
+    protected final ReportBorder reportBorder;
+    private PageParameters pageParameters;
+
+    public AbstractReportPage()
     {
+        this(null);
     }
 
-    public Panel getWorklistControlBarPanel(final String id)
+    public AbstractReportPage(final PageParameters pageParameters)
     {
-        return new PatientActivityControlBar(id);
+        this.pageParameters = pageParameters;
+        add(reportBorder = new ReportBorder("reportBorder", this));
+        reportBorder.add(controlBar = getReportControlBarPanel("controlBar"));
     }
 
+    public PageParameters getPageParameters()
+    {
+        return pageParameters;
+    }
+
+    public abstract Panel getReportControlBarPanel(final String id);
 }

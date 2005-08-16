@@ -35,7 +35,6 @@
  * CAUSED AND REGARDLESS OF THE THEORY OF LIABILITY, ARISING OUT OF THE USE OF OR INABILITY TO USE THE SOFTWARE, EVEN
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
- * @author Shahid N. Shah
  */
 
 /*
@@ -43,17 +42,13 @@
  */
 package com.medigy.app.pbs.page;
 
-import com.medigy.app.pbs.page.search.SearchNavigator;
-import com.medigy.app.pbs.page.worklist.WorklistNavigator;
 import com.medigy.app.pbs.page.report.ReportNavigator;
 import com.medigy.wicket.page.AuthenticatedWebPage;
 
-public class Home extends AuthenticatedWebPage
+public class Report extends AuthenticatedWebPage
 {
-    public Home()
+    public Report()
     {
-        add(new SearchNavigator("searchNavigator"));
-        add(new WorklistNavigator("worklistNavigator"));
         add(new ReportNavigator("reportNavigator"));
     }
 }
