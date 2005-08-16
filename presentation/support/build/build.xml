@@ -81,7 +81,7 @@
 
             <!-- TODO: need to decide which db we'll use in production but for now we'll use the test database -->
             <fileset dir="${persistence.home}/depend/lib/test">
-                <include name="mysql-connector-java-3.1.8-bin.jar"/>
+                <include name="mysql-connector-java-3.0.17.jar"/>
             </fileset>
 
             <!-- TODO: need to decide how we're going to do pooling in production but for now we'll use the test method -->
