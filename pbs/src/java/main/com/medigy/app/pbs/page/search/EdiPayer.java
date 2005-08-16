@@ -44,11 +44,11 @@ package com.medigy.app.pbs.page.search;
 
 import wicket.markup.html.panel.Panel;
 
-public class EnvoyPayer extends AbstractSearchPage
+public class EdiPayer extends AbstractSearchPage
 {
     public Panel getSearchCriteriaPanel(final String id)
     {
-        return new EnvoyPayerCriteriaPanel(id);
+        return new EdiPayerCriteriaPanel(id);
     }
 
     public Panel getSearchResultPanel(final String id)

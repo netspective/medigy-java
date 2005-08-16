@@ -41,9 +41,9 @@ package com.medigy.app.pbs.page.search;
 
 import wicket.markup.html.panel.Panel;
 
-public class EnvoyPayerCriteriaPanel extends Panel
+public class EdiPayerCriteriaPanel extends Panel
 {
-    public EnvoyPayerCriteriaPanel(final String id)
+    public EdiPayerCriteriaPanel(final String id)
     {
         super(id);
     }
