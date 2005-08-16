@@ -1,4 +1,4 @@
-A2,A3,NUM,Country
+com.medigy.persist.model.contact.Country.isoTwoLetterCode,isoThreeLetterCode,isoThreeDigitCode,countryName
 AF,AFG,4,Afghanistan
 AL,ALB,8,Albania
 DZ,DZA,12,Algeria
