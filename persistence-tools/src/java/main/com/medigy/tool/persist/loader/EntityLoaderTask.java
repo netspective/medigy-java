@@ -54,11 +54,13 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.Environment;
 
 import com.medigy.persist.util.DelimitedValuesParser;
 import com.medigy.persist.util.DelimitedValuesReader;
+import com.medigy.persist.util.ModelInitializer;
 import com.medigy.tool.persist.loader.EntityLoader.EventHandler;
 
 public class EntityLoaderTask extends Task
@@ -150,13 +152,34 @@ public class EntityLoaderTask extends Task
         log("Showing SQL " + configuration.getProperty(Environment.SHOW_SQL));
 
         final SessionFactory sessionFactory = configuration.buildSessionFactory();
-        final Session session = sessionFactory.openSession();
+        Session session = sessionFactory.openSession();
+
+        final Transaction tx = session.beginTransaction();
         try
         {
+            tx.commit();
+            log("Committed model initialization (seed data).");
+        }
+        catch(Exception e)
+        {
+            tx.rollback();
+            log("Rolled back model initialization (seed data).");
+            throw new BuildException(e);
+        }
+        finally
+        {
+            session.close();
+        }
+
+        session = sessionFactory.openSession();
+        try
+        {
+            // these reference entities might need to refer to "cached" lookup items also
             loadData(session);
         }
         catch(final Exception e)
         {
+            e.printStackTrace();
             throw new BuildException(e);
         }
         finally
