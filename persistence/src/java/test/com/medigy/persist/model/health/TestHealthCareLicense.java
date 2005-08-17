@@ -78,6 +78,9 @@ public class TestHealthCareLicense extends TestCase
         final Calendar calendar = Calendar.getInstance();
         final Country country = new Country();
         country.setCountryName("USA");
+        country.setIsoTwoLetterCode("US");
+        country.setIsoThreeLetterCode("USA");
+        country.setIsoThreeDigitCode("123");
         session.save(country);
 
         final State state = new State("Virginia", "VA");
