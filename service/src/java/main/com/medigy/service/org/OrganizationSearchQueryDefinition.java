@@ -75,14 +75,12 @@ public class OrganizationSearchQueryDefinition extends BasicQueryDefinition impl
         select.addDisplayField(getField(Field.ORG_ID.getName()));
         // TODO: Add org type criteria
 
-        final QueryDefnCondition orgNameCondition = new QueryDefinitionConditionImpl(getField(Field.ORG_NAME.getName()),
-                SqlComparisonFactory.getInstance().getComparison(StartsWithComparisonIgnoreCase.COMPARISON_NAME));
-        orgNameCondition.setConnector("and");
+        final QueryDefnCondition orgNameCondition = new QueryDefinitionConditionImpl("orgNameCondition", getField(Field.ORG_NAME.getName()),
+                SqlComparisonFactory.getInstance().getComparison(StartsWithComparisonIgnoreCase.COMPARISON_NAME), "AND");
         select.addCondition(orgNameCondition);
 
-        final QueryDefnCondition idCondition = new QueryDefinitionConditionImpl(getField(Field.ORG_ID.getName()),
-                SqlComparisonFactory.getInstance().getComparison(EqualsComparison.COMPARISON_NAME));
-        idCondition.setConnector("and");
+        final QueryDefnCondition idCondition = new QueryDefinitionConditionImpl("idCondition", getField(Field.ORG_ID.getName()),
+                SqlComparisonFactory.getInstance().getComparison(EqualsComparison.COMPARISON_NAME), "AND");
         select.addCondition(idCondition);
 
         final QueryDefinitionField idField = getField(Field.ORG_NAME.getName());

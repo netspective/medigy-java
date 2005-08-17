@@ -38,14 +38,14 @@
  */
 package com.medigy.persist.reference.custom.person;
 
-import com.medigy.persist.reference.custom.CustomReferenceEntity;
-import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
 import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
+import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
+import com.medigy.persist.reference.custom.CustomReferenceEntity;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.GeneratorType;
 import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratorType;
+import javax.persistence.Id;
 
 @Entity
 public class PatientType extends AbstractCustomReferenceEntity
@@ -54,18 +54,20 @@ public class PatientType extends AbstractCustomReferenceEntity
 
     public enum Cache implements CachedCustomReferenceEntity
     {
-        NEW("NEW", "New Patient"),
-        ESTABLISHED("ESTABLISHED", "Established Patient"),
-        TEMPORARY("TEMPORARY", "Temporary Patient");
+        NEW("NEW", "New", "New Patient"),
+        ESTABLISHED("ESTABLISHED", "Est", "Established Patient"),
+        TEMPORARY("TEMPORARY", "Temp", "Temporary Patient");
 
         private String code;
         private String label;
+        private String description;
         private PatientType entity;
 
-        Cache(final String code, final String label)
+        Cache(final String code, final String label, final String description)
         {
             this.code = code;
             this.label = label;
+            this.description = description;
         }
 
         public String getCode()
@@ -76,6 +78,11 @@ public class PatientType extends AbstractCustomReferenceEntity
         public PatientType getEntity()
         {
             return entity;
+        }
+
+        public String getDescription()
+        {
+            return description;
         }
 
         public void setEntity(final CustomReferenceEntity entity)

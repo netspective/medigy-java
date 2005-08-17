@@ -51,8 +51,11 @@ public class QueryDefinitionConditions
     {
         int index = list.size();
         list.add(condition);
-        final String key = (condition.getParentCondition() != null ? condition.getParentCondition().getName() : "") + "." + condition.getField().getName() + index;
-        condition.setName(key);
+        String key = "";
+        if (condition.getParentCondition() != null)
+            key = condition.getParentCondition().getName() + ".";
+
+        key = key + condition.getName();
         map.put(key, condition);
         if(!haveAnyDynamicConditions && condition.isRemoveIfValueNull())
             haveAnyDynamicConditions = true;
@@ -104,15 +107,11 @@ public class QueryDefinitionConditions
         {
             QueryDefnCondition cond = list.get(c);
             //cond.useCondition(stmtGen, usedConditions, fieldValues);
-            if (useCondition(cond, valueContext))
+            if (useCondition(stmtGen, cond, valueContext))
             {
-                System.out.println("Use condition: " + cond.getField().getName());
+
                 usedConditions.add(cond);
                 stmtGen.addJoin(cond.getField());
-            }
-            else
-            {
-                System.out.println("Dont use: " + cond.getField().getName());
             }
         }
 
@@ -125,13 +124,12 @@ public class QueryDefinitionConditions
      * @param valueContext  the context to use to lookup condition values
      * @return True if the condition should be used as part of the query
      */
-    protected boolean useCondition(final QueryDefnCondition condition, final ValueContext valueContext)
+    protected boolean useCondition(final QueryDefnStatementGenerator stmtGen, final QueryDefnCondition condition, final ValueContext valueContext) throws QueryDefinitionException
     {
         // if we don't allow nulls, always use the condition
         if(!condition.isRemoveIfValueNull())
             return true;
 
-        // DOES NOT SUPPORT NESTED CONDITIONS
         if(condition.getValueProvider() == null || condition.getValueProvider().getValue() == null)
             return false;
 
@@ -200,4 +198,6 @@ public class QueryDefinitionConditions
         log.info("Condition SQL: " + sb.toString());
         return sb.toString();
     }
+
+
 }

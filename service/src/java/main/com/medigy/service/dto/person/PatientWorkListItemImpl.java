@@ -54,6 +54,7 @@ public class PatientWorkListItemImpl implements PatientWorkListItem
     private Date checkinTimestamp;
     private Date checkoutTimestamp;
     private Float accountBalance;
+    private Float patientBalance;
 
     public void setPatientId(final Long patientId)
     {
@@ -187,13 +188,16 @@ public class PatientWorkListItemImpl implements PatientWorkListItem
 
     public Float getPatientBalance()
     {
-        return null;
+        return patientBalance;
     }
-
-
 
     public void setAccountBalance(final Float balance)
     {
         this.accountBalance = balance;
+    }
+
+    public void setPatientBalance(final Float balance)
+    {
+        this.patientBalance = balance;
     }
 }

@@ -38,12 +38,15 @@
  */
 package com.medigy.persist.util.query.impl;
 
+import com.medigy.persist.util.query.CompositeQueryDefinitionCondition;
 import com.medigy.persist.util.query.QueryDefinition;
-import com.medigy.persist.util.query.QueryDefinitionConditions;
 import com.medigy.persist.util.query.QueryDefinitionField;
 import com.medigy.persist.util.query.QueryDefinitionSelect;
 import com.medigy.persist.util.query.QueryDefinitionSortBy;
 import com.medigy.persist.util.query.QueryDefnCondition;
+import com.medigy.persist.util.query.QueryDefnStatementGenerator;
+import com.medigy.persist.util.query.exception.QueryDefinitionException;
+import com.medigy.persist.util.value.ValueContext;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -60,7 +63,7 @@ public class QueryDefinitionSelectImpl implements QueryDefinitionSelect
 
     private List<QueryDefinitionSortBy> orderBys = new ArrayList<QueryDefinitionSortBy>();
     private Map<String, QueryDefinitionField> groupByFields = new HashMap<String, QueryDefinitionField>();
-    private QueryDefinitionConditions conditions = new QueryDefinitionConditions();
+    private List<QueryDefnCondition> conditions = new ArrayList<QueryDefnCondition>();
     //private QueryDefnSqlWhereExpressions whereExprs = new QueryDefnSqlWhereExpressions();
 
     public QueryDefinitionSelectImpl(final String name, final QueryDefinition queryDefinition)
@@ -124,12 +127,87 @@ public class QueryDefinitionSelectImpl implements QueryDefinitionSelect
         this.groupByFields.put(field.getName(), field);
     }
 
-    public QueryDefinitionConditions getConditions()
+    /**
+     * Gets all the conditions belonging to this select object
+     * @return List of conditions
+     */
+    public List<QueryDefnCondition> getConditions()
     {
         return conditions;
     }
 
-    public void setConditions(final QueryDefinitionConditions conditions)
+    /**
+     * Gets the conditions to be used for the current query generation
+     * @param generator
+     * @param valueContext
+     * @return
+     * @throws QueryDefinitionException
+     */
+    public List<QueryDefnCondition> getUsedConditions(final QueryDefnStatementGenerator generator, final ValueContext valueContext) throws QueryDefinitionException
+    {
+        List<QueryDefnCondition> usedConditions = new ArrayList<QueryDefnCondition>();
+        for(QueryDefnCondition cond : conditions)
+        {
+            if (cond.useCondition(generator, valueContext))
+            {
+                usedConditions.add(cond);
+                if (CompositeQueryDefinitionCondition.class.isAssignableFrom(cond.getClass()))
+                {
+                    final List<QueryDefnCondition> childConditions = ((CompositeQueryDefinitionCondition) cond).getChildConditions();
+                    for (QueryDefnCondition childCond : childConditions)
+                        generator.addJoin(childCond.getField());
+                }
+                else
+                {
+                    generator.addJoin(cond.getField());
+                }
+            }
+        }
+
+        return usedConditions;
+    }
+
+    public String createSql(QueryDefnStatementGenerator stmtGen, List<QueryDefnCondition> usedConditions,
+                            final ValueContext valueContext) throws QueryDefinitionException
+    {
+        StringBuffer sb = new StringBuffer();
+        QueryDefinitionSelect select = stmtGen.getQuerySelect();
+        int usedCondsCount = usedConditions.size();
+        int condsUsedLast = usedCondsCount - 1;
+
+        for(int c = 0; c < usedCondsCount; c++)
+        {
+            boolean conditionAdded = false;
+            QueryDefnCondition cond = usedConditions.get(c);
+            if (CompositeQueryDefinitionCondition.class.isAssignableFrom(cond.getClass()))
+            {
+                final List<QueryDefnCondition> childConditions = ((CompositeQueryDefinitionCondition) cond).getChildConditions();
+                String sql = createSql(stmtGen, childConditions, valueContext);
+                if(sql != null && sql.length() > 0)
+                {
+                    sb.append("(" + sql + ")");
+                    conditionAdded = true;
+                }
+                if(c != condsUsedLast)
+                    sb.append(cond.getConnector());
+            }
+            else
+            {
+                if(!cond.isJoinOnly())
+                {
+                    sb.append(" (" + cond.getComparison().getWhereCondExpr(select, stmtGen, cond, valueContext) + ")");
+                    conditionAdded = true;
+                }
+                if(c != condsUsedLast && !((QueryDefnCondition) usedConditions.get(c + 1)).isJoinOnly())
+                    sb.append(" " + (cond.getConnector() != null ? cond.getConnector() : "AND") + " ");
+            }
+            if(conditionAdded)
+                sb.append("\n");
+        }
+        return sb.toString();
+    }
+
+    public void setConditions(final List<QueryDefnCondition> conditions)
     {
         this.conditions = conditions;
     }

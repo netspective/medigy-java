@@ -36,57 +36,55 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.persist.util.query;
+package com.medigy.persist.reference.custom.invoice;
 
-import com.medigy.persist.util.query.exception.QueryDefinitionException;
-import com.medigy.persist.util.value.ValueContext;
-import com.medigy.persist.util.value.ValueProvider;
+import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
+import com.medigy.persist.reference.custom.CustomReferenceEntity;
 
-/**
- * This interface is used to declare a condition  defined after the WHERE clause.
- * The condition describes the field it is associated with and the SQL comparison to use; it DOES NOT
- * describe where it is getting the value from to bind to the field. Also there is no concrete
- * implementation of this interface and all logic has been moved into the
- * {@link QueryDefinitionConditions} class.
- *
- */
-public interface QueryDefnCondition
+import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+
+@Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE, discriminatorValue = "Insurance")
+public class InsurancePaymentType extends PaymentType
 {
-    public String getName();
-    public void setName(final String name);
+    public enum Cache implements CachedCustomReferenceEntity
+    {
+        DEDUCTIBLE("DEDUCTIBLE", "Deductible"),
+        DENIED("DENIED", "Denied"),
+        COB("COB", "COB"),
+        COVERAGE_TERMINATED("COVG_TER", "Coverage Terminated"),
+        PAST_FILE_DEADLINE("PAST", "Past File Deadline");
 
-    public String getDisplayCaption();
+        private final String label;
+        private final String code;
+        private InvoiceType entity;
 
-    public boolean isRemoveIfValueNull();   // may not be needed
-    public void setIsRemoveIfValueNull(final boolean flag);
+        Cache(final String code, final String label)
+        {
+            this.code = code;
+            this.label = label;
+        }
 
-    public String getConnector();
-    public void setConnector(final String connector);
+        public String getCode()
+        {
+            return code;
+        }
 
-    // =========== good for the single field one
-    public QueryDefinitionField getField();
-    public void setField(QueryDefinitionField field);
-    public String getBindExpr();
-    public void setBindExpr(String expr);
-    // ============
+        public InvoiceType getEntity()
+        {
+            return entity;
+        }
 
-    public SqlComparison getComparison();
-    public void setComparison(SqlComparison comp);
+        public void setEntity(final CustomReferenceEntity entity)
+        {
+            this.entity = (InvoiceType) entity;
+        }
 
-    public boolean isJoinOnly();
-    public void setJoinOnly(boolean flag);
-
-    public QueryDefnCondition getParentCondition();
-    public void setParentCondition(QueryDefnCondition condition);
-
-    public QueryDefinition getQueryDefinition();
-    public void setQueryDefinition(QueryDefinition defn);
-
-    public QueryDefinitionSelect getQueryDefinitionSelect();
-    public void setQueryDefinitionSelect(QueryDefinitionSelect select);
-
-    public ValueProvider getValueProvider();
-    public void setValueProvider(ValueProvider provider);
-
-    public boolean useCondition(final QueryDefnStatementGenerator stmtGen, final ValueContext valueContext) throws QueryDefinitionException;
+        public String getLabel()
+        {
+            return label;
+        }
+    }
 }

@@ -3,27 +3,25 @@
  */
 package com.medigy.persist.util.query;
 
-import com.medigy.persist.util.query.exception.QueryDefinitionException;
-import com.medigy.persist.util.query.comparison.StartsWithComparisonIgnoreCase;
-import com.medigy.persist.util.query.comparison.EqualsComparison;
-import com.medigy.persist.util.value.ValueContext;
 import com.medigy.persist.model.person.Person;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Set;
-import java.util.HashSet;
-import java.util.Arrays;
-import java.util.Iterator;
-
+import com.medigy.persist.util.query.comparison.EqualsComparison;
+import com.medigy.persist.util.query.comparison.StartsWithComparisonIgnoreCase;
+import com.medigy.persist.util.query.exception.QueryDefinitionException;
+import com.medigy.persist.util.value.ValueContext;
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Restrictions;
 import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Restrictions;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class QueryDefnStatementGenerator
 {
@@ -101,6 +99,12 @@ public class QueryDefnStatementGenerator
         }
     }
 
+    /**
+     * This is not used currently.
+     * @param valueContext
+     * @return
+     * @throws QueryDefinitionException
+     */
     public DetachedCriteria generateCriteria(final ValueContext valueContext) throws QueryDefinitionException
     {
         DetachedCriteria criteria = DetachedCriteria.forClass(Person.class);
@@ -122,9 +126,8 @@ public class QueryDefnStatementGenerator
                 addJoin(queryDefinitionField);
             }
         }
-        QueryDefinitionConditions allSelectConditions = select.getConditions();
-        QueryDefinitionConditions usedSelectConditions = allSelectConditions.getUsedConditions(this, valueContext);
-        for (QueryDefnCondition cond : usedSelectConditions.getList())
+        List<QueryDefnCondition>  usedSelectConditions = select.getUsedConditions(this, valueContext);
+        for (QueryDefnCondition cond : usedSelectConditions)
         {
             final QueryDefinitionField field = cond.getField();
             final SqlComparison comparison = cond.getComparison();
@@ -166,8 +169,7 @@ public class QueryDefnStatementGenerator
         else
             selectClause.add("*");
 
-        QueryDefinitionConditions allSelectConditions = select.getConditions();
-        QueryDefinitionConditions usedSelectConditions = allSelectConditions.getUsedConditions(this, valueContext);
+        List<QueryDefnCondition> usedSelectConditions = select.getUsedConditions(this, valueContext);
 
         // add join tables which have the auto-include flag set and their respective conditions to the
         // from and where clause lists. If the join is already in the 'joins' list, no need to add it in.
@@ -245,7 +247,7 @@ public class QueryDefnStatementGenerator
         int usedCondsCount = usedSelectConditions.size();
         if(usedCondsCount > 0)
         {
-            String conditionSql = usedSelectConditions.createSql(this, usedSelectConditions, valueContext);
+            String conditionSql = select.createSql(this, usedSelectConditions, valueContext);
             if(conditionSql != null && conditionSql.length() > 0)
             {
                 if(haveJoinWheres)

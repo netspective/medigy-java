@@ -42,6 +42,7 @@ import com.medigy.persist.model.claim.ClaimSettlementAmount;
 import com.medigy.persist.model.common.AbstractTopLevelEntity;
 import com.medigy.persist.model.party.Party;
 import com.medigy.persist.reference.custom.invoice.PaymentMethodType;
+import com.medigy.persist.reference.custom.invoice.PaymentType;
 import com.medigy.persist.reference.type.CurrencyType;
 
 import javax.persistence.Column;
@@ -69,6 +70,7 @@ public class Payment extends AbstractTopLevelEntity
 
     private Party payee;
     private Party payer;
+    private PaymentType type;
     private PaymentMethodType paymentMethodType;
     private String paymentMethodDescription;
     private CurrencyType currencyType;
@@ -227,5 +229,17 @@ public class Payment extends AbstractTopLevelEntity
     public void setCurrencyType(final CurrencyType currencyType)
     {
         this.currencyType = currencyType;
+    }
+
+    @ManyToOne
+    @JoinColumn
+    public PaymentType getType()
+    {
+        return type;
+    }
+
+    public void setType(final PaymentType type)
+    {
+        this.type = type;
     }
 }

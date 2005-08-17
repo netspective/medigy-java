@@ -38,16 +38,25 @@
  */
 package com.medigy.persist.reference.custom.invoice;
 
+import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
+
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
-
-import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 
 @Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE, discriminatorValue = "General")
+@DiscriminatorColumn(name = "Group_Name")
 public class PaymentType extends AbstractCustomReferenceEntity
 {
+    public static final String PK_COLUMN_NAME = "payment_type_id";
+
     @Id(generate = GeneratorType.AUTO)
+    @Column(name = PK_COLUMN_NAME)
     public Long getPaymentTypeId()
     {
         return super.getSystemId();

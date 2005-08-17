@@ -4,6 +4,7 @@
 package com.medigy.service;
 
 import com.medigy.persist.model.common.Entity;
+import com.medigy.persist.util.query.CompositeQueryDefinitionCondition;
 import com.medigy.persist.util.query.QueryDefinition;
 import com.medigy.persist.util.query.QueryDefinitionField;
 import com.medigy.persist.util.query.QueryDefinitionSelect;
@@ -34,6 +35,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 /**
  * Abstract service class for utlizing a query definition to execute a search
@@ -78,7 +80,7 @@ public abstract class AbstractQueryDefinitionSearchServiceImpl extends AbstractS
     public List<QueryDefnCondition> getCriteriaList()
     {
         final QueryDefinition queryDef = QueryDefinitionFactory.getInstance().getQueryDefinition(queryDefinitionClass);
-        return queryDef.getSelects().get("criteriaSearch").getConditions().getList();
+        return queryDef.getSelects().get("criteriaSearch").getConditions();
     }
 
     /**
@@ -95,7 +97,7 @@ public abstract class AbstractQueryDefinitionSearchServiceImpl extends AbstractS
         // loop through all the DEFINED CONDITIONS of the SELECT and apply the values for them from the
         // passed in search parameters
         final List<SearchCondition> searchConditionList = params.getConditions();
-        final List<QueryDefnCondition> conditionList = select.getConditions().getList();
+        final List<QueryDefnCondition> conditionList = select.getConditions();
         for (QueryDefnCondition selectCondition : conditionList)
         {
             boolean isUsed = false;
@@ -103,46 +105,69 @@ public abstract class AbstractQueryDefinitionSearchServiceImpl extends AbstractS
             {
                 // Since this is a predefined SELECT, the QUERY DEFN CONDITION in th search parameters is expected to be non-null
                 final QueryDefnCondition useCondition = searchCondition.getCondition();
+                final String searchCriteriaValue = searchCondition.getFieldValue();
+
                 if (useCondition.getName().equals(selectCondition.getName()))
                 {
                     isUsed = true;
-                    final Class entityPropertyType = selectCondition.getField().getEntityPropertyType();
-                    final String searchCriteriaValue = searchCondition.getFieldValue();
-                    if (Date.class.isAssignableFrom(entityPropertyType))
+                    if (CompositeQueryDefinitionCondition.class.isAssignableFrom(useCondition.getClass()))
                     {
-                        SimpleDateFormat format = new SimpleDateFormat();
-                        format.applyPattern(DATE_PATTERN);
-                        final Date date = format.parse(searchCriteriaValue);
-                        selectCondition.setValueProvider(new ValueProvider() {
-                            public Object getValue()
-                            {
-                                return date;
-                            }
-                        });
-                    }
-                    else if (Float.class.isAssignableFrom(entityPropertyType))
-                    {
-                        selectCondition.setValueProvider(new ValueProvider() {
-                            public Object getValue()
-                            {
-                                return new Float(searchCriteriaValue);
-                            }
-                        });
+                        final List<QueryDefnCondition> childConditions = ((CompositeQueryDefinitionCondition) useCondition).getChildConditions();
+                        StringTokenizer tokenizer = new StringTokenizer(searchCriteriaValue, ",");
+                        int i=0;
+                        while(tokenizer.hasMoreTokens())
+                        {
+                            final String s = tokenizer.nextToken();
+                            final Class entityPropertyType = childConditions.get(i).getField().getEntityPropertyType();
+                            assignConditionValue(childConditions.get(i), s, entityPropertyType);
+                            i++;
+                        }
                     }
                     else
                     {
-                        selectCondition.setValueProvider(new ValueProvider() {
-                            public Object getValue()
-                            {
-                                return searchCriteriaValue;
-                            }
-                        });
+                        final Class entityPropertyType = selectCondition.getField().getEntityPropertyType();
+                        assignConditionValue(selectCondition, searchCriteriaValue, entityPropertyType);
                     }
                     break;
                 }
             }
             if (!isUsed)
                 selectCondition.setValueProvider(null);
+        }
+    }
+
+    private void assignConditionValue(final QueryDefnCondition selectCondition, final String searchCriteriaValue, final Class entityPropertyType)
+            throws ParseException
+    {
+        if (Date.class.isAssignableFrom(entityPropertyType))
+        {
+            SimpleDateFormat format = new SimpleDateFormat();
+            format.applyPattern(DATE_PATTERN);
+            final Date date = format.parse(searchCriteriaValue);
+            selectCondition.setValueProvider(new ValueProvider() {
+                public Object getValue()
+                {
+                    return date;
+                }
+            });
+        }
+        else if (Float.class.isAssignableFrom(entityPropertyType))
+        {
+            selectCondition.setValueProvider(new ValueProvider() {
+                public Object getValue()
+                {
+                    return new Float(searchCriteriaValue);
+                }
+            });
+        }
+        else
+        {
+            selectCondition.setValueProvider(new ValueProvider() {
+                public Object getValue()
+                {
+                    return searchCriteriaValue;
+                }
+            });
         }
     }
 
@@ -159,8 +184,7 @@ public abstract class AbstractQueryDefinitionSearchServiceImpl extends AbstractS
             final SqlComparison comparison = SqlComparisonFactory.getInstance().getComparison(searchCondition.getFieldComparison());
             final String connector = searchCondition.getConnector();
             final String value = searchCondition.getFieldValue();
-            final QueryDefnCondition cond = new QueryDefinitionConditionImpl(field, comparison);
-            cond.setConnector(connector);
+            final QueryDefnCondition cond = new QueryDefinitionConditionImpl(fieldName, field, comparison, connector);
             cond.setValueProvider(new ValueProvider() {
                 public Object getValue()
                 {

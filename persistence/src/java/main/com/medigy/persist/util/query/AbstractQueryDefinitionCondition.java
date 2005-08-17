@@ -38,55 +38,135 @@
  */
 package com.medigy.persist.util.query;
 
-import com.medigy.persist.util.query.exception.QueryDefinitionException;
-import com.medigy.persist.util.value.ValueContext;
 import com.medigy.persist.util.value.ValueProvider;
 
-/**
- * This interface is used to declare a condition  defined after the WHERE clause.
- * The condition describes the field it is associated with and the SQL comparison to use; it DOES NOT
- * describe where it is getting the value from to bind to the field. Also there is no concrete
- * implementation of this interface and all logic has been moved into the
- * {@link QueryDefinitionConditions} class.
- *
- */
-public interface QueryDefnCondition
+public abstract class AbstractQueryDefinitionCondition implements QueryDefnCondition
 {
-    public String getName();
-    public void setName(final String name);
+    private String name;
+    private QueryDefinitionField field;
+    private SqlComparison comparison;
+    private boolean isJoinOnly = false;
+    private String bindExpr;
+    private String connector;
+    private QueryDefnCondition parentCondition;
+    private QueryDefinition queryDefinition;
+    private QueryDefinitionSelect queryDefinitionSelect;
+    private boolean isRemoveIfValueNull = true;
+    private ValueProvider valueProvider;
 
-    public String getDisplayCaption();
+    public String getName()
+    {
+        return name;
+    }
 
-    public boolean isRemoveIfValueNull();   // may not be needed
-    public void setIsRemoveIfValueNull(final boolean flag);
+    public void setName(final String name)
+    {
+        this.name = name;
+    }
 
-    public String getConnector();
-    public void setConnector(final String connector);
+    public void setBindExpr(final String bindExpr)
+    {
+        this.bindExpr = bindExpr;
+    }
 
-    // =========== good for the single field one
-    public QueryDefinitionField getField();
-    public void setField(QueryDefinitionField field);
-    public String getBindExpr();
-    public void setBindExpr(String expr);
-    // ============
+    public void setComparison(final SqlComparison comparison)
+    {
+        this.comparison = comparison;
+    }
 
-    public SqlComparison getComparison();
-    public void setComparison(SqlComparison comp);
+    public void setField(final QueryDefinitionField field)
+    {
+        this.field = field;
+    }
 
-    public boolean isJoinOnly();
-    public void setJoinOnly(boolean flag);
+    public void setJoinOnly(final boolean joinOnly)
+    {
+        isJoinOnly = joinOnly;
+    }
 
-    public QueryDefnCondition getParentCondition();
-    public void setParentCondition(QueryDefnCondition condition);
+    public void setRemoveIfValueNull(final boolean removeIfValueNull)
+    {
+        isRemoveIfValueNull = removeIfValueNull;
+    }
 
-    public QueryDefinition getQueryDefinition();
-    public void setQueryDefinition(QueryDefinition defn);
+    public void setParentCondition(final QueryDefnCondition parentCondition)
+    {
+        this.parentCondition = parentCondition;
+    }
 
-    public QueryDefinitionSelect getQueryDefinitionSelect();
-    public void setQueryDefinitionSelect(QueryDefinitionSelect select);
+    public boolean isRemoveIfValueNull()
+    {
+        return isRemoveIfValueNull;
+    }
 
-    public ValueProvider getValueProvider();
-    public void setValueProvider(ValueProvider provider);
+    public void setIsRemoveIfValueNull(final boolean flag)
+    {
+        this.isRemoveIfValueNull = flag;
+    }
 
-    public boolean useCondition(final QueryDefnStatementGenerator stmtGen, final ValueContext valueContext) throws QueryDefinitionException;
+    public String getConnector()
+    {
+        return connector;
+    }
+
+    public void setConnector(final String connector)
+    {
+        this.connector = connector;
+    }
+
+    public QueryDefinitionField getField()
+    {
+        return field;
+    }
+
+    public String getBindExpr()
+    {
+        return bindExpr;
+    }
+
+    public SqlComparison getComparison()
+    {
+        return comparison;
+    }
+
+    public boolean isJoinOnly()
+    {
+        return isJoinOnly;
+    }
+
+    public ValueProvider getValueProvider()
+    {
+        return valueProvider;
+    }
+
+    public void setValueProvider(ValueProvider provider)
+    {
+        this.valueProvider = provider;
+    }
+
+    public QueryDefnCondition getParentCondition()
+    {
+        return parentCondition;
+    }
+
+    public QueryDefinition getQueryDefinition()
+    {
+        return queryDefinition;
+    }
+
+    public void setQueryDefinition(final QueryDefinition queryDefinition)
+    {
+        this.queryDefinition = queryDefinition;
+    }
+
+    public QueryDefinitionSelect getQueryDefinitionSelect()
+    {
+        return queryDefinitionSelect;
+    }
+
+    public void setQueryDefinitionSelect(final QueryDefinitionSelect queryDefinitionSelect)
+    {
+        this.queryDefinitionSelect = queryDefinitionSelect;
+    }
+
 }

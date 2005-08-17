@@ -36,57 +36,74 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.persist.util.query;
+package com.medigy.persist.util.query.impl;
 
+import com.medigy.persist.util.query.AbstractQueryDefinitionCondition;
+import com.medigy.persist.util.query.CompositeQueryDefinitionCondition;
+import com.medigy.persist.util.query.QueryDefnCondition;
+import com.medigy.persist.util.query.QueryDefnStatementGenerator;
 import com.medigy.persist.util.query.exception.QueryDefinitionException;
 import com.medigy.persist.util.value.ValueContext;
-import com.medigy.persist.util.value.ValueProvider;
 
-/**
- * This interface is used to declare a condition  defined after the WHERE clause.
- * The condition describes the field it is associated with and the SQL comparison to use; it DOES NOT
- * describe where it is getting the value from to bind to the field. Also there is no concrete
- * implementation of this interface and all logic has been moved into the
- * {@link QueryDefinitionConditions} class.
- *
- */
-public interface QueryDefnCondition
+import java.util.ArrayList;
+import java.util.List;
+
+public class CompositeQueryDefinitionConditionImpl extends AbstractQueryDefinitionCondition implements CompositeQueryDefinitionCondition
 {
-    public String getName();
-    public void setName(final String name);
+    private List<QueryDefnCondition> childConditions = new ArrayList<QueryDefnCondition>();
 
-    public String getDisplayCaption();
+    public CompositeQueryDefinitionConditionImpl(final String name)
+    {
+        setName(name);
+        setJoinOnly(true);
+    }
 
-    public boolean isRemoveIfValueNull();   // may not be needed
-    public void setIsRemoveIfValueNull(final boolean flag);
+    public List<QueryDefnCondition> getChildConditions()
+    {
+        return childConditions;
+    }
 
-    public String getConnector();
-    public void setConnector(final String connector);
+    public void setChildConditions(final  List<QueryDefnCondition>  childConditions)
+    {
+        this.childConditions = childConditions;
+    }
 
-    // =========== good for the single field one
-    public QueryDefinitionField getField();
-    public void setField(QueryDefinitionField field);
-    public String getBindExpr();
-    public void setBindExpr(String expr);
-    // ============
+    public void addChildCondition(final QueryDefnCondition condition)
+    {
+        // if you're adding child conditions then this condition has no FIELD associated with it directly and should
+        // only be used for JOIN purposes
+        childConditions.add(condition);
+    }
 
-    public SqlComparison getComparison();
-    public void setComparison(SqlComparison comp);
+    public String getDisplayCaption()
+    {
+        StringBuffer buffer = new StringBuffer();
+        for (int i=0; i < childConditions.size(); i++)
+        {
 
-    public boolean isJoinOnly();
-    public void setJoinOnly(boolean flag);
+            buffer.append(childConditions.get(i).getField().getCaption());
+            if (i != childConditions.size()-1)
+                buffer.append(", ");
+        }
+        return buffer.toString();
+    }
 
-    public QueryDefnCondition getParentCondition();
-    public void setParentCondition(QueryDefnCondition condition);
+    public boolean useCondition(final QueryDefnStatementGenerator stmtGen, final ValueContext valueContext) throws QueryDefinitionException
+    {
+        if (childConditions.size() == 0)
+                return false;
 
-    public QueryDefinition getQueryDefinition();
-    public void setQueryDefinition(QueryDefinition defn);
+        // if we don't allow nulls, always use the condition
+        if(!isRemoveIfValueNull())
+            return true;
 
-    public QueryDefinitionSelect getQueryDefinitionSelect();
-    public void setQueryDefinitionSelect(QueryDefinitionSelect select);
+        // by default all child conditions MUST be satisfied
+        for (QueryDefnCondition cond : childConditions)
+        {
+            if (!cond.useCondition(stmtGen, valueContext))
+                return false;
+        }
+        return true;
+    }
 
-    public ValueProvider getValueProvider();
-    public void setValueProvider(ValueProvider provider);
-
-    public boolean useCondition(final QueryDefnStatementGenerator stmtGen, final ValueContext valueContext) throws QueryDefinitionException;
 }

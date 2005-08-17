@@ -8,6 +8,7 @@ import com.medigy.persist.model.person.Person;
 import com.medigy.persist.model.person.PersonIdentifier;
 import com.medigy.persist.model.person.PersonRole;
 import com.medigy.persist.reference.custom.person.PersonIdentifierType;
+import com.medigy.persist.util.query.CompositeQueryDefinitionCondition;
 import com.medigy.persist.util.query.QueryDefinition;
 import com.medigy.persist.util.query.QueryDefinitionField;
 import com.medigy.persist.util.query.QueryDefinitionJoin;
@@ -19,6 +20,7 @@ import com.medigy.persist.util.query.comparison.EqualsComparison;
 import com.medigy.persist.util.query.comparison.StartsWithComparisonIgnoreCase;
 import com.medigy.persist.util.query.exception.QueryDefinitionException;
 import com.medigy.persist.util.query.impl.BasicQueryDefinition;
+import com.medigy.persist.util.query.impl.CompositeQueryDefinitionConditionImpl;
 import com.medigy.persist.util.query.impl.QueryDefinitionConditionImpl;
 import com.medigy.persist.util.query.impl.QueryDefinitionJoinImpl;
 import com.medigy.persist.util.query.impl.QueryDefinitionSelectImpl;
@@ -127,24 +129,47 @@ public class PatientSearchQueryDefinition extends BasicQueryDefinition implement
         select.addDisplayField(getField(Field.DOB.getName()));
         select.addDisplayField(getField("ssnProperty"));
 
-        final QueryDefnCondition lastNameCondition = new QueryDefinitionConditionImpl(getField(Field.LAST_NAME.getName()),
-                SqlComparisonFactory.getInstance().getComparison(StartsWithComparisonIgnoreCase.COMPARISON_NAME));
-        lastNameCondition.setConnector("and");
+
+        final CompositeQueryDefinitionCondition firstAndlastNameCondition = new CompositeQueryDefinitionConditionImpl("firstAndlastNameCondition");
+        firstAndlastNameCondition.addChildCondition(new QueryDefinitionConditionImpl(
+                "lastNameCondition",
+                getField(Field.LAST_NAME.getName()),
+                SqlComparisonFactory.getInstance().getComparison(StartsWithComparisonIgnoreCase.COMPARISON_NAME), "AND"));
+        firstAndlastNameCondition.addChildCondition(new QueryDefinitionConditionImpl(
+                "firstNameCondition",
+                getField(Field.FIRST_NAME.getName()),
+                SqlComparisonFactory.getInstance().getComparison(StartsWithComparisonIgnoreCase.COMPARISON_NAME), "AND"));
+        firstAndlastNameCondition.setConnector("and");
+        select.addCondition(firstAndlastNameCondition);
+
+        final QueryDefnCondition lastNameCondition = new QueryDefinitionConditionImpl(
+                "lastNameCondition",
+                getField(Field.LAST_NAME.getName()),
+                SqlComparisonFactory.getInstance().getComparison(StartsWithComparisonIgnoreCase.COMPARISON_NAME), "AND");
         select.addCondition(lastNameCondition);
 
-        final QueryDefnCondition idCondition = new QueryDefinitionConditionImpl(getField(Field.PATIENT_ID.getName()),
-                SqlComparisonFactory.getInstance().getComparison(EqualsComparison.COMPARISON_NAME));
-        idCondition.setConnector("and");
+        final QueryDefnCondition firstNameCondition = new QueryDefinitionConditionImpl(
+                "firstNameCondition",
+                getField(Field.FIRST_NAME.getName()),
+                SqlComparisonFactory.getInstance().getComparison(StartsWithComparisonIgnoreCase.COMPARISON_NAME), "AND");
+        select.addCondition(firstNameCondition);
+
+        final QueryDefnCondition idCondition = new QueryDefinitionConditionImpl(
+                "idCondition",
+                getField(Field.PATIENT_ID.getName()),
+                SqlComparisonFactory.getInstance().getComparison(EqualsComparison.COMPARISON_NAME), "AND");
         select.addCondition(idCondition);
 
-        final QueryDefnCondition dobCondition = new QueryDefinitionConditionImpl(getField(Field.DOB.getName()),
-                SqlComparisonFactory.getInstance().getComparison(EqualsComparison.COMPARISON_NAME));
-        dobCondition.setConnector("and");
+        final QueryDefnCondition dobCondition = new QueryDefinitionConditionImpl(
+                "dobCondition",
+                getField(Field.DOB.getName()),
+                SqlComparisonFactory.getInstance().getComparison(EqualsComparison.COMPARISON_NAME), "AND");
         select.addCondition(dobCondition);
 
-        final QueryDefnCondition ssnCondition = new QueryDefinitionConditionImpl(getField("ssnProperty"),
-                SqlComparisonFactory.getInstance().getComparison(EqualsComparison.COMPARISON_NAME));
-        ssnCondition.setConnector("and");
+        final QueryDefnCondition ssnCondition = new QueryDefinitionConditionImpl(
+                "ssnCondition",
+                getField("ssnProperty"),
+                SqlComparisonFactory.getInstance().getComparison(EqualsComparison.COMPARISON_NAME), "AND");
         select.addCondition(ssnCondition);
 
 

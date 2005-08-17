@@ -38,6 +38,7 @@
  */
 package com.medigy.service.impl.person;
 
+import com.medigy.persist.reference.custom.claim.ClaimType;
 import com.medigy.persist.reference.custom.health.HealthCareVisitRoleType;
 import com.medigy.persist.reference.custom.invoice.InvoiceStatusType;
 import com.medigy.service.AbstractService;
@@ -81,10 +82,42 @@ public class PatientWorklistServiceImpl extends AbstractService implements Patie
             "       statuses.type.id NOT IN (:excludeStatusList) " +
             "GROUP BY visit.patient " +
             "ORDER BY visit.patient.id";
+    public static final String PATIENT_BALANCE_HQL =
+            "SELECT visit.patient.id, sum(invoice.balance) " +
+            "FROM Invoice as invoice " +
+            "JOIN invoice.visit as visit " +
+            "JOIN  invoice.invoiceStatuses as statuses WITH " +
+            "       statuses.invoiceStatusDate = (select max(status.invoiceStatusDate) from InvoiceStatus status where invoice = status.invoice GROUP BY invoice) AND " +
+            "       statuses.type.id NOT IN (:excludeStatusList) " +
+            "JOIN invoice.claimType as claimType WITH claimType.id = :selfpayClaimType " +
+            "GROUP BY visit.patient " +
+            "ORDER BY visit.patient.id";
 
     public PatientWorklistServiceImpl(final SessionFactory sessionFactory)
     {
         super(sessionFactory);
+    }
+
+    private Map<Long, Float> getPatientBalance(final PatientWorklistParameters parameters)
+    {
+        final Query query = getSession().createQuery(ACCOUNT_BALANCE_HQL);
+        final List<Long> idList = new ArrayList<Long>();
+        for (InvoiceStatusType.Cache cache : excludeStatusList)
+            idList.add(cache.getEntity().getSystemId());
+        query.setParameterList("excludeStatusList", idList);
+        query.setLong("selfpayClaimType", ClaimType.Cache.SELFPAY.getEntity().getClaimTypeId());
+
+        final Map<Long, Float> balanceMap = new HashMap<Long, Float>();
+        final List list = query.list();
+        for (Object rowObject : list)
+        {
+            if (rowObject instanceof Object[])
+            {
+                final Object[] columnValues = (Object[]) rowObject;
+                balanceMap.put((Long) columnValues[0], (Float) columnValues[1]);
+            }
+        }
+        return balanceMap;
     }
 
     private Map<Long, Float> getAccountBalance(final PatientWorklistParameters parameters)
@@ -194,6 +227,7 @@ public class PatientWorklistServiceImpl extends AbstractService implements Patie
             log.info(patientWorkListQuery.getQueryString() + " \n" + list.size());
 
         final Map<Long, Float> accountBalance = getAccountBalance(parameters);
+        final Map<Long, Float> patientBalance = getPatientBalance(parameters);
         for (int i=0; i < list.size(); i++)
         {
             final Object rowObject = list.get(i);
@@ -202,7 +236,10 @@ public class PatientWorklistServiceImpl extends AbstractService implements Patie
                 final PatientWorkListItemImpl item = new PatientWorkListItemImpl();
                 final Object[] columnValues = (Object[]) rowObject;
                 item.setPatientId((Long) columnValues[0]);
+
                 item.setAccountBalance(accountBalance.get(item.getPatientId()));
+                item.setPatientBalance(patientBalance.get(item.getPatientId()));
+
                 item.setPatientLastName((String) columnValues[1]);
                 item.setPatientFirstName((String) columnValues[2]);
                 item.setPhysicianId((Long) columnValues[3]);

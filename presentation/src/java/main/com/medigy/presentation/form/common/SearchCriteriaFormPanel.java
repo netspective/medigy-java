@@ -79,6 +79,7 @@ public class SearchCriteriaFormPanel extends Panel
             private class CriteriaChoice implements IChoice
             {
                 private QueryDefnCondition condition;
+                private List<QueryDefnCondition> conditionList;
 
                 public CriteriaChoice(final QueryDefnCondition condition)
                 {
@@ -87,7 +88,7 @@ public class SearchCriteriaFormPanel extends Panel
 
                 public String getDisplayValue()
                 {
-                    return condition.getField().getCaption();
+                    return condition.getDisplayCaption();
                 }
 
                 public String getId()

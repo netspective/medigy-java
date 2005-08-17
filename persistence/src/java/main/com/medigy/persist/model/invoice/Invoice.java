@@ -92,7 +92,7 @@ public class Invoice  extends AbstractTopLevelEntity
     private BillingAccount billingAccount;
     private HealthCareEncounter encounter;
 
-    private Set<InvoiceItem> items = new HashSet<InvoiceItem>();
+    private List<InvoiceItem> invoiceItems = new ArrayList<InvoiceItem>();
     private Set<InvoiceRole> invoiceRoles = new HashSet<InvoiceRole>();
     private List<InvoiceStatus> invoiceStatuses = new ArrayList<InvoiceStatus>();
     private Set<InvoiceTerm> invoiceTerms = new HashSet<InvoiceTerm>();
@@ -229,14 +229,21 @@ public class Invoice  extends AbstractTopLevelEntity
     }
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "invoice")
-    public Set<InvoiceItem> getItems()
+    @OrderBy("invoiceItemId")
+    public List<InvoiceItem> getInvoiceItems()
     {
-        return items;
+        return invoiceItems;
     }
 
-    public void setItems(final Set<InvoiceItem> items)
+    public void setInvoiceItems(final List<InvoiceItem> invoiceItems)
     {
-        this.items = items;
+        this.invoiceItems = invoiceItems;
+    }
+
+    @Transient
+    public InvoiceItem getInvoiceItem(final int index)
+    {
+        return getInvoiceItems().get(index);
     }
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "invoice")
@@ -407,7 +414,7 @@ public class Invoice  extends AbstractTopLevelEntity
     public void addInvoiceItem(final InvoiceItem item)
     {
         item.setInvoice(this);
-        items.add(item);
+        invoiceItems.add(item);
     }
 
     @ManyToOne
