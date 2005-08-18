@@ -87,6 +87,7 @@
         <property name="hibernate-doc.home" value="${repository.home}/hibernate-doc"/>
         <property name="persistence.home" value="${repository.home}/persistence"/>
         <property name="persistence-tools.home" value="${repository.home}/persistence-tools"/>
+        <property name="scheduler.home" value="${repository.home}/scheduler"/>
         <property name="service.home" value="${repository.home}/service"/>
         <property name="presentation.home" value="${repository.home}/presentation"/>
         <property name="support.home" value="${repository.home}/support"/>
@@ -99,6 +100,7 @@
         <property name="hibernate-doc.artifacts.home" value="${repository.artifacts.home}/hibernate-doc"/>
         <property name="persistence.artifacts.home" value="${repository.artifacts.home}/persistence"/>
         <property name="persistence-tools.artifacts.home" value="${repository.artifacts.home}/persistence-tools"/>
+        <property name="scheduler.artifacts.home" value="${repository.artifacts.home}/scheduler"/>
         <property name="service.artifacts.home" value="${repository.artifacts.home}/service"/>
         <property name="presentation.artifacts.home" value="${repository.artifacts.home}/presentation"/>
         <property name="pbs.artifacts.home" value="${repository.artifacts.home}/pbs"/>

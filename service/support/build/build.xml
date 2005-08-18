@@ -16,6 +16,7 @@
             <fileset dir="${service.home}/depend/lib/main" includes="*.jar"/>
         
             <path location="${persistence.artifacts.home}/classes/main"/>
+            <path location="${scheduler.artifacts.home}/classes/main"/>
         </path>
     </target>
 
@@ -35,6 +36,9 @@
 
             <path location="${persistence.artifacts.home}/classes/main"/>
             <path location="${persistence.artifacts.home}/classes/test"/>
+            
+            <path location="${scheduler.artifacts.home}/classes/main"/>
+            <path location="${scheduler.artifacts.home}/classes/test"/>
         </path>
     </target>
 
