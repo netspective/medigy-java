@@ -46,9 +46,6 @@ import com.medigy.service.dto.schedule.ScheduleReturnValues;
 import com.medigy.service.dto.schedule.ScheduleParameters;
 import com.medigy.service.dto.schedule.ScheduleWorksheetItems;
 import com.medigy.scheduler.util.CalendarUtils;
-import com.medigy.scheduler.model.*;
-import com.medigy.scheduler.model.impl.DefaultScheduleManager;
-import com.medigy.scheduler.model.mock.MockScheduleElementProvider;
 
 import java.util.Date;
 import java.util.Calendar;
@@ -59,25 +56,14 @@ public class ScheduleServiceImpl implements ScheduleService
 {
     public ScheduleReturnValues getSchedules(final ScheduleParameters parameters)
     {
-        // TODO: Remove test code, mock objects.
         Calendar calendar = Calendar.getInstance();
         CalendarUtils calendarUtils = new CalendarUtils(calendar);
-
-        MockScheduleElementProvider mockScheduleItemProvider = new MockScheduleElementProvider();
-        ScheduleParticipantProvider participantProvider = mockScheduleItemProvider;
-        ScheduleEventProvider eventProvider = mockScheduleItemProvider;
-        ScheduleTemplateProvider templateProvider = mockScheduleItemProvider;
-
-        ScheduleManager scheduleManager = new DefaultScheduleManager(calendarUtils, participantProvider, eventProvider, templateProvider);
 
         Date beginDate = calendarUtils.createDate(Calendar.JANUARY, 1, 2004);
         Date endDate = calendarUtils.createDate(Calendar.JANUARY, 1, 2004);
 
         int beginDay = calendarUtils.getJulianDay(beginDate);
         int endDay = calendarUtils.getJulianDay(endDate);
-
-        ScheduleEvents scheduleEvents = eventProvider.getScheduledEvents(scheduleManager, beginDate, endDate);
-        final ScheduleEvent[] scheduleEventsList = scheduleEvents.getScheduleEvents();
 
         return new ScheduleReturnValues()
         {
