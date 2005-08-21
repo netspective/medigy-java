@@ -100,7 +100,8 @@ public class PatientWorklistServiceImpl extends AbstractService implements Patie
 
     private Map<Long, Float> getPatientBalance(final PatientWorklistParameters parameters)
     {
-        final Query query = getSession().createQuery(ACCOUNT_BALANCE_HQL);
+        // TODO: There is no claimType in INVOICE. Need to re-do the patient balance query
+        final Query query = getSession().createQuery(PATIENT_BALANCE_HQL);
         final List<Long> idList = new ArrayList<Long>();
         for (InvoiceStatusType.Cache cache : excludeStatusList)
             idList.add(cache.getEntity().getSystemId());
@@ -227,7 +228,7 @@ public class PatientWorklistServiceImpl extends AbstractService implements Patie
             log.info(patientWorkListQuery.getQueryString() + " \n" + list.size());
 
         final Map<Long, Float> accountBalance = getAccountBalance(parameters);
-        final Map<Long, Float> patientBalance = getPatientBalance(parameters);
+        //final Map<Long, Float> patientBalance = getPatientBalance(parameters);
         for (int i=0; i < list.size(); i++)
         {
             final Object rowObject = list.get(i);
@@ -238,7 +239,7 @@ public class PatientWorklistServiceImpl extends AbstractService implements Patie
                 item.setPatientId((Long) columnValues[0]);
 
                 item.setAccountBalance(accountBalance.get(item.getPatientId()));
-                item.setPatientBalance(patientBalance.get(item.getPatientId()));
+                //item.setPatientBalance(patientBalance.get(item.getPatientId()));
 
                 item.setPatientLastName((String) columnValues[1]);
                 item.setPatientFirstName((String) columnValues[2]);
