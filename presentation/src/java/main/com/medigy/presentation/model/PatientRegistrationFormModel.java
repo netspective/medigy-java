@@ -84,6 +84,7 @@ public final class PatientRegistrationFormModel implements RegisterPatientParame
 	private Float primaryInsuranceMaxThresholdAmount;
 	private Float primaryInsuranceOfficeVisitCoPay;
 	private String relationshipToResponsible;
+	private String relationshipToResponsibleOther;
 	private String employmentStatus;
 	private String insuranceSequence;
     private String primaryInsuranceContractHolderId;
@@ -731,6 +732,16 @@ public final class PatientRegistrationFormModel implements RegisterPatientParame
         this.relationshipToResponsible = relationshipToResponsible;
     }
 
+    public String getRelationshipToResponsibleOther()
+    {
+        return relationshipToResponsibleOther;
+    }
+
+    public void setRelationshipToResponsibleOther(String relationshipToResponsibleOther)
+    {
+        this.relationshipToResponsibleOther = relationshipToResponsibleOther;
+    }
+
     @ValidEntity(entity = EmploymentStatusType.class)
     @SelectFieldStyle(style = SelectFieldStyle.Style.COMBO)
     public String getEmploymentStatus()
@@ -884,6 +895,7 @@ public final class PatientRegistrationFormModel implements RegisterPatientParame
 		 .append(", genderCode = ").append(genderCode)
 		 .append(", maritalStatusCode = ").append(maritalStatusCode)
 		 .append(", relationshipToResponsible = ").append(relationshipToResponsible)
+		 .append(", relationshipToResponsibleOther = ").append(relationshipToResponsibleOther)
 		 .append(", employmentStatus = ").append(employmentStatus)
 		 .append(", insuranceSequence = ").append(insuranceSequence)
 		 .append(", primaryInsuranceContractHolderRole = ").append(primaryInsuranceContractHolderRole)
