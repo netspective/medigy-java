@@ -123,7 +123,7 @@ public class ContactMechanismFacadeImpl extends AbstractFacade implements Contac
         address.setAddress1(street1);
         address.setAddress2(street2);
 
-        Country country = (Country) getSession().createCriteria(Country.class).add(Restrictions.eq("countryAbbreviation", countryCode).ignoreCase()).uniqueResult();
+        Country country = (Country) getSession().createCriteria(Country.class).add(Restrictions.eq("isoThreeLetterCode", countryCode).ignoreCase()).uniqueResult();
         address.setCountry(country);
 
         if (stateCode != null)
