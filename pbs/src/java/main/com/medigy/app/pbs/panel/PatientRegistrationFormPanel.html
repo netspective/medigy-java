@@ -1,8 +1,5 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns:wicket="http://wicket.sourceforge.net/">
-    <head>
-        <title>Patient/Person Add</title>
-        <link rel="stylesheet" type="text/css" href="../../../../../../../../../resources/theme/default/css/theme.css"/>
-    </head>
     <body>
         <wicket:panel>
             <div wicket:id="panel_border">
@@ -31,7 +28,7 @@
                             <tr class="field">
                                 <td class="label">
                                     <label wicket:id="emergencyContact_label">Emergency Contact</label> /
-                                    <label wicket:id="emegencyPhone_label">Phone</label>
+                                    <label wicket:id="emergencyPhone_label">Phone</label>
                                 </td>
                                 <td class="control">
                                     <input type="text" wicket:id="emergencyContact" value=""/>
@@ -140,14 +137,14 @@
                             <tr class="field">
                                 <td class="label">
                                     <label wicket:id="relationshipToResponsible_label">Relationship To Responsible Party</label> /
-                                    <label wicket:id="patientRelationshipToInsuredOtherRelationship_label">Other Relationship Name</label>
+                                    <label wicket:id="relationshipToResponsibleOther_label">Other Relationship Name</label>
                                 </td>
                                 <td class="control">
                                     <select wicket:id="relationshipToResponsible">
                                         <option>Self</option>
                                         <option>Spouse</option>
                                     </select>
-                                    <input type="text" wicket:id="patientRelationshipToInsuredOtherRelationship" value=""/>
+                                    <input type="text" wicket:id="relationshipToResponsibleOther" value=""/>
                                 </td>
                             </tr>
                             <tr class="field">
