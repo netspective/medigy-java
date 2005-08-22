@@ -102,10 +102,13 @@ public class Country extends GeographicBoundary
     public void setIsoThreeDigitCode(final String code)
     {
         this.isoThreeDigitCode = code;
-        if (isoThreeDigitCode.length() == 2)
-            isoThreeDigitCode = "0" + isoThreeDigitCode;
-        else if (isoThreeDigitCode.length() == 1)
-            isoThreeDigitCode = "00" + isoThreeDigitCode;
+        if (isoThreeDigitCode != null)
+        {
+            if (isoThreeDigitCode.length() == 2)
+                isoThreeDigitCode = "0" + isoThreeDigitCode;
+            else if (isoThreeDigitCode.length() == 1)
+                isoThreeDigitCode = "00" + isoThreeDigitCode;
+        }
     }
 
     @Column(length = 3)

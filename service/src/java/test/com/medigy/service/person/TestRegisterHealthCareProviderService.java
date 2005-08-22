@@ -67,7 +67,11 @@ public class TestRegisterHealthCareProviderService extends AbstractSpringTestCas
 
     public void testRegisterHealthCareProviderService()
     {
-        final Country usa = new Country("United States of America", "USA");
+        final Country usa = new Country();
+        usa.setCountryName("United States of America");
+        usa.setIsoThreeLetterCode("USA");
+        usa.setIsoTwoLetterCode("US");
+        usa.setIsoThreeDigitCode("123");
         final State va = new State("Virginia", "VA");
         va.setParentCountry(usa);
         usa.addState(va);

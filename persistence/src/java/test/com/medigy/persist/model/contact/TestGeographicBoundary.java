@@ -79,7 +79,9 @@ public class TestGeographicBoundary extends TestCase
         Transaction transaction = session.beginTransaction();
         final Country country = new Country();
         country.setCountryName("United States of America");
-        country.setCountryAbbreviation("USA");
+        country.setIsoThreeLetterCode("USA");
+        country.setIsoTwoLetterCode("US");
+        country.setIsoThreeDigitCode("123");
         session.save(country);
 
         final State virginia = new State();
@@ -127,11 +129,15 @@ public class TestGeographicBoundary extends TestCase
         Transaction transaction = session.beginTransaction();
         final Country country = new Country();
         country.setCountryName("United States of America");
-        country.setCountryAbbreviation("USA");
+        country.setIsoThreeLetterCode("USA");
+        country.setIsoTwoLetterCode("US");
+        country.setIsoThreeDigitCode("123");
 
         final Country countryB = new Country();
         countryB.setCountryName("Canada");
-        countryB.setCountryAbbreviation("CAN");
+        countryB.setIsoThreeLetterCode("CAN");
+        countryB.setIsoTwoLetterCode("CA");
+        countryB.setIsoThreeDigitCode("121");
 
         session.save(country);
         session.save(countryB);
@@ -185,7 +191,7 @@ public class TestGeographicBoundary extends TestCase
 
         final Country usa = (Country) session.load(Country.class, country.getCountryId());
         assertThat(usa.getCountryName(), eq("United States of America"));
-        assertThat(usa.getCountryAbbreviation(), eq("USA"));
+        assertThat(usa.getIsoThreeLetterCode(), eq("USA"));
         assertThat(usa.getStates().size(), eq(2));
         assertThat(usa.hasState(stateA), eq(true));
         assertThat(usa.hasState(stateB), eq(true));
@@ -194,7 +200,7 @@ public class TestGeographicBoundary extends TestCase
 
         final Country canada = (Country) session.load(Country.class, countryB.getCountryId());
         assertThat(canada.getCountryName(), eq("Canada"));
-        assertThat(canada.getCountryAbbreviation(), eq("CAN"));
+        assertThat(canada.getIsoThreeLetterCode(), eq("CAN"));
         assertThat(canada.getProvinces().size(), eq(1));
         assertThat(canada.hasProvince(province), eq(true));
 

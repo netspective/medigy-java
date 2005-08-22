@@ -138,7 +138,9 @@ public class TestContactMechanismFacade extends AbstractSpringTestCase
 
         final Country country = new Country();
         country.setCountryName("United States of America");
-        country.setCountryAbbreviation("USA");
+        country.setIsoThreeLetterCode("USA");
+        country.setIsoTwoLetterCode("US");
+        country.setIsoThreeDigitCode("123");
 
         final State virginia = new State();
         virginia.setStateName("Virginia");
@@ -226,7 +228,9 @@ public class TestContactMechanismFacade extends AbstractSpringTestCase
     {
         final Country country = new Country();
         country.setCountryName("United States of America");
-        country.setCountryAbbreviation("USA");
+        country.setIsoThreeLetterCode("USA");
+        country.setIsoTwoLetterCode("US");
+        country.setIsoThreeDigitCode("123");
 
         final State virginia = new State();
         virginia.setStateName("Virginia");

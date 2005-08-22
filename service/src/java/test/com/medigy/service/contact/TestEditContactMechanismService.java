@@ -71,7 +71,9 @@ public class TestEditContactMechanismService extends AbstractSpringTestCase
 
         final Country country = new Country();
         country.setCountryName("United States of America");
-        country.setCountryAbbreviation("USA");
+        country.setIsoThreeDigitCode("123");
+        country.setIsoThreeLetterCode("USA");
+        country.setIsoTwoLetterCode("US");
 
         final State virginia = new State();
         virginia.setStateName("Virginia");
