@@ -44,10 +44,13 @@ import com.medigy.service.dto.ServiceParameters;
 import com.medigy.service.dto.ServiceReturnValues;
 import com.medigy.service.dto.schedule.ScheduleReturnValues;
 import com.medigy.service.dto.schedule.ScheduleParameters;
+import com.medigy.service.dto.schedule.ScheduleWorksheetItems;
 import com.medigy.persist.model.health.HealthCareEncounter;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import java.util.List;
 
 
 public class SchedulerServiceImpl implements ScheduleService
@@ -81,6 +84,11 @@ public class SchedulerServiceImpl implements ScheduleService
             {
                 return null;
             }
+
+            public List<ScheduleWorksheetItems> getItems()
+            {
+                return null;
+            }
         };
     }
 
@@ -101,6 +109,11 @@ public class SchedulerServiceImpl implements ScheduleService
             public String getErrorMessage()
             {
                 return errorMessage;
+            }
+
+            public List<ScheduleWorksheetItems> getItems()
+            {
+                return null;
             }
         };
     }
