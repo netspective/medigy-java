@@ -1,4 +1,4 @@
-com.medigy.persist.reference.type.clincial.Icd.code,shortDescr,mediumDescr,longDescr
+com.medigy.persist.reference.type.clincial.Icd9.code,shortDescr,mediumDescr,longDescr
 1,CHOLERA VIBRIO CHOLERAE,CHOLERA VIBRIO CHOLERAE,CHOLERA DUE TO VIBRIO CHOLERAE
 1.1,CHOLERA VIBRIO CHOLER EL TOR,CHOLERA VIBRIO CHOLERAE EL TOR,CHOLERA DUE TO VIBRIO CHOLERAE EL TOR
 1.9,CHOLERA UNSP,CHOLERA UNSPEC,CHOLERA UNSPECIFIED
