@@ -38,9 +38,9 @@
  */
 package com.medigy.persist.model.health;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import com.medigy.persist.model.common.AbstractTopLevelEntity;
+import com.medigy.persist.reference.custom.health.DiagnosisType;
+import com.medigy.persist.reference.type.clincial.Icd;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -50,9 +50,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-
-import com.medigy.persist.model.common.AbstractTopLevelEntity;
-import com.medigy.persist.reference.custom.health.DiagnosisType;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Diagnosis extends AbstractTopLevelEntity
@@ -60,10 +60,11 @@ public class Diagnosis extends AbstractTopLevelEntity
     public static final String PK_COLUMN_NAME = "diagnosis_id";
     private Long diagnosisId;
     private Date diagnosisDate;
-    private HealthCareEpisode healthCareEpisode;
     private DiagnosisType type;
-    private Set<PractitionerDiagnosis> practitioners = new HashSet<PractitionerDiagnosis>();
+    private Icd icd;
+    private HealthCareDelivery healthCareDelivery;
 
+    private Set<PractitionerDiagnosis> practitioners = new HashSet<PractitionerDiagnosis>();
     private Set<DiagnosisTreatment> diagnosisTreatments = new HashSet<DiagnosisTreatment>();
 
     @Id(generate = GeneratorType.AUTO)
@@ -90,19 +91,7 @@ public class Diagnosis extends AbstractTopLevelEntity
     }
 
     @ManyToOne
-    @JoinColumn(name = "health_care_episode_id")
-    public HealthCareEpisode getHealthCareEpisode()
-    {
-        return healthCareEpisode;
-    }
-
-    public void setHealthCareEpisode(final HealthCareEpisode healthCareEpisode)
-    {
-        this.healthCareEpisode = healthCareEpisode;
-    }
-
-    @ManyToOne
-    @JoinColumn(name = "diagnosis_type_id")
+    @JoinColumn(name = DiagnosisType.PK_COLUMN_NAME)
     public DiagnosisType getType()
     {
         return type;
@@ -113,8 +102,7 @@ public class Diagnosis extends AbstractTopLevelEntity
         this.type = type;
     }
 
-    @OneToMany
-    @JoinColumn(name = "diagnosis_id")
+    @OneToMany(mappedBy = "diagnosis")
     public Set<DiagnosisTreatment> getDiagnosisTreatments()
     {
         return diagnosisTreatments;
@@ -134,5 +122,29 @@ public class Diagnosis extends AbstractTopLevelEntity
     public void setPractitioners(final Set<PractitionerDiagnosis> practitioners)
     {
         this.practitioners = practitioners;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "icd_id", referencedColumnName = Icd.PK_COLUMN_NAME)
+    public Icd getIcd()
+    {
+        return icd;
+    }
+
+    public void setIcd(final Icd icd)
+    {
+        this.icd = icd;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = HealthCareDelivery.PK_COLUMN_NAME)
+    public HealthCareDelivery getHealthCareDelivery()
+    {
+        return healthCareDelivery;
+    }
+
+    public void setHealthCareDelivery(final HealthCareDelivery healthCareDelivery)
+    {
+        this.healthCareDelivery = healthCareDelivery;
     }
 }

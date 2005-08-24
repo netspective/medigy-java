@@ -38,11 +38,11 @@
  */
 package com.medigy.persist.reference.custom.person;
 
+import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
-
-import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
 
 @Entity
 public class MedicalConditionType extends AbstractCustomReferenceEntity

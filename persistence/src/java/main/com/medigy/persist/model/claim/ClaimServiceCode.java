@@ -42,6 +42,7 @@ import com.medigy.persist.model.common.AbstractTopLevelEntity;
 import com.medigy.persist.model.health.DiagnosisRelatedGroupClassification;
 import com.medigy.persist.reference.custom.claim.ClaimServiceCodeType;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
@@ -51,7 +52,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-import javax.persistence.CascadeType;
 import java.util.HashSet;
 import java.util.Set;
 

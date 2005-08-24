@@ -39,6 +39,8 @@
         <mapping class="com.medigy.persist.reference.type.clincial.HCPCS"/>
         <mapping class="com.medigy.persist.reference.type.clincial.IcdAge"/>
         <mapping class="com.medigy.persist.reference.type.clincial.Icd"/>
+        <mapping class="com.medigy.persist.reference.type.clincial.Icd9"/>
+        <mapping class="com.medigy.persist.reference.type.clincial.Icd10"/>
 
         <!--mapping package="com.medigy.persist.reference.type.party"/-->
         <mapping class="com.medigy.persist.reference.type.party.PartyFacilityRoleType"/>
@@ -197,7 +199,6 @@
         <mapping class="com.medigy.persist.model.health.DiagnosisTreatment"/>
         <mapping class="com.medigy.persist.model.health.EpisodeOutcome"/>
         <mapping class="com.medigy.persist.model.health.HealthCareDelivery"/>
-        <mapping class="com.medigy.persist.model.health.HealthCareDeliveryAssociation"/>
         <mapping class="com.medigy.persist.model.health.HealthCareDeliveryBilling"/>
         <mapping class="com.medigy.persist.model.health.HealthCareDeliveryClaimSubmission"/>
         <mapping class="com.medigy.persist.model.health.HealthCareDeliveryRole"/>

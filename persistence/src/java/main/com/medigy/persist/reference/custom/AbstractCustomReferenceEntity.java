@@ -42,7 +42,6 @@ package com.medigy.persist.reference.custom;
 import com.medigy.persist.model.common.AbstractEntity;
 import com.medigy.persist.model.party.Party;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.EmbeddableSuperclass;
 import javax.persistence.JoinColumn;

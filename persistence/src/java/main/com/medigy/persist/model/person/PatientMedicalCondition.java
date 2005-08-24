@@ -38,16 +38,15 @@
  */
 package com.medigy.persist.model.person;
 
+import com.medigy.persist.model.common.AbstractDateDurationEntity;
+import com.medigy.persist.reference.custom.person.MedicalConditionType;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-
-import com.medigy.persist.model.common.AbstractDateDurationEntity;
-import com.medigy.persist.model.party.PartyRole;
-import com.medigy.persist.reference.custom.person.MedicalConditionType;
 
 @Entity
 public class PatientMedicalCondition extends AbstractDateDurationEntity

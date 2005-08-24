@@ -38,11 +38,11 @@
  */
 package com.medigy.persist.reference.type.clincial;
 
-import javax.persistence.Entity;
-
 import com.medigy.persist.reference.AbstractReferenceEntity;
 import com.medigy.persist.reference.CachedReferenceEntity;
 import com.medigy.persist.reference.ReferenceEntity;
+
+import javax.persistence.Entity;
 
 @Entity
 public class IcdAge extends AbstractReferenceEntity

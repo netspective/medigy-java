@@ -41,15 +41,15 @@ package com.medigy.persist.model.org.attribute;
 import com.medigy.persist.model.common.attribute.EntityAttribute;
 import com.medigy.persist.model.org.Organization;
 
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.JoinColumn;
-import javax.persistence.Id;
-import javax.persistence.GeneratorType;
-import javax.persistence.Table;
 import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratorType;
+import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "Org_Attribute")

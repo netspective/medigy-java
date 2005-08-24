@@ -38,13 +38,13 @@
  */
 package com.medigy.persist.model.health;
 
+import com.medigy.persist.model.common.AbstractTopLevelEntity;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-
-import com.medigy.persist.model.common.AbstractTopLevelEntity;
 
 @Entity
 public class DiagnosisTreatment extends AbstractTopLevelEntity
@@ -65,7 +65,7 @@ public class DiagnosisTreatment extends AbstractTopLevelEntity
     }
 
     @ManyToOne
-    @JoinColumn(name = "diagnosis_id")
+    @JoinColumn(name = Diagnosis.PK_COLUMN_NAME)
     public Diagnosis getDiagnosis()
     {
         return diagnosis;
@@ -77,7 +77,7 @@ public class DiagnosisTreatment extends AbstractTopLevelEntity
     }
 
     @ManyToOne
-    @JoinColumn(name = "health_care_delivery_id")
+    @JoinColumn(name = HealthCareDelivery.PK_COLUMN_NAME)
     public HealthCareDelivery getHealthCareDelivery()
     {
         return healthCareDelivery;

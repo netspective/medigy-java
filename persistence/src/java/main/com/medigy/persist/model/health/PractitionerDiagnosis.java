@@ -38,17 +38,16 @@
  */
 package com.medigy.persist.model.health;
 
+import com.medigy.persist.model.common.AbstractTopLevelEntity;
+import com.medigy.persist.model.person.Person;
+import com.medigy.persist.reference.custom.person.PersonRoleType;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.Column;
-
-import com.medigy.persist.model.common.AbstractTopLevelEntity;
-import com.medigy.persist.model.person.Person;
-import com.medigy.persist.reference.custom.party.PartyRoleType;
-import com.medigy.persist.reference.custom.person.PersonRoleType;
 
 @Entity
 public class PractitionerDiagnosis extends AbstractTopLevelEntity

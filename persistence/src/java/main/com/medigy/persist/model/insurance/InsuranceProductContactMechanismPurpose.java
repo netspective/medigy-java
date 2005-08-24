@@ -41,13 +41,13 @@ package com.medigy.persist.model.insurance;
 import com.medigy.persist.model.common.AbstractDateDurationEntity;
 import com.medigy.persist.reference.custom.party.ContactMechanismPurposeType;
 
-import javax.persistence.Id;
-import javax.persistence.GeneratorType;
-import javax.persistence.ManyToOne;
-import javax.persistence.JoinColumn;
-import javax.persistence.Entity;
-import javax.persistence.Table;
 import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratorType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "Ins_Prod_Contact_Mech_Purpose")

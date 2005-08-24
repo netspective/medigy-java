@@ -39,19 +39,18 @@
 package com.medigy.persist.model.person;
 
 import com.medigy.persist.model.common.AbstractEntity;
+import org.hibernate.validator.NotNull;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Id;
-import javax.persistence.GeneratorType;
-import javax.persistence.Column;
-import javax.persistence.ManyToOne;
-import javax.persistence.JoinColumn;
 import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratorType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import javax.persistence.TemporalType;
 import java.util.Date;
-
-import org.hibernate.validator.NotNull;
 
 @Entity
 @Table(name = "Patient_Medication_Refill")

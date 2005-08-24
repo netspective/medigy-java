@@ -43,11 +43,10 @@
  */
 package com.medigy.persist.model.session;
 
-import java.util.Stack;
-
-import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import java.util.Stack;
 
 public class SessionManager
 {

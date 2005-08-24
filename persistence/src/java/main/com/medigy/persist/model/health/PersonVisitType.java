@@ -41,12 +41,12 @@ package com.medigy.persist.model.health;
 import com.medigy.persist.model.common.AbstractEntity;
 import com.medigy.persist.model.person.Person;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.GeneratorType;
 import javax.persistence.Column;
-import javax.persistence.ManyToOne;
+import javax.persistence.Entity;
+import javax.persistence.GeneratorType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class PersonVisitType extends AbstractEntity

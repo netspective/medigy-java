@@ -5,8 +5,8 @@ package com.medigy.persist.model.insurance;
 
 import com.medigy.persist.model.common.AbstractEntity;
 
-import javax.persistence.ManyToOne;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 public abstract class CoverageRelationship extends AbstractEntity
 {

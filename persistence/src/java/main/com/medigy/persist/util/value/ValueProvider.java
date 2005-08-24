@@ -38,8 +38,6 @@
  */
 package com.medigy.persist.util.value;
 
-import com.medigy.persist.util.query.QueryDefnCondition;
-
 public interface ValueProvider
 {
     public Object getValue();

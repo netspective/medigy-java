@@ -40,27 +40,25 @@ package com.medigy.persist.model.order;
 
 import com.medigy.persist.model.common.AbstractTopLevelEntity;
 import com.medigy.persist.reference.custom.order.OrderType;
+import org.hibernate.validator.NotNull;
 
 import javax.persistence.Basic;
-import javax.persistence.TemporalType;
-import javax.persistence.Id;
-import javax.persistence.GeneratorType;
-import javax.persistence.Column;
-import javax.persistence.OneToMany;
 import javax.persistence.CascadeType;
-import javax.persistence.Transient;
+import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EmbeddableSuperclass;
+import javax.persistence.GeneratorType;
+import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import javax.persistence.ManyToOne;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.TemporalType;
+import javax.persistence.Transient;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.ArrayList;
-
-import org.hibernate.validator.NotNull;
 
 @Entity
 @Inheritance(discriminatorValue = "Order", strategy = InheritanceType.SINGLE_TABLE)

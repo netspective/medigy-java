@@ -38,9 +38,9 @@
  */
 package com.medigy.persist.reference.type.insurance;
 
+import com.medigy.persist.reference.AbstractReferenceEntity;
 import com.medigy.persist.reference.CachedReferenceEntity;
 import com.medigy.persist.reference.ReferenceEntity;
-import com.medigy.persist.reference.AbstractReferenceEntity;
 
 import javax.persistence.Entity;
 

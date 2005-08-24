@@ -39,20 +39,10 @@
 package com.medigy.persist.model.common.attribute;
 
 import com.medigy.persist.model.common.AbstractTopLevelEntity;
-import com.medigy.persist.model.invoice.Invoice;
-import com.medigy.persist.model.person.Person;
-import com.medigy.persist.reference.custom.attribute.EntityAttributeType;
 
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.Id;
-import javax.persistence.GeneratorType;
-import javax.persistence.Entity;
 import javax.persistence.Column;
-import javax.persistence.ManyToOne;
-import javax.persistence.JoinColumn;
-import javax.persistence.Transient;
 import javax.persistence.EmbeddableSuperclass;
+import javax.persistence.Transient;
 
 @EmbeddableSuperclass
 public abstract class EntityAttribute extends AbstractTopLevelEntity

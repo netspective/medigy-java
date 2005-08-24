@@ -39,8 +39,7 @@
  */
 package com.medigy.persist.model.party;
 
-import java.util.HashSet;
-import java.util.Set;
+import com.medigy.persist.model.common.AbstractDateDurationEntity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -48,8 +47,8 @@ import javax.persistence.GeneratorType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
-
-import com.medigy.persist.model.common.AbstractDateDurationEntity;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Case extends AbstractDateDurationEntity

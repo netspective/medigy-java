@@ -38,10 +38,10 @@
  */
 package com.medigy.persist.reference.custom.party;
 
-import javax.persistence.Transient;
-import javax.persistence.EmbeddableSuperclass;
-
 import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
+
+import javax.persistence.EmbeddableSuperclass;
+import javax.persistence.Transient;
 
 @EmbeddableSuperclass
 public class AgreementRoleType extends AbstractCustomReferenceEntity

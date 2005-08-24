@@ -39,12 +39,11 @@
  */
 package com.medigy.persist.model.common;
 
-import java.util.Date;
-
-import javax.persistence.Transient;
-import javax.persistence.EmbeddableSuperclass;
 import javax.persistence.Basic;
+import javax.persistence.EmbeddableSuperclass;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
+import java.util.Date;
 
 @EmbeddableSuperclass
 public abstract class AbstractDateDurationEntity extends AbstractTopLevelEntity

@@ -43,9 +43,9 @@
  */
 package com.medigy.persist.util;
 
-import java.io.Serializable;
-
 import org.hibernate.cfg.NamingStrategy;
+
+import java.io.Serializable;
 
 public class HibernateNamingStrategy implements NamingStrategy, Serializable
 {

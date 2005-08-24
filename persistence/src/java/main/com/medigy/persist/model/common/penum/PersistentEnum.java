@@ -43,6 +43,10 @@
  */
 package com.medigy.persist.model.common.penum;
 
+import org.hibernate.HibernateException;
+import org.hibernate.type.NullableType;
+import org.hibernate.usertype.UserType;
+
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.sql.PreparedStatement;
@@ -53,17 +57,13 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.hibernate.HibernateException;
-import org.hibernate.type.NullableType;
-import org.hibernate.usertype.UserType;
-
 
 /**
  * Provides a base class for implementations of persistable, type-safe,
  * comparable and serializable enums with a custom persisted representation.
  *
  * @author &Oslash;rjan Nygaard Austvold
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 abstract class PersistentEnum implements Comparable, Serializable, UserType
 {

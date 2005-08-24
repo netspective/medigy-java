@@ -51,6 +51,7 @@ import com.medigy.persist.model.party.Party;
 import com.medigy.persist.reference.custom.invoice.InvoiceRoleType;
 import com.medigy.persist.reference.custom.invoice.InvoiceStatusType;
 import com.medigy.persist.reference.custom.invoice.InvoiceType;
+import com.medigy.persist.reference.type.CurrencyType;
 
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -91,6 +92,7 @@ public class Invoice  extends AbstractTopLevelEntity
 
     private BillingAccount billingAccount;
     private HealthCareEncounter encounter;
+    private CurrencyType currencyType;
 
     private List<InvoiceItem> invoiceItems = new ArrayList<InvoiceItem>();
     private Set<InvoiceRole> invoiceRoles = new HashSet<InvoiceRole>();
@@ -415,6 +417,7 @@ public class Invoice  extends AbstractTopLevelEntity
     {
         item.setInvoice(this);
         invoiceItems.add(item);
+        totalCost = new Float(totalCost  + item.getAmount());
     }
 
     @ManyToOne
@@ -501,5 +504,17 @@ public class Invoice  extends AbstractTopLevelEntity
         attr.setInvoice(this);
         attr.setLabel(label);
         this.attributes.add(attr);
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "currency_type_id", referencedColumnName = CurrencyType.PK_COLUMN_NAME)
+    public CurrencyType getCurrencyType()
+    {
+        return currencyType;
+    }
+
+    public void setCurrencyType(final CurrencyType currencyType)
+    {
+        this.currencyType = currencyType;
     }
 }

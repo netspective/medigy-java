@@ -3,29 +3,22 @@
  */
 package com.medigy.persist.model.product;
 
-import com.medigy.persist.model.common.AbstractDateDurationEntity;
 import com.medigy.persist.model.common.EffectiveDates;
-import com.medigy.persist.model.common.AbstractTopLevelEntity;
 import com.medigy.persist.model.org.Organization;
-import com.medigy.persist.model.party.Party;
-import com.medigy.persist.reference.custom.product.ProductType;
 import com.medigy.persist.reference.custom.CustomReferenceEntity;
-
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.GeneratorType;
-import javax.persistence.Column;
-import javax.persistence.ManyToOne;
-import javax.persistence.JoinColumn;
-import javax.persistence.Basic;
-import javax.persistence.TemporalType;
-import javax.persistence.Transient;
-import javax.persistence.EmbeddableSuperclass;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-
 import org.hibernate.validator.NotNull;
 
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratorType;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import java.util.Date;
 
 //@EmbeddableSuperclass

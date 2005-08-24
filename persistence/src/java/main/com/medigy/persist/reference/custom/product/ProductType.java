@@ -5,10 +5,10 @@ package com.medigy.persist.reference.custom.product;
 
 import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.GeneratorType;
 import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratorType;
+import javax.persistence.Id;
 
 @Entity
 public class ProductType  extends AbstractCustomReferenceEntity

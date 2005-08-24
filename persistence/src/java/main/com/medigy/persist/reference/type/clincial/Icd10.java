@@ -36,61 +36,14 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.persist.model.health;
+package com.medigy.persist.reference.type.clincial;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratorType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-
-import com.medigy.persist.model.common.AbstractTopLevelEntity;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 
 @Entity
-@Table(name = "Health_Care_Delivery_Assc")
-public class HealthCareDeliveryAssociation extends AbstractTopLevelEntity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE, discriminatorValue = "ICD-10")
+public class Icd10 extends Icd
 {
-    private Long healthCareDeliveryAsscId;
-    private HealthCareDelivery deliveryFrom;
-    private HealthCareDelivery deliveryTo;
-
-    public HealthCareDeliveryAssociation()
-    {
-    }
-
-    @Id(generate = GeneratorType.AUTO)
-    public Long getHealthCareDeliveryAsscId()
-    {
-        return healthCareDeliveryAsscId;
-    }
-
-    protected void setHealthCareDeliveryAsscId(final Long healthCareDeliveryAsscId)
-    {
-        this.healthCareDeliveryAsscId = healthCareDeliveryAsscId;
-    }
-
-    @ManyToOne
-    @JoinColumn(name = "delivery_id_from", referencedColumnName = "health_care_delivery_id", nullable = false)
-    public HealthCareDelivery getDeliveryFrom()
-    {
-        return deliveryFrom;
-    }
-
-    public void setDeliveryFrom(final HealthCareDelivery deliveryFrom)
-    {
-        this.deliveryFrom = deliveryFrom;
-    }
-
-    @ManyToOne
-    @JoinColumn(name = "delivery_id_to", referencedColumnName = "health_care_delivery_id", nullable = false)
-    public HealthCareDelivery getDeliveryTo()
-    {
-        return deliveryTo;
-    }
-
-    public void setDeliveryTo(final HealthCareDelivery deliveryTo)
-    {
-        this.deliveryTo = deliveryTo;
-    }
 }

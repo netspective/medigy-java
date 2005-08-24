@@ -41,12 +41,12 @@ package com.medigy.persist.model.party;
 import com.medigy.persist.model.common.AbstractDateDurationEntity;
 import com.medigy.persist.reference.custom.party.ContactMechanismPurposeType;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.Column;
 import javax.persistence.Table;
 
 @Entity

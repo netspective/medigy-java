@@ -38,11 +38,11 @@
  */
 package com.medigy.persist.reference.custom.person;
 
+import com.medigy.persist.reference.custom.party.PartyClassificationType;
+
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-
-import com.medigy.persist.reference.custom.party.PartyClassificationType;
 
 /**
  * Type class for creating classifications for people.  Most of the time people

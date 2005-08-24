@@ -38,16 +38,15 @@
  */
 package com.medigy.persist.model.health;
 
+import com.medigy.persist.model.common.AbstractDateDurationEntity;
+import com.medigy.persist.model.org.Organization;
+import com.medigy.persist.model.person.PersonRole;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-
-import com.medigy.persist.model.common.AbstractDateDurationEntity;
-import com.medigy.persist.model.org.Organization;
-import com.medigy.persist.model.party.PartyRole;
-import com.medigy.persist.model.person.PersonRole;
 
 @Entity
 public class ProviderOffering extends AbstractDateDurationEntity

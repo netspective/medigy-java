@@ -6,12 +6,11 @@ package com.medigy.persist.reference.custom;
 import com.medigy.persist.model.common.AbstractEntity;
 import com.medigy.persist.model.party.Party;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.EmbeddableSuperclass;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
-import javax.persistence.EmbeddableSuperclass;
 
 @EmbeddableSuperclass
 public abstract class AbstractCustomHierarchyReferenceEntity extends AbstractEntity implements CustomHierarchyReferenceEntity, Comparable

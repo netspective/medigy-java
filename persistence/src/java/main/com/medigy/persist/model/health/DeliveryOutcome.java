@@ -71,7 +71,7 @@ public class DeliveryOutcome extends AbstractTopLevelEntity
     }
 
     @ManyToOne
-    @JoinColumn(name = "health_care_delivery_id")
+    @JoinColumn(name = HealthCareDelivery.PK_COLUMN_NAME)
     public HealthCareDelivery getHealthCareDelivery()
     {
         return healthCareDelivery;

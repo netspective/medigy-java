@@ -72,7 +72,7 @@ public class HealthCareDeliveryRole extends AbstractDateDurationEntity
     }
 
     @ManyToOne
-    @JoinColumn(name = "health_care_delivery_id", nullable = false)
+    @JoinColumn(name = HealthCareDelivery.PK_COLUMN_NAME, nullable = false)
     public HealthCareDelivery getHealthCareDelivery()
     {
         return healthCareDelivery;

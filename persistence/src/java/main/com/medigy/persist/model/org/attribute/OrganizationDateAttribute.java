@@ -38,13 +38,10 @@
  */
 package com.medigy.persist.model.org.attribute;
 
-import com.medigy.persist.model.common.attribute.EntityAttribute;
-import com.medigy.persist.model.invoice.attribute.InvoiceAttribute;
-
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import javax.persistence.Column;
 import javax.persistence.Table;
 import java.util.Date;
 

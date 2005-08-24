@@ -3,12 +3,12 @@
  */
 package com.medigy.persist.util.query.impl;
 
-import com.medigy.persist.util.query.QueryDefinitionJoin;
 import com.medigy.persist.util.query.QueryDefinition;
+import com.medigy.persist.util.query.QueryDefinitionJoin;
 
 import javax.persistence.Table;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *

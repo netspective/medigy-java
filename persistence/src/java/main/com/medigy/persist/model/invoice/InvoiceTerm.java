@@ -38,14 +38,14 @@
  */
 package com.medigy.persist.model.invoice;
 
+import com.medigy.persist.model.common.AbstractTopLevelEntity;
+import com.medigy.persist.reference.custom.invoice.InvoiceTermType;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-
-import com.medigy.persist.model.common.AbstractTopLevelEntity;
-import com.medigy.persist.reference.custom.invoice.InvoiceTermType;
 
 @Entity
 public class InvoiceTerm extends AbstractTopLevelEntity

@@ -43,13 +43,13 @@
  */
 package com.medigy.persist.util;
 
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.List;
-
 import com.medigy.persist.util.DelimitedValuesReader.IgnoredLineHandler;
 import com.medigy.persist.util.DelimitedValuesReader.LineHandler;
 import junit.framework.TestCase;
+
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.List;
 
 public class DelimitedValuesReaderTest extends TestCase
 {

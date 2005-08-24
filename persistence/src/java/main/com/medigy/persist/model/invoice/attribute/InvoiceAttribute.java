@@ -41,14 +41,14 @@ package com.medigy.persist.model.invoice.attribute;
 import com.medigy.persist.model.common.attribute.EntityAttribute;
 import com.medigy.persist.model.invoice.Invoice;
 
-import javax.persistence.Id;
-import javax.persistence.GeneratorType;
 import javax.persistence.Column;
-import javax.persistence.ManyToOne;
-import javax.persistence.JoinColumn;
 import javax.persistence.Entity;
+import javax.persistence.GeneratorType;
+import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)

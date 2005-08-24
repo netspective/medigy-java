@@ -40,6 +40,9 @@ package com.medigy.persist.model.invoice;
 
 import com.medigy.persist.model.common.AbstractTopLevelEntity;
 import com.medigy.persist.reference.custom.invoice.InvoiceItemType;
+import com.medigy.persist.reference.type.CurrencyType;
+import com.medigy.persist.reference.type.clincial.CPT;
+import com.medigy.persist.reference.type.clincial.Icd;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -53,6 +56,11 @@ import javax.persistence.UniqueConstraint;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Each invoice item is related to a service code performed (CPT) or a diagnostic code (ICD). When the invoice is generated,
+ * there is no indication of copays, coinsurance, or deductibles. The invoice is just a listing of all the cost associated
+ * with the encounter/visit.
+ */
 @Entity
 @Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"invoice_id", "invoice_item_seq_id"})})
 public class InvoiceItem extends AbstractTopLevelEntity
@@ -70,6 +78,9 @@ public class InvoiceItem extends AbstractTopLevelEntity
     private InvoiceItemType type;
     private Invoice invoice;
     private Set<InvoiceTerm> invoiceTerms = new HashSet<InvoiceTerm>();
+    private CurrencyType currencyType;
+    private CPT cpt;
+    private Icd icd;
 
     private InvoiceItem parentInvoiceItem;
 
@@ -199,5 +210,41 @@ public class InvoiceItem extends AbstractTopLevelEntity
     public void setInvoiceTerms(final Set<InvoiceTerm> invoiceTerm)
     {
         this.invoiceTerms = invoiceTerm;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "currency_type_id", referencedColumnName = CurrencyType.PK_COLUMN_NAME)
+    public CurrencyType getCurrencyType()
+    {
+        return currencyType;
+    }
+
+    public void setCurrencyType(final CurrencyType currencyType)
+    {
+        this.currencyType = currencyType;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "cpt_code", referencedColumnName = CPT.PK_COLUMN_NAME)
+    public CPT getCpt()
+    {
+        return cpt;
+    }
+
+    public void setCpt(final CPT cpt)
+    {
+        this.cpt = cpt;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "icd_code", referencedColumnName = Icd.PK_COLUMN_NAME)
+    public Icd getIcd()
+    {
+        return icd;
+    }
+
+    public void setIcd(final Icd icd)
+    {
+        this.icd = icd;
     }
 }

@@ -38,14 +38,14 @@
  */
 package com.medigy.persist.model.contact;
 
+import com.medigy.persist.model.common.AbstractTopLevelEntity;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-
-import com.medigy.persist.model.common.AbstractTopLevelEntity;
 
 @Entity
 @Table(name = "Geo_Boundary_Assc")

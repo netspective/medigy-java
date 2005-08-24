@@ -43,6 +43,8 @@
  */
 package com.medigy.persist.model.common;
 
+import com.medigy.persist.reference.type.DataEncryptionType;
+
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
@@ -51,8 +53,6 @@ import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.Table;
-
-import com.medigy.persist.reference.type.DataEncryptionType;
 
 @Entity
 @Table(name = "Identifier_Type")

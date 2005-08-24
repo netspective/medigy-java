@@ -38,16 +38,15 @@
  */
 package com.medigy.persist.model.work;
 
-import java.util.Date;
+import com.medigy.persist.model.common.AbstractTopLevelEntity;
+import com.medigy.persist.model.common.EffectiveDates;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
 import javax.persistence.Transient;
-
-import com.medigy.persist.model.common.AbstractTopLevelEntity;
-import com.medigy.persist.model.common.EffectiveDates;
+import java.util.Date;
 
 @Entity
 public class WorkEffort extends AbstractTopLevelEntity

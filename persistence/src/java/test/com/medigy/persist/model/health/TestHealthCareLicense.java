@@ -46,12 +46,11 @@ import com.medigy.persist.reference.custom.health.HealthCareLicenseType;
 import com.medigy.persist.reference.type.GenderType;
 import com.medigy.persist.reference.type.LanguageType;
 import org.hibernate.Transaction;
-import org.hibernate.criterion.Restrictions;
 import org.hibernate.classic.Session;
 
 import java.util.Calendar;
-import java.util.Set;
 import java.util.GregorianCalendar;
+import java.util.Set;
 
 public class TestHealthCareLicense extends TestCase
 {

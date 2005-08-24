@@ -46,9 +46,9 @@ package com.medigy.persist.reference;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import javax.persistence.Id;
-import javax.persistence.EmbeddableSuperclass;
 import javax.persistence.Column;
+import javax.persistence.EmbeddableSuperclass;
+import javax.persistence.Id;
 import java.io.Serializable;
 
 @EmbeddableSuperclass

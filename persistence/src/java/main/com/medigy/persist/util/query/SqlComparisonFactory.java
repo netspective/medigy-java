@@ -3,9 +3,9 @@
  */
 package com.medigy.persist.util.query;
 
+import com.medigy.persist.util.query.comparison.ContainsComparisonIgnoreCase;
 import com.medigy.persist.util.query.comparison.EqualsComparison;
 import com.medigy.persist.util.query.comparison.StartsWithComparisonIgnoreCase;
-import com.medigy.persist.util.query.comparison.ContainsComparisonIgnoreCase;
 
 import java.util.ArrayList;
 import java.util.HashMap;

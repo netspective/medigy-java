@@ -42,10 +42,10 @@ import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
 import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
 import com.medigy.persist.reference.custom.CustomReferenceEntity;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.GeneratorType;
 import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratorType;
+import javax.persistence.Id;
 
 @Entity
 public class InvoiceType extends AbstractCustomReferenceEntity
@@ -71,7 +71,7 @@ public class InvoiceType extends AbstractCustomReferenceEntity
         {
             return code;
         }
-
+                                                                                                
         public InvoiceType getEntity()
         {
             return entity;

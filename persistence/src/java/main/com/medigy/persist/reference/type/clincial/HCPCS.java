@@ -38,9 +38,9 @@
  */
 package com.medigy.persist.reference.type.clincial;
 
-import javax.persistence.Entity;
-
 import com.medigy.persist.reference.AbstractReferenceEntity;
+
+import javax.persistence.Entity;
 
 @Entity
 public class HCPCS extends AbstractReferenceEntity

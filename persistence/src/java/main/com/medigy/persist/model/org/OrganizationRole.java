@@ -3,20 +3,20 @@
  */
 package com.medigy.persist.model.org;
 
+import com.medigy.persist.model.party.Party;
 import com.medigy.persist.model.party.PartyRole;
 import com.medigy.persist.model.person.PersonAndOrgRelationship;
-import com.medigy.persist.model.party.Party;
 import com.medigy.persist.reference.custom.party.OrganizationRoleType;
 
-import javax.persistence.Transient;
-import javax.persistence.ManyToOne;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import java.util.List;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class OrganizationRole extends PartyRole

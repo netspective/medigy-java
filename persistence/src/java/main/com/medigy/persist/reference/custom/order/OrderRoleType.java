@@ -43,7 +43,6 @@ import com.medigy.persist.reference.custom.CustomReferenceEntity;
 import com.medigy.persist.reference.custom.party.PartyRoleType;
 
 import javax.persistence.Entity;
-import javax.persistence.Inheritance;
 
 @Entity
 public class OrderRoleType  extends PartyRoleType

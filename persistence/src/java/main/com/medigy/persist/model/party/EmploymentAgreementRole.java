@@ -38,14 +38,14 @@
  */
 package com.medigy.persist.model.party;
 
+import com.medigy.persist.reference.custom.party.AgreementRoleType;
+import com.medigy.persist.reference.custom.party.EmploymentAgreementRoleType;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-
-import com.medigy.persist.reference.custom.party.AgreementRoleType;
-import com.medigy.persist.reference.custom.party.EmploymentAgreementRoleType;
 
 @Entity
 public class EmploymentAgreementRole implements AgreementRole

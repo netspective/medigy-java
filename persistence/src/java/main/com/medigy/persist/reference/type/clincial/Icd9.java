@@ -36,78 +36,14 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.persist.reference.custom.insurance;
+package com.medigy.persist.reference.type.clincial;
 
-import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
-import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
-import com.medigy.persist.reference.custom.CustomReferenceEntity;
-
-import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratorType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 
 @Entity
-@Table(name = "Ins_Sequence_Type")
-public class InsuranceSequenceType extends AbstractCustomReferenceEntity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE, discriminatorValue = "ICD-9")
+public class Icd9 extends Icd
 {
-    public enum Cache implements CachedCustomReferenceEntity
-    {
-        PRIMARY_SEQUENCE("PRIMARY", "Primary"),
-        SECONDARY_SEQUENCE("SECONDARY", "Secondary"),
-        TERTIARY_SEQUENCE("TERTIARY", "Tertiary");
-
-        private final String label;
-        private final String code;
-        private InsuranceSequenceType entity;
-
-        Cache(final String code, final String label)
-        {
-            this.code = code;
-            this.label = label;
-        }
-
-        public String getCode()
-        {
-            return code;
-        }
-
-        public InsuranceSequenceType getEntity()
-        {
-            return entity;
-        }
-
-        public void setEntity(final CustomReferenceEntity entity)
-        {
-            this.entity = (InsuranceSequenceType) entity;
-        }
-
-        public String getLabel()
-        {
-            return label;
-        }
-
-        public static InsuranceSequenceType getEntity(final String code)
-        {
-            for (InsuranceSequenceType.Cache sequence : InsuranceSequenceType.Cache.values())
-            {
-                if (sequence.getCode().equals(code))
-                    return sequence.getEntity();
-            }
-            return null;
-        }
-    }
-
-    @Id(generate = GeneratorType.AUTO)
-    @Column(name = "ins_sequence_type_id")
-    public Long getInsuranceSequenceTypeId()
-    {
-        return super.getSystemId();
-    }
-
-    public void setInsuranceSequenceTypeId(final Long id)
-    {
-        super.setSystemId(id);
-    }
 }

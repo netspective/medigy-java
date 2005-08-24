@@ -5,12 +5,12 @@ package com.medigy.persist.model.insurance;
 
 import com.medigy.persist.reference.custom.insurance.InsurancePlanAttributeType;
 
-import javax.persistence.Id;
-import javax.persistence.GeneratorType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
+import javax.persistence.GeneratorType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class InsurancePlanAttribute extends InsuranceAttribute

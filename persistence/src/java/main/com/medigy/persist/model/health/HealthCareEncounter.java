@@ -91,7 +91,7 @@ public class HealthCareEncounter  extends AbstractDateDurationEntity
     private List<HealthCareVisitStatus> statuses = new ArrayList<HealthCareVisitStatus>();
     private Set<HealthCareVisitRole> roles = new HashSet<HealthCareVisitRole>();    // scheduler, patient, doctor
     private Set<VisitReason> reasons = new HashSet<VisitReason>();
-    private Set<HealthCareDelivery> healthCareDeliveries = new HashSet<HealthCareDelivery>();
+    private List<HealthCareDelivery> healthCareDeliveries = new ArrayList<HealthCareDelivery>();
 
     private List<Perscription> perscription = new ArrayList<Perscription>();
 
@@ -338,14 +338,21 @@ public class HealthCareEncounter  extends AbstractDateDurationEntity
      * @return
      */
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "healthCareEncounter")
-    public Set<HealthCareDelivery> getHealthCareDeliveries()
+    public List<HealthCareDelivery> getHealthCareDeliveries()
     {
         return healthCareDeliveries;
     }
 
-    public void setHealthCareDeliveries(final Set<HealthCareDelivery> healthCareDeliveries)
+    public void setHealthCareDeliveries(final List<HealthCareDelivery> healthCareDeliveries)
     {
         this.healthCareDeliveries = healthCareDeliveries;
+    }
+
+    @Transient
+    public void addHealthCareDelivery(final HealthCareDelivery delivery)
+    {
+        delivery.setHealthCareEncounter(this);
+        this.healthCareDeliveries.add(delivery);
     }
 
     @ManyToOne

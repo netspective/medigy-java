@@ -42,6 +42,7 @@ import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
 import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
 import com.medigy.persist.reference.custom.CustomReferenceEntity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
@@ -49,6 +50,8 @@ import javax.persistence.Id;
 @Entity
 public class DiagnosisType extends AbstractCustomReferenceEntity
 {
+    public static final String PK_COLUMN_NAME = "diagnosis_type_id";
+
     public enum Cache implements CachedCustomReferenceEntity
     {
         ICD9_CODE("ICD9"),      // remember that ICD9 or ICD10 has their own list of CODES
@@ -87,6 +90,7 @@ public class DiagnosisType extends AbstractCustomReferenceEntity
     }
 
     @Id(generate = GeneratorType.AUTO)
+    @Column(name = PK_COLUMN_NAME)
     public Long getDiagnosisTypeId()
     {
         return super.getSystemId();

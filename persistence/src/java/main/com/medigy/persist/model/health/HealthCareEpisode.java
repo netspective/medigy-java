@@ -42,6 +42,7 @@ import com.medigy.persist.model.common.AbstractTopLevelEntity;
 import com.medigy.persist.model.person.Person;
 import com.medigy.persist.reference.custom.health.EpisodeType;
 
+import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -50,13 +51,18 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.TemporalType;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
 public class HealthCareEpisode extends AbstractTopLevelEntity
 {
+    public static final String PK_COLUMN_NAME = "episode_id";
+
     private Long healthCareEpisodeId;
     private Incident incident;
     private String description;
@@ -65,10 +71,10 @@ public class HealthCareEpisode extends AbstractTopLevelEntity
     private Person person;
 
     private Set<HealthCareReferral> healthCareReferrals = new HashSet<HealthCareReferral>();
-    private Set<HealthCareDelivery> healthCareDeliveries = new HashSet<HealthCareDelivery>();
-    private Set<Diagnosis> diagnosises = new HashSet<Diagnosis>();
     private Set<EpisodeOutcome> outcomes = new HashSet<EpisodeOutcome>();
     private Set<Symptom> symptoms = new HashSet<Symptom>();
+
+    private List<HealthCareDelivery> healthCareDeliveries = new ArrayList<HealthCareDelivery>();
 
     /**
      * INCIDENTs such as car accident, epidemic, or other event lead to HEALTH CARE EPISODEs, such as
@@ -79,7 +85,7 @@ public class HealthCareEpisode extends AbstractTopLevelEntity
     }
 
     @Id(generate = GeneratorType.AUTO)
-    @Column(name = "episode_id")
+    @Column(name = PK_COLUMN_NAME)
     public Long getHealthCareEpisodeId()
     {
         return healthCareEpisodeId;
@@ -91,7 +97,7 @@ public class HealthCareEpisode extends AbstractTopLevelEntity
     }
 
     @ManyToOne
-    @JoinColumn(name = "person_id", referencedColumnName = "party_id")        
+    @JoinColumn(name = "person_id", referencedColumnName = "party_id")
     public Person getPerson()
     {
         return person;
@@ -125,6 +131,7 @@ public class HealthCareEpisode extends AbstractTopLevelEntity
         this.description = description;
     }
 
+    @Basic(temporalType = TemporalType.DATE)
     public Date getEpisodeDate()
     {
         return episodeDate;
@@ -135,30 +142,7 @@ public class HealthCareEpisode extends AbstractTopLevelEntity
         this.episodeDate = episodeDate;
     }
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "health_care_episode_id")
-    public Set<HealthCareDelivery> getHealthCareDeliveries()
-    {
-        return healthCareDeliveries;
-    }
-
-    public void setHealthCareDeliveries(final Set<HealthCareDelivery> healthCareDeliveries)
-    {
-        this.healthCareDeliveries = healthCareDeliveries;
-    }
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "healthCareEpisode")
-    public Set<Diagnosis> getDiagnosises()
-    {
-        return diagnosises;
-    }
-
-    public void setDiagnosises(final Set<Diagnosis> diagnosises)
-    {
-        this.diagnosises = diagnosises;
-    }
-
-    @OneToMany(mappedBy = "healthCareEpisode")
+    @OneToMany(mappedBy = "healthCareEpisode", cascade = CascadeType.ALL)
     public Set<EpisodeOutcome> getOutcomes()
     {
         return outcomes;
@@ -201,5 +185,16 @@ public class HealthCareEpisode extends AbstractTopLevelEntity
     public void setHealthCareReferrals(final Set<HealthCareReferral> healthCareReferrals)
     {
         this.healthCareReferrals = healthCareReferrals;
+    }
+
+    @OneToMany(mappedBy = "healthCareEpisode", cascade = CascadeType.ALL)
+    public List<HealthCareDelivery> getHealthCareDeliveries()
+    {
+        return healthCareDeliveries;
+    }
+
+    public void setHealthCareDeliveries(final List<HealthCareDelivery> deliveries)
+    {
+        this.healthCareDeliveries = deliveries;
     }
 }

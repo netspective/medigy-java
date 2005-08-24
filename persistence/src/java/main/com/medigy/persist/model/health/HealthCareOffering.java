@@ -48,9 +48,6 @@ import javax.persistence.GeneratorType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 public class HealthCareOffering extends AbstractTopLevelEntity
@@ -58,7 +55,6 @@ public class HealthCareOffering extends AbstractTopLevelEntity
     private Long healthCareOfferingId;
     //private SystemPk healthCareOfferingPk;
     private String name;
-    private Set<HealthCareDelivery> healthCareDeliveries = new HashSet<HealthCareDelivery>();
     private HealthCareOfferingType type;
     private Organization organization;
 
@@ -97,18 +93,6 @@ public class HealthCareOffering extends AbstractTopLevelEntity
     public void setName(final String name)
     {
         this.name = name;
-    }
-
-    @OneToMany
-    @JoinColumn(name = "health_care_offering_id")
-    public Set<HealthCareDelivery> getHealthCareDeliveries()
-    {
-        return healthCareDeliveries;
-    }
-
-    public void setHealthCareDeliveries(final Set<HealthCareDelivery> healthCareDeliveries)
-    {
-        this.healthCareDeliveries = healthCareDeliveries;
     }
 
     @ManyToOne

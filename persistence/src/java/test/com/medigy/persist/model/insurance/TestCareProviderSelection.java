@@ -4,13 +4,10 @@
 package com.medigy.persist.model.insurance;
 
 import com.medigy.persist.TestCase;
-import com.medigy.persist.model.party.PartyRole;
 import com.medigy.persist.model.person.Person;
 import com.medigy.persist.model.person.PersonRole;
 import com.medigy.persist.reference.custom.person.PersonRoleType;
 import com.medigy.persist.util.HibernateUtil;
-
-import java.util.Date;
 
 
 /**

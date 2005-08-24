@@ -3,20 +3,19 @@
  */
 package com.medigy.persist.model.person;
 
-import com.medigy.persist.model.person.Person;
-import com.medigy.persist.model.party.PartyRole;
 import com.medigy.persist.model.party.Party;
-import com.medigy.persist.reference.custom.person.PersonRoleType;
+import com.medigy.persist.model.party.PartyRole;
 import com.medigy.persist.reference.custom.party.PartyRoleType;
+import com.medigy.persist.reference.custom.person.PersonRoleType;
 
-import javax.persistence.ManyToOne;
-import javax.persistence.JoinColumn;
-import javax.persistence.Entity;
-import javax.persistence.Transient;
-import javax.persistence.OneToMany;
 import javax.persistence.CascadeType;
-import java.util.List;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class PersonRole extends PartyRole

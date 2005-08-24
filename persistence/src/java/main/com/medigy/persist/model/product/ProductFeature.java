@@ -38,17 +38,16 @@
  */
 package com.medigy.persist.model.product;
 
-import java.util.HashSet;
-import java.util.Set;
+import com.medigy.persist.model.common.AbstractTopLevelEntity;
+import com.medigy.persist.model.invoice.InvoiceItem;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-
-import com.medigy.persist.model.common.AbstractTopLevelEntity;
-import com.medigy.persist.model.invoice.InvoiceItem;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class ProductFeature extends AbstractTopLevelEntity

@@ -43,9 +43,10 @@
  */
 package com.medigy.persist.model.person;
 
-import java.util.Date;
+import com.medigy.persist.model.common.AbstractEntity;
+import com.medigy.persist.model.common.EffectiveDates;
+import com.medigy.persist.reference.type.MaritalStatusType;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
@@ -54,10 +55,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-
-import com.medigy.persist.model.common.AbstractEntity;
-import com.medigy.persist.model.common.EffectiveDates;
-import com.medigy.persist.reference.type.MaritalStatusType;
+import java.util.Date;
 
 @Entity
 @Table(name = "Person_Mar_Stat")

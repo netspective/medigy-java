@@ -38,11 +38,11 @@
  */
 package com.medigy.persist.reference.custom.invoice;
 
+import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
-
-import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
 
 @Entity
 public class InvoiceTermType extends AbstractCustomReferenceEntity

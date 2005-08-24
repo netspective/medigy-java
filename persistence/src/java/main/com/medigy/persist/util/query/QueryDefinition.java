@@ -5,8 +5,8 @@ package com.medigy.persist.util.query;
 
 import com.medigy.persist.util.query.exception.QueryDefinitionException;
 
-import java.util.Map;
 import java.util.List;
+import java.util.Map;
 
 public interface QueryDefinition
 {

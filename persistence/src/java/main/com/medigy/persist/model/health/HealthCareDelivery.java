@@ -40,27 +40,39 @@ package com.medigy.persist.model.health;
 
 import com.medigy.persist.model.claim.Claim;
 import com.medigy.persist.model.common.AbstractDateDurationEntity;
+import com.medigy.persist.reference.custom.health.DiagnosisType;
 import com.medigy.persist.reference.custom.health.HealthCareDeliveryType;
+import com.medigy.persist.reference.type.clincial.CPT;
+import com.medigy.persist.reference.type.clincial.Icd;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Transient;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
- * Class for representing the health care services that was performed during a visit  
+ * Class for representing the health care services that was performed during a visit. Each visit will have
+ * multiple health care deliveries that was performed and each delivery will have a CPT (current Procedural Terminology)
+ * code associated with it. Each delivery can also have multiple ICD codes associated with it to relate with the CPT
+ * service that was performed.
  */
 @Entity
 public class HealthCareDelivery extends AbstractDateDurationEntity
 {
+    public static final String PK_COLUMN_NAME = "delivery_id";
+
     private Long healthCareDeliveryId;
     private String deliveryNotes;
-    private HealthCareOffering healthCareOffering;
     private HealthCareEpisode healthCareEpisode;
     private HealthCareEncounter healthCareEncounter;
     private Claim claim;
@@ -70,14 +82,45 @@ public class HealthCareDelivery extends AbstractDateDurationEntity
     private Set<HealthCareDeliveryRole> healthCareDeliveryRoles = new HashSet<HealthCareDeliveryRole>();
     private Set<DeliveryOutcome> outcomes = new HashSet<DeliveryOutcome>();
 
-    /**
-     *
-     */
-    public HealthCareDelivery()
+    private CPT cpt;
+    private List<Diagnosis> diagnoses = new ArrayList<Diagnosis>();
+
+    @ManyToOne
+    @JoinColumn(name = "cpt_code", referencedColumnName = CPT.PK_COLUMN_NAME)
+    public CPT getCpt()
     {
+        return cpt;
+    }
+
+    public void setCpt(final CPT cpt)
+    {
+        this.cpt = cpt;
+    }
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "healthCareDelivery")
+    public List<Diagnosis> getDiagnoses()
+    {
+        return diagnoses;
+    }
+
+    public void setDiagnoses(final List<Diagnosis> diagnoses)
+    {
+        this.diagnoses = diagnoses;
+    }
+
+    @Transient
+    public void addDiagnosis(final DiagnosisType type, final Icd icd)
+    {
+        final Diagnosis diagnosis = new Diagnosis();
+        diagnosis.setDiagnosisDate(new Date());
+        diagnosis.setType(type);
+        diagnosis.setIcd(icd);
+        diagnosis.setHealthCareDelivery(this);
+        this.diagnoses.add(diagnosis);
     }
 
     @Id(generate = GeneratorType.AUTO)
+    @Column(name = PK_COLUMN_NAME)
     public Long getHealthCareDeliveryId()
     {
         return healthCareDeliveryId;
@@ -127,19 +170,7 @@ public class HealthCareDelivery extends AbstractDateDurationEntity
     }
 
     @ManyToOne
-    @JoinColumn(name = "health_care_offering_id", nullable = false)
-    public HealthCareOffering getHealthCareOffering()
-    {
-        return healthCareOffering;
-    }
-
-    public void setHealthCareOffering(final HealthCareOffering healthCareOffering)
-    {
-        this.healthCareOffering = healthCareOffering;
-    }
-
-    @ManyToOne
-    @JoinColumn(name = "health_care_episode_id", nullable = false)
+    @JoinColumn(name = HealthCareEpisode.PK_COLUMN_NAME)
     public HealthCareEpisode getHealthCareEpisode()
     {
         return healthCareEpisode;

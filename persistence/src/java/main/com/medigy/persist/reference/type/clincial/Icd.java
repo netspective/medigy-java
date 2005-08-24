@@ -43,11 +43,18 @@ import com.medigy.persist.reference.type.GenderType;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+/**
+ * The International Classification of Diseases (ICD), It is used to classify diseases and other health problems
+ * recorded on many types of health and vital records including death certificates and hospital records.
+ */
 @Entity
 @Table(name = "ICD")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE, discriminatorValue = "ICD")
 public class Icd  extends AbstractReferenceEntity
 {
     /**
@@ -259,4 +266,5 @@ public class Icd  extends AbstractReferenceEntity
     {
         this.cptsAllowed = cptsAllowed;
     }
+
 }

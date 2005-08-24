@@ -11,10 +11,10 @@ import com.medigy.persist.util.query.QueryDefinitionSelect;
 import com.medigy.persist.util.query.QueryDefnSelects;
 import com.medigy.persist.util.query.exception.QueryDefinitionException;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class BasicQueryDefinition implements QueryDefinition
 {

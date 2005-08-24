@@ -39,7 +39,6 @@
 package com.medigy.persist.model.invoice.attribute;
 
 import com.medigy.persist.model.common.EffectiveDates;
-import com.medigy.persist.model.common.attribute.EntityAttribute;
 
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;

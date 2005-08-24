@@ -4,18 +4,17 @@
 package com.medigy.persist.model.org;
 
 import com.medigy.persist.model.common.AbstractDateDurationEntity;
-import com.medigy.persist.reference.type.PriorityType;
 import com.medigy.persist.reference.custom.party.OrganizationsRelationshipType;
+import com.medigy.persist.reference.type.PriorityType;
+import org.hibernate.validator.NotNull;
 
-import javax.persistence.Id;
-import javax.persistence.GeneratorType;
-import javax.persistence.ManyToOne;
-import javax.persistence.JoinColumn;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratorType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-
-import org.hibernate.validator.NotNull;
 
 @Entity
 @Table(name = "Org_Rel")

@@ -8,18 +8,16 @@ import com.medigy.persist.util.query.QueryDefinitionField;
 import com.medigy.persist.util.query.QueryDefinitionJoin;
 import com.medigy.persist.util.query.SqlComparison;
 import com.medigy.persist.util.query.exception.QueryDefinitionException;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.lang.reflect.Method;
-import java.beans.PropertyDescriptor;
-
 import org.apache.commons.beanutils.PropertyUtils;
 
-import javax.persistence.OneToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Transient;
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 
 public class QueryDefinitionFieldImpl implements QueryDefinitionField
 {

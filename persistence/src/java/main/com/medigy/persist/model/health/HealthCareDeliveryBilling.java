@@ -38,15 +38,15 @@
  */
 package com.medigy.persist.model.health;
 
+import com.medigy.persist.model.common.AbstractTopLevelEntity;
+import com.medigy.persist.model.invoice.Invoice;
+import com.medigy.persist.model.invoice.InvoiceItem;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-
-import com.medigy.persist.model.common.AbstractTopLevelEntity;
-import com.medigy.persist.model.invoice.Invoice;
-import com.medigy.persist.model.invoice.InvoiceItem;
 
 @Entity
 public class HealthCareDeliveryBilling extends AbstractTopLevelEntity
@@ -68,7 +68,7 @@ public class HealthCareDeliveryBilling extends AbstractTopLevelEntity
     }
 
     @ManyToOne
-    @JoinColumn(name = "invoice_id")        
+    @JoinColumn(name = Invoice.PK_COLUMN_NAME)
     public Invoice getInvoice()
     {
         return invoice;
@@ -92,7 +92,7 @@ public class HealthCareDeliveryBilling extends AbstractTopLevelEntity
     }
 
     @ManyToOne
-    @JoinColumn(name = "health_care_delivery_id")
+    @JoinColumn(name = HealthCareDelivery.PK_COLUMN_NAME)
     public HealthCareDelivery getHealthCareDelivery()
     {
         return healthCareDelivery;

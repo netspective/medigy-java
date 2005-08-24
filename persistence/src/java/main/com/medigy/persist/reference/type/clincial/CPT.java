@@ -46,6 +46,12 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+/**
+ * CPT Codes describe medical or psychiatric procedures performed by physicians and other health providers.
+ * The codes were developed by the Health Care Financing Administration (HCFA) to assist in the assignment of
+ * reimbursement amounts to providers by Medicare carriers. A growing number of managed care and other insurance
+ * companies, however, base their reimbursements on the values established by HCFA.
+ */
 @Entity
 public class CPT extends AbstractReferenceEntity
 {

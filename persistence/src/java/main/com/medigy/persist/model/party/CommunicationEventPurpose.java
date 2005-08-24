@@ -39,6 +39,9 @@
  */
 package com.medigy.persist.model.party;
 
+import com.medigy.persist.model.common.AbstractTopLevelEntity;
+import com.medigy.persist.reference.custom.party.CommunicationEventPurposeType;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
@@ -46,9 +49,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-
-import com.medigy.persist.model.common.AbstractTopLevelEntity;
-import com.medigy.persist.reference.custom.party.CommunicationEventPurposeType;
 
 @Entity
 @Table(name = "Comm_Event_Purpose")        

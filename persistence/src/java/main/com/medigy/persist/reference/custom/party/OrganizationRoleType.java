@@ -40,14 +40,9 @@ package com.medigy.persist.reference.custom.party;
 
 import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
 import com.medigy.persist.reference.custom.CustomReferenceEntity;
-import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
 
 import javax.persistence.Entity;
-import javax.persistence.Inheritance;
-import javax.persistence.Id;
-import javax.persistence.GeneratorType;
 import javax.persistence.Table;
-import javax.persistence.Column;
 
 @Entity
 @Table(name = "Org_Role_Type")

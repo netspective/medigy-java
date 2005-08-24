@@ -3,10 +3,10 @@
  */
 package com.medigy.persist.util.query.comparison;
 
-import com.medigy.persist.util.query.SqlComparison;
 import com.medigy.persist.util.query.QueryDefinitionSelect;
-import com.medigy.persist.util.query.QueryDefnStatementGenerator;
 import com.medigy.persist.util.query.QueryDefnCondition;
+import com.medigy.persist.util.query.QueryDefnStatementGenerator;
+import com.medigy.persist.util.query.SqlComparison;
 import com.medigy.persist.util.query.exception.QueryDefinitionException;
 import com.medigy.persist.util.value.ValueContext;
 

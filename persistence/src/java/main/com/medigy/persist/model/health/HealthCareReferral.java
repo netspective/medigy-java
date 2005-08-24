@@ -39,23 +39,21 @@
 package com.medigy.persist.model.health;
 
 import com.medigy.persist.model.common.AbstractEntity;
-import com.medigy.persist.model.party.PartyRole;
 import com.medigy.persist.model.person.Person;
 import com.medigy.persist.model.person.PersonRole;
 import com.medigy.persist.reference.custom.health.HealthCareReferralType;
 import com.medigy.persist.reference.custom.person.PersonRoleType;
+import org.hibernate.validator.NotNull;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.Column;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import java.util.Date;
-
-import org.hibernate.validator.NotNull;
 
 @Entity
 @Table(name = HealthCareReferral.TABLE_NAME)

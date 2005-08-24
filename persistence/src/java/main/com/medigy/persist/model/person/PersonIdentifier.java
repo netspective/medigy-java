@@ -38,17 +38,17 @@
  */
 package com.medigy.persist.model.person;
 
-import com.medigy.persist.model.party.PartyIdentifier;
-import com.medigy.persist.model.contact.GeographicBoundary;
 import com.medigy.persist.model.common.AbstractEntity;
+import com.medigy.persist.model.contact.GeographicBoundary;
+import com.medigy.persist.model.party.PartyIdentifier;
 import com.medigy.persist.reference.custom.person.PersonIdentifierType;
 
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.JoinColumn;
-import javax.persistence.Id;
-import javax.persistence.GeneratorType;
 import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratorType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class PersonIdentifier extends AbstractEntity implements PartyIdentifier 

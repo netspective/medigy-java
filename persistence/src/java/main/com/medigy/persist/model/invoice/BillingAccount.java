@@ -38,8 +38,7 @@
  */
 package com.medigy.persist.model.invoice;
 
-import java.util.HashSet;
-import java.util.Set;
+import com.medigy.persist.model.common.AbstractDateDurationEntity;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -49,8 +48,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-
-import com.medigy.persist.model.common.AbstractDateDurationEntity;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "Bill_Acct")

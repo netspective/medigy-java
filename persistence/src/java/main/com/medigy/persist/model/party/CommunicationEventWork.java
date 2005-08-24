@@ -38,6 +38,8 @@
  */
 package com.medigy.persist.model.party;
 
+import com.medigy.persist.model.work.WorkEffort;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
@@ -45,8 +47,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-
-import com.medigy.persist.model.work.WorkEffort;
 
 @Entity
 @Table(name = "Comm_Event_Work")
