@@ -93,6 +93,29 @@
             showSql="no"/>
     </target>
 
+    <target name="db.load-demo-data" depends="compile.main,init.define-module.dependencies.main.classpath">
+        <property name="db.create-devl-instance.database.name" value="medigy_devl"/>
+        <property name="db.create-devl-instance.database.dialectClass" value="org.hibernate.dialect.MySQLInnoDBDialect"/>
+        <property name="db.create-devl-instance.database.driverClass" value="com.mysql.jdbc.Driver"/>
+        <property name="db.create-devl-instance.database.url" value="jdbc:mysql://localhost:3306/${db.create-devl-instance.database.name}"/>
+        <property name="db.create-devl-instance.database.userid" value="medigy_devl"/>
+        <property name="db.create-devl-instance.database.password" value="medigy_devl"/>
+
+        <taskdef name="populate-demo-data" classname="com.medigy.tool.persist.populate.DataPopulatorTask"
+                                classpathref="module.dependencies.test.classpath">
+            <classpath location="${module.artifacts.classes.main.home}"/>
+        </taskdef>
+
+        <populate-demo-data
+            hibernateConfigClass="com.medigy.persist.util.HibernateConfiguration"
+            hibernateConfigFile="/com/medigy/persist/hibernate.cfg.xml"
+            dialect="${db.create-devl-instance.database.dialectClass}"
+            driver="${db.create-devl-instance.database.driverClass}"
+            url="${db.create-devl-instance.database.url}"
+            userid="${db.create-devl-instance.database.userid}" password="${db.create-devl-instance.database.password}"
+            showSql="no"/>
+
+    </target>
     <target name="db.load-reference-data" depends="compile.main,init.define-module.dependencies.main.classpath">
         <property name="db.load-reference-data.database.dialectClass" value="org.hibernate.dialect.MySQLInnoDBDialect"/>
         <property name="db.load-reference-data.database.driverClass" value="com.mysql.jdbc.Driver"/>
@@ -105,7 +128,7 @@
             <classpath location="${module.artifacts.classes.main.home}"/>
         </taskdef>
 
-        <load-entity
+        <!--load-entity
             resource="/com/medigy/tool/persist/loader/data/iso-country-codes.csv"
             beforeLoadUpdateHQL="delete from Country"
             hibernateConfigClass="com.medigy.persist.util.HibernateConfiguration"
@@ -114,7 +137,7 @@
             driver="${db.load-reference-data.database.driverClass}"
             url="${db.load-reference-data.database.url}"
             userid="${db.load-reference-data.database.userid}" password="${db.load-reference-data.database.password}"
-            showSql="no"/>
+            showSql="no"/-->
 
         <!--load-entity
             resource="/com/medigy/tool/persist/loader/data/usa-states-fips.csv"
@@ -130,6 +153,17 @@
         <load-entity
             resource="/com/medigy/tool/persist/loader/data/icd9.csv"
             beforeLoadUpdateHQL="delete from Icd"
+            hibernateConfigClass="com.medigy.persist.util.HibernateConfiguration"
+            hibernateConfigFile="/com/medigy/persist/hibernate.cfg.xml"
+            dialect="${db.load-reference-data.database.dialectClass}"
+            driver="${db.load-reference-data.database.driverClass}"
+            url="${db.load-reference-data.database.url}"
+            userid="${db.load-reference-data.database.userid}" password="${db.load-reference-data.database.password}"
+            showSql="no"/>
+
+        <load-entity
+            resource="/com/medigy/tool/persist/loader/data/cpt4.csv"
+            beforeLoadUpdateHQL="delete from CPT"
             hibernateConfigClass="com.medigy.persist.util.HibernateConfiguration"
             hibernateConfigFile="/com/medigy/persist/hibernate.cfg.xml"
             dialect="${db.load-reference-data.database.dialectClass}"
