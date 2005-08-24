@@ -39,10 +39,9 @@
 package com.medigy.service.dto.schedule;
 
 import com.medigy.service.dto.ServiceReturnValues;
-
-import java.util.List;
+import com.medigy.persist.model.health.HealthCareEncounter;
 
 public interface ScheduleReturnValues extends ServiceReturnValues
 {
-    public List<ScheduleWorksheetItems> getItems();
+    public HealthCareEncounter[] getEncounters();
 }
