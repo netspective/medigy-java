@@ -43,15 +43,23 @@
  */
 package com.medigy.tool.persist.populate;
 
+import com.medigy.persist.model.claim.Claim;
+import com.medigy.persist.model.claim.ClaimItem;
+import com.medigy.persist.model.health.HealthCareDelivery;
 import com.medigy.persist.model.health.HealthCareEncounter;
+import com.medigy.persist.model.invoice.Invoice;
+import com.medigy.persist.model.invoice.InvoiceItem;
 import com.medigy.persist.model.org.Organization;
 import com.medigy.persist.model.org.OrganizationsRelationship;
 import com.medigy.persist.model.party.Facility;
 import com.medigy.persist.model.person.Ethnicity;
 import com.medigy.persist.model.person.Person;
 import com.medigy.persist.model.person.PersonAndOrgRelationship;
-import com.medigy.persist.model.invoice.Invoice;
+import com.medigy.persist.reference.custom.claim.ClaimType;
+import com.medigy.persist.reference.custom.health.DiagnosisType;
 import com.medigy.persist.reference.custom.health.HealthCareEncounterStatusType;
+import com.medigy.persist.reference.custom.invoice.InvoiceStatusType;
+import com.medigy.persist.reference.custom.invoice.InvoiceType;
 import com.medigy.persist.reference.custom.party.FacilityType;
 import com.medigy.persist.reference.custom.party.OrganizationRoleType;
 import com.medigy.persist.reference.custom.party.OrganizationsRelationshipType;
@@ -59,9 +67,10 @@ import com.medigy.persist.reference.custom.party.PersonOrgRelationshipType;
 import com.medigy.persist.reference.custom.person.EthnicityType.Cache;
 import com.medigy.persist.reference.custom.person.PatientType;
 import com.medigy.persist.reference.custom.person.PersonRoleType;
-import com.medigy.persist.reference.custom.invoice.InvoiceType;
-import com.medigy.persist.reference.custom.invoice.InvoiceStatusType;
+import com.medigy.persist.reference.type.CurrencyType;
 import com.medigy.persist.reference.type.GenderType;
+import com.medigy.persist.reference.type.clincial.CPT;
+import com.medigy.persist.reference.type.clincial.Icd9;
 import com.medigy.persist.util.ModelInitializer;
 import com.medigy.persist.util.ModelInitializer.SeedDataPopulationType;
 import org.apache.tools.ant.BuildException;
@@ -82,11 +91,11 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.GregorianCalendar;
 import java.util.Random;
+import java.util.Set;
 
 public class DataPopulatorTask extends Task
 {
@@ -399,8 +408,6 @@ public class DataPopulatorTask extends Task
         invoice.setType(InvoiceType.Cache.SERVICES.getEntity());
         invoice.setDescription("Medigy DEMO invoice description");
         invoice.setInvoiceDate(encounter.getCheckoutTime());
-        invoice.setTotalCost(new Float(RandomUtils.generateRandomNumberBetween(1, 1000)));
-        invoice.setTotalAdjustments(new Float(RandomUtils.generateRandomNumberBetween(1, 1000)));
         invoice.addInvoiceStatus(InvoiceStatusType.Cache.CREATED.getEntity(), encounter.getCheckoutTime());
 
         final Calendar instance = Calendar.getInstance();
@@ -413,7 +420,43 @@ public class DataPopulatorTask extends Task
             instance.add(Calendar.DAY_OF_MONTH, 5);
             invoice.addInvoiceStatus(InvoiceStatusType.Cache.CLOSED.getEntity(), instance.getTime());
         }
+
+        // each invoice item will correspond to each Health Care Delivery that is associated with the
+        // visit.
+        final List<HealthCareDelivery> healthCareDeliveries = encounter.getHealthCareDeliveries();
+        int invItemCount = healthCareDeliveries.size();
+        for (int i=0; i < invItemCount; i++)
+        {
+            final InvoiceItem item = new InvoiceItem();
+            item.setInvoice(invoice);
+            // TODO: This invoice item amount should be coming from the Fee Schedule associated with the doctor/facility
+            int amount = RandomUtils.generateRandomNumberBetween(100, 1000);
+            item.setAmount(new Float(amount));
+            item.setQuantity(new Long(1));
+            item.setCurrencyType(CurrencyType.Cache.US.getEntity());
+            item.setCpt(healthCareDeliveries.get(i).getCpt());
+            invoice.addInvoiceItem(item);
+        }
+        invoice.setTotalAdjustments(new Float(RandomUtils.generateRandomNumberBetween(1, 1000)));
         session.save(invoice);
+    }
+
+    protected void populateClaimPerInvoice(final Session session, final Person patient, final Invoice invoice)
+    {
+        // TODO: Need to decipher how claims should get created out of an Invoice.
+        final Claim claim = new Claim();
+        claim.setInvoice(invoice);
+        claim.setType(ClaimType.Cache.INSURANCE.getEntity());
+
+        int claimItemCount = invoice.getInvoiceItems().size();
+        for (int i=0; i < claimItemCount; i++)
+        {
+            final ClaimItem item1 = new ClaimItem();
+            item1.setClaimAmount(invoice.getInvoiceItem(i).getAmount());
+            item1.setClaim(claim);
+            item1.addDiagnosticCode(DiagnosisType.Cache.ICD9_CODE.getEntity(), null);
+            item1.addDiagnosticCode(DiagnosisType.Cache.ICD9_CODE.getEntity(), null);
+        }
     }
 
     protected void  populatePatientAppointment(final Session session, final Person patient, final Person randomPhysician,
@@ -450,6 +493,25 @@ public class DataPopulatorTask extends Task
             encounter.addStatus(HealthCareEncounterStatusType.Cache.INPROGRESS.getEntity(), scheduledTimestamp);
             encounter.addStatus(HealthCareEncounterStatusType.Cache.COMPLETE.getEntity(), checkoutTime);
             encounter.setFacility(facility);
+
+            final List icdList = session.createCriteria(Icd9.class).list();
+            final List cptList = session.createCriteria(CPT.class).list();
+            CPT cpt = null;
+            Icd9 icd9 = null;
+            if (cptList.size() > 0 && icdList.size() > 0)
+            {
+                cpt = (CPT) cptList.get(RandomUtils.generateRandomNumberBetween(0, cptList.size()));
+                icd9 = (Icd9) icdList.get(RandomUtils.generateRandomNumberBetween(0, icdList.size()));
+                int totalDeliveries  = RandomUtils.generateRandomNumberBetween(0, 5);
+                for (int m = 0; m < totalDeliveries; m++)
+                {
+                    HealthCareDelivery delivery = new HealthCareDelivery();
+                    delivery.setCpt(cpt);
+                    delivery.setHealthCareEncounter(encounter);
+                    delivery.addDiagnosis(DiagnosisType.Cache.ICD9_CODE.getEntity(), icd9);
+                    encounter.addHealthCareDelivery(delivery);
+                }
+            }
             session.save(encounter);
 
             populateInvoicePerEncounter(session, patient, encounter);

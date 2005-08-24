@@ -1,16 +1,15 @@
 package com.medigy.tool.persist.loader;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
+import com.medigy.persist.util.DelimitedValuesReader;
+import com.medigy.persist.util.DelimitedValuesReaderException;
 import org.apache.commons.beanutils.BeanUtils;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
-import com.medigy.persist.util.DelimitedValuesReader;
-import com.medigy.persist.util.DelimitedValuesReaderException;
+import java.lang.reflect.InvocationTargetException;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Load records from a delimited (CSV, text, etc) file into the database using a hibernate entity.
@@ -167,7 +166,7 @@ public class EntityLoader implements DelimitedValuesReader.LineHandler
         catch (IllegalAccessException e)
         {
             throw new DelimitedValuesReaderException(e);
-        }
+        }                
 
         for(int i = 0; i < propertyNames.length; i++)
         {
