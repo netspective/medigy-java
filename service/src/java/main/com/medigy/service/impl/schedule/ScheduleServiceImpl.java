@@ -46,6 +46,7 @@ import com.medigy.service.dto.schedule.ScheduleReturnValues;
 import com.medigy.service.dto.schedule.ScheduleParameters;
 import com.medigy.service.dto.schedule.ScheduleWorksheetItems;
 import com.medigy.scheduler.util.CalendarUtils;
+import com.medigy.persist.model.health.HealthCareEncounter;
 
 import java.util.Date;
 import java.util.Calendar;
@@ -81,6 +82,11 @@ public class ScheduleServiceImpl implements ScheduleService
             {
                 return null;
             }
+
+            public HealthCareEncounter[] getEncounters()
+            {
+                return new HealthCareEncounter[0];
+            }
         };
     }
 
@@ -101,6 +107,11 @@ public class ScheduleServiceImpl implements ScheduleService
             public String getErrorMessage()
             {
                 return errorMessage;
+            }
+
+            public HealthCareEncounter[] getEncounters()
+            {
+                return new HealthCareEncounter[0];
             }
         };
     }
