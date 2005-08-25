@@ -35,41 +35,23 @@
  * CAUSED AND REGARDLESS OF THE THEORY OF LIABILITY, ARISING OUT OF THE USE OF OR INABILITY TO USE THE SOFTWARE, EVEN
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
- * @author Shahid N. Shah
- */
-
-/*
- * Copyright (c) 2005 Your Corporation. All Rights Reserved.
  */
 package com.medigy.app.pbs.page.entity.person;
 
-import com.medigy.app.pbs.page.entity.AbstractEntityPage;
 import com.medigy.persist.model.person.Person;
-import wicket.PageParameters;
+import wicket.markup.html.basic.Label;
+import wicket.markup.html.panel.Panel;
+import wicket.model.IModel;
+import wicket.model.Model;
 
-public abstract class AbstractPersonPage extends AbstractEntityPage
+public class PatientProfilePanel extends Panel
 {
-    public final static String REQPARAMNAME_PERSON_ID = "person_id";
-
-    protected Person activePerson;
-
-    protected AbstractPersonPage(final PageParameters parameters)
+    public PatientProfilePanel(final String id, final IModel model)
     {
-        super(parameters);
-    }
+        super(id, model);
 
-    public String getEntityIdPageParamName()
-    {
-        return REQPARAMNAME_PERSON_ID;
-    }
-
-    protected void loadEntity(final long entityId) throws PersonAccessException
-    {
-        // TODO: load the activePerson instance
-    }
-
-    public Person getEntity()
-    {
-        return activePerson;
+        Person patient = (Person) getModelObject();
+        // for now only
+        add(new Label("fullName", new Model(patient.getFullName())));
     }
 }

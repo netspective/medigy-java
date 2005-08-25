@@ -35,41 +35,43 @@
  * CAUSED AND REGARDLESS OF THE THEORY OF LIABILITY, ARISING OUT OF THE USE OF OR INABILITY TO USE THE SOFTWARE, EVEN
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
- * @author Shahid N. Shah
- */
-
-/*
- * Copyright (c) 2005 Your Corporation. All Rights Reserved.
  */
 package com.medigy.app.pbs.page.entity.person;
 
-import com.medigy.app.pbs.page.entity.AbstractEntityPage;
-import com.medigy.persist.model.person.Person;
+import com.medigy.service.ServiceVersion;
+import com.medigy.service.dto.person.PatientProfileParameters;
+import com.medigy.service.dto.person.PatientProfileReturnValues;
+import com.medigy.service.person.PatientProfileService;
+import com.medigy.wicket.DefaultApplication;
 import wicket.PageParameters;
+import wicket.model.CompoundPropertyModel;
 
-public abstract class AbstractPersonPage extends AbstractEntityPage
+public class PatientProfile extends AbstractPersonPage
 {
-    public final static String REQPARAMNAME_PERSON_ID = "person_id";
+    private PatientProfilePanel mainPanel;
 
-    protected Person activePerson;
-
-    protected AbstractPersonPage(final PageParameters parameters)
+    public PatientProfile(final PageParameters parameters)
     {
         super(parameters);
-    }
-
-    public String getEntityIdPageParamName()
-    {
-        return REQPARAMNAME_PERSON_ID;
+        mainPanel = new PatientProfilePanel("mainPanel", new CompoundPropertyModel(getEntity()));
+        add(mainPanel);
     }
 
     protected void loadEntity(final long entityId) throws PersonAccessException
     {
-        // TODO: load the activePerson instance
+        final PatientProfileService service = (PatientProfileService) ((DefaultApplication) getApplication()).getService(PatientProfileService.class);
+        final PatientProfileReturnValues values = service.getProfile(new PatientProfileParameters () {
+            public Long getPatientId()
+            {
+                return new Long(entityId);
+            }
+
+            public ServiceVersion getServiceVersion()
+            {
+                return null;
+            }
+        });
+        activePerson = values.getPatient();
     }
 
-    public Person getEntity()
-    {
-        return activePerson;
-    }
 }
