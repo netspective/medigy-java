@@ -63,7 +63,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity()
@@ -101,7 +103,7 @@ public class Party extends AbstractTopLevelEntity
     private Set<PartyClassification> partyClassifications = new HashSet<PartyClassification>();
     private Set<PartyQualification> partyQualifications = new HashSet<PartyQualification>();
 
-    protected Set<PartyContactMechanism> partyContactMechanisms = new HashSet<PartyContactMechanism>();
+    protected List<PartyContactMechanism> partyContactMechanisms = new ArrayList<PartyContactMechanism>();
     private Set<PartyFacilityRole> partyFacilityRoles = new HashSet<PartyFacilityRole>();
     private Set<CommunicationEventRole> communicationEventRoles = new HashSet<CommunicationEventRole>();
     private Set<BillingAccountRole> billingAccountRoles = new HashSet<BillingAccountRole>();
@@ -125,7 +127,7 @@ public class Party extends AbstractTopLevelEntity
     }
 
     @Id(generate=GeneratorType.AUTO)
-    @Column(name = PK_COLUMN_NAME)        
+    @Column(name = PK_COLUMN_NAME)
     public Long getPartyId()
     {
         return partyId;
@@ -148,7 +150,7 @@ public class Party extends AbstractTopLevelEntity
     }
 
     @ManyToOne
-    @JoinColumn(name = "party_type_id")
+    @JoinColumn(name= "party_type_id", referencedColumnName = PartyType.PK_COLUMN_NAME)
     public PartyType getPartyType()
     {
         return partyType;
@@ -162,7 +164,7 @@ public class Party extends AbstractTopLevelEntity
     @Transient
     public boolean isPerson()
     {
-        return partyType.equals(PartyType.Cache.PERSON.getEntity());    
+        return partyType.equals(PartyType.Cache.PERSON.getEntity());
     }
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "party")
@@ -197,12 +199,12 @@ public class Party extends AbstractTopLevelEntity
     }
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "party")
-    public Set<PartyContactMechanism> getPartyContactMechanisms()
+    public List<PartyContactMechanism> getPartyContactMechanisms()
     {
         return partyContactMechanisms;
     }
 
-    protected void setPartyContactMechanisms(final Set<PartyContactMechanism> partyContactMechanisms)
+    protected void setPartyContactMechanisms(final List<PartyContactMechanism> partyContactMechanisms)
     {
         this.partyContactMechanisms = partyContactMechanisms;
     }

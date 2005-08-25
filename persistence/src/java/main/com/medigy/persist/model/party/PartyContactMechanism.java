@@ -45,15 +45,17 @@ import com.medigy.persist.reference.custom.party.ContactMechanismPurposeType;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "Party_Contact_Mech")
@@ -65,7 +67,7 @@ public class PartyContactMechanism extends AbstractDateDurationEntity
     private Party party;
     private ContactMechanism contactMechanism;
 
-    private Set<PartyContactMechanismPurpose> purposes = new HashSet<PartyContactMechanismPurpose>();
+    private List<PartyContactMechanismPurpose> purposes = new ArrayList<PartyContactMechanismPurpose>();
 
     public PartyContactMechanism()
     {
@@ -129,14 +131,15 @@ public class PartyContactMechanism extends AbstractDateDurationEntity
         this.contactMechanism = contactMechanism;
     }
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "party_contact_mech_id")        
-    public Set<PartyContactMechanismPurpose> getPurposes()
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "party_contact_mech_id")
+    @OrderBy("purposeId")
+    public List<PartyContactMechanismPurpose> getPurposes()
     {
         return purposes;
     }
 
-    public void setPurposes(final Set<PartyContactMechanismPurpose> purposes)
+    public void setPurposes(final List<PartyContactMechanismPurpose> purposes)
     {
         this.purposes = purposes;
     }

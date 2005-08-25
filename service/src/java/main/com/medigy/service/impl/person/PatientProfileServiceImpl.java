@@ -63,10 +63,11 @@ public class PatientProfileServiceImpl extends AbstractService   implements Pati
     {
         final Session session = getSession();
         final Criteria criteria = session.createCriteria(Person.class);
-        criteria.setFetchMode("identifiers", FetchMode.JOIN);
+        criteria.setFetchMode("personIdentifiers", FetchMode.JOIN);
         criteria.setFetchMode("ethnicities", FetchMode.JOIN);
         criteria.setFetchMode("insurancePolicies", FetchMode.JOIN);
-
+        criteria.setFetchMode("maritalStatuses", FetchMode.JOIN);
+        criteria.setFetchMode("partyContactMechanisms", FetchMode.JOIN);
 
         criteria.add(Restrictions.eq("partyId", params.getPatientId()));
         final Person patient = (Person) criteria.uniqueResult();

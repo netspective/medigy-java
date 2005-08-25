@@ -105,8 +105,6 @@ public class Person extends Party
     private GenderType currentGenderType;
 
     private List<PersonIdentifier> personIdentifiers = new ArrayList<PersonIdentifier>();
-    //private Set<CareProviderSelection> careProviderSelections = new HashSet<CareProviderSelection>();
-
     private Set<Ethnicity> ethnicities = new HashSet<Ethnicity>();
     private List<Gender> genders = new ArrayList<Gender>();
     private List<MaritalStatus> maritalStatuses = new ArrayList<MaritalStatus>();
@@ -116,7 +114,7 @@ public class Person extends Party
     private Set<Language> languages = new HashSet<Language>();
     private Set<HealthCareLicense> licenses = new HashSet<HealthCareLicense>();
 
-    private Set<InsurancePolicy> insurancePolicies = new HashSet<InsurancePolicy>();
+    private List<InsurancePolicy> insurancePolicies = new ArrayList<InsurancePolicy>();
     private Set<InsurancePolicy> responsibleInsurancePolicies = new HashSet<InsurancePolicy>();
 
     private Set<FeeSchedule> feeSchedules = new HashSet<FeeSchedule>();
@@ -640,13 +638,13 @@ public class Person extends Party
      *
      * @return a set of insurance policies
      */
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "insuredPerson", fetch = FetchType.LAZY)
-    public Set<InsurancePolicy> getInsurancePolicies()
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "insuredPerson")
+    public List<InsurancePolicy> getInsurancePolicies()
     {
         return insurancePolicies;
     }
 
-    public void setInsurancePolicies(final Set<InsurancePolicy> insurancePolicies)
+    public void setInsurancePolicies(final List<InsurancePolicy> insurancePolicies)
     {
         this.insurancePolicies = insurancePolicies;
     }

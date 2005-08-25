@@ -38,11 +38,24 @@
  */
 package com.medigy.app.pbs.page.entity.person;
 
+import com.medigy.persist.model.insurance.InsurancePolicy;
+import com.medigy.persist.model.party.ContactMechanism;
+import com.medigy.persist.model.party.PartyContactMechanism;
+import com.medigy.persist.model.party.PhoneNumber;
+import com.medigy.persist.model.party.PostalAddress;
 import com.medigy.persist.model.person.Person;
+import com.medigy.persist.model.person.PersonIdentifier;
 import wicket.markup.html.basic.Label;
+import wicket.markup.html.basic.MultiLineLabel;
+import wicket.markup.html.list.ListItem;
+import wicket.markup.html.list.ListView;
 import wicket.markup.html.panel.Panel;
 import wicket.model.IModel;
 import wicket.model.Model;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 public class PatientProfilePanel extends Panel
 {
@@ -51,7 +64,76 @@ public class PatientProfilePanel extends Panel
         super(id, model);
 
         Person patient = (Person) getModelObject();
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+
+        final GregorianCalendar calendar = new GregorianCalendar();
+        final int currentYear = calendar.get(Calendar.YEAR);
+        calendar.setTime(patient.getBirthDate());
+        final int birthYear = calendar.get(Calendar.YEAR);
         // for now only
         add(new Label("fullName", new Model(patient.getFullName())));
+        add(new Label("gender", new Model(patient.getCurrentGenderType().getLabel())));
+        add(new Label("age", new Model(currentYear - birthYear)));
+        add(new Label("birthdate", new Model(sdf.format(patient.getBirthDate()))));
+        add(new Label("maritalStatus", new Model(patient.getCurrentMaritalStatus().getLabel())));
+
+        // Add person identifiers
+        add(new ListView("identifiers", patient.getPersonIdentifiers())
+        {
+            public void populateItem(final ListItem listItem)
+            {
+                final PersonIdentifier identifier = (PersonIdentifier) listItem.getModelObject();
+                listItem.add(new MultiLineLabel("identifierName", identifier.getType().getLabel()));
+                listItem.add(new Label("identifierValue", new Model(identifier.getIdentifierValue())));
+            }
+        });
+
+        // Add insurance policies
+        add(new ListView("insurancePolicies", patient.getInsurancePolicies())
+        {
+            public void populateItem(final ListItem listItem)
+            {
+                final InsurancePolicy policy = (InsurancePolicy) listItem.getModelObject();
+                listItem.add(new MultiLineLabel("type", policy.getType().getLabel()));
+                listItem.add(new Label("carrierName", new Model(policy.getInsuranceProvider().getOrganizationName())));
+                listItem.add(new MultiLineLabel("policyNumber", policy.getPolicyNumber()));
+            }
+        });
+
+        // Add insurance policies
+        add(new ListView("addresses", patient.getPartyContactMechanisms())
+        {
+            public void populateItem(final ListItem listItem)
+            {
+                final PartyContactMechanism pcm = (PartyContactMechanism) listItem.getModelObject();
+                final ContactMechanism contactMechanism = pcm.getContactMechanism();
+
+                if (contactMechanism instanceof PostalAddress)
+                {
+                    final PostalAddress postalAddress = (PostalAddress) contactMechanism;
+                    listItem.add(new Label("address1", postalAddress.getAddress1()));
+                    listItem.add(new Label("address2", postalAddress.getAddress2()));
+                    listItem.add(new Label("city", postalAddress.getCity().getCityName()));
+                    listItem.add(new Label("state", postalAddress.getState().getStateAbbreviation()));
+                    listItem.add(new Label("zip", postalAddress.getPostalCode().getCodeValue()));
+                }
+            }
+        });
+
+        add(new ListView("phones", patient.getPartyContactMechanisms())
+        {
+            public void populateItem(final ListItem listItem)
+            {
+                final PartyContactMechanism pcm = (PartyContactMechanism) listItem.getModelObject();
+                final ContactMechanism contactMechanism = pcm.getContactMechanism();
+                if (contactMechanism instanceof PhoneNumber)
+                {
+                    final PhoneNumber phoneNumber = (PhoneNumber) contactMechanism;
+
+                    listItem.add(new Label("areaCode", phoneNumber.getAreaCode()));
+                    listItem.add(new Label("number", phoneNumber.getNumberValue()));
+                }
+            }
+        });
     }
 }

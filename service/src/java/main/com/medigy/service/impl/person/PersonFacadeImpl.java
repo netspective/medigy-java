@@ -66,7 +66,6 @@ import org.hibernate.criterion.Expression;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 public class PersonFacadeImpl extends AbstractFacade implements PersonFacade
 {
@@ -159,12 +158,12 @@ public class PersonFacadeImpl extends AbstractFacade implements PersonFacade
      */
     public PostalAddress getHomeAddress(final Person person)
     {
-        final Set<PartyContactMechanism> partyContactMechanisms = person.getPartyContactMechanisms();
+        final List<PartyContactMechanism> partyContactMechanisms = person.getPartyContactMechanisms();
         for (PartyContactMechanism pcm : partyContactMechanisms)
         {
             if (pcm.getContactMechanism().getType().equals(ContactMechanismType.Cache.POSTAL_ADDRESS.getEntity()))
             {
-                final Set<PartyContactMechanismPurpose> purposes = pcm.getPurposes();
+                final List<PartyContactMechanismPurpose> purposes = pcm.getPurposes();
                 for (PartyContactMechanismPurpose purpose : purposes)
                 {
                     if (purpose.getType().equals(ContactMechanismPurposeType.Cache.HOME_ADDRESS.getEntity()))
