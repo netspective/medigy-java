@@ -39,14 +39,14 @@
 package com.medigy.presentation.form.common;
 
 import com.medigy.presentation.page.SearchPage;
+import com.medigy.presentation.model.IChoiceList;
 import com.medigy.service.Service;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import wicket.IFeedback;
 import wicket.markup.html.form.DropDownChoice;
 import wicket.markup.html.form.TextField;
-import wicket.markup.html.form.model.IChoiceList;
 import wicket.model.IModel;
+import wicket.feedback.IFeedback;
 
 /**
  * A single criteria search form that needs a service to construct itself (meaning getting search criterias from
@@ -66,7 +66,7 @@ public abstract class CriteriaSearchServiceForm extends ServiceForm
 
     public void initializeForm()
     {
-        add(new DropDownChoice(CRITERIA_DROPDOWN_COMPONENT_ID, constructConditionList()));
+        add(new DropDownChoice(CRITERIA_DROPDOWN_COMPONENT_ID, constructConditionList().getChoices()));
         add(new TextField(CRITERIA_VALUE_COMPONENT_ID));
     }
 

@@ -6,8 +6,8 @@ package com.medigy.presentation.form.common;
 import com.medigy.service.Service;
 import com.medigy.wicket.form.BaseForm;
 import com.medigy.wicket.form.FormMode;
-import wicket.IFeedback;
 import wicket.model.IModel;
+import wicket.feedback.IFeedback;
 
 /**
  * A form that relies on a service for creation
