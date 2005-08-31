@@ -46,12 +46,12 @@ import wicket.markup.html.panel.Panel;
 
 public class Catalog extends AbstractSearchPage
 {
-    public Panel getSearchCriteriaPanel(final String id)
+    public Panel createSearchCriteriaPanel(final String id)
     {
         return new CatalogCriteriaPanel(id);
     }
 
-    public Panel getSearchResultPanel(final String id)
+    public Panel createSearchResultPanel(final String id)
     {
         return null;
     }

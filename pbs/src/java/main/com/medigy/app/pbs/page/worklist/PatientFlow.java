@@ -43,7 +43,7 @@
  */
 package com.medigy.app.pbs.page.worklist;
 
-import com.medigy.presentation.form.query.SearchResultsListView;
+import com.medigy.presentation.form.query.DynamicSearchResultsListView;
 import com.medigy.service.ServiceVersion;
 import com.medigy.service.dto.person.PatientWorkListItem;
 import com.medigy.service.dto.person.PatientWorklistParameters;
@@ -63,7 +63,7 @@ import java.util.List;
 
 public class PatientFlow extends AbstractWorklistPage
 {
-    private SearchResultsListView listView;
+    private DynamicSearchResultsListView listView;
 
     public PatientFlow(final PageParameters parameters)
     {

@@ -40,12 +40,13 @@ package com.medigy.app.pbs.page.search;
 
 import com.medigy.presentation.form.query.QueryDefinitionSearchFormPanel;
 import com.medigy.service.person.PatientSearchQueryDefinition;
+import com.medigy.service.person.PatientSearchService;
 import com.medigy.wicket.form.FormMode;
 
 public class PatientCriteriaPanel extends QueryDefinitionSearchFormPanel
 {
     public PatientCriteriaPanel(final String componentName, final FormMode formMode)
     {
-        super(componentName, formMode, PatientSearchQueryDefinition.class);
+        super(componentName, formMode, PatientSearchService.class, PatientSearchQueryDefinition.class);
     }
 }

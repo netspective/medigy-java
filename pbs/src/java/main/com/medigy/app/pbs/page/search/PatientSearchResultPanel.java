@@ -47,4 +47,74 @@ public class PatientSearchResultPanel extends QueryDefinitionSearchResultPanel
     {
         super(id, PatientSearchQueryDefinition.class);
     }
+
+    /*
+    public SearchServiceParameters createSearchServiceParameters(final Object queryObject)
+    {
+        final CriteriaSearchFormModelObject formModelObject = (CriteriaSearchFormModelObject) queryObject;
+        return new SearchServiceParameters()  {
+            public List<SearchCondition> getConditions()
+            {
+                final SearchCondition searchCondition = new SearchCondition();
+                searchCondition.setCondition(formModelObject.getSearchCriterias());
+                searchCondition.setFieldValue(formModelObject.getSearchCriteriaValue());
+                return Arrays.asList(searchCondition);
+            }
+
+            public List<String> getOrderBys()
+            {
+                return null;
+            }
+
+            public List<String> getDisplayFields()
+            {
+                return null;
+            }
+
+            public int getStartFromRow()
+            {
+                return 0;
+            }
+
+            public ServiceVersion getServiceVersion()
+            {
+                return null;
+            };
+        };
+    }
+
+    public SearchServiceParameters createSearchServiceParameters(final Object queryObject, final int startFromRow, int numberOfRows)
+    {
+        final CriteriaSearchFormModelObject formModelObject = (CriteriaSearchFormModelObject) queryObject;
+        return new SearchServiceParameters()  {
+            public List<SearchCondition> getConditions()
+            {
+                final SearchCondition searchCondition = new SearchCondition();
+                searchCondition.setCondition(formModelObject.getSearchCriterias());
+                searchCondition.setFieldValue(formModelObject.getSearchCriteriaValue());
+                return Arrays.asList(searchCondition);
+            }
+
+            public List<String> getDisplayFields()
+            {
+                return null;
+            }
+
+            public List<String> getOrderBys()
+            {
+                return null;
+            }
+
+            public int getStartFromRow()
+            {
+                return startFromRow;
+            }
+
+            public ServiceVersion getServiceVersion()
+            {
+                return null;
+            }
+        };
+    }
+    */
 }

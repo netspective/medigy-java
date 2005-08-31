@@ -41,10 +41,22 @@ package com.medigy.app.pbs.page.search;
 import com.medigy.presentation.form.common.SearchResultPanel;
 import com.medigy.service.org.OrganizationSearchService;
 
+import java.util.List;
+
 public class OrganizationSearchResultPanel extends SearchResultPanel
 {
     public OrganizationSearchResultPanel(final String id)
     {
         super(id, OrganizationSearchService.class);
+    }
+
+    public Object invokeService(final Object queryObject)
+    {
+        return null;
+    }
+
+    public List invokeService(final Object queryObject, final int startFromRow, final int numberOfRows)
+    {
+        return null;
     }
 }

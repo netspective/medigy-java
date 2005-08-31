@@ -52,6 +52,7 @@ import com.medigy.persist.model.invoice.InvoiceItem;
 import com.medigy.persist.model.org.Organization;
 import com.medigy.persist.model.org.OrganizationsRelationship;
 import com.medigy.persist.model.party.Facility;
+import com.medigy.persist.model.party.PhoneNumber;
 import com.medigy.persist.model.person.Ethnicity;
 import com.medigy.persist.model.person.Person;
 import com.medigy.persist.model.person.PersonAndOrgRelationship;
@@ -64,6 +65,7 @@ import com.medigy.persist.reference.custom.party.FacilityType;
 import com.medigy.persist.reference.custom.party.OrganizationRoleType;
 import com.medigy.persist.reference.custom.party.OrganizationsRelationshipType;
 import com.medigy.persist.reference.custom.party.PersonOrgRelationshipType;
+import com.medigy.persist.reference.custom.party.ContactMechanismPurposeType;
 import com.medigy.persist.reference.custom.person.EthnicityType.Cache;
 import com.medigy.persist.reference.custom.person.PatientType;
 import com.medigy.persist.reference.custom.person.PersonRoleType;
@@ -352,7 +354,8 @@ public class DataPopulatorTask extends Task
         // TODO: add a "address2" line generator for things like "Suite 400" or "Apartment 76"
 
         final City city = usAddressDataGenerator.getRandomCity();
-        final String phone = usAddressDataGenerator.getRandomPhoneNumber(city);
+        final String phoneNumber = usAddressDataGenerator.getRandomPhoneNumber(city);
+        final String areaCode = usAddressDataGenerator.getRandomPhoneAreaCode(city);
 
         final Person patient = new Person();
         if(gender == Gender.MALE)
@@ -382,6 +385,12 @@ public class DataPopulatorTask extends Task
         // TODO: replace with a real drivers license number generator for various states
         patient.setDriversLicenseNumber(personDataGenerator.getRandomSocialSecurityNumber());
         patient.addRole(PersonRoleType.Cache.PATIENT.getEntity());
+
+        final PhoneNumber phone = new PhoneNumber();
+        phone.setNumberValue(phoneNumber);
+        phone.setAreaCode(areaCode);
+        session.save(phone);
+        patient.addPartyContactMechanism(phone, ContactMechanismPurposeType.Cache.HOME_PHONE.getEntity());
         session.save(patient);
 
         // now create the link between the patient and the clinic through their roles

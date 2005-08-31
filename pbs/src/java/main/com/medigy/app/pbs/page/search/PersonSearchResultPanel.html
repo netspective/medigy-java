@@ -1,0 +1,33 @@
+<html xmlns:wicket="http://wicket.sourceforge.net/">
+    <head>
+        <title>Person Search Result Panel</title>
+        <link rel="stylesheet" type="text/css" href="../../../../../../../../../resources/theme/default/css/theme.css"/>
+    </head>
+    <body>
+        <wicket:panel>
+            <div>
+                <table id="resultsTable" class="report">
+                        <tr class="heading" wicket:id="resultsHeader">
+                            <th wicket:id="firstNameLabel">First Name</th>
+                            <th wicket:id="lastNameLabel">Last Name</th>
+                            <th wicket:id="genderLabel">Gender</th>
+                            <th wicket:id="dobLabel">Date of Birth</th>
+                            <th wicket:id="ssnLabel">SSN</th>
+                        </tr>
+                        <tr wicket:id="results">
+                            <td> <a wicket:id="firstName"><span wicket:id="firstName">(first name)</span></a></td>
+                            <td> <a wicket:id="lastName"><span wicket:id="lastName">(last name)</span></a></td>
+                            <td wicket:id="gender"></td>
+                            <td wicket:id="birthdate"></td>
+                            <td wicket:id="ssn"></td>
+                        </tr>
+                </table>
+            </div>
+            <div id="resultsNavigation">
+                <table>
+                    <tr wicket:id="navigation-panel"/>
+                </table>
+            </div>
+        </wicket:panel>
+    </body>
+</html>

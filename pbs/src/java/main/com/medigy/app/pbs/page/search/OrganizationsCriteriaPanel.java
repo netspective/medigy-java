@@ -42,21 +42,37 @@
  */
 package com.medigy.app.pbs.page.search;
 
-import wicket.markup.html.panel.Panel;
-import wicket.markup.html.form.Form;
-import wicket.markup.html.form.ListMultipleChoice;
-import wicket.markup.html.form.TextField;
-import wicket.IFeedback;
-import wicket.model.IModel;
-import wicket.model.CompoundPropertyModel;
-import com.medigy.wicket.form.FormMode;
-import com.medigy.presentation.form.common.SearchCriteriaFormPanel;
+import com.medigy.persist.util.query.QueryDefnCondition;
+import com.medigy.presentation.form.common.CriteriaSearchFormModelObject;
+import com.medigy.presentation.form.common.CriteriaSearchServiceForm;
+import com.medigy.presentation.form.common.QueryDefConditionChoiceList;
+import com.medigy.presentation.form.common.ServiceFormPanel;
 import com.medigy.service.org.OrganizationSearchService;
+import com.medigy.wicket.form.FormMode;
+import wicket.IFeedback;
+import wicket.markup.html.form.Form;
+import wicket.markup.html.form.model.IChoiceList;
+import wicket.model.CompoundPropertyModel;
 
-public class OrganizationsCriteriaPanel extends SearchCriteriaFormPanel
+import java.util.List;
+
+public class OrganizationsCriteriaPanel extends ServiceFormPanel
 {
     public OrganizationsCriteriaPanel(final String id)
     {
         super(id, FormMode.NONE, OrganizationSearchService.class);
+    }
+
+    public Form createForm(final String componentName, final IFeedback feedback, final FormMode formMode)
+    {
+        final Object modelObject = new CriteriaSearchFormModelObject();
+        return new CriteriaSearchServiceForm(componentName,  new CompoundPropertyModel(modelObject), feedback, getService())
+        {
+            public IChoiceList constructConditionList()
+            {
+                final List<QueryDefnCondition> searchCriterias = ((OrganizationSearchService) getService()).getCriteriaList();
+                return new QueryDefConditionChoiceList(searchCriterias);
+            }
+        };
     }
 }

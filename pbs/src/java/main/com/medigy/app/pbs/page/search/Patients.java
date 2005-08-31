@@ -38,19 +38,20 @@
  */
 package com.medigy.app.pbs.page.search;
 
-import wicket.markup.html.panel.Panel;
 import com.medigy.presentation.form.query.QueryDefinitionSearchFormPanel;
-import com.medigy.wicket.form.FormMode;
 import com.medigy.service.person.PatientSearchQueryDefinition;
+import com.medigy.service.person.PatientSearchService;
+import com.medigy.wicket.form.FormMode;
+import wicket.markup.html.panel.Panel;
 
 public class Patients extends AbstractSearchPage
 {
-    public Panel getSearchCriteriaPanel(final String id)
+    public Panel createSearchCriteriaPanel(final String id)
     {
-        return new QueryDefinitionSearchFormPanel(id, FormMode.NONE, PatientSearchQueryDefinition.class);
+        return new QueryDefinitionSearchFormPanel(id, FormMode.NONE, PatientSearchService.class,  PatientSearchQueryDefinition.class);
     }
 
-    public Panel getSearchResultPanel(final String id)
+    public Panel createSearchResultPanel(final String id)
     {
         return new PatientSearchResultPanel(id);
     }

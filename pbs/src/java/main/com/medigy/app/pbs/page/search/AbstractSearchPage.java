@@ -44,10 +44,13 @@
 package com.medigy.app.pbs.page.search;
 
 import com.medigy.presentation.page.SearchPage;
+import com.medigy.presentation.form.common.SearchResultPanel;
 import com.medigy.wicket.page.AuthenticatedWebPage;
 import wicket.Component;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.panel.Panel;
+
+import java.util.List;
 
 public abstract class AbstractSearchPage extends AuthenticatedWebPage implements SearchPage
 {
@@ -66,8 +69,18 @@ public abstract class AbstractSearchPage extends AuthenticatedWebPage implements
         onSelectPanel.setVisible(customSelectPanel != null);
 
         searchResultPanel = createSearchResultPanel("searchResultsPanel");
-        //if(searchResultPanel == null)
-        //      searchResultPanel = new SearchResultPanel("searchResultsPanel", null);
+        if(searchResultPanel == null)
+            searchResultPanel = new SearchResultPanel("searchResultsPanel", null) {
+                public Object invokeService(final Object queryObject)
+                {
+                    return null;
+                }
+
+                public List invokeService(final Object queryObject, final int startFromRow, final int numberOfRows)
+                {
+                    return null;
+                }
+            };
 
         searchBorder.add(searchResultPanel);
     }

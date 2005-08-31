@@ -36,23 +36,44 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
+package com.medigy.app.pbs.panel.common;
 
-/*
- * Copyright (c) 2005 Your Corporation. All Rights Reserved.
- */
-package com.medigy.app.pbs.page.search;
-
+import com.medigy.persist.model.party.PartyContactMechanism;
+import com.medigy.persist.model.party.PartyContactMechanismPurpose;
+import com.medigy.persist.model.party.PostalAddress;
+import wicket.markup.html.basic.Label;
+import wicket.markup.html.list.ListItem;
+import wicket.markup.html.list.ListView;
 import wicket.markup.html.panel.Panel;
 
-public class Cpt extends AbstractSearchPage
-{
-    public Panel createSearchCriteriaPanel(final String id)
-    {
-        return new CptCriteriaPanel(id);
-    }
+import java.util.List;
 
-    public Panel createSearchResultPanel(final String id)
+/**
+ * A generic container for displaying a list of addresses
+ */
+public class AddressListPanel extends Panel
+{
+    public AddressListPanel(final String id, final List<PartyContactMechanism> list)
     {
-        return null;
+        super(id);
+        add(new ListView("address", list) {
+            public void populateItem(final ListItem listItem)
+            {
+                final PartyContactMechanism pcm = ((PartyContactMechanism) listItem.getModelObject());
+                final PostalAddress postalAddress = (PostalAddress) pcm.getContactMechanism();
+                final List<PartyContactMechanismPurpose> purposes = pcm.getPurposes();
+                final StringBuffer sb = new StringBuffer();
+                for (PartyContactMechanismPurpose purpose : purposes)
+                {
+                    sb.append(purpose.getType().getLabel());
+                }
+                listItem.add(new Label("purpose", sb.toString()));
+                listItem.add(new Label("address1", postalAddress.getAddress1()));
+                listItem.add(new Label("address2", postalAddress.getAddress2()));
+                listItem.add(new Label("city", postalAddress.getCity().getCityName()));
+                listItem.add(new Label("state", postalAddress.getState().getStateAbbreviation()));
+                listItem.add(new Label("zip", postalAddress.getPostalCode().getCodeValue()));
+            }
+        });
     }
 }
