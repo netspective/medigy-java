@@ -38,20 +38,21 @@
  */
 package com.medigy.service.party;
 
-import com.medigy.persist.model.contact.Country;
-import com.medigy.persist.model.contact.State;
-import com.medigy.persist.model.contact.PostalCode;
 import com.medigy.persist.model.contact.City;
+import com.medigy.persist.model.contact.Country;
+import com.medigy.persist.model.contact.PostalCode;
+import com.medigy.persist.model.contact.State;
+import com.medigy.persist.model.org.Organization;
+import com.medigy.persist.model.party.ElectronicAddress;
 import com.medigy.persist.model.party.PartyContactMechanism;
 import com.medigy.persist.model.party.PhoneNumber;
 import com.medigy.persist.model.party.PostalAddress;
-import com.medigy.persist.model.party.ElectronicAddress;
 import com.medigy.persist.model.person.Person;
-import com.medigy.persist.model.org.Organization;
 import com.medigy.persist.reference.custom.party.ContactMechanismPurposeType;
 import com.medigy.persist.reference.type.GenderType;
 import com.medigy.service.AbstractSpringTestCase;
 import com.medigy.service.contact.ContactMechanismFacade;
+import org.hibernate.Transaction;
 
 import java.util.Calendar;
 import java.util.List;
@@ -95,7 +96,7 @@ public class TestContactMechanismFacade extends AbstractSpringTestCase
         assertEquals(2, list.size());
         assertEquals("703", list.get(0).getAreaCode());
         assertEquals("800", list.get(1).getAreaCode());
-        assertEquals("1234567", list.get(0).getNumberValue());  
+        assertEquals("1234567", list.get(0).getNumberValue());
         assertEquals("1111111", list.get(1).getNumberValue());
     }
 
@@ -220,12 +221,13 @@ public class TestContactMechanismFacade extends AbstractSpringTestCase
         mech =  (PartyContactMechanism) contactMechList.toArray()[1];
         assertTrue(mech.hasPurpose(ContactMechanismPurposeType.Cache.OTHER.getEntity()));
         assertEquals(mech.getPurpose(ContactMechanismPurposeType.Cache.OTHER.getEntity()).getDescription(), "The Bat Phone");
-        
+
     }
 
 
     public void testAddPostalAddress()
     {
+        Transaction transaction = getSession().beginTransaction();
         final Country country = new Country();
         country.setCountryName("United States of America");
         country.setIsoThreeLetterCode("USA");
@@ -238,6 +240,8 @@ public class TestContactMechanismFacade extends AbstractSpringTestCase
         country.addState(virginia);
 
         getSession().save(country);
+        transaction.commit();
+
         //ContactMechanismFacade contactMechanismFacade = (ContactMechanismFacade) getRegistry().getService(ContactMechanismFacade.class);
         final PostalAddress postalAddress = contactMechanismFacade.addPostalAddress("123 Acme Road", null, "Fairfax", "VA", null, "Fairfax County", "22033", "USA");
 

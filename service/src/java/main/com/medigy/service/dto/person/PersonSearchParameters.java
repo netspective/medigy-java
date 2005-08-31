@@ -1,6 +1,6 @@
-package com.medigy.service.person;
+package com.medigy.service.dto.person;
 
-import com.medigy.service.SearchService;
+import com.medigy.service.SearchServiceParameters;
 /*
  * Copyright (c) 2000-2003 Netspective Communications LLC. All rights reserved.
  *
@@ -40,6 +40,6 @@ import com.medigy.service.SearchService;
  *
  */
 
-public interface PatientSearchService extends SearchService
-{    
+public interface PersonSearchParameters extends SearchServiceParameters
+{
 }

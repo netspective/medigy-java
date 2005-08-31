@@ -60,7 +60,9 @@ public class QueryDefinitionSearchServiceImpl extends AbstractQueryDefinitionSea
 {
     private final Log log = LogFactory.getLog(QueryDefinitionSearchServiceImpl.class);
 
-    public QueryDefinitionSearchServiceImpl(final SessionFactory sessionFactory, final Class searchClass, final String querySelectName)
+    public QueryDefinitionSearchServiceImpl(final SessionFactory sessionFactory,
+                                            final Class<? extends QueryDefinition> searchClass,
+                                            final String querySelectName)
     {
         super(sessionFactory, searchClass, querySelectName);
     }
@@ -70,11 +72,11 @@ public class QueryDefinitionSearchServiceImpl extends AbstractQueryDefinitionSea
         return QueryDefinitionFactory.getInstance().getQueryDefinition(queryDefClass);
     }
 
-    public QueryDefinitionSearchFormPopulateValues getAvailableSearchParameters(final Class queryDefinitionClass)
+    public QueryDefinitionSearchFormPopulateValues getAvailableSearchParameters()
     {
-        final QueryDefinition queryDefinition = QueryDefinitionFactory.getInstance().getQueryDefinition(queryDefinitionClass);
+        final QueryDefinition queryDefinition = QueryDefinitionFactory.getInstance().getQueryDefinition(getQueryDefinitionClass());
         if (queryDefinition == null)
-            throw new RuntimeException("Unknown query definition: " + queryDefinitionClass);
+            throw new RuntimeException("Unknown query definition: " + getQueryDefinitionClass());
         return new QueryDefinitionSearchFormPopulateValues() {
 
             public Map<String, QueryDefinitionField> getSortByFields()

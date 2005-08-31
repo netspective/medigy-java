@@ -4,10 +4,9 @@
 package com.medigy.service;
 
 import com.medigy.service.dto.ServiceReturnValues;
-import com.medigy.service.dto.ServiceParameters;
 
-import java.util.Map;
 import java.util.List;
+import java.util.Map;
 
 public interface SearchReturnValues extends ServiceReturnValues
 {

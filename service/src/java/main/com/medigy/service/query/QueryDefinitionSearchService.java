@@ -17,6 +17,6 @@ public interface QueryDefinitionSearchService extends SearchService
      *
      * @return all available search criteria and respective choices
      */
-    public QueryDefinitionSearchFormPopulateValues getAvailableSearchParameters(final Class queryDefinitionClass);
+    public QueryDefinitionSearchFormPopulateValues getAvailableSearchParameters();
 
 }

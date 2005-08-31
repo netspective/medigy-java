@@ -105,7 +105,8 @@ public class PatientSearchQueryDefinition extends BasicQueryDefinition implement
         LAST_NAME("lastName"),
         DOB("birthDate"),
         GENDER("gender"),
-        ORG_ID("orgId");
+        ORG_ID("orgId"),
+        SSN("ssnProperty");
 
         private String name;
         Field(final String name)

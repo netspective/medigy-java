@@ -255,7 +255,7 @@ public abstract class AbstractQueryDefinitionSearchServiceImpl extends AbstractS
         }
     }
 
-    protected SearchReturnValues executeQuery(final SearchServiceParameters params, final QueryDefinitionSelect select)
+    protected ServiceReturnValues executeQuery(final SearchServiceParameters params, final QueryDefinitionSelect select)
             throws QueryDefinitionException, IllegalAccessException, InvocationTargetException, NoSuchMethodException
     {
         final List<Map<String, Object>> searchResult = new ArrayList<Map<String, Object>>();
@@ -298,27 +298,48 @@ public abstract class AbstractQueryDefinitionSearchServiceImpl extends AbstractS
         final List list = query.list();
         if (log.isInfoEnabled())
             log.info("Query Definition search query returned: " + list.size() + " row(s).");
-        for (int k=0; k < list.size(); k++)
+        return extractResult(params, generator, list);
+    }
+
+    protected ServiceReturnValues extractResult(final SearchServiceParameters params, final QueryDefnStatementGenerator generator, final List queryResultList)
+    {
+        final List<Map<String, Object>> searchResult = new ArrayList<Map<String, Object>>();
+        final List<QueryDefinitionField> displayFields = generator.getQuerySelect().getDisplayFields();
+
+        try
         {
-            final Object rowObject = list.get(k);
-            final Map<String, Object> map = new HashMap<String, Object>();
-
-            if (rowObject instanceof Entity)
+            for (int k=0; k < queryResultList.size(); k++)
             {
-                for (QueryDefinitionField field : displayFields)
-                {
-                     map.put(field.getCaption(), PropertyUtils.getNestedProperty(rowObject, field.getEntityPropertyName()));
-                }
-            }
-            else if (rowObject instanceof Object[])
-            {
-                for (int fieldIndex=0; fieldIndex < displayFields.size(); fieldIndex++)
-                {
-                    map.put(displayFields.get(fieldIndex).getCaption(), ((Object[])rowObject)[fieldIndex]);
-                }
-            }
+                final Object rowObject = queryResultList.get(k);
+                final Map<String, Object> map = new HashMap<String, Object>();
 
-            searchResult.add(map);
+                if (rowObject instanceof Entity)
+                {
+                    for (QueryDefinitionField field : displayFields)
+                    {
+                         map.put(field.getCaption(), PropertyUtils.getNestedProperty(rowObject, field.getEntityPropertyName()));
+                    }
+                }
+                else if (rowObject instanceof Object[])
+                {
+                    for (int fieldIndex=0; fieldIndex < displayFields.size(); fieldIndex++)
+                    {
+                        map.put(displayFields.get(fieldIndex).getCaption(), ((Object[])rowObject)[fieldIndex]);
+                    }
+                }
+                searchResult.add(map);
+            }
+        }
+        catch (Exception e)
+        {
+            log.error(e);
+            return createErrorResponse(params, e.getMessage());
+        }
+
+        final List<String> displayPropertyNames = new ArrayList<String>();
+        for (int i=0; i < displayFields.size(); i++)
+        {
+            displayPropertyNames.add(i, displayFields.get(i).getCaption());
         }
 
         return new SearchReturnValues()
