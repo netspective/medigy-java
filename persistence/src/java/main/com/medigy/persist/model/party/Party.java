@@ -49,7 +49,9 @@ import com.medigy.persist.reference.custom.party.CommunicationEventRoleType;
 import com.medigy.persist.reference.custom.party.FacilityType;
 import com.medigy.persist.reference.custom.party.PartyClassificationType;
 import com.medigy.persist.reference.custom.party.PartyIdentifierType;
+import com.medigy.persist.reference.custom.party.ContactMechanismPurposeType;
 import com.medigy.persist.reference.type.party.PartyType;
+import com.medigy.persist.reference.type.ContactMechanismType;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -207,6 +209,40 @@ public class Party extends AbstractTopLevelEntity
     protected void setPartyContactMechanisms(final List<PartyContactMechanism> partyContactMechanisms)
     {
         this.partyContactMechanisms = partyContactMechanisms;
+    }
+
+    @Transient
+    public List<PartyContactMechanism> getAddresses()
+    {
+        List<PartyContactMechanism> addresses = new ArrayList<PartyContactMechanism>();
+        for (PartyContactMechanism mech : partyContactMechanisms)
+        {
+            if (mech.getContactMechanism() instanceof  PostalAddress)
+                addresses.add(mech);
+        }
+        return addresses;
+    }
+
+    @Transient
+    public List<PartyContactMechanism> getPhoneNumbers()
+    {
+        List<PartyContactMechanism> addresses = new ArrayList<PartyContactMechanism>();
+        for (PartyContactMechanism mech : partyContactMechanisms)
+        {
+            if (mech.getContactMechanism().getType().equals(ContactMechanismType.Cache.PHONE.getEntity()))
+                addresses.add(mech);
+        }
+        return addresses;
+    }
+
+    @Transient
+    public void addPartyContactMechanism(final ContactMechanism number, final ContactMechanismPurposeType type)
+    {
+        final PartyContactMechanism pcm = new PartyContactMechanism();
+        pcm.setContactMechanism(number);
+        pcm.setParty(this);
+        pcm.addPurpose(type);
+        partyContactMechanisms.add(pcm);
     }
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "party")
