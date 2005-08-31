@@ -107,7 +107,11 @@ public class USAddressDataGenerator
     {
         // TODO: try to generate proper exchanges and prefixs; right now we're just creating truly random ones
         return RandomUtils.generateRandomNumberBetween(100, 999) + "-" +
-               RandomUtils.generateRandomNumberBetween(100, 999) + "-" +
                RandomUtils.generateRandomNumberBetween(1000, 9999);
+    }
+
+    public String getRandomPhoneAreaCode(final City city)
+    {
+        return "" + RandomUtils.generateRandomNumberBetween(100, 999);
     }
 }
