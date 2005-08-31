@@ -66,8 +66,8 @@ public class SchedulerFacadeImpl extends AbstractFacade implements SchedulerFaca
     /**
      * Lists all appointments on the same day. This query is not case sensitive.
      *
-     * @param beginDate     exact last name or partial last name
-     * @param endDate       whether or not the name search should be an exact match
+     * @param beginDate     begin date of encounter event range
+     * @param endDate       end date of encounter event range
      * @return HealthCareEncounter array
      */
     public HealthCareEncounter[] listEncountersByDateRange(final Date beginDate, final Date endDate)
