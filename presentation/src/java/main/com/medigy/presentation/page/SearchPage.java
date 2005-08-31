@@ -1,3 +1,6 @@
+package com.medigy.presentation.page;
+
+import wicket.markup.html.panel.Panel;
 /*
  * Copyright (c) 2000-2003 Netspective Communications LLC. All rights reserved.
  *
@@ -36,57 +39,12 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.app.pbs.page.entity.person;
 
-import com.medigy.service.ServiceVersion;
-import com.medigy.service.dto.person.PatientProfileParameters;
-import com.medigy.service.dto.person.PatientProfileReturnValues;
-import com.medigy.service.person.PatientProfileService;
-import com.medigy.wicket.DefaultApplication;
-import com.medigy.wicket.border.DefaultPageBodyBorder;
-import wicket.Page;
-import wicket.PageParameters;
-import wicket.model.CompoundPropertyModel;
-
-public class PatientProfile extends AbstractPersonPage  implements DefaultPageBodyBorder.HeadingProvider
+public interface SearchPage 
 {
-    private PatientProfilePanel mainPanel;
-    private Page searchPage;
+    public Panel createSearchCriteriaPanel(final String id);
+    public Panel createSearchResultPanel(final String id);
 
-    public PatientProfile(final PageParameters parameters)
-    {
-        super(parameters);
-        mainPanel = new PatientProfilePanel("mainPanel", new CompoundPropertyModel(getEntity()));
-        add(mainPanel);
-    }
-
-    public PatientProfile(final Page searchPage, final PageParameters parameters)
-    {
-        super(parameters);
-        this.searchPage = searchPage;
-        mainPanel = new PatientProfilePanel("mainPanel", new CompoundPropertyModel(getEntity()));
-        add(mainPanel);
-    }
-
-    protected void loadEntity(final long entityId) throws PersonAccessException
-    {
-        final PatientProfileService service = (PatientProfileService) ((DefaultApplication) getApplication()).getService(PatientProfileService.class);
-        final PatientProfileReturnValues values = service.getProfile(new PatientProfileParameters () {
-            public Long getPatientId()
-            {
-                return new Long(entityId);
-            }
-
-            public ServiceVersion getServiceVersion()
-            {
-                return null;
-            }
-        });
-        activePerson = values.getPatient();
-    }
-
-    public String getPageHeading()
-    {
-        return getEntity().getFullName();
-    }
+    public Panel getSearchCriteriaPanel();
+    public Panel getSearchResultsPanel();
 }

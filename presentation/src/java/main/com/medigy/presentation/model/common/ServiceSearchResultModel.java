@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * Model behind the search result. Expects to use a service to get the search results.
  */
-public abstract class ServiceSearchResultModel extends AbstractReadOnlyDetachableModel
+public class ServiceSearchResultModel extends AbstractReadOnlyDetachableModel
 {
     private SearchResultPageableList list;
     private int rowsPerPage = 10;
@@ -25,11 +25,11 @@ public abstract class ServiceSearchResultModel extends AbstractReadOnlyDetachabl
     private SearchFormModelObject formModelObject;
     private SearchResultPanel parent;
 
-    public  ServiceSearchResultModel(final SearchResultPanel panel, final Service service)
+    public  ServiceSearchResultModel(final SearchResultPanel panel, final Service service, final ServiceCountAndListAction calAction)
     {
         this.parent = panel;
         this.service = service;
-        this.countAndListAction = createCountAndListAction();
+        this.countAndListAction = calAction;
     }
 
     public SearchResultPanel getParent()
@@ -98,12 +98,6 @@ public abstract class ServiceSearchResultModel extends AbstractReadOnlyDetachabl
     }
 
     /**
-     * Since count and list actions invoke the actual underlying SERVICE, the
-     * child classes must implement this method.
-     */
-    public abstract ServiceCountAndListAction createCountAndListAction();
-
-    /**
      * @see PageableList
      */
     public class SearchResultPageableList extends PageableList
@@ -130,7 +124,7 @@ public abstract class ServiceSearchResultModel extends AbstractReadOnlyDetachabl
         {
             final List list = super.load(startFromIndex, numberOfElements);
             // the result column names are not a part of the list
-            resultColumnNames = ((ServiceCountAndListAction) getCountAndListAction()).getColumnNames();
+            //resultColumnNames = ((ServiceCountAndListAction) getCountAndListAction()).getColumnNames();
             return list;
         }
 

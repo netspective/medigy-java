@@ -14,11 +14,14 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-public class SearchResultsListView  extends PageableListView
+/**
+ * A search result list view that is pageable but the output is dynamic meaning
+ * the number of columns displayed is not static and could be different for each search.
+ */
+public class DynamicSearchResultsListView  extends PageableListView
 {
     private List<String> columnNames;
     /**
@@ -31,12 +34,12 @@ public class SearchResultsListView  extends PageableListView
      * @param pageSizeInCells
      *            page size
      */
-    public SearchResultsListView(String id, IModel model, int pageSizeInCells)
+    public DynamicSearchResultsListView(String id, IModel model, int pageSizeInCells)
     {
         super(id, model, pageSizeInCells);
     }
 
-    public SearchResultsListView(String id, List list, int pageSizeInCells)
+    public DynamicSearchResultsListView(String id, List list, int pageSizeInCells)
     {
         super(id, list, pageSizeInCells);
     }
@@ -55,6 +58,11 @@ public class SearchResultsListView  extends PageableListView
         return new SimpleDateFormat("MM/dd/yyyy");
     }
 
+    /**
+     *
+     * @param index
+     * @return
+     */
     protected ListItem newItem(final int index)
     {
         columnNames = ((ServiceSearchResultModel) getModel()).getResultColumnNames();
@@ -71,12 +79,8 @@ public class SearchResultsListView  extends PageableListView
                 for (String column : columnNames)
                 {
                     final Object value = map.get(column);
-                    if (value != null && value instanceof Date)
-                         buffer.append("<td>" + getDateFormat().format((Date)value) +"</td>");
-                    else if (value != null)
-                        buffer.append("<td>" + value +"</td>");
-                    else
-                        buffer.append("<td>&nbsp;</td>");
+                    final String s = formatColumnValue(column, value);
+                    buffer.append("<td>" + (s != null ? s : "&nbsp;") + "</td>");
                 }
 
                 replaceComponentTagBody(markupStream, openTag, buffer.toString());
@@ -85,13 +89,30 @@ public class SearchResultsListView  extends PageableListView
         };
     }
 
+    protected String applyHtmlMarkup(final String columnName, final String columnValue)
+    {
+        return columnValue;
+    }
+
+    protected String formatColumnValue(final String columnName, final Object value)
+    {
+        String formattedStr = null;
+        if (value != null && value instanceof Date)
+             formattedStr = getDateFormat().format((Date)value);
+        else if (value != null)
+            formattedStr = value.toString();
+
+        return applyHtmlMarkup(columnName, formattedStr);
+    }
+
     /**
+     *
      * @see PageableListView#populateItem(ListItem)
      * @param item
      */
     public void populateItem(final ListItem item)
     {
-        final Map<String, Object> map = (Map<String, Object>) item.getModelObject();
-        final Iterator<String> strings = map.keySet().iterator();
+        //final Map<String, Object> map = (Map<String, Object>) item.getModelObject();
+        //final Iterator<String> strings = map.keySet().iterator();
     }
 }

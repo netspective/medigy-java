@@ -3,11 +3,10 @@
  */
 package com.medigy.presentation.model.common;
 
-import com.medigy.service.SearchReturnValues;
-import com.medigy.service.SearchService;
-import com.medigy.service.SearchServiceParameters;
+import com.medigy.presentation.form.common.SearchResultPanel;
 import com.medigy.service.Service;
-import com.medigy.service.dto.ServiceReturnValues;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import wicket.contrib.data.model.ISelectCountAndListAction;
 
 import java.util.List;
@@ -18,14 +17,22 @@ import java.util.List;
  * are invoked by PageableList in the {@link com.medigy.presentation.model.common.ServiceSearchResultModel#onAttach()}
  * method call.
  */
-public abstract class ServiceCountAndListAction implements ISelectCountAndListAction
+public class ServiceCountAndListAction implements ISelectCountAndListAction
 {
-    private final SearchService service;
-    protected List<String> columnNames;
+    private final Log log = LogFactory.getLog(ServiceCountAndListAction.class);
 
-    public ServiceCountAndListAction(final SearchService service)
+    private final Service service;
+    private final SearchResultPanel panel;
+
+    public ServiceCountAndListAction(final SearchResultPanel panel, final Service service)
     {
         this.service = service;
+        this.panel = panel;
+    }
+
+    public SearchResultPanel getParentPanel()
+    {
+        return panel;
     }
 
     public Service getService()
@@ -33,44 +40,19 @@ public abstract class ServiceCountAndListAction implements ISelectCountAndListAc
         return service;
     }
 
-    public List<String> getColumnNames()
-    {
-        return columnNames;
-    }
-
-    public Object execute(Object queryObject)
+    public Object execute(final Object queryObject)
     {
         if (queryObject == null)
             return 0;
-
-        ServiceReturnValues values = service.search(createSearchServiceParameters(queryObject));
-        if(values.getErrorMessage() != null)
-        {
-            return 0;
-        }
-
-        SearchReturnValues srv = (SearchReturnValues) values;
-        columnNames = srv.getSearchResults() != null ? srv.getColumnNames() : null;
-        return srv.getSearchResults().size();
-
+        // let the parent panel handle the service invocation
+        return getParentPanel().invokeService(queryObject);
     }
 
-    public abstract SearchServiceParameters createSearchServiceParameters(final Object queryObject);
-    public abstract SearchServiceParameters createSearchServiceParameters(final Object queryObject, int startFromRow,
-                                                                          int numberOfRows);
-
-    public List execute(Object queryObject, final int startFromRow, int numberOfRows)
+    public List execute(final Object queryObject, final int startFromRow, final int numberOfRows)
     {
-        ServiceReturnValues values = service.search(createSearchServiceParameters(queryObject, startFromRow, numberOfRows));
-        if(values.getErrorMessage() != null)
-        {
+        if (queryObject == null)
             return null;
-        }
-        
-        SearchReturnValues srv = (SearchReturnValues) values;
 
-        columnNames = srv.getSearchResults() != null ? srv.getColumnNames() : null;
-        //columnNames = values.getSearchResults() != null && values.getSearchResults().size() > 0 ? new ArrayList<String>(values.getSearchResults().get(0).keySet()) : null;
-        return srv.getSearchResults();
+        return getParentPanel().invokeService(queryObject, startFromRow, numberOfRows);
     }
 }

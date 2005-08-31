@@ -38,11 +38,9 @@
  */
 package com.medigy.app.pbs.page.entity.person;
 
+import com.medigy.app.pbs.panel.common.AddressListPanel;
+import com.medigy.app.pbs.panel.common.PhoneListPanel;
 import com.medigy.persist.model.insurance.InsurancePolicy;
-import com.medigy.persist.model.party.ContactMechanism;
-import com.medigy.persist.model.party.PartyContactMechanism;
-import com.medigy.persist.model.party.PhoneNumber;
-import com.medigy.persist.model.party.PostalAddress;
 import com.medigy.persist.model.person.Person;
 import com.medigy.persist.model.person.PersonIdentifier;
 import wicket.markup.html.basic.Label;
@@ -100,40 +98,7 @@ public class PatientProfilePanel extends Panel
             }
         });
 
-        // Add insurance policies
-        add(new ListView("addresses", patient.getPartyContactMechanisms())
-        {
-            public void populateItem(final ListItem listItem)
-            {
-                final PartyContactMechanism pcm = (PartyContactMechanism) listItem.getModelObject();
-                final ContactMechanism contactMechanism = pcm.getContactMechanism();
-
-                if (contactMechanism instanceof PostalAddress)
-                {
-                    final PostalAddress postalAddress = (PostalAddress) contactMechanism;
-                    listItem.add(new Label("address1", postalAddress.getAddress1()));
-                    listItem.add(new Label("address2", postalAddress.getAddress2()));
-                    listItem.add(new Label("city", postalAddress.getCity().getCityName()));
-                    listItem.add(new Label("state", postalAddress.getState().getStateAbbreviation()));
-                    listItem.add(new Label("zip", postalAddress.getPostalCode().getCodeValue()));
-                }
-            }
-        });
-
-        add(new ListView("phones", patient.getPartyContactMechanisms())
-        {
-            public void populateItem(final ListItem listItem)
-            {
-                final PartyContactMechanism pcm = (PartyContactMechanism) listItem.getModelObject();
-                final ContactMechanism contactMechanism = pcm.getContactMechanism();
-                if (contactMechanism instanceof PhoneNumber)
-                {
-                    final PhoneNumber phoneNumber = (PhoneNumber) contactMechanism;
-
-                    listItem.add(new Label("areaCode", phoneNumber.getAreaCode()));
-                    listItem.add(new Label("number", phoneNumber.getNumberValue()));
-                }
-            }
-        });
+        add(new AddressListPanel("addressList", patient.getAddresses()));
+        add(new PhoneListPanel("phoneList", patient.getPhoneNumbers()));
     }
 }

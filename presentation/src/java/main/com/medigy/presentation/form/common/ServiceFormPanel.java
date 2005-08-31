@@ -36,57 +36,68 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.app.pbs.page.entity.person;
+package com.medigy.presentation.form.common;
 
-import com.medigy.service.ServiceVersion;
-import com.medigy.service.dto.person.PatientProfileParameters;
-import com.medigy.service.dto.person.PatientProfileReturnValues;
-import com.medigy.service.person.PatientProfileService;
+import com.medigy.service.SearchService;
+import com.medigy.service.Service;
 import com.medigy.wicket.DefaultApplication;
-import com.medigy.wicket.border.DefaultPageBodyBorder;
-import wicket.Page;
-import wicket.PageParameters;
-import wicket.model.CompoundPropertyModel;
+import com.medigy.wicket.form.FormMode;
+import wicket.IFeedback;
+import wicket.markup.html.form.Form;
+import wicket.markup.html.panel.FeedbackPanel;
+import wicket.markup.html.panel.Panel;
 
-public class PatientProfile extends AbstractPersonPage  implements DefaultPageBodyBorder.HeadingProvider
+/**
+ * Panel containing a form that relies on a service for creation of it. The panel also
+ * contains a feedpack panel for the form.
+ */
+public abstract class ServiceFormPanel extends Panel
 {
-    private PatientProfilePanel mainPanel;
-    private Page searchPage;
+    public static final String FORM_COMPONENT_ID = "form";
+    public static final String FEEDBACK_COMPONENT_ID = "feedback";
 
-    public PatientProfile(final PageParameters parameters)
+    private Service service;
+    private Form form;
+
+    public ServiceFormPanel(final String id, final Class<? extends Service> serviceClass)
     {
-        super(parameters);
-        mainPanel = new PatientProfilePanel("mainPanel", new CompoundPropertyModel(getEntity()));
-        add(mainPanel);
+        this(id, FormMode.NONE, serviceClass);
     }
 
-    public PatientProfile(final Page searchPage, final PageParameters parameters)
+    public ServiceFormPanel(final String id, final FormMode formMode, final Class<? extends Service> serviceClass)
     {
-        super(parameters);
-        this.searchPage = searchPage;
-        mainPanel = new PatientProfilePanel("mainPanel", new CompoundPropertyModel(getEntity()));
-        add(mainPanel);
+        super(id);
+        if (serviceClass != null)
+            this.service = (SearchService) ((DefaultApplication) getApplication()).getService(serviceClass);
+        final FeedbackPanel feedback = new FeedbackPanel(FEEDBACK_COMPONENT_ID);
+        add(feedback);
+        add(form = createForm(FORM_COMPONENT_ID, feedback, formMode));
     }
 
-    protected void loadEntity(final long entityId) throws PersonAccessException
+    /**
+     * Gets the  associated service
+     * @return Service object
+     */
+    public Service getService()
     {
-        final PatientProfileService service = (PatientProfileService) ((DefaultApplication) getApplication()).getService(PatientProfileService.class);
-        final PatientProfileReturnValues values = service.getProfile(new PatientProfileParameters () {
-            public Long getPatientId()
-            {
-                return new Long(entityId);
-            }
-
-            public ServiceVersion getServiceVersion()
-            {
-                return null;
-            }
-        });
-        activePerson = values.getPatient();
+        return service;
     }
 
-    public String getPageHeading()
+    /**
+     * Gets the child component form
+     * @return Form child
+     */
+    public Form getForm()
     {
-        return getEntity().getFullName();
+        return form;
     }
+
+    /**
+     * Creates the service-related form component
+     * @param id        Form component ID
+     * @param feedback  the form related feedback panel
+     * @param mode      the form mode
+     * @return          form
+     */
+    public abstract Form createForm(final String id, final IFeedback feedback, final FormMode mode);
 }

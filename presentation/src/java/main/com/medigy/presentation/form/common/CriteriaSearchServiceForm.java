@@ -36,57 +36,49 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.app.pbs.page.entity.person;
+package com.medigy.presentation.form.common;
 
-import com.medigy.service.ServiceVersion;
-import com.medigy.service.dto.person.PatientProfileParameters;
-import com.medigy.service.dto.person.PatientProfileReturnValues;
-import com.medigy.service.person.PatientProfileService;
-import com.medigy.wicket.DefaultApplication;
-import com.medigy.wicket.border.DefaultPageBodyBorder;
-import wicket.Page;
-import wicket.PageParameters;
-import wicket.model.CompoundPropertyModel;
+import com.medigy.presentation.page.SearchPage;
+import com.medigy.service.Service;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import wicket.IFeedback;
+import wicket.markup.html.form.DropDownChoice;
+import wicket.markup.html.form.TextField;
+import wicket.markup.html.form.model.IChoiceList;
+import wicket.model.IModel;
 
-public class PatientProfile extends AbstractPersonPage  implements DefaultPageBodyBorder.HeadingProvider
+/**
+ * A single criteria search form that needs a service to construct itself (meaning getting search criterias from
+ * a service)
+ */
+public abstract class CriteriaSearchServiceForm extends ServiceForm
 {
-    private PatientProfilePanel mainPanel;
-    private Page searchPage;
+    private final Log log = LogFactory.getLog(CriteriaSearchServiceForm.class);
 
-    public PatientProfile(final PageParameters parameters)
+    public static final String CRITERIA_DROPDOWN_COMPONENT_ID = "searchCriterias";
+    public static final String CRITERIA_VALUE_COMPONENT_ID = "searchCriteriaValue";
+
+    public CriteriaSearchServiceForm(final String componentName, final IModel iModel, final IFeedback iFeedback, final Service service)
     {
-        super(parameters);
-        mainPanel = new PatientProfilePanel("mainPanel", new CompoundPropertyModel(getEntity()));
-        add(mainPanel);
+        super(componentName, iModel, iFeedback, service);
     }
 
-    public PatientProfile(final Page searchPage, final PageParameters parameters)
+    public void initializeForm()
     {
-        super(parameters);
-        this.searchPage = searchPage;
-        mainPanel = new PatientProfilePanel("mainPanel", new CompoundPropertyModel(getEntity()));
-        add(mainPanel);
+        add(new DropDownChoice(CRITERIA_DROPDOWN_COMPONENT_ID, constructConditionList()));
+        add(new TextField(CRITERIA_VALUE_COMPONENT_ID));
     }
 
-    protected void loadEntity(final long entityId) throws PersonAccessException
-    {
-        final PatientProfileService service = (PatientProfileService) ((DefaultApplication) getApplication()).getService(PatientProfileService.class);
-        final PatientProfileReturnValues values = service.getProfile(new PatientProfileParameters () {
-            public Long getPatientId()
-            {
-                return new Long(entityId);
-            }
+    public abstract IChoiceList constructConditionList();
 
-            public ServiceVersion getServiceVersion()
-            {
-                return null;
-            }
-        });
-        activePerson = values.getPatient();
-    }
-
-    public String getPageHeading()
+    public void onSubmit()
     {
-        return getEntity().getFullName();
+        final CriteriaSearchFormModelObject formModelObject = (CriteriaSearchFormModelObject) getModelObject();
+        //((SearchResultPanel) getPage().get("border.searchBorder.searchResultsPanel")).onSearchExecute(formModelObject);
+        final SearchPage searchPage = ((SearchPage) getPage());
+        final SearchResultPanel searchResultsPanel = (SearchResultPanel) searchPage.getSearchResultsPanel();
+        searchResultsPanel.onSearchExecute(formModelObject);
+
     }
 }

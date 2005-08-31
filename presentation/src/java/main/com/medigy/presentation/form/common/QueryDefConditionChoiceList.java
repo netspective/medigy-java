@@ -36,57 +36,88 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.app.pbs.page.entity.person;
+package com.medigy.presentation.form.common;
 
-import com.medigy.service.ServiceVersion;
-import com.medigy.service.dto.person.PatientProfileParameters;
-import com.medigy.service.dto.person.PatientProfileReturnValues;
-import com.medigy.service.person.PatientProfileService;
-import com.medigy.wicket.DefaultApplication;
-import com.medigy.wicket.border.DefaultPageBodyBorder;
-import wicket.Page;
-import wicket.PageParameters;
-import wicket.model.CompoundPropertyModel;
+import com.medigy.persist.util.query.QueryDefnCondition;
+import wicket.markup.html.form.model.IChoice;
+import wicket.markup.html.form.model.IChoiceList;
 
-public class PatientProfile extends AbstractPersonPage  implements DefaultPageBodyBorder.HeadingProvider
+import java.util.ArrayList;
+import java.util.List;
+
+public class QueryDefConditionChoiceList implements IChoiceList
 {
-    private PatientProfilePanel mainPanel;
-    private Page searchPage;
+    private List<IChoice> choices = new ArrayList<IChoice>();
 
-    public PatientProfile(final PageParameters parameters)
+    private class CriteriaChoice implements IChoice
     {
-        super(parameters);
-        mainPanel = new PatientProfilePanel("mainPanel", new CompoundPropertyModel(getEntity()));
-        add(mainPanel);
+        private QueryDefnCondition condition;
+        private List<QueryDefnCondition> conditionList;
+
+        public CriteriaChoice(final QueryDefnCondition condition)
+        {
+            this.condition = condition;
+        }
+
+        public String getDisplayValue()
+        {
+            return condition.getDisplayCaption();
+        }
+
+        public String getId()
+        {
+            return condition.getName();
+        }
+
+        public Object getObject()
+        {
+            return condition;
+        }
     }
 
-    public PatientProfile(final Page searchPage, final PageParameters parameters)
+    public QueryDefConditionChoiceList(final List<QueryDefnCondition> conditions)
     {
-        super(parameters);
-        this.searchPage = searchPage;
-        mainPanel = new PatientProfilePanel("mainPanel", new CompoundPropertyModel(getEntity()));
-        add(mainPanel);
+        for (QueryDefnCondition cond : conditions)
+            choices.add(new CriteriaChoice(cond));
     }
 
-    protected void loadEntity(final long entityId) throws PersonAccessException
+    public void attach()
     {
-        final PatientProfileService service = (PatientProfileService) ((DefaultApplication) getApplication()).getService(PatientProfileService.class);
-        final PatientProfileReturnValues values = service.getProfile(new PatientProfileParameters () {
-            public Long getPatientId()
-            {
-                return new Long(entityId);
-            }
 
-            public ServiceVersion getServiceVersion()
-            {
-                return null;
-            }
-        });
-        activePerson = values.getPatient();
     }
 
-    public String getPageHeading()
+    public IChoice choiceForId(String id)
     {
-        return getEntity().getFullName();
+        for (IChoice choice: choices)
+        {
+            if (choice.getId().equals(id))
+                return choice;
+        }
+        return null;
+    }
+
+    public IChoice choiceForObject(Object object)
+    {
+        for (IChoice choice: choices)
+        {
+            if (choice.getObject().equals(object))
+                return choice;
+        }
+        return null;
+    }
+
+    public IChoice get(int index)
+    {
+        return choices.get(index);
+    }
+
+    public int size()
+    {
+        return this.choices.size();
+    }
+
+    public void detach()
+    {
+
     }
 }

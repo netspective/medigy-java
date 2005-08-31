@@ -36,33 +36,45 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.presentation.form.query;
+package com.medigy.presentation.form.common;
 
-import com.medigy.presentation.form.common.SearchResultPanel;
 import com.medigy.presentation.model.common.ServiceCountAndListAction;
 import com.medigy.service.SearchReturnValues;
 import com.medigy.service.SearchService;
 import com.medigy.service.SearchServiceParameters;
 import com.medigy.service.ServiceVersion;
 import com.medigy.service.dto.ServiceReturnValues;
-import com.medigy.service.dto.query.QueryDefinitionSearchParameters;
 import com.medigy.service.dto.query.SearchCondition;
-import com.medigy.service.query.QueryDefinitionSearchService;
 
+import java.util.Arrays;
 import java.util.List;
 
-public class QueryDefinitionSearchResultPanel extends SearchResultPanel
+/**
+ * Class implementing the ISelectCountAndListAction. It is based on invoking services implementing the
+ *  {@link SearchService}.
+ */
+public class SearchServiceCountAndListAction extends ServiceCountAndListAction
 {
-    private final Class queryDefinitionClass;
     protected List<String> columnNames = null;
 
-    public QueryDefinitionSearchResultPanel(final String id, final Class queryDefClass)
-    {
-        super(id, QueryDefinitionSearchService.class);
-        this.queryDefinitionClass = queryDefClass;
-    }       
 
-    public Object invokeService(final Object queryObject)
+    public SearchServiceCountAndListAction(final SearchResultPanel panel, final SearchService service)
+    {
+        super(panel, service);
+    }
+
+    /**
+     * Gets the column names returned from the invocation of {@link SearchService#search(com.medigy.service.SearchServiceParameters)}.
+     *
+     * @return  Null if none of the execute() methods have been called
+     * @see com.medigy.service.SearchReturnValues#getColumnNames()
+     */
+    public List<String> getColumnNames()
+    {
+       return columnNames;
+    }
+
+    public Object execute(Object queryObject)
     {
         if (queryObject == null)
             return 0;
@@ -77,7 +89,7 @@ public class QueryDefinitionSearchResultPanel extends SearchResultPanel
         return srv.getSearchResults().size();
     }
 
-    public List invokeService(final Object queryObject, final int startFromRow, final int numberOfRows)
+    public List execute(Object queryObject, final int startFromRow, int numberOfRows)
     {
         ServiceReturnValues values = ((SearchService) getService()).search(createSearchServiceParameters(queryObject, startFromRow, numberOfRows));
         if(values.getErrorMessage() != null)
@@ -91,27 +103,24 @@ public class QueryDefinitionSearchResultPanel extends SearchResultPanel
 
     public SearchServiceParameters createSearchServiceParameters(final Object queryObject)
     {
-        final QueryDefSearchFormModelObject paramsObject = (QueryDefSearchFormModelObject) queryObject;
-
-        return new QueryDefinitionSearchParameters() {
-            public Class getQueryDefinitionClass()
-            {
-                return queryDefinitionClass;
-            }
-
+        final CriteriaSearchFormModelObject formModelObject = (CriteriaSearchFormModelObject) queryObject;
+        return new SearchServiceParameters()  {
             public List<SearchCondition> getConditions()
             {
-                return  paramsObject.getConditionFieldList();
-            }
-
-            public List<String> getDisplayFields()
-            {
-                return paramsObject != null ? paramsObject.getDisplayFields() : null;
+                final SearchCondition searchCondition = new SearchCondition();
+                searchCondition.setCondition(formModelObject.getSearchCriterias());
+                searchCondition.setFieldValue(formModelObject.getSearchCriteriaValue());
+                return Arrays.asList(searchCondition);
             }
 
             public List<String> getOrderBys()
             {
-                return paramsObject.getSortByFields();
+                return null;
+            }
+
+            public List<String> getDisplayFields()
+            {
+                return null;
             }
 
             public int getStartFromRow()
@@ -122,33 +131,30 @@ public class QueryDefinitionSearchResultPanel extends SearchResultPanel
             public ServiceVersion getServiceVersion()
             {
                 return null;
-            }
+            };
         };
     }
 
     public SearchServiceParameters createSearchServiceParameters(final Object queryObject, final int startFromRow, int numberOfRows)
     {
-        final QueryDefSearchFormModelObject paramsObject = (QueryDefSearchFormModelObject) queryObject;
-
-        return new QueryDefinitionSearchParameters() {
-            public Class getQueryDefinitionClass()
-            {
-                return queryDefinitionClass;
-            }
-
+        final CriteriaSearchFormModelObject formModelObject = (CriteriaSearchFormModelObject) queryObject;
+        return new SearchServiceParameters()  {
             public List<SearchCondition> getConditions()
             {
-                return  paramsObject.getConditionFieldList();
+                final SearchCondition searchCondition = new SearchCondition();
+                searchCondition.setCondition(formModelObject.getSearchCriterias());
+                searchCondition.setFieldValue(formModelObject.getSearchCriteriaValue());
+                return Arrays.asList(searchCondition);
             }
 
             public List<String> getDisplayFields()
             {
-                return paramsObject != null ? paramsObject.getDisplayFields() : null;
+                return null;
             }
 
             public List<String> getOrderBys()
             {
-                return paramsObject.getSortByFields();
+                return null;
             }
 
             public int getStartFromRow()
@@ -161,10 +167,5 @@ public class QueryDefinitionSearchResultPanel extends SearchResultPanel
                 return null;
             }
         };
-    }
-
-    public ServiceCountAndListAction createCountAndListAction()
-    {
-        return new ServiceCountAndListAction(this, service);
     }
 }
