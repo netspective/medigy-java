@@ -47,6 +47,7 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 import wicket.util.parse.metapattern.MetaPattern;
+import wicket.markup.html.form.FormComponent;
 
 public class PatternValidator extends wicket.markup.html.form.validation.PatternValidator
 {
@@ -107,9 +108,9 @@ public class PatternValidator extends wicket.markup.html.form.validation.Pattern
         return formatForMessage;
     }
 
-    protected Map messageModel()
+    protected Map messageModel(final FormComponent formComponent)
     {
-        final Map messageModel = super.messageModel();
+        final Map messageModel = super.messageModel(formComponent);
         messageModel.put("pattern", getPattern());
         messageModel.put("format", getFormatForMessage() == null ? getPattern().pattern() : getFormatForMessage());
         return messageModel;

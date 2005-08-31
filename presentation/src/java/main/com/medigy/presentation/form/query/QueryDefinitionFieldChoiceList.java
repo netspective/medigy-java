@@ -3,85 +3,60 @@
  */
 package com.medigy.presentation.form.query;
 
-import wicket.markup.html.form.model.IChoiceList;
-import wicket.markup.html.form.model.IChoice;
+import wicket.markup.html.form.IChoiceRenderer;
+import wicket.markup.html.form.ListMultipleChoice;
 
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Collection;
 
 import com.medigy.persist.util.query.QueryDefinitionField;
 
-public class QueryDefinitionFieldChoiceList implements IChoiceList
+public class QueryDefinitionFieldChoiceList extends ListMultipleChoice
 {
-    private List<IChoice> choices = new ArrayList<IChoice>();
-
-    private class FieldChoice implements IChoice
+    private class FieldChoice implements IChoiceRenderer
     {
-        private QueryDefinitionField field;
+        private List<QueryDefinitionField> conditionList = new ArrayList<QueryDefinitionField>();
 
-        public FieldChoice(final QueryDefinitionField field)
+        public FieldChoice(final List<QueryDefinitionField> conditionList)
         {
-            this.field = field;
+            this.conditionList = conditionList;
         }
 
-        public String getDisplayValue()
+        public String getDisplayValue(Object object)
         {
-            return field.getCaption();
+            for(QueryDefinitionField choice: conditionList)
+            {
+                if (choice.equals(object))
+                    return choice.getCaption();
+            }
+            return null;
         }
 
-        public String getId()
+        public String getIdValue(Object object, int index)
         {
-            return field.getEntityPropertyName();
+            for(QueryDefinitionField choice: conditionList)
+            {
+                if(object instanceof QueryDefinitionField)
+                {
+                    QueryDefinitionField param = (QueryDefinitionField)object;
+                    if (choice.getCaption().equals(param.getCaption()))
+                        return choice.getName();
+                }
+                else if(object instanceof String)
+                {
+                    if (choice.getName().equals(object))
+                        return choice.getName();
+                }
+            }
+            return null;
         }
-
-        public Object getObject()
-        {
-            return field.getName();
-        }
     }
 
-    public QueryDefinitionFieldChoiceList(final Collection<QueryDefinitionField> fieldList)
+    public QueryDefinitionFieldChoiceList(final String name, final List<QueryDefinitionField> fieldList)
     {
-        for (QueryDefinitionField field : fieldList)
-            choices.add(new FieldChoice(field));
-    }
+        super(name);
 
-    public void attach()
-    {
-    }
-
-    public IChoice choiceForId(final String id)
-    {
-        for (IChoice choice: choices)
-        {
-            if (choice.getId().equals(id))
-                return choice;
-        }
-        return null;
-    }
-
-    public IChoice choiceForObject(Object object)
-    {
-        for (IChoice choice: choices)
-        {
-            if (choice.getObject().equals(object))
-                return choice;
-        }
-        return null;
-    }
-
-    public IChoice get(int index)
-    {
-        return choices.get(index);
-    }
-
-    public int size()
-    {
-        return this.choices.size();
-    }
-
-    public void detach()
-    {
+        this.setChoices(fieldList);
+        this.setChoiceRenderer(new FieldChoice(fieldList));
     }
 }

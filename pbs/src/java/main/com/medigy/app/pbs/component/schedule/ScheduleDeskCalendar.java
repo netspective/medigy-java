@@ -42,7 +42,9 @@
  */
 package com.medigy.app.pbs.component.schedule;
 
-public class ScheduleDeskCalendar extends AbstractScheduleDeskPanel
+import com.medigy.presentation.scheduler.component.AbstractScheduleDeskComponent;
+
+public class ScheduleDeskCalendar extends AbstractScheduleDeskComponent
 {
     public ScheduleDeskCalendar(final String id)
     {

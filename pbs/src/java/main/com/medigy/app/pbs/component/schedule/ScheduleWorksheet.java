@@ -42,11 +42,11 @@
  */
 package com.medigy.app.pbs.component.schedule;
 
-import wicket.markup.html.panel.Panel;
+import com.medigy.wicket.panel.DefaultPanel;
 
-public class AddSchedulesPanel extends Panel
+public class ScheduleWorksheet extends DefaultPanel
 {
-    public AddSchedulesPanel(final String id)
+    public ScheduleWorksheet(final String id)
     {
         super(id);
     }

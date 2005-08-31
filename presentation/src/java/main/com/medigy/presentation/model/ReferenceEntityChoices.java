@@ -45,79 +45,53 @@ package com.medigy.presentation.model;
 
 import com.medigy.persist.reference.CachedReferenceEntity;
 import com.medigy.persist.reference.ReferenceEntity;
-import wicket.markup.html.form.model.IChoice;
-import wicket.markup.html.form.model.IChoiceList;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import wicket.markup.html.form.IChoiceRenderer;
+
 /**
- * Simple choice list for providing choices in a static ReferenceEntity. This class implements
- * {@link wicket.markup.html.form.model.IChoiceList}so that it is easier to
- * create subclasses and anonymous implementations.
+ * Simple choice list for providing choices in a static ReferenceEntity.
  */
 public class ReferenceEntityChoices implements IChoiceList
 {
-	/** The reference entity that we're getting the enums from */
-	private Class entity;
-    private List<Choice> choices;
+    /** The reference entity that we're getting the enums from */
+    private Class entity;
+    private List<CachedReferenceEntity> choices;
+    private IChoiceRenderer renderer;
 
     /**
-	 * Implementation of IChoice for simple objects.
-	 */
-	private class Choice implements IChoice
-	{
-		/** The index of the choice */
-		private final int index;
+     * Implementation of IChoice for simple objects.
+     */
+    private class Choice implements IChoiceRenderer
+    {
+        public String getDisplayValue(Object object)
+        {
+            for(CachedReferenceEntity choice: choices)
+            {
+                if (choice.equals(object))
+                    return choice.getLabel();
+            }
+            return null;
+        }
 
-		/** The choice model object */
-		private final CachedReferenceEntity object;
+        public String getIdValue(Object object, int index)
+        {
+            if(index > 0)
+                return choices.get(index).getCode();
+            else
+                return null;
+        }
+    }
 
-		/**
-		 * Constructor
-		 *
-		 * @param object
-		 *            The object
-		 * @param index
-		 *            The index of the object in the choice list
-		 */
-		public Choice(final CachedReferenceEntity object, final int index)
-		{
-			this.object = object;
-			this.index = index;
-		}
-
-		/**
-		 * @see wicket.markup.html.form.model.IChoice#getDisplayValue()
-		 */
-		public String getDisplayValue()
-		{
-			return object.getLabel();
-		}
-
-		/**
-		 * @see wicket.markup.html.form.model.IChoice#getId()
-		 */
-		public String getId()
-		{
-			return object.getCode();
-		}
-
-		/**
-		 * @see wicket.markup.html.form.model.IChoice#getObject()
-		 */
-		public Object getObject()
-		{
-			return object.getCode();
-		}
-	}
-
-	/**
-	 * Constructor
-	 * @param entity Choices to add to this list
-	 */
-	public ReferenceEntityChoices(final Class entity)
-	{
+    /**
+     * Constructor
+     * @param entity Choices to add to this list
+     */
+    public ReferenceEntityChoices(final Class entity)
+    {
+        setRenderer(new Choice());
         this.entity = entity;
         boolean foundCache = false;
         for (final Class ic : this.entity.getClasses())
@@ -126,13 +100,11 @@ public class ReferenceEntityChoices implements IChoiceList
             {
                 if (ic.isEnum())
                 {
-                    int i = 0;
-                    choices = new ArrayList<Choice>();
+                    List choices = new ArrayList<Choice>();
                     for(final CachedReferenceEntity c : (CachedReferenceEntity[]) ic.getEnumConstants())
-                    {
-                        choices.add(new Choice(c, i));
-                        i++;
-                    }
+                        choices.add(c);
+
+                    setChoices(choices);
                     foundCache = true;
                 }
                 else
@@ -140,74 +112,34 @@ public class ReferenceEntityChoices implements IChoiceList
 
                 break;
             }
-
         }
 
         if (!foundCache)
             throw new RuntimeException(this.entity + " is marked as a ReferenceEntity but does not contain a ReferenceEntityCache enum.");
-	}
+    }
 
     public Class getEntity()
     {
         return entity;
     }
 
-	/**
-	 * @see IChoiceList#attach()
-	 */
-	public void attach()
-	{
-	}
-
-    /**
-     * @see wicket.model.IDetachable#detach()
-     */
-    public void detach()
+    public IChoiceRenderer getRenderer()
     {
+        return this.renderer;
     }
 
-	/**
-	 * @see wicket.markup.html.form.model.IChoiceList#choiceForId(java.lang.String)
-	 */
-	public IChoice choiceForId(String id)
-	{
-        for(Choice c : choices)
-            if(c.getId().equals(id))
-                return c;
+    public void setRenderer(final IChoiceRenderer renderer)
+    {
+        this.renderer = renderer;
+    }
 
-        return null;
-	}
+    public List getChoices()
+    {
+        return this.choices;
+    }
 
-	/**
-	 * @see wicket.markup.html.form.model.IChoiceList#choiceForObject(java.lang.Object)
-	 */
-	public IChoice choiceForObject(final Object object)
-	{
-        for(Choice c : choices)
-            if(c.getObject() == object)
-                return c;
-
-        return null;
-	}
-
-	/**
-	 * @see wicket.markup.html.form.model.IChoiceList#get(int)
-	 */
-	public IChoice get(final int index)
-	{
-		attach();
-		if (index != -1)
-			return choices.get(index);
-
-		return null;
-	}
-
-	/**
-	 * @see wicket.markup.html.form.model.IChoiceList#size()
-	 */
-	public int size()
-	{
-		attach();
-		return choices.size();
-	}
+    public void setChoices(final List choices)
+    {
+        this.choices = choices;
+    }
 }

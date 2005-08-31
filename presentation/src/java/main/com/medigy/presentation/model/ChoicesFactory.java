@@ -52,10 +52,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.medigy.persist.reference.ReferenceEntity;
+import com.medigy.persist.reference.CachedReferenceEntity;
 import com.medigy.persist.reference.custom.CustomReferenceEntity;
 import com.medigy.service.util.FacadeManager;
 import com.medigy.service.util.ReferenceEntityFacade;
-import wicket.markup.html.form.model.IChoiceList;
 
 public class ChoicesFactory
 {
@@ -67,7 +67,7 @@ public class ChoicesFactory
         return INSTANCE;
     }
 
-    private Map<Class, ReferenceEntityChoices> referenceEntityChoices = Collections.synchronizedMap(new HashMap<Class, ReferenceEntityChoices>());
+    private Map<Class, IChoiceList> referenceEntityChoices = Collections.synchronizedMap(new HashMap<Class, IChoiceList>());
     private Map<Class, CustomReferenceEntityChoices> customReferenceEntityChoices = Collections.synchronizedMap(new HashMap<Class, CustomReferenceEntityChoices>());
     private ReferenceEntityFacade referenceEntityFacade; // Do not reference this directly
 
@@ -78,10 +78,10 @@ public class ChoicesFactory
     // TODO: determine whether lazy loading is thread-safe
     protected ReferenceEntityFacade getReferenceEntityFacade()
     {
-        if (referenceEntityFacade == null)
+        if(referenceEntityFacade == null)
         {
             referenceEntityFacade = (ReferenceEntityFacade) FacadeManager.getInstance().getFacade(ReferenceEntityFacade.class);
-            if (referenceEntityFacade == null)
+            if(referenceEntityFacade == null)
                 log.error("Failed to lookup " + ReferenceEntityFacade.class.getName() + " implementation");
         }
         return referenceEntityFacade;
@@ -92,7 +92,6 @@ public class ChoicesFactory
         IChoiceList result = null;
         if(CustomReferenceEntity.class.isAssignableFrom(entity))
         {
-
             List<CustomReferenceEntity> entityList =  getReferenceEntityFacade().listCustomReferenceEntities(entity);
             return new CustomReferenceEntityChoices(entityList);
         }
@@ -110,7 +109,7 @@ public class ChoicesFactory
     }
 
 
-    public Map<Class, ReferenceEntityChoices> getReferenceEntityChoices()
+    public Map<Class, IChoiceList> getReferenceEntityChoices()
     {
         return referenceEntityChoices;
     }

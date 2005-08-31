@@ -3,8 +3,8 @@
  */
 package com.medigy.wicket.form;
 
-import wicket.IFeedback;
 import wicket.model.IModel;
+import wicket.feedback.IFeedback;
 
 abstract public class RecordEditorForm extends BaseForm
 {

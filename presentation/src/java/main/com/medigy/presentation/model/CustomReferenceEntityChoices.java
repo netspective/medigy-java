@@ -39,85 +39,48 @@
 package com.medigy.presentation.model;
 
 import com.medigy.persist.reference.custom.CustomReferenceEntity;
-import wicket.markup.html.form.model.IChoice;
-import wicket.markup.html.form.model.IChoiceList;
+import wicket.markup.html.form.IChoiceRenderer;
 
-import java.util.ArrayList;
 import java.util.List;
-
 
 public class CustomReferenceEntityChoices implements IChoiceList
 {
-    private class Choice implements IChoice
+    private List<CustomReferenceEntity> choices;
+    private IChoiceRenderer renderer = new Choice();
+
+    private class Choice implements IChoiceRenderer
     {
-        private final CustomReferenceEntity object;
-
-        Choice(final CustomReferenceEntity refEntity)
+        public String getDisplayValue(Object object)
         {
-            this.object = refEntity;
+            for(CustomReferenceEntity choice: choices)
+            {
+                if (choice.equals(object))
+                    return choice.getLabel();
+            }
+            return null;
         }
 
-        public String getDisplayValue()
+        public String getIdValue(Object object, int index)
         {
-            return object.getLabel();
-        }
-
-        public String getId()
-        {
-            return object.getCode();
-        }
-
-        public Object getObject()
-        {
-            return object.getCode();
+            if(index > 0)
+                return choices.get(index).getCode();
+            else
+                return null;
         }
     }
-
-    private List<Choice> choiceList;
 
     public CustomReferenceEntityChoices(final List<CustomReferenceEntity> list)
     {
-        this.choiceList = new ArrayList<Choice>();
-        for (int i = 0; i < list.size(); i++)
-        {
-            choiceList.add(new Choice(list.get(i)));
-        }
+        this.choices = list;
     }
 
-    public void attach()
+    public List getChoices()
     {
-
+        return this.choices;
     }
 
-    public IChoice choiceForId(String id)
+    public IChoiceRenderer getRenderer()
     {
-        for(Choice c : choiceList)
-            if(c.getId().equals(id))
-                return c;
-
-        return null;
-    }
-
-    public IChoice choiceForObject(Object object)
-    {
-        for(Choice c : choiceList)
-            if(c.getObject() == object)
-                return c;
-        return null;
-    }
-
-    public IChoice get(int i)
-    {
-        return choiceList.get(i);
-    }
-
-    public int size()
-    {
-        return choiceList.size();
-    }
-
-    public void detach()
-    {
-
+        return this.renderer;
     }
 }

@@ -58,8 +58,8 @@ import com.medigy.wicket.form.FormJavaScriptGenerator.FieldRegistrationContribut
 import com.medigy.wicket.form.FormJavaScriptGenerator.FieldTypeNameContributor;
 import com.medigy.wicket.form.FormJavaScriptGenerator.FieldTypeScriptContributor;
 import wicket.IComponentResolver;
-import wicket.IFeedback;
 import wicket.MarkupContainer;
+import wicket.feedback.IFeedback;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.form.Form;
@@ -104,12 +104,12 @@ public class BaseForm extends Form implements IComponentResolver
 
     protected BaseForm(final String componentName, final IFeedback feedback)
     {
-        super(componentName, feedback);
+        super(componentName);
     }
 
     public BaseForm(String componentName, IModel model, IFeedback feedback, final Class serviceParameterClass, final FormMode formMode)
     {
-        super(componentName, model, feedback);
+        super(componentName, model);
 
         assert(model instanceof BoundCompoundPropertyModel); // we only handle this kind of model right now
         assert(getModel().getObject(null) != null);  // make sure a service bean is attached

@@ -81,6 +81,14 @@ public class AuthenticatedWebPage extends BasePage
     }
 
     /**
+     * @see wicket.MarkupContainer#autoAdd(wicket.Component)
+     */
+    public boolean autoAdd(Component component)
+    {
+        return border.autoAdd(component);
+    }
+
+    /**
      * @see wicket.Page#checkAccess()
      */
 /*

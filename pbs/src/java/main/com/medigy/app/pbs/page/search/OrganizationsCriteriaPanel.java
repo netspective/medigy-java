@@ -49,9 +49,7 @@ import com.medigy.presentation.form.common.QueryDefConditionChoiceList;
 import com.medigy.presentation.form.common.ServiceFormPanel;
 import com.medigy.service.org.OrganizationSearchService;
 import com.medigy.wicket.form.FormMode;
-import wicket.IFeedback;
 import wicket.markup.html.form.Form;
-import wicket.markup.html.form.model.IChoiceList;
 import wicket.model.CompoundPropertyModel;
 
 import java.util.List;

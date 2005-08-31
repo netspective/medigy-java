@@ -44,13 +44,14 @@
 package com.medigy.wicket.form;
 
 import java.util.Collection;
+import java.util.List;
 
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.form.IOnChangeListener;
 import wicket.markup.html.form.ListMultipleChoice;
-import wicket.markup.html.form.model.IChoice;
-import wicket.markup.html.form.model.IChoiceList;
+import wicket.markup.html.form.ChoiceRenderer;
+import wicket.markup.html.form.IChoiceRenderer;
 import wicket.model.IModel;
 import wicket.util.string.Strings;
 
@@ -71,33 +72,17 @@ public class MultiCheckChoice extends ListMultipleChoice
 	}
 
 	/**
-	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, java.util.Collection)
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, List)
 	 */
-	public MultiCheckChoice(final String id, final Collection choices)
+	public MultiCheckChoice(final String id, final List choices)
 	{
 		super(id, choices);
 	}
 
 	/**
-	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, wicket.markup.html.form.model.IChoiceList)
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel, List)
 	 */
-	public MultiCheckChoice(final String id, final IChoiceList choices)
-	{
-		super(id, choices);
-	}
-
-	/**
-	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, wicket.model.IModel, Collection)
-	 */
-	public MultiCheckChoice(final String id, IModel object, final Collection choices)
-	{
-		super(id, object, choices);
-	}
-
-	/**
-	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel, IChoiceList)
-	 */
-	public MultiCheckChoice(final String id, IModel object, final IChoiceList choices)
+	public MultiCheckChoice(final String id, IModel object, final List choices)
 	{
 		super(id, object, choices);
 	}
@@ -176,16 +161,18 @@ public class MultiCheckChoice extends ListMultipleChoice
         final StringBuffer buffer = new StringBuffer();
 
         // Iterate through choices
-        final IChoiceList choices = getChoices();
+        final List choices = getChoices();
 
         // Loop through choices
         for (int i = 0; i < choices.size(); i++)
         {
             // Get next choice
-            final IChoice choice = choices.get(i);
+            final Object choice = choices.get(i);
+
+            final IChoiceRenderer choiceRenderer = (IChoiceRenderer)choice;
 
             // Get label for choice
-            final String label = choice.getDisplayValue();
+            final String label = ((IChoiceRenderer)choice).getDisplayValue(choice);
 
             // If there is a display value for the choice, then we know that the
             // choice is automatic in some way. If label is /null/ then we know
@@ -199,7 +186,7 @@ public class MultiCheckChoice extends ListMultipleChoice
                 // Add checkbox tag
                 final String tagId = getPath() + "_" + i;
                 buffer.append("<input id=\""+ tagId +"\" name=\"" + getPath() + "\"" + " type=\"checkbox\""
-                        + (isSelected(choice) ? " checked" : "") + " value=\"" + choice.getId()
+                        + (isSelected(choice, i) ? " checked" : "") + " value=\"" + choiceRenderer.getIdValue(choice, i)
                         + "\"");
 
                 // Should a roundtrip be made (have onSelectionChanged called) when the option is clicked?
@@ -209,7 +196,7 @@ public class MultiCheckChoice extends ListMultipleChoice
 
                     // NOTE: do not encode the url as that would give invalid JavaScript
                     buffer.append(" onclick=\"location.href='" + url + "&" + getPath()
-                            + "=" + choice.getId() + "';\"");
+                            + "=" + choiceRenderer.getIdValue(choice, i) + "';\"");
                 }
 
                 buffer.append(">");

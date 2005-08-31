@@ -1,6 +1,6 @@
 /*
- * $Id: SignInPanel.java,v 1.3 2005-07-01 20:01:07 shahid.shah Exp $
- * $Revision: 1.3 $ $Date: 2005-07-01 20:01:07 $
+ * $Id: SignInPanel.java,v 1.4 2005-08-31 23:40:49 jeremy.hulick Exp $
+ * $Revision: 1.4 $ $Date: 2005-08-31 23:40:49 $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -19,8 +19,8 @@ package com.medigy.wicket.panel;
 
 import com.medigy.wicket.border.StandardPanelBorder;
 import com.medigy.wicket.form.BaseForm;
-import wicket.IFeedback;
 import wicket.PageParameters;
+import wicket.feedback.IFeedback;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.form.CheckBox;
 import wicket.markup.html.form.PasswordTextField;
@@ -111,7 +111,7 @@ public abstract class SignInPanel extends DefaultPanel
 				{
 					// HTTP redirect response has been committed. No more data
 					// shall be written to the response.
-					setResponsePage(null);
+					setResponsePage(getPage());
 				}
 				else
 				{

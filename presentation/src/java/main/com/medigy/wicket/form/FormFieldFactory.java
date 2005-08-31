@@ -44,6 +44,7 @@
 package com.medigy.wicket.form;
 
 import com.medigy.presentation.model.ChoicesFactory;
+import com.medigy.presentation.model.IChoiceList;
 import com.medigy.service.validator.ValidEntity;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -54,7 +55,6 @@ import wicket.markup.html.form.PasswordTextField;
 import wicket.markup.html.form.RadioChoice;
 import wicket.markup.html.form.TextArea;
 import wicket.markup.html.form.TextField;
-import wicket.markup.html.form.model.IChoiceList;
 import wicket.markup.html.form.upload.FileUploadField;
 import wicket.markup.html.form.validation.EmailAddressPatternValidator;
 import wicket.markup.html.form.validation.TypeValidator;
@@ -205,7 +205,7 @@ public class FormFieldFactory
         {
             final TextField result = new TextField(controlId);
             reflectedFormFieldDefn.initializeField(form, reflectedFormFieldDefn, result);
-            result.add(new EmailAddressPatternValidator());
+            result.add(EmailAddressPatternValidator.getInstance());
             return result;
         }
 
@@ -386,7 +386,7 @@ public class FormFieldFactory
             super(componentId);
         }
 
-        protected void updateModel()
+        public void updateModel()
         {
             String input = getInput();
 
@@ -424,16 +424,16 @@ public class FormFieldFactory
             switch(style)
             {
                 case COMBO:
-                    return new DropDownChoice(controlId, referenceEntityChoices);
+                    return new DropDownChoice(controlId, referenceEntityChoices.getChoices(), referenceEntityChoices.getRenderer());
                 case RADIO:
-                    return new RadioChoice(controlId, referenceEntityChoices);
+                    return new RadioChoice(controlId, referenceEntityChoices.getChoices(), referenceEntityChoices.getRenderer());
 
                 case MULTICHECK:
-                    return new MultiCheckChoice(controlId, referenceEntityChoices);
+                    return new MultiCheckChoice(controlId, referenceEntityChoices.getChoices());
 
                 case MULTIDUAL:  // TODO: implement this but it defaults to MULTILIST
                 case MULTILIST:
-                    return new ListMultipleChoice(controlId, referenceEntityChoices);
+                    return new ListMultipleChoice(controlId, referenceEntityChoices.getChoices(), referenceEntityChoices.getRenderer());
 
                 default:
                 {

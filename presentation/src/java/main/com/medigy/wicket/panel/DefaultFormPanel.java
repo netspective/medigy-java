@@ -5,7 +5,7 @@ package com.medigy.wicket.panel;
 
 import com.medigy.wicket.border.StandardPanelBorder;
 import com.medigy.wicket.form.FormMode;
-import wicket.IFeedback;
+import wicket.feedback.IFeedback;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.panel.FeedbackPanel;
 

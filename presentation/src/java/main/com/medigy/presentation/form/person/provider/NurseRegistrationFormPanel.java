@@ -46,7 +46,7 @@ package com.medigy.presentation.form.person.provider;
 import com.medigy.wicket.form.BaseForm;
 import com.medigy.wicket.form.FormMode;
 import com.medigy.wicket.panel.DefaultFormPanel;
-import wicket.IFeedback;
+import wicket.feedback.IFeedback;
 
 public class NurseRegistrationFormPanel extends DefaultFormPanel
 {

@@ -6,43 +6,44 @@ package com.medigy.presentation.form.query;
 import com.medigy.persist.util.query.QueryDefinition;
 import com.medigy.persist.util.query.QueryDefinitionField;
 import com.medigy.persist.util.query.SqlComparisonFactory;
+import com.medigy.presentation.form.common.SearchCriteriaFormPanel;
+import com.medigy.presentation.form.common.SearchForm;
 import com.medigy.presentation.form.common.SearchResultPanel;
-import com.medigy.presentation.form.common.ServiceForm;
-import com.medigy.presentation.form.common.ServiceFormPanel;
-import com.medigy.service.Service;
 import com.medigy.service.dto.query.QueryDefinitionSearchFormPopulateValues;
 import com.medigy.service.dto.query.SearchCondition;
+import com.medigy.service.person.PatientSearchService;
 import com.medigy.service.query.QueryDefinitionSearchService;
 import com.medigy.wicket.form.FormMode;
-import wicket.IFeedback;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.DropDownChoice;
 import wicket.markup.html.form.ListMultipleChoice;
 import wicket.markup.html.form.TextField;
-import wicket.markup.html.form.model.IChoiceList;
+import wicket.markup.html.form.IChoiceRenderer;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
 import wicket.model.CompoundPropertyModel;
 import wicket.model.IModel;
+import wicket.feedback.IFeedback;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.ArrayList;
 
 /**
  * Panel class for the query definition form
  */
-public class QueryDefinitionSearchFormPanel extends ServiceFormPanel
+public class QueryDefinitionSearchFormPanel extends SearchCriteriaFormPanel
 {
     private Class queryDefinitionClass;
 
     public QueryDefinitionSearchFormPanel(final String componentName, final FormMode formMode,
-                                          final Class<? extends Service> serviceClass,
                                           final Class<? extends QueryDefinition> queryDefinitionClass)
     {
-        super(componentName, formMode, serviceClass);
+        super(componentName, formMode, PatientSearchService.class);
         this.queryDefinitionClass = queryDefinitionClass;
+        this.searchForm.initializeForm();
     }
 
     /**
@@ -50,30 +51,27 @@ public class QueryDefinitionSearchFormPanel extends ServiceFormPanel
      * @param componentName
      * @param feedback
      * @param formMode
-     * @return
+     * @return SearchForm
      */
-    public ServiceForm createForm(final String componentName, final IFeedback feedback, final FormMode formMode)
+    protected SearchForm createForm(final String componentName, final IFeedback feedback, final FormMode formMode)
     {
-        return new QueryDefinitionSearchForm(componentName, feedback, getService());
+        return new QueryDefinitionSearchForm(componentName, feedback);
     }
 
-    
-
-
-    protected class QueryDefinitionSearchForm extends ServiceForm
+    protected class QueryDefinitionSearchForm extends SearchForm
     {
         private QueryDefinitionSearchFormPopulateValues defaultValues;
         private ListMultipleChoice displayFieldsSelectList;
 
-        public QueryDefinitionSearchForm(final String id, final IFeedback feedback, final Service service)
+        public QueryDefinitionSearchForm(final String id, final IFeedback feedback)
         {
-            super(id, feedback, service);
+            super(id, feedback);
         }
 
         public void initializeForm()
         {
-            final QueryDefinitionSearchService service = ((QueryDefinitionSearchService) getService());
-            defaultValues = service.getAvailableSearchParameters();
+            final QueryDefinitionSearchService queryDefinitionSearchService = ((QueryDefinitionSearchService) service);
+            defaultValues = queryDefinitionSearchService.getAvailableSearchParameters(queryDefinitionClass);
 
             final QueryDefSearchFormModelObject searchFormModelObject = new QueryDefSearchFormModelObject();
             searchFormModelObject.setDefaultValues(defaultValues);
@@ -86,11 +84,11 @@ public class QueryDefinitionSearchFormPanel extends ServiceFormPanel
                 });
             }
             setModel(new CompoundPropertyModel(searchFormModelObject));
-            add(new ConditionFieldListView("conditionFieldList", searchFormModelObject.getConditionFieldList(),
-                    defaultValues));
-            displayFieldsSelectList = new ListMultipleChoice("displayFields", new QueryDefinitionFieldChoiceList(defaultValues.getDisplayFields().values()));
+            add(new ConditionFieldListView("conditionFieldList", searchFormModelObject.getConditionFieldList(), defaultValues));
+
+            displayFieldsSelectList = new QueryDefinitionFieldChoiceList("displayFields", new ArrayList((defaultValues.getDisplayFields().values())));
             add(displayFieldsSelectList);
-            add(new ListMultipleChoice("sortByFields", new QueryDefinitionFieldChoiceList(defaultValues.getSortByFields().values())));
+            add(new QueryDefinitionFieldChoiceList("sortByFields", new ArrayList(defaultValues.getSortByFields().values())));
         }
 
         public final void onSubmit()
@@ -99,14 +97,14 @@ public class QueryDefinitionSearchFormPanel extends ServiceFormPanel
             final List<String> displayFields = formModelObject.getDisplayFields();
             if (displayFields.size() == 0)
             {
-                final IChoiceList choices = displayFieldsSelectList.getChoices();
+                final List choices = displayFieldsSelectList.getChoices();
                 for (int i = 0; i < choices.size(); i++)
                 {
-                    displayFields.add((String) choices.get(i).getObject());
+                    displayFields.add(((QueryDefinitionField) choices.get(i)).getName());
                 }
                 formModelObject.setDisplayFields(displayFields);
             }
-            ((SearchResultPanel) getPage().get("border.searchBorder.searchResultsPanel")).onSearchExecute(formModelObject);
+            ((SearchResultPanel) getPage().get("border:searchBorder:searchResultsPanel")).onSearchExecute(formModelObject);
         }
     }
 
@@ -137,20 +135,47 @@ public class QueryDefinitionSearchFormPanel extends ServiceFormPanel
             final Map<String, QueryDefinitionField> conditionFieldsMap = defaultValues.getConditionFields();
 
             item.add(new Label("fieldLabel", "Field"));
-            item.add(new DropDownChoice("field", new QueryDefinitionFieldChoiceList(defaultValues.getConditionFields().values())) {
-                protected void onComponentTag(final ComponentTag tag)
-                {
-                    // TODO:  Populate the field Comparison list with the field specific comparisons
-                    super.onComponentTag(tag);
-                    //tag.put("onChange", "this.form.fieldComparison.");
-                }
-            });
+            item.add(new ConditionFieldChoiceList("field", new ArrayList(defaultValues.getConditionFields().values())));
             item.add(new DropDownChoice("fieldComparison", SqlComparisonFactory.getInstance().listAllNames()));
             item.add(new TextField("fieldValue"));
             item.add(new DropDownChoice("connector", defaultValues.getConnectors()));
         }
+
+        public class ConditionFieldChoiceList extends DropDownChoice
+        {
+            private class ConditionChoice implements IChoiceRenderer
+            {
+                private List<QueryDefinitionField> fieldList;
+
+                public ConditionChoice(final List<QueryDefinitionField> conditionList)
+                {
+                    this.fieldList = conditionList;
+                }
+
+                public String getDisplayValue(Object object)
+                {
+                    for(QueryDefinitionField choice: fieldList)
+                    {
+                        if (choice.equals(object))
+                            return choice.getCaption();
+                    }
+                    return null;
+                }
+
+                public String getIdValue(Object object, int index)
+                {
+                    return fieldList.get(index).getName();
+                }
+            }
+
+            public ConditionFieldChoiceList(final String name, final List<QueryDefinitionField> conditions)
+            {
+                super(name);
+
+                setChoices(conditions);
+                this.setChoiceRenderer(new ConditionChoice(conditions));
+            }
+        }
     }
 
-
 }
-
