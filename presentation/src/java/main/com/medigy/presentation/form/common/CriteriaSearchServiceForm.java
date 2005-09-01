@@ -66,7 +66,7 @@ public abstract class CriteriaSearchServiceForm extends ServiceForm
 
     public void initializeForm()
     {
-        add(new DropDownChoice(CRITERIA_DROPDOWN_COMPONENT_ID, constructConditionList().getChoices()));
+        add(new DropDownChoice(CRITERIA_DROPDOWN_COMPONENT_ID, constructConditionList().getChoices(), constructConditionList().getRenderer()));
         add(new TextField(CRITERIA_VALUE_COMPONENT_ID));
     }
 

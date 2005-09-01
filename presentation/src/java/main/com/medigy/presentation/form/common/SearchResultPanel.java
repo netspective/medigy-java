@@ -7,12 +7,12 @@ import com.medigy.presentation.form.query.DynamicSearchResultsListView;
 import com.medigy.presentation.model.common.SearchFormModelObject;
 import com.medigy.presentation.model.common.ServiceCountAndListAction;
 import com.medigy.presentation.model.common.ServiceSearchResultModel;
-import com.medigy.presentation.navigation.paging.PageableListViewNavigator;
 import com.medigy.service.SearchService;
 import com.medigy.wicket.DefaultApplication;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebMarkupContainer;
+import wicket.markup.html.navigation.paging.PagingNavigator;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
@@ -27,7 +27,7 @@ public abstract class SearchResultPanel extends Panel
     protected PageableListView resultsListView;
     protected ServiceSearchResultModel searchResultModel;
     protected SearchService service;
-    protected PageableListViewNavigator navPanel;
+    protected PagingNavigator navPanel;
     protected ServiceCountAndListAction countAndListAction;
 
     public SearchResultPanel(final String id, final Class searchServiceClass)
@@ -40,17 +40,15 @@ public abstract class SearchResultPanel extends Panel
 
     protected void initialize()
     {
-
         countAndListAction = createCountAndListAction();
         searchResultModel = createSearchResultModel();
         resultsListView = createSearchResultsListView(searchResultModel, rowsPerPage);
         add(resultsListView);
         add(createSearchResultHeader());
-        navPanel = new PageableListViewNavigator("navigation-panel", resultsListView);
+        navPanel = new PagingNavigator("navigation-panel", resultsListView);
         navPanel.setVisible(false);
         add(navPanel);
     }
-
 
     protected WebMarkupContainer createSearchResultHeader()
     {

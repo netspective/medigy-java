@@ -52,22 +52,22 @@ public class QueryDefConditionChoiceList implements IChoiceList
 
     private class CriteriaChoice implements IChoiceRenderer
     {
-        private QueryDefnCondition condition;
-        private List<QueryDefnCondition> conditionList;
-
-        public String getDisplayValue(Object o)
+        public String getDisplayValue(Object object)
         {
-            return condition.getDisplayCaption();
+            for(QueryDefnCondition choice: choices)
+            {
+                if (choice.equals(object))
+                    return choice.getDisplayCaption();
+            }
+            return null;
         }
 
-        public String getIdValue(Object o, int index)
+        public String getIdValue(Object object, int index)
         {
-            return condition.getName();
-        }
-
-        public Object getObject()
-        {
-            return condition;
+            if(index > 0)
+                return choices.get(index).getName();
+            else
+                return null;
         }
     }
 
