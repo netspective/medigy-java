@@ -74,10 +74,15 @@ public class TestAddContactMechanismService extends AbstractSpringTestCase
 
     public void testAddPostalAddress() throws Exception
     {
-        Country country = new Country("United States of America",  "USA");
+        Country country = new Country();
+        country.setCountryName("United States of America");
+        country.setIsoThreeLetterCode("USA");
+        country.setIsoThreeDigitCode("123");
+        country.setIsoTwoLetterCode("US");
         State state = new State("Virginia", "VA");
         country.addState(state);
         getSession().save(country);
+
 
         final Person p = new Person();
         p.setLastName("Hackett");
@@ -85,6 +90,7 @@ public class TestAddContactMechanismService extends AbstractSpringTestCase
         p.addGender(GenderType.Cache.MALE.getEntity());
         p.setBirthDate(new Date(123456));
         getSession().save(p);
+        getSession().flush();
 
         //AddContactMechanismService service =  (AddContactMechanismService) getRegistry().getService(AddContactMechanismService.class);
         final NewPostalAddress address = addContactMechanismService.addPostalAddress(new AddPostalAddressParameters() {
@@ -177,7 +183,7 @@ public class TestAddContactMechanismService extends AbstractSpringTestCase
         assertEquals(purpose.getType(), ContactMechanismPurposeType.Cache.HOME_ADDRESS.getEntity());
         */
         // verify the contact mchanism data
-        final PostalAddress ps = (PostalAddress) getSession().load(PostalAddress.class, address.getPostalAddressId());
+        final PostalAddress ps = (PostalAddress) getSession().get(PostalAddress.class, address.getPostalAddressId());
         assertEquals(ps.getAddress1(), "123 Acme Road");
         assertEquals(ps.getAddress2(), "Suite 100");
         assertEquals(5, ps.getAddressBoundaries().size());
@@ -185,7 +191,7 @@ public class TestAddContactMechanismService extends AbstractSpringTestCase
         assertEquals(ps.getState().getStateAbbreviation(), "VA");
         assertEquals(ps.getPostalCode().getCodeValue(), "22033");
         assertEquals(ps.getCounty().getCountyName(), "Fairfax County");
-        assertEquals(ps.getCountry().getCountryAbbreviation(), "USA");
+        assertEquals(ps.getCountry().getIsoThreeLetterCode(), "USA");
 
         final Set<PartyContactMechanism> pcmList = ps.getPartyContactMechanisms();
         assertEquals(1, pcmList.size());

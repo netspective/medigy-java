@@ -52,7 +52,6 @@ import com.medigy.persist.reference.custom.party.ContactMechanismPurposeType;
 import com.medigy.persist.reference.type.GenderType;
 import com.medigy.service.AbstractSpringTestCase;
 import com.medigy.service.contact.ContactMechanismFacade;
-import org.hibernate.Transaction;
 
 import java.util.Calendar;
 import java.util.List;
@@ -227,7 +226,6 @@ public class TestContactMechanismFacade extends AbstractSpringTestCase
 
     public void testAddPostalAddress()
     {
-        Transaction transaction = getSession().beginTransaction();
         final Country country = new Country();
         country.setCountryName("United States of America");
         country.setIsoThreeLetterCode("USA");
@@ -238,9 +236,7 @@ public class TestContactMechanismFacade extends AbstractSpringTestCase
         virginia.setStateName("Virginia");
         virginia.setStateAbbreviation("VA");
         country.addState(virginia);
-
         getSession().save(country);
-        transaction.commit();
 
         //ContactMechanismFacade contactMechanismFacade = (ContactMechanismFacade) getRegistry().getService(ContactMechanismFacade.class);
         final PostalAddress postalAddress = contactMechanismFacade.addPostalAddress("123 Acme Road", null, "Fairfax", "VA", null, "Fairfax County", "22033", "USA");
