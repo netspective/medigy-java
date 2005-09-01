@@ -47,10 +47,12 @@ import com.medigy.presentation.form.common.CriteriaSearchFormModelObject;
 import com.medigy.presentation.form.common.CriteriaSearchServiceForm;
 import com.medigy.presentation.form.common.QueryDefConditionChoiceList;
 import com.medigy.presentation.form.common.ServiceFormPanel;
+import com.medigy.presentation.model.IChoiceList;
 import com.medigy.service.org.OrganizationSearchService;
 import com.medigy.wicket.form.FormMode;
 import wicket.markup.html.form.Form;
 import wicket.model.CompoundPropertyModel;
+import wicket.feedback.IFeedback;
 
 import java.util.List;
 

@@ -6,15 +6,15 @@ package com.medigy.presentation.form.query;
 import com.medigy.persist.util.query.QueryDefinition;
 import com.medigy.persist.util.query.QueryDefinitionField;
 import com.medigy.persist.util.query.SqlComparisonFactory;
-import com.medigy.presentation.form.common.SearchCriteriaFormPanel;
-import com.medigy.presentation.form.common.SearchForm;
 import com.medigy.presentation.form.common.SearchResultPanel;
+import com.medigy.presentation.form.common.ServiceForm;
+import com.medigy.presentation.form.common.ServiceFormPanel;
+import com.medigy.service.Service;
 import com.medigy.service.dto.query.QueryDefinitionSearchFormPopulateValues;
 import com.medigy.service.dto.query.SearchCondition;
-import com.medigy.service.person.PatientSearchService;
 import com.medigy.service.query.QueryDefinitionSearchService;
 import com.medigy.wicket.form.FormMode;
-import wicket.markup.ComponentTag;
+import wicket.feedback.IFeedback;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.DropDownChoice;
 import wicket.markup.html.form.ListMultipleChoice;
@@ -24,7 +24,6 @@ import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
 import wicket.model.CompoundPropertyModel;
 import wicket.model.IModel;
-import wicket.feedback.IFeedback;
 
 import java.util.Collection;
 import java.util.List;
@@ -34,16 +33,16 @@ import java.util.ArrayList;
 /**
  * Panel class for the query definition form
  */
-public class QueryDefinitionSearchFormPanel extends SearchCriteriaFormPanel
+public class QueryDefinitionSearchFormPanel extends ServiceFormPanel
 {
     private Class queryDefinitionClass;
 
     public QueryDefinitionSearchFormPanel(final String componentName, final FormMode formMode,
+                                          final Class<? extends Service> serviceClass,
                                           final Class<? extends QueryDefinition> queryDefinitionClass)
     {
-        super(componentName, formMode, PatientSearchService.class);
+        super(componentName, formMode, serviceClass);
         this.queryDefinitionClass = queryDefinitionClass;
-        this.searchForm.initializeForm();
     }
 
     /**
@@ -51,27 +50,27 @@ public class QueryDefinitionSearchFormPanel extends SearchCriteriaFormPanel
      * @param componentName
      * @param feedback
      * @param formMode
-     * @return SearchForm
+     * @return
      */
-    protected SearchForm createForm(final String componentName, final IFeedback feedback, final FormMode formMode)
+    public ServiceForm createForm(final String componentName, final IFeedback feedback, final FormMode formMode)
     {
-        return new QueryDefinitionSearchForm(componentName, feedback);
+        return new QueryDefinitionSearchForm(componentName, feedback, getService());
     }
 
-    protected class QueryDefinitionSearchForm extends SearchForm
+    protected class QueryDefinitionSearchForm extends ServiceForm
     {
         private QueryDefinitionSearchFormPopulateValues defaultValues;
         private ListMultipleChoice displayFieldsSelectList;
 
-        public QueryDefinitionSearchForm(final String id, final IFeedback feedback)
+        public QueryDefinitionSearchForm(final String id, final IFeedback feedback, final Service service)
         {
-            super(id, feedback);
+            super(id, feedback, service);
         }
 
         public void initializeForm()
         {
-            final QueryDefinitionSearchService queryDefinitionSearchService = ((QueryDefinitionSearchService) service);
-            defaultValues = queryDefinitionSearchService.getAvailableSearchParameters(queryDefinitionClass);
+            final QueryDefinitionSearchService service = ((QueryDefinitionSearchService) getService());
+            defaultValues = service.getAvailableSearchParameters();
 
             final QueryDefSearchFormModelObject searchFormModelObject = new QueryDefSearchFormModelObject();
             searchFormModelObject.setDefaultValues(defaultValues);
@@ -83,6 +82,7 @@ public class QueryDefinitionSearchFormPanel extends SearchCriteriaFormPanel
 
                 });
             }
+            
             setModel(new CompoundPropertyModel(searchFormModelObject));
             add(new ConditionFieldListView("conditionFieldList", searchFormModelObject.getConditionFieldList(), defaultValues));
 
@@ -177,5 +177,5 @@ public class QueryDefinitionSearchFormPanel extends SearchCriteriaFormPanel
             }
         }
     }
-
 }
+

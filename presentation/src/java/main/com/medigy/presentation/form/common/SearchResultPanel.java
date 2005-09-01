@@ -3,47 +3,58 @@
  */
 package com.medigy.presentation.form.common;
 
-import com.medigy.presentation.form.query.SearchResultsListView;
+import com.medigy.presentation.form.query.DynamicSearchResultsListView;
 import com.medigy.presentation.model.common.SearchFormModelObject;
 import com.medigy.presentation.model.common.ServiceCountAndListAction;
 import com.medigy.presentation.model.common.ServiceSearchResultModel;
+import com.medigy.presentation.navigation.paging.PageableListViewNavigator;
 import com.medigy.service.SearchService;
-import com.medigy.service.SearchServiceParameters;
-import com.medigy.service.ServiceVersion;
-import com.medigy.service.dto.query.SearchCondition;
 import com.medigy.wicket.DefaultApplication;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebMarkupContainer;
-import wicket.markup.html.navigation.paging.PagingNavigator;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
+import wicket.markup.html.list.PageableListView;
 import wicket.markup.html.panel.Panel;
 
-import java.util.Arrays;
 import java.util.List;
 
-public class SearchResultPanel extends Panel
+public abstract class SearchResultPanel extends Panel
 {
     private int rowsPerPage = 10;
-    protected SearchResultsListView resultsListView;
+    protected PageableListView resultsListView;
     protected ServiceSearchResultModel searchResultModel;
     protected SearchService service;
-    protected PagingNavigator navPanel;
+    protected PageableListViewNavigator navPanel;
     protected ServiceCountAndListAction countAndListAction;
 
     public SearchResultPanel(final String id, final Class searchServiceClass)
     {
         super(id);
-        if(searchServiceClass != null)
+        if (searchServiceClass != null)
             service = (SearchService) ((DefaultApplication) getApplication()).getService(searchServiceClass);
+        initialize();
+    }
 
+    protected void initialize()
+    {
+
+        countAndListAction = createCountAndListAction();
         searchResultModel = createSearchResultModel();
         resultsListView = createSearchResultsListView(searchResultModel, rowsPerPage);
         add(resultsListView);
+        add(createSearchResultHeader());
+        navPanel = new PageableListViewNavigator("navigation-panel", resultsListView);
+        navPanel.setVisible(false);
+        add(navPanel);
+    }
 
-        WebMarkupContainer resultsTableHeader = new WebMarkupContainer("resultsHeader")
+
+    protected WebMarkupContainer createSearchResultHeader()
+    {
+        return new WebMarkupContainer("resultsHeader")
 		{
 			public boolean isVisible()
 			{
@@ -54,7 +65,7 @@ public class SearchResultPanel extends Panel
             {
                 final StringBuffer buffer = new StringBuffer();
                 final List<String> resultColumnNames = searchResultModel.getResultColumnNames();
-                if(resultColumnNames != null)
+                if (resultColumnNames != null)
                 {
                     for (String colName : resultColumnNames)
                     {
@@ -65,13 +76,18 @@ public class SearchResultPanel extends Panel
                 super.onComponentTagBody(markupStream, openTag);
             }
         };
-
-        add(resultsTableHeader);
-        navPanel = new PagingNavigator("navigation-panel", resultsListView);
-        navPanel.setVisible(false);
-        add(navPanel);
     }
 
+    public SearchService getService()
+    {
+        return service;
+    }
+
+    /**
+     * A callback method for the ServiceForm to call when it has been executed. The form doesn't actually invoke the
+     * service but this result panel does.
+     * @param formModelObject   the form model at execution time
+     */
     public void onSearchExecute(final SearchFormModelObject formModelObject)
     {
         searchResultModel.setSearchParameters(formModelObject);
@@ -79,94 +95,24 @@ public class SearchResultPanel extends Panel
         setCurrentResultPageToFirst();
     }
 
-    protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
-    {
-        super.onComponentTagBody(markupStream, openTag);
-    }
+    // the following are two callback methods used by the child ISelectCountAndListAction implementation to
+    // get the row count and first page.
+    public abstract List invokeService(final Object queryObject, final int startFromRow, final int numberOfRows);
+    public abstract Object invokeService(final Object queryObject);
 
-    protected SearchResultsListView createSearchResultsListView(final ServiceSearchResultModel searchResultModel, final int rowsPerPage)
+    protected PageableListView createSearchResultsListView(final ServiceSearchResultModel searchResultModel, final int rowsPerPage)
     {
-       return new SearchResultsListView("results", searchResultModel, rowsPerPage);
+       return new DynamicSearchResultsListView("results", searchResultModel, rowsPerPage) {
+           public boolean isVisible()
+           {
+               return searchResultModel.hasResults();
+           }
+       };
     }
 
     protected ServiceSearchResultModel createSearchResultModel()
     {
-        return new ServiceSearchResultModel(this, service)
-        {
-            public ServiceCountAndListAction createCountAndListAction()
-            {
-                return new ServiceCountAndListAction(service) {
-
-                    public SearchServiceParameters createSearchServiceParameters(final Object queryObject)
-                    {
-                        final CriteriaSearchFormModelObject formModelObject = (CriteriaSearchFormModelObject) queryObject;
-                        return new SearchServiceParameters()  {
-                            public List<SearchCondition> getConditions()
-                            {
-                                final SearchCondition searchCondition = new SearchCondition();
-                                searchCondition.setCondition(formModelObject.getSearchCriterias());
-                                searchCondition.setFieldValue(formModelObject.getSearchCriteriaValue());
-                                return Arrays.asList(searchCondition);
-                            }
-
-                            public List<String> getOrderBys()
-                            {
-                                return null;
-                            }
-
-                            public List<String> getDisplayFields()
-                            {
-                                return null;
-                            }
-
-                            public int getStartFromRow()
-                            {
-                                return 0;
-                            }
-
-                            public ServiceVersion getServiceVersion()
-                            {
-                                return null;
-                            };
-                        };
-                    }
-
-                    public SearchServiceParameters createSearchServiceParameters(final Object queryObject, final int startFromRow, int numberOfRows)
-                    {
-                        final CriteriaSearchFormModelObject formModelObject = (CriteriaSearchFormModelObject) queryObject;
-                        return new SearchServiceParameters()  {
-                            public List<SearchCondition> getConditions()
-                            {
-                                final SearchCondition searchCondition = new SearchCondition();
-                                searchCondition.setCondition(formModelObject.getSearchCriterias());
-                                searchCondition.setFieldValue(formModelObject.getSearchCriteriaValue());
-                                return Arrays.asList(searchCondition);
-                            }
-
-                            public List<String> getDisplayFields()
-                            {
-                                return null;
-                            }
-
-                            public List<String> getOrderBys()
-                            {
-                                return null;
-                            }
-
-                            public int getStartFromRow()
-                            {
-                                return startFromRow;
-                            }
-
-                            public ServiceVersion getServiceVersion()
-                            {
-                                return null;
-                            }
-                        };
-                    }
-                };
-            }
-        };
+        return new ServiceSearchResultModel(this, service, countAndListAction);
     }
 
     public void setCurrentResultPageToFirst()
@@ -177,6 +123,15 @@ public class SearchResultPanel extends Panel
     private int getNumberOfResults()
     {
         return ((List)resultsListView.getModelObject()).size();
+    }
+
+    /**
+     * Since count and list actions invoke the actual underlying SERVICE, the
+     * child classes must implement this method.
+     */
+    public ServiceCountAndListAction createCountAndListAction()
+    {
+        return new ServiceCountAndListAction(this, service);
     }
 
     public class SearchResultsHeaderView extends ListView

@@ -44,11 +44,11 @@ import com.medigy.presentation.form.common.CriteriaSearchFormModelObject;
 import com.medigy.presentation.form.common.CriteriaSearchServiceForm;
 import com.medigy.presentation.form.common.QueryDefConditionChoiceList;
 import com.medigy.presentation.form.common.ServiceFormPanel;
+import com.medigy.presentation.model.IChoiceList;
 import com.medigy.service.person.PersonSearchService;
 import com.medigy.wicket.form.FormMode;
-import wicket.IFeedback;
+import wicket.feedback.IFeedback;
 import wicket.markup.html.form.Form;
-import wicket.markup.html.form.model.IChoiceList;
 import wicket.model.CompoundPropertyModel;
 
 import java.util.List;

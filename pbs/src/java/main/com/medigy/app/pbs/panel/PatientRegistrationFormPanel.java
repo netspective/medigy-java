@@ -51,7 +51,7 @@ import com.medigy.wicket.DefaultApplication;
 import com.medigy.wicket.form.FormMode;
 import com.medigy.wicket.form.RecordEditorForm;
 import com.medigy.wicket.panel.DefaultFormPanel;
-import wicket.IFeedback;
+import wicket.feedback.IFeedback;
 import wicket.model.BoundCompoundPropertyModel;
 
 public class PatientRegistrationFormPanel extends DefaultFormPanel

@@ -42,10 +42,10 @@ import com.medigy.service.SearchService;
 import com.medigy.service.Service;
 import com.medigy.wicket.DefaultApplication;
 import com.medigy.wicket.form.FormMode;
-import wicket.IFeedback;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.panel.FeedbackPanel;
 import wicket.markup.html.panel.Panel;
+import wicket.feedback.IFeedback;
 
 /**
  * Panel containing a form that relies on a service for creation of it. The panel also

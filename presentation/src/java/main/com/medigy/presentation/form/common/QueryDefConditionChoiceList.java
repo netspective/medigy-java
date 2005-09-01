@@ -39,32 +39,28 @@
 package com.medigy.presentation.form.common;
 
 import com.medigy.persist.util.query.QueryDefnCondition;
-import wicket.markup.html.form.model.IChoice;
-import wicket.markup.html.form.model.IChoiceList;
+import com.medigy.presentation.model.IChoiceList;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import wicket.markup.html.form.IChoiceRenderer;
 
 public class QueryDefConditionChoiceList implements IChoiceList
 {
-    private List<IChoice> choices = new ArrayList<IChoice>();
+    private List<QueryDefnCondition> choices;
+    private IChoiceRenderer renderer = new CriteriaChoice();
 
-    private class CriteriaChoice implements IChoice
+    private class CriteriaChoice implements IChoiceRenderer
     {
         private QueryDefnCondition condition;
         private List<QueryDefnCondition> conditionList;
 
-        public CriteriaChoice(final QueryDefnCondition condition)
-        {
-            this.condition = condition;
-        }
-
-        public String getDisplayValue()
+        public String getDisplayValue(Object o)
         {
             return condition.getDisplayCaption();
         }
 
-        public String getId()
+        public String getIdValue(Object o, int index)
         {
             return condition.getName();
         }
@@ -77,47 +73,16 @@ public class QueryDefConditionChoiceList implements IChoiceList
 
     public QueryDefConditionChoiceList(final List<QueryDefnCondition> conditions)
     {
-        for (QueryDefnCondition cond : conditions)
-            choices.add(new CriteriaChoice(cond));
+        choices = conditions;
     }
 
-    public void attach()
+    public IChoiceRenderer getRenderer()
     {
-
+        return this.renderer;
     }
 
-    public IChoice choiceForId(String id)
+    public List getChoices()
     {
-        for (IChoice choice: choices)
-        {
-            if (choice.getId().equals(id))
-                return choice;
-        }
-        return null;
-    }
-
-    public IChoice choiceForObject(Object object)
-    {
-        for (IChoice choice: choices)
-        {
-            if (choice.getObject().equals(object))
-                return choice;
-        }
-        return null;
-    }
-
-    public IChoice get(int index)
-    {
-        return choices.get(index);
-    }
-
-    public int size()
-    {
-        return this.choices.size();
-    }
-
-    public void detach()
-    {
-
+        return this.choices;
     }
 }
