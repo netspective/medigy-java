@@ -56,7 +56,7 @@ public class QueryDefConditionChoiceList implements IChoiceList
         {
             for(QueryDefnCondition choice: choices)
             {
-                if (choice.equals(object))
+                if(choice.equals(object))
                     return choice.getDisplayCaption();
             }
             return null;
@@ -64,7 +64,7 @@ public class QueryDefConditionChoiceList implements IChoiceList
 
         public String getIdValue(Object object, int index)
         {
-            if(index > 0)
+            if(index >= 0)
                 return choices.get(index).getName();
             else
                 return null;

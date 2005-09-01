@@ -54,7 +54,7 @@ public class CustomReferenceEntityChoices implements IChoiceList
         {
             for(CustomReferenceEntity choice: choices)
             {
-                if (choice.equals(object))
+                if(choice.equals(object))
                     return choice.getLabel();
             }
             return null;
@@ -62,7 +62,7 @@ public class CustomReferenceEntityChoices implements IChoiceList
 
         public String getIdValue(Object object, int index)
         {
-            if(index > 0)
+            if(index >= 0)
                 return choices.get(index).getCode();
             else
                 return null;
