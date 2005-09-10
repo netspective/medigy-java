@@ -47,25 +47,32 @@ import com.medigy.persist.model.claim.Claim;
 import com.medigy.persist.model.claim.ClaimItem;
 import com.medigy.persist.model.health.HealthCareDelivery;
 import com.medigy.persist.model.health.HealthCareEncounter;
+import com.medigy.persist.model.insurance.InsurancePlan;
+import com.medigy.persist.model.insurance.InsurancePolicy;
+import com.medigy.persist.model.insurance.ResponsiblePartySelection;
 import com.medigy.persist.model.invoice.Invoice;
 import com.medigy.persist.model.invoice.InvoiceItem;
 import com.medigy.persist.model.org.Organization;
 import com.medigy.persist.model.org.OrganizationsRelationship;
+import com.medigy.persist.model.party.ElectronicAddress;
 import com.medigy.persist.model.party.Facility;
 import com.medigy.persist.model.party.PhoneNumber;
 import com.medigy.persist.model.person.Ethnicity;
+import com.medigy.persist.model.person.PeopleRelationship;
 import com.medigy.persist.model.person.Person;
 import com.medigy.persist.model.person.PersonAndOrgRelationship;
 import com.medigy.persist.reference.custom.claim.ClaimType;
 import com.medigy.persist.reference.custom.health.DiagnosisType;
 import com.medigy.persist.reference.custom.health.HealthCareEncounterStatusType;
+import com.medigy.persist.reference.custom.insurance.InsurancePolicyType;
 import com.medigy.persist.reference.custom.invoice.InvoiceStatusType;
 import com.medigy.persist.reference.custom.invoice.InvoiceType;
+import com.medigy.persist.reference.custom.party.ContactMechanismPurposeType;
 import com.medigy.persist.reference.custom.party.FacilityType;
 import com.medigy.persist.reference.custom.party.OrganizationRoleType;
 import com.medigy.persist.reference.custom.party.OrganizationsRelationshipType;
+import com.medigy.persist.reference.custom.party.PeopleRelationshipType;
 import com.medigy.persist.reference.custom.party.PersonOrgRelationshipType;
-import com.medigy.persist.reference.custom.party.ContactMechanismPurposeType;
 import com.medigy.persist.reference.custom.person.EthnicityType.Cache;
 import com.medigy.persist.reference.custom.person.PatientType;
 import com.medigy.persist.reference.custom.person.PersonRoleType;
@@ -118,6 +125,8 @@ public class DataPopulatorTask extends Task
     private int generateBillingOrgsCount = 5;
     private int generatePatientsPerOrgCount = 10;
     private int generateEmployeesPerClinicCount = 5;
+
+    final List<Organization> carrierList = new ArrayList<Organization>();
 
     private DataGeneratorSources dataGeneratorSources;
 
@@ -193,17 +202,17 @@ public class DataPopulatorTask extends Task
 
     protected void populateData(final Session session)
     {
-        for(int i = 1; i <= generateBillingOrgsCount; i++)
-            populateBillingService(session, 1);
-
         // TODO: Need to create relationships between orgs
         // for every 10 clinics, create one billing service
         for (int i = 1; i <= generateCarrierOrgsCount; i++)
-            populateCarrier(session, i);
+            carrierList.add(populateCarrier(session, i));
+
+        for(int i = 1; i <= generateBillingOrgsCount; i++)
+            populateBillingService(session, 1);
 
     }
 
-    protected void populateCarrier(final Session session, final int number)
+    protected Organization populateCarrier(final Session session, final int number)
     {
         final Transaction tx = session.beginTransaction();
         try
@@ -212,10 +221,17 @@ public class DataPopulatorTask extends Task
             final String organizationName = MessageFormat.format(carrierOrgNameTemplate, number);
             org.setOrganizationName(organizationName);
             org.addRole(OrganizationRoleType.Cache.INSURANCE_PROVIDER.getEntity());
+
+            // create Insurance plans for the carrier
+            final InsurancePlan plan = new InsurancePlan();
+            plan.setOrganization(org);
+            plan.setName("Medigy Demo Insurance Plan");
+            org.addInsurancePlan(plan);
             session.save(org);
 
             log("Created insurance carrier: " + organizationName);
             tx.commit();
+            return org;
         }
         catch(final Exception e)
         {
@@ -307,7 +323,7 @@ public class DataPopulatorTask extends Task
             employee.addGender(GenderType.Cache.FEMALE.getEntity());
         employee.setFirstName(personDataGenerator.getRandomFirstName(gender));
         employee.setLastName(personDataGenerator.getRandomSurname());
-        employee.addRole(PersonRoleType.Cache.EMPLOYEE.getEntity());
+        employee.addRole(PersonRoleType.Cache.EMPLOYEE.getEntity(), true);
         session.save(employee);
 
         // now create the link between the patient and the clinic through their roles
@@ -330,7 +346,7 @@ public class DataPopulatorTask extends Task
             physician.addGender(GenderType.Cache.FEMALE.getEntity());
         physician.setFirstName(personDataGenerator.getRandomFirstName(gender));
         physician.setLastName(personDataGenerator.getRandomSurname());
-        physician.addRole(PersonRoleType.Cache.INDIVIDUAL_HEALTH_CARE_PRACTITIONER.getEntity());
+        physician.addRole(PersonRoleType.Cache.INDIVIDUAL_HEALTH_CARE_PRACTITIONER.getEntity(), true);
         session.save(physician);
 
         // now create the link between the patient and the clinic through their roles
@@ -344,12 +360,24 @@ public class DataPopulatorTask extends Task
         return physician;
     }
 
+    protected void populatePatientInsurancePolicy(final Session session, final Organization carrier, final Person patient)
+    {
+        final InsurancePolicy policy = new InsurancePolicy();
+        policy.setPolicyNumber("12345");
+        policy.setInsuredPerson(patient);
+        policy.setType(InsurancePolicyType.Cache.GROUP_INSURANCE_POLICY.getEntity());
+        policy.setContractHolderPerson(patient);
+        policy.setInsurancePlan(carrier.getInsurancePlans().get(0));
+        policy.setFromDate(new Date());
+        session.save(policy);
+    }
+
     protected Person populatePatient(final Session session, final Organization org, final int number)
     {
         final PersonDataGenerator personDataGenerator = new PersonDataGenerator(dataGeneratorSources);
         final USAddressDataGenerator usAddressDataGenerator = new USAddressDataGenerator(dataGeneratorSources);
 
-        final Gender gender = personDataGenerator.getRandomGender();
+        Gender gender = personDataGenerator.getRandomGender();
         final String address1 = usAddressDataGenerator.getRandomStreetAddress(1000, 9999);
         // TODO: add a "address2" line generator for things like "Suite 400" or "Apartment 76"
 
@@ -357,7 +385,7 @@ public class DataPopulatorTask extends Task
         final String phoneNumber = usAddressDataGenerator.getRandomPhoneNumber(city);
         final String areaCode = usAddressDataGenerator.getRandomPhoneAreaCode(city);
 
-        final Person patient = new Person();
+        final Person patient = Person.createNewPatient();
         if(gender == Gender.MALE)
             patient.addGender(GenderType.Cache.MALE.getEntity());
         else
@@ -386,6 +414,11 @@ public class DataPopulatorTask extends Task
         patient.setDriversLicenseNumber(personDataGenerator.getRandomSocialSecurityNumber());
         patient.addRole(PersonRoleType.Cache.PATIENT.getEntity());
 
+        final ElectronicAddress email = new ElectronicAddress();
+        email.setElectronicAddress(patient.getLastName() + patient.getFirstName() + "@medigy.com");
+        session.save(email);
+        patient.addPartyContactMechanism(email, ContactMechanismPurposeType.Cache.HOME_PHONE.getEntity());
+
         final PhoneNumber phone = new PhoneNumber();
         phone.setNumberValue(phoneNumber);
         phone.setAreaCode(areaCode);
@@ -400,6 +433,40 @@ public class DataPopulatorTask extends Task
         rel.setType(PersonOrgRelationshipType.Cache.PATIENT_CLINIC.getEntity());
         rel.setFromDate(new Date());
         session.save(rel);
+
+        // create the responsible person
+        gender = personDataGenerator.getRandomGender();
+        Person respPerson = new Person();
+
+        PeopleRelationship pplRel = new PeopleRelationship();
+        if(gender == Gender.MALE)
+        {
+            respPerson.addGender(GenderType.Cache.MALE.getEntity());
+            respPerson.addRole(PersonRoleType.Cache.FATHER.getEntity());
+            pplRel.setSecondaryPersonRole(respPerson.getRole(PersonRoleType.Cache.FATHER.getEntity()));
+
+        }
+        else
+        {
+            respPerson.addGender(GenderType.Cache.FEMALE.getEntity());
+            respPerson.addRole(PersonRoleType.Cache.MOTHER.getEntity());
+            pplRel.setSecondaryPersonRole(respPerson.getRole(PersonRoleType.Cache.MOTHER.getEntity()));
+        }
+        respPerson.setFirstName(personDataGenerator.getRandomFirstName(gender));
+        respPerson.setLastName(personDataGenerator.getRandomSurname());
+        session.save(respPerson);
+
+        pplRel.setPrimaryPersonRole(patient.getRole(PersonRoleType.Cache.PATIENT.getEntity()));
+        pplRel.setType(PeopleRelationshipType.Cache.PARENT_CHILD.getEntity());
+        session.save(pplRel);
+
+        final ResponsiblePartySelection selection = new ResponsiblePartySelection();
+        selection.setPeopleRelationship(pplRel);
+        selection.setDefaultSelection(true);
+        selection.setPatient(patient);
+        session.save(selection);
+
+        populatePatientInsurancePolicy(session, carrierList.get(0), patient);
 
         return patient;
     }
