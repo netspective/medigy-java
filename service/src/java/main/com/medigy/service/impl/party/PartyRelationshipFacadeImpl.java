@@ -38,10 +38,10 @@
  */
 package com.medigy.service.impl.party;
 
-import com.medigy.persist.model.person.Person;
+import com.medigy.persist.model.insurance.ResponsiblePartySelection;
 import com.medigy.persist.model.person.PeopleRelationship;
+import com.medigy.persist.model.person.Person;
 import com.medigy.persist.model.person.PersonRole;
-import com.medigy.persist.model.insurance.FinancialResponsiblePartySelection;
 import com.medigy.persist.reference.custom.party.PeopleRelationshipType;
 import com.medigy.persist.reference.custom.person.PersonRoleType;
 import com.medigy.service.party.PartyRelationshipFacade;
@@ -88,7 +88,7 @@ public class PartyRelationshipFacadeImpl extends AbstractFacade implements Party
         relationship.setFromDate(new Date());
         getSession().save(relationship);
 
-        FinancialResponsiblePartySelection selection = new FinancialResponsiblePartySelection();
+        ResponsiblePartySelection selection = new ResponsiblePartySelection();
         selection.setPeopleRelationship(relationship);
         getSession().save(selection);
 

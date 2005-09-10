@@ -47,7 +47,7 @@ import com.medigy.service.dto.person.PatientProfileParameters;
 import com.medigy.service.dto.person.PatientProfileReturnValues;
 import com.medigy.service.person.PatientProfileService;
 import org.hibernate.Criteria;
-import org.hibernate.FetchMode;
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
@@ -62,16 +62,35 @@ public class PatientProfileServiceImpl extends AbstractService   implements Pati
     public PatientProfileReturnValues getProfile(final PatientProfileParameters params)
     {
         final Session session = getSession();
+
         final Criteria criteria = session.createCriteria(Person.class);
-        criteria.setFetchMode("personIdentifiers", FetchMode.JOIN);
-        criteria.setFetchMode("ethnicities", FetchMode.JOIN);
-        criteria.setFetchMode("insurancePolicies", FetchMode.JOIN);
-        criteria.setFetchMode("maritalStatuses", FetchMode.JOIN);
-        criteria.setFetchMode("partyContactMechanisms", FetchMode.JOIN);
-
-        criteria.add(Restrictions.eq("partyId", params.getPatientId()));
+        //criteria.setFetchMode("personIdentifiers", FetchMode.JOIN)
+        //        .setFetchMode("ethnicities", FetchMode.JOIN)
+       //         .setFetchMode("insurancePolicies", FetchMode.JOIN)
+        //        .setFetchMode("maritalStatuses", FetchMode.JOIN)
+        //        .setFetchMode("partyContactMechanisms", FetchMode.JOIN)
+        criteria.add(Restrictions.idEq(params.getPatientId()));
         final Person patient = (Person) criteria.uniqueResult();
+        Hibernate.initialize(patient.getEthnicities());
+        Hibernate.initialize(patient.getPersonIdentifiers());
+        Hibernate.initialize(patient.getInsurancePolicies());
+        Hibernate.initialize(patient.getMaritalStatuses());
+        Hibernate.initialize(patient.getPartyContactMechanisms());
+        Hibernate.initialize(patient.getResponsiblePartySelections());
 
+        /*
+
+        final Query query = session.createQuery("from Person person " +
+                "left join fetch person.personIdentifiers " +
+                "left join fetch person.ethnicities " +
+                "left join fetch person.insurancePolicies " +
+                "left join fetch person.maritalStatuses " +
+                "left join fetch person.partyContactMechanisms as contacts " +
+                "WHERE person.partyId = :patientId");
+        query.setLong("patientId", params.getPatientId());
+        final Person patient = (Person) query.uniqueResult();
+        */
+        System.out.println("Number of contact mechs: " + patient.getPartyContactMechanisms().size());
         return new PatientProfileReturnValues() {
             public Person getPatient()
             {

@@ -61,6 +61,10 @@ public class PatientSearchQueryDefinition extends BasicQueryDefinition implement
         driversLicenseJoin.setAssociatedJoinExpression("left outer join " + personJoin.getEntityAlias() + ".personIdentifiers as " +
                 driversLicenseJoin.getEntityAlias() + " with pi2.type.id = '" + PersonIdentifierType.Cache.DRIVERS_LICENSE.getEntity().getSystemId() + "'");
 
+        final QueryDefinitionJoin primaryRoleJoin = new QueryDefinitionJoinImpl("roles", PersonRole.class, this);
+        primaryRoleJoin.setAssociatedJoin(personJoin);
+        primaryRoleJoin.setAssociatedJoinExpression("left outer join " + personJoin.getEntityAlias() + ".roles as " + primaryRoleJoin.getEntityAlias() +
+            " with roles.isPrimaryRole = true");
 
         final QueryDefinitionJoin orgJoin =  new QueryDefinitionJoinImpl("org", Organization.class, this);
 
@@ -72,19 +76,20 @@ public class PatientSearchQueryDefinition extends BasicQueryDefinition implement
         this.addJoin(ssnJoin);
         this.addJoin(driversLicenseJoin);
         this.addJoin(personRoleJoin);
+        this.addJoin(primaryRoleJoin);
 
         addField("personId", "partyId", "Patient ID", personJoin);
         addField("firstName", "firstName", "First Name", personJoin);
         addField("lastName", "lastName", "Last Name", personJoin);
         addField("birthDate", "birthDate", "Date of Birth", personJoin);
+        addField("primaryRole", "type", "Primary Role", primaryRoleJoin);
         //addField("gender", "currentGenderType.label", "Gender", personJoin);
         //addField("ssn", "currentGenderType.label", "Gender", personJoin);
 
         // use this for display of SSN in result but it shouldn't be part of the SELECT clause!
-        final QueryDefinitionField ssnPropertyField = addField("ssnProperty", "identifierValue", "SSN", ssnJoin);
+        addField("ssnProperty", "identifierValue", "SSN", ssnJoin);
 
-        final QueryDefinitionField driversLicensePropertyField = addField("driversLicProperty", "identifierValue",
-                "Driver's License", driversLicenseJoin);
+        addField("driversLicProperty", "identifierValue", "Driver's License", driversLicenseJoin);
         //driversLicensePropertyField.setWhereClauseExpr("pi2.type.code = " + PersonIdentifierType.Cache.DRIVERS_LICENSE.getCode() +
         //    " AND pi2.identifierValue ");
 
@@ -106,7 +111,8 @@ public class PatientSearchQueryDefinition extends BasicQueryDefinition implement
         DOB("birthDate"),
         GENDER("gender"),
         ORG_ID("orgId"),
-        SSN("ssnProperty");
+        SSN("ssnProperty"),
+        PRIMARY_ROLE("primaryRole");
 
         private String name;
         Field(final String name)
@@ -129,7 +135,7 @@ public class PatientSearchQueryDefinition extends BasicQueryDefinition implement
         //select.addDisplayField(getField(Field.GENDER.getEntityAlias()));
         select.addDisplayField(getField(Field.DOB.getName()));
         select.addDisplayField(getField("ssnProperty"));
-
+        select.addDisplayField(getField(Field.PRIMARY_ROLE.getName()));
 
         final CompositeQueryDefinitionCondition firstAndlastNameCondition = new CompositeQueryDefinitionConditionImpl("firstAndlastNameCondition");
         firstAndlastNameCondition.addChildCondition(new QueryDefinitionConditionImpl(

@@ -18,6 +18,7 @@ public interface PersonSearchReturnValues extends ServiceReturnValues
         private String ssn;
         private Long personId;
         private Date birthDate;
+        private String primaryRole;
 
         public Date getBirthDate()
         {
@@ -77,6 +78,16 @@ public interface PersonSearchReturnValues extends ServiceReturnValues
         public void setSsn(final String ssn)
         {
             this.ssn = ssn;
+        }
+
+        public String getPrimaryRole()
+        {
+            return primaryRole;
+        }
+
+        public void setPrimaryRole(final String primaryRole)
+        {
+            this.primaryRole = primaryRole;
         }
     }
 

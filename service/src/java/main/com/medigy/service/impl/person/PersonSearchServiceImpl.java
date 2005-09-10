@@ -4,6 +4,7 @@
 package com.medigy.service.impl.person;
 
 import com.medigy.persist.model.common.Entity;
+import com.medigy.persist.reference.custom.person.PersonRoleType;
 import com.medigy.persist.util.query.QueryDefinitionField;
 import com.medigy.persist.util.query.QueryDefnCondition;
 import com.medigy.persist.util.query.QueryDefnStatementGenerator;
@@ -109,6 +110,8 @@ public class PersonSearchServiceImpl extends AbstractQueryDefinitionSearchServic
                             person.setPersonId((Long)fieldValue);
                         else if (field.getName().equals(PatientSearchQueryDefinition.Field.SSN.getName()))
                             person.setSsn(fieldValue.toString());
+                        else if (field.getName().equals(PatientSearchQueryDefinition.Field.PRIMARY_ROLE.getName()))
+                            person.setPrimaryRole(((PersonRoleType) fieldValue).getLabel());
                     }
 
                 }
@@ -132,6 +135,8 @@ public class PersonSearchServiceImpl extends AbstractQueryDefinitionSearchServic
                             person.setPersonId((Long)fieldValue);
                         else if (field.getName().equals(PatientSearchQueryDefinition.Field.SSN.getName()))
                             person.setSsn(fieldValue.toString());
+                        else if (field.getName().equals(PatientSearchQueryDefinition.Field.PRIMARY_ROLE.getName()))
+                            person.setPrimaryRole(((PersonRoleType) fieldValue).getLabel());
                     }
                 }
                 people.add(person);
