@@ -66,11 +66,7 @@ public class GeographicBoundary extends AbstractTopLevelEntity
 
     private Set<IncidentGeographicBoundary> incidentGeographicBoundary = new HashSet<IncidentGeographicBoundary>();
     private Set<PostalAddressBoundary> postalAddressBoundary = new HashSet<PostalAddressBoundary>();
-
-    public GeographicBoundary()
-    {
-    }
-
+   
     @Id(generate = GeneratorType.AUTO)
     @Column(name = PK_COLUMN_NAME)
     public final Long getGeoId()

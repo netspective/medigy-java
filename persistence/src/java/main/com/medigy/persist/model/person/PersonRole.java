@@ -24,6 +24,7 @@ public class PersonRole extends PartyRole
 
     private Person person;
     private PersonRoleType type;
+    private boolean isPrimaryRole;
 
     private List<PersonAndOrgRelationship> personOrgRelationships = new ArrayList<PersonAndOrgRelationship>();
     private List<PeopleRelationship> primaryPersonRelationships = new ArrayList<PeopleRelationship>();
@@ -108,5 +109,19 @@ public class PersonRole extends PartyRole
     public void setSecondaryPersonRelationships(final List<PeopleRelationship> secondaryPersonRelationships)
     {
         this.secondaryPersonRelationships = secondaryPersonRelationships;
+    }
+
+    /**
+     * Checks to see if this is the person's primary role
+     * @return
+     */
+    public boolean getIsPrimaryRole()
+    {
+        return isPrimaryRole;
+    }
+
+    public void setIsPrimaryRole(final boolean primaryRole)
+    {
+        isPrimaryRole = primaryRole;
     }
 }

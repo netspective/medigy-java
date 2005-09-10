@@ -70,7 +70,7 @@ public class PartyContactMechanismPurpose extends AbstractDateDurationEntity
     }
 
     @ManyToOne
-    @JoinColumn(name = "party_contact_mech_id")
+    @JoinColumn(name = PartyContactMechanism.PK_COLUMN_NAME)
     public PartyContactMechanism getPartyContactMechanism()
     {
         return partyContactMechanism;

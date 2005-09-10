@@ -108,7 +108,7 @@ public class PhoneNumber extends ContactMechanism
         this.areaCode = areaCode;
     }
 
-    @Column(length = 7)
+    @Column(length = 7, nullable = false)
     public String getNumberValue()
     {
         return numberValue;

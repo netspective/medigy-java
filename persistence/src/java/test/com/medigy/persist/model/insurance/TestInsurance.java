@@ -96,8 +96,8 @@ public class TestInsurance extends TestCase
         assertThat(insuranceProducts.size(), eq(1));
         final InsuranceProduct product = (InsuranceProduct) carrier.getInsuranceProducts().toArray()[0];
         assertThat(product.getInsurancePlans().size(), eq(2));
-        assertThat(product.getInsurancePlan("Super Plan 1").getName(), eq("Super Plan 1"));
-        assertThat(product.getInsurancePlan("Super Plan 2").getName(), eq("Super Plan 2"));
+        assertThat(product.getInsurancePlans("Super Plan 1").getName(), eq("Super Plan 1"));
+        assertThat(product.getInsurancePlans("Super Plan 2").getName(), eq("Super Plan 2"));
 
         transaction = session.beginTransaction();
         Calendar cal = Calendar.getInstance();
@@ -138,7 +138,7 @@ public class TestInsurance extends TestCase
         session.save(relationship);
 
         InsurancePolicy johnDoePolicy = new InsurancePolicy();
-        johnDoePolicy.setInsurancePlan(plan1);
+        johnDoePolicy.setInsurancePlans(plan1);
         johnDoePolicy.setInsuredPerson(johnDoe);
         johnDoePolicy.setContractHolderPerson(johnDoe);
         johnDoePolicy.setPolicyNumber("12345");
@@ -149,7 +149,7 @@ public class TestInsurance extends TestCase
         johnDoe.addResponsibleInsurancePolicy(johnDoePolicy);
 
         InsurancePolicy patientPolicy = new InsurancePolicy();
-        patientPolicy.setInsurancePlan(plan1);
+        patientPolicy.setInsurancePlans(plan1);
         patientPolicy.setInsuredPerson(patient);
         patientPolicy.setContractHolderPerson(johnDoe);
         patientPolicy.setPolicyNumber("12345-1");
@@ -177,10 +177,10 @@ public class TestInsurance extends TestCase
         assertThat(jdPolicy.getPolicyNumber(), eq("12345"));
         assertThat(jdPolicy.getGroupNumber(), eq("XXX"));
         assertThat(jdPolicy.getType(), eq(InsurancePolicyType.Cache.INDIVIDUAL_INSURANCE_POLICY.getEntity()));
-        assertThat(jdPolicy.getInsurancePlan().getInsurancePlanId(), eq(plan1.getInsurancePlanId()));
-        assertThat(jdPolicy.getInsurancePlan().getName(), eq("Super Plan 1"));
-        assertThat(jdPolicy.getInsurancePlan().getInsuranceProduct().getInsuranceProductId(), eq(product.getInsuranceProductId()));
-        assertThat(jdPolicy.getInsurancePlan().getInsuranceProduct().getType(), eq(InsuranceProductType.Cache.MEDICAID.getEntity()));
+        assertThat(jdPolicy.getInsurancePlans().getInsurancePlanId(), eq(plan1.getInsurancePlanId()));
+        assertThat(jdPolicy.getInsurancePlans().getName(), eq("Super Plan 1"));
+        assertThat(jdPolicy.getInsurancePlans().getInsuranceProduct().getInsuranceProductId(), eq(product.getInsuranceProductId()));
+        assertThat(jdPolicy.getInsurancePlans().getInsuranceProduct().getType(), eq(InsuranceProductType.Cache.MEDICAID.getEntity()));
 
         final Person secondPerson = (Person) session.load(Person.class, patient.getPartyId());
         final Set<InsurancePolicy> insurancePolicies = secondPerson.getInsurancePolicies();
@@ -194,10 +194,10 @@ public class TestInsurance extends TestCase
         assertThat(secondPolicy.getPolicyNumber(), eq("12345-1"));
         assertThat(secondPolicy.getGroupNumber(), eq("XXX"));
         assertThat(secondPolicy.getType(), eq(InsurancePolicyType.Cache.INDIVIDUAL_INSURANCE_POLICY.getEntity()));
-        assertThat(secondPolicy.getInsurancePlan().getInsurancePlanId(), eq(plan1.getInsurancePlanId()));
-        assertThat(secondPolicy.getInsurancePlan().getName(), eq("Super Plan 1"));
-        assertThat(secondPolicy.getInsurancePlan().getInsuranceProduct().getInsuranceProductId(), eq(product.getInsuranceProductId()));
-        assertThat(secondPolicy.getInsurancePlan().getInsuranceProduct().getType(), eq(InsuranceProductType.Cache.MEDICAID.getEntity()));
+        assertThat(secondPolicy.getInsurancePlans().getInsurancePlanId(), eq(plan1.getInsurancePlanId()));
+        assertThat(secondPolicy.getInsurancePlans().getName(), eq("Super Plan 1"));
+        assertThat(secondPolicy.getInsurancePlans().getInsuranceProduct().getInsuranceProductId(), eq(product.getInsuranceProductId()));
+        assertThat(secondPolicy.getInsurancePlans().getInsuranceProduct().getType(), eq(InsuranceProductType.Cache.MEDICAID.getEntity()));
         session.close();
         */
     }

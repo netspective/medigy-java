@@ -47,11 +47,14 @@ import javax.persistence.FetchType;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.persistence.UniqueConstraint;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@Table(uniqueConstraints = { @UniqueConstraint(columnNames = "country_name") })
 @Inheritance(strategy = InheritanceType.JOINED )
 public class Country extends GeographicBoundary
 {
@@ -232,6 +235,7 @@ public class Country extends GeographicBoundary
         return false;
     }
 
+    @Column(nullable =  false)
     public String getCountryName()
     {
         return countryName;

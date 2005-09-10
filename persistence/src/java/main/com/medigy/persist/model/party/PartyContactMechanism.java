@@ -61,6 +61,8 @@ import java.util.List;
 @Table(name = "Party_Contact_Mech")
 public class PartyContactMechanism extends AbstractDateDurationEntity
 {
+    public static final String PK_COLUMN_NAME = "party_contact_mech_id";
+
     private Long partyContactMechanismId;
     private String notes;
     private boolean nonSolicitation;
@@ -74,7 +76,7 @@ public class PartyContactMechanism extends AbstractDateDurationEntity
     }
 
     @Id(generate = GeneratorType.AUTO)
-    @Column(name = "party_contact_mech_id")
+    @Column(name = PK_COLUMN_NAME)
     public Long getPartyContactMechanismId()
     {
         return partyContactMechanismId;
@@ -97,7 +99,7 @@ public class PartyContactMechanism extends AbstractDateDurationEntity
     }
 
     @ManyToOne
-    @JoinColumn(name = "party_id", nullable = false)
+    @JoinColumn(name = Party.PK_COLUMN_NAME, nullable = false)
     public Party getParty()
     {
         return party;
@@ -150,6 +152,16 @@ public class PartyContactMechanism extends AbstractDateDurationEntity
         final PartyContactMechanismPurpose purpose = new PartyContactMechanismPurpose();
         purpose.setType(type);
         purpose.setPartyContactMechanism(this);
+        purposes.add(purpose);
+    }
+
+    @Transient
+    public void addPurpose(final ContactMechanismPurposeType type, final String description)
+    {
+        final PartyContactMechanismPurpose purpose = new PartyContactMechanismPurpose();
+        purpose.setType(type);
+        purpose.setPartyContactMechanism(this);
+        purpose.setDescription(description);
         purposes.add(purpose);
     }
 

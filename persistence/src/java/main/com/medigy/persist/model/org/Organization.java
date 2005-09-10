@@ -70,6 +70,7 @@ import javax.persistence.FetchType;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import java.util.ArrayList;
@@ -87,7 +88,7 @@ import java.util.Set;
 public class Organization extends Party
 {
     private Set<InsuranceProduct> insuranceProducts = new HashSet<InsuranceProduct>();
-    private Set<InsurancePlan> insurancePlan = new HashSet<InsurancePlan>();
+    private List<InsurancePlan> insurancePlans = new ArrayList<InsurancePlan>();
     private Set<Enrollment> enrollments = new HashSet<Enrollment>();
     private Set<Facility> facilities = new HashSet<Facility>();
 
@@ -193,21 +194,22 @@ public class Organization extends Party
     }
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "organization")
-    public Set<InsurancePlan> getInsurancePlan()
+    @OrderBy("name")
+    public List<InsurancePlan> getInsurancePlans()
     {
-        return insurancePlan;
+        return insurancePlans;
     }
 
-    public void setInsurancePlan(final Set<InsurancePlan> insurancePlan)
+    public void setInsurancePlans(final List<InsurancePlan> insurancePlans)
     {
-        this.insurancePlan = insurancePlan;
+        this.insurancePlans = insurancePlans;
     }
 
     @Transient
     public void addInsurancePlan(final InsurancePlan plan)
     {
         plan.setOrganization(this);
-        insurancePlan.add(plan);
+        insurancePlans.add(plan);
     }
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "organization")

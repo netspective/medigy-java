@@ -40,6 +40,7 @@ package com.medigy.persist.model.insurance;
 
 import com.medigy.persist.model.common.AbstractDateDurationEntity;
 import com.medigy.persist.model.person.PeopleRelationship;
+import com.medigy.persist.model.person.Person;
 import com.medigy.persist.model.person.PersonAndOrgRelationship;
 
 import javax.persistence.Column;
@@ -55,16 +56,16 @@ import javax.persistence.Table;
  * for an insurance policy. 
  */
 @Entity
-@Table(name = "Finance_Resp_Party_Sel")
-public class FinancialResponsiblePartySelection extends AbstractDateDurationEntity
+@Table(name = "Resp_Party_Sel")
+public class ResponsiblePartySelection extends AbstractDateDurationEntity
 {
     public static final String PK_COLUMN_NAME = "selection_id";
 
     public Long selectionId;
-    public InsurancePolicy insurancePolicy;
     public PeopleRelationship peopleRelationship;
     public PersonAndOrgRelationship personOrgRelationship;
-
+    public boolean isDefaultSelection;
+    private Person patient;
 
     @Id(generate = GeneratorType.AUTO)
     @Column(name = PK_COLUMN_NAME)
@@ -79,15 +80,25 @@ public class FinancialResponsiblePartySelection extends AbstractDateDurationEnti
     }
 
     @ManyToOne
-    @JoinColumn(name = InsurancePolicy.PK_COLUMN_NAME, nullable = false)
-    public InsurancePolicy getInsurancePolicy()
+    @JoinColumn(name = Person.PK_COLUMN_NAME, nullable = false)
+    public Person getPatient()
     {
-        return insurancePolicy;
+        return patient;
     }
 
-    public void setInsurancePolicy(final InsurancePolicy insurancePolicy)
+    public void setPatient(final Person patient)
     {
-        this.insurancePolicy = insurancePolicy;
+        this.patient = patient;
+    }
+
+    public boolean isDefaultSelection()
+    {
+        return isDefaultSelection;
+    }
+
+    public void setDefaultSelection(final boolean defaultSelection)
+    {
+        isDefaultSelection = defaultSelection;
     }
 
     @ManyToOne

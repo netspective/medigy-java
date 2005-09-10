@@ -49,6 +49,7 @@ import com.medigy.persist.model.health.HealthCareLicense;
 import com.medigy.persist.model.health.lab.LabOrder;
 import com.medigy.persist.model.insurance.FeeSchedule;
 import com.medigy.persist.model.insurance.InsurancePolicy;
+import com.medigy.persist.model.insurance.ResponsiblePartySelection;
 import com.medigy.persist.model.party.Party;
 import com.medigy.persist.reference.custom.health.HealthCareLicenseType;
 import com.medigy.persist.reference.custom.person.EthnicityType;
@@ -122,6 +123,7 @@ public class Person extends Party
 
     private List<PersonRole> roles = new ArrayList<PersonRole>();
     private List<LabOrder> labOrders = new ArrayList<LabOrder>();
+    private List<ResponsiblePartySelection> responsiblePartySelections = new ArrayList<ResponsiblePartySelection>();
 
     public Person()
     {
@@ -686,7 +688,7 @@ public class Person extends Party
     public static Person createNewPatient()
     {
         final Person patient = new Person();
-        patient.addRole(PersonRoleType.Cache.PATIENT.getEntity());
+        patient.addRole(PersonRoleType.Cache.PATIENT.getEntity(), true);
         return patient;
     }
 
@@ -698,7 +700,7 @@ public class Person extends Party
     public static Person createNewPhysician()
     {
         final Person doctor = new Person();
-        doctor.addRole(PersonRoleType.Cache.INDIVIDUAL_HEALTH_CARE_PRACTITIONER.getEntity());
+        doctor.addRole(PersonRoleType.Cache.INDIVIDUAL_HEALTH_CARE_PRACTITIONER.getEntity(), true);
         return doctor;
     }
 
@@ -755,11 +757,29 @@ public class Person extends Party
     @Transient
     public PersonRole addRole(final PersonRoleType type)
     {
+        return addRole(type, false);
+    }
+
+    @Transient
+    public PersonRole addRole(final PersonRoleType type, final boolean isPrimary)
+    {
         final PersonRole role = new PersonRole();
         role.setPerson(this);
         role.setType(type);
+        role.setIsPrimaryRole(isPrimary);
         this.roles.add(role);
         return role;
+    }
+
+    @Transient
+    public PersonRole getPrimaryRole()
+    {
+        for (PersonRole role: roles)
+        {
+            if (role.getIsPrimaryRole())
+                return role;
+        }
+        return null;
     }
 
     @Transient
@@ -810,5 +830,44 @@ public class Person extends Party
     public void addPersonIdentifier(final PersonIdentifier ident)
     {
         this.personIdentifiers.add(ident);
+    }
+
+    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL)
+    public List<ResponsiblePartySelection> getResponsiblePartySelections()
+    {
+        return responsiblePartySelections;
+    }
+
+    public void setResponsiblePartySelections(final List<ResponsiblePartySelection> responsiblePartySelections)
+    {
+        this.responsiblePartySelections = responsiblePartySelections;
+    }
+
+    @Transient
+    public ResponsiblePartySelection getDefaultResponsiblePartySelection()
+    {
+        for (ResponsiblePartySelection sel: responsiblePartySelections)
+        {
+            if (sel.isDefaultSelection())
+                return sel;
+        }
+        return null;
+    }
+
+    @Transient
+    public void addResponsiblePersonSelection(final Person person, final PeopleRelationship rel, final boolean isDefault)
+    {
+        final ResponsiblePartySelection selection = new ResponsiblePartySelection();
+        selection.setPatient(this);
+        selection.setPeopleRelationship(rel);
+        selection.setDefaultSelection(isDefault);
+
+        if (isDefault)
+        {
+            final ResponsiblePartySelection defaultSel = getDefaultResponsiblePartySelection();
+            if (defaultSel != null)
+                defaultSel.setDefaultSelection(false);
+        }
+        responsiblePartySelections.add(selection);
     }
 }

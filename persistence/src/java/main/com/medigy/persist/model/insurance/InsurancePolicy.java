@@ -89,7 +89,6 @@ public class InsurancePolicy extends AbstractDateDurationEntity
     private InsurancePlan insurancePlan;            // the plan to which this policy belongs to
     private Enrollment enrollment;                  // the enrollment to which this policy belongs to (optional)
 
-    private Set<FinancialResponsiblePartySelection> responsiblePartySelection = new HashSet<FinancialResponsiblePartySelection>();
     private Set<CareProviderSelection> careProviderSelections = new HashSet<CareProviderSelection>();
     private Set<InsurancePolicyCoverageLevel> coverageLevelRelationships = new HashSet<InsurancePolicyCoverageLevel>();
     private Set<Claim> claims = new HashSet<Claim>();
@@ -257,18 +256,6 @@ public class InsurancePolicy extends AbstractDateDurationEntity
     public void setInsurancePlan(final InsurancePlan insurancePlan)
     {
         this.insurancePlan = insurancePlan;
-    }
-
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "insurancePolicy")
-    public Set<FinancialResponsiblePartySelection> getResponsiblePartySelection()
-    {
-        return responsiblePartySelection;
-    }
-
-    public void setResponsiblePartySelection(final Set<FinancialResponsiblePartySelection> responsiblePartySelection)
-    {
-        this.responsiblePartySelection = responsiblePartySelection;
     }
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "insurancePolicy")

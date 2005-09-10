@@ -46,12 +46,12 @@ import com.medigy.persist.model.invoice.InvoiceRole;
 import com.medigy.persist.reference.custom.GeographicBoundaryType;
 import com.medigy.persist.reference.custom.party.CommunicationEventPurposeType;
 import com.medigy.persist.reference.custom.party.CommunicationEventRoleType;
+import com.medigy.persist.reference.custom.party.ContactMechanismPurposeType;
 import com.medigy.persist.reference.custom.party.FacilityType;
 import com.medigy.persist.reference.custom.party.PartyClassificationType;
 import com.medigy.persist.reference.custom.party.PartyIdentifierType;
-import com.medigy.persist.reference.custom.party.ContactMechanismPurposeType;
-import com.medigy.persist.reference.type.party.PartyType;
 import com.medigy.persist.reference.type.ContactMechanismType;
+import com.medigy.persist.reference.type.party.PartyType;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -226,13 +226,14 @@ public class Party extends AbstractTopLevelEntity
     @Transient
     public List<PartyContactMechanism> getPhoneNumbers()
     {
-        List<PartyContactMechanism> addresses = new ArrayList<PartyContactMechanism>();
+        List<PartyContactMechanism> phoneList = new ArrayList<PartyContactMechanism>();
         for (PartyContactMechanism mech : partyContactMechanisms)
         {
+            System.out.println(mech.getContactMechanism().getType().getLabel());
             if (mech.getContactMechanism().getType().equals(ContactMechanismType.Cache.PHONE.getEntity()))
-                addresses.add(mech);
+                phoneList.add(mech);
         }
-        return addresses;
+        return phoneList;
     }
 
     @Transient

@@ -276,7 +276,7 @@
 
         <!--mapping package="com.medigy.persist.model.insurance"/-->
         <mapping class="com.medigy.persist.model.insurance.CareProviderSelection"/>
-        <mapping class="com.medigy.persist.model.insurance.FinancialResponsiblePartySelection"/>
+        <mapping class="com.medigy.persist.model.insurance.ResponsiblePartySelection"/>
         <mapping class="com.medigy.persist.model.insurance.Coverage"/>
         <mapping class="com.medigy.persist.model.insurance.CoverageLevel"/>
         <mapping class="com.medigy.persist.model.insurance.CoverageLevelBasis"/>
