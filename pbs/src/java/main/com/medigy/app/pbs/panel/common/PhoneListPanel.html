@@ -5,14 +5,30 @@
     </head>
     <body>
         <wicket:panel>
-            <table>
-                <tbody>
+        	<div>
+            <table class="attribute-panel">
+                <tr class="heading">
+                    <td colspan="2">
+                        <div class="text">Phone Numbers</div>
+                        <div class="action">Add</div>
+                    </td>
+                </tr>
                 <tr wicket:id="phone">
-                    <td><span wicket:id="purpose"></span></td>
+                    <td class="label"><a href="#" wicket:id="purpose">Home Phone:</a></td>
                     <td>(<span wicket:id="areaCode">800</span>) <span wicket:id="number">123-4567</span></td>
                 </tr>
-                </tbody>
+                <wicket:remove>
+                <tr>
+					<td  class="label"><span>Work Phone:</span></td>
+					<td>(<span>800</span>) <span>123-4567</span></td>
+                </tr>
+                <tr>
+					<td class="label"><span>Cell Phone:</span></td>
+					<td>(<span>800</span>) <span>123-4567</span></td>
+                </tr>
+                </wicket:remove>
             </table>
+            </div>
         </wicket:panel>
     </body>
 </html>

@@ -7,16 +7,17 @@ import com.medigy.presentation.form.query.DynamicSearchResultsListView;
 import com.medigy.presentation.model.common.SearchFormModelObject;
 import com.medigy.presentation.model.common.ServiceCountAndListAction;
 import com.medigy.presentation.model.common.ServiceSearchResultModel;
+import com.medigy.presentation.navigation.paging.PageableListViewNavigator;
 import com.medigy.service.SearchService;
 import com.medigy.wicket.DefaultApplication;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebMarkupContainer;
-import wicket.markup.html.navigation.paging.PagingNavigator;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
 import wicket.markup.html.list.PageableListView;
+import wicket.markup.html.navigation.paging.PagingNavigator;
 import wicket.markup.html.panel.Panel;
 
 import java.util.List;
@@ -44,20 +45,25 @@ public abstract class SearchResultPanel extends Panel
         searchResultModel = createSearchResultModel();
         resultsListView = createSearchResultsListView(searchResultModel, rowsPerPage);
         add(resultsListView);
+        add(createSearchResultMessage());
         add(createSearchResultHeader());
-        navPanel = new PagingNavigator("navigation-panel", resultsListView);
-        navPanel.setVisible(false);
+        navPanel = new PageableListViewNavigator("navigation-panel", resultsListView) {
+            public boolean isVisible()
+            {
+                return searchResultModel.hasResults();
+            }
+        };
         add(navPanel);
     }
 
     protected WebMarkupContainer createSearchResultHeader()
     {
         return new WebMarkupContainer("resultsHeader")
-		{
-			public boolean isVisible()
-			{
-				return searchResultModel.hasResults();
-			}
+        {
+            public boolean isVisible()
+            {
+                return searchResultModel.hasResults();
+            }
 
             protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
             {
@@ -72,6 +78,20 @@ public abstract class SearchResultPanel extends Panel
                     replaceComponentTagBody(markupStream, openTag, buffer.toString());
                 }
                 super.onComponentTagBody(markupStream, openTag);
+            }
+        };
+    }
+
+    protected WebMarkupContainer createSearchResultMessage()
+    {
+        return new WebMarkupContainer("resultsMessage")
+        {
+            protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
+            {
+                final StringBuffer buffer = new StringBuffer();
+                if (searchResultModel.getSearchParameters() != null)
+                    buffer.append("<span>" + searchResultModel.getResultSize() + " row(s) were found. </span>");
+                replaceComponentTagBody(markupStream, openTag, buffer.toString());
             }
         };
     }

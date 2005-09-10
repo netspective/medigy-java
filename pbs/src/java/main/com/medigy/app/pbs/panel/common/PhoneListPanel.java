@@ -59,6 +59,8 @@ public class PhoneListPanel extends Panel
                 final PartyContactMechanism pcm = ((PartyContactMechanism) listItem.getModelObject());
                 final List<PartyContactMechanismPurpose> purposes = pcm.getPurposes();
                 final StringBuffer sb = new StringBuffer();
+
+                System.out.println(">>>>>>>>>>>>>> " + purposes.size());
                 for (PartyContactMechanismPurpose purpose : purposes)
                 {
                     sb.append(purpose.getType().getLabel());

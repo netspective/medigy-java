@@ -41,6 +41,7 @@ package com.medigy.app.pbs.page.entity.person;
 import com.medigy.app.pbs.panel.common.AddressListPanel;
 import com.medigy.app.pbs.panel.common.PhoneListPanel;
 import com.medigy.persist.model.insurance.InsurancePolicy;
+import com.medigy.persist.model.insurance.ResponsiblePartySelection;
 import com.medigy.persist.model.person.Person;
 import com.medigy.persist.model.person.PersonIdentifier;
 import wicket.markup.html.basic.Label;
@@ -74,6 +75,17 @@ public class PatientProfilePanel extends Panel
         add(new Label("age", new Model(currentYear - birthYear)));
         add(new Label("birthdate", new Model(sdf.format(patient.getBirthDate()))));
         add(new Label("maritalStatus", new Model(patient.getCurrentMaritalStatus().getLabel())));
+        final ResponsiblePartySelection respPersonSelection = patient.getDefaultResponsiblePartySelection();
+        if (respPersonSelection.getPeopleRelationship() != null)
+        {
+            final String label = respPersonSelection.getPeopleRelationship().getSecondaryPersonRole().getType().getLabel();
+            final String fullName = respPersonSelection.getPeopleRelationship().getSecondaryPersonRole().getPerson().getFullName();
+            add(new Label("responsiblePerson", new Model(fullName + "(" + label + ")")));
+        }
+        else
+        {
+            add(new Label("responsiblePerson", new Model("Self")));
+        }
 
         // Add person identifiers
         add(new ListView("identifiers", patient.getPersonIdentifiers())
@@ -97,7 +109,7 @@ public class PatientProfilePanel extends Panel
                 listItem.add(new MultiLineLabel("policyNumber", policy.getPolicyNumber()));
             }
         });
-
+        System.out.println("Phone numbers: " + patient.getPhoneNumbers().size());
         add(new AddressListPanel("addressList", patient.getAddresses()));
         add(new PhoneListPanel("phoneList", patient.getPhoneNumbers()));
     }

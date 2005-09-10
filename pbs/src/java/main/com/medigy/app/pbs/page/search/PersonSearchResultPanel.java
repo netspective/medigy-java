@@ -159,6 +159,7 @@ public class PersonSearchResultPanel extends SearchResultPanel
                 item.add(new Label("gender", person.getGender()));
                 item.add(new Label("birthdate", person.getBirthDate() != null ? sdf.format(person.getBirthDate()): ""));
                 item.add(new Label("ssn", person.getSsn()));
+                item.add(new Label("primaryRole", person.getPrimaryRole()));
             }
         };
     }
@@ -174,6 +175,7 @@ public class PersonSearchResultPanel extends SearchResultPanel
             add(new Label("genderLabel", "Gender"));
             add(new Label("dobLabel", "Date of Birth"));
             add(new Label("ssnLabel", "SSN"));
+            add(new Label("primaryRoleLabel", "Primary Role"));
         }
 
          public boolean isVisible()

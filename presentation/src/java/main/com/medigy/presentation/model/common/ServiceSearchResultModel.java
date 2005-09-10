@@ -74,6 +74,11 @@ public class ServiceSearchResultModel extends AbstractReadOnlyDetachableModel
         return (!results.isEmpty());
     }
 
+    public int getResultSize()
+    {
+        return list.size();
+    }
+
     /**
      * Gets the result column names relative to the last time the model was loaded.
      */

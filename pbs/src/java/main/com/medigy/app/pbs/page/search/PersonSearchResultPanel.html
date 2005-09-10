@@ -5,7 +5,8 @@
     </head>
     <body>
         <wicket:panel>
-            <div>
+            <div class="body">
+                <div class="body" wicket:id="resultsMessage"></div>
                 <table id="resultsTable" class="report">
                         <tr class="heading" wicket:id="resultsHeader">
                             <th wicket:id="firstNameLabel">First Name</th>
@@ -13,6 +14,7 @@
                             <th wicket:id="genderLabel">Gender</th>
                             <th wicket:id="dobLabel">Date of Birth</th>
                             <th wicket:id="ssnLabel">SSN</th>
+                            <th wicket:id="primaryRoleLabel">Primary Role</th>
                         </tr>
                         <tr wicket:id="results">
                             <td> <a wicket:id="firstName"><span wicket:id="firstName">(first name)</span></a></td>
@@ -20,6 +22,7 @@
                             <td wicket:id="gender"></td>
                             <td wicket:id="birthdate"></td>
                             <td wicket:id="ssn"></td>
+                            <td wicket:id="primaryRole"></td>
                         </tr>
                 </table>
             </div>
