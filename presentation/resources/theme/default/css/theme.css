@@ -155,6 +155,20 @@ div.main-menu a:visited { color: white; text-decoration: none; }
 div.main-menu a:hover { background: url(../images/navigation/main-menu-hover-bg.png) repeat-x; color: black; }
 div.main-menu a.active { background: url(../images/navigation/main-menu-hover-bg.png) repeat-x; color: white; }
 
+div.main-menu span span
+{
+    color: white;
+    display: block;
+	font-family: Tahoma, Helvetica, sans-serif;
+	float: left;
+	line-height: 25px;
+    padding: 0px 25px;
+    text-decoration:none;
+    font-size: 12px;
+    font-weight: bold;
+    border-right: 1px solid white;
+}
+
 /*********************************************************************
  ** VERTICAL MENU                                                   **
  *********************************************************************/
