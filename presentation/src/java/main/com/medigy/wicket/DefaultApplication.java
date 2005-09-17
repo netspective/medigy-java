@@ -108,6 +108,8 @@ public abstract class DefaultApplication extends SpringApplication implements Ap
         final ApplicationSettings settings = getSettings();
         settings.setStripComments(true);
         settings.setStripWicketTags(true);
+        settings.setDefaultBeforeDisabledLink("");
+        settings.setDefaultAfterDisabledLink("");
 
         devlEnvHome = getDevelopmentEnvironmentProjectHome();
         if(devlEnvHome != null && devlEnvHome.exists())
