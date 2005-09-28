@@ -99,7 +99,7 @@ public class ClaimItem extends AbstractTopLevelEntity
     }
 
     @ManyToOne
-    @JoinColumn(name = "claim_id", nullable = false)
+    @JoinColumn(name = Claim.PK_COLUMN_NAME, nullable = false)
     public Claim getClaim()
     {
         return claim;
