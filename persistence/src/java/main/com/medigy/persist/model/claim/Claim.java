@@ -53,6 +53,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
+import javax.persistence.Basic;
+import javax.persistence.TemporalType;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -95,6 +97,7 @@ public class Claim extends AbstractTopLevelEntity
      * Gets the batch the claim is associated with
      * @return
      */
+    @Column(length = 16)
     public String getClaimBatchId()
     {
         return claimBatchId;
@@ -144,6 +147,7 @@ public class Claim extends AbstractTopLevelEntity
      * Gets the claim submission date
      * @return
      */
+    @Basic(temporalType =  TemporalType.DATE)
     public Date getClaimSubmissionDate()
     {
         return claimSubmissionDate;
