@@ -38,7 +38,7 @@
  */
 package com.medigy.service.util;
 
-import com.medigy.persist.util.ModelInitializer;
+import com.medigy.persist.util.HibernateModelInitializer;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -55,7 +55,7 @@ public class ModelSessionFactoryBean extends org.springframework.orm.hibernate3.
         final SessionFactory factory = (SessionFactory) getObject();
         final Session session = SessionFactoryUtils.getNewSession(factory);
 
-        if (!ModelInitializer.getInstance().isInitialized())
-            ModelInitializer.getInstance().initialize(session,ModelInitializer.SeedDataPopulationType.AUTO, getConfiguration());
+        if (!HibernateModelInitializer.getInstance().isInitialized())
+            HibernateModelInitializer.getInstance().initialize(session,HibernateModelInitializer.SeedDataPopulationType.AUTO, getConfiguration());
     }
 }
