@@ -80,8 +80,8 @@ import com.medigy.persist.reference.type.CurrencyType;
 import com.medigy.persist.reference.type.GenderType;
 import com.medigy.persist.reference.type.clincial.CPT;
 import com.medigy.persist.reference.type.clincial.Icd9;
-import com.medigy.persist.util.ModelInitializer;
-import com.medigy.persist.util.ModelInitializer.SeedDataPopulationType;
+import com.medigy.persist.util.HibernateModelInitializer;
+import com.medigy.persist.util.AbstractModelInitializer;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 import org.hibernate.Session;
@@ -176,7 +176,7 @@ public class DataPopulatorTask extends Task
             final Transaction tx = session.beginTransaction();
             try
             {
-                ModelInitializer.getInstance().initialize(session, SeedDataPopulationType.AUTO, configuration);
+                HibernateModelInitializer.getInstance().initialize(session, AbstractModelInitializer.SeedDataPopulationType.AUTO, configuration);
                 tx.commit();
                 log("Committed model initialization (seed data).");
             }
@@ -242,46 +242,40 @@ public class DataPopulatorTask extends Task
 
     protected void populateClinic(final Session session, final Organization billingServiceOrg, final int number)
     {
-        final Transaction tx = session.beginTransaction();
-        try
+        Transaction tx = session.getTransaction();
+        if (tx == null)
         {
-            final Organization org = new Organization();
-            final String organizationName = MessageFormat.format(clinicOrgNameTemplate, number);
-            org.setOrganizationName(organizationName);
-            org.addRole(OrganizationRoleType.Cache.CLINIC.getEntity());
-            session.save(org);
-
-            final Facility orgFacility = new Facility();
-            orgFacility.setOrganization(org);
-            orgFacility.setType(FacilityType.Cache.CLINIC.getEntity());
-            session.save(orgFacility);
-
-            final OrganizationsRelationship rel = new OrganizationsRelationship();
-            rel.setPrimaryOrgRole(billingServiceOrg.getRole(OrganizationRoleType.Cache.BILLING_PROVIDER.getEntity()));
-            rel.setSecondaryOrgRole(org.getRole(OrganizationRoleType.Cache.CLINIC.getEntity()));
-            rel.setType(OrganizationsRelationshipType.Cache.CUSTOMER.getEntity());
-            session.save(rel);
-
-            // create physicians for the clinic
-            List<Person> physicians = new ArrayList<Person>();
-            for(int i = 1; i <= generatePatientsPerOrgCount; i++)
-                physicians.add(populatePhysician(session, org, i));
-
-            for(int i = 1; i <= generatePatientsPerOrgCount; i++)
-            {
-                final Person physician = physicians.get(RandomUtils.generateRandomNumberBetween(0, physicians.size()));
-                final Person patient = populatePatient(session, org, i);
-                populatePatientAppointment(session, patient, physician, org, orgFacility, i);
-            }
-
-            log("Created " + generatePatientsPerOrgCount + " patients in clinic: " + organizationName);
-            tx.commit();
+            throw new BuildException("Faied to create clinics and related entities. No available transaction.");
         }
-        catch(final Exception e)
+        final Organization org = new Organization();
+        final String organizationName = MessageFormat.format(clinicOrgNameTemplate, number);
+        org.setOrganizationName(organizationName);
+        org.addRole(OrganizationRoleType.Cache.CLINIC.getEntity());
+        session.save(org);
+
+        final Facility orgFacility = new Facility();
+        orgFacility.setOrganization(org);
+        orgFacility.setType(FacilityType.Cache.CLINIC.getEntity());
+        session.save(orgFacility);
+
+        final OrganizationsRelationship rel = new OrganizationsRelationship();
+        rel.setPrimaryOrgRole(billingServiceOrg.getRole(OrganizationRoleType.Cache.BILLING_PROVIDER.getEntity()));
+        rel.setSecondaryOrgRole(org.getRole(OrganizationRoleType.Cache.CLINIC.getEntity()));
+        rel.setType(OrganizationsRelationshipType.Cache.CUSTOMER.getEntity());
+        session.save(rel);
+
+        // create physicians for the clinic
+        List<Person> physicians = new ArrayList<Person>();
+        for(int i = 1; i <= generatePatientsPerOrgCount; i++)
+            physicians.add(populatePhysician(session, org, i));
+
+        for(int i = 1; i <= generatePatientsPerOrgCount; i++)
         {
-            tx.rollback();
-            throw new BuildException(e);
+            final Person physician = physicians.get(RandomUtils.generateRandomNumberBetween(0, physicians.size()));
+            final Person patient = populatePatient(session, org, i);
+            populatePatientAppointment(session, patient, physician, org, orgFacility, i);
         }
+        log("Created " + generatePatientsPerOrgCount + " patients in clinic: " + organizationName);
     }
 
     protected void populateBillingService(final Session session, final int number)
