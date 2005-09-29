@@ -60,7 +60,6 @@ import org.hibernate.cfg.Environment;
 
 import com.medigy.persist.util.DelimitedValuesParser;
 import com.medigy.persist.util.DelimitedValuesReader;
-import com.medigy.persist.util.ModelInitializer;
 import com.medigy.tool.persist.loader.EntityLoader.EventHandler;
 
 public class EntityLoaderTask extends Task
