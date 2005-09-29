@@ -51,6 +51,8 @@ import javax.persistence.ManyToOne;
 @Entity
 public class PatientMedicalCondition extends AbstractDateDurationEntity
 {
+    public static final String PK_COLUMN_NAME = "med_condition_id";
+
     private Long medicalConditionId;
     private Person person;
     private MedicalConditionType type;
@@ -64,6 +66,7 @@ public class PatientMedicalCondition extends AbstractDateDurationEntity
     }
 
     @Id(generate = GeneratorType.AUTO)
+    @Column(name = PK_COLUMN_NAME)
     public Long getMedicalConditionId()
     {
         return medicalConditionId;
@@ -87,7 +90,7 @@ public class PatientMedicalCondition extends AbstractDateDurationEntity
     }
 
     @ManyToOne
-    @JoinColumn(name = "medical_condition_type_id")
+    @JoinColumn(name = MedicalConditionType.PK_COLUMN_NAME)
     public MedicalConditionType getType()
     {
         return type;

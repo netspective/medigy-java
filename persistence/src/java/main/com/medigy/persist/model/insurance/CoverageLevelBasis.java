@@ -41,6 +41,7 @@ package com.medigy.persist.model.insurance;
 import com.medigy.persist.model.common.AbstractEntity;
 import com.medigy.persist.reference.custom.insurance.CoverageLevelBasisType;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
@@ -50,11 +51,14 @@ import javax.persistence.ManyToOne;
 @Entity
 public class CoverageLevelBasis extends AbstractEntity
 {
+    public static final String PK_COLUMN_NAME = "level_basis_id";
+
     private Long coverageLevelBasisId;
     private CoverageLevelBasisType type;
     private CoverageLevel coverageLevel;
 
     @Id(generate = GeneratorType.AUTO)
+    @Column(name = PK_COLUMN_NAME)
     public Long getCoverageLevelBasisId()
     {
         return coverageLevelBasisId;

@@ -41,11 +41,11 @@ package com.medigy.persist.model.party;
 
 import com.medigy.persist.model.common.AbstractDateDurationEntity;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import java.util.HashSet;
 import java.util.Set;
@@ -53,6 +53,8 @@ import java.util.Set;
 @Entity
 public class Case extends AbstractDateDurationEntity
 {
+    public static final String PK_COLUMN_NAME = "case_id";
+
     private Long caseId;
     private String description;
 
@@ -63,6 +65,7 @@ public class Case extends AbstractDateDurationEntity
     }
 
     @Id(generate = GeneratorType.AUTO)
+    @Column(name = PK_COLUMN_NAME)
     public Long getCaseId()
     {
         return caseId;
@@ -84,8 +87,7 @@ public class Case extends AbstractDateDurationEntity
         this.description = description;
     }
 
-    @OneToMany
-    @JoinColumn(name = "case_id")
+    @OneToMany(mappedBy = "case", cascade = CascadeType.ALL)
     public Set<CaseRole> getCaseRoles()
     {
         return caseRoles;

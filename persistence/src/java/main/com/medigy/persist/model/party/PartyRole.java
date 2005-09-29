@@ -54,6 +54,7 @@ public abstract class PartyRole extends AbstractEntity
     public static final String PK_COLUMN_NAME = "role_id";
 
     private Long roleId;
+    private boolean isPrimaryRole;
 
     @Id(generate = GeneratorType.AUTO)
     @Column(name = PartyRole.PK_COLUMN_NAME)
@@ -65,6 +66,20 @@ public abstract class PartyRole extends AbstractEntity
     protected void setRoleId(final Long roleId)
     {
         this.roleId = roleId;
+    }
+
+     /**
+     * Checks to see if this is the person's primary role
+     * @return
+     */
+    public boolean getIsPrimaryRole()
+    {
+        return isPrimaryRole;
+    }
+
+    public void setIsPrimaryRole(final boolean primaryRole)
+    {
+        isPrimaryRole = primaryRole;
     }
 
     /**

@@ -1,45 +1,8 @@
-/*
- * Copyright (c) 2000-2003 Netspective Communications LLC. All rights reserved.
- *
- * Netspective Communications LLC ("Netspective") permits redistribution, modification and use of this file in source
- * and binary form ("The Software") under the Netspective Source License ("NSL" or "The License"). The following
- * conditions are provided as a summary of the NSL but the NSL remains the canonical license and must be accepted
- * before using The Software. Any use of The Software indicates agreement with the NSL.
- *
- * 1. Each copy or derived work of The Software must preserve the copyright notice and this notice unmodified.
- *
- * 2. Redistribution of The Software is allowed in object code form only (as Java .class files or a .jar file
- *    containing the .class files) and only as part of an application that uses The Software as part of its primary
- *    functionality. No distribution of the package is allowed as part of a software development kit, other library,
- *    or development tool without written consent of Netspective. Any modified form of The Software is bound by these
- *    same restrictions.
- *
- * 3. Redistributions of The Software in any form must include an unmodified copy of The License, normally in a plain
- *    ASCII text file unless otherwise agreed to, in writing, by Netspective.
- *
- * 4. The names "Netspective", "Axiom", "Commons", "Junxion", and "Sparx" are trademarks of Netspective and may not be
- *    used to endorse products derived from The Software without without written consent of Netspective. "Netspective",
- *    "Axiom", "Commons", "Junxion", and "Sparx" may not appear in the names of products derived from The Software
- *    without written consent of Netspective.
- *
- * 5. Please attribute functionality where possible. We suggest using the "powered by Netspective" button or creating
- *    a "powered by Netspective(tm)" link to http://www.netspective.com for each application using The Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS" WITHOUT A WARRANTY OF ANY KIND. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND
- * WARRANTIES, INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT,
- * ARE HEREBY DISCLAIMED.
- *
- * NETSPECTIVE AND ITS LICENSORS SHALL NOT BE LIABLE FOR ANY DAMAGES SUFFERED BY LICENSEE OR ANY THIRD PARTY AS A
- * RESULT OF USING OR DISTRIBUTING THE SOFTWARE. IN NO EVENT WILL NETSPECTIVE OR ITS LICENSORS BE LIABLE FOR ANY LOST
- * REVENUE, PROFIT OR DATA, OR FOR DIRECT, INDIRECT, SPECIAL, CONSEQUENTIAL, INCIDENTAL OR PUNITIVE DAMAGES, HOWEVER
- * CAUSED AND REGARDLESS OF THE THEORY OF LIABILITY, ARISING OUT OF THE USE OF OR INABILITY TO USE THE SOFTWARE, EVEN
- * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
- *
- */
 package com.medigy.persist;
 
+import com.medigy.persist.util.Ejb3ModelInitializer;
 import com.medigy.persist.util.HibernateConfiguration;
-import com.medigy.persist.util.ModelInitializer;
+import com.medigy.persist.util.HibernateModelInitializer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.HibernateException;
@@ -49,8 +12,14 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.Environment;
 import org.hibernate.classic.Session;
 import org.hibernate.dialect.HSQLDialect;
+import org.hibernate.ejb.Ejb3Configuration;
+import org.hibernate.event.EventListeners;
+import org.hibernate.event.PostInsertEventListener;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -78,6 +47,9 @@ public class SetupTestConfiguration
     private static Configuration hibernateConfiguration;
     private static SessionFactory sessionFactory;
 
+    private static EntityManagerFactory entityManagerFactory;
+    private static Ejb3Configuration ejb3Configuration;
+
     private static SetupTestConfiguration testConfiguration = new SetupTestConfiguration();
 
     private SetupTestConfiguration()
@@ -92,6 +64,11 @@ public class SetupTestConfiguration
     protected static Configuration getConfiguration()
     {
         return hibernateConfiguration;
+    }
+
+    protected static Ejb3Configuration getEjb3Configuration()
+    {
+        return ejb3Configuration;
     }
 
     protected static void setConfiguration(Configuration cfg)
@@ -124,21 +101,45 @@ public class SetupTestConfiguration
      * Setup the hibernate configuration properties for a database. You must specify all the property parameters
      * explicitly.
      *
-     * @param dialectClassName
-     * @param jdbcDriverClassName
-     * @param url
-     * @param userName
-     * @param password
-     * @return Properties for hibernate config
+     * @return Properties for  config
      */
-    protected Properties setupDatabaseProperties(final String dialectClassName,
-                                                     final String jdbcDriverClassName,
-                                                     final String url, final String userName,
-                                                     final String password)
+    protected Properties setupDatabaseProperties()
     {
+        String dialectClassName;
+        String driverName;
+        String url;
+        String userName;
+        String password;
+
+        if (System.getProperty(TEST_DB_DIALECT_PROPERTY) != null)
+        {
+            dialectClassName = System.getProperty(TEST_DB_DIALECT_PROPERTY);
+            url = System.getProperty(TEST_DB_URL_PROPERTY);
+            userName = System.getProperty(TEST_DB_USER_PROPERTY);
+            password = System.getProperty(TEST_DB_PASSWD_PROPERTY);
+            driverName = System.getProperty(TEST_DB_DRIVER_PROPERTY);
+        }
+        else if (System.getProperty(BUILD_PROPERTY_PREFIX + TEST_DB_DIALECT_PROPERTY) != null)
+        {
+            dialectClassName = System.getProperty(BUILD_PROPERTY_PREFIX + TEST_DB_DIALECT_PROPERTY);
+            url = System.getProperty(BUILD_PROPERTY_PREFIX + TEST_DB_URL_PROPERTY);
+            userName = System.getProperty(BUILD_PROPERTY_PREFIX + TEST_DB_USER_PROPERTY);
+            password = System.getProperty(BUILD_PROPERTY_PREFIX + TEST_DB_PASSWD_PROPERTY);
+            driverName = System.getProperty(BUILD_PROPERTY_PREFIX + TEST_DB_DRIVER_PROPERTY);
+        }
+        else
+        {
+            // assume HSQLDB
+            dialectClassName = HSQLDialect.class.getName();
+            url = "jdbc:hsqldb:" + databaseDirectory + "/db";
+            userName = "sa";
+            password = "";
+            driverName = "org.hsqldb.jdbcDriver";
+        }
+
         final Properties hibProperties = new Properties();
         hibProperties.setProperty(Environment.DIALECT, dialectClassName);
-        hibProperties.setProperty(Environment.CONNECTION_PREFIX + ".driver_class", jdbcDriverClassName);
+        hibProperties.setProperty(Environment.CONNECTION_PREFIX + ".driver_class", driverName);
         hibProperties.setProperty(Environment.CONNECTION_PREFIX + ".url", url);
         hibProperties.setProperty(Environment.CONNECTION_PREFIX + ".username", userName);
         hibProperties.setProperty(Environment.CONNECTION_PREFIX + ".password", password);
@@ -146,31 +147,17 @@ public class SetupTestConfiguration
             hibProperties.setProperty(Environment.HBM2DDL_AUTO, "create-drop");
         hibProperties.setProperty(Environment.SHOW_SQL, "true");
         hibProperties.setProperty(Environment.AUTOCOMMIT, "false");
-
         return hibProperties;
     }
 
-    /**
-     * Setup the hibernate configuration properties for Hypersonic SQL database. This defaults a lot of the
-     * property parameters;
-     *
-     * @return Properties for hibernate config
-     */
-    protected Properties setupHsqldb()
+    protected Ejb3Configuration createEjb3Configuration()
     {
-        final Properties hibProperties = new Properties();
-        hibProperties.setProperty(Environment.DIALECT, HSQLDialect.class.getName());
-        hibProperties.setProperty(Environment.CONNECTION_PREFIX + ".driver_class", "org.hsqldb.jdbcDriver");
-        hibProperties.setProperty(Environment.CONNECTION_PREFIX + ".url", "jdbc:hsqldb:" + databaseDirectory + "/db");
-        hibProperties.setProperty(Environment.CONNECTION_PREFIX + ".username", "sa");
-        hibProperties.setProperty(Environment.CONNECTION_PREFIX + ".password", "");
-        if (recreateSchema())
-            hibProperties.setProperty(Environment.HBM2DDL_AUTO, "create-drop");
-        hibProperties.setProperty(Environment.SHOW_SQL, "false");
-        hibProperties.setProperty(Environment.AUTOCOMMIT, "false");
-        return hibProperties;
-    }
+        final Ejb3Configuration ejb3Configuration = new Ejb3Configuration();
+        ejb3Configuration.configure("com/medigy/persist/hibernate.cfg.xml");
+        ejb3Configuration.addProperties(setupDatabaseProperties());
 
+        return ejb3Configuration;
+    }
 
     protected HibernateConfiguration createHibernateConfiguration() throws HibernateException, FileNotFoundException, IOException
     {
@@ -184,32 +171,7 @@ public class SetupTestConfiguration
 
         setupDatabaseDirectory();
         final HibernateConfiguration config = new HibernateConfiguration();
-
-        if (System.getProperty(TEST_DB_DIALECT_PROPERTY) != null)
-        {
-            final String dialectName = System.getProperty(TEST_DB_DIALECT_PROPERTY);
-            final String databaseUrl = System.getProperty(TEST_DB_URL_PROPERTY);
-            final String databaseUserName = System.getProperty(TEST_DB_USER_PROPERTY);
-            final String databasePassword = System.getProperty(TEST_DB_PASSWD_PROPERTY);
-            final String databaseDriver = System.getProperty(TEST_DB_DRIVER_PROPERTY);
-            config.addProperties(setupDatabaseProperties(dialectName, databaseDriver, databaseUrl, databaseUserName,
-                databasePassword));
-        }
-        else if (System.getProperty(BUILD_PROPERTY_PREFIX + TEST_DB_DIALECT_PROPERTY) != null)
-        {
-            final String dialectName = System.getProperty(BUILD_PROPERTY_PREFIX + TEST_DB_DIALECT_PROPERTY);
-            final String databaseUrl = System.getProperty(BUILD_PROPERTY_PREFIX + TEST_DB_URL_PROPERTY);
-            final String databaseUserName = System.getProperty(BUILD_PROPERTY_PREFIX + TEST_DB_USER_PROPERTY);
-            final String databasePassword = System.getProperty(BUILD_PROPERTY_PREFIX + TEST_DB_PASSWD_PROPERTY);
-            final String databaseDriver = System.getProperty(BUILD_PROPERTY_PREFIX + TEST_DB_DRIVER_PROPERTY);
-            config.addProperties(setupDatabaseProperties(dialectName, databaseDriver, databaseUrl, databaseUserName,
-                databasePassword));
-        }
-        else
-        {
-            // assume HSQLDB
-            config.addProperties(setupHsqldb());
-        }
+        config.addProperties(setupDatabaseProperties());
 
         try
         {
@@ -224,7 +186,6 @@ public class SetupTestConfiguration
         return config;
     }
 
-
     private void buildSessionFactory() throws Exception
     {
         if (sessionFactory != null)
@@ -234,10 +195,26 @@ public class SetupTestConfiguration
         {
             hibernateConfiguration = createHibernateConfiguration();
             postInsertEventListener = new EntitySaveListener();
-            getConfiguration().getSessionEventListenerConfig().setPostInsertEventListener(postInsertEventListener);
+            getConfiguration().getEventListeners().setPostInsertEventListeners(new PostInsertEventListener[] { postInsertEventListener });
             //generateSchemaDdl(hibernateConfiguration);
         }
        sessionFactory = getConfiguration().buildSessionFactory();
+    }
+
+    private void buildEntityManagerFactory()
+    {
+        if (entityManagerFactory != null)
+            entityManagerFactory.close();
+
+        if (getEjb3Configuration() == null)
+        {
+            ejb3Configuration = createEjb3Configuration();
+            postInsertEventListener = new EntitySaveListener();
+            //getEjb3Configuration().getSessionEventListenerConfig().setPostInsertEventListener(postInsertEventListener);
+            final EventListeners eventListeners = getEjb3Configuration().getEventListeners();
+            eventListeners.setPostInsertEventListeners(new PostInsertEventListener[] { postInsertEventListener });
+        }
+        entityManagerFactory = getEjb3Configuration().createEntityManagerFactory();
     }
 
     /**
@@ -269,6 +246,40 @@ public class SetupTestConfiguration
         se.create(false, false);
     }
 
+    public EntityManagerFactory getEntityManagerFactory()
+    {
+        if (entityManagerFactory == null)
+            buildEntityManagerFactory();
+
+        final EntityManager em = entityManagerFactory.createEntityManager();
+        EntityTransaction transaction = null;
+        try
+        {
+            transaction = em.getTransaction();
+            transaction.begin();
+            if (!Ejb3ModelInitializer.getInstance().isInitialized())
+            {
+                if (recreateSchema())
+                    Ejb3ModelInitializer.getInstance().initialize(em, Ejb3ModelInitializer.SeedDataPopulationType.AUTO, ejb3Configuration);
+                else
+                    Ejb3ModelInitializer.getInstance().initialize(em, Ejb3ModelInitializer.SeedDataPopulationType.NO, ejb3Configuration);
+            }
+            transaction.commit();
+        }
+        catch (Exception e)
+        {
+            if (transaction != null)
+                transaction.rollback();
+            log.error(e);
+            throw new RuntimeException(e);
+        }
+        finally
+        {
+            em.close();
+        }
+        return entityManagerFactory;
+    }
+
     public SessionFactory getSessionFactory() throws Exception
     {
         if (sessionFactory == null)
@@ -278,12 +289,12 @@ public class SetupTestConfiguration
         final Transaction transaction = session.beginTransaction();
         try
         {
-            if (!ModelInitializer.getInstance().isInitialized())
+            if (!HibernateModelInitializer.getInstance().isInitialized())
             {
                 if (recreateSchema())
-                    ModelInitializer.getInstance().initialize(session, ModelInitializer.SeedDataPopulationType.AUTO, hibernateConfiguration);
+                    HibernateModelInitializer.getInstance().initialize(session, HibernateModelInitializer.SeedDataPopulationType.AUTO, hibernateConfiguration);
                 else
-                    ModelInitializer.getInstance().initialize(session, ModelInitializer.SeedDataPopulationType.NO, hibernateConfiguration);
+                    HibernateModelInitializer.getInstance().initialize(session, HibernateModelInitializer.SeedDataPopulationType.NO, hibernateConfiguration);
             }
             transaction.commit();
         }

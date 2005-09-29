@@ -42,6 +42,7 @@ import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
 import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
 import com.medigy.persist.reference.custom.CustomReferenceEntity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
@@ -49,6 +50,8 @@ import javax.persistence.Id;
 @Entity
 public class EthnicityType extends AbstractCustomReferenceEntity
 {
+    public static final String PK_COLUMN_NAME = "ethnicity_type_id";
+    
     public enum Cache implements CachedCustomReferenceEntity
     {
         CAUCASIAN("C", "Caucasian"),
@@ -99,6 +102,7 @@ public class EthnicityType extends AbstractCustomReferenceEntity
     }
 
     @Id(generate = GeneratorType.AUTO)
+    @Column(name = PK_COLUMN_NAME)
     public Long getEthnicityTypeId()
     {
         return getSystemId();

@@ -76,7 +76,7 @@ public class DiagnosisRelatedGroup extends AbstractTopLevelEntity
         this.diagnosisRelatedGroupId = diagnosisRelatedGroupId;
     }
 
-    @Column(length = 100, nullable = false)
+    @Column(length = 100, nullable = false, name = "group_name")
     public String getGroupName()
     {
         return groupName;

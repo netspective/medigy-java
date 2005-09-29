@@ -128,6 +128,7 @@ public class CoverageLevel extends AbstractTopLevelEntity
      * instead of one value.
      * @return minimum coverage value
      */
+    @Column(name = "min_value")
     public Float getMinValue()
     {
         return minValue;
@@ -143,6 +144,7 @@ public class CoverageLevel extends AbstractTopLevelEntity
      * instead of one value.
      * @return  maximum coverage value
      */
+    @Column(name = "max_value")
     public Float getMaxValue()
     {
         return maxValue;

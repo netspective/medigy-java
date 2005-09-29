@@ -91,7 +91,7 @@ public class Country extends GeographicBoundary
         setGeoId(id);
     }
 
-    @Column(length = 3)
+    @Column(length = 3, name = "iso_three_digit_code")
     public String getIsoThreeDigitCode()
     {
         return isoThreeDigitCode;
@@ -114,7 +114,7 @@ public class Country extends GeographicBoundary
         }
     }
 
-    @Column(length = 3)
+    @Column(length = 3, name = "iso_three_letter_code")
     public String getIsoThreeLetterCode()
     {
         return isoThreeLetterCode;
@@ -125,7 +125,7 @@ public class Country extends GeographicBoundary
         this.isoThreeLetterCode = isoThreeLetterCode;
     }
 
-    @Column(length = 2)
+    @Column(length = 2, name = "iso_two_letter_code")
     public String getIsoTwoLetterCode()
     {
         return isoTwoLetterCode;
@@ -235,7 +235,7 @@ public class Country extends GeographicBoundary
         return false;
     }
 
-    @Column(nullable =  false)
+    @Column(nullable =  false, name = "country_name")
     public String getCountryName()
     {
         return countryName;

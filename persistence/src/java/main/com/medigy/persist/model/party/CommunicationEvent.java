@@ -58,6 +58,8 @@ import java.util.Set;
 @Table(name = "Comm_Event")
 public class CommunicationEvent extends AbstractDateDurationEntity
 {
+    public static final String PK_COLUMN_NAME = "comm_event_id";
+
     private Long eventId;
     private String notes;
     private Set<CommunicationEventPurpose> eventPurposes = new HashSet<CommunicationEventPurpose>();
@@ -70,7 +72,7 @@ public class CommunicationEvent extends AbstractDateDurationEntity
     }
 
     @Id(generate = GeneratorType.AUTO)
-    @Column(name = "comm_event_id")
+    @Column(name = PK_COLUMN_NAME)
     public Long getEventId()
     {
         return this.eventId;
@@ -92,8 +94,7 @@ public class CommunicationEvent extends AbstractDateDurationEntity
         this.notes = notes;
     }
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "comm_event_id")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "communicationEvent")
     public Set<CommunicationEventPurpose> getEventPurposes()
     {
         return eventPurposes;
@@ -116,8 +117,7 @@ public class CommunicationEvent extends AbstractDateDurationEntity
         this.contactMechanismType = contactMechanismType;
     }
 
-    @OneToMany
-    @JoinColumn(name = "comm_event_id")
+    @OneToMany(mappedBy = "communicationEvent", cascade = CascadeType.ALL)
     public Set<CommunicationEventRole> getEventRoles()
     {
         return eventRoles;
@@ -128,8 +128,7 @@ public class CommunicationEvent extends AbstractDateDurationEntity
         this.eventRoles = eventRoles;
     }
 
-    @OneToMany
-    @JoinColumn(name = "comm_event_id")
+    @OneToMany(mappedBy = "communicationEvent", cascade = CascadeType.ALL)
     public Set<CommunicationEventWork> getEventWorks()
     {
         return eventWorks;

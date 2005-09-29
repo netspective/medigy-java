@@ -79,7 +79,7 @@ public class Diagnosis extends AbstractTopLevelEntity
         this.diagnosisId = diagnosisId;
     }
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "diagnosis_date")
     public Date getDiagnosisDate()
     {
         return diagnosisDate;

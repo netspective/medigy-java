@@ -82,7 +82,7 @@ public class DeliveryOutcome extends AbstractTopLevelEntity
         this.healthCareDelivery = healthCareDelivery;
     }
 
-    @Column(length = 5000, nullable = false)
+    @Column(length = 5000, nullable = false, name = "explanation")
     public String getExplanation()
     {
         return explanation;

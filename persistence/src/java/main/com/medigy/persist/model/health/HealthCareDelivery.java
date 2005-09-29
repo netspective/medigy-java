@@ -131,6 +131,7 @@ public class HealthCareDelivery extends AbstractDateDurationEntity
         this.healthCareDeliveryId = healthCareDeliveryId;
     }
 
+    @Column(name = "delivery_notes")
     public String getDeliveryNotes()
     {
         return deliveryNotes;

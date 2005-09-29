@@ -86,7 +86,7 @@ public class PhoneNumber extends ContactMechanism
         this.countryCode = countryCode;
     }
 
-    @Column(length = 3)
+    @Column(length = 3, name = "city_code")
     public String getCityCode()
     {
         return cityCode;
@@ -97,7 +97,7 @@ public class PhoneNumber extends ContactMechanism
         this.cityCode = cityCode;
     }
 
-    @Column(length = 5)
+    @Column(length = 5, name = "area_code")
     public String getAreaCode()
     {
         return areaCode;
@@ -108,7 +108,7 @@ public class PhoneNumber extends ContactMechanism
         this.areaCode = areaCode;
     }
 
-    @Column(length = 7, nullable = false)
+    @Column(length = 7, nullable = false, name = "number_value")
     public String getNumberValue()
     {
         return numberValue;

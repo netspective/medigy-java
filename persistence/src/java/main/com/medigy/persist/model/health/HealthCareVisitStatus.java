@@ -41,23 +41,28 @@ package com.medigy.persist.model.health;
 import com.medigy.persist.model.common.AbstractTopLevelEntity;
 import com.medigy.persist.reference.custom.health.HealthCareEncounterStatusType;
 
+import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.TemporalType;
 import java.util.Date;
 
 @Entity
 public class HealthCareVisitStatus extends AbstractTopLevelEntity
 {
+    public static final String PK_COLUMN_NAME = "visit_status_id";
+
     private Long visitStatusId;
     private Date statusDate;
     private HealthCareEncounter encounter;
     private HealthCareEncounterStatusType type;
 
     @Id(generate = GeneratorType.AUTO)
+    @Column(name = PK_COLUMN_NAME)
     public Long getVisitStatusId()
     {
         return visitStatusId;
@@ -68,7 +73,8 @@ public class HealthCareVisitStatus extends AbstractTopLevelEntity
         this.visitStatusId = visitStatusId;
     }
 
-    @Column(nullable = false)
+    @Basic(temporalType = TemporalType.DATE)
+    @Column(nullable = false, name= "status_date")
     public Date getStatusDate()
     {
         return statusDate;

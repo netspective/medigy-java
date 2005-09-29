@@ -40,6 +40,7 @@ package com.medigy.persist.reference.custom.party;
 
 import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
 
+import javax.persistence.Column;
 import javax.persistence.DiscriminatorType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
@@ -51,8 +52,10 @@ import javax.persistence.InheritanceType;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE, discriminatorType = DiscriminatorType.STRING, discriminatorValue = "Party")
 public abstract class PartyClassificationType extends AbstractCustomReferenceEntity
 {
+    public static final String PK_COLUMN_NAME = "classification_type_id";
 
     @Id(generate = GeneratorType.AUTO)
+    @Column(name = PK_COLUMN_NAME)
     public Long getClassificationTypeId()
     {
         return getSystemId();

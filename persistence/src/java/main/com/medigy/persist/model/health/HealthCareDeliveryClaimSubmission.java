@@ -42,6 +42,7 @@ import com.medigy.persist.model.claim.Claim;
 import com.medigy.persist.model.claim.ClaimItem;
 import com.medigy.persist.model.common.AbstractTopLevelEntity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
@@ -53,12 +54,15 @@ import javax.persistence.Table;
 @Table(name = "Delivery_Claim_Submission")
 public class HealthCareDeliveryClaimSubmission extends AbstractTopLevelEntity
 {
+    public static final String PK_COLUMN_NAME = "submission_id";
+
     private Long deliveryClaimSubmissionId;
     private ClaimItem claimItem;
     private Claim claim;
     private HealthCareDelivery healthCareDelivery;
 
     @Id(generate = GeneratorType.AUTO)
+    @Column(name = PK_COLUMN_NAME)
     public Long getDeliveryClaimSubmissionId()
     {
         return deliveryClaimSubmissionId;
@@ -70,7 +74,7 @@ public class HealthCareDeliveryClaimSubmission extends AbstractTopLevelEntity
     }
 
     @ManyToOne
-    @JoinColumn(name = "claim_id")
+    @JoinColumn(name = Claim.PK_COLUMN_NAME)
     public Claim getClaim()
     {
         return claim;
@@ -82,7 +86,7 @@ public class HealthCareDeliveryClaimSubmission extends AbstractTopLevelEntity
     }
 
     @ManyToOne
-    @JoinColumn(name = "cliam_item")
+    @JoinColumn(name = ClaimItem.PK_COLUMN_NAME)
     public ClaimItem getClaimItem()
     {
         return claimItem;

@@ -86,7 +86,7 @@ public class MaritalStatus extends AbstractEntity implements Comparable
     }
 
     @ManyToOne
-    @JoinColumn(name =Person.PK_COLUMN_NAME, nullable = false)
+    @JoinColumn(name = Person.PK_COLUMN_NAME, nullable = false)
     public Person getPerson()
     {
         return person;
@@ -109,6 +109,7 @@ public class MaritalStatus extends AbstractEntity implements Comparable
         this.type = type;
     }
 
+    @Column(name = "from_date")
     public Date getFromDate()
     {
         return effectiveDates.getFromDate();
@@ -119,6 +120,7 @@ public class MaritalStatus extends AbstractEntity implements Comparable
         effectiveDates.setFromDate(fromDate);
     }
 
+    @Column(name = "through_date")
     public Date getThroughDate()
     {
         return effectiveDates.getThroughDate();

@@ -41,16 +41,20 @@ package com.medigy.persist.model.work;
 import com.medigy.persist.model.common.AbstractTopLevelEntity;
 import com.medigy.persist.model.common.EffectiveDates;
 
+import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
+import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import java.util.Date;
 
 @Entity
 public class WorkEffort extends AbstractTopLevelEntity
 {
+    public static final String PK_COLUMN_NAME = "work_effort_id";
+
     private Long workId;
     private String workName;
     private String description;
@@ -67,6 +71,7 @@ public class WorkEffort extends AbstractTopLevelEntity
     }
 
     @Id(generate = GeneratorType.AUTO)
+    @Column(name = PK_COLUMN_NAME)
     public Long getWorkId()
     {
         return workId;
@@ -77,7 +82,7 @@ public class WorkEffort extends AbstractTopLevelEntity
         this.workId = workId;
     }
 
-    @Column(length = 100, nullable = false)
+    @Column(length = 100, nullable = false, name = "work_name")
     public String getWorkName()
     {
         return workName;
@@ -99,6 +104,7 @@ public class WorkEffort extends AbstractTopLevelEntity
         this.description = description;
     }
 
+    @Column(name = "total_dollars_allowed")
     public Float getTotalDollarsAllowed()
     {
         return totalDollarsAllowed;
@@ -109,6 +115,7 @@ public class WorkEffort extends AbstractTopLevelEntity
         this.totalDollarsAllowed = totalDollarsAllowed;
     }
 
+    @Column(name = "total_hours_allowed")
     public Float getTotalHoursAllowed()
     {
         return totalHoursAllowed;
@@ -119,6 +126,7 @@ public class WorkEffort extends AbstractTopLevelEntity
         this.totalHoursAllowed = totalHoursAllowed;
     }
 
+    @Column(name = "estimated_hours")
     public Float getEstimatedHours()
     {
         return estimatedHours;
@@ -129,6 +137,8 @@ public class WorkEffort extends AbstractTopLevelEntity
         this.estimatedHours = estimatedHours;
     }
 
+    @Basic(temporalType = TemporalType.DATE)
+    @Column(name = "scheduled_start_date")
     public Date getScheduledStartDate()
     {
         return scheduledDates.getFromDate();
@@ -139,6 +149,8 @@ public class WorkEffort extends AbstractTopLevelEntity
         this.scheduledDates.setFromDate(scheduledStartDate);
     }
 
+    @Basic(temporalType = TemporalType.DATE)
+    @Column(name = "scheduled_end_date")
     public Date getScheduledEndDate()
     {
         return scheduledDates.getThroughDate();
@@ -155,6 +167,8 @@ public class WorkEffort extends AbstractTopLevelEntity
         return scheduledDates;
     }
 
+    @Basic(temporalType = TemporalType.DATE)
+    @Column(name = "actual_start_date")
     public Date getActualStartDate()
     {
         return actualDates.getFromDate();
@@ -165,6 +179,8 @@ public class WorkEffort extends AbstractTopLevelEntity
         this.actualDates.setFromDate(startDate);
     }
 
+    @Basic(temporalType = TemporalType.DATE)
+    @Column(name = "actual_end_date")
     public Date getActualEndDate()
     {
         return actualDates.getThroughDate();
@@ -181,6 +197,7 @@ public class WorkEffort extends AbstractTopLevelEntity
         return actualDates;
     }
 
+    @Column(name = "actual_hours")
     public Float getActualHours()
     {
         return actualHours;

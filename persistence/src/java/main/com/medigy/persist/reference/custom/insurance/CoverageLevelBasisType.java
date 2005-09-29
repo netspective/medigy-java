@@ -15,6 +15,8 @@ import javax.persistence.Id;
 @Entity
 public class CoverageLevelBasisType extends AbstractCustomReferenceEntity
 {
+    public static final String PK_COLUMN_NAME =  "coverage_level_basis_id";
+
     public enum Cache implements CachedCustomReferenceEntity
     {
         PER_INCIDENT("PER_INC", "Per Incident"),
@@ -53,7 +55,7 @@ public class CoverageLevelBasisType extends AbstractCustomReferenceEntity
     }
 
     @Id(generate = GeneratorType.AUTO)
-    @Column(name = "coverage_level_basis_id")
+    @Column(name = PK_COLUMN_NAME )
     public Long getCoverageLevelBasisId()
     {
         return super.getSystemId();

@@ -162,7 +162,7 @@ public class InsurancePlan extends AbstractDateDurationEntity
      * Gets the remittance payer name. The name given to the primary remittance id record (NEFS-SAMPLE-MEDIGY)
      * @return
      */
-    @Column(length = 256)
+    @Column(length = 256, name = "remit_payer_name")
     public String getRemittancePayerName()
     {
         return remittancePayerName;
@@ -173,7 +173,7 @@ public class InsurancePlan extends AbstractDateDurationEntity
         this.remittancePayerName = remittancePayerName;
     }
 
-    @Column(length = 64)
+    @Column(length = 64, name = "medigap_id")
     public String getMedigapId()
     {
         return medigapId;
@@ -188,6 +188,7 @@ public class InsurancePlan extends AbstractDateDurationEntity
      * Gets the remittance payer name. The id (if required) for this insurance plan/group for electronic remittance (NEFS-SAMPLE-MEDIGY)
      * @return
      */
+    @Column(name = "remit_payer_id")
     public String getRemittancePayerId()
     {
         return remittancePayerId;

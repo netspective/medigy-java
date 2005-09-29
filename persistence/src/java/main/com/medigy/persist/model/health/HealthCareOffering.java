@@ -52,6 +52,8 @@ import javax.persistence.ManyToOne;
 @Entity
 public class HealthCareOffering extends AbstractTopLevelEntity
 {
+    public static final String PK_COLUMN_NAME = "offering_id";
+
     private Long healthCareOfferingId;
     //private SystemPk healthCareOfferingPk;
     private String name;
@@ -74,6 +76,7 @@ public class HealthCareOffering extends AbstractTopLevelEntity
     */
 
     @Id(generate = GeneratorType.AUTO)
+    @Column(name = PK_COLUMN_NAME)
     public Long getHealthCareOfferingId()
     {
         return healthCareOfferingId;

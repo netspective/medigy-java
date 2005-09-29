@@ -64,7 +64,7 @@ public class CaseRole extends AbstractTopLevelEntity
     }
 
     @ManyToOne
-    @JoinColumn(name = "case_id")
+    @JoinColumn(name = Case.PK_COLUMN_NAME)
     public Case getCase()
     {
         return workCase;
@@ -75,6 +75,7 @@ public class CaseRole extends AbstractTopLevelEntity
         this.workCase = workCase;
     }
 
+    @ManyToOne
     @JoinColumn(name = "case_role_type_id")
     public CaseRoleType getType()
     {

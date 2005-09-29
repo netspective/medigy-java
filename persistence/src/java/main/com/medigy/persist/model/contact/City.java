@@ -40,6 +40,7 @@ package com.medigy.persist.model.contact;
 
 import com.medigy.persist.reference.custom.GeographicBoundaryType;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
@@ -105,7 +106,7 @@ public class City extends GeographicBoundary
     }
 
     @ManyToOne
-    @JoinColumn(name = "province_id", referencedColumnName = "geo_id")        
+    @JoinColumn(name = "province_id", referencedColumnName = "geo_id")
     public Province getParentProvince()
     {
         return parentProvince;
@@ -116,6 +117,7 @@ public class City extends GeographicBoundary
         this.parentProvince = parentProvince;
     }
 
+    @Column(name = "city_name", length = 64, nullable = false)
     public String getCityName()
     {
         return cityName;

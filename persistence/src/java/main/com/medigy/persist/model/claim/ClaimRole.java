@@ -42,6 +42,7 @@ import com.medigy.persist.model.common.AbstractTopLevelEntity;
 import com.medigy.persist.model.party.Party;
 import com.medigy.persist.reference.custom.claim.ClaimRoleType;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
@@ -51,6 +52,8 @@ import javax.persistence.ManyToOne;
 @Entity
 public class ClaimRole   extends AbstractTopLevelEntity
 {
+    public static final String PK_COLUMN_NAME = "claim_role_id";
+
     private Long claimRoleId;
     private Party party;
     private Claim claim;
@@ -61,6 +64,7 @@ public class ClaimRole   extends AbstractTopLevelEntity
     }
 
     @Id(generate = GeneratorType.AUTO)
+    @Column(name = PK_COLUMN_NAME)
     public Long getClaimRoleId()
     {
         return claimRoleId;
@@ -84,7 +88,7 @@ public class ClaimRole   extends AbstractTopLevelEntity
     }
 
     @ManyToOne
-    @JoinColumn(name = "claim_id")
+    @JoinColumn(name = Claim.PK_COLUMN_NAME)
     public Claim getClaim()
     {
         return claim;

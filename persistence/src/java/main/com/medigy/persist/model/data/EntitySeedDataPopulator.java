@@ -56,8 +56,10 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.Environment;
+import org.hibernate.ejb.Ejb3Configuration;
 import org.hibernate.mapping.PersistentClass;
 
+import javax.persistence.EntityManager;
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
@@ -74,6 +76,9 @@ import java.util.Properties;
 import java.util.Scanner;
 import java.util.regex.MatchResult;
 
+/**
+ * Class for populating the
+ */
 public class EntitySeedDataPopulator
 {
     private final Log log = LogFactory.getLog(EntitySeedDataPopulator.class);
@@ -82,12 +87,24 @@ public class EntitySeedDataPopulator
 
     private Session session;
     private Configuration configuration;
+
+    private EntityManager entityManager;
+    private Ejb3Configuration ejb3Configuration;
+    private boolean useEjb = false;
+
     private Party globalParty;
 
     public EntitySeedDataPopulator(final Session session, final Configuration configuration)
     {
         this.session = session;
         this.configuration = configuration;
+    }
+
+    public EntitySeedDataPopulator(final EntityManager manager, final Ejb3Configuration ejb3Configuration)
+    {
+        this.entityManager = manager;
+        this.ejb3Configuration = ejb3Configuration;
+        this.useEjb = true;
     }
 
      /**
@@ -155,7 +172,13 @@ public class EntitySeedDataPopulator
 
     public void populateEntityCacheData() throws HibernateException
     {
-        final Iterator itr = configuration.getClassMappings();
+
+        Iterator itr = null;
+        if (!useEjb)
+            itr = configuration.getClassMappings();
+        else
+            itr = ejb3Configuration.getClassMappings();
+
         while (itr.hasNext())
         {
             Class entityClass = ((PersistentClass) itr.next()).getMappedClass(); //(Class) classMappings.next();
@@ -228,13 +251,20 @@ public class EntitySeedDataPopulator
         com.medigy.persist.model.session.Session processSession = new ProcessSession();
         processSession.setProcessName(EntitySeedDataPopulator.class.getName());
 
-        session.save(processSession);
+        if (!useEjb)
+            session.save(processSession);
+        else
+            entityManager.persist(processSession);
         SessionManager.getInstance().pushActiveSession(processSession);
 
         if (log.isInfoEnabled())
             log.info("Initializing with seed data");
         globalParty = new Party(Party.SYS_GLOBAL_PARTY_NAME);
-        session.save(globalParty);
+
+        if (!useEjb)
+            session.save(globalParty);
+        else
+            entityManager.persist(globalParty);
 
         final Map<Class,Class<? extends CachedReferenceEntity>> referenceEntitiesAndCachesMap = HibernateUtil.getReferenceEntitiesAndRespectiveEnums(configuration);
         for(final Map.Entry<Class,Class<? extends CachedReferenceEntity>> entry : referenceEntitiesAndCachesMap.entrySet())
@@ -251,7 +281,7 @@ public class EntitySeedDataPopulator
             }
             if (log.isInfoEnabled())
                 log.info(aClass.getCanonicalName() + " cached enums addded.");
-            populateCachedReferenceEntities(session, aClass, cachedEntities, new String[] {"code", "label"}, data);
+            populateCachedReferenceEntities(aClass, cachedEntities, new String[] {"code", "label"}, data);
         }
 
         final Map<Class,Class<? extends CachedCustomReferenceEntity>> customReferenceEntitiesAndCachesMap = HibernateUtil.getCustomReferenceEntitiesAndRespectiveEnums(configuration);
@@ -275,7 +305,7 @@ public class EntitySeedDataPopulator
             }
             if (log.isInfoEnabled())
                 log.info(aClass.getCanonicalName() + " cached custom enums addded.");
-            populateCachedCustomReferenceEntities(session, aClass, cachedEntities, new String[] {"code", "label", "party", "parentEntity"}, data);
+            populateCachedCustomReferenceEntities(aClass, cachedEntities, new String[] {"code", "label", "party", "parentEntity"}, data);
         }
         //loadExternalReferenceData();
         //populateEntityCacheData();
@@ -283,8 +313,7 @@ public class EntitySeedDataPopulator
         SessionManager.getInstance().popActiveSession();
     }
 
-    protected void  populateCachedCustomReferenceEntities(final Session session,
-                                                          final Class entityClass,
+    protected void  populateCachedCustomReferenceEntities(final Class entityClass,
                                                           final CachedCustomReferenceEntity[] cachedEntities,
                                                           final String[] propertyList,
                                                           final Object[][] data)  throws HibernateException
@@ -319,7 +348,10 @@ public class EntitySeedDataPopulator
                     }
                 }
                 entityMapByCache.put(cachedEntities[i], entityObject);
-                session.save(entityObject);
+                if (!useEjb)
+                    session.save(entityObject);
+                else
+                    entityManager.persist(entityObject);
                 cachedEntities[i].setEntity((CustomReferenceEntity) entityObject);
             }
         }
@@ -330,8 +362,7 @@ public class EntitySeedDataPopulator
         }
     }
 
-    protected void  populateCachedReferenceEntities(final Session session,
-                                                    final Class entityClass,
+    protected void  populateCachedReferenceEntities(final Class entityClass,
                                                     final CachedReferenceEntity[] cachedEntities,
                                                     final String[] propertyList,
                                                     final Object[][] data)  throws HibernateException
@@ -361,7 +392,10 @@ public class EntitySeedDataPopulator
                     }
                 }
                 entityMapByCache.put(cachedEntities[i], entityObject);
-                session.save(entityObject);
+                if (!useEjb)
+                    session.save(entityObject);
+                else
+                    entityManager.persist(entityObject);
                 cachedEntities[i].setEntity((ReferenceEntity) entityObject);
             }
         }

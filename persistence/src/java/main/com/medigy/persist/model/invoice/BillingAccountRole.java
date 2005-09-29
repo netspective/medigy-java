@@ -42,6 +42,7 @@ import com.medigy.persist.model.common.AbstractDateDurationEntity;
 import com.medigy.persist.model.party.Party;
 import com.medigy.persist.reference.custom.invoice.BillingAccountRoleType;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
@@ -54,12 +55,15 @@ import javax.persistence.UniqueConstraint;
 @Table(name = "Bill_Acct_Role", uniqueConstraints = {@UniqueConstraint(columnNames = {"bill_acct_id", "party_id", "bill_acct_role_type_id"})})
 public class BillingAccountRole extends AbstractDateDurationEntity
 {
+    public static final String PK_COLUMN_NAME = "bill_acct_role_id";
+
     private Long billingAccountRoleId;
     private Party party;
     private BillingAccount billingAccount;
     private BillingAccountRoleType roleType;
 
     @Id(generate = GeneratorType.AUTO)
+    @Column(name = PK_COLUMN_NAME)
     public Long getBillingAccountRoleId()
     {
         return billingAccountRoleId;
@@ -95,7 +99,7 @@ public class BillingAccountRole extends AbstractDateDurationEntity
     }
 
     @ManyToOne
-    @JoinColumn(name = "bill_acct_id")
+    @JoinColumn(name = BillingAccount.PK_COLUMN_NAME)
     public BillingAccount getBillingAccount()
     {
         return billingAccount;

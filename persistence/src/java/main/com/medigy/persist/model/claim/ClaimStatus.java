@@ -41,6 +41,7 @@ package com.medigy.persist.model.claim;
 import com.medigy.persist.model.common.AbstractTopLevelEntity;
 import com.medigy.persist.reference.custom.claim.ClaimStatusType;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
@@ -51,12 +52,15 @@ import java.util.Date;
 @Entity
 public class ClaimStatus extends AbstractTopLevelEntity
 {
+    public static final String PK_COLUMN_NAME = "claim_status_id";
+
     private Long claimStatusId;
     private Claim claim;
     private ClaimStatusType type;
     private Date claimStatusDate;
 
     @Id(generate = GeneratorType.AUTO)
+    @Column(name = PK_COLUMN_NAME)
     public Long getClaimStatusId()
     {
         return claimStatusId;
@@ -80,7 +84,7 @@ public class ClaimStatus extends AbstractTopLevelEntity
     }
 
     @ManyToOne
-    @JoinColumn(name = "claim_status_type_id")
+    @JoinColumn(name = ClaimStatusType.PK_COLUMN_NAME)
     public ClaimStatusType getType()
     {
         return type;
@@ -95,6 +99,7 @@ public class ClaimStatus extends AbstractTopLevelEntity
      * Gets the claimStatusDate/time for when this claim status was assigned to the claim
      * @return
      */
+    @Column(name = "claim_status_date")
     public Date getClaimStatusDate()
     {
         return claimStatusDate;

@@ -41,6 +41,7 @@ package com.medigy.persist.model.invoice;
 import com.medigy.persist.model.common.AbstractTopLevelEntity;
 import com.medigy.persist.reference.custom.invoice.InvoiceTermType;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
@@ -50,6 +51,8 @@ import javax.persistence.ManyToOne;
 @Entity
 public class InvoiceTerm extends AbstractTopLevelEntity
 {
+    public static final String PK_COLUMN_NAME = "invoice_term_id";
+
     private Long invoiceTermId;
     private InvoiceItem invoiceItem;
     private Invoice invoice;
@@ -65,6 +68,7 @@ public class InvoiceTerm extends AbstractTopLevelEntity
     }
 
     @Id(generate = GeneratorType.AUTO)
+    @Column(name = PK_COLUMN_NAME)
     public Long getInvoiceTermId()
     {
         return invoiceTermId;
@@ -77,7 +81,7 @@ public class InvoiceTerm extends AbstractTopLevelEntity
 
 
     @ManyToOne
-    @JoinColumn(name = "invoice_item_id", updatable = false, insertable = false)
+    @JoinColumn(name = InvoiceItem.PK_COLUMN_NAME, updatable = false, insertable = false)
     public InvoiceItem getInvoiceItem()
     {
         return invoiceItem;
@@ -88,6 +92,7 @@ public class InvoiceTerm extends AbstractTopLevelEntity
         this.invoiceItem = invoiceItem;
     }
 
+    @Column(name = "term_value")
     public Long getTermValue()
     {
         return termValue;

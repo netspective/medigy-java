@@ -50,12 +50,15 @@ import javax.persistence.ManyToOne;
 @Entity
 public class VisitReason  extends AbstractTopLevelEntity
 {
+    public static final String PK_COLUMN_NAME = "visit_reason_id";
+
     private Long visitReasonId;
     private HealthCareEncounter encounter;
     private String description;
     private HealthCareEpisode healthCareEpisode;
 
     @Id(generate = GeneratorType.AUTO)
+    @Column(name = PK_COLUMN_NAME)
     public Long getVisitReasonId()
     {
         return visitReasonId;

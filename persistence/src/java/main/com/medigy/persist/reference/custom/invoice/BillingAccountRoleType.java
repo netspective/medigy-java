@@ -42,21 +42,17 @@ import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
 import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
 import com.medigy.persist.reference.custom.CustomReferenceEntity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "Bill_Acct_Role_Type")        
+@Table(name = "Bill_Acct_Role_Type")
 public class BillingAccountRoleType extends AbstractCustomReferenceEntity
 {
-    /**
-     * PRIMARY PAYER
-     * SECONDARY PAYER
-     * MANAGER
-     *
-     */
+    public static final String PK_COLUMN_NAME = "role_type_id";
 
     public enum Cache implements CachedCustomReferenceEntity
     {
@@ -109,6 +105,7 @@ public class BillingAccountRoleType extends AbstractCustomReferenceEntity
     }
 
     @Id(generate = GeneratorType.AUTO)
+    @Column(name = PK_COLUMN_NAME)
     public Long getBillingAccountRoleTypeId()
     {
         return super.getSystemId();

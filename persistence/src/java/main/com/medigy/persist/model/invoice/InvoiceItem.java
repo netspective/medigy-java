@@ -45,6 +45,7 @@ import com.medigy.persist.reference.type.clincial.CPT;
 import com.medigy.persist.reference.type.clincial.Icd;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
@@ -89,6 +90,7 @@ public class InvoiceItem extends AbstractTopLevelEntity
     }
 
     @Id(generate = GeneratorType.AUTO)
+    @Column(name = PK_COLUMN_NAME)
     public Long getInvoiceItemId()
     {
         return invoiceItemId;
@@ -99,6 +101,7 @@ public class InvoiceItem extends AbstractTopLevelEntity
         this.invoiceItemId = invoiceItemId;
     }
 
+    @Column(name = "invoice_item_seq_id")
     public Long getInvoiceItemSeqId()
     {
         return invoiceItemSeqId;
@@ -109,6 +112,7 @@ public class InvoiceItem extends AbstractTopLevelEntity
         this.invoiceItemSeqId = invoiceItemSeqId;
     }
 
+    @Column(name = "taxable_flag")
     public Boolean getTaxableFlag()
     {
         return taxableFlag;
@@ -125,6 +129,7 @@ public class InvoiceItem extends AbstractTopLevelEntity
      * both optional.
      * @return
      */
+    @Column(name = "item_description")
     public String getItemDescription()
     {
         return itemDescription;
@@ -145,6 +150,7 @@ public class InvoiceItem extends AbstractTopLevelEntity
         this.quantity = quantity;
     }
 
+    @Column(name = "unit_price")
     public Float getUnitPrice()
     {
         return unitPrice;

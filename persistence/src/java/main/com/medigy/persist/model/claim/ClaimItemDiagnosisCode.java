@@ -49,14 +49,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-import javax.persistence.Column;
 
 @Entity
 @Table(name = "Claim_Item_Diag_Code", uniqueConstraints={@UniqueConstraint(columnNames={"claim_item_id", "icd_code"})})
 public class ClaimItemDiagnosisCode extends AbstractTopLevelEntity
 {
-    public static final String PK_COLUMN_NAME = "claim_item_diag_code_id";
-
     private Long claimItemDiagnosisCode;
     private ClaimItem claimItem;
     private DiagnosisType diagnosisType;
@@ -67,7 +64,6 @@ public class ClaimItemDiagnosisCode extends AbstractTopLevelEntity
     }
 
     @Id(generate = GeneratorType.AUTO)
-    @Column(name = PK_COLUMN_NAME)
     public Long getClaimItemDiagnosisCode()
     {
         return claimItemDiagnosisCode;
@@ -91,7 +87,7 @@ public class ClaimItemDiagnosisCode extends AbstractTopLevelEntity
     }
 
     @ManyToOne
-    @JoinColumn(name = "diagnosis_type_id", nullable = false)
+    @JoinColumn(nullable = false)
     public DiagnosisType getDiagnosisType()
     {
         return diagnosisType;

@@ -247,6 +247,7 @@ public class State extends GeographicBoundary
         this.parentCountry = parentCountry;
     }
 
+    @Column(length = 64, name = "state_name")
     public String getStateName()
     {
         return stateName;
@@ -257,6 +258,7 @@ public class State extends GeographicBoundary
         this.stateName = stateName;
     }
 
+    @Column(length = 2, name = "state_abbreviation")
     public String getStateAbbreviation()
     {
         return stateAbbreviation;

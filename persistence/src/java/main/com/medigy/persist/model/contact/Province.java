@@ -41,6 +41,7 @@ package com.medigy.persist.model.contact;
 import com.medigy.persist.reference.custom.GeographicBoundaryType;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
@@ -89,6 +90,7 @@ public class Province extends GeographicBoundary
         this.parentCountry = parentCountry;
     }
 
+    @Column(name = "province_name", length = 64, nullable = false)
     public String getProvinceName()
     {
         return provinceName;
@@ -99,6 +101,7 @@ public class Province extends GeographicBoundary
         this.provinceName = provinceName;
     }
 
+    @Column(name = "province_abbreviation", length = 10)
     public String getProvinceAbbreviation()
     {
         return provinceAbbreviation;

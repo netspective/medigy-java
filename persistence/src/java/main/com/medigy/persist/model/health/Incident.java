@@ -41,6 +41,7 @@ package com.medigy.persist.model.health;
 import com.medigy.persist.model.common.AbstractTopLevelEntity;
 import com.medigy.persist.reference.custom.person.IncidentType;
 
+import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -49,6 +50,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.TemporalType;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -79,7 +81,8 @@ public class Incident extends AbstractTopLevelEntity
         this.incidentId = incidentId;
     }
 
-    @Column
+    @Basic(temporalType = TemporalType.DATE)
+    @Column(name = "incident_date")
     public Date getIncidentDate()
     {
         return incidentDate;

@@ -54,6 +54,8 @@ import javax.persistence.Table;
 @Table(name = "Party_Fac_Role")
 public class PartyFacilityRole extends AbstractTopLevelEntity
 {
+    public static final String PK_COLUMN_NAME = "party_fac_role_id";
+
     private Long partyFacilityRoleId;
 
     private Party party;
@@ -66,7 +68,7 @@ public class PartyFacilityRole extends AbstractTopLevelEntity
     }
 
     @Id(generate = GeneratorType.AUTO)
-    @Column(name = "party_fac_role_id")
+    @Column(name = PK_COLUMN_NAME)
     public Long getPartyFacilityRoleId()
     {
         return partyFacilityRoleId;

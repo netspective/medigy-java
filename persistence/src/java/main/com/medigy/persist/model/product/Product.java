@@ -58,6 +58,7 @@ public class Product implements CustomReferenceEntity
         productId = id;
     }
 
+    @Column(length = 10)
     public String getCode()
     {
         return code;
@@ -106,6 +107,7 @@ public class Product implements CustomReferenceEntity
 
 
     @Basic(temporalType = TemporalType.DATE)
+    @Column(name = "introduction_date")
     public Date getIntroductionDate()
     {
         return effectiveDates.getFromDate();
@@ -117,6 +119,7 @@ public class Product implements CustomReferenceEntity
     }
 
     @Basic(temporalType = TemporalType.DATE)
+    @Column(name = "discontinued_date")
     public Date getDiscontinuedDate()
     {
         return effectiveDates.getThroughDate();

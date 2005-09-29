@@ -120,6 +120,7 @@ public class VisitType extends AbstractTopLevelEntity
         this.duration = duration;
     }
 
+    @Column(name = "lag_time")
     public Long getLagTime()
     {
         return lagTime;
@@ -130,6 +131,7 @@ public class VisitType extends AbstractTopLevelEntity
         this.lagTime = lagTime;
     }
 
+    @Column(name ="lead_time")
     public Long getLeadTime()
     {
         return leadTime;
@@ -140,6 +142,7 @@ public class VisitType extends AbstractTopLevelEntity
         this.leadTime = leadTime;
     }
 
+    @Column(name = "back_to_back_allowed")
     public Boolean getBackToBackAllowed()
     {
         return backToBackAllowed;
@@ -150,6 +153,7 @@ public class VisitType extends AbstractTopLevelEntity
         this.backToBackAllowed = backToBackAllowed;
     }
 
+    @Column(name = "multi_simultaneous_allowed")
     public Boolean getMultipleSimultaneousAllowed()
     {
         return multipleSimultaneousAllowed;
@@ -160,6 +164,7 @@ public class VisitType extends AbstractTopLevelEntity
         this.multipleSimultaneousAllowed = multipleSimultaneousAllowed;
     }
 
+    @Column(name = "simultaneous_limit")
     public Long getSimultaneousLimit()
     {
         return simultaneousLimit;
@@ -170,6 +175,7 @@ public class VisitType extends AbstractTopLevelEntity
         this.simultaneousLimit = simultaneousLimit;
     }
 
+    @Column(name ="am_limit")
     public Long getAmLimit()
     {
         return amLimit;
@@ -180,6 +186,7 @@ public class VisitType extends AbstractTopLevelEntity
         this.amLimit = amLimit;
     }
 
+    @Column(name = "pm_limit")
     public Long getPmLimit()
     {
         return pmLimit;
@@ -190,6 +197,7 @@ public class VisitType extends AbstractTopLevelEntity
         this.pmLimit = pmLimit;
     }
 
+    @Column(name = "day_limit")
     public Long getDayLimit()
     {
         return dayLimit;

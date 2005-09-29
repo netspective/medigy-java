@@ -144,7 +144,7 @@ public class PatientMedication extends AbstractTopLevelEntity
      *
      * @return
      */
-    @Column(length = 10)
+    @Column(length = 10, name = "dosage_form")
     public String getDosageForm()
     {
         return dosageForm;
@@ -222,6 +222,7 @@ public class PatientMedication extends AbstractTopLevelEntity
      * Allow the use of generic brand?
      * @return
      */
+    @Column(name = "allow_generic")
     public boolean isAllowGeneric()
     {
         return allowGeneric;
@@ -249,6 +250,7 @@ public class PatientMedication extends AbstractTopLevelEntity
      * How many times the medication can be refilled without another visit
      * @return
      */
+    @Column(name = "number_of_refills")
     public Long getNumberOfRefills()
     {
         return numberOfRefills;

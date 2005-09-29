@@ -82,6 +82,7 @@ public class ClaimSettlement extends AbstractTopLevelEntity
     }
 
     @Basic(temporalType = TemporalType.DATE)
+    @Column(name = "settled_date")
     public Date getSettledDate()
     {
         return settledDate;

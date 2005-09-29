@@ -41,6 +41,7 @@ package com.medigy.persist.model.party;
 import com.medigy.persist.model.common.AbstractDateDurationEntity;
 import com.medigy.persist.reference.custom.party.PartyQualificationType;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
@@ -50,6 +51,8 @@ import javax.persistence.ManyToOne;
 @Entity
 public class PartyQualification extends AbstractDateDurationEntity
 {
+    public static final String PK_COLUMN_NAME = "party_qualification_id";
+    
     private Long partyQualificationId;
     private Party party;
     private PartyQualificationType type;
@@ -60,6 +63,7 @@ public class PartyQualification extends AbstractDateDurationEntity
     }
 
     @Id(generate = GeneratorType.AUTO)
+    @Column(name = PK_COLUMN_NAME)
     public Long getPartyQualificationId()
     {
         return partyQualificationId;

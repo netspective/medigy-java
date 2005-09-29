@@ -42,6 +42,7 @@ import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
 import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
 import com.medigy.persist.reference.custom.CustomReferenceEntity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
@@ -52,6 +53,8 @@ import javax.persistence.UniqueConstraint;
 @Table(name = "Claim_Service_Code_Type", uniqueConstraints = {@UniqueConstraint(columnNames = {"code", "party_id"})})
 public class ClaimServiceCodeType extends AbstractCustomReferenceEntity
 {
+    public static final String PK_COLUMN_NAME = "claim_service_code_type_id";
+
     public enum Cache implements CachedCustomReferenceEntity
     {
         CPT_CODE("CPT"),
@@ -91,6 +94,7 @@ public class ClaimServiceCodeType extends AbstractCustomReferenceEntity
     }
 
     @Id(generate = GeneratorType.AUTO)
+    @Column(name = PK_COLUMN_NAME)
     public Long getClaimServiceCodeTypeId()
     {
         return super.getSystemId();

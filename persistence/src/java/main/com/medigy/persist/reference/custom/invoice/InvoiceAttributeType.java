@@ -42,6 +42,10 @@ import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
 import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
 import com.medigy.persist.reference.custom.CustomReferenceEntity;
 
+import javax.persistence.Column;
+import javax.persistence.GeneratorType;
+import javax.persistence.Id;
+
 public class InvoiceAttributeType extends AbstractCustomReferenceEntity
 {
     public static final String PK_COLUMN_NAME = "inv_attr_type_id";
@@ -104,7 +108,8 @@ public class InvoiceAttributeType extends AbstractCustomReferenceEntity
         }
     }
 
-
+    @Id(generate = GeneratorType.AUTO)
+    @Column(name = PK_COLUMN_NAME)
     public Long getInvoiceAttributeTypeId()
     {
         return super.getSystemId();

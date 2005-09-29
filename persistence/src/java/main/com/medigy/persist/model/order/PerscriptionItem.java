@@ -79,7 +79,7 @@ public class PerscriptionItem extends OrderItem
         this.medicationType = medicationType;
     }
 
-    @Column(length = 128)
+    @Column(length = 128, name = "dosage_form")
     public String getDosageForm()
     {
         return dosageForm;

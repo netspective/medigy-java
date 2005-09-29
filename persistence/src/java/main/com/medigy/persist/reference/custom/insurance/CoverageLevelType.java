@@ -17,6 +17,8 @@ import javax.persistence.Table;
 @Table(name = "Coverage_Level_Type")
 public class CoverageLevelType extends AbstractCustomReferenceEntity
 {
+    public static final String PK_COLUMN_NAME = "coverage_level_type_id";
+
     public enum Cache implements CachedCustomReferenceEntity
     {
         INDIVIDUAL_DEDUCTIBLE("IND_DEDUCT", "Individual Deductible"),
@@ -57,7 +59,7 @@ public class CoverageLevelType extends AbstractCustomReferenceEntity
     }
 
     @Id(generate = GeneratorType.AUTO)
-    @Column(name = "coverage_level_type_id")
+    @Column(name = PK_COLUMN_NAME)
     public Long getCoverageLevelTypeId()
     {
         return super.getSystemId();

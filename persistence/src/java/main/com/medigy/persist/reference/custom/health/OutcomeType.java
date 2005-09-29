@@ -40,6 +40,7 @@ package com.medigy.persist.reference.custom.health;
 
 import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
@@ -47,11 +48,14 @@ import javax.persistence.Id;
 @Entity
 public class OutcomeType extends AbstractCustomReferenceEntity
 {
+    public static final String PK_COLUMN_NAME = "outcome_type_id";
+
     public OutcomeType()
     {
     }
 
     @Id(generate = GeneratorType.AUTO)
+    @Column(name = PK_COLUMN_NAME)
     public Long getOutcomeTypeId()
     {
         return super.getSystemId();

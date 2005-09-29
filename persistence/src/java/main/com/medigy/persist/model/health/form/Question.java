@@ -137,6 +137,7 @@ public class Question extends AbstractTopLevelEntity
     }
 
     @Id(generate = GeneratorType.AUTO)
+    @Column(name = PK_COLUMN_NAME)
     public Long getQuestionId()
     {
         return questionId;

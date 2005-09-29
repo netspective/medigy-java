@@ -93,7 +93,7 @@ public class PostalCode extends GeographicBoundary
         this.parentState = parentState;
     }
 
-    @Column(length = 5, nullable = false)
+    @Column(length = 5, nullable = false, name = "code_value")
     @NotNull @Length(min=5, max=5)
     public String getCodeValue()
     {
@@ -105,7 +105,7 @@ public class PostalCode extends GeographicBoundary
         this.codeValue = codeValue;
     }
 
-    @Column(length = 4)
+    @Column(length = 4, name = "extension_code_value")
     @Length(min=4, max=4)
     public String getExtensionCodeValue()
     {

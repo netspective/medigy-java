@@ -42,6 +42,7 @@ import com.medigy.persist.model.common.AbstractTopLevelEntity;
 import com.medigy.persist.model.person.Person;
 import com.medigy.persist.reference.custom.health.HealthCareVisitRoleType;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
@@ -51,12 +52,15 @@ import javax.persistence.ManyToOne;
 @Entity
 public class HealthCareVisitRole extends AbstractTopLevelEntity
 {
+    public static final String PK_COLUMN_NAME = "visit_role_id";
+
     private Long visitRoleId;
     private HealthCareEncounter encounter;
     private Person person;
     private HealthCareVisitRoleType type;
 
     @Id(generate = GeneratorType.AUTO)
+    @Column(name = PK_COLUMN_NAME)
     public Long getVisitRoleId()
     {
         return visitRoleId;

@@ -42,6 +42,7 @@ import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
 import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
 import com.medigy.persist.reference.custom.CustomReferenceEntity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
@@ -49,6 +50,8 @@ import javax.persistence.Id;
 @Entity
 public class CoverageType extends AbstractCustomReferenceEntity
 {
+    public static final String PK_COLUMN_NAME = "coverage_type_id";
+    
     public enum Cache implements CachedCustomReferenceEntity
     {
         MAJOR_MEDICAL("MEDICAL", "Major Medical"),
@@ -88,7 +91,8 @@ public class CoverageType extends AbstractCustomReferenceEntity
         }
     }
 
-    @Id(generate = GeneratorType.AUTO)    
+    @Id(generate = GeneratorType.AUTO)
+    @Column(name = PK_COLUMN_NAME)
     public Long getCoverageTypeId()
     {
         return super.getSystemId();

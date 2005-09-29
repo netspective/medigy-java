@@ -55,7 +55,7 @@ public class CommunicationEventRole extends AbstractTopLevelEntity
 {
     private Long communicationEventRoleId;
     private CommunicationEventRoleType type;
-    private CommunicationEvent event;
+    private CommunicationEvent communicationEvent;
     private Party party;
 
     @Id(generate = GeneratorType.AUTO)
@@ -84,14 +84,14 @@ public class CommunicationEventRole extends AbstractTopLevelEntity
 
     @ManyToOne
     @JoinColumn(name = "comm_event_id")
-    public CommunicationEvent getEvent()
+    public CommunicationEvent getCommunicationEvent()
     {
-        return event;
+        return communicationEvent;
     }
 
-    public void setEvent(final CommunicationEvent event)
+    public void setCommunicationEvent(final CommunicationEvent communicationEvent)
     {
-        this.event = event;
+        this.communicationEvent = communicationEvent;
     }
 
     @ManyToOne

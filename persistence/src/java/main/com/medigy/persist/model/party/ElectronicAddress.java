@@ -69,7 +69,7 @@ public class ElectronicAddress extends ContactMechanism
         setContactMechanismId(electronicAddressId);
     }
 
-    @Column(length = 256)
+    @Column(length = 256, name = "electronic_address", nullable = false)
     public String getElectronicAddress()
     {
         return electronicAddress;

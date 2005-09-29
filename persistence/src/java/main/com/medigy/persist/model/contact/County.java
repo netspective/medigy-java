@@ -40,6 +40,7 @@ package com.medigy.persist.model.contact;
 
 import com.medigy.persist.reference.custom.GeographicBoundaryType;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
@@ -69,6 +70,7 @@ public class County extends GeographicBoundary
         setCountyName(name);
     }
 
+    @Column(name = "county_name", length = 64, nullable = false)
     public String getCountyName()
     {
         return countyName;

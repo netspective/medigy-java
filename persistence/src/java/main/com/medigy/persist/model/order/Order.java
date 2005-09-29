@@ -107,6 +107,7 @@ public class Order extends AbstractTopLevelEntity
      * @return
      */
     @Basic(temporalType = TemporalType.TIMESTAMP)
+    @Column(name = "order_date")
     public Date getOrderDate()
     {
         return orderDate;
@@ -122,6 +123,7 @@ public class Order extends AbstractTopLevelEntity
      * @return
      */
     @Basic(temporalType = TemporalType.TIMESTAMP)
+    @Column(name = "entry_date")
     public Date getEntryDate()
     {
         return entryDate;
@@ -137,6 +139,7 @@ public class Order extends AbstractTopLevelEntity
      * @return
      */
     @Basic(temporalType = TemporalType.TIMESTAMP)
+    @Column(name = "filled_date")
     public Date getFilledDate()
     {
         return filledDate;

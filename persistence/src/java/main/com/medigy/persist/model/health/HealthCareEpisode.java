@@ -132,6 +132,7 @@ public class HealthCareEpisode extends AbstractTopLevelEntity
     }
 
     @Basic(temporalType = TemporalType.DATE)
+    @Column(name = "episode_date")
     public Date getEpisodeDate()
     {
         return episodeDate;

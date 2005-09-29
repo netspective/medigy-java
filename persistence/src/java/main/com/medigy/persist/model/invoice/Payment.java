@@ -93,6 +93,7 @@ public class Payment extends AbstractTopLevelEntity
         this.paymentId = paymentId;
     }
 
+    @Column(name = "effective_date")
     public Date getEffectiveDate()
     {
         return effectiveDate;
@@ -125,6 +126,7 @@ public class Payment extends AbstractTopLevelEntity
         this.notes = notes;
     }
 
+    @Column(name = "payment_ref_number")
     public String getPaymentRefNumber()
     {
         return paymentRefNumber;
@@ -209,6 +211,7 @@ public class Payment extends AbstractTopLevelEntity
      * Gets the payment method description. Used when the payment method type is OTHER.
      * @return  payment method description
      */
+    @Column(name = "payment_method_description")
     public String getPaymentMethodDescription()
     {
         return paymentMethodDescription;

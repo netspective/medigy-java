@@ -223,7 +223,7 @@ public class Organization extends Party
         this.enrollments = enrollments;
     }
 
-    @Column(length = 128)
+    @Column(length = 128, name = "trade_name")
     public String getTradeName()
     {
         return tradeName;
@@ -359,6 +359,17 @@ public class Organization extends Party
     public void setRoles(final List<OrganizationRole> roles)
     {
         this.roles = roles;
+    }
+
+    @Transient
+    public OrganizationRole getPrimaryRole()
+    {
+        for (OrganizationRole role: roles)
+        {
+            if (role.getIsPrimaryRole())
+                return role;
+        }
+        return null;
     }
 
     @Transient

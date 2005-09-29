@@ -52,6 +52,7 @@ import java.util.Set;
 @Entity
 public class ProductFeature extends AbstractTopLevelEntity
 {
+    public static final String PK_COLUMN_NAME = "product_feat_id";
     private Long productFeatureId;
     private String description;
     private Set<InvoiceItem> invoiceItems = new HashSet<InvoiceItem>();
@@ -64,7 +65,7 @@ public class ProductFeature extends AbstractTopLevelEntity
     }
 
     @Id(generate = GeneratorType.AUTO)
-    @Column(name = "product_feat_id")
+    @Column(name = PK_COLUMN_NAME)
     public Long getProductFeatureId()
     {
         return productFeatureId;

@@ -169,6 +169,7 @@ public class Invoice  extends AbstractTopLevelEntity
      * @return
      */
     @Basic(temporalType = TemporalType.DATE)
+    @Column(name = "submit_date")
     public Date getSubmitDate()
     {
         return submitDate;
@@ -183,7 +184,7 @@ public class Invoice  extends AbstractTopLevelEntity
      * Gets the invoice number specific to the organization that created it.
      * @return
      */
-    @Column(length = 32)
+    @Column(length = 32, name = "invoice_number")
     public String getInvoiceNumber()
     {
         return invoiceNumber;
@@ -199,6 +200,7 @@ public class Invoice  extends AbstractTopLevelEntity
      * @return
      */
     @Basic(temporalType = TemporalType.DATE)
+    @Column(name = "invoice_date")
     public Date getInvoiceDate()
     {
         return invoiceDate;
@@ -220,6 +222,7 @@ public class Invoice  extends AbstractTopLevelEntity
         this.description = description;
     }
 
+    @Column(length = 512)
     public String getMessage()
     {
         return message;

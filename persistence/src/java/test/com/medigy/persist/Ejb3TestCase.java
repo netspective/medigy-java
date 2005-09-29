@@ -36,69 +36,64 @@
  * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  *
  */
-package com.medigy.persist.model.insurance;
+package com.medigy.persist;
 
-import com.medigy.persist.model.common.AbstractTopLevelEntity;
-import com.medigy.persist.reference.custom.insurance.CoverageType;
+import com.medigy.persist.model.session.SessionManager;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.hibernate.HibernateException;
+import org.jmock.MockObjectTestCase;
+import org.jmock.core.Constraint;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratorType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
 
-@Entity
-public class EnrollmentElection extends AbstractTopLevelEntity
+public abstract class Ejb3TestCase  extends MockObjectTestCase
 {
-    public static final String PK_COLUMN_NAME = "election_id";
-    
-    private Long enrollmentElectionId;
-    private Enrollment enrollment;
-    private CoverageType coverageType;
+    private static final Log log = LogFactory.getLog(TestCase.class);
 
-    /**
-     * Examples of enrollment elections are dental, medical, accident, and life policies
-     */
-    public EnrollmentElection()
+    protected boolean useExternalModelData = false;
+
+    // this is only used to keep track of currently open/used hibernate session
+    private EntityManager  entityManager;
+    private EntityManagerFactory entityManagerFactory;
+
+    public EntityManager getEntityManager() throws HibernateException
     {
+        entityManager = entityManagerFactory.createEntityManager();
+        return entityManager;
     }
 
-    @Id(generate = GeneratorType.AUTO)
-    @Column(name = PK_COLUMN_NAME)
-    public Long getEnrollmentElectionId()
+    protected boolean dropAfterFailure()
     {
-        return enrollmentElectionId;
+        return true;
     }
 
-    protected void setEnrollmentElectionId(final Long enrollmentElectionId)
+    protected void assertThat(Object something, Constraint matches)
     {
-        this.enrollmentElectionId = enrollmentElectionId;
+        if (!matches.eval(something))
+        {
+            StringBuffer message = new StringBuffer("\nExpected: ");
+            matches.describeTo(message);
+            message.append("\nbut got : ").append(something).append('\n');
+            fail(message.toString());
+        }
     }
 
-    @ManyToOne
-    @JoinColumn(name = "enrollment_id", nullable = false)
-    public Enrollment getEnrollment()
+    protected void setUp() throws Exception
     {
-        return enrollment;
+        entityManagerFactory = SetupTestConfiguration.getInstance().getEntityManagerFactory();
+        SetupTestConfiguration.getInstance().getPostInsertEventListener().newEntityList();
     }
 
-    public void setEnrollment(final Enrollment enrollment)
+    protected void tearDown() throws Exception
     {
-        this.enrollment = enrollment;
+        final EntityManager entityManager = getEntityManager();
+        final EntityTransaction transaction = entityManager.getTransaction();
+        SetupTestConfiguration.getInstance().getPostInsertEventListener().deleteEntityList(entityManager);
+        transaction.commit();
+        entityManager.close();
+        SessionManager.getInstance().popActiveSession();
     }
-
-    @ManyToOne
-    @JoinColumn(name = "coverage_type_id", nullable = false)
-    public CoverageType getCoverageType()
-    {
-        return coverageType;
-    }
-
-    public void setCoverageType(final CoverageType coverageType)
-    {
-        this.coverageType = coverageType;
-    }
-
-
 }

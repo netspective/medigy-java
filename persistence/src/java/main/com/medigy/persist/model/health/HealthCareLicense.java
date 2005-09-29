@@ -55,6 +55,8 @@ import java.util.Date;
 @Entity
 public class HealthCareLicense extends AbstractDateDurationEntity
 {
+    public static final String PK_COLUMN_NAME = "license_id";
+
     private Long licenseId;
     private String licenseNumber;
     private String description;
@@ -63,6 +65,7 @@ public class HealthCareLicense extends AbstractDateDurationEntity
     private HealthCareLicenseType type;
 
     @Id(generate = GeneratorType.AUTO)
+    @Column(name = PK_COLUMN_NAME)
     public Long getLicenseId()
     {
         return licenseId;
@@ -73,7 +76,7 @@ public class HealthCareLicense extends AbstractDateDurationEntity
         this.licenseId = licenseId;
     }
 
-    @Column(length = 50, nullable = false)
+    @Column(length = 50, nullable = false, name = "license_number")
     public String getLicenseNumber()
     {
         return licenseNumber;

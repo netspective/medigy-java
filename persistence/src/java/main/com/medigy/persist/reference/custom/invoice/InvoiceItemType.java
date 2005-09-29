@@ -42,6 +42,7 @@ import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
 import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
 import com.medigy.persist.reference.custom.CustomReferenceEntity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
@@ -52,17 +53,18 @@ import javax.persistence.UniqueConstraint;
 @Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"code", "party_id"})})
 public class InvoiceItemType extends AbstractCustomReferenceEntity
 {
+    public static final String PK_COLUMN_NAME = "invoice_item_type_id";
     public enum Cache implements CachedCustomReferenceEntity
     {
         /**
          * <enum>Invoice</enum>
-		<enum>Service</enum>
-		<enum>Lab</enum>
-		<enum>Co-pay</enum>
-		<enum>Co-insurance</enum>
-		<enum>Adjustment</enum>
-		<enum>Deductible</enum>
-		<enum>Void</enum>
+        <enum>Service</enum>
+        <enum>Lab</enum>
+        <enum>Co-pay</enum>
+        <enum>Co-insurance</enum>
+        <enum>Adjustment</enum>
+        <enum>Deductible</enum>
+        <enum>Void</enum>
          */
         INVOICE("INVOICE", "Invoice"),
         SERVICE("SERVICE", "Service"),
@@ -105,6 +107,7 @@ public class InvoiceItemType extends AbstractCustomReferenceEntity
     }
 
     @Id(generate = GeneratorType.AUTO)
+    @Column(name = PK_COLUMN_NAME)
     public Long getInvoiceItemTypeId()
     {
         return super.getSystemId();

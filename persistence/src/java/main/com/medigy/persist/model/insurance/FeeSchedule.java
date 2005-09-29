@@ -118,6 +118,7 @@ public class FeeSchedule extends AbstractDateDurationEntity
         this.caption = caption;
     }
 
+    @Column(name = "seq_number")
     public Long getSequenceNumber()
     {
         return sequenceNumber;
@@ -128,6 +129,7 @@ public class FeeSchedule extends AbstractDateDurationEntity
         this.sequenceNumber = sequenceNumber;
     }
 
+    @Column(name = "rvrbs_multiplier")
     public Float getRvrbsMultiplier()
     {
         return rvrbsMultiplier;

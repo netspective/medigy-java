@@ -111,7 +111,7 @@ public class FeeScheduleItem extends AbstractTopLevelEntity
         this.code = code;
     }
 
-    @Column(length = 64)
+    @Column(length = 64, name ="code_modifier")
     public String getCodeModifier()
     {
         return codeModifier;
@@ -133,6 +133,7 @@ public class FeeScheduleItem extends AbstractTopLevelEntity
         this.name = name;
     }
 
+    @Column(name = "seq_number")
     public Long getSequenceNumber()
     {
         return sequenceNumber;
@@ -212,6 +213,7 @@ public class FeeScheduleItem extends AbstractTopLevelEntity
         this.description = description;
     }
 
+    @Column(name = "is_taxable")
     public Boolean getTaxable()
     {
         return isTaxable;
@@ -222,7 +224,7 @@ public class FeeScheduleItem extends AbstractTopLevelEntity
         isTaxable = taxable;
     }
 
-    @Column(precision = 12, scale = 2)
+    @Column(precision = 12, scale = 2, name = "unit_cost")
     public Float getUnitCost()
     {
         return unitCost;
@@ -233,7 +235,7 @@ public class FeeScheduleItem extends AbstractTopLevelEntity
         this.unitCost = unitCost;
     }
 
-    @Column
+    @Column(name = "default_units")
     public Long getDefaultUnits()
     {
         return defaultUnits;

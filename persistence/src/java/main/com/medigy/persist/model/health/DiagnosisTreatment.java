@@ -40,6 +40,7 @@ package com.medigy.persist.model.health;
 
 import com.medigy.persist.model.common.AbstractTopLevelEntity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
@@ -49,11 +50,14 @@ import javax.persistence.ManyToOne;
 @Entity
 public class DiagnosisTreatment extends AbstractTopLevelEntity
 {
+    public static final String PK_COLUMN_NAME = "diag_treatment_id";
+
     private Long diagnosisTreatmentId;
     private Diagnosis diagnosis;
     private HealthCareDelivery healthCareDelivery;
 
     @Id(generate = GeneratorType.AUTO)
+    @Column(name = PK_COLUMN_NAME)
     public Long getDiagnosisTreatmentId()
     {
         return diagnosisTreatmentId;

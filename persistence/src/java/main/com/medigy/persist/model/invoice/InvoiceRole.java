@@ -42,12 +42,15 @@ import com.medigy.persist.model.common.AbstractTopLevelEntity;
 import com.medigy.persist.model.party.Party;
 import com.medigy.persist.reference.custom.invoice.InvoiceRoleType;
 
+import javax.persistence.Basic;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 import java.util.Date;
 
@@ -55,6 +58,8 @@ import java.util.Date;
 @Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"invoice_id", "party_id", "invoice_role_type_id"})})
 public class InvoiceRole extends AbstractTopLevelEntity
 {
+    public static final String PK_COLUMN_NAME = "invoice_role_id";
+
     private Long invoiceRoleId;
     private Date invoiceDate;
     //private Float percentage;
@@ -63,6 +68,7 @@ public class InvoiceRole extends AbstractTopLevelEntity
     private InvoiceRoleType type;
 
     @Id(generate = GeneratorType.AUTO)
+    @Column(name = PK_COLUMN_NAME)
     public Long getInvoiceRoleId()
     {
         return invoiceRoleId;
@@ -98,7 +104,7 @@ public class InvoiceRole extends AbstractTopLevelEntity
     }
 
     @ManyToOne
-    @JoinColumn(name = "invoice_id", nullable = false)
+    @JoinColumn(name = Invoice.PK_COLUMN_NAME, nullable = false)
     public Invoice getInvoice()
     {
         return invoice;
@@ -109,6 +115,8 @@ public class InvoiceRole extends AbstractTopLevelEntity
         this.invoice = invoice;
     }
 
+    @Basic(temporalType =  TemporalType.DATE)
+    @Column(name = "invoice_date")
     public Date getInvoiceDate()
     {
         return invoiceDate;

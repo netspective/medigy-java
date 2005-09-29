@@ -40,6 +40,7 @@ package com.medigy.persist.model.insurance;
 
 import com.medigy.persist.model.common.AbstractEntity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
@@ -49,6 +50,7 @@ import javax.persistence.ManyToOne;
 @Entity
 public class CareProviderSelection extends AbstractEntity
 {
+    public static final String PK_COLUMN_NAME = "selection_id";
     private Long selectionId;
     private InsurancePolicy insurancePolicy;
 
@@ -57,6 +59,7 @@ public class CareProviderSelection extends AbstractEntity
     }
 
     @Id(generate = GeneratorType.AUTO)
+    @Column(name = PK_COLUMN_NAME)
     public Long getSelectionId()
     {
         return selectionId;

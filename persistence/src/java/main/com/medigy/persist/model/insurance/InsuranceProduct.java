@@ -226,7 +226,7 @@ public class InsuranceProduct extends AbstractTopLevelEntity
      * Gets the remittance type description. Used when the the getRemittanceType() returns OTHER.
      * @return
      */
-    @Column(length = 128)
+    @Column(length = 128, name = "remittance_type_description")
     public String getRemittanceTypeDescription()
     {
         return remittanceTypeDescription;
@@ -237,7 +237,7 @@ public class InsuranceProduct extends AbstractTopLevelEntity
         this.remittanceTypeDescription = remittanceTypeDescription;
     }
 
-    @Column(length = 128)
+    @Column(length = 128, name = "remittance_payer_name")
     public String getRemittancePayerName()
     {
         return remittancePayerName;

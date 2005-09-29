@@ -53,6 +53,8 @@ import javax.persistence.Table;
 @Table(name = "Person_Language")
 public class Language extends AbstractTopLevelEntity
 {
+    public static final String PK_COLUMN_NAME = "language_id";
+
     private Long languageId;
     private Person person;
     private Boolean primaryInd;
@@ -68,6 +70,7 @@ public class Language extends AbstractTopLevelEntity
     }
 
     @Id(generate = GeneratorType.AUTO)
+    @Column(name = PK_COLUMN_NAME)
     public Long getLanguageId()
     {
         return languageId;
@@ -79,7 +82,7 @@ public class Language extends AbstractTopLevelEntity
     }
 
     @ManyToOne
-    @JoinColumn(name = "party_id")
+    @JoinColumn(name = Person.PK_COLUMN_NAME)
     public Person getPerson()
     {
         return person;
@@ -90,7 +93,7 @@ public class Language extends AbstractTopLevelEntity
         this.person = person;
     }
 
-    @Column()
+    @Column(name = "primary_ind")
     public Boolean getPrimaryInd()
     {
         return primaryInd;

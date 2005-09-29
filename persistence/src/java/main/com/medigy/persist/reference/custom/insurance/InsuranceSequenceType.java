@@ -52,6 +52,8 @@ import javax.persistence.Table;
 @Table(name = "Ins_Sequence_Type")
 public class InsuranceSequenceType extends AbstractCustomReferenceEntity
 {
+    public static final String PK_COLUMN_NAME = "ins_sequence_type_id";
+
     public enum Cache implements CachedCustomReferenceEntity
     {
         PRIMARY_SEQUENCE("PRIMARY", "Primary"),
@@ -100,7 +102,7 @@ public class InsuranceSequenceType extends AbstractCustomReferenceEntity
     }
 
     @Id(generate = GeneratorType.AUTO)
-    @Column(name = "ins_sequence_type_id")
+    @Column(name = PK_COLUMN_NAME)
     public Long getInsuranceSequenceTypeId()
     {
         return super.getSystemId();

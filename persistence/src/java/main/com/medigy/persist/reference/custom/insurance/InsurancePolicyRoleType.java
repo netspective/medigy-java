@@ -52,6 +52,7 @@ import javax.persistence.Table;
 @Table(name = "Ins_Policy_Role_Type")
 public class InsurancePolicyRoleType  extends AgreementRoleType
 {
+    public static final String PK_COLUMN_NAME =  "ins_policy_role_type_id";
     public enum Cache implements CachedCustomReferenceEntity
     {
         INSURANCE_PROVIDER("INS_PROV", "Insurance Provider"),
@@ -92,7 +93,7 @@ public class InsurancePolicyRoleType  extends AgreementRoleType
     }
 
     @Id(generate = GeneratorType.AUTO)
-    @Column(name = "ins_policy_role_type_id")        
+    @Column(name = PK_COLUMN_NAME)        
     public Long getInsurancePolicyRoleTypeId()
     {
         return super.getAgreementRoleTypeId();

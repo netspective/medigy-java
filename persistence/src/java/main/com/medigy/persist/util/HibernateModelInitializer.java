@@ -80,9 +80,7 @@ package com.medigy.persist.util;
 import com.medigy.persist.model.data.EntitySeedDataPopulator;
 import com.medigy.persist.model.party.Party;
 import com.medigy.persist.reference.CachedReferenceEntity;
-import com.medigy.persist.reference.ReferenceEntity;
 import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
-import com.medigy.persist.reference.custom.CustomReferenceEntity;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
@@ -93,35 +91,23 @@ import org.hibernate.criterion.Restrictions;
 import java.util.List;
 import java.util.Map;
 
-public class ModelInitializer
+public class HibernateModelInitializer  extends AbstractModelInitializer
 {
-    public enum SeedDataPopulationType
-    {
-        AUTO, YES, NO
-    }
+    private final Log log = LogFactory.getLog(HibernateModelInitializer.class);
 
-    private final Log log = LogFactory.getLog(ModelInitializer.class);
-    private SeedDataPopulationType seedDataPopulationType;
     private Session session;
     private Configuration hibernateConfiguration;
-    private boolean isInitialized = false;
-
     private Map<Class,Class<? extends CachedReferenceEntity>> referenceEntitiesAndCachesMap;
     private Map<Class,Class<? extends CachedCustomReferenceEntity>> customReferenceEntitiesAndCachesMap;
 
-    private static ModelInitializer initializer = new ModelInitializer();
+    private static HibernateModelInitializer initializer = new HibernateModelInitializer();
 
-    public static final ModelInitializer getInstance()
+    public static final HibernateModelInitializer getInstance()
     {
         return initializer;
     }
 
-    public boolean isInitialized()
-    {
-        return isInitialized;
-    }
-
-    private ModelInitializer()
+    private HibernateModelInitializer()
     {
 
     }
@@ -139,145 +125,46 @@ public class ModelInitializer
     public void initialize(final Session session, final SeedDataPopulationType seedDataPopulationType, final Configuration hibernateConfiguration)
     {
         this.session = session;
-        this.seedDataPopulationType = seedDataPopulationType;
         this.hibernateConfiguration = hibernateConfiguration;
-
-        boolean populate = false;
-        log.info("Initialize model setting: " + seedDataPopulationType);
-        switch(seedDataPopulationType)
-        {
-            case AUTO:
-                if(readSystemGlobalPropertyEntity() == null)
-                {
-                    populateSeedData();
-                    populate = true;
-                }
-                break;
-
-            case YES:
-                populateSeedData();
-                populate = true;
-                break;
-        }
-        initSystemGlobalPartyEntity();
-        if (!populate)
-        {
-            // the EntitySeedDataPopulator also registers the cache entities so no need to do this if it was called
-            initReferenceEntityCaches();
-            initCustomReferenceEntityCaches();
-        }
-        isInitialized = true;
+        super.initialize(seedDataPopulationType);
     }
 
-    private void populateSeedData()
+    protected EntitySeedDataPopulator createEntitySeedDataPopulator()
     {
-        EntitySeedDataPopulator populator = new EntitySeedDataPopulator(session, hibernateConfiguration);
-        populator.populateSeedData();
+        return new EntitySeedDataPopulator(session, hibernateConfiguration);
     }
 
-    private Party readSystemGlobalPropertyEntity()
+    protected Party readSystemGlobalPropertyEntity()
     {
         final Criteria criteria = session.createCriteria(Party.class);
         criteria.add(Restrictions.eq("partyName", Party.SYS_GLOBAL_PARTY_NAME));
         return (Party) criteria.uniqueResult();
     }
 
-    private void initSystemGlobalPartyEntity()
-    {
-        final Party entity = readSystemGlobalPropertyEntity();
-        if (entity == null)
-             throw new RuntimeException("The " + Party.SYS_GLOBAL_PARTY_NAME + " entity MUST exist before trying to " +
-                    "access related built-in custom reference entities.");
-
-        Party.Cache.SYS_GLOBAL_PARTY.setEntity(entity);
-    }
-
     protected void initReferenceEntityCaches()
     {
         referenceEntitiesAndCachesMap = HibernateUtil.getReferenceEntitiesAndRespectiveEnums(hibernateConfiguration);
         for(final Map.Entry<Class,Class<? extends CachedReferenceEntity>> entry : referenceEntitiesAndCachesMap.entrySet())
-            initReferenceEntityCache(entry.getKey(), (CachedReferenceEntity[]) entry.getValue().getEnumConstants());
+        {
+            final Class aClass = entry.getKey();
+            final List list = session.createCriteria(aClass).list();
+            initReferenceEntityList(aClass, (CachedReferenceEntity[]) entry.getValue().getEnumConstants(), list);
+        }
     }
 
     protected void initCustomReferenceEntityCaches()
     {
         customReferenceEntitiesAndCachesMap = HibernateUtil.getCustomReferenceEntitiesAndRespectiveEnums(hibernateConfiguration);
         for(final Map.Entry<Class,Class<? extends CachedCustomReferenceEntity>> entry : customReferenceEntitiesAndCachesMap.entrySet())
-            initCustomReferenceEntityCache(entry.getKey(), (CachedCustomReferenceEntity[]) entry.getValue().getEnumConstants());
-    }
-
-    protected void initReferenceEntityCache(final Class aClass, final CachedReferenceEntity[] cache)
-    {
-        final List list = session.createCriteria(aClass).list();
-        for(final Object i : list)
         {
-            final ReferenceEntity entity = (ReferenceEntity) i;
-            final Object id = entity.getCode();
-            if(id == null)
-            {
-                log.error(entity + " id is NULL: unable to map to one of " + cache);
-                continue;
-            }
-
-            for(final CachedReferenceEntity c : cache)
-            {
-                if(id.equals(c.getCode()))
-                {
-                    final ReferenceEntity record = c.getEntity();
-                    if(record != null)
-                        log.error(c.getClass().getName() + " enum '" + c + "' is bound to multiple rows.");
-                    else
-                        c.setEntity(entity);
-                    break;
-                }
-            }
-        }
-
-        for(final CachedReferenceEntity c : cache)
-        {
-            if(c.getEntity() == null)
-                log.error(c.getClass().getName() + " enum '" + c + "' was not bound to a database row.");
+            final Class aClass = entry.getKey();
+            final Criteria criteria = session.createCriteria(aClass);
+            criteria.add(Restrictions.eq("party.id", Party.Cache.SYS_GLOBAL_PARTY.getEntity().getPartyId()));
+            final List list = criteria.list();
+            initCustomReferenceEntityList(aClass, (CachedCustomReferenceEntity[]) entry.getValue().getEnumConstants(), list);
         }
     }
 
-    protected void initCustomReferenceEntityCache(final Class aClass, final CachedCustomReferenceEntity[] cache)
-    {
-        final Criteria criteria = session.createCriteria(aClass);
-        criteria.add(Restrictions.eq("party.id", Party.Cache.SYS_GLOBAL_PARTY.getEntity().getPartyId()));
 
-        final List list = criteria.list();
-        if (list == null || list.size() == 0)
-        {
-            log.error("Failed to initialize CustomReferenceEntity caches. There were NO records of CustomReferenceEntity type.");
-            throw new RuntimeException("There were NO records of CustomReferenceEntity type: " + aClass.getName());
-        }
-        for(final Object i : list)
-        {
-            final CustomReferenceEntity entity = (CustomReferenceEntity) i;
-            final Object code = entity.getCode();
-            if(code == null)
-            {
-                log.error(entity + " code is NULL: unable to map to one of " + cache);
-                continue;
-            }
 
-            for(final CachedCustomReferenceEntity c : cache)
-            {
-                if(code.equals(c.getCode()))
-                {
-                    final CustomReferenceEntity record = c.getEntity();
-                    if(record == null)
-                        c.setEntity(entity);
-                    break;
-                }
-            }
-        }
-
-        for(final CachedCustomReferenceEntity c : cache)
-        {
-            if(c.getEntity() == null)
-                log.error(c.getClass().getName() + " enum '" + c + "' was not bound to a database row.");
-        }
-
-    }
 }

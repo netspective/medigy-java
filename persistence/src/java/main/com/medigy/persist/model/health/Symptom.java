@@ -51,12 +51,15 @@ import javax.persistence.ManyToOne;
 @Entity
 public class Symptom extends AbstractTopLevelEntity
 {
+    public static final String PK_COLUMN_NAME = "sympton_id";
+
     private Long symptonId;
     private String description;
     private HealthCareEpisode healthCareEpisode;
     private SymptomType type;
 
     @Id(generate = GeneratorType.AUTO)
+    @Column(name = PK_COLUMN_NAME)
     public Long getSymptonId()
     {
         return symptonId;

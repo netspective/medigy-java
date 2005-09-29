@@ -149,7 +149,7 @@ public class Person extends Party
         super.setPartyId(personId);
     }
 
-    @Column(length = 128, nullable = false)
+    @Column(length = 128, nullable = false, name = "first_name")
     public String getFirstName()
     {
         return firstName;
@@ -170,7 +170,7 @@ public class Person extends Party
         return soundex.encode(name);
     }
 
-    @Column(length = 128, nullable = false)
+    @Column(length = 128, nullable = false, name = "last_name")
     public String getLastName()
     {
         return lastName;
@@ -183,7 +183,7 @@ public class Person extends Party
         setLastNameSoundex(createSoundexName(lastName));
     }
 
-    @Column(length = 96)
+    @Column(length = 96, name = "middle_name")
     public String getMiddleName()
     {
         return middleName;
@@ -244,6 +244,7 @@ public class Person extends Party
 
     @Past
     @Basic(temporalType = TemporalType.DATE)
+    @Column(name = "birth_date")
     public Date getBirthDate()
     {
         return birthDate;
@@ -353,6 +354,8 @@ public class Person extends Party
         this.maritalStatuses.add(status);
     }
 
+    @Basic(temporalType = TemporalType.DATE)
+    @Column(name = "death_date")
     public Date getDeathDate()
     {
         return deathDate;
@@ -602,6 +605,7 @@ public class Person extends Party
     }
     */
 
+    @Column(name = "first_name_soundex", length = 32)
     public String getFirstNameSoundex()
     {
         return firstNameSoundex;
@@ -612,6 +616,7 @@ public class Person extends Party
         this.firstNameSoundex = firstNameSoundex;
     }
 
+    @Column(name = "last_name_soundex", length = 32)
     public String getLastNameSoundex()
     {
         return lastNameSoundex;

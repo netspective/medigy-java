@@ -26,6 +26,7 @@ public class PeopleRelationship extends AbstractDateDurationEntity
     private String typeDescription;
 
     @Id(generate = GeneratorType.AUTO)
+    @Column(name = PK_COLUMN_NAME)
     public Long getRelationshipId()
     {
         return relationshipId;
@@ -75,7 +76,7 @@ public class PeopleRelationship extends AbstractDateDurationEntity
         this.type = type;
     }
 
-    @Column(length = 128)
+    @Column(length = 128, name = "type_description")
     public String getTypeDescription()
     {
         return typeDescription;

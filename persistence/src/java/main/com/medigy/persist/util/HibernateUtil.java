@@ -57,6 +57,7 @@ import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.connection.ConnectionProvider;
 import org.hibernate.connection.ConnectionProviderFactory;
+import org.hibernate.ejb.Ejb3Configuration;
 import org.hibernate.exception.NestableRuntimeException;
 import org.hibernate.mapping.PersistentClass;
 import org.hibernate.stat.EntityStatistics;
@@ -243,18 +244,9 @@ public class HibernateUtil
         log.info(entityClass.getName() + " changed " + changes + "times"  );
     }
 
-
-    /**
-     * Creates a map of all classes implementing the {@link com.medigy.persist.reference.ReferenceEntity}
-     *  interface and the respective cached enums
-     *
-     * @param hibernateConfiguration    the hibernate configuration
-     * @return
-     */
-    public static Map<Class, Class<? extends CachedReferenceEntity>> getReferenceEntitiesAndRespectiveEnums(final Configuration hibernateConfiguration)
+    protected static Map<Class, Class<? extends CachedReferenceEntity>> getReferenceEntitiesAndRespectiveEnums(final Iterator classMappings)
     {
         Map<Class, Class<? extends CachedReferenceEntity>> referenceEntitiesAndCachesMap = new HashMap<Class, Class<? extends CachedReferenceEntity>>();
-        final Iterator classMappings = hibernateConfiguration.getClassMappings();
         while (classMappings.hasNext())
         {
             Class aClass = ((PersistentClass) classMappings.next()).getMappedClass(); //(Class) classMappings.next();
@@ -286,19 +278,37 @@ public class HibernateUtil
             }
         }
         return referenceEntitiesAndCachesMap;
+
+    }
+
+    public static Map<Class, Class<? extends CachedReferenceEntity>> getReferenceEntitiesAndRespectiveEnums(final Ejb3Configuration configuration)
+    {
+        final Iterator classMappings = configuration.getClassMappings();
+        return getReferenceEntitiesAndRespectiveEnums(classMappings);
+    }
+
+    /**
+     * Creates a map of all classes implementing the {@link com.medigy.persist.reference.ReferenceEntity}
+     *  interface and the respective cached enums
+     *
+     * @param hibernateConfiguration    the hibernate configuration
+     * @return
+     */
+    public static Map<Class, Class<? extends CachedReferenceEntity>> getReferenceEntitiesAndRespectiveEnums(final Configuration hibernateConfiguration)
+    {
+        final Iterator classMappings = hibernateConfiguration.getClassMappings();
+        return getReferenceEntitiesAndRespectiveEnums(classMappings);
     }
 
     /**
      * Creates a map of all classes implementing the {@link com.medigy.persist.reference.custom.CustomReferenceEntity}
      * interface and the respective cached enums
      *
-     * @param hibernateConfiguration   the hibernate configuration
      * @return
      */
-    public static Map<Class, Class<? extends CachedCustomReferenceEntity>> getCustomReferenceEntitiesAndRespectiveEnums(final Configuration hibernateConfiguration)
+    protected static Map<Class, Class<? extends CachedCustomReferenceEntity>> getCustomReferenceEntitiesAndRespectiveEnums(final Iterator classMappings)
     {
         final Map<Class, Class<? extends CachedCustomReferenceEntity>> customReferenceEntitiesAndCachesMap = new HashMap<Class, Class<? extends CachedCustomReferenceEntity>>();
-        final Iterator classMappings = hibernateConfiguration.getClassMappings();
         while (classMappings.hasNext())
         {
             Class aClass = ((PersistentClass) classMappings.next()).getMappedClass(); //(Class) classMappings.next();
@@ -323,5 +333,17 @@ public class HibernateUtil
             }
         }
         return customReferenceEntitiesAndCachesMap;
+    }
+
+    public static Map<Class, Class<? extends CachedCustomReferenceEntity>> getCustomReferenceEntitiesAndRespectiveEnums(final Configuration configuration)
+    {
+        final Iterator classMappings = configuration.getClassMappings();
+        return getCustomReferenceEntitiesAndRespectiveEnums(classMappings);
+    }
+
+    public static Map<Class, Class<? extends CachedCustomReferenceEntity>> getCustomReferenceEntitiesAndRespectiveEnums(final Ejb3Configuration configuration)
+    {
+        final Iterator classMappings = configuration.getClassMappings();
+        return getCustomReferenceEntitiesAndRespectiveEnums(classMappings);
     }
 }

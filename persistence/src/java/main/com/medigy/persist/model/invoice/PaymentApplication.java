@@ -40,6 +40,7 @@ package com.medigy.persist.model.invoice;
 
 import com.medigy.persist.model.common.AbstractTopLevelEntity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
@@ -49,6 +50,8 @@ import javax.persistence.ManyToOne;
 @Entity
 public class PaymentApplication extends AbstractTopLevelEntity
 {
+    public static final String PK_COLUMN_NAME = "payment_application_id";
+
     private Long paymentApplicationId;
     private Float amountApplied;
     private Payment payment;
@@ -65,6 +68,7 @@ public class PaymentApplication extends AbstractTopLevelEntity
     }
 
     @Id(generate = GeneratorType.AUTO)
+    @Column(name = PK_COLUMN_NAME)
     public Long getPaymentApplicationId()
     {
         return paymentApplicationId;
@@ -75,6 +79,7 @@ public class PaymentApplication extends AbstractTopLevelEntity
         this.paymentApplicationId = paymentApplicationId;
     }
 
+    @Column(name = "amount_applied")
     public Float getAmountApplied()
     {
         return amountApplied;
@@ -86,7 +91,7 @@ public class PaymentApplication extends AbstractTopLevelEntity
     }
 
     @ManyToOne
-    @JoinColumn(name = "payment_id")
+    @JoinColumn(name = Payment.PK_COLUMN_NAME)
     public Payment getPayment()
     {
         return payment;
@@ -98,7 +103,7 @@ public class PaymentApplication extends AbstractTopLevelEntity
     }
 
     @ManyToOne
-    @JoinColumn(name = "invoice_id")
+    @JoinColumn(name = Invoice.PK_COLUMN_NAME)
     public Invoice getInvoiceId()
     {
         return invoiceId;
@@ -109,7 +114,8 @@ public class PaymentApplication extends AbstractTopLevelEntity
         this.invoiceId = invoiceId;
     }
 
-    @JoinColumn(name = "bill_acct_id")
+    @ManyToOne
+    @JoinColumn(name = BillingAccount.PK_COLUMN_NAME)
     public BillingAccount getBillingAccount()
     {
         return billingAccount;
@@ -120,6 +126,8 @@ public class PaymentApplication extends AbstractTopLevelEntity
         this.billingAccount = billingAccount;
     }
 
+    @ManyToOne
+    @JoinColumn(name = InvoiceItem.PK_COLUMN_NAME)
     public InvoiceItem getInvoiceItem()
     {
         return invoiceItem;

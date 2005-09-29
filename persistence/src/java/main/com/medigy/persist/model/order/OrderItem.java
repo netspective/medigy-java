@@ -74,6 +74,7 @@ public class OrderItem extends AbstractEntity
     private List<OrderItem> childItems = new ArrayList<OrderItem>();
 
     @Id(generate = GeneratorType.AUTO)
+    @Column(name = PK_COLUMN_NAME)
     public Long getOrderItemId()
     {
         return orderItemId;
@@ -84,6 +85,7 @@ public class OrderItem extends AbstractEntity
         this.orderItemId = orderItemId;
     }
 
+    @Column(name = "order_item_seq_id")
     public Long getOrderItemSeqId()
     {
         return orderItemSeqId;
@@ -94,7 +96,7 @@ public class OrderItem extends AbstractEntity
         this.orderItemSeqId = orderItemSeqId;
     }
 
-    @Column(length = 512)
+    @Column(length = 512, name = "item_description")
     public String getItemDescription()
     {
         return itemDescription;

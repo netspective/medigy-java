@@ -42,6 +42,7 @@ import com.medigy.persist.model.common.AbstractDateDurationEntity;
 import com.medigy.persist.model.org.Organization;
 import com.medigy.persist.model.person.PersonRole;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
@@ -51,12 +52,15 @@ import javax.persistence.ManyToOne;
 @Entity
 public class ProviderOffering extends AbstractDateDurationEntity
 {
+    public static final String PK_COLUMN_NAME = "offering_id";
+
     //TODO: Clarify what this class if for!
     private Long providerOfferingId;
     private Organization providerOrganization;
     private PersonRole personRole;
 
     @Id(generate = GeneratorType.AUTO)
+    @Column(name = PK_COLUMN_NAME)
     public Long getProviderOfferingId()
     {
         return providerOfferingId;

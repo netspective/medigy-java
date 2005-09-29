@@ -123,7 +123,7 @@ public class HealthCareEncounter  extends AbstractDateDurationEntity
         this.discardType = discardType;
     }
 
-    @Column(length = 512)
+    @Column(length = 512, name = "discard_remarks")
     public String getDiscardRemarks()
     {
         return discardRemarks;
@@ -139,6 +139,7 @@ public class HealthCareEncounter  extends AbstractDateDurationEntity
      * @return
      */
     @Basic(temporalType = TemporalType.TIMESTAMP)
+    @Column(name = "discard_time")
     public Date getDiscardTime()
     {
         return discardTime;
@@ -165,6 +166,7 @@ public class HealthCareEncounter  extends AbstractDateDurationEntity
      * @return
      */
     @Basic(temporalType = TemporalType.TIMESTAMP)
+    @Column(name = "start_time")
     public Date getStartTime()
     {
         return startTime;
@@ -180,6 +182,7 @@ public class HealthCareEncounter  extends AbstractDateDurationEntity
      * @return
      */
     @Basic(temporalType = TemporalType.TIMESTAMP)
+    @Column(name = "scheduled_time")
     public Date getScheduledTime()
     {
         return scheduledTime;

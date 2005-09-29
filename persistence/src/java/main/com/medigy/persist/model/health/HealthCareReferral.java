@@ -45,6 +45,7 @@ import com.medigy.persist.reference.custom.health.HealthCareReferralType;
 import com.medigy.persist.reference.custom.person.PersonRoleType;
 import org.hibernate.validator.NotNull;
 
+import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
@@ -52,6 +53,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import java.util.Date;
 
@@ -92,6 +94,7 @@ public class HealthCareReferral extends AbstractEntity
      * Gets the referral authorization number
      * @return
      */
+    @Column(name = "authorization_number", length = 32)
     public String getAuthorizationNumber()
     {
         return authorizationNumber;
@@ -106,6 +109,7 @@ public class HealthCareReferral extends AbstractEntity
      * Gets the number of allowed visits
      * @return
      */
+    @Column(name = "allowed_visits")
     public Long getAllowedVisits()
     {
         return allowedVisits;
@@ -116,6 +120,7 @@ public class HealthCareReferral extends AbstractEntity
         this.allowedVisits = allowedVisits;
     }
 
+    @Column(name = "referral_reason", length = 128)
     public String getReferralReason()
     {
         return referralReason;
@@ -136,6 +141,8 @@ public class HealthCareReferral extends AbstractEntity
         this.notes = notes;
     }
 
+    @Basic(temporalType = TemporalType.DATE)
+    @Column(name = "referral_date")
     public Date getReferralDate()
     {
         return referralDate;

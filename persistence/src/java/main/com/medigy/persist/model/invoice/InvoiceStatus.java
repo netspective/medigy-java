@@ -55,6 +55,7 @@ import java.util.Date;
 @Entity
 public class InvoiceStatus extends AbstractTopLevelEntity implements Comparable
 {
+    public static final String PK_COLUMN_NAME = "invoice_status_id";
     private Long invoiceStatusId;
     private Date invoiceStatusDate;
     private Invoice invoice;
@@ -65,6 +66,7 @@ public class InvoiceStatus extends AbstractTopLevelEntity implements Comparable
     }
 
     @Id(generate = GeneratorType.AUTO)
+    @Column(name = PK_COLUMN_NAME)
     public Long getInvoiceStatusId()
     {
         return invoiceStatusId;
@@ -76,7 +78,7 @@ public class InvoiceStatus extends AbstractTopLevelEntity implements Comparable
     }
 
     @Basic(temporalType = TemporalType.TIMESTAMP)
-    @Column(nullable = false)
+    @Column(nullable = false, name = "invoice_status_date")
     @NotNull
     public Date getInvoiceStatusDate()
     {

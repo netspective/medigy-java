@@ -91,6 +91,7 @@ public class ResponsiblePartySelection extends AbstractDateDurationEntity
         this.patient = patient;
     }
 
+    @Column(name = "is_default_selection")
     public boolean isDefaultSelection()
     {
         return isDefaultSelection;

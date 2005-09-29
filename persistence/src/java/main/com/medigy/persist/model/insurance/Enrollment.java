@@ -91,6 +91,7 @@ public class Enrollment extends AbstractTopLevelEntity
     }
 
 
+    @Column(name = "enrolled_date")
     public Date getEnrolledDate()
     {
         return enrolledDate;

@@ -52,22 +52,25 @@ import javax.persistence.Table;
 @Table(name = "Comm_Event_Work")
 public class CommunicationEventWork
 {
-    private Long systemId;
+    public static final String PK_COLUMN_NAME = "work_id";
+
+    private Long workId;
     private String description;
-    private CommunicationEvent event;
+    private CommunicationEvent communicationEvent;
     private WorkEffort workEffort;
-    // indicates whether or not the workEffort was started by this particular communication event
+    // indicates whether or not the workEffort was started by this particular communication communicationEvent
     private Boolean startWorkInd;
 
     @Id(generate = GeneratorType.AUTO)
-    public Long getSystemId()
+    @Column(name = PK_COLUMN_NAME)
+    public Long getWorkId()
     {
-        return systemId;
+        return workId;
     }
 
-    public void setSystemId(final Long systemId)
+    public void setWorkId(final Long workId)
     {
-        this.systemId = systemId;
+        this.workId = workId;
     }
 
     public Boolean getStartWorkInd()
@@ -81,7 +84,7 @@ public class CommunicationEventWork
     }
 
     @ManyToOne
-    @JoinColumn(name = "work_id")
+    @JoinColumn(name = WorkEffort.PK_COLUMN_NAME)
     public WorkEffort getWork()
     {
         return workEffort;
@@ -93,15 +96,15 @@ public class CommunicationEventWork
     }
 
     @ManyToOne
-    @JoinColumn(name = "comm_event_id")
-    public CommunicationEvent getEvent()
+    @JoinColumn(name = CommunicationEvent.PK_COLUMN_NAME)
+    public CommunicationEvent getCommunicationEvent()
     {
-        return event;
+        return communicationEvent;
     }
 
-    public void setEvent(final CommunicationEvent event)
+    public void setCommunicationEvent(final CommunicationEvent communicationEvent)
     {
-        this.event = event;
+        this.communicationEvent = communicationEvent;
     }
 
     @Column(length = 100, nullable = true)

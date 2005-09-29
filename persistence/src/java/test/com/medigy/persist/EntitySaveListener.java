@@ -42,12 +42,13 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Session;
 import org.hibernate.event.PostInsertEvent;
-import org.hibernate.event.def.DefaultPostInsertEventListener;
+import org.hibernate.event.PostInsertEventListener;
 
+import javax.persistence.EntityManager;
 import java.io.Serializable;
 import java.util.Stack;
 
-public class EntitySaveListener  extends DefaultPostInsertEventListener
+public class EntitySaveListener  implements  PostInsertEventListener
 {
     private static final Log log = LogFactory.getLog(EntitySaveListener.class);
 
@@ -88,6 +89,20 @@ public class EntitySaveListener  extends DefaultPostInsertEventListener
                 session.delete(entity);
         }
     }
+
+    public void deleteEntityList(final EntityManager manager)
+    {
+        while (!entityList.empty())
+        {
+            final EntityInfo obj = (EntityInfo) entityList.pop();
+            if (log.isInfoEnabled())
+                log.info("Deleteing... " + obj.getEntityClass() + ". (id = " + obj.getId() + ")\n");
+            final Object entity = manager.find(obj.getEntityClass(), obj.getId());
+            if (entity != null)
+                manager.remove(entity);
+        }
+    }
+
 
     public class EntityInfo
     {

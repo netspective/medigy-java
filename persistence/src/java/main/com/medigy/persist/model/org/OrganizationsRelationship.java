@@ -84,7 +84,7 @@ public class OrganizationsRelationship extends AbstractDateDurationEntity
      * Used when the default types do not suffice
      * @return type description
      */
-    @Column(length = 128)
+    @Column(length = 128, name ="type_description")
     public String getTypeDescription()
     {
         return typeDescription;

@@ -3,6 +3,7 @@
  */
 package com.medigy.persist.model.insurance;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
@@ -19,6 +20,7 @@ public class InsuranceProductCoverage  extends CoverageRelationship
     private Coverage coverage;
 
     @Id(generate = GeneratorType.AUTO)
+    @Column(name = PK_COLUMN_NAME)
     public Long getInsuranceProductCoverageId()
     {
         return insuranceProductCoverageId;

@@ -42,6 +42,7 @@ import com.medigy.persist.model.common.AbstractDateDurationEntity;
 import com.medigy.persist.model.party.Party;
 import com.medigy.persist.reference.custom.health.HealthCareDeliveryRoleType;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
@@ -51,6 +52,8 @@ import javax.persistence.ManyToOne;
 @Entity
 public class HealthCareDeliveryRole extends AbstractDateDurationEntity
 {
+    public static final String PK_COLUMN_NAME = "delivery_role_id";
+
     private Long healthCareDeliveryRoleId;
     private HealthCareDelivery healthCareDelivery;
     private Party party;
@@ -61,6 +64,7 @@ public class HealthCareDeliveryRole extends AbstractDateDurationEntity
     }
 
     @Id(generate = GeneratorType.AUTO)
+    @Column(name = PK_COLUMN_NAME)
     public Long getHealthCareDeliveryRoleId()
     {
         return healthCareDeliveryRoleId;
@@ -84,7 +88,7 @@ public class HealthCareDeliveryRole extends AbstractDateDurationEntity
     }
 
     @ManyToOne
-    @JoinColumn(name = "party_id")
+    @JoinColumn(name = Party.PK_COLUMN_NAME)
     public Party getParty()
     {
         return party;

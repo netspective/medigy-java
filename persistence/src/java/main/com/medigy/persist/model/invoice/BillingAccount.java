@@ -45,7 +45,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.util.HashSet;
@@ -55,6 +54,7 @@ import java.util.Set;
 @Table(name = "Bill_Acct")
 public class BillingAccount extends AbstractDateDurationEntity
 {
+    public static final String PK_COLUMN_NAME = "bill_acct_id";
     private Long billingAccountId;
     private String description;
     private Set<Invoice> invoices = new HashSet<Invoice>();
@@ -65,7 +65,7 @@ public class BillingAccount extends AbstractDateDurationEntity
     private Set<BillingAccountRole> billingAccountRoles = new HashSet<BillingAccountRole>();
 
     @Id(generate = GeneratorType.AUTO)
-    @Column(name = "bill_acct_id")
+    @Column(name = PK_COLUMN_NAME)
     public Long getBillingAccountId()
     {
         return billingAccountId;
@@ -87,8 +87,7 @@ public class BillingAccount extends AbstractDateDurationEntity
         this.description = description;
     }
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "bill_acct_id")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "billingAccount")
     public Set<BillingAccountRole> getBillingAccountRoles()
     {
         return billingAccountRoles;
@@ -99,8 +98,7 @@ public class BillingAccount extends AbstractDateDurationEntity
         this.billingAccountRoles = billingAccountRoles;
     }
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "bill_acct_id")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "billingAccount")
     public Set<Invoice> getInvoices()
     {
         return invoices;

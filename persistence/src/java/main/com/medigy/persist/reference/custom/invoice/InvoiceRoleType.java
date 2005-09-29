@@ -42,6 +42,7 @@ import com.medigy.persist.reference.custom.AbstractCustomReferenceEntity;
 import com.medigy.persist.reference.custom.CachedCustomReferenceEntity;
 import com.medigy.persist.reference.custom.CustomReferenceEntity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
@@ -49,6 +50,8 @@ import javax.persistence.Id;
 @Entity
 public class InvoiceRoleType extends AbstractCustomReferenceEntity
 {
+    public static final String PK_COLUMN_NAME = "invoice_role_type_id";
+
     public enum Cache implements CachedCustomReferenceEntity
     {
         SERVICE_PARTY("SERVICER", "Organization where services where rendered"),
@@ -89,6 +92,7 @@ public class InvoiceRoleType extends AbstractCustomReferenceEntity
     }
 
     @Id(generate = GeneratorType.AUTO)
+    @Column(name = PK_COLUMN_NAME)
     public Long getInvoiceRoleTypeId()
     {
         return super.getSystemId();

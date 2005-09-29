@@ -42,6 +42,7 @@ import com.medigy.persist.model.common.AbstractTopLevelEntity;
 import com.medigy.persist.model.invoice.Invoice;
 import com.medigy.persist.model.invoice.InvoiceItem;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
@@ -51,12 +52,15 @@ import javax.persistence.ManyToOne;
 @Entity
 public class HealthCareDeliveryBilling extends AbstractTopLevelEntity
 {
+    public static final String PK_COLUMN_NAME = "billing_id";
+
     private Long billingId;
     private Invoice invoice;
     private InvoiceItem invoiceItem;
     private HealthCareDelivery healthCareDelivery;
 
     @Id(generate = GeneratorType.AUTO)
+    @Column(name = PK_COLUMN_NAME)
     public Long getBillingId()
     {
         return billingId;
@@ -80,7 +84,7 @@ public class HealthCareDeliveryBilling extends AbstractTopLevelEntity
     }
 
     @ManyToOne
-    @JoinColumn(name = "invoice_item_id")
+    @JoinColumn(name = InvoiceItem.PK_COLUMN_NAME)
     public InvoiceItem getInvoiceItem()
     {
         return invoiceItem;

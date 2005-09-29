@@ -41,6 +41,7 @@ package com.medigy.persist.model.party;
 import com.medigy.persist.model.common.AbstractDateDurationEntity;
 import com.medigy.persist.reference.custom.party.PartyClassificationType;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratorType;
 import javax.persistence.Id;
@@ -50,11 +51,14 @@ import javax.persistence.ManyToOne;
 @Entity
 public class PartyClassification extends AbstractDateDurationEntity
 {
+    public static final String PK_COLUMN_NAME = "party_classification_id";
+
     private Long partyClassificationId;
     private Party party;
     private PartyClassificationType type;
 
     @Id(generate = GeneratorType.AUTO)
+    @Column(name = PK_COLUMN_NAME)
     public Long getPartyClassificationId()
     {
         return partyClassificationId;
@@ -66,7 +70,7 @@ public class PartyClassification extends AbstractDateDurationEntity
     }
 
     @ManyToOne
-    @JoinColumn(name = "party_id")
+    @JoinColumn(name = Party.PK_COLUMN_NAME)
     public Party getParty()
     {
         return party;
@@ -78,7 +82,7 @@ public class PartyClassification extends AbstractDateDurationEntity
     }
 
     @ManyToOne
-    @JoinColumn(name = "party_classification_type_id")
+    @JoinColumn(name = PartyClassificationType.PK_COLUMN_NAME)
     public PartyClassificationType getType()
     {
         return type;

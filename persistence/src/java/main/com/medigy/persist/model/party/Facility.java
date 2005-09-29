@@ -105,6 +105,7 @@ public class Facility extends AbstractTopLevelEntity
         this.description = description;
     }
 
+    @Column(name = "square_footage")
     public Float getSquareFootage()
     {
         return squareFootage;

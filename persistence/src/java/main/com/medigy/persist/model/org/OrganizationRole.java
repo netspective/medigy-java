@@ -92,7 +92,7 @@ public class OrganizationRole extends PartyRole
         this.secondaryOrgRelationships = secondaryOrgRelationships;
     }
 
-    @Column(length = 128)
+    @Column(length = 128, name = "type_description")
     public String getTypeDescription()
     {
         return typeDescription;
