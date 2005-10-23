@@ -42,31 +42,69 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.orm.hibernate3.SessionFactoryUtils;
 
+import java.io.Serializable;
+
 /**
- * Abstract class that is "aware" of a hibernate session factory.
+ * Abstract class that is "aware" of either a hibernate session factory or a hibernate entity manager
  *
  */
 public abstract class AbstractService implements Service
 {
     private SessionFactory sessionFactory;
+    //private EntityManagerFactory entityManagerFactory;
 
-    public AbstractService(final SessionFactory sessionFactory)
+    private boolean isEntityManagerBased = false;
+
+    /*
+    protected AbstractService(final EntityManagerFactory entityManagerFactory)
+    {
+        this.entityManagerFactory = entityManagerFactory;
+        this.isEntityManagerBased = true;
+    }
+    */
+
+    protected AbstractService(final SessionFactory sessionFactory)
     {
         this.sessionFactory = sessionFactory;
+        this.isEntityManagerBased = false;
     }
 
-    public SessionFactory getSessionFactory()
+    public boolean isEntityManagerBased()
     {
-        return sessionFactory;
-    }
-
-    public void setSessionFactory(final SessionFactory sessionFactory)
-    {
-        this.sessionFactory = sessionFactory;
+        return isEntityManagerBased;
     }
 
     public Session getSession()
     {
         return SessionFactoryUtils.getSession(sessionFactory, false);
+    }
+
+    /*
+    public EntityManager getEntityManager()
+    {
+        return entityManagerFactory.getEntityManager();
+    }
+
+    public final void save(final Object entityObject)
+    {
+        if (isEntityManagerBased)
+            getEntityManager().persist(entityObject);
+        else
+            getSession().save(entityObject);
+    }
+    */
+    /**
+     * Encapsulates the retrieval of the entity object  from child classes based on how the
+     * class was instantiated.
+     * @param entityClass
+     * @param entityId
+     * @return the entity object
+     */
+    public final Object get(final Class entityClass, final Serializable entityId)
+    {
+        //if (isEntityManagerBased)
+        //    return getEntityManager().find(entityClass, entityId);
+        //else
+            return getSession().get(entityClass, entityId);
     }
 }
