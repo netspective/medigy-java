@@ -38,10 +38,12 @@ public class AddInsurancePlanServiceImpl extends AbstractService implements AddI
         super(sessionFactory);
     }
 
+    /*
     public AddInsurancePlanServiceImpl(final EntityManagerFactory entityManagerFactory)
     {
         super(entityManagerFactory);
     }
+    */
 
     public ContactMechanismFacade getContactMechanismFacade()
     {
