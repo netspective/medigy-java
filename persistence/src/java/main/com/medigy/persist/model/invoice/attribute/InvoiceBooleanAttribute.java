@@ -38,9 +38,9 @@
  */
 package com.medigy.persist.model.invoice.attribute;
 
-import org.hibernate.validator.NotNull;
+import com.medigy.persist.model.common.attribute.BooleanAttributeValue;
 
-import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
@@ -49,17 +49,16 @@ import javax.persistence.InheritanceType;
 @Inheritance(strategy = InheritanceType.JOINED)
 public class InvoiceBooleanAttribute extends InvoiceAttribute
 {
-    private Boolean value;
+    private BooleanAttributeValue booleanValue;
 
-    @Column(nullable = false)
-    @NotNull
-    public Boolean getValue()
+    @Embedded
+    public BooleanAttributeValue getBooleanValue()
     {
-        return value;
+        return booleanValue;
     }
 
-    public void setValue(final Boolean value)
+    public void setBooleanValue(final BooleanAttributeValue booleanValue)
     {
-        this.value = value;
+        this.booleanValue = booleanValue;
     }
 }

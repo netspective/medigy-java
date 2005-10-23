@@ -47,6 +47,9 @@ import javax.persistence.GeneratorType;
 import javax.persistence.Id;
 import javax.persistence.Transient;
 
+/**
+ * Base class for relating entities to a party
+ */
 @EmbeddableSuperclass
 public abstract class PartyRole extends AbstractEntity
 {

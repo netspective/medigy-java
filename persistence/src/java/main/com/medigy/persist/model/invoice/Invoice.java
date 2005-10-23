@@ -1,45 +1,11 @@
-/*
- * Copyright (c) 2000-2003 Netspective Communications LLC. All rights reserved.
- *
- * Netspective Communications LLC ("Netspective") permits redistribution, modification and use of this file in source
- * and binary form ("The Software") under the Netspective Source License ("NSL" or "The License"). The following
- * conditions are provided as a summary of the NSL but the NSL remains the canonical license and must be accepted
- * before using The Software. Any use of The Software indicates agreement with the NSL.
- *
- * 1. Each copy or derived work of The Software must preserve the copyright notice and this notice unmodified.
- *
- * 2. Redistribution of The Software is allowed in object code form only (as Java .class files or a .jar file
- *    containing the .class files) and only as part of an application that uses The Software as part of its primary
- *    functionality. No distribution of the package is allowed as part of a software development kit, other library,
- *    or development tool without written consent of Netspective. Any modified form of The Software is bound by these
- *    same restrictions.
- *
- * 3. Redistributions of The Software in any form must include an unmodified copy of The License, normally in a plain
- *    ASCII text file unless otherwise agreed to, in writing, by Netspective.
- *
- * 4. The names "Netspective", "Axiom", "Commons", "Junxion", and "Sparx" are trademarks of Netspective and may not be
- *    used to endorse products derived from The Software without without written consent of Netspective. "Netspective",
- *    "Axiom", "Commons", "Junxion", and "Sparx" may not appear in the names of products derived from The Software
- *    without written consent of Netspective.
- *
- * 5. Please attribute functionality where possible. We suggest using the "powered by Netspective" button or creating
- *    a "powered by Netspective(tm)" link to http://www.netspective.com for each application using The Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS" WITHOUT A WARRANTY OF ANY KIND. ALL EXPRESS OR IMPLIED REPRESENTATIONS AND
- * WARRANTIES, INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT,
- * ARE HEREBY DISCLAIMED.
- *
- * NETSPECTIVE AND ITS LICENSORS SHALL NOT BE LIABLE FOR ANY DAMAGES SUFFERED BY LICENSEE OR ANY THIRD PARTY AS A
- * RESULT OF USING OR DISTRIBUTING THE SOFTWARE. IN NO EVENT WILL NETSPECTIVE OR ITS LICENSORS BE LIABLE FOR ANY LOST
- * REVENUE, PROFIT OR DATA, OR FOR DIRECT, INDIRECT, SPECIAL, CONSEQUENTIAL, INCIDENTAL OR PUNITIVE DAMAGES, HOWEVER
- * CAUSED AND REGARDLESS OF THE THEORY OF LIABILITY, ARISING OUT OF THE USE OF OR INABILITY TO USE THE SOFTWARE, EVEN
- * IF HE HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
- *
- */
 package com.medigy.persist.model.invoice;
 
 import com.medigy.persist.model.claim.Claim;
 import com.medigy.persist.model.common.AbstractTopLevelEntity;
+import com.medigy.persist.model.common.attribute.BooleanAttributeValue;
+import com.medigy.persist.model.common.attribute.DateAttributeValue;
+import com.medigy.persist.model.common.attribute.LongAttributeValue;
+import com.medigy.persist.model.common.attribute.StringAttributeValue;
 import com.medigy.persist.model.health.HealthCareEncounter;
 import com.medigy.persist.model.invoice.attribute.InvoiceAttribute;
 import com.medigy.persist.model.invoice.attribute.InvoiceBooleanAttribute;
@@ -72,6 +38,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Main entity for representing a healthcare Invoice. Usually an Invoice is issued for a health care encounter or visit.
+ *
+ */
 @Entity
 public class Invoice  extends AbstractTopLevelEntity
 {
@@ -98,7 +68,7 @@ public class Invoice  extends AbstractTopLevelEntity
     private Set<InvoiceRole> invoiceRoles = new HashSet<InvoiceRole>();
     private List<InvoiceStatus> invoiceStatuses = new ArrayList<InvoiceStatus>();
     private Set<InvoiceTerm> invoiceTerms = new HashSet<InvoiceTerm>();
-    private Set<InvoiceAttribute> attributes = new HashSet<InvoiceAttribute>();
+    private List<InvoiceAttribute> attributes = new ArrayList<InvoiceAttribute>();
 
     private Set<Invoice> childInvoices = new HashSet<Invoice>();
     private List<Claim> claims = new ArrayList<Claim>();
@@ -128,8 +98,8 @@ public class Invoice  extends AbstractTopLevelEntity
     }
 
     /**
-     * Total cose minus the total asjustment
-     * @return
+     * Gets the total cost minus the total adjustment
+     * @return the balance for the invoice
      */
     public Float getBalance()
     {
@@ -141,6 +111,10 @@ public class Invoice  extends AbstractTopLevelEntity
         this.balance = balance;
     }
 
+    /**
+     * Gets the parent invoice associated with this invoice.
+     * @return Null if there is no parent invoice
+     */
     @ManyToOne
     @JoinColumn(name = "parent_invoice_id", referencedColumnName = PK_COLUMN_NAME)
     public Invoice getParentInvoice()
@@ -153,6 +127,10 @@ public class Invoice  extends AbstractTopLevelEntity
         this.parentInvoice = parentInvoice;
     }
 
+    /**
+     * Gets a list of child invoices
+     * @return Child invoices
+     */
     @OneToMany(mappedBy = "parentInvoice", cascade = CascadeType.ALL)
     public Set<Invoice> getChildInvoices()
     {
@@ -166,7 +144,7 @@ public class Invoice  extends AbstractTopLevelEntity
 
     /**
      * Gets the date the invoice was submitted
-     * @return
+     * @return submit date
      */
     @Basic(temporalType = TemporalType.DATE)
     @Column(name = "submit_date")
@@ -182,7 +160,7 @@ public class Invoice  extends AbstractTopLevelEntity
 
     /**
      * Gets the invoice number specific to the organization that created it.
-     * @return
+     * @return  invoice number
      */
     @Column(length = 32, name = "invoice_number")
     public String getInvoiceNumber()
@@ -211,6 +189,10 @@ public class Invoice  extends AbstractTopLevelEntity
         this.invoiceDate = invoiceDate;
     }
 
+    /**
+     * Gets the description associated with the invoice.
+     * @return the description text
+     */
     @Column(length = 256)
     public String getDescription()
     {
@@ -222,6 +204,10 @@ public class Invoice  extends AbstractTopLevelEntity
         this.description = description;
     }
 
+    /**
+     * Gets the message associated with the invoice
+     * @return the message text
+     */
     @Column(length = 512)
     public String getMessage()
     {
@@ -233,6 +219,10 @@ public class Invoice  extends AbstractTopLevelEntity
         this.message = message;
     }
 
+    /**
+     * Gets the list of invoice items associated with the invoice
+     * @return list of invoice items
+     */
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "invoice")
     @OrderBy("invoiceItemId")
     public List<InvoiceItem> getInvoiceItems()
@@ -245,12 +235,22 @@ public class Invoice  extends AbstractTopLevelEntity
         this.invoiceItems = invoiceItems;
     }
 
+    /**
+     * Gets an invoice item by the index
+     * @param index
+     * @return an invoice item
+     */
     @Transient
     public InvoiceItem getInvoiceItem(final int index)
     {
         return getInvoiceItems().get(index);
     }
 
+    /**
+     * Gets the roles associated with the invoice. Each role represents a relationship between the invoice and
+     * a party. This one-to-many relationship allows for a flexible association between invoice and parties.
+     * @return list of invoice roles
+     */
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "invoice")
     public Set<InvoiceRole> getInvoiceRoles()
     {
@@ -262,6 +262,10 @@ public class Invoice  extends AbstractTopLevelEntity
         this.invoiceRoles = invoiceRoles;
     }
 
+    /**
+     * Adds a new invoice role to the invoice
+     * @param role
+     */
     @Transient
     public void addInvoiceRole(final InvoiceRole role)
     {
@@ -269,6 +273,11 @@ public class Invoice  extends AbstractTopLevelEntity
         invoiceRoles.add(role);
     }
 
+    /**
+     * Adds a new invoice role to the invoice
+     * @param party
+     * @param type
+     */
     @Transient
     public void addInvoiceRole(final Party party, final InvoiceRoleType type)
     {
@@ -290,7 +299,8 @@ public class Invoice  extends AbstractTopLevelEntity
     }
 
     /**
-     * Gets the organization which is tracking the billing
+     * Gets the organization which is tracking the billing. This is a convience method that searches
+     * the invoice roles for a type: {@link InvoiceRoleType.Cache.BILLING_PARTY}
      * @return
      */
     @Transient
@@ -306,8 +316,9 @@ public class Invoice  extends AbstractTopLevelEntity
     }
 
     /**
-     * Gets the organization where the payment should be sent
-     * @return
+     * Gets the organization where the payment should be sent. This is a convience method that searches the
+     * invoice roles for a role with type {@link InvoiceRoleType.Cache.RECEIVING_PARTY}
+     * @return  the pay-to organization party
      */
     @Transient
     public Party getPayToOrganization()
@@ -322,8 +333,9 @@ public class Invoice  extends AbstractTopLevelEntity
     }
 
     /**
-     * Gets the organization who performed services
-     * @return
+     * Gets the organization who performed services. This is a convience method that searches the
+     * invoice roles for a role with type {@link InvoiceRoleType.Cache.SERVICE_PARTY}
+     * @return the service organization
      */
     @Transient
     public Party getServiceOrganization()
@@ -337,6 +349,10 @@ public class Invoice  extends AbstractTopLevelEntity
         addInvoiceRole(org, InvoiceRoleType.Cache.SERVICE_PARTY.getEntity());
     }
 
+    /**
+     * Gets all the invoice statuses associated with the invoice. The statuses are sorted by date in descending order.
+     * @return  list of invoice statuses
+     */
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "invoice")
     @OrderBy("invoiceStatusDate desc")
     public List<InvoiceStatus> getInvoiceStatuses()
@@ -371,6 +387,12 @@ public class Invoice  extends AbstractTopLevelEntity
         invoiceStatuses.add(status);
     }
 
+    /**
+     * Gets the current invoice status
+     *
+     * @return invoice status
+     * @see com.medigy.persist.model.invoice.Invoice#getInvoiceStatuses()
+     */
     @Transient
     public InvoiceStatus getCurrentInvoiceStatus()
     {
@@ -380,6 +402,10 @@ public class Invoice  extends AbstractTopLevelEntity
         return invoiceStatuses.get(0);
     }
 
+    /**
+     * Gets a list of terms associated with the invoice.
+     * @return list of terms
+     */
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "invoice")
     public Set<InvoiceTerm> getInvoiceTerms()
     {
@@ -391,8 +417,12 @@ public class Invoice  extends AbstractTopLevelEntity
         this.invoiceTerms = invoiceTerms;
     }
 
+    /**
+     * Gets the billing account associated with the invoice
+     * @return
+     */
     @ManyToOne
-    @JoinColumn(name = "bill_acct_id")
+    @JoinColumn(name = BillingAccount.PK_COLUMN_NAME)
     public BillingAccount getBillingAccount()
     {
         return billingAccount;
@@ -403,6 +433,10 @@ public class Invoice  extends AbstractTopLevelEntity
         this.billingAccount = billingAccount;
     }
 
+    /**
+     * Gets the health care encounter (visit) associated with this invoice
+     * @return the health care encounter
+     */
     @OneToOne
     @JoinColumn(name = HealthCareEncounter.PK_COLUMN_NAME)
     public HealthCareEncounter getVisit()
@@ -423,6 +457,10 @@ public class Invoice  extends AbstractTopLevelEntity
         totalCost = new Float(totalCost  + item.getAmount());
     }
 
+    /**
+     * Gets the type of invoice.
+     * @return the invoice type
+     */
     @ManyToOne
     @JoinColumn(name = InvoiceType.PK_COLUMN_NAME)
     public InvoiceType getType()
@@ -435,6 +473,10 @@ public class Invoice  extends AbstractTopLevelEntity
         this.type = type;
     }
 
+    /**
+     * Gets the total cost
+     * @return the total cost
+     */
     public Float getTotalCost()
     {
         return totalCost;
@@ -447,6 +489,10 @@ public class Invoice  extends AbstractTopLevelEntity
         this.balance = new Float(totalCost - totalAdjustments);
     }
 
+    /**
+     * Gets the total adjustments
+     * @return the total adjustment
+     */
     public Float getTotalAdjustments()
     {
         return totalAdjustments;
@@ -458,13 +504,17 @@ public class Invoice  extends AbstractTopLevelEntity
         this.balance = new Float(totalCost - totalAdjustments);
     }
 
+    /**
+     * Gets the list of attributes defined for this invoice.
+     * @return  list of attributes
+     */
     @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL)
-    public Set<InvoiceAttribute> getAttributes()
+    public List<InvoiceAttribute> getAttributes()
     {
         return attributes;
     }
 
-    public void setAttributes(final Set<InvoiceAttribute> attributes)
+    public void setAttributes(final List<InvoiceAttribute> attributes)
     {
         this.attributes = attributes;
     }
@@ -473,7 +523,7 @@ public class Invoice  extends AbstractTopLevelEntity
     public void addInvoiceAttribute(final String label, final Long id)
     {
         final InvoiceLongAttribute attr = new InvoiceLongAttribute();
-        attr.setValue(id);
+        attr.setLongValue(new LongAttributeValue(id));
         attr.setInvoice(this);
         attr.setLabel(label);
         this.attributes.add(attr);
@@ -483,7 +533,7 @@ public class Invoice  extends AbstractTopLevelEntity
     public void addInvoiceAttribute(final String label, final Date date)
     {
         final InvoiceDateAttribute attr = new InvoiceDateAttribute();
-        attr.setValue(date);
+        attr.setDateValue(new DateAttributeValue(date));
         attr.setInvoice(this);
         attr.setLabel(label);
         this.attributes.add(attr);
@@ -493,7 +543,7 @@ public class Invoice  extends AbstractTopLevelEntity
     public void addInvoiceAttribute(final String label, final String value)
     {
         final InvoiceStringAttribute attr = new InvoiceStringAttribute();
-        attr.setValue(value);
+        attr.setStringValue(new StringAttributeValue(value));
         attr.setInvoice(this);
         attr.setLabel(label);
         this.attributes.add(attr);
@@ -503,12 +553,16 @@ public class Invoice  extends AbstractTopLevelEntity
     public void addInvoiceAttribute(final String label, final boolean value)
     {
         final InvoiceBooleanAttribute attr = new InvoiceBooleanAttribute();
-        attr.setValue(value);
+        attr.setBooleanValue(new BooleanAttributeValue(value));
         attr.setInvoice(this);
         attr.setLabel(label);
         this.attributes.add(attr);
     }
 
+    /**
+     * Gets the currency type associated with this invoice
+     * @return   the currency type
+     */
     @ManyToOne
     @JoinColumn(name = "currency_type_id", referencedColumnName = CurrencyType.PK_COLUMN_NAME)
     public CurrencyType getCurrencyType()

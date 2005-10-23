@@ -46,6 +46,9 @@ import com.medigy.persist.reference.ReferenceEntity;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+/**
+ * Reference entity describing the relationship between a party and a facility
+ */
 @Entity
 @Table(name = "Party_Fac_Role_Type")        
 public class PartyFacilityRoleType extends AbstractReferenceEntity

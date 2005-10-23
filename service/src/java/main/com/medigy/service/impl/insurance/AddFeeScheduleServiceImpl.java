@@ -59,7 +59,7 @@ public class AddFeeScheduleServiceImpl implements AddFeeScheduleService
         feeSchedule.setName(parameters.getFeeScheduleName());
         feeSchedule.setDescription(parameters.getDescription());
         feeSchedule.setCaption(parameters.getFeeScheduleCaption());
-        feeSchedule.setRvrbsMultiplier(parameters.getRvrbsMultiplier());
+        feeSchedule.setRbrvsMultiplier(parameters.getRvrbsMultiplier());
         if (parameters.getSiteId() != null)
         {
             final Facility facility = (Facility) HibernateUtil.getSession().load(Facility.class, parameters.getSiteId());

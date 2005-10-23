@@ -55,6 +55,9 @@ import javax.persistence.Transient;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Class for describing fees for various medical services
+ */
 @Entity
 public class FeeSchedule extends AbstractDateDurationEntity
 {
@@ -65,7 +68,7 @@ public class FeeSchedule extends AbstractDateDurationEntity
     private String description;
     private String caption;
     private Long sequenceNumber;
-    private Float rvrbsMultiplier;
+    private Float rbrvsMultiplier;
 
     private Person person;
     private Facility facility;
@@ -85,6 +88,10 @@ public class FeeSchedule extends AbstractDateDurationEntity
         this.feeScheduleId = feeScheduleId;
     }
 
+    /**
+     * Gets the name of fee schedule
+     * @return
+     */
     @Column(length = 64, nullable = false)
     public String getName()
     {
@@ -96,6 +103,10 @@ public class FeeSchedule extends AbstractDateDurationEntity
         this.name = name;
     }
 
+    /**
+     * Gets the description
+     * @return
+     */
     @Column(length = 128)
     public String getDescription()
     {
@@ -129,15 +140,19 @@ public class FeeSchedule extends AbstractDateDurationEntity
         this.sequenceNumber = sequenceNumber;
     }
 
+    /**
+     * gets the resource-based relative value scale (RBRVS) multiplier
+     * @return
+     */
     @Column(name = "rvrbs_multiplier")
-    public Float getRvrbsMultiplier()
+    public Float getRbrvsMultiplier()
     {
-        return rvrbsMultiplier;
+        return rbrvsMultiplier;
     }
 
-    public void setRvrbsMultiplier(final Float rvrbsMultiplier)
+    public void setRbrvsMultiplier(final Float rbrvsMultiplier)
     {
-        this.rvrbsMultiplier = rvrbsMultiplier;
+        this.rbrvsMultiplier = rbrvsMultiplier;
     }
 
     /**
@@ -156,6 +171,10 @@ public class FeeSchedule extends AbstractDateDurationEntity
         this.person = person;
     }
 
+    /**
+     * gets the facility associated with the fee schedule
+     * @return
+     */
     @ManyToOne
     @JoinColumn(name = Facility.PK_COLUMN_NAME)
     public Facility getFacility()
@@ -186,6 +205,10 @@ public class FeeSchedule extends AbstractDateDurationEntity
         this.feeScheduleItems.add(item);
     }
 
+    /**
+     * Gets the associated encounter/visit type
+     * @return
+     */
     @OneToMany(mappedBy = "feeSchedule", cascade = CascadeType.ALL)
     public Set<VisitType> getVisitTypes()
     {

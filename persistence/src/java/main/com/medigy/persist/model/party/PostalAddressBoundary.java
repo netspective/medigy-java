@@ -69,6 +69,10 @@ public class PostalAddressBoundary extends AbstractTopLevelEntity
         this.postalAddressBoundaryId = postalAddressBoundaryId;
     }
 
+    /**
+     * Gets the associated postal address
+     * @return
+     */
     @ManyToOne
     @JoinColumn(name = PostalAddress.PK_COLUMN_NAME)
     public PostalAddress getPostalAddress()

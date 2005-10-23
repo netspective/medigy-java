@@ -30,6 +30,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Main entity class to represent a party such as a person or an organization. This class is useful for relating
+ * other entities that might have relationships to either a person or an organization.
+ *
+ * @see com.medigy.persist.model.person.Person
+ * @see com.medigy.persist.model.org.Organization
+ */
 @Entity()
 @Inheritance(strategy=InheritanceType.JOINED)
 @Table(name = "Party")
@@ -66,7 +73,7 @@ public class Party extends AbstractTopLevelEntity
     private Set<PartyQualification> partyQualifications = new HashSet<PartyQualification>();
 
     protected List<PartyContactMechanism> partyContactMechanisms = new ArrayList<PartyContactMechanism>();
-    private Set<PartyFacilityRole> partyFacilityRoles = new HashSet<PartyFacilityRole>();
+    private Set<PartyFacility> partyFacilities = new HashSet<PartyFacility>();
     private Set<CommunicationEventRole> communicationEventRoles = new HashSet<CommunicationEventRole>();
     private Set<BillingAccountRole> billingAccountRoles = new HashSet<BillingAccountRole>();
     private Set<InvoiceRole> invoiceRoles = new HashSet<InvoiceRole>();
@@ -102,6 +109,10 @@ public class Party extends AbstractTopLevelEntity
         this.partyId = partyId;
     }
 
+    /**
+     * Gets the name for the party
+     * @return party name
+     */
     @Column(length = 100, nullable = false, name = "party_name")
     public String getPartyName()
     {
@@ -113,6 +124,10 @@ public class Party extends AbstractTopLevelEntity
         this.partyName = partyName;
     }
 
+    /**
+     * Gets the party type
+     * @return party type
+     */
     @ManyToOne
     @JoinColumn(name= "party_type_id", referencedColumnName = PartyType.PK_COLUMN_NAME)
     public PartyType getPartyType()
@@ -125,6 +140,10 @@ public class Party extends AbstractTopLevelEntity
         this.partyType = partyType;
     }
 
+    /**
+     * Checks to see if this party is actually a person
+     * @return True if the party is a person
+     */
     @Transient
     public boolean isPerson()
     {
@@ -162,6 +181,10 @@ public class Party extends AbstractTopLevelEntity
         return null;
     }
 
+    /**
+     * Gets all the party contact mechanisms for this party such as phone numbers, emails, and addresses.
+     * @return list of contact mechanisms
+     */
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "party")
     public List<PartyContactMechanism> getPartyContactMechanisms()
     {
@@ -198,27 +221,40 @@ public class Party extends AbstractTopLevelEntity
         return phoneList;
     }
 
+    /**
+     * Add a new contact mechanism for the party
+     * @param cm    the contact mechanism
+     * @param type  purpose of the contact mechanism
+     */
     @Transient
-    public void addPartyContactMechanism(final ContactMechanism number, final ContactMechanismPurposeType type)
+    public void addPartyContactMechanism(final ContactMechanism cm, final ContactMechanismPurposeType type)
     {
         final PartyContactMechanism pcm = new PartyContactMechanism();
-        pcm.setContactMechanism(number);
+        pcm.setContactMechanism(cm);
         pcm.setParty(this);
         pcm.addPurpose(type);
         partyContactMechanisms.add(pcm);
     }
 
+    /**
+     * Gets the facility relationships for this party
+     * @return party and facility relationships
+     */
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "party")
-    public Set<PartyFacilityRole> getPartyFacilityRoles()
+    public Set<PartyFacility> getPartyFacilities()
     {
-        return partyFacilityRoles;
+        return partyFacilities;
     }
 
-    public void setPartyFacilityRoles(final Set<PartyFacilityRole> partyFacilityRoles)
+    public void setPartyFacilities(final Set<PartyFacility> partyFacilities)
     {
-        this.partyFacilityRoles = partyFacilityRoles;
+        this.partyFacilities = partyFacilities;
     }
 
+    /**
+     * Gets all the party identifier types defined specifically for this party
+     * @return custom party identifier type
+     */
     @OneToMany(cascade =  CascadeType.ALL, mappedBy = "party")
     public Set<PartyIdentifierType> getPartyIdentifierTypes()
     {
@@ -230,6 +266,10 @@ public class Party extends AbstractTopLevelEntity
         this.partyIdentifierTypes = partyIdentifierTypes;
     }
 
+    /**
+     * Gets all the facility types specifically defined for this party
+     * @return  custom facility types
+     */
     @OneToMany(cascade =  CascadeType.ALL, mappedBy = "party")
     public Set<FacilityType> getFacilityTypes()
     {
@@ -241,6 +281,10 @@ public class Party extends AbstractTopLevelEntity
         this.facilityTypes = facilityTypes;
     }
 
+    /**
+     * Gets all the custom communication event purpose types defined for this party
+     * @return custom communication event purpose types
+     */
     @OneToMany(cascade =  CascadeType.ALL, mappedBy = "party")
     public Set<CommunicationEventPurposeType> getCommunicationEventPurposeTypes()
     {
@@ -252,6 +296,10 @@ public class Party extends AbstractTopLevelEntity
         this.communicationEventPurposeTypes = communicationEventPurposeTypes;
     }
 
+    /**
+     * Gets all the custom communication event role types defined for this party
+     * @return
+     */
     @OneToMany(cascade =  CascadeType.ALL, mappedBy = "party")
     public Set<CommunicationEventRoleType> getCommunicationEventRoleTypes()
     {
@@ -263,6 +311,10 @@ public class Party extends AbstractTopLevelEntity
         this.communicationEventRoleTypes = communicationEventRoleTypes;
     }
 
+    /**
+     *
+     * @return
+     */
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "party")
     public Set<CommunicationEventRole> getCommunicationEventRoles()
     {
@@ -274,6 +326,10 @@ public class Party extends AbstractTopLevelEntity
         this.communicationEventRoles = communicationEventRoles;
     }
 
+    /**
+     * Gets all the billing account relationships that the party is ivolved with
+     * @return
+     */
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "party")
     public Set<BillingAccountRole> getBillingAccountRoles()
     {
@@ -285,6 +341,10 @@ public class Party extends AbstractTopLevelEntity
         this.billingAccountRoles = billingAccountRoles;
     }
 
+    /**
+     * Gets all the invoice relationships that the party is involved with
+     * @return
+     */
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "party")
     public Set<InvoiceRole> getInvoiceRoles()
     {
@@ -296,6 +356,7 @@ public class Party extends AbstractTopLevelEntity
         this.invoiceRoles = invoiceRoles;
     }
 
+    // TODO: Need to see if this needs to b a PersonQualification
     @OneToMany(mappedBy = "party")
     public Set<PartyQualification> getPartyQualifications()
     {

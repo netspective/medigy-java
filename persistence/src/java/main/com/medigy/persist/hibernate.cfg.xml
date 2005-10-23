@@ -13,6 +13,14 @@
         <mapping class="com.medigy.persist.model.party.TestPersonRoleType"/>
         <mapping class="com.medigy.persist.model.party.TestPersonRole"/>
         <mapping class="com.medigy.persist.model.party.TestPersonOrgRelationship"/-->
+
+        <!--mapping class="com.medigy.persist.model.common.attribute.BooleanAttributeValue"/>
+        <mapping class="com.medigy.persist.model.common.attribute.DateAttributeValue"/>
+        <mapping class="com.medigy.persist.model.common.attribute.DateTimeAttributeValue"/>
+        <mapping class="com.medigy.persist.model.common.attribute.DoubleAttributeValue"/>
+        <mapping class="com.medigy.persist.model.common.attribute.LongAttributeValue"/>
+        <mapping class="com.medigy.persist.model.common.attribute.StringAttributeValue"/-->
+
         <mapping class="com.medigy.persist.reference.AbstractReferenceEntity"/>
         <mapping class="com.medigy.persist.reference.type.RecordStatusType"/>
 
@@ -24,8 +32,6 @@
         <mapping class="com.medigy.persist.reference.ModelVersion"/>
         <mapping class="com.medigy.persist.model.health.form.Form"/>
 
-
-        <!--mapping package="com.medigy.persist.reference.type"/-->
         <mapping class="com.medigy.persist.reference.type.ContactMechanismType"/>
         <mapping class="com.medigy.persist.reference.type.DataEncryptionType"/>
         <mapping class="com.medigy.persist.reference.type.GenderType"/>
@@ -42,7 +48,7 @@
         <mapping class="com.medigy.persist.reference.type.clincial.Icd9"/>
         <mapping class="com.medigy.persist.reference.type.clincial.Icd10"/>
 
-        <!--mapping package="com.medigy.persist.reference.type.party"/-->
+        <mapping class="com.medigy.persist.reference.custom.attribute.AttributeType"/>
         <mapping class="com.medigy.persist.reference.type.party.PartyFacilityRoleType"/>
         <mapping class="com.medigy.persist.reference.type.party.PartyType"/>
 
@@ -161,7 +167,7 @@
         <mapping class="com.medigy.persist.model.party.PartyClassification"/>
         <mapping class="com.medigy.persist.model.party.PartyContactMechanism"/>
         <mapping class="com.medigy.persist.model.party.PartyContactMechanismPurpose"/>
-        <mapping class="com.medigy.persist.model.party.PartyFacilityRole"/>        
+        <mapping class="com.medigy.persist.model.party.PartyFacility"/>
         <mapping class="com.medigy.persist.model.party.PartyQualification"/>
         <!--mapping class="com.medigy.persist.model.party.PartyRelationshipStatus"/-->
         <mapping class="com.medigy.persist.model.party.PartyRole"/>

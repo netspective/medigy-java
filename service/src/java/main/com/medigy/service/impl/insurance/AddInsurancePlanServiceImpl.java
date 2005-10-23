@@ -5,12 +5,15 @@ package com.medigy.service.impl.insurance;
 
 import com.medigy.persist.model.insurance.InsurancePlan;
 import com.medigy.persist.model.insurance.InsurancePlanContactMechanism;
+import com.medigy.persist.model.insurance.InsurancePlanAttribute;
 import com.medigy.persist.model.org.Organization;
 import com.medigy.persist.model.party.PostalAddress;
 import com.medigy.persist.model.party.PhoneNumber;
 import com.medigy.persist.util.HibernateUtil;
 import com.medigy.persist.reference.custom.party.ContactMechanismPurposeType;
+import com.medigy.persist.reference.custom.insurance.InsurancePlanAttributeType;
 import com.medigy.service.ServiceVersion;
+import com.medigy.service.AbstractService;
 import com.medigy.service.contact.ContactMechanismFacade;
 import com.medigy.service.dto.ServiceParameters;
 import com.medigy.service.dto.ServiceReturnValues;
@@ -22,9 +25,23 @@ import com.medigy.service.insurance.AddInsurancePlanService;
 
 import java.io.Serializable;
 
-public class AddInsurancePlanServiceImpl implements AddInsurancePlanService
+import org.hibernate.SessionFactory;
+
+import javax.persistence.EntityManagerFactory;
+
+public class AddInsurancePlanServiceImpl extends AbstractService implements AddInsurancePlanService
 {
     private ContactMechanismFacade contactMechanismFacade;
+
+    public AddInsurancePlanServiceImpl(final SessionFactory sessionFactory)
+    {
+        super(sessionFactory);
+    }
+
+    public AddInsurancePlanServiceImpl(final EntityManagerFactory entityManagerFactory)
+    {
+        super(entityManagerFactory);
+    }
 
     public ContactMechanismFacade getContactMechanismFacade()
     {
@@ -38,7 +55,7 @@ public class AddInsurancePlanServiceImpl implements AddInsurancePlanService
 
     public NewInsurancePlanValues add(AddInsurancePlanParameters parameters)
     {
-        final Organization insuranceCarrier = (Organization) HibernateUtil.getSession().load(Organization.class, parameters.getInsuranceCarrierId());
+        final Organization insuranceCarrier = (Organization) get(Organization.class, parameters.getInsuranceCarrierId());
         if (insuranceCarrier == null)
             return (NewInsurancePlanValues) createErrorResponse(parameters, "Unknown insurance carrier");
 
@@ -73,7 +90,7 @@ public class AddInsurancePlanServiceImpl implements AddInsurancePlanService
         final PhoneParameters faxParams = parameters.getFax();
         if (phoneParams != null)
         {
-            final PhoneNumber fax = contactMechanismFacade.addPhone(faxParams.getCountryCode(), faxParams.getCityCode(), 
+            final PhoneNumber fax = contactMechanismFacade.addPhone(faxParams.getCountryCode(), faxParams.getCityCode(),
                     faxParams.getAreaCode(), faxParams.getNumber(),
                 faxParams.getExtension());
             InsurancePlanContactMechanism ipcm = new InsurancePlanContactMechanism();
@@ -83,6 +100,8 @@ public class AddInsurancePlanServiceImpl implements AddInsurancePlanService
         }
 
         // handle the CHAMPUS attributes
+        final InsurancePlanAttribute attr = new InsurancePlanAttribute();
+        attr.setType(InsurancePlanAttributeType.Cache.BCBS_PLAN_CODE.getEntity());
         
         return null;
     }
