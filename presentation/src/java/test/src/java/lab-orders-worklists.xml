@@ -9,7 +9,7 @@
     <qa:hu-session application="pbs" beginSession="true">
         <qa:hu-page-validation functionId="Successful arrival at Medigy's demo home page" title="Welcome to Medigy" textPresent="Welcome to Medigy"/>
         
-        <qa:hu-click-link functionId="Click on the 'Lab Orders Worklist' link" link="Lab Orders Worklist"/>
+        <qa:hu-click-link functionId="Click on the 'Lab Orders' worklist link" link="Lab Orders"/>
         <qa:hu-page-validation functionId="Validate that we made it to the Lab Orders Worklist page" title="Lab Orders Worklist" textPresent="Lab Orders Worklist"/>
 
     </qa:hu-session>

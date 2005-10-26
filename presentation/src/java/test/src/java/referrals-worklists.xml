@@ -9,7 +9,7 @@
     <qa:hu-session application="pbs" beginSession="true">
         <qa:hu-page-validation functionId="Successful arrival at Medigy's demo home page" title="Welcome to Medigy" textPresent="Welcome to Medigy"/>
 
-        <qa:hu-click-link functionId="Click on the 'Referral Followups Worklist' link" link="Referral Followups Worklist"/>
+        <qa:hu-click-link functionId="Click on the 'Referral Followups' worklist link" link="Referral Followups"/>
         <qa:hu-page-validation functionId="Validate that we made it to the Referrals Worklist page" title="Referrals Worklist" textPresent="Referrals Worklist"/>
         <qa:hu-click-link functionId="Click on the 'Patient' link" link="Shah, Shahid N."/>
         <qa:hu-page-validation functionId="Validate that we made it to the Add Patient page" title="Add Patient" textPresent="Add Patient"/>
