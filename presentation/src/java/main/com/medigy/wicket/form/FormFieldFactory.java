@@ -93,6 +93,7 @@ public class FormFieldFactory
         addFieldCreator(ValidEntity.class, new ReferenceEntityFieldCreator());
         addFieldCreator(String.class, new TextFieldCreator());
         addFieldCreator(Float.class, new FloatFieldCreator());
+        addFieldCreator(Boolean.class, new BooleanFieldCreator());
         addFieldCreator(Date.class, new DateFieldCreator());
         addFieldCreator(SocialSecurityFieldCreator.class, new SocialSecurityFieldCreator());
         addFieldCreator(PhoneFieldCreator.class, new PhoneFieldCreator());
@@ -105,6 +106,7 @@ public class FormFieldFactory
         addFieldCreator(CreditCardFieldCreator.class, new CreditCardFieldCreator());
         addFieldCreator(CurrencyFieldCreator.class, new CurrencyFieldCreator());
         addFieldCreator(DateTimeFieldCreator.class, new DateTimeFieldCreator());
+        addFieldCreator(TextAreaFieldCreator.class, new TextAreaFieldCreator());
     }
 
     public void addFieldCreator(final Class dataType, final FieldCreator creator)
@@ -339,6 +341,21 @@ public class FormFieldFactory
         public FormComponent createField(final BaseForm form, final String controlId, final ReflectedFormFieldDefn reflectedFormFieldDefn)
         {
             final TextField result = new TextField(controlId);
+            reflectedFormFieldDefn.initializeField(form, reflectedFormFieldDefn, result);
+            return result;
+        }
+
+        public String getJavaScriptFieldTypeId(FormJavaScriptGenerator generator)
+        {
+            return "text";
+        }
+    }
+
+    public class TextAreaFieldCreator implements FieldCreator, FormJavaScriptGenerator.FieldTypeNameContributor
+    {
+        public FormComponent createField(final BaseForm form, final String controlId, final ReflectedFormFieldDefn reflectedFormFieldDefn)
+        {
+            final TextArea result = new TextArea(controlId);
             reflectedFormFieldDefn.initializeField(form, reflectedFormFieldDefn, result);
             return result;
         }
