@@ -46,6 +46,9 @@ package com.medigy.wicket.form;
 import com.medigy.presentation.model.ChoicesFactory;
 import com.medigy.presentation.model.IChoiceList;
 import com.medigy.service.validator.ValidEntity;
+import com.medigy.wicket.form.field.type.CreditCardField;
+import com.medigy.wicket.form.field.type.DateTimeField;
+import com.medigy.wicket.form.validation.DateValidator;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import wicket.markup.html.form.DropDownChoice;
@@ -99,6 +102,9 @@ public class FormFieldFactory
         addFieldCreator(PasswordFieldCreator.class, new PasswordFieldCreator());
         addFieldCreator(FileUploadFieldCreator.class, new FileUploadFieldCreator());
         addFieldCreator(Integer.class, new IntegerFieldCreator());
+        addFieldCreator(CreditCardFieldCreator.class, new CreditCardFieldCreator());
+        addFieldCreator(CurrencyFieldCreator.class, new CurrencyFieldCreator());
+        addFieldCreator(DateTimeFieldCreator.class, new DateTimeFieldCreator());
     }
 
     public void addFieldCreator(final Class dataType, final FieldCreator creator)
@@ -343,6 +349,22 @@ public class FormFieldFactory
         }
     }
 
+    public class DateTimeFieldCreator implements FieldCreator, FormJavaScriptGenerator.FieldTypeNameContributor
+    {
+        public FormComponent createField(final BaseForm form, final String controlId, final ReflectedFormFieldDefn reflectedFormFieldDefn)
+        {
+            final DateTimeField result = new DateTimeField(controlId);
+            reflectedFormFieldDefn.initializeField(form, reflectedFormFieldDefn, result);
+            result.add(new DateValidator(DateValidator.DATE_FORMATS[0], false, false));
+            return result;
+        }
+
+        public String getJavaScriptFieldTypeId(FormJavaScriptGenerator generator)
+        {
+            return "date-time";
+        }
+    }
+
     public class CurrencyFieldCreator implements FieldCreator, FormJavaScriptGenerator.FieldTypeNameContributor
     {
         public FormComponent createField(final BaseForm form, final String controlId, final ReflectedFormFieldDefn reflectedFormFieldDefn)
@@ -373,6 +395,21 @@ public class FormFieldFactory
         public String getJavaScriptFieldTypeId(FormJavaScriptGenerator generator)
         {
             return "text"; // TODO: need to supply special client side validation for zip fields, too
+        }
+    }
+
+    public class CreditCardFieldCreator implements FieldCreator, FormJavaScriptGenerator.FieldTypeNameContributor
+    {
+        public FormComponent createField(final BaseForm form, final String controlId, final ReflectedFormFieldDefn reflectedFormFieldDefn)
+        {
+            final CreditCardField result = new CreditCardField(controlId);
+            reflectedFormFieldDefn.initializeField(form, reflectedFormFieldDefn, result);
+            return result;
+        }
+
+        public String getJavaScriptFieldTypeId(FormJavaScriptGenerator generator)
+        {
+            return "text"; // TODO: need to supply special client side validation for credit cards, too
         }
     }
 

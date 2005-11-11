@@ -32,7 +32,7 @@ public class ReflectedFormFieldDefn
     private final Method method;
     private final boolean methodIsAccessor;
     private final Map<Class, Annotation> constraints = Collections.synchronizedMap(new HashMap<Class, Annotation>());
-    private final com.medigy.wicket.form.FormFieldFactory.FieldCreator creator;
+    private final FormFieldFactory.FieldCreator creator;
 
     public ReflectedFormFieldDefn(final String propertyName, final Class ... containers)
     {
@@ -145,22 +145,22 @@ public class ReflectedFormFieldDefn
         return creator.createField(form, componentId, this);
     }
 
-    public void initializeField(final BaseForm form, final ReflectedFormFieldDefn reflectedFormFieldDefn, final FormComponent formComponent)
-    {
-        // at this point we have the originating class, the creator, and the newly created field so we can do
-        // basic annotations processing first (all common annotations) and then let the field handle what it
-        // needs to do
-        if(this.isAnnotationPresent(NotNull.class))
-            formComponent.add(RequiredValidator.getInstance());
+        public void initializeField(final BaseForm form, final ReflectedFormFieldDefn reflectedFormFieldDefn, final FormComponent formComponent)
+        {
+            // at this point we have the originating class, the creator, and the newly created field so we can do
+            // basic annotations processing first (all common annotations) and then let the field handle what it
+            // needs to do
+            if(this.isAnnotationPresent(NotNull.class))
+                formComponent.add(RequiredValidator.getInstance());
 
-        // TODO: find the BaseForms FormMode and check against annotation. Hide the formComponent's label.
-        if(this.isAnnotationPresent(InvisibleWhen.class))
-            formComponent.setVisible(false);
-    }
+            // TODO: find the BaseForms FormMode and check against annotation. Hide the formComponent's label.
+            if(this.isAnnotationPresent(InvisibleWhen.class))
+                formComponent.setVisible(false);
+        }
 
-    public com.medigy.wicket.form.FormFieldFactory.FieldCreator getFieldCreator(final Class dataTypeOrValidEntity)
+    public FormFieldFactory.FieldCreator getFieldCreator(final Class dataTypeOrValidEntity)
     {
-        final com.medigy.wicket.form.FormFieldFactory.FieldCreator result = FormFieldFactory.getInstance().getFieldCreator(dataTypeOrValidEntity);
+        final FormFieldFactory.FieldCreator result = FormFieldFactory.getInstance().getFieldCreator(dataTypeOrValidEntity);
         if(result == null)
         {
             log.error("Unable to find a field creator for " + dataTypeOrValidEntity);
@@ -210,7 +210,7 @@ public class ReflectedFormFieldDefn
         return constraints;
     }
 
-    public com.medigy.wicket.form.FormFieldFactory.FieldCreator getCreator()
+    public FormFieldFactory.FieldCreator getCreator()
     {
         return creator;
     }
